@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Checkout = () => {
+const Index = () => {
     return (
         <div>
             <h1>Checkout</h1>
@@ -8,4 +8,4 @@ const Checkout = () => {
     );
 };
 
-export default Checkout;
+export default Index;
