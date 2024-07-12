@@ -7,15 +7,16 @@ import {VscAccount} from "react-icons/vsc";
 import {useGlobalContext} from "@/context/GlobalProvider";
 
 const Header = () => {
+    // @ts-ignore
     const {cart} = useGlobalContext();
     const [showMenu, setShowMenu] = useState(false);
 
     console.log(showMenu)
     return (
-        <div className="w-full flex-row" onMouseEnter={() => setShowMenu(false)}>
+        <div className="w-full flex-row">
             <header className="flex relative w-full items-center">
                 <div className="absolute left-0 top-0">
-                    <p className="text-2xl font-bold">NeverBe</p>
+                    <p className="text-3xl font-bold">Never Be</p>
                     {/* <Image alt="nevebe_logo" src=""></Image>*/}
                 </div>
                 <nav className="flex w-full justify-center items-center gap-8">
@@ -28,7 +29,7 @@ const Header = () => {
                 </nav>
                 <div className="flex absolute items-center justify-center right-0 top-0 gap-6">
                     <div className="relative">
-                        <FormField placeholder="Search"
+                        <FormField containerStles="" placeholder="Search"
                                    otherStyle="w-[10rem] hover:bg-gray-200  pl-3 pt-1 pb-1 pr-10 h-[2rem]"/>
                         <button
                             className="absolute flex items-center justify-center h-[2rem] text-center hover:bg-gray-200 rounded-full top-0 w-[2rem] right-0">
@@ -48,15 +49,20 @@ const Header = () => {
                 <div>
                 </div>
             </header>
-            <div
-                className={`w-[95vw] -z-50 absolute gap-20 flex justify-center items-center duration-[800ms] transition-all ${showMenu ? 'top-[3rem] z-0' : '-top-[100%]'} `}>
-                <div onMouseOut={() => setShowMenu(false)} onMouseOver={() => setShowMenu(true)}
-                     className="gap-20 mt-7 p-5 w-fit flex justify-center items-center">
-                    <Link href="" className="font-bold text-xl h-[2rem] border-b-black hover:border-b-2">Nike</Link>
-                    <Link href="" className="font-bold text-xl h-[2rem] border-b-black hover:border-b-2">Adidas</Link>
-                    <Link href="" className="font-bold text-xl h-[2rem] border-b-black hover:border-b-2">Puma</Link>
-                    <Link href="" className="font-bold text-xl h-[2rem] border-b-black hover:border-b-2">Luvion
-                        Vuitton</Link>
+            <div onMouseOut={() => setShowMenu(false)} onMouseOver={() => setShowMenu(true)} className={`w-[95vw] -z-50 absolute gap-12 flex justify-center items-center duration-[800ms] transition-all ${showMenu ? 'top-[3rem] z-0' : '-top-[100%]'} `}>
+                <div className="mt-7 gap-3 p-5 w-fit flex justify-center items-center flex-col">
+                    <div className="flex gap-5">
+                        <Link href="" className="font-bold text-xl h-[2rem] border-b-black hover:border-b-2">Nike</Link>
+                        <Link href="" className="font-bold text-xl h-[2rem] border-b-black hover:border-b-2">Adidas</Link>
+                        <Link href="" className="font-bold text-xl h-[2rem] border-b-black hover:border-b-2">Puma</Link>
+                        <Link href="" className="font-bold text-xl h-[2rem] border-b-black hover:border-b-2">Louis Vuitton</Link>
+                        <Link href="" className="font-bold text-xl h-[2rem] border-b-black hover:border-b-2">Cross</Link>
+                        <Link href="" className="font-bold text-xl h-[2rem] border-b-black hover:border-b-2">Polo</Link>
+                    </div>
+                    <div className="flex gap-5">
+                        <Link href="" className="font-bold text-xl h-[2rem] border-b-black hover:border-b-2">New Balance</Link>
+                        <Link href="" className="font-bold text-xl h-[2rem] border-b-black hover:border-b-2">Other</Link>
+                    </div>
                 </div>
             </div>
         </div>

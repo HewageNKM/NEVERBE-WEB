@@ -3,6 +3,7 @@ import {createContext, useContext, useState} from "react";
 const GlobalContext = createContext({})
 export const useGlobalContext = () => useContext(GlobalContext)
 
+// @ts-ignore
 export const GlobalProvider = ({children}) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [cart, setCart] = useState([]);
