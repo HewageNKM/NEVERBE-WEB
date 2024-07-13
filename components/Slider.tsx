@@ -9,15 +9,14 @@ import 'swiper/css/navigation';
 
 
 // import required modules
-import { Pagination, Navigation,EffectFade,FreeMode,Autoplay } from 'swiper/modules';
+import { Navigation,EffectFade,FreeMode,Autoplay } from 'swiper/modules';
 
-export default function Slider({images}) {
+export default function Slider({images}:{images:string[]}) {
     return (
         <>
             <Swiper
                 style={{
                     '--swiper-navigation-color': '#fff',
-                    '--swiper-pagination-color': '#fff',
                 }}
                 autoplay={{
                     delay: 2000,

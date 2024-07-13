@@ -1,6 +1,6 @@
 import React from 'react';
 
-const EmptyState = ({title,subTitle}) => {
+const EmptyState = ({title, subTitle}: { title: string, subTitle: string }) => {
     return (
         <div className="w-full flex flex-col items-center justify-center">
             <h1 className="text-3xl font-bold text-gray-500">{title}</h1>

@@ -51,9 +51,8 @@ export const logOut = async () => {
 }
 
 export const getSliders = async () => {
-    const getAllSlides = query(slidersCollectionRef);
+    const getAllSlides = query(slidersCollectionRef,limit(8));
     const doc = await getDocs(getAllSlides);
-    console.log(doc.docs.map(doc => doc.data()));
     return doc.docs.map(doc => doc.data());
 }
 

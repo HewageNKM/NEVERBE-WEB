@@ -20,7 +20,7 @@ const Popular = () => {
             <div className="mt-3 flex flex-col gap-5 justify-center items-center">
                 <div>
                     {popular.length > 0 ? popular.map((item, index) => (
-                        <ShoeCard key={index}/>
+                        <ShoeCard key={index} title={item.description} thumbnail={item.thumbnail} color={item.color} sellingPrice={item.sellingPrice} type="popular"/>
                     )):(<EmptyState title="Oops!" subTitle="No Shoes Found"/>)}
                 </div>
                 {popular && <Button title="Load More" containerStyles=""/>}

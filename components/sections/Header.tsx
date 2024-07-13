@@ -29,8 +29,8 @@ const Header = () => {
                 </nav>
                 <div className="flex absolute items-center justify-center right-0 top-0 gap-2">
                     <div className="relative hidden lg:flex">
-                        <FormField containerStles="" placeholder="Search"
-                                   otherStyle="w-[10rem] hover:bg-gray-200  pl-3 pt-1 pb-1 pr-10 h-[2rem]"/>
+                        <FormField containerStyles="" placeholder="Search"
+                                   otherStyles="w-[10rem] hover:bg-gray-200  pl-3 pt-1 pb-1 pr-10 h-[2rem]"/>
                         <button
                             className="absolute flex items-center justify-center h-[2rem] text-center hover:bg-gray-200 rounded-full top-0 w-[2rem] right-0">
                             <CiSearch size={18}/></button>
