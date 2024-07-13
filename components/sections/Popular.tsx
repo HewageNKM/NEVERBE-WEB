@@ -1,6 +1,6 @@
 'use client';
 import React, {useEffect, useState} from 'react';
-import {getPopular} from "@/firebase/Firebase";
+import {getNewArrival, getPopular} from "@/firebase/Firebase";
 import ShoeCard from "@/components/ShoeCard";
 import EmptyState from "@/components/EmptyState";
 import Button from "@/components/Button";
@@ -8,7 +8,7 @@ import Button from "@/components/Button";
 const Popular = () => {
     const [popular, setPopular] = useState([{}])
     const fetchPopular = async () => {
-        const popular = await getPopular();
+        const popular = await getNewArrival();
         setPopular(popular);
     }
     useEffect(() => {
@@ -17,13 +17,14 @@ const Popular = () => {
     return (
         <div className="mt-20">
             <h1 className="font-bold text-3xl">Popular</h1>
-            <div className="mt-3 flex flex-col gap-5 justify-center items-center">
-                <div>
+            <div className="flex-col mt-16 justify-center items-center flex gap-10">
+                <div className="flex-row justify-center flex-wrap flex gap-10 items-center">
                     {popular.length > 0 ? popular.map((item, index) => (
-                        <ShoeCard key={index} title={item.description} thumbnail={item.thumbnail} color={item.color} sellingPrice={item.sellingPrice} type="popular"/>
-                    )):(<EmptyState title="Oops!" subTitle="No Shoes Found"/>)}
+                        <ShoeCard key={index} title={item.description} thumbnail={item.thumbnail} color={item.color}
+                                  sellingPrice={item.sellingPrice} type="popular"/>
+                    )) : (<EmptyState title="Opps!" subTitle="No New Arrivals"/>)}
                 </div>
-                {popular && <Button title="Load More" containerStyles=""/>}
+                <Button title="Load More" containerStyles=""/>
             </div>
         </div>
     );
