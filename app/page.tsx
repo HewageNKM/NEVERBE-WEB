@@ -6,7 +6,7 @@ import Hero from "@/components/sections/Hero";
 
 export default function Home() {
     return (
-        <main className="w-full overflow-clip h-full px-4 py-4">
+        <main className="w-full overflow-clip relative h-full px-4 py-4">
             <Header/>
             <Hero/>
             <Popular/>

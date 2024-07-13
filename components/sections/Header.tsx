@@ -54,8 +54,8 @@ const Header = () => {
                 <div>
                 </div>
             </header>
-            <div onMouseOut={() => setShowMenu(false)} onMouseOver={() => setShowMenu(true)} className={`w-[95vw] -z-50  absolute gap-12 justify-center items-center duration-[800ms] transition-all ${showMenu ? 'top-[3rem] z-0' : '-top-[100%]'} `}>
-                <div className="mt-7 gap-3 p-5 w-full flex justify-center items-center flex-col">
+            <div onMouseOut={() => setShowMenu(false)} onMouseOver={() => setShowMenu(true)} className={`w-[97vw] -z-50  absolute gap-12 justify-center items-center duration-[800ms] transition-all ${showMenu ? 'top-[3rem] z-50' : '-top-[100%]'} `}>
+                <div className="mt-7 gap-3 bg-white overflow-clip p-5 w-full flex justify-center items-center flex-col">
                     <div className="flex gap-5">
                         <Link href="" className="font-semibold text-xl h-[2rem] border-b-black hover:border-b-2">Nike</Link>
                         <Link href="" className="font-semibold text-xl h-[2rem] border-b-black hover:border-b-2">Adidas</Link>
