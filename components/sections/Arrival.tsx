@@ -10,7 +10,6 @@ const Arrival = () => {
     const fetchNewArrival = async () => {
         const arrival = await getNewArrival();
         setArrival(arrival);
-        console.log(arrival);
     }
     useEffect(() => {
         fetchNewArrival()

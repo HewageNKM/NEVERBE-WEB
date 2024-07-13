@@ -2,7 +2,6 @@ import React from 'react';
 import Image from "next/image";
 
 const ShoeCard = ({title,thumbnail,sellingPrice,type,color}) => {
-    console.log(thumbnail)
     return (
         <div className="flex hover:shadow cursor-pointer hover:scale-105 transition-all duration-300 relative p-2 flex-col w-[15rem]">
            <div>
