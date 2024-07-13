@@ -2,6 +2,8 @@
 import React, {useEffect, useState} from 'react';
 import {getPopular} from "@/firebase/Firebase";
 import ShoeCard from "@/components/ShoeCard";
+import EmptyState from "@/components/EmptyState";
+import Button from "@/components/Button";
 
 const Popular = () => {
     const [popular, setPopular] = useState([{}])
@@ -13,12 +15,15 @@ const Popular = () => {
         fetchPopular()
     }, [])
     return (
-        <div className="mt-8">
+        <div className="mt-20">
             <h1 className="font-bold text-3xl">Popular</h1>
-            <div className="mt-3">
-                {popular && popular.map((item, index) => (
-                    <ShoeCard key={index}/>
-                ))}
+            <div className="mt-3 flex flex-col gap-5 justify-center items-center">
+                <div>
+                    {popular.length > 0 ? popular.map((item, index) => (
+                        <ShoeCard key={index}/>
+                    )):(<EmptyState title="Oops!" subTitle="No Shoes Found"/>)}
+                </div>
+                {popular && <Button title="Load More" containerStyles=""/>}
             </div>
         </div>
     );
