@@ -16,7 +16,7 @@ const Header = () => {
         <div className="w-full flex-row">
             <header className="flex relative w-full items-center">
                 <div className="absolute left-0 top-0">
-                    <p className="text-3xl font-bold">Never Be</p>
+                    <Link href="/"><p className="text-3xl font-bold">Never Be</p></Link>
                     {/* <Image alt="nevebe_logo" src=""></Image>*/}
                 </div>
                 <nav className="lg:flex w-full justify-center hidden items-center gap-8">

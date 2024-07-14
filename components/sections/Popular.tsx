@@ -22,8 +22,8 @@ const Popular = () => {
                 <div className="flex-row justify-center flex-wrap flex gap-10 items-center">
                     {popular.length > 0 ? popular.map((item, index) => (
                         <ShoeCard key={index} title={item.description} thumbnail={item.thumbnail} color={item.color}
-                                  sellingPrice={item.sellingPrice} type="popular"/>
-                    )) : (<EmptyState title="Opps!" subTitle="No New Arrivals"/>)}
+                                  sellingPrice={item.sellingPrice} type="popular" shoeId={item.shoeId}/>
+                    )) : (<EmptyState title="Opps!" subTitle="No Popular"/>)}
                 </div>
                 <Button title="Load More" containerStyles=""/>
             </div>

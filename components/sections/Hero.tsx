@@ -26,7 +26,7 @@ const Hero = () => {
         <div className="relative mt-16 lg:mt-8">
             {isLoading ? (<SplashScreen containerStyles="w-full h-96"/>):(
                 <div>
-                    <Slider images={sliders}/>
+                    <Slider images={sliders} imageStyles="w-full h-[40vh] lg:h-[80vh] bg-cover"/>
                     <div className="absolute flex-col gap-7 flex z-30 bottom-10 left-10 lg:bottom-16 lg:left-16">
                         <h2 className="text-xl line-clamp-2 lg:line-clamp-1 font-semibold text-white">Wear It, Like You Never Before</h2>
                         <BorderButton

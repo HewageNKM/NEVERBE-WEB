@@ -4,10 +4,8 @@ import {GlobalProvider} from "@/context/GlobalProvider";
 
 export default function App({Component, pageProps}) {
     return (
-        <>
-            <GlobalProvider>
-                <Component {...pageProps} />;
-            </GlobalProvider>
-        </>
+        <GlobalProvider>
+            <Component {...pageProps}/>;
+        </GlobalProvider>
     )
 }

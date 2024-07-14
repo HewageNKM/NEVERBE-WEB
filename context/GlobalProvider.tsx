@@ -1,10 +1,10 @@
-import {createContext, useContext, useState} from "react";
+import {createContext, ReactNode, useContext, useState} from "react";
 
 
 const GlobalContext = createContext({})
 export const useGlobalContext = () => useContext(GlobalContext)
 
-export const GlobalProvider = async ({children}: { children: React.ReactNode }) => {
+export const GlobalProvider = ({children}) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [cart, setCart] = useState([]);
     const [user, setUser] = useState(null);
