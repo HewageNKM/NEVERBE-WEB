@@ -31,12 +31,12 @@ const ShoeDetails = ({shoe}: { shoe: object }) => {
     };
     return (
         <div
-            className="w-full relative mt-20 lg:mt-12 flex flex-col md:grid md:grid-cols-2 justify-center items-center lg:flex-row gap-10 lg:gap-20 ">
-            <div className="lg:w-[30vw] w-full">
+            className="w-full relative mt-20 lg:mt-12 flex flex-col md:grid md:grid-cols-2 justify-center lg:flex-row gap-10 lg:gap-20 ">
+            <div className="h-[60vh] md:h-[90vh] w-full">
                 {shoe.thumbnail ? (<Image src={shoe.thumbnail} width={2000} height={2000}
-                                          className="w-full bg-contain h-[80vh] md:h-[70vh]"
+                                          className="w-full bg-contain h-[60vh] md:h-[90vh]"
                                           alt={shoe.description}/>) : (
-                    <SplashScreen containerStyles="lg:w-[30vw] w-full h-[70vh]"/>)}
+                    <SplashScreen containerStyles="w-full h-[90vh] md:h-[60vh]"/>)}
             </div>
             <div className="flex flex-col gap-2 justify-start">
                 <div>
@@ -57,26 +57,26 @@ const ShoeDetails = ({shoe}: { shoe: object }) => {
                         ))}
                     </div>
                 </div>
-                <div className="w-full">
+                <div className="w-full mt-1">
                     <h3 className="text-lg font-medium">Quantity</h3>
-                    <div className="flex gap-2 items-center justify-start w-fit flex-row mt-1">
-                        <button onClick={()=> setQuantity("b")} className={`bg-gray-200 rounded-full p-1.5 ${!selectedSize ? 'opacity-50' :'hover:bg-gray-300'}`} disabled={!selectedSize}>
+                    <div className="flex gap-4 items-center justify-start w-fit flex-row mt-1">
+                        <button onClick={()=> setQuantity("b")} className={`bg-gray-200 rounded-full p-2 ${!selectedSize ? 'opacity-50' :'hover:bg-gray-300'}`} disabled={!selectedSize}>
                             <MdArrowBackIos/>
                         </button>
-                        <p className="font-medium text-lg">{qty}</p>
-                        <button onClick={()=> setQuantity("f")}  className={`bg-gray-200 rounded-full p-1.5 ${!selectedSize ? 'opacity-50':'hover:bg-gray-300'}`} disabled={!selectedSize}>
+                        <p className="font-medium text-xl">{qty}</p>
+                        <button onClick={()=> setQuantity("f")}  className={`bg-gray-200 rounded-full p-2 ${!selectedSize ? 'opacity-50':'hover:bg-gray-300'}`} disabled={!selectedSize}>
                             <MdArrowForwardIos/>
                         </button>
                     </div>
                     <div className="mt-5 flex justify-center items-center">
-                        <button disabled={qty<= 0} onClick={()=>addToCart()} className={`bg-black w-full leading-5 tracking-wide font-medium text-white rounded-md p-1.5 ${qty<= 0 ? 'opacity-40':'bg-gray-950'}`}>Add
+                        <button disabled={qty<= 0} onClick={()=>addToCart()} className={`bg-black w-full text-lg leading-5 tracking-wide font-medium text-white rounded-md p-3 ${qty<= 0 ? 'opacity-40':'bg-gray-950'}`}>Add
                             to
                             Cart
                         </button>
                     </div>
                 </div>
             </div>
-            <div className="capitalize font-medium text-sm absolute -top-5 left-0">
+            <div className="capitalize font-medium text-[8px] md:text-sm absolute -top-3 md:-top-5 md:left-0">
                 <p>
                     <Link href="/">Home</Link> &gt; Product &gt; <Link className="uppercase" href={`/product/${shoe.shoeId}`}>{shoe.shoeId}</Link>
                 </p>

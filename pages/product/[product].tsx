@@ -20,7 +20,7 @@ const Product = () => {
         }
     }, [router.query.product]);
     return (
-        <main className="w-full overflow-clip relative h-full px-10 py-4">
+        <main className="w-full overflow-clip relative h-full px-5 md:px-10 py-4">
             <Header/>
             <ShoeDetails shoe={shoe}/>
             <ShoeReview/>
