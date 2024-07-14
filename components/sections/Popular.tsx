@@ -9,6 +9,7 @@ const Popular = () => {
     const [popular, setPopular] = useState([{}])
     const fetchPopular = async () => {
         const popular = await getNewArrival();
+        //ToDO implement get Popular shoes
         setPopular(popular);
     }
     useEffect(() => {

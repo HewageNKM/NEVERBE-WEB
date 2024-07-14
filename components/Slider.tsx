@@ -10,6 +10,7 @@ import 'swiper/css/navigation';
 
 // import required modules
 import { Navigation,EffectFade,FreeMode,Autoplay } from 'swiper/modules';
+import Image from "next/image";
 
 export default function Slider({images}:{images:string[]}) {
     return (
@@ -33,7 +34,7 @@ export default function Slider({images}:{images:string[]}) {
                 {images.map((image, index) => (
                     <div key={index}>
                         <SwiperSlide key={index}>
-                            <img src={image.slideUrl} alt={image.alt} className="w-full h-[80vh] bg-cover"/>
+                            <Image width={3000} height={3000} src={image.slideUrl} alt={image.alt} className="w-full h-[40vh] lg:h-[80vh] bg-cover"/>
                         </SwiperSlide>
                     </div>
                 ))}

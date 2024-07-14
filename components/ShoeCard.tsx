@@ -1,5 +1,6 @@
 import React from 'react';
 import Image from "next/image";
+import SplashScreen from "@/components/SplashScreen";
 
 const ShoeCard = ({title, thumbnail, sellingPrice, type, color}: {
     title: string,
@@ -12,7 +13,9 @@ const ShoeCard = ({title, thumbnail, sellingPrice, type, color}: {
         <div
             className="flex hover:shadow cursor-pointer hover:scale-105 transition-all duration-300 relative p-2 flex-col w-[15rem]">
             <div>
-                <Image src={thumbnail} alt="" className="w-full h-[40vh] bg-contain" width={2000} height={2000}/>
+                {thumbnail ? (<Image src={thumbnail} alt="" className="w-full h-[40vh] bg-contain" width={2000} height={2000}/>):(
+                    <SplashScreen containerStyles="w-full h-[40vh]"/>
+                )}
             </div>
             <div className="mt-2 flex flex-col gap-1">
                 <div>
@@ -25,7 +28,7 @@ const ShoeCard = ({title, thumbnail, sellingPrice, type, color}: {
                     <h2 className="font-medium text-sm">Rs.{sellingPrice || 0}</h2>
                 </div>
                 <div>
-                    <h2 className="line-clamp-1 font-medium text-sm">Pay Koko {(sellingPrice / 3).toFixed(2)} x 3</h2>
+                    <h2 className="line-clamp-1 font-medium text-sm">Pay Koko {(sellingPrice / 3).toFixed(2)}  x 3</h2>
                 </div>
             </div>
             {type === "new" &&
