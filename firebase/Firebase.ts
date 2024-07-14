@@ -1,5 +1,5 @@
 import {initializeApp} from "firebase/app";
-import {collection, getDocs, getFirestore, limit, orderBy, query} from "firebase/firestore";
+import {collection, getDocs, getFirestore, limit, orderBy, query, where} from "firebase/firestore";
 import {createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword, signOut} from "firebase/auth";
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -67,4 +67,12 @@ export const getNewArrival = async () => {
     const newArr = query(shoesCollectionRef, orderBy('createdAt', 'desc'), limit(10));
     const doc = await getDocs(newArr);
     return doc.docs.map(doc => doc.data());
+}
+
+export const getAShoeById = async (shoeId:string) => {
+    console.log("Shoe Id: "+shoeId)
+    const getAShoeByIdQuery = query(shoesCollectionRef, where('shoeId', '==',shoeId), limit(1));
+    const doc = await getDocs(getAShoeByIdQuery);
+    console.log(doc.docs.map(doc => doc.data())[0])
+    return doc.docs.map(doc => doc.data())[0];
 }
