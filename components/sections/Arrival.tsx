@@ -16,11 +16,11 @@ const Arrival = () => {
     },[])
     return (
         <div className="mt-20">
-            <h1 className="font-bold text-3xl">New Arrival</h1>
+            <h1 className="font-bold text-5xl">New Arrival</h1>
             <div className="flex-col mt-16 justify-center items-center flex gap-10">
                 <div className="flex-row justify-center flex-wrap flex gap-10 items-center">
                     {arrival.length > 0 ? arrival.map((item, index) => (
-                        <ShoeCard key={index} title={item.description} thumbnail={item.thumbnail} color={item.color} sellingPrice={item.sellingPrice} type="new" shoeId={item.shoeId}/>
+                        <ShoeCard key={index} title={item.name} thumbnail={item.thumbnail} color={item.color} sellingPrice={item.sellingPrice} type="new" shoeId={item.shoeId}/>
                     )):(<EmptyState title="Opps!" subTitle="No New Arrivals"/>)}
                 </div>
                 <Button title="Load More" containerStyles=""/>

@@ -5,7 +5,7 @@ const Phrase = () => {
     const router = useRouter();
     return (
         <div>
-            <h1>Search</h1>
+            <h1>{router.query.phrase}</h1>
         </div>
     );
 };

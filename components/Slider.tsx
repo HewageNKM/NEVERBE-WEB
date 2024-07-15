@@ -34,7 +34,7 @@ export default function Slider({images,imageStyles}:{images:string[],imageStyles
                 {images.map((image, index) => (
                     <div key={index}>
                         <SwiperSlide key={index}>
-                            <Image width={3000} height={3000} src={image.slideUrl} alt={image.alt} className={imageStyles}/>
+                            <Image width={3000} height={3000} src={image.slideUrl} alt={`slide ${index}`} className={imageStyles}/>
                         </SwiperSlide>
                     </div>
                 ))}

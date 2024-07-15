@@ -4,7 +4,7 @@ import {createContext, ReactNode, useContext, useState} from "react";
 const GlobalContext = createContext({})
 export const useGlobalContext = () => useContext(GlobalContext)
 
-export const GlobalProvider = ({children}) => {
+export const GlobalProvider = ({children}:{children:ReactNode}) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [cart, setCart] = useState([]);
     const [user, setUser] = useState(null);
