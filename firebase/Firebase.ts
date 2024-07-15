@@ -76,3 +76,7 @@ export const getAShoeById = async (shoeId:string) => {
     console.log(doc.docs.map(doc => doc.data())[0])
     return doc.docs.map(doc => doc.data())[0];
 }
+
+export const getReviewsById = async (shoeId:string) => {
+
+}

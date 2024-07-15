@@ -23,7 +23,7 @@ const Product = () => {
         <main className="w-full overflow-clip relative h-full px-5 md:px-10 py-4">
             <Header/>
             <ShoeDetails shoe={shoe}/>
-            <ShoeReview/>
+            <ShoeReview shoeId={shoe.shoeId}/>
             <SimilarProducts/>
             <Footer/>
         </main>

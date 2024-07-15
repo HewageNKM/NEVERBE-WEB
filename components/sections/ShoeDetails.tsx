@@ -32,21 +32,21 @@ const ShoeDetails = ({shoe}: { shoe: object }) => {
     return (
         <div
             className="w-full relative mt-20 lg:mt-12 flex flex-col md:grid md:grid-cols-2 justify-center lg:flex-row gap-10 lg:gap-20 ">
-            <div className="h-[60vh] md:h-[90vh] w-full">
+            <div className="h-[60vh] md:h-[80vh] w-full">
                 {shoe.thumbnail ? (<Image src={shoe.thumbnail} width={2000} height={2000}
-                                          className="w-full bg-contain h-[60vh] md:h-[90vh]"
+                                          className="w-full shadow rounded-sm bg-contain h-[50vh] md:h-[80vh]"
                                           alt={shoe.description}/>) : (
                     <SplashScreen containerStyles="w-full h-[90vh] md:h-[60vh]"/>)}
             </div>
             <div className="flex flex-col gap-2 justify-start">
                 <div>
-                    <h1 className="md:text-3xl text-2xl font-bold capitalize">{shoe.manufacture || "NeverBe"}</h1>
-                    <p className="md:text-2xl text-xl capitalize">{shoe.name || "NeverBe"}</p>
+                    <h1 className="md:text-3xl text-2xl font-bold capitalize">{shoe.manufacture}</h1>
+                    <p className="md:text-2xl text-xl capitalize">{shoe.name}</p>
                 </div>
-                <p className="text-sm text-gray-500 flex flex-wrap capitalize">{shoe.description || "NeverBe"}</p>
-                <h4 className="md:text-lg capitalize font-medium">{shoe.color || "None"}</h4>
+                <p className="text-sm text-gray-500 flex flex-wrap capitalize">{shoe.description}</p>
+                <h4 className="md:text-lg capitalize font-medium">{shoe.color}</h4>
                 <div className="mt-2 flex-col flex gap-1">
-                    <h3 className="md:text-2xl text-xl font-medium">Rs.{shoe.sellingPrice || 0}</h3>
+                    <h3 className="md:text-2xl text-xl font-medium">Rs.{shoe.sellingPrice}</h3>
                     <p className="text-sm text-gray-500 capitalize font-medium">{available} available</p>
                 </div>
                 <div className="mt-1">
@@ -75,11 +75,6 @@ const ShoeDetails = ({shoe}: { shoe: object }) => {
                         </button>
                     </div>
                 </div>
-            </div>
-            <div className="capitalize font-medium text-[8px] md:text-sm absolute -top-3 md:-top-5 md:left-0">
-                <p>
-                    <Link href="/">Home</Link> &gt; Product &gt; <Link className="uppercase" href={`/product/${shoe.shoeId}`}>{shoe.shoeId}</Link>
-                </p>
             </div>
         </div>
     );

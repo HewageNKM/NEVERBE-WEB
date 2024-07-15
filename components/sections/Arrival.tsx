@@ -16,7 +16,7 @@ const Arrival = () => {
     },[])
     return (
         <div className="mt-20">
-            <h1 className="font-bold text-3xl">New Arrival</h1>
+            <h1 className="font-bold text-5xl">New Arrival</h1>
             <div className="flex-col mt-16 justify-center items-center flex gap-10">
                 <div className="flex-row justify-center flex-wrap flex gap-10 items-center">
                     {arrival.length > 0 ? arrival.map((item, index) => (

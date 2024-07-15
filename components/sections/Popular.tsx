@@ -17,7 +17,7 @@ const Popular = () => {
     }, [])
     return (
         <div className="mt-20">
-            <h1 className="font-bold text-3xl">Popular</h1>
+            <h1 className="font-bold text-5xl">Popular</h1>
             <div className="flex-col mt-16 justify-center items-center flex gap-10">
                 <div className="flex-row justify-center flex-wrap flex gap-10 items-center">
                     {popular.length > 0 ? popular.map((item, index) => (
