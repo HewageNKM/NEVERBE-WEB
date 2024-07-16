@@ -11,6 +11,8 @@ const ShoeReview = ({shoe}: { shoe: object }) => {
     const [reviews, setReviews] = useState([]);
     const fetchReviews = async () => {
         const rv = await getReviewsById(shoe?.shoeId, 5);
+        console.log(reviews?.length  <= 0)
+        console.log(rv)
         setReviews(rv)
     }
     useEffect(() => {
@@ -26,7 +28,7 @@ const ShoeReview = ({shoe}: { shoe: object }) => {
                 </h1>
             </div>
             <div className="mt-2 flex flex-col justify-center items-center">
-                {reviews ? (<div className="flex flex-col w-full justify-center items-center">
+                {reviews?.length  > 0 ? (<div className="flex flex-col w-full justify-center items-center">
                             <h2 className="text-3xl">{rating}</h2>
                             <Rating value={rating} readOnly precision={0.1}/>
                         </div>
@@ -40,7 +42,7 @@ const ShoeReview = ({shoe}: { shoe: object }) => {
                     }
                 </div>
                 <div className="flex flex-row gap-3 flex-wrap justify-center items-center">
-                    {reviews?.length < 0 && (
+                    {reviews?.length > 4 && (
                         <button className="mt-5 font-bold border-b text-lg border-b-black">More Review</button>)}
                     <button className="mt-5 font-bold border-b text-lg border-b-black">Write a Review</button>
                 </div>

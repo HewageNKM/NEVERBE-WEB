@@ -4,9 +4,12 @@ import SplashScreen from "@/components/SplashScreen";
 import {MdArrowBackIos, MdArrowForwardIos} from "react-icons/md";
 
 const ShoeDetails = ({shoe}: { shoe: object }) => {
+    const [selectedSlide,setSelectedSlide] = useState("")
     const [available, setAvailable] = useState(0);
     const [selectedSize, setSelectedSize] = useState(0);
     const [qty, setQty] = useState(0);
+
+
     const setQuantity = (action: string) => {
         if (action === "f") {
             if (qty + 1 > available) return;
@@ -28,14 +31,26 @@ const ShoeDetails = ({shoe}: { shoe: object }) => {
     const addToCart = () => {
         alert(`Added ${qty} ${shoe.name} to cart`)
     };
+
     return (
         <div
             className="w-full relative mt-20 lg:mt-12 flex flex-col md:grid md:grid-cols-2 justify-center lg:flex-row gap-10 lg:gap-20 ">
             <div className="h-[60vh] md:h-[90vh] w-full">
-                {shoe.thumbnail ? (<Image src={shoe.thumbnail} width={2000} height={2000}
+                {shoe.thumbnail ? (<Image src={selectedSlide || shoe.thumbnail} width={2000} height={2000}
                                           className="w-full shadow rounded-sm bg-contain h-[60vh] md:h-[90vh]"
                                           alt={shoe.description}/>) : (
                     <SplashScreen containerStyles="w-full h-[90vh] md:h-[60vh]"/>)}
+                <div className="flex mt-3 flex-row gap-4 justify-center items-center w-full">
+                    {shoe.images?.map((url:string,index:number)=>(
+                        <button key={index} value={url} onClick={()=>setSelectedSlide(url)}>
+                            <Image src={url} className={`bg-cover w-20 h-20 rounded ${selectedSlide == url && 'border-[1.5px] transition-all duration-300 scale-110 border-black '}`} alt={`${index}`} width={1000} height={1000}/>
+                        </button>
+
+                    ))}
+                    <button onClick={()=>setSelectedSlide(shoe.thumbnail)}>
+                        <Image src={shoe.thumbnail} className={`bg-cover w-20 h-20 rounded ${selectedSlide == shoe.thumbnail && 'border-[1.5px] transition-all duration-300 scale-110 border-black '}`} alt="thumbnail" width={1000} height={1000}/>
+                    </button>
+                </div>
             </div>
             <div className="flex flex-col gap-2 justify-start">
                 <div>
