@@ -1,44 +1,46 @@
 import React, {useEffect, useState} from 'react';
-import EmptyState from "@/components/EmptyState";
-import {rv} from '@/constants/Reviews';
 import {getReviewsById} from "@/firebase/Firebase";
 import ReviewCard from "@/components/ReviewCard";
 import {useGlobalContext} from "@/context/GlobalProvider";
+import {Rating} from "@mui/material";
 import FormField from "@/components/FormField";
+import {BsStarFill} from "react-icons/bs";
 
-const ShoeReview = ({shoeId}: { shoeId: string }) => {
+const ShoeReview = ({shoe}: { shoe: object }) => {
     const {isLoggedIn} = useGlobalContext();
+    const [rating,setRating] = useState(0)
     const [reviews, setReviews] = useState([]);
     const fetchReviews = async () => {
-        const rv = await getReviewsById(shoeId);
+        const rv = await getReviewsById(shoe?.shoeId,5);
         setReviews(rv)
     }
     useEffect(() => {
         fetchReviews()
-    }, []);
+        setRating(shoe.rating)
+    }, [shoe]);
+
     return (
-        <div className="w-full mt-20">
+        <div className="w-full mt-20 h-full">
             <div>
-                <h1 className="text-5xl font-bold">Review</h1>
+                <h1 className="text-5xl font-bold">Review<span
+                    className="text-sm hover:border-b cursor-pointer border-b-black font-medium">{shoe?.reviews}</span>
+                </h1>
             </div>
-            {reviews?.length > 0 ? (<div className="mt-2">
-                <ReviewCard review={[]}/>
-            </div>) : (
-                <div className="mt-2">
-                    <EmptyState title="No Reviews Found!" subTitle="Be the first one"/>
+            <div className="mt-2 flex flex-col justify-center items-center">
+                <div className="flex flex-col w-full justify-center items-center">
+                    <h2 className="text-3xl">{rating}</h2>
+                    <Rating value={rating} readOnly precision={0.1}/>
                 </div>
-            )}
-            {isLoggedIn && (
-                <div className="mt-5 flex flex-1 justify-center items-center">
-                    <form className="flex gap-2 flex-col">
-                        <legend className="text-2xl font-bold">Write a Review</legend>
-                        <FormField placeholder="Name" containerStyles="" otherStyles="p-2 md:w-[30vw]"/>
-                        <textarea placeholder="Write Your Review"
-                                  className="mt-1 md:w-[30vw] h-[15vh] bg-gray-100 p-2 rounded-xl"/>
-                        <button className="mt-2 bg-black text-white p-2 rounded-md">Add</button>
-                    </form>
+                <div className="flex mt-10 flex-col w-full justify-center items-center">
+                    {
+                        reviews?.map((item, index) => (<ReviewCard key={index} review={item}/>))
+                    }
                 </div>
-            )}
+                <div className="flex flex-row gap-3 flex-wrap justify-center items-center">
+                    <button className="mt-5 font-bold border-b text-lg border-b-black">More Review</button>
+                    <button className="mt-5 font-bold border-b text-lg border-b-black">Write a Review</button>
+                </div>
+            </div>
         </div>
     );
 };

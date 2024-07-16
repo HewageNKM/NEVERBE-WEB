@@ -6,6 +6,8 @@ import ShoeReview from "@/components/sections/ShoeReview";
 import Footer from "@/components/sections/Footer";
 import SimilarProducts from "@/components/sections/SimilarProducts";
 import {getAShoeById} from "@/firebase/Firebase";
+import {Rating} from "@mui/material";
+import FeedBack from "@/components/FeedBack";
 
 const Product = () => {
     const router = useRouter();
@@ -20,10 +22,10 @@ const Product = () => {
         }
     }, [router.query.product]);
     return (
-        <main className="w-full overflow-clip relative h-full px-5 md:px-10 py-4">
+        <main className="w-full relative overflow-clip h-full px-5 md:px-10 py-4">
             <Header/>
             <ShoeDetails shoe={shoe}/>
-            <ShoeReview shoeId={shoe.shoeId}/>
+            <ShoeReview shoe={shoe}/>
             <SimilarProducts/>
             <Footer/>
         </main>
