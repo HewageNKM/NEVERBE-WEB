@@ -3,15 +3,14 @@ import {getReviewsById} from "@/firebase/Firebase";
 import ReviewCard from "@/components/ReviewCard";
 import {useGlobalContext} from "@/context/GlobalProvider";
 import {Rating} from "@mui/material";
-import FormField from "@/components/FormField";
-import {BsStarFill} from "react-icons/bs";
+import EmptyState from "@/components/EmptyState";
 
 const ShoeReview = ({shoe}: { shoe: object }) => {
     const {isLoggedIn} = useGlobalContext();
-    const [rating,setRating] = useState(0)
+    const [rating, setRating] = useState(0)
     const [reviews, setReviews] = useState([]);
     const fetchReviews = async () => {
-        const rv = await getReviewsById(shoe?.shoeId,5);
+        const rv = await getReviewsById(shoe?.shoeId, 5);
         setReviews(rv)
     }
     useEffect(() => {
@@ -27,17 +26,22 @@ const ShoeReview = ({shoe}: { shoe: object }) => {
                 </h1>
             </div>
             <div className="mt-2 flex flex-col justify-center items-center">
-                <div className="flex flex-col w-full justify-center items-center">
-                    <h2 className="text-3xl">{rating}</h2>
-                    <Rating value={rating} readOnly precision={0.1}/>
-                </div>
+                {reviews ? (<div className="flex flex-col w-full justify-center items-center">
+                            <h2 className="text-3xl">{rating}</h2>
+                            <Rating value={rating} readOnly precision={0.1}/>
+                        </div>
+                    ) :
+                    (<div className="mt-5">
+                        <EmptyState title="No Reviews Found!" subTitle="Be the first one"/>
+                    </div>)}
                 <div className="flex mt-10 flex-col w-full justify-center items-center">
                     {
                         reviews?.map((item, index) => (<ReviewCard key={index} review={item}/>))
                     }
                 </div>
                 <div className="flex flex-row gap-3 flex-wrap justify-center items-center">
-                    <button className="mt-5 font-bold border-b text-lg border-b-black">More Review</button>
+                    {reviews?.length < 0 && (
+                        <button className="mt-5 font-bold border-b text-lg border-b-black">More Review</button>)}
                     <button className="mt-5 font-bold border-b text-lg border-b-black">Write a Review</button>
                 </div>
             </div>
