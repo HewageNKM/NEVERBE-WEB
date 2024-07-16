@@ -44,7 +44,8 @@ const ShoeReview = ({shoe}: { shoe: object }) => {
                 <div className="flex flex-row gap-3 flex-wrap justify-center items-center">
                     {reviews?.length > 4 && (
                         <button className="mt-5 font-bold border-b text-lg border-b-black">More Review</button>)}
-                    <button className="mt-5 font-bold border-b text-lg border-b-black">Write a Review</button>
+                    {isLoggedIn && (
+                        <button className="mt-5 font-bold border-b text-lg border-b-black">Write a Review</button>)}
                 </div>
             </div>
         </div>
