@@ -10,16 +10,16 @@ import {getCurrentUser} from "@/firebase/Firebase";
 
 export default function Home() {
     const {setUser, setIsLoggedIn} = useGlobalContext();
-    const getUser = async ()=>{
+    const getUser = async () => {
         const usr = await getCurrentUser();
-        if (usr){
+        if (usr) {
             setIsLoggedIn(true)
             setUser(usr)
         }
     }
-    useEffect(()=>{
+    useEffect(() => {
         getUser()
-    },[])
+    }, [])
     return (
         <main className="w-full overflow-clip relative h-full px-4 py-4">
             <Header/>

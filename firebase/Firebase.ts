@@ -20,6 +20,7 @@ const auth = getAuth(app);
 const usersCollectionRef = collection(db, 'users');
 const slidersCollectionRef = collection(db, 'sliders');
 const shoesCollectionRef = collection(db, 'shoes');
+const reviewsCollectionRef = collection(db, 'reviews')
 
 
 export const createUser = async (email: string, password: string) => {
@@ -45,13 +46,13 @@ export const signInWithEmailPassword = async (email: string, password: string) =
 export const logOut = async () => {
     signOut(auth).then(() => {
         return true;
-    }).catch((error) => {
-        throw new Error(error);
+    }).catch((err) => {
+        console.error(err.message)
     });
 }
 
 export const getSliders = async () => {
-    const getAllSlides = query(slidersCollectionRef,limit(8));
+    const getAllSlides = query(slidersCollectionRef, limit(8));
     const doc = await getDocs(getAllSlides);
     return doc.docs.map(doc => doc.data());
 }
@@ -64,19 +65,32 @@ export const getPopular = async () => {
     return [];
 }
 export const getNewArrival = async () => {
-    const newArr = query(shoesCollectionRef, orderBy('createdAt', 'desc'), limit(10));
-    const doc = await getDocs(newArr);
-    return doc.docs.map(doc => doc.data());
+    try {
+        const newArr = query(shoesCollectionRef, orderBy('createdAt', 'desc'), limit(10));
+        const doc = await getDocs(newArr);
+        return doc.docs.map(doc => doc.data());
+    } catch (err) {
+        console.error(err.message)
+    }
 }
 
-export const getAShoeById = async (shoeId:string) => {
-    console.log("Shoe Id: "+shoeId)
-    const getAShoeByIdQuery = query(shoesCollectionRef, where('shoeId', '==',shoeId), limit(1));
-    const doc = await getDocs(getAShoeByIdQuery);
-    console.log(doc.docs.map(doc => doc.data())[0])
-    return doc.docs.map(doc => doc.data())[0];
+export const getAShoeById = async (shoeId: string) => {
+    try {
+        const getAShoeByIdQuery = query(shoesCollectionRef, where('shoeId', '==', shoeId));
+        const doc = await getDocs(getAShoeByIdQuery);
+        return doc.docs.map(doc => doc.data())[0];
+    } catch (err) {
+        console.log(err.message)
+    }
+
 }
 
-export const getReviewsById = async (shoeId:string) => {
-
+export const getReviewsById = async (shoeId: string, lim: number) => {
+    try {
+        const getReviewsByIdQuery = query(reviewsCollectionRef, where('shoeId', '==', shoeId), limit(lim))
+        const doc = await getDocs(getReviewsByIdQuery);
+        return doc.docs.map(doc => doc.data());
+    } catch (err) {
+        console.error(err.message)
+    }
 }
