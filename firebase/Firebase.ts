@@ -1,6 +1,6 @@
 import {initializeApp} from "firebase/app";
 import {collection, getDocs, getFirestore, limit, orderBy, query, where} from "firebase/firestore";
-import {createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword, signOut} from "firebase/auth";
+import {createUserWithEmailAndPassword,getAuth, signInWithEmailAndPassword, signOut} from "firebase/auth";
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 const firebaseConfig = {
@@ -13,9 +13,9 @@ const firebaseConfig = {
     measurementId: process.env.NEXT_PUBLIC_FIRBASE_MESSUREMENT_ID
 };
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const auth = getAuth(app);
+export const app = initializeApp(firebaseConfig);
+export const db = getFirestore(app);
+export const auth = getAuth(app);
 
 const usersCollectionRef = collection(db, 'users');
 const slidersCollectionRef = collection(db, 'sliders');
@@ -89,6 +89,16 @@ export const getReviewsById = async (shoeId: string, lim: number) => {
     try {
         const getReviewsByIdQuery = query(reviewsCollectionRef, where('shoeId', '==', shoeId), limit(lim))
         const doc = await getDocs(getReviewsByIdQuery);
+        return doc.docs.map(doc => doc.data());
+    } catch (err) {
+        console.error(err.message)
+    }
+}
+
+export const getSimilarProducts = async (type: string) => {
+    try {
+        const getSimilarProducts = query(shoesCollectionRef, where('for', '==', type), limit(20))
+        const doc = await getDocs(getSimilarProducts);
         return doc.docs.map(doc => doc.data());
     } catch (err) {
         console.error(err.message)

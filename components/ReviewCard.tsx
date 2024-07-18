@@ -1,8 +1,6 @@
 import React from 'react';
 import {Rating} from "@mui/material";
 
-
-
 const ReviewCard = ({review}: { review: object }) => {
     return (
         <div className="flex relative flex-col justify-center items-center md:w-[20rem] h-fit pb-12 p-2" >

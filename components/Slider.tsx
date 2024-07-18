@@ -12,7 +12,7 @@ import 'swiper/css/navigation';
 import { Navigation,EffectFade,FreeMode,Autoplay } from 'swiper/modules';
 import Image from "next/image";
 
-export default function Slider({images,imageStyles}:{images:string[],imageStyles:string}) {
+export default function Slider({images,imageStyles}:{images:object[],imageStyles:string}) {
     return (
         <>
             <Swiper
