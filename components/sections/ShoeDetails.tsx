@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import Image from "next/image";
 import SplashScreen from "@/components/SplashScreen";
 import {MdArrowBackIos, MdArrowForwardIos} from "react-icons/md";
+import {Skeleton} from "@mui/material";
 
 const ShoeDetails = ({shoe}: { shoe: object }) => {
     const [selectedSlide,setSelectedSlide] = useState("")
@@ -12,11 +13,13 @@ const ShoeDetails = ({shoe}: { shoe: object }) => {
 
     const setQuantity = (action: string) => {
         if (action === "f") {
-            if (qty + 1 > available) return;
+            if (qty + 1 > shoe.stocks[selectedSize]) return;
             setQty(qty + 1);
+            setAvailable((prevState)=>prevState-1)
         } else if (action === "b") {
             if (qty <= 0) return;
             setQty(qty - 1);
+            setAvailable((prevState)=>prevState+1)
         }
     }
     const getAvailable = (size: number, index: number) => {
@@ -39,7 +42,7 @@ const ShoeDetails = ({shoe}: { shoe: object }) => {
                 {shoe.thumbnail ? (<Image src={selectedSlide || shoe.thumbnail} width={2000} height={2000}
                                           className="w-full shadow rounded-sm bg-contain h-[60vh] md:h-[90vh]"
                                           alt={shoe.description}/>) : (
-                    <SplashScreen containerStyles="w-full h-[90vh] md:h-[60vh]"/>)}
+                    <Skeleton animation="wave" sx={{background: "rgb(243 244 246)",width:'100%',height:'70%'}}/>)}
                 <div className="flex mt-3 flex-row gap-4 justify-center items-center w-full">
                     {shoe.images?.map((url:string,index:number)=>(
                         <button key={index} value={url} onClick={()=>setSelectedSlide(url)}>
@@ -47,20 +50,17 @@ const ShoeDetails = ({shoe}: { shoe: object }) => {
                         </button>
 
                     ))}
-                    <button onClick={()=>setSelectedSlide(shoe.thumbnail)}>
-                        <Image src={shoe.thumbnail} className={`bg-cover w-20 h-20 rounded ${selectedSlide == shoe.thumbnail && 'border-[1.5px] transition-all duration-300 scale-110 border-black '}`} alt="thumbnail" width={1000} height={1000}/>
-                    </button>
                 </div>
             </div>
             <div className="flex flex-col gap-2 justify-start">
                 <div className="mt-20 md:mt-0">
                     <h1 className="md:text-3xl text-2xl font-bold capitalize">{shoe.manufacture || "NeverBe"}</h1>
-                    <p className="md:text-2xl text-xl capitalize">{shoe.name || "NeverBe"}</p>
+                    <p className="md:text-2xl text-xl capitalize">{shoe.name || <Skeleton animation="wave" sx={{background: "rgb(243 244 246)",width:'5rem'}}/>}</p>
                 </div>
-                <p className="text-sm text-gray-500 flex flex-wrap capitalize">{shoe.description || "NeverBe"}</p>
-                <h4 className="md:text-lg capitalize font-medium">{shoe.color || "None"}</h4>
+                <p className="text-sm text-gray-500 flex flex-wrap capitalize">{shoe.description || <Skeleton animation="wave" sx={{background: "rgb(243 244 246)",width:'100%',height:'12rem'}}/>}</p>
+                <h4 className="md:text-lg capitalize font-medium">{shoe.color || <Skeleton animation="wave" sx={{background: "rgb(243 244 246)",width:'5rem'}}/>}</h4>
                 <div className="mt-2 flex-col flex gap-1">
-                    <h3 className="md:text-2xl text-xl font-medium">Rs.{shoe.sellingPrice || 0}</h3>
+                    <h3 className="md:text-2xl text-xl font-medium">{shoe.sellingPrice || <Skeleton animation="wave" sx={{background: "rgb(243 244 246)",width:'5rem'}}/>}</h3>
                     <p className="text-sm text-gray-500 capitalize font-medium">{available} available</p>
                 </div>
                 <div className="mt-1">
