@@ -4,6 +4,7 @@ import {getSliders} from "@/firebase/Firebase";
 import BorderButton from "@/components/BorderButton";
 import Slider from "@/components/Slider";
 import SplashScreen from "@/components/SplashScreen";
+import {Skeleton} from "@mui/material";
 
 const Hero = () => {
 
@@ -24,7 +25,7 @@ const Hero = () => {
     }, [])
     return (
         <div className="relative mt-16 lg:mt-8">
-            {isLoading ? (<SplashScreen containerStyles="w-full h-96"/>):(
+            {isLoading ? (<Skeleton animation="wave" sx={{width:'96vw',height:'90vh',background: "rgb(243 244 246)"}}/>):(
                 <div>
                     <Slider images={sliders} imageStyles="w-full h-[40vh] lg:h-[80vh] bg-cover"/>
                     <div className="absolute flex-col gap-7 flex z-30 bottom-10 left-10 lg:bottom-16 lg:left-16">

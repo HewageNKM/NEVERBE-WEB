@@ -2,6 +2,7 @@ import React from 'react';
 import Image from "next/image";
 import SplashScreen from "@/components/SplashScreen";
 import Link from "next/link";
+import {Skeleton} from "@mui/material";
 
 const ShoeCard = ({title, thumbnail, sellingPrice, type, color, shoeId}: {
     title: string,
@@ -18,22 +19,18 @@ const ShoeCard = ({title, thumbnail, sellingPrice, type, color, shoeId}: {
                 <div>
                     {thumbnail ? (<Image src={thumbnail} alt="" className="w-full h-[40vh] bg-contain" width={2000}
                                          height={2000}/>) : (
-                        <SplashScreen containerStyles="w-full h-[40vh]"/>
+                        <Skeleton animation="wave" sx={{width:'100%',height:'40vh',background: "rgb(243 244 246)"}}/>
                     )}
                 </div>
                 <div className="mt-2 flex flex-col gap-1">
                     <div>
-                        <h2 className="line-clamp-1 font-bold text-lg capitalize">{title || "Shoe"}</h2>
+                        <h2 className="line-clamp-1 font-bold text-lg capitalize">{title || <Skeleton animation="wave" sx={{background: "rgb(243 244 246)"}}/>}</h2>
                     </div>
                     <div>
-                        <h2 className="capitalize font-medium text-sm">Color: {color || "None"}</h2>
+                        <h2 className="capitalize font-medium text-sm">{color || <Skeleton animation="wave" sx={{background: "rgb(243 244 246)"}}/>}</h2>
                     </div>
                     <div>
-                        <h2 className="font-medium text-sm">Rs.{sellingPrice || 0}</h2>
-                    </div>
-                    <div>
-                        <h2 className="line-clamp-1 font-medium text-sm">Pay Koko {(sellingPrice / 3).toFixed(2)} x
-                            3</h2>
+                        <h2 className="font-medium text-sm">{sellingPrice || <Skeleton animation="wave" sx={{background: "rgb(243 244 246)"}}/>}</h2>
                     </div>
                 </div>
                 {type === "new" &&
