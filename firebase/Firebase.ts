@@ -1,6 +1,6 @@
 import {initializeApp} from "firebase/app";
 import {collection, getDocs, getFirestore, limit, orderBy, query, where} from "firebase/firestore";
-import {createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword, signOut} from "firebase/auth";
+import {createUserWithEmailAndPassword,getAuth, signInWithEmailAndPassword, signOut} from "firebase/auth";
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 const firebaseConfig = {
@@ -13,9 +13,9 @@ const firebaseConfig = {
     measurementId: process.env.NEXT_PUBLIC_FIRBASE_MESSUREMENT_ID
 };
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const auth = getAuth(app);
+export const app = initializeApp(firebaseConfig);
+export const db = getFirestore(app);
+export const auth = getAuth(app);
 
 const usersCollectionRef = collection(db, 'users');
 const slidersCollectionRef = collection(db, 'sliders');

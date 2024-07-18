@@ -6,9 +6,9 @@ import {CiSearch, CiShoppingCart} from "react-icons/ci";
 import {VscAccount} from "react-icons/vsc";
 import {useGlobalContext} from "@/context/GlobalProvider";
 import {CgMenu} from "react-icons/cg";
+import {menu} from "@/constants";
 
 const Header = () => {
-    // @ts-ignore
     const {cart} = useGlobalContext();
     const [showMenu, setShowMenu] = useState(false);
 
@@ -17,7 +17,6 @@ const Header = () => {
             <header className="flex relative w-full items-center">
                 <div className="absolute left-0 top-0">
                     <Link href="/"><p className="text-3xl font-bold">Never Be</p></Link>
-                    {/* <Image alt="nevebe_logo" src=""></Image>*/}
                 </div>
                 <nav className="lg:flex w-full justify-center hidden items-center gap-8">
                     <Link href=""
@@ -38,8 +37,8 @@ const Header = () => {
                     <button className="hover:bg-gray-100 lg:hidden relative rounded-full p-1 lg:p-1.5">
                         <CiSearch size={25}/>
                     </button>
-                    <Link href="" className="hover:bg-gray-100 rounded-full p-1 lg:p-2">
-                        <VscAccount size={22}/>
+                    <Link href="/auth" className="hover:bg-gray-100 rounded-full p-1 lg:p-2">
+                        <VscAccount size={25}/>
                     </Link>
                     <div className="hover:bg-gray-100 relative rounded-full p-1 lg:p-1.5">
                         <Link href="" className="">
@@ -56,17 +55,10 @@ const Header = () => {
             </header>
             <div onMouseOut={() => setShowMenu(false)} onMouseOver={() => setShowMenu(true)} className={`w-[97vw] -z-50  absolute gap-12 justify-center items-center duration-[800ms] transition-all ${showMenu ? 'top-[3rem] z-50' : '-top-[100%]'} `}>
                 <div className="mt-7 gap-3 bg-white overflow-clip p-5 w-full flex justify-center items-center flex-col">
-                    <div className="flex gap-5">
-                        <Link href="" className="font-semibold text-xl h-[2rem] border-b-black hover:border-b-2">Nike</Link>
-                        <Link href="" className="font-semibold text-xl h-[2rem] border-b-black hover:border-b-2">Adidas</Link>
-                        <Link href="" className="font-semibold text-xl h-[2rem] border-b-black hover:border-b-2">Puma</Link>
-                        <Link href="" className="font-semibold text-xl h-[2rem] border-b-black hover:border-b-2">Louis Vuitton</Link>
-                        <Link href="" className="font-semibold text-xl h-[2rem] border-b-black hover:border-b-2">Cross</Link>
-                        <Link href="" className="font-semibold text-xl h-[2rem] border-b-black hover:border-b-2">Polo</Link>
-                    </div>
-                    <div className="flex gap-5">
-                        <Link href="" className="font-semibold text-xl h-[2rem] border-b-black hover:border-b-2">New Balance</Link>
-                        <Link href="" className="font-semibold text-xl h-[2rem] border-b-black hover:border-b-2">Other</Link>
+                    <div className="flex gap-5 flex-wrap">
+                        {menu.map((item,index)=>(
+                            <Link key={index} href={item.url} className="font-semibold capitalize text-xl h-[2rem] border-b-black hover:border-b-2">{item.title}</Link>
+                            ))}
                     </div>
                 </div>
             </div>
