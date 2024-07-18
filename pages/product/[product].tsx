@@ -26,7 +26,7 @@ const Product = () => {
             <Header/>
             <ShoeDetails shoe={shoe}/>
             <ShoeReview shoe={shoe}/>
-            <SimilarProducts/>
+            <SimilarProducts shoe={shoe}/>
             <Footer/>
         </main>
     );

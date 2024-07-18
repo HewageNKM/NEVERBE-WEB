@@ -53,7 +53,7 @@ const ShoeDetails = ({shoe}: { shoe: object }) => {
                 </div>
             </div>
             <div className="flex flex-col gap-2 justify-start">
-                <div>
+                <div className="mt-20 md:mt-0">
                     <h1 className="md:text-3xl text-2xl font-bold capitalize">{shoe.manufacture || "NeverBe"}</h1>
                     <p className="md:text-2xl text-xl capitalize">{shoe.name || "NeverBe"}</p>
                 </div>

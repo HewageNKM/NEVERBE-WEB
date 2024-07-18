@@ -94,3 +94,13 @@ export const getReviewsById = async (shoeId: string, lim: number) => {
         console.error(err.message)
     }
 }
+
+export const getSimilarProducts = async (type: string) => {
+    try {
+        const getSimilarProducts = query(shoesCollectionRef, where('for', '==', type), limit(20))
+        const doc = await getDocs(getSimilarProducts);
+        return doc.docs.map(doc => doc.data());
+    } catch (err) {
+        console.error(err.message)
+    }
+}
