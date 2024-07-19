@@ -6,7 +6,6 @@ import Slider from "@/components/Slider";
 import {Skeleton} from "@mui/material";
 
 const Hero = () => {
-
     const [sliders, setSliders] = useState([{}])
     const [isLoading, setIsLoading] = useState(true)
     const fetchSliders = async () => {

@@ -1,18 +1,14 @@
 import React, {useEffect, useState} from 'react';
 import {getReviewsById} from "@/firebase/Firebase";
 import ReviewCard from "@/components/ReviewCard";
-import {useGlobalContext} from "@/context/GlobalProvider";
 import {Rating} from "@mui/material";
 import EmptyState from "@/components/EmptyState";
 
 const ShoeReview = ({shoe}: { shoe: object }) => {
-    const {isLoggedIn} = useGlobalContext();
     const [rating, setRating] = useState(0)
     const [reviews, setReviews] = useState([]);
     const fetchReviews = async () => {
         const rv = await getReviewsById(shoe?.shoeId, 5);
-        console.log(reviews?.length  <= 0)
-        console.log(rv)
         setReviews(rv)
     }
     useEffect(() => {
@@ -44,7 +40,7 @@ const ShoeReview = ({shoe}: { shoe: object }) => {
                 <div className="flex flex-row gap-3 flex-wrap justify-center items-center">
                     {reviews?.length > 4 && (
                         <button className="mt-5 font-bold border-b text-lg border-b-black">More Review</button>)}
-                    {isLoggedIn && (
+                    {true && (
                         <button className="mt-5 font-bold border-b text-lg border-b-black">Write a Review</button>)}
                 </div>
             </div>

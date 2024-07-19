@@ -8,15 +8,17 @@ import SimilarProducts from "@/components/sections/SimilarProducts";
 import {getAShoeById} from "@/firebase/Firebase";
 import {Rating} from "@mui/material";
 import FeedBack from "@/components/FeedBack";
+import {useDispatch, useSelector} from "react-redux";
+import {AppDispatch} from "@/lib/store";
+import {getCurrentUser} from "@/lib/features/authSlice/authSlice";
 
-const Product = () => {
+const Id = () => {
     const router = useRouter();
-
     const [shoe, setShoe] = useState({});
 
     useEffect(() => {
         if (router.query.product) {
-            getAShoeById(router.query.product).then((shoe) => {
+            getAShoeById(router.query.id).then((shoe) => {
                 setShoe(shoe);
             });
         }
@@ -32,4 +34,4 @@ const Product = () => {
     );
 }
 
-export default Product;
+export default Id;
