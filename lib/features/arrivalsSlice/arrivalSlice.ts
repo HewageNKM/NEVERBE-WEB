@@ -3,7 +3,7 @@ import {getDocs, limit, orderBy, query} from "firebase/firestore";
 import {shoesCollectionRef} from "@/firebase/Firebase";
 
 interface ArrivalsSlice{
-    arrivals: null | object[]
+    arrivals: object[]
 }
 
 const initialState:ArrivalsSlice = {

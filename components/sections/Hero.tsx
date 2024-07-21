@@ -4,12 +4,12 @@ import BorderButton from "@/components/BorderButton";
 import Slider from "@/components/Slider";
 import {Skeleton} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
-import {AppDispatch} from "@/lib/store";
+import {AppDispatch, RootState} from "@/lib/store";
 import {getSliders} from "@/lib/features/sliderSlice/sliderSlice";
 
 const Hero = () => {
     const dispatch:AppDispatch = useDispatch();
-    const {sliders, isLoading} = useSelector(state => state.sliderSlice)
+    const {sliders, isLoading} = useSelector((state:RootState)  => state.sliderSlice)
     useEffect(() => {
        dispatch(getSliders())
     }, [dispatch])

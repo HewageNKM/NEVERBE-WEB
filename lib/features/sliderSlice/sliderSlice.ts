@@ -3,7 +3,7 @@ import {getDocs, limit, query} from "firebase/firestore";
 import {slidersCollectionRef} from "@/firebase/Firebase";
 
 interface SliderSlice {
-    sliders: null | object[],
+    sliders: object[],
     isLoading: boolean
 }
 
@@ -30,7 +30,7 @@ export const getSliders = createAsyncThunk(
             const getAllSlides = query(slidersCollectionRef, limit(8));
             const doc = await getDocs(getAllSlides);
             return doc.docs.map(doc => doc.data());
-        } catch (error:any) {
+        } catch (error: any) {
             return thunkAPI.rejectWithValue(error.message)
         }
     }

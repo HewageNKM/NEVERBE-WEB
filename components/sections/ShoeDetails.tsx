@@ -65,7 +65,7 @@ const ShoeDetails = ({shoe}: { shoe: object }) => {
                 <h4 className="md:text-lg capitalize font-medium">{shoe.color ||
                     <Skeleton animation="wave" sx={{background: "rgb(243 244 246)", width: '5rem'}}/>}</h4>
                 <div className="mt-2 flex-col flex gap-1">
-                    <h3 className="md:text-2xl text-xl font-medium">{shoe.sellingPrice ||
+                    <h3 className="md:text-2xl text-xl font-medium">රු {shoe.sellingPrice ||
                         <Skeleton animation="wave" sx={{background: "rgb(243 244 246)", width: '5rem'}}/>}</h3>
                     <p className="text-sm text-gray-500 capitalize font-medium">{available} available</p>
                 </div>

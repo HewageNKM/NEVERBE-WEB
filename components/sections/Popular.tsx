@@ -5,18 +5,12 @@ import ShoeCard from "@/components/ShoeCard";
 import EmptyState from "@/components/EmptyState";
 import Button from "@/components/Button";
 import {useDispatch, useSelector} from "react-redux";
-import {AppDispatch} from "@/lib/store";
+import {AppDispatch, RootState} from "@/lib/store";
 import {getArrivals} from "@/lib/features/arrivalsSlice/arrivalSlice";
 
 const Popular = () => {
     const dispatch:AppDispatch = useDispatch();
-    const arrivals = useSelector(state => state.arrivalsSlice.arrivals)
-    const [popular, setPopular] = useState([{}])
-    const fetchPopular = async () => {
-        const popular = await getNewArrival();
-        //ToDO implement get Popular shoes
-        setPopular(popular);
-    }
+    const popular = useSelector((state:RootState) => state.arrivalsSlice.arrivals)
     useEffect(() => {
         dispatch(getArrivals())
     }, [dispatch])
@@ -30,7 +24,7 @@ const Popular = () => {
                                   sellingPrice={item.sellingPrice} type="popular" shoeId={item.shoeId}/>
                     )) : (<EmptyState title="Opps!" subTitle="No Popular"/>)}
                 </div>
-                <Button title="Load More" containerStyles=""/>
+                {popular.length > 20 && <Button title="Load More" containerStyles=""/>}
             </div>
         </div>
     );
