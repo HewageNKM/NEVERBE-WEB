@@ -4,8 +4,13 @@ import {getNewArrival, getPopular} from "@/firebase/Firebase";
 import ShoeCard from "@/components/ShoeCard";
 import EmptyState from "@/components/EmptyState";
 import Button from "@/components/Button";
+import {useDispatch, useSelector} from "react-redux";
+import {AppDispatch} from "@/lib/store";
+import {getArrivals} from "@/lib/features/arrivalsSlice/arrivalSlice";
 
 const Popular = () => {
+    const dispatch:AppDispatch = useDispatch();
+    const arrivals = useSelector(state => state.arrivalsSlice.arrivals)
     const [popular, setPopular] = useState([{}])
     const fetchPopular = async () => {
         const popular = await getNewArrival();
@@ -13,8 +18,8 @@ const Popular = () => {
         setPopular(popular);
     }
     useEffect(() => {
-        fetchPopular()
-    }, [])
+        dispatch(getArrivals())
+    }, [dispatch])
     return (
         <div className="mt-20">
             <h1 className="font-bold text-5xl">Popular</h1>

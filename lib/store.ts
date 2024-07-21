@@ -1,9 +1,13 @@
-import { configureStore } from '@reduxjs/toolkit';
+import {configureStore} from '@reduxjs/toolkit';
 import authSlice from '@/lib/features/authSlice/authSlice';
+import sliderSlice from "@/lib/features/sliderSlice/sliderSlice";
+import arrivalsSlice from "@/lib/features/arrivalsSlice/arrivalSlice";
 
 export const store = configureStore({
     reducer: {
-         authSlice
+        authSlice,
+        sliderSlice,
+        arrivalsSlice
     }
 });
 

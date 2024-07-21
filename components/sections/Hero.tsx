@@ -1,26 +1,18 @@
 'use client';
 import React, {useEffect, useState} from 'react';
-import {getSliders} from "@/firebase/Firebase";
 import BorderButton from "@/components/BorderButton";
 import Slider from "@/components/Slider";
 import {Skeleton} from "@mui/material";
+import {useDispatch, useSelector} from "react-redux";
+import {AppDispatch} from "@/lib/store";
+import {getSliders} from "@/lib/features/sliderSlice/sliderSlice";
 
 const Hero = () => {
-    const [sliders, setSliders] = useState([{}])
-    const [isLoading, setIsLoading] = useState(true)
-    const fetchSliders = async () => {
-        try {
-            const sliders = await getSliders();
-            setSliders(sliders);
-        } catch (e) {
-            console.log(e.message)
-        } finally {
-            setIsLoading(false)
-        }
-    }
+    const dispatch:AppDispatch = useDispatch();
+    const {sliders, isLoading} = useSelector(state => state.sliderSlice)
     useEffect(() => {
-        fetchSliders();
-    }, [])
+       dispatch(getSliders())
+    }, [dispatch])
     return (
         <div className="relative mt-16 lg:mt-8">
             {isLoading ? (

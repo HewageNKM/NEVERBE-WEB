@@ -1,6 +1,6 @@
 import {initializeApp} from "firebase/app";
 import {collection, getDocs, getFirestore, limit, orderBy, query, where} from "firebase/firestore";
-import {createUserWithEmailAndPassword,getAuth, signInWithEmailAndPassword, signOut} from "firebase/auth";
+import {createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword, signOut} from "firebase/auth";
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 const firebaseConfig = {
@@ -17,10 +17,10 @@ export const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
 export const auth = getAuth(app);
 
-const usersCollectionRef = collection(db, 'users');
-const slidersCollectionRef = collection(db, 'sliders');
-const shoesCollectionRef = collection(db, 'shoes');
-const reviewsCollectionRef = collection(db, 'reviews')
+export const usersCollectionRef = collection(db, 'users');
+export const slidersCollectionRef = collection(db, 'sliders');
+export const shoesCollectionRef = collection(db, 'shoes');
+export const reviewsCollectionRef = collection(db, 'reviews')
 
 
 export const createUser = async (email: string, password: string) => {
@@ -51,27 +51,8 @@ export const logOut = async () => {
     });
 }
 
-export const getSliders = async () => {
-    const getAllSlides = query(slidersCollectionRef, limit(8));
-    const doc = await getDocs(getAllSlides);
-    return doc.docs.map(doc => doc.data());
-}
-
-export const getCurrentUser = async () => {
-    return auth.currentUser;
-}
-
 export const getPopular = async () => {
     return [];
-}
-export const getNewArrival = async () => {
-    try {
-        const newArr = query(shoesCollectionRef, orderBy('createdAt', 'desc'), limit(10));
-        const doc = await getDocs(newArr);
-        return doc.docs.map(doc => doc.data());
-    } catch (err) {
-        console.error(err.message)
-    }
 }
 
 export const getAShoeById = async (shoeId: string) => {
