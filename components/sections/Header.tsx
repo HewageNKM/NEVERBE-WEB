@@ -6,10 +6,13 @@ import {CiSearch, CiShoppingCart} from "react-icons/ci";
 import {VscAccount} from "react-icons/vsc";
 import {CgMenu} from "react-icons/cg";
 import {menu} from "@/constants";
+import {useDispatch, useSelector} from "react-redux";
+import {AppDispatch, RootState} from "@/lib/store";
 
 const Header = ({containerStyle}:{containerStyle:string}) => {
     const [showMenu, setShowMenu] = useState(false);
-
+    const dispatch:AppDispatch = useDispatch();
+    const isLoggedIn = useSelector((state:RootState) => state.authSlice.isLoggedIn);
     return (
         <div className={`w-full flex-row ${containerStyle}`}>
             <header className="flex relative w-full items-center">
@@ -35,7 +38,7 @@ const Header = ({containerStyle}:{containerStyle:string}) => {
                     <button className="hover:bg-gray-100 lg:hidden relative rounded-full p-1 lg:p-1.5">
                         <CiSearch size={25}/>
                     </button>
-                    <Link href="/auth" className="hover:bg-gray-100 rounded-full p-1 lg:p-2">
+                    <Link href={isLoggedIn ? "/account":"/auth"} className="hover:bg-gray-100 rounded-full p-1 lg:p-2">
                         <VscAccount size={25}/>
                     </Link>
                     <div className="hover:bg-gray-100 relative rounded-full p-1 lg:p-1.5">

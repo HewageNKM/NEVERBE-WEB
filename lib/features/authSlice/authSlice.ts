@@ -6,11 +6,13 @@ interface AuthSlice {
     user: object | null;
     isLoggedIn: boolean;
     status: string;
+    state:boolean
     error: any;
 }
 
 const initialState: AuthSlice = {
     isLoggedIn: false,
+    state:false,
     user: null,
     status: 'idle',
     error: null
@@ -46,6 +48,9 @@ const authSlice = createSlice({
         getCurrentUser: (state) => {
             state.user = auth.currentUser;
             state.status = 'fulfilled';
+        },
+        setState:(state,action) => {
+            state.state = action.payload;
         }
     },
     extraReducers: (builder) => {
@@ -72,5 +77,5 @@ const authSlice = createSlice({
     }
 });
 
-export const { getCurrentUser } = authSlice.actions;
+export const { getCurrentUser,setState } = authSlice.actions;
 export default authSlice.reducer;
