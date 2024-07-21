@@ -2,12 +2,18 @@ import {configureStore} from '@reduxjs/toolkit';
 import authSlice from '@/lib/features/authSlice/authSlice';
 import sliderSlice from "@/lib/features/sliderSlice/sliderSlice";
 import arrivalsSlice from "@/lib/features/arrivalsSlice/arrivalSlice";
+import shoeDetailsSlice from "@/lib/features/shoeDetailsSlice/shoeDetailsSlice";
+import shoeReviewSlice from "@/lib/features/shoeReviewSlice/shoeReviewSlice";
+import similarProductsSlice from "@/lib/features/similarProductsSlice/similarProductsSlice";
 
 export const store = configureStore({
     reducer: {
         authSlice,
         sliderSlice,
-        arrivalsSlice
+        arrivalsSlice,
+        shoeDetailsSlice,
+        shoeReviewSlice,
+        similarProductsSlice
     }
 });
 

@@ -7,11 +7,11 @@ import {VscAccount} from "react-icons/vsc";
 import {CgMenu} from "react-icons/cg";
 import {menu} from "@/constants";
 
-const Header = () => {
+const Header = ({containerStyle}:{containerStyle:string}) => {
     const [showMenu, setShowMenu] = useState(false);
 
     return (
-        <div className="w-full flex-row">
+        <div className={`w-full flex-row ${containerStyle}`}>
             <header className="flex relative w-full items-center">
                 <div className="absolute left-0 top-0">
                     <Link href="/"><p className="text-3xl font-bold">Never Be</p></Link>

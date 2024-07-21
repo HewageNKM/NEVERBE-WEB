@@ -7,14 +7,14 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "@/lib/store";
 import {getArrivals} from "@/lib/features/arrivalsSlice/arrivalSlice";
 
-const Arrival = () => {
+const Arrival = ({containerStyles}:{containerStyles:string}) => {
     const dispatch: AppDispatch = useDispatch();
     const arrival = useSelector((state: RootState) => state.arrivalsSlice.arrivals)
     useEffect(() => {
         dispatch(getArrivals)
     }, [dispatch])
     return (
-        <div className="mt-20">
+        <div className={`mt-20 ${containerStyles}`}>
             <h1 className="font-bold text-5xl">New Arrival</h1>
             <div className="flex-col mt-16 justify-center items-center flex gap-10">
                 <div className="flex-row justify-center flex-wrap flex gap-10 items-center">

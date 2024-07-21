@@ -1,6 +1,5 @@
 import React from 'react';
 import Image from "next/image";
-import SplashScreen from "@/components/SplashScreen";
 import Link from "next/link";
 import {Skeleton} from "@mui/material";
 

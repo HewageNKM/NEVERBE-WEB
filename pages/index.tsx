@@ -7,14 +7,14 @@ import Footer from "@/components/sections/Footer";
 
 const Home = () => {
     return (
-        <main className="w-full overflow-clip relative h-full px-4 py-4">
-            <Header/>
-            <Hero/>
-            <Popular/>
-            <Arrival/>
+        <main className="w-full overflow-clip bg-slate-50 relative h-full ">
+            <Header containerStyle="px-4 py-4"/>
+            <Hero containerStyle="px-4 py-4"/>
+            <Popular containerStyles="px-4 py-4"/>
+            <Arrival containerStyles="px-4 py-4"/>
             <Footer/>
         </main>
-    );
-};
+    )
+}
 
 export default Home;

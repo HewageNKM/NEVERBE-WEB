@@ -7,14 +7,14 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "@/lib/store";
 import {getSliders} from "@/lib/features/sliderSlice/sliderSlice";
 
-const Hero = () => {
+const Hero = ({containerStyle}:{containerStyle:string}) => {
     const dispatch:AppDispatch = useDispatch();
     const {sliders, isLoading} = useSelector((state:RootState)  => state.sliderSlice)
     useEffect(() => {
        dispatch(getSliders())
     }, [dispatch])
     return (
-        <div className="relative mt-16 lg:mt-8">
+        <div className={`relative mt-16 lg:mt-8 ${containerStyle}`}>
             {isLoading ? (
                 <Skeleton animation="wave" sx={{width: '96vw', height: '90vh', background: "rgb(243 244 246)"}}/>) : (
                 <div>
