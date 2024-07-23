@@ -9,12 +9,12 @@ import {menu} from "@/constants";
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "@/lib/store";
 
-const Header = ({containerStyle}:{containerStyle:string}) => {
+const Header = ({containerStyles}:{containerStyles:string}) => {
     const [showMenu, setShowMenu] = useState(false);
     const dispatch:AppDispatch = useDispatch();
     const isLoggedIn = useSelector((state:RootState) => state.authSlice.isLoggedIn);
     return (
-        <div className={`w-full flex-row ${containerStyle}`}>
+        <div className={`w-full flex-row ${containerStyles}`}>
             <header className="flex relative w-full items-center">
                 <div className="absolute left-0 top-0">
                     <Link href="/"><p className="text-3xl font-bold">Never Be</p></Link>

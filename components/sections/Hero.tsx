@@ -9,14 +9,14 @@ import {getSliders} from "@/lib/features/sliderSlice/sliderSlice";
 import Image from "next/image";
 import {authentic, payment, shipping} from "@/assets";
 
-const Hero = ({containerStyle}:{containerStyle:string}) => {
+const Hero = ({containerStyles}:{containerStyles:string}) => {
     const dispatch:AppDispatch = useDispatch();
     const {sliders, isLoading} = useSelector((state:RootState)  => state.sliderSlice)
     useEffect(() => {
        dispatch(getSliders())
     }, [dispatch])
     return (
-        <div className={`relative mt-16 flex flex-col lg:mt-8 ${containerStyle}`}>
+        <div className={`relative mt-16 flex flex-col lg:mt-8 ${containerStyles}`}>
             {isLoading ? (
                 <Skeleton animation="wave" sx={{width: '96vw', height: '90vh', background: "rgb(243 244 246)"}}/>) : (
                 <div className="relative">
