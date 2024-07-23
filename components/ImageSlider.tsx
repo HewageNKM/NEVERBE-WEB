@@ -1,40 +1,44 @@
-import React, { useRef, useState } from 'react';
+import React from 'react';
 
-import { Swiper, SwiperSlide } from 'swiper/react';
+import {Swiper, SwiperSlide} from 'swiper/react';
 
 import 'swiper/css';
 import 'swiper/css/free-mode';
 import 'swiper/css/effect-fade';
 import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 
 
 // import required modules
-import { Navigation,EffectFade,FreeMode,Autoplay } from 'swiper/modules';
+import {Autoplay, EffectFade, FreeMode, Navigation, Pagination} from 'swiper/modules';
 import Image from "next/image";
 
-export default function Slider({images,imageStyles}:{images:object[],imageStyles:string}) {
+export default function ImageSlider({images, imageStyles}: { images: object[], imageStyles: string }) {
     return (
         <>
             <Swiper
                 style={{
                     '--swiper-navigation-color': '#fff',
+                    '--swiper-pagination-color': '#fff',
                 }}
                 autoplay={{
                     delay: 2000,
                     disableOnInteraction: false,
                 }}
                 pagination={{
-                    type: 'fraction',
+                    dynamicBullets: true,
+                    clickable: true,
                 }}
                 effect={'fade'}
                 navigation={true}
-                modules={[Autoplay ,FreeMode,Navigation,EffectFade]}
+                modules={[Autoplay, FreeMode, Navigation, EffectFade, Pagination]}
                 className="w-full rounded"
             >
                 {images.map((image, index) => (
                     <div key={index}>
                         <SwiperSlide key={index}>
-                            <Image width={3000} height={3000} src={image.slideUrl} alt={`slide ${index}`} className={imageStyles}/>
+                            <Image width={3000} height={3000} src={image.slideUrl} alt={`slide ${index}`}
+                                   className={imageStyles}/>
                         </SwiperSlide>
                     </div>
                 ))}

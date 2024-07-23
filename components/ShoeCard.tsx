@@ -1,6 +1,5 @@
 import React from 'react';
 import Image from "next/image";
-import SplashScreen from "@/components/SplashScreen";
 import Link from "next/link";
 import {Skeleton} from "@mui/material";
 
@@ -13,7 +12,7 @@ const ShoeCard = ({title, thumbnail, sellingPrice, type, color, shoeId}: {
     shoeId: string
 }) => {
     return (
-        <Link href={`/product/${shoeId}`} target='_blank'>
+        <Link href={`/products/${shoeId}`} target='_blank'>
             <div
                 className="flex hover:shadow cursor-pointer hover:scale-105 transition-all duration-300 relative p-2 flex-col w-[15rem]">
                 <div>
@@ -30,7 +29,7 @@ const ShoeCard = ({title, thumbnail, sellingPrice, type, color, shoeId}: {
                         <h2 className="capitalize font-medium text-sm">{color || <Skeleton animation="wave" sx={{background: "rgb(243 244 246)"}}/>}</h2>
                     </div>
                     <div>
-                        <h2 className="font-medium text-sm">{sellingPrice || <Skeleton animation="wave" sx={{background: "rgb(243 244 246)"}}/>}</h2>
+                        <h2 className="font-medium text-sm">රු {sellingPrice || <Skeleton animation="wave" sx={{background: "rgb(243 244 246)"}}/>}</h2>
                     </div>
                 </div>
                 {type === "new" &&
