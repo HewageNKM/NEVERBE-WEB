@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import Image from "next/image";
 import {facebook, google} from "@/assets";
 import FormField from "@/components/FormField";
@@ -8,13 +8,13 @@ import {setState} from "@/lib/features/authSlice/authSlice";
 import Header from "@/components/sections/Header";
 
 const Index = () => {
-    const state = useSelector((state:RootState) => state.authSlice.state);
-    const dispatch:AppDispatch = useDispatch();
+    const state = useSelector((state: RootState) => state.authSlice.state);
+    const dispatch: AppDispatch = useDispatch();
     return (
         <div className="w-full min-h-screen gap-5 justify-center items-center flex flex-col">
-            <Header  containerStyle="px-4 py-4"/>
+            <Header containerStyle="px-4 py-4"/>
             <div className="mx-auto my-auto flex flex-col gap-8">
-                <h1 className="font-bold text-3xl">{state ? "Create Account":"Login"} </h1>
+                <h1 className="font-bold text-3xl">{state ? "Create Account" : "Login"} </h1>
                 <div className="flex flex-col gap-2 justify-start">
                     <form className="flex gap-3 flex-col">
                         {state && (
@@ -26,13 +26,16 @@ const Index = () => {
                         )}
                         <label className="font-medium">
                             Email*
-                            <FormField required={true} otherStyles="p-2 w-full" placeholder="Email" containerStyles="md:w-[25vw]"/>
+                            <FormField required={true} otherStyles="p-2 w-full" placeholder="Email"
+                                       containerStyles="md:w-[25vw]"/>
                         </label>
                         <label className="font-medium">
                             Password*
-                            <FormField required={true} otherStyles="p-2 w-full" placeholder="Password" containerStyles="md:w-[25vw]"/>
+                            <FormField required={true} otherStyles="p-2 w-full" placeholder="Password"
+                                       containerStyles="md:w-[25vw]"/>
                         </label>
-                        <button type="submit" className="bg-black text-white p-2 md:w-[25vw] w-full hover:opacity-80 font-semibold rounded-md">
+                        <button type="submit"
+                                className="bg-black text-white p-2 md:w-[25vw] w-full hover:opacity-80 font-semibold rounded-md">
                             {state ? "Create Account" : "Login"}
                         </button>
                         <div className="relative">

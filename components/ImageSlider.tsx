@@ -6,29 +6,32 @@ import 'swiper/css';
 import 'swiper/css/free-mode';
 import 'swiper/css/effect-fade';
 import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 
 
 // import required modules
-import {Autoplay, EffectFade, FreeMode, Navigation} from 'swiper/modules';
+import {Autoplay, EffectFade, FreeMode, Navigation, Pagination} from 'swiper/modules';
 import Image from "next/image";
 
-export default function Slider({images, imageStyles}: { images: object[], imageStyles: string }) {
+export default function ImageSlider({images, imageStyles}: { images: object[], imageStyles: string }) {
     return (
         <>
             <Swiper
                 style={{
                     '--swiper-navigation-color': '#fff',
+                    '--swiper-pagination-color': '#fff',
                 }}
                 autoplay={{
                     delay: 2000,
                     disableOnInteraction: false,
                 }}
                 pagination={{
-                    type: 'fraction',
+                    dynamicBullets: true,
+                    clickable: true,
                 }}
                 effect={'fade'}
                 navigation={true}
-                modules={[Autoplay, FreeMode, Navigation, EffectFade]}
+                modules={[Autoplay, FreeMode, Navigation, EffectFade, Pagination]}
                 className="w-full rounded"
             >
                 {images.map((image, index) => (
