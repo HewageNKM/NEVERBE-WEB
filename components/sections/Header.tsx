@@ -55,7 +55,7 @@ const Header = ({containerStyles}:{containerStyles:string}) => {
                 <div>
                 </div>
             </header>
-            <div onMouseOut={() => dispatch(setShowMenu(false))}
+            <div onMouseOut={() => dispatch(setShowMenu(false)) } onMouseOver={() => dispatch(setShowMenu(true))}
                  className={`w-[97vw] -z-50  absolute gap-12 justify-center items-center duration-[800ms] transition-all ${showMenu ? 'top-[3rem] z-50' : '-top-[100%]'} `}>
                 <div className="mt-7 gap-3 bg-white overflow-clip p-5 w-full flex justify-center items-center flex-col">
                     <div className="flex gap-5 flex-wrap">
