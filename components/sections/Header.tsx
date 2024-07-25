@@ -8,10 +8,11 @@ import {CgMenu} from "react-icons/cg";
 import {menu} from "@/constants";
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "@/lib/store";
+import {setShowMenu} from "@/lib/features/headerSlice/headerSlice";
 
 const Header = ({containerStyles}:{containerStyles:string}) => {
-    const [showMenu, setShowMenu] = useState(false);
     const dispatch:AppDispatch = useDispatch();
+    const {showMenu} = useSelector((state:RootState) => state.headerSlice)
     const isLoggedIn = useSelector((state:RootState) => state.authSlice.isLoggedIn);
     return (
         <div className={`w-full flex-row ${containerStyles}`}>
@@ -22,10 +23,10 @@ const Header = ({containerStyles}:{containerStyles:string}) => {
                 <nav className="lg:flex w-full justify-center hidden items-center gap-8">
                     <Link href=""
                           className="font-bold text-center h-[2rem] duration-100 hover:border-b-2 border-b-black text-xl"
-                          onMouseEnter={() => setShowMenu(true)}>Women</Link>
+                          onMouseEnter={() => dispatch(setShowMenu(true))}>Women</Link>
                     <Link href=""
                           className="font-bold duration-100 h-[2rem] hover:border-b-2 border-b-black text-xl"
-                          onMouseEnter={() => setShowMenu(true)}>Men</Link>
+                          onMouseEnter={() => dispatch(setShowMenu(true))}>Men</Link>
                 </nav>
                 <div className="flex absolute items-center justify-center right-0 top-0 gap-2">
                     <div className="relative hidden lg:flex">
@@ -54,7 +55,7 @@ const Header = ({containerStyles}:{containerStyles:string}) => {
                 <div>
                 </div>
             </header>
-            <div onMouseOut={() => setShowMenu(false)} onMouseOver={() => setShowMenu(true)}
+            <div onMouseOut={() => dispatch(setShowMenu(false))}
                  className={`w-[97vw] -z-50  absolute gap-12 justify-center items-center duration-[800ms] transition-all ${showMenu ? 'top-[3rem] z-50' : '-top-[100%]'} `}>
                 <div className="mt-7 gap-3 bg-white overflow-clip p-5 w-full flex justify-center items-center flex-col">
                     <div className="flex gap-5 flex-wrap">
