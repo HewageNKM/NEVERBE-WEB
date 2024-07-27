@@ -39,7 +39,7 @@ const LoginModel = () => {
                                        containerStyles="md:w-[25vw]"/>
                         </label>
                         <Button type="submit"
-                                className="bg-primary text-sm md:text-lg text-white p-2 md:w-[25vw] w-full hover:bg-primary-100 font-semibold rounded-md">
+                                className="bg-primary text-sm text-white p-2 md:w-[25vw] w-full hover:bg-primary-100 font-semibold rounded-md">
                             {state ? "Create Account" : "Login"}
                         </Button>
                         <div className="relative">
@@ -66,6 +66,7 @@ const LoginModel = () => {
                 </div>
                 <Button onClick={() => {
                     dispatch(closeLoginDialog())
+                    dispatch(setState(!state))
                 }}
                         className="text-black rounded-full w-fit h-fit font-bold text-lg absolute right-0 top-1 hover:bg-white">
                     X

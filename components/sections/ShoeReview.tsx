@@ -5,7 +5,6 @@ import EmptyState from "@/components/EmptyState";
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "@/lib/store";
 import {getReviews, openReviewDialog} from "@/lib/features/shoeReviewSlice/shoeReviewSlice";
-import Backdrop from "@/components/Backdrop";
 
 const ShoeReview = ({shoe, containerStyles}: { shoe: object, containerStyles: string }) => {
     const dispatch: AppDispatch = useDispatch();
@@ -14,7 +13,6 @@ const ShoeReview = ({shoe, containerStyles}: { shoe: object, containerStyles: st
         dispatch(getReviews(shoe?.shoeId))
     }, [dispatch, shoe?.shoeId]);
 
-    const [reviewDialog, setReviewDialog] = useState(false);
     return (
 
         <div className={`w-full mt-20 h-full relative ${containerStyles}`}>

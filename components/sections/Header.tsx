@@ -33,7 +33,7 @@ const Header = ({containerStyles}: { containerStyles: string }) => {
                         <CiSearch size={25}/>
                     </button>
                     <Button onClick={()=>dispatch(showLoginDialog())}
-                          className="rounded-full p-1 lg:p-2">
+                          className="rounded-full text-black p-1 lg:p-2">
                         <RxAvatar size={25}/>
                     </Button>
                     <div className="relative rounded-full p-1 lg:p-1.5">
