@@ -5,8 +5,13 @@ import Popular from "@/components/sections/Popular";
 import Arrival from "@/components/sections/Arrival";
 import Footer from "@/components/sections/Footer";
 import Promotion from "@/components/sections/Promotion";
+import {useSelector} from "react-redux";
+import {RootState} from "@/lib/store";
+import {AnimatePresence} from "framer-motion";
+import LoginModel from "@/components/LoginModel";
 
 const Home = () => {
+    const showLoginDialog = useSelector((state: RootState) => state.headerSlice.showLoginDialog);
     return (
         <main className="w-full overflow-clip relative h-full ">
             <Header containerStyles="px-4 py-4"/>
@@ -15,6 +20,11 @@ const Home = () => {
             <Popular containerStyles="px-4 py-4"/>
             <Arrival containerStyles="px-4 py-4"/>
             <Footer/>
+            <AnimatePresence>
+                {showLoginDialog && (
+                    <LoginModel/>
+                )}
+            </AnimatePresence>
         </main>
     )
 }

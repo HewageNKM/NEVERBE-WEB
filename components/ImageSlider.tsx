@@ -18,8 +18,8 @@ export default function ImageSlider({images, imageStyles}: { images: object[], i
         <>
             <Swiper
                 style={{
-                    '--swiper-navigation-color': '#fff',
-                    '--swiper-pagination-color': '#fff',
+                    '--swiper-navigation-color': '#97E13E',
+                    '--swiper-pagination-color': '#97E13E',
                 }}
                 autoplay={{
                     delay: 2000,

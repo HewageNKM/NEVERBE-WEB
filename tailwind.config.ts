@@ -20,6 +20,13 @@ const config: Config = {
             },
             boxShadow:{
                custom: 'rgba(0, 0, 0, 0.16) 0px 1px 4px;'
+            },
+            colors: {
+                'primary':'#97E13E',
+                'primary-100':'#8DC63F',
+                'primary-200':'#7CAB3D',
+                'primary-300':'#6B903B',
+                'primary-400':'#5A7539',
             }
         },
     },

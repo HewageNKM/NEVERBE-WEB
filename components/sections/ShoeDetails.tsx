@@ -4,7 +4,12 @@ import {MdArrowBackIos, MdArrowForwardIos} from "react-icons/md";
 import {Skeleton} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "@/lib/store";
-import {setAvailable, setQuantity, setSelectedSize} from "@/lib/features/shoeDetailsSlice/shoeDetailsSlice";
+import {
+    setAvailable,
+    setQuantity,
+    setSelectedSize,
+    setSelectedSlide
+} from "@/lib/features/shoeDetailsSlice/shoeDetailsSlice";
 
 const ShoeDetails = ({shoe,containerStyles}:{shoe:object,containerStyles:string}) => {
     const dispatch: AppDispatch = useDispatch();
@@ -22,7 +27,7 @@ const ShoeDetails = ({shoe,containerStyles}:{shoe:object,containerStyles:string}
             dispatch(setSelectedSize(size))
             dispatch(setAvailable(stocks[size]));
         }}
-                       className={`capitalize p-2 rounded-md ${selectedSize === size ? 'bg-black text-white' : 'bg-gray-200 text-black'}     ${stocks[size] <= 0 && 'opacity-50'}`}
+                       className={`capitalize p-2 rounded-md ${selectedSize === size ? 'bg-primary text-white' : 'bg-gray-200 text-black'}     ${stocks[size] <= 0 && 'opacity-50'}`}
                        disabled={stocks[size] <= 0}>{size}</button>
     }
     const addToCart = () => {
@@ -38,7 +43,7 @@ const ShoeDetails = ({shoe,containerStyles}:{shoe:object,containerStyles:string}
                     <Skeleton animation="wave" sx={{background: "rgb(243 244 246)", width: '100%', height: '70%'}}/>)}
                 <div className="flex mt-3 flex-row gap-4 justify-center items-center w-full">
                     {shoe.images?.map((url: string, index: number) => (
-                        <button key={index} value={url} onClick={() => dispatch(setSelectedSize(url))}>
+                        <button key={index} value={url} onClick={() => dispatch(setSelectedSlide(url))}>
                             <Image src={url}
                                    className={`bg-cover w-20 h-20 rounded ${selectedSlide == url && 'border-[1.5px] transition-all duration-300 scale-110 border-black '}`}
                                    alt={`${index}`} width={1000} height={1000}/>
@@ -88,7 +93,7 @@ const ShoeDetails = ({shoe,containerStyles}:{shoe:object,containerStyles:string}
                     </div>
                     <div className="mt-5 flex justify-center items-center">
                         <button disabled={qty <= 0} onClick={() => addToCart()}
-                                className={`bg-black w-full text-lg leading-5 tracking-wide font-medium text-white rounded-md p-3 ${qty <= 0 ? 'opacity-40' : 'bg-gray-950'}`}>Add
+                                className={`bg-primary w-full text-lg leading-5 tracking-wide font-medium text-white rounded-md p-3 ${qty <= 0 && 'opacity-40'}`}>Add
                             to
                             Cart
                         </button>
