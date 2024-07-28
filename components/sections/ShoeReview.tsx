@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import ReviewCard from "@/components/ReviewCard";
 import {Button, Rating} from "@mui/material";
 import EmptyState from "@/components/EmptyState";

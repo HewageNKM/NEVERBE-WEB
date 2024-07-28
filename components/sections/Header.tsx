@@ -6,7 +6,7 @@ import {CgMenu} from "react-icons/cg";
 import {menu} from "@/constants";
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "@/lib/store";
-import {setShowMenu, showLoginDialog} from "@/lib/features/headerSlice/headerSlice";
+import {setShowMenu, showLoginDialog, showSearchDialog} from "@/lib/features/headerSlice/headerSlice";
 import {RxAvatar} from "react-icons/rx";
 import { Button } from '@mui/material';
 
@@ -29,7 +29,7 @@ const Header = ({containerStyles}: { containerStyles: string }) => {
                           onMouseEnter={() => dispatch(setShowMenu(true))}>Men</Link>
                 </nav>
                 <div className="flex absolute items-center justify-center right-0 top-0 gap-2">
-                    <button className="rounded-full p-1 lg:p-1.5">
+                    <button className="rounded-full p-1 lg:p-1.5" onClick={()=>{dispatch(showSearchDialog())}}>
                         <CiSearch size={25}/>
                     </button>
                     <Button onClick={()=>dispatch(showLoginDialog())}

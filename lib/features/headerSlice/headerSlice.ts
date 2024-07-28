@@ -3,11 +3,13 @@ import {createSlice} from "@reduxjs/toolkit";
 interface Header {
     showMenu: boolean;
     showLoginDialog: boolean;
+    showSearchDialog: boolean;
 }
 
 const initialState: Header = {
     showMenu: false,
-    showLoginDialog: false
+    showLoginDialog: false,
+    showSearchDialog: false
 }
 
 const headerSlice = createSlice(
@@ -23,10 +25,16 @@ const headerSlice = createSlice(
             },
             closeLoginDialog: (state) => {
                 state.showLoginDialog = false
+            },
+            showSearchDialog: (state) => {
+                state.showSearchDialog = true
+            },
+            closeSearchDialog: (state) => {
+                state.showSearchDialog = false
             }
         }
     }
 )
 
 export default headerSlice.reducer
-export const {setShowMenu,closeLoginDialog,showLoginDialog} = headerSlice.actions
+export const {setShowMenu,closeLoginDialog,showSearchDialog,closeSearchDialog,showLoginDialog} = headerSlice.actions

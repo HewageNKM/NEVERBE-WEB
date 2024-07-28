@@ -9,9 +9,11 @@ import {useSelector} from "react-redux";
 import {RootState} from "@/lib/store";
 import {AnimatePresence} from "framer-motion";
 import LoginModel from "@/components/LoginModel";
+import SearchDialog from "@/components/SearchDialog";
 
 const Home = () => {
     const showLoginDialog = useSelector((state: RootState) => state.headerSlice.showLoginDialog);
+    const showSearchDialog = useSelector((state: RootState) => state.headerSlice.showSearchDialog);
     return (
         <main className="w-full overflow-clip relative h-full ">
             <Header containerStyles="px-4 py-4"/>
@@ -23,6 +25,11 @@ const Home = () => {
             <AnimatePresence>
                 {showLoginDialog && (
                     <LoginModel/>
+                )}
+            </AnimatePresence>
+            <AnimatePresence>
+                {showSearchDialog && (
+                    <SearchDialog/>
                 )}
             </AnimatePresence>
         </main>

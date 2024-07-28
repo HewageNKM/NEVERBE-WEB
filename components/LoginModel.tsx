@@ -14,7 +14,7 @@ const LoginModel = () => {
     const state = useSelector((state: RootState) => state.authSlice.state);
     const dispatch: AppDispatch = useDispatch();
     return (
-        <Backdrop>
+        <Backdrop containerStyles="w-[100%] z-50 fixed top-0 left-0 flex justify-center items-center h-[100%] bg-opacity-70 bg-black">
             <motion.div exit={{opacity: 0, x: '100vw'}} initial={{x: "-100vw", opacity: 0}}
                         animate={{opacity: 1, x: 0, transition: {type: "spring", stiffness: 200, damping: 20}}}
                         className="justify-center bg-white px-8 py-4 rounded-lg relative w-[80vw] md:w-[30vw] items-center flex flex-col gap-8">
@@ -66,7 +66,7 @@ const LoginModel = () => {
                 </div>
                 <Button onClick={() => {
                     dispatch(closeLoginDialog())
-                    dispatch(setState(!state))
+                    dispatch(setState(false))
                 }}
                         className="text-black rounded-full w-fit h-fit font-bold text-lg absolute right-0 top-1 hover:bg-white">
                     X

@@ -17,9 +17,8 @@ const SimilarProducts = ({shoe, containerStyles}: { shoe: object, containerStyle
             <h1 className="text-5xl font-bold">Similar Products</h1>
             <div className="flex flex-col gap-5 justify-center mt-10 items-center">
                 <div className="flex-row justify-center flex-wrap flex gap-10 items-center">
-                    {similarProducts?.length > 0 ? similarProducts.map((item, index) => (
-                        <ShoeCard key={index} title={item.name} thumbnail={item.thumbnail} color={item.color}
-                                  sellingPrice={item.sellingPrice} shoeId={item.shoeId}/>
+                    {similarProducts?.length > 0 ? similarProducts.map((shoe, index) => (
+                        <ShoeCard key={index} shoe={shoe}/>
                     )) : (<EmptyState title="Opps!" subTitle="No Similar Products"/>)}
                 </div>
                 <Button variant={"text"} color={"primary"}

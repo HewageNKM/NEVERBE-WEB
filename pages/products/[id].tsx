@@ -10,12 +10,14 @@ import ShoeReview from "@/components/sections/ShoeReview";
 import SimilarProducts from "@/components/sections/SimilarProducts";
 import ReviewModel from "@/components/ReviewModel";
 import {AnimatePresence} from "framer-motion";
+import LoginModel from "@/components/LoginModel";
 
 const Id = () => {
     const dispatch: AppDispatch = useDispatch();
     const router = useRouter();
     const addReviewDialog = useSelector((state: RootState) => state.shoeReviewSlice.reviewAddDialog);
     const shoe = useSelector((state: RootState) => state.shoeDetailsSlice.shoeDetails);
+    const showLoginDialog = useSelector((state: RootState) => state.headerSlice.showLoginDialog);
     useEffect(() => {
         dispatch(getShoeDetails(router.query.id as string));
     }, [router.query.id, dispatch]);
@@ -31,7 +33,11 @@ const Id = () => {
                 {addReviewDialog && (
                     <ReviewModel/>
                 )}
+                {showLoginDialog && (
+                    <LoginModel/>
+                )}
             </AnimatePresence>
+
         </main>
     );
 }

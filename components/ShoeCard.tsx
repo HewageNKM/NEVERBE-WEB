@@ -1,34 +1,35 @@
 import React from 'react';
 import Image from "next/image";
 import Link from "next/link";
-import {Skeleton} from "@mui/material";
+import {Rating} from "@mui/material";
 
-const ShoeCard = ({title, thumbnail, sellingPrice, type, color, shoeId}: {
-    title: string,
-    thumbnail: string,
-    sellingPrice: number,
-    type?: string,
-    color: string,
-    shoeId: string
+const ShoeCard = ({shoe, type}: {
+    shoe: object,
+    type?: string
 }) => {
     return (
-        <Link href={`/products/${shoeId}`} target='_blank'>
+        <Link href={`/products/${shoe.shoeId}`} target='_blank'>
             <div
                 className="flex cursor-pointer hover:scale-105 transition-all duration-300 relative p-2 flex-col w-[15rem]">
                 <div>
-                 <Image src={thumbnail} alt="" className="w-full rounded-lg h-[40vh] bg-contain" width={2000} height={2000}/>
+                    <Image src={shoe.thumbnail} alt="" className="w-full md:w-[15rem] rounded-lg h-[20rem] bg-contain" width={2000}
+                           height={2000}/>
                 </div>
                 <div className="mt-2 flex flex-col gap-1">
                     <div>
-                        <h2 className="line-clamp-1 font-bold text-lg capitalize">{title}</h2>
+                        <h2 className="line-clamp-1 font-bold text-lg capitalize">{shoe.title}</h2>
+                    </div>
+                    <div className="flex text-lg flex-row justify-start gap-2 items-center">
+                        <Rating size={"medium"} readOnly value={shoe?.rating} precision={0.1}/>
+                        <p className="font-medium">{shoe.rating}</p>
                     </div>
                     <div className="flex flex-row gap-4 justify-start items-center">
                         <div className="relative w-fit">
-                            <h2 className="font-medium text-lg">රු {sellingPrice + 2000}</h2>
+                            <h2 className="font-medium text-lg">රු {shoe.sellingPrice + 2000}</h2>
                             <div className="h-[1.1px] absolute top-1/2 left-0 w-[4.2rem] bg-black"/>
                         </div>
                         <div>
-                            <h2 className="text-lg font-medium text-primary">රු {sellingPrice}</h2>
+                            <h2 className="text-lg font-medium text-primary">රු {shoe.sellingPrice}</h2>
                         </div>
                     </div>
                 </div>
