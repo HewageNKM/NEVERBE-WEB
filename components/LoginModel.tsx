@@ -16,7 +16,8 @@ const LoginModel = () => {
     return (
         <Backdrop containerStyles="w-[100%] z-50 fixed top-0 left-0 flex justify-center items-center h-[100%] bg-opacity-70 bg-black">
             <motion.div exit={{opacity: 0, x: '100vw'}} initial={{x: "-100vw", opacity: 0}}
-                        animate={{opacity: 1, x: 0, transition: {type: "spring", stiffness: 200, damping: 20}}}
+                        animate={{opacity: 1, x: 0}}
+                        transition={{type: "spring", damping: 28, stiffness: 200}}
                         className="justify-center bg-white px-8 py-4 rounded-lg relative w-[80vw] md:w-[30vw] items-center flex flex-col gap-8">
                 <h1 className="font-bold text-xl md:text-3xl">{state ? "Create Account" : "Login"} </h1>
                 <div className="flex flex-col gap-2 justify-start">

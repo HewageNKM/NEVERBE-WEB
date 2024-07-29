@@ -1,13 +1,13 @@
 import React, {useEffect} from 'react';
 import {useRouter} from "next/router";
-import Header from "@/components/sections/Header";
-import ShoeDetails from "@/components/sections/ShoeDetails";
-import Footer from "@/components/sections/Footer";
+import Header from "@/components/Header";
+import ShoeDetails from "@/components/sections/productDetails/ShoeDetails";
+import Footer from "@/components/sections/home/Footer";
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "@/lib/store";
 import {getShoeDetails} from "@/lib/features/shoeDetailsSlice/shoeDetailsSlice";
-import ShoeReview from "@/components/sections/ShoeReview";
-import SimilarProducts from "@/components/sections/SimilarProducts";
+import ShoeReview from "@/components/sections/productDetails/ShoeReview";
+import SimilarProducts from "@/components/sections/productDetails/SimilarProducts";
 import ReviewModel from "@/components/ReviewModel";
 import {AnimatePresence} from "framer-motion";
 import LoginModel from "@/components/LoginModel";

@@ -21,11 +21,11 @@ const Hero = ({containerStyles}:{containerStyles:string}) => {
             {isLoading ? (
                 <Skeleton animation="wave" sx={{width: '96vw', height: '90vh', background: "rgb(243 244 246)"}}/>) : (
                 <div className="relative">
-                    <ImageSlider images={sliders} imageStyles="w-full h-[40vh] lg:h-[80vh] bg-cover"/>
+                    <ImageSlider images={sliders} imageStyles="w-full h-[45vh] lg:h-[80vh] bg-cover"/>
                     <div className="absolute flex-col gap-7 flex z-30 bottom-10 left-10 lg:bottom-16 lg:left-16">
-                        <h2 className="text-xl line-clamp-2 lg:line-clamp-1 font-semibold text-white">Wear It, Like You
+                        <h2 className="text-sm line-clamp-2 lg:text-3xl lg:line-clamp-1 font-semibold text-white">Wear It, Like You
                             Never Before</h2>
-                        <Link href="/products">
+                        <Link href="/products/shoes">
                             <BorderButton
                                 buttonStyles="border-[1.4px] absolute -top-1.5 -left-1.5 p-1 w-[8rem] h-[2.4rem] text-center border-white lg:text-xl text-sm text-white hover:text-black hover:bg-primary"
                                 title="Shop Now" imageUrl=""

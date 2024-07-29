@@ -18,7 +18,7 @@ const Header = ({containerStyles}: { containerStyles: string }) => {
         <div className={`w-full flex-row ${containerStyles}`}>
             <header className="flex relative w-full items-center">
                 <div className="absolute left-0 top-0">
-                    <Link href="/"><p className="text-3xl font-bold">Never Be</p></Link>
+                    <Link href="/public"><p className="text-3xl font-bold">Never Be</p></Link>
                 </div>
                 <nav className="lg:flex w-full justify-center hidden items-center gap-8">
                     <Link href=""

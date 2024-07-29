@@ -10,7 +10,9 @@ const ReviewModel = () => {
     const dispatch: AppDispatch = useDispatch();
     return (
         <Backdrop containerStyles="w-[100%] z-50 fixed top-0 left-0 flex justify-center items-center h-[100%] bg-opacity-70 bg-black">
-            <motion.div initial={
+            <motion.div
+                transition={{type: "spring", damping: 28, stiffness: 200}}
+                initial={
                 {y: '-100vh', opacity: 0}}
                         exit={{
                             y: '100vh',
@@ -18,11 +20,6 @@ const ReviewModel = () => {
                         }} animate={{
                 y: 0,
                 opacity: 1,
-                transition: {
-                    type: "spring",
-                    damping: 20,
-                    stiffness: 200,
-                }
             }} className="w-96 h-96 bg-white flex relative flex-col gap-2 justify-center items-center rounded-2xl p-5">
                 <h1 className="text-3xl font-bold">Write a Review</h1>
                 <Rating precision={0.1}/>
