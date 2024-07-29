@@ -3,17 +3,26 @@ import {getDocs, query, where} from "firebase/firestore";
 import {reviewsCollectionRef} from "@/firebase/Firebase";
 
 interface ShoeReview{
+    reviewAddDialog:boolean,
     reviews: object[]
 }
 
 const initialState:ShoeReview = {
+    reviewAddDialog:false,
     reviews:[]
 }
 
 const shoeReviewSlice = createSlice({
     name:"shoeReviewSlice",
     initialState,
-    reducers:{},
+    reducers:{
+        openReviewDialog:(state) => {
+            state.reviewAddDialog = true
+        },
+        closeReviewDialog:(state) => {
+            state.reviewAddDialog = false
+        }
+    },
     extraReducers:(builder) => {
         builder.addCase(getReviews.fulfilled, (state,action) => {
             state.reviews = action.payload
@@ -33,5 +42,5 @@ export const getReviews = createAsyncThunk(
         }
     }
 )
-
+export const {openReviewDialog,closeReviewDialog} = shoeReviewSlice.actions;
 export default shoeReviewSlice.reducer;
