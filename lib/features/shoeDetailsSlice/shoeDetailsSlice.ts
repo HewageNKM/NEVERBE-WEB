@@ -3,7 +3,7 @@ import {getDocs, query, where} from "firebase/firestore";
 import {shoesCollectionRef} from "@/firebase/Firebase";
 
 interface ShoeDetails {
-    shoeDetails: object,
+    shoeDetails: Shoe
     available: number,
     qty: number,
     selectedSize: number,
@@ -11,7 +11,21 @@ interface ShoeDetails {
 }
 
 const initialState: ShoeDetails = {
-    shoeDetails: {},
+    shoeDetails: {
+        sizes: [],
+        thumbnail: "",
+        color: "",
+        rating: 0,
+        reviews: 0,
+        manufacturer: "",
+        shoeId: "",
+        name: "",
+        sellingPrice: 0,
+        description: "",
+        for: "",
+        images: [],
+        stocks: []
+    },
     available: 0,
     qty: 0,
     selectedSize: 0,
@@ -24,7 +38,6 @@ const shoeDetailsSlice = createSlice({
     reducers: {
         setQuantity: (state, action) => {
             if (action.payload === "f") {
-                // @ts-ignore
                 if (state.qty + 1 > state.shoeDetails.stocks[state.selectedSize]) return;
                 state.qty += 1;
                 state.available -= 1;
@@ -46,6 +59,7 @@ const shoeDetailsSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(getShoeDetails.fulfilled, (state, action) => {
+            // @ts-ignore
             state.shoeDetails = action.payload
         })
     }

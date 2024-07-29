@@ -3,7 +3,7 @@ import {getDocs, limit, orderBy, query} from "firebase/firestore";
 import {shoesCollectionRef} from "@/firebase/Firebase";
 
 interface ArrivalsSlice{
-    arrivals: object[]
+    arrivals: Shoe[]
 }
 
 const initialState:ArrivalsSlice = {
@@ -16,6 +16,7 @@ const arrivalsSlice = createSlice({
     reducers:{},
     extraReducers:(builder)=>{
         builder.addCase(getArrivals.fulfilled,(state,action)=>{
+            // @ts-ignore
             state.arrivals = action.payload
         })
     }

@@ -5,7 +5,7 @@ import {Button, Rating} from "@mui/material";
 import {motion} from "framer-motion";
 
 const AccessoryCard = ({accessory, type}: {
-    accessory: object,
+    accessory: Accessory,
     type?: string
 }) => {
     const [addToCart, setAddToCart] = useState(false);

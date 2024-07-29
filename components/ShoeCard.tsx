@@ -5,7 +5,7 @@ import {Button, Rating} from "@mui/material";
 import {motion} from "framer-motion";
 
 const ShoeCard = ({shoe, type}: {
-    shoe: object,
+    shoe: Shoe,
     type?: string
 }) => {
     const [addToCart, setAddToCart] = useState(false);
@@ -35,7 +35,7 @@ const ShoeCard = ({shoe, type}: {
                 </div>
                 <div className="mt-2 flex flex-col gap-1">
                     <div>
-                        <h2 className="line-clamp-1 font-bold text-lg capitalize">{shoe.manufacture}</h2>
+                        <h2 className="line-clamp-1 font-bold text-lg capitalize">{shoe.manufacturer}</h2>
                     </div>
                     <div>
                         <h2 className="line-clamp-1 text-slate-400 font-bold text-sm capitalize">{shoe.name}</h2>

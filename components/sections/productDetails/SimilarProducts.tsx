@@ -6,9 +6,9 @@ import {AppDispatch, RootState} from "@/lib/store";
 import {getSimilarProducts} from "@/lib/features/similarProductsSlice/similarProductsSlice";
 import {Button} from "@mui/material";
 
-const SimilarProducts = ({shoe, containerStyles}: { shoe: object, containerStyles: string }) => {
+const SimilarProducts = ({shoe, containerStyles}: { shoe: Shoe, containerStyles: string }) => {
     const dispatch: AppDispatch = useDispatch();
-    const similarProducts = useSelector((state: RootState) => state.similarProductsSlice.similarProducts);
+    const similarProducts:Shoe[] = useSelector((state: RootState) => state.similarProductsSlice.similarProducts);
     useEffect(() => {
         dispatch(getSimilarProducts(shoe?.for as string))
     }, [dispatch, shoe?.for])

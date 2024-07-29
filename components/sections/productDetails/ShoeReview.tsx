@@ -6,7 +6,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "@/lib/store";
 import {getReviews, openReviewDialog} from "@/lib/features/shoeReviewSlice/shoeReviewSlice";
 
-const ShoeReview = ({shoe, containerStyles}: { shoe: object, containerStyles: string }) => {
+const ShoeReview = ({shoe, containerStyles}: { shoe: Shoe, containerStyles: string }) => {
     const dispatch: AppDispatch = useDispatch();
     const reviews = useSelector((state: RootState) => state.shoeReviewSlice.reviews);
     useEffect(() => {

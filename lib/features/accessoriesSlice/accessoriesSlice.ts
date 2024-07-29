@@ -3,7 +3,7 @@ import {getDocs, query} from "firebase/firestore";
 import {accessoriesCollectionRef} from "@/firebase/Firebase";
 
 interface Accessories{
-    accessories: object[]
+    accessories: Accessory []
 }
 
 const initialState: Accessories = {
@@ -16,6 +16,7 @@ const accessoriesSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder.addCase(getAccessories.fulfilled, (state, action) => {
+            // @ts-ignore
             state.accessories = action.payload
         })
     }

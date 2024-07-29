@@ -4,7 +4,7 @@ import {getDocs, limit, query, where} from "firebase/firestore";
 
 
 interface SimilarProducts {
-    similarProducts: object[]
+    similarProducts: Shoe[]
 }
 
 const initialState: SimilarProducts = {
@@ -17,6 +17,7 @@ const similarProductsSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder.addCase(getSimilarProducts.fulfilled, (state, action) => {
+            // @ts-ignore
             state.similarProducts = action.payload ? action.payload : []
         })
     }

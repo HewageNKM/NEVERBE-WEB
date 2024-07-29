@@ -9,7 +9,7 @@ import {getArrivals} from "@/lib/features/arrivalsSlice/arrivalSlice";
 
 const Arrival = ({containerStyles}:{containerStyles:string}) => {
     const dispatch: AppDispatch = useDispatch();
-    const arrival = useSelector((state: RootState) => state.arrivalsSlice.arrivals)
+    const arrival:Shoe[] = useSelector((state: RootState) => state.arrivalsSlice.arrivals)
     useEffect(() => {
         dispatch(getArrivals)
     }, [dispatch])
