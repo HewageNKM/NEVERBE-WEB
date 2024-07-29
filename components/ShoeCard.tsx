@@ -44,7 +44,7 @@ const ShoeCard = ({shoe, type}: {
                         <Rating size={"medium"} readOnly value={shoe?.rating} precision={0.1}/>
                         <p className="font-medium">{shoe.rating}</p>
                     </div>
-                    <div className="flex flex-row gap-4 justify-start items-center">
+                    <div className="flex flex-row flex-wrap justify-between items-center">
                         <div className="relative w-fit">
                             <div className="h-[1.1px] absolute top-1/2 left-0 w-[4.2rem] bg-black"/>
                             <div className="flex flex-row items-center justify-center gap-3">

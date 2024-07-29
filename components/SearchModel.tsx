@@ -22,7 +22,7 @@ const SearchModel = () => {
                 <div className="mt-2 flex flex-col gap-2 justify-start font-bold text-xl">
                     <FormField containerStyles="" otherStyles="p-2 w-full px-4" placeholder="Nike, Adidas, ......"/>
                     <h2 className="mt-3">New Arrivals</h2>
-                    <div className="flex flex-row gap-2 hide-scrollbar overflow-auto">
+                    <div className="flex h-[90vh] flex-row gap-2 hide-scrollbar overflow-auto">
                         {arrivals.map((item, index) => (
                             <ShoeCard shoe={item} key={index}/>
                         ))}

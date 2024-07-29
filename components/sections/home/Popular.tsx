@@ -15,9 +15,19 @@ const Popular = ({containerStyles}: { containerStyles: string }) => {
     }, [dispatch])
     return (
         <div className={`mt-20 ${containerStyles}`}>
-            <h1 className="font-bold text-4xl">Popular</h1>
+            <div className="flex w-full flex-col items-center justify-center">
+                <h1 className="font-bold text-5xl ">
+                    Popular
+                </h1>
+                <div>
+                    <p className="text-sm flex flex-wrap md:text-lg m-2 text-slate-500">
+                       Blend in with people&apos;s choice of shoes
+                    </p>
+                </div>
+                <div className="w-[20vw] h-[1.8px] bg-primary-100"/>
+            </div>
             <div className="flex-col mt-8 justify-center items-center flex gap-10">
-                <div className="flex-row justify-center flex-wrap flex gap-10 items-center">
+                <div className="flex-row justify-center flex-wrap flex md:gap-10 gap-20 items-center">
                     {popular.length > 0 ? popular.map((shoe, index) => (
                         <ShoeCard key={index} shoe={shoe} type="popular"/>
                     )) : (<EmptyState title="Opps!" subTitle="No Popular"/>)}
