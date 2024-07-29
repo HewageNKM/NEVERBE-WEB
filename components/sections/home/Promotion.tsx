@@ -13,7 +13,7 @@ const Promotion = ({containerStyles}:{containerStyles:string}) => {
                         Get the best deals on our products
                     </p>
                 </div>
-                <div className="w-[30vw] h-[1.8px] bg-primary-100"/>
+                <div className="w-[60vw] h-[1.8px] bg-primary-100"/>
             </div>
             <div className="mt-10">
                 <EmptyState title="Opps!" subTitle="No Sales and Promotions Available at the moment"/>

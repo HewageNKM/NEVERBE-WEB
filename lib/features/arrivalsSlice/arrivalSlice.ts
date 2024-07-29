@@ -24,9 +24,9 @@ const arrivalsSlice = createSlice({
 
 export const getArrivals = createAsyncThunk(
     "arrivalsSlice/getArrivals",
-    async (arg, thunkAPI) => {
+    async ({l}:{l:number}, thunkAPI) => {
         try {
-            const newArr = query(shoesCollectionRef, orderBy('createdAt', 'desc'), limit(10));
+            const newArr = query(shoesCollectionRef, orderBy('createdAt', 'desc'), limit(l));
             const doc = await getDocs(newArr);
             return doc.docs.map(doc => doc.data());
         }catch (error:any){

@@ -3,7 +3,7 @@ import {getDocs, limit, query} from "firebase/firestore";
 import {slidersCollectionRef} from "@/firebase/Firebase";
 
 interface SliderSlice {
-    sliders: object[],
+    sliders: Slide[],
     isLoading: boolean
 }
 
@@ -17,6 +17,7 @@ const sliderSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder.addCase(getSliders.fulfilled, (state, action) => {
+            // @ts-ignore
             state.sliders = action.payload;
             state.isLoading = false;
         });

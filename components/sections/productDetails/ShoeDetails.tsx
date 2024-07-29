@@ -37,12 +37,12 @@ const ShoeDetails = ({shoe,containerStyles}:{shoe:Shoe,containerStyles:string}) 
         <div
             className={`w-full relative mt-20 lg:mt-12 flex flex-col md:grid md:grid-cols-2 justify-center lg:flex-row gap-10 lg:gap-20 ${containerStyles}`}>
             <div className="h-[60vh] md:h-[90vh] w-full">
-                {shoe.thumbnail ? (<Image src={selectedSlide || shoe.thumbnail} width={2000} height={2000}
+                {shoe?.thumbnail ? (<Image src={selectedSlide || shoe.thumbnail} width={2000} height={2000}
                                           className="w-full shadow rounded-sm bg-contain h-[60vh] md:h-[90vh]"
                                           alt={shoe.description}/>) : (
                     <Skeleton animation="wave" sx={{background: "rgb(243 244 246)", width: '100%', height: '70%'}}/>)}
                 <div className="flex mt-3 flex-row gap-4 justify-center items-center w-full">
-                    {shoe.images?.map((url: string, index: number) => (
+                    {shoe?.images?.map((url: string, index: number) => (
                         <button key={index} value={url} onClick={() => dispatch(setSelectedSlide(url))}>
                             <Image src={url}
                                    className={`bg-cover w-20 h-20 rounded ${selectedSlide == url && 'border-[1.5px] transition-all duration-300 scale-110 border-black '}`}
@@ -54,24 +54,24 @@ const ShoeDetails = ({shoe,containerStyles}:{shoe:Shoe,containerStyles:string}) 
             </div>
             <div className="flex flex-col gap-2 justify-start">
                 <div className="mt-20 md:mt-0">
-                    <h1 className="md:text-3xl text-2xl font-bold capitalize">{shoe.manufacturer || "NeverBe"}</h1>
-                    <p className="md:text-2xl text-xl capitalize">{shoe.name ||
+                    <h1 className="md:text-3xl text-2xl font-bold capitalize">{shoe?.manufacturer || "NeverBe"}</h1>
+                    <p className="md:text-2xl text-xl capitalize">{shoe?.name ||
                         <Skeleton animation="wave" sx={{background: "rgb(243 244 246)", width: '5rem'}}/>}</p>
                 </div>
-                <p className="text-sm text-gray-500 flex flex-wrap capitalize">{shoe.description ||
+                <p className="text-sm text-gray-500 flex flex-wrap capitalize">{shoe?.description ||
                     <Skeleton animation="wave"
                               sx={{background: "rgb(243 244 246)", width: '100%', height: '12rem'}}/>}</p>
-                <h4 className="md:text-lg capitalize font-medium">{shoe.color ||
+                <h4 className="md:text-lg capitalize font-medium">{shoe?.color ||
                     <Skeleton animation="wave" sx={{background: "rgb(243 244 246)", width: '5rem'}}/>}</h4>
                 <div className="mt-2 flex-col flex gap-1">
-                    <h3 className="md:text-2xl text-xl font-medium">රු {shoe.sellingPrice ||
+                    <h3 className="md:text-2xl text-xl font-medium">රු {shoe?.sellingPrice ||
                         <Skeleton animation="wave" sx={{background: "rgb(243 244 246)", width: '5rem'}}/>}</h3>
                     <p className="text-sm text-gray-500 capitalize font-medium">{available} available</p>
                 </div>
                 <div className="mt-1">
                     <h3 className="text-lg font-medium">Size</h3>
                     <div className="flex mt-1 flex-row gap-3 flex-wrap ">
-                        {shoe.sizes?.map((size: number, index: number) => (
+                        {shoe?.sizes?.map((size: number, index: number) => (
                             getAvailable(size, index)
                         ))}
                     </div>

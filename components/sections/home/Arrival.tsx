@@ -9,9 +9,9 @@ import {getArrivals} from "@/lib/features/arrivalsSlice/arrivalSlice";
 
 const Arrival = ({containerStyles}:{containerStyles:string}) => {
     const dispatch: AppDispatch = useDispatch();
-    const arrival:Shoe[] = useSelector((state: RootState) => state.arrivalsSlice.arrivals)
+    const arrival = useSelector((state: RootState) => state.arrivalsSlice.arrivals)
     useEffect(() => {
-        dispatch(getArrivals)
+        dispatch(getArrivals({l:20}))
     }, [dispatch])
     return (
         <div className={`mt-20 ${containerStyles}`}>
@@ -24,7 +24,7 @@ const Arrival = ({containerStyles}:{containerStyles:string}) => {
                         Don&apos;t be left out. Stay ahead of the trend
                     </p>
                 </div>
-                <div className="w-[25vw] h-[1.8px] bg-primary-100"/>
+                <div className="w-[60vw] h-[1.8px] bg-primary-100"/>
             </div>
             <div className="flex-col mt-8 justify-center items-center flex gap-10">
                 <div className="flex-row justify-center flex-wrap flex md:gap-10 gap-20 items-center">

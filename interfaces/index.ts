@@ -1,8 +1,10 @@
 interface Shoe{
     brand:string
+    discount:number
     createdAt:{
         seconds:number
     }
+    updatedAt:{}
     shoeId:string
     manufacturer:string
     name:string
@@ -19,7 +21,15 @@ interface Shoe{
 }
 
 interface Accessory{
+    createdAt:{
+        seconds:number
+    }
+    updatedAt:{
+        seconds:number
+    }
     accessoryId:string
+    discount:number
+    manufacturer:string
     name:string
     thumbnail:string
     rating:number
@@ -39,4 +49,9 @@ interface Review{
     createdAt:{
         seconds:number
     }
+}
+
+interface Slide {
+    slideId: string
+    slideUrl: string
 }

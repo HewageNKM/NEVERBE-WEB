@@ -6,7 +6,7 @@ import {useSelector} from "react-redux";
 import {RootState} from "@/lib/store";
 
 const Accessories = ({containerStyles}:{containerStyles:string}) => {
-    let accessories = useSelector((state:RootState) => state.accessoriesSlice.accessories);
+    const accessories = useSelector((state:RootState) => state.accessoriesSlice.accessories);
     return (
         <div className={`mt-10 ${containerStyles}`}>
             <div className={`mt-20 ${containerStyles}`}>
@@ -19,7 +19,7 @@ const Accessories = ({containerStyles}:{containerStyles:string}) => {
                             Get your favorite accessories here
                         </p>
                     </div>
-                    <div className="w-[22vw] h-[1.8px] bg-primary-100"/>
+                    <div className="w-[60vw] h-[1.8px] bg-primary-100"/>
                 </div>
             </div>
             <div className="flex-col mt-8 justify-center items-center flex gap-10">

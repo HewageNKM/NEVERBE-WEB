@@ -34,22 +34,22 @@ const ShoeCard = ({shoe, type}: {
                            height={2000}/>
                 </div>
                 <div className="mt-2 flex flex-col gap-1">
+                    <div className="flex text-lg flex-row justify-start gap-2 items-center">
+                        <Rating size={"medium"} readOnly value={shoe?.rating} precision={0.1}/>
+                        <p className="font-medium">{shoe.rating}</p>
+                    </div>
                     <div>
                         <h2 className="line-clamp-1 font-bold text-lg capitalize">{shoe.manufacturer}</h2>
                     </div>
                     <div>
                         <h2 className="line-clamp-1 text-slate-400 font-bold text-sm capitalize">{shoe.name}</h2>
                     </div>
-                    <div className="flex text-lg flex-row justify-start gap-2 items-center">
-                        <Rating size={"medium"} readOnly value={shoe?.rating} precision={0.1}/>
-                        <p className="font-medium">{shoe.rating}</p>
-                    </div>
                     <div className="flex flex-row flex-wrap justify-between items-center">
                         <div className="relative w-fit">
                             <div className="h-[1.1px] absolute top-1/2 left-0 w-[4.2rem] bg-black"/>
                             <div className="flex flex-row items-center justify-center gap-3">
-                                <h2 className="font-medium text-lg">රු {shoe.sellingPrice + 2000}</h2>
-                                <p className="bg-red-600 text-sm p-[2px] rounded text-white">{-((2000 / (shoe.sellingPrice + 2000)) * 100).toFixed(2)}</p>
+                                <h2 className="font-medium text-lg">රු {((shoe.discount+100)*shoe.sellingPrice/100)}</h2>
+                                <p className="bg-red-600 text-sm px-1 rounded text-white">-{shoe.discount}</p>
                             </div>
                         </div>
                         <div>

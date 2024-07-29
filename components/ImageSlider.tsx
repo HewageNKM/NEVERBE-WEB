@@ -13,11 +13,12 @@ import 'swiper/css/pagination';
 import {Autoplay, EffectFade, FreeMode, Navigation, Pagination} from 'swiper/modules';
 import Image from "next/image";
 
-export default function ImageSlider({images, imageStyles}: { images: object[], imageStyles: string }) {
+export default function ImageSlider({images, imageStyles}: { images: Slide[], imageStyles: string }) {
     return (
         <>
             <Swiper
                 style={{
+                    // @ts-ignore
                     '--swiper-navigation-color': '#97E13E',
                     '--swiper-pagination-color': '#97E13E',
                 }}
@@ -32,7 +33,7 @@ export default function ImageSlider({images, imageStyles}: { images: object[], i
                 effect={'fade'}
                 navigation={true}
                 modules={[Autoplay, FreeMode, Navigation, EffectFade, Pagination]}
-                className="w-full rounded"
+                className="w-full"
             >
                 {images.map((image, index) => (
                     <div key={index}>

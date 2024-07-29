@@ -18,7 +18,7 @@ const Home = () => {
     return (
         <main className="w-full overflow-clip relative h-full ">
             <Header containerStyles="px-4 py-4"/>
-            <Hero containerStyles="px-2 md:px-8 py-4"/>
+            <Hero containerStyles=""/>
             <Promotion containerStyles="px-4 py-4"/>
             <Popular containerStyles="px-4 py-4"/>
             <Arrival containerStyles="px-4 py-4"/>
