@@ -15,7 +15,7 @@ const ShoeCard = ({shoe, type}: {
 
     const setAvailableSizes = (size: number, index: number) => {
         const stocks = shoe.stocks;
-        return <motion.button initial={{opacity:0,y:"1vh"}} animate={{opacity:1,y:0}} transition={{duration:0.5}} key={index} onClick={() => {
+        return <motion.button initial={{opacity:0,y:"1vh"}} animate={{opacity:1,y:0}} transition={{duration:0.5}} exit={{opacity:0,y:'1vh'}} key={index} onClick={() => {
             setSelectedSize(size)
         }}
                        className={`capitalize p-2 rounded-md ${selectedSize === size ? 'bg-primary text-white' : 'bg-gray-200 text-black'}     ${stocks[size] <= 0 && 'opacity-50'}`}
@@ -66,7 +66,7 @@ const ShoeCard = ({shoe, type}: {
                                 setAvailableSizes(size, index)
                             ))}
                         </div>
-                        <motion.div initial={{opacity:0,y:"1vh"}} animate={{opacity:1,y:0}} transition={{duration:0.5}} className='w-full mt-2 justify-between items-center gap-2 flex-row flex'>
+                        <motion.div initial={{opacity:0,y:"1vh"}} animate={{opacity:1,y:0}} transition={{duration:0.5}} exit={{opacity:0, y:'1vh'}} className='w-full mt-2 justify-between items-center gap-2 flex-row flex'>
                             <Button onClick={() => {
                                 setAddToCart(false)
                                 setSelectedSize(0)
