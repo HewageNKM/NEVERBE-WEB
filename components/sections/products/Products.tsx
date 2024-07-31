@@ -6,7 +6,7 @@ const Products = ({containerStyles}:{containerStyles:string}) => {
     })
     return (
         <div className={`${containerStyles} mt-3`}>
-            <div  className="flex-wrap flex gap-5">
+            <div  className="flex-wrap flex gap-5 flex-row">
                 Products
             </div>
         </div>

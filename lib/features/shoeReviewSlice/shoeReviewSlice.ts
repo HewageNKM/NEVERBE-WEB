@@ -4,7 +4,7 @@ import {reviewsCollectionRef} from "@/firebase/Firebase";
 
 interface ShoeReview{
     reviewAddDialog:boolean,
-    reviews: object[]
+    reviews: Review[]
 }
 
 const initialState:ShoeReview = {
@@ -25,6 +25,7 @@ const shoeReviewSlice = createSlice({
     },
     extraReducers:(builder) => {
         builder.addCase(getReviews.fulfilled, (state,action) => {
+            // @ts-ignore
             state.reviews = action.payload
         })
     }

@@ -1,6 +1,6 @@
 import {initializeApp} from "firebase/app";
-import {collection, getDocs, getFirestore, limit, orderBy, query, where} from "firebase/firestore";
-import {createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword, signOut} from "firebase/auth";
+import {collection, getFirestore} from "firebase/firestore";
+import {getAuth} from "firebase/auth";
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 const firebaseConfig = {
@@ -21,3 +21,4 @@ export const usersCollectionRef = collection(db, 'users');
 export const slidersCollectionRef = collection(db, 'sliders');
 export const shoesCollectionRef = collection(db, 'shoes');
 export const reviewsCollectionRef = collection(db, 'reviews')
+export const accessoriesCollectionRef = collection(db, 'accessories');

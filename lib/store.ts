@@ -7,6 +7,7 @@ import shoeReviewSlice from "@/lib/features/shoeReviewSlice/shoeReviewSlice";
 import similarProductsSlice from "@/lib/features/similarProductsSlice/similarProductsSlice";
 import headerSlice from "@/lib/features/headerSlice/headerSlice";
 import promotionsSlice from "@/lib/features/promotionsSlice/promotionsSlice";
+import accessoriesSlice from "@/lib/features/accessoriesSlice/accessoriesSlice";
 
 export const store = configureStore({
     reducer: {
@@ -17,7 +18,8 @@ export const store = configureStore({
         shoeReviewSlice,
         similarProductsSlice,
         headerSlice,
-        promotionsSlice
+        promotionsSlice,
+        accessoriesSlice
     }
 });
 

@@ -3,7 +3,7 @@ import {getDocs, limit, orderBy, query} from "firebase/firestore";
 import {shoesCollectionRef} from "@/firebase/Firebase";
 
 interface ArrivalsSlice{
-    arrivals: object[]
+    arrivals: Shoe[]
 }
 
 const initialState:ArrivalsSlice = {
@@ -16,6 +16,7 @@ const arrivalsSlice = createSlice({
     reducers:{},
     extraReducers:(builder)=>{
         builder.addCase(getArrivals.fulfilled,(state,action)=>{
+            // @ts-ignore
             state.arrivals = action.payload
         })
     }
@@ -23,9 +24,9 @@ const arrivalsSlice = createSlice({
 
 export const getArrivals = createAsyncThunk(
     "arrivalsSlice/getArrivals",
-    async (arg, thunkAPI) => {
+    async ({l}:{l:number}, thunkAPI) => {
         try {
-            const newArr = query(shoesCollectionRef, orderBy('createdAt', 'desc'), limit(10));
+            const newArr = query(shoesCollectionRef, orderBy('createdAt', 'desc'), limit(l));
             const doc = await getDocs(newArr);
             return doc.docs.map(doc => doc.data());
         }catch (error:any){
