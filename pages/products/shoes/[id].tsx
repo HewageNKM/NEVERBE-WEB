@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 import {useRouter} from "next/router";
 import Header from "@/components/Header";
 import ShoeDetails from "@/components/sections/productDetails/ShoeDetails";
-import Footer from "@/components/sections/home/Footer";
+import Footer from "@/components/Footer";
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "@/lib/store";
 import {getShoeDetails} from "@/lib/features/shoeDetailsSlice/shoeDetailsSlice";
