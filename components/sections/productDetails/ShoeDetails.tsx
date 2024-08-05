@@ -10,6 +10,7 @@ import {
     setSelectedSize,
     setSelectedSlide
 } from "@/lib/features/shoeDetailsSlice/shoeDetailsSlice";
+import {BiMinus, BiPlus} from "react-icons/bi";
 
 const ShoeDetails = ({shoe,containerStyles}:{shoe:Shoe,containerStyles:string}) => {
     const dispatch: AppDispatch = useDispatch();
@@ -54,7 +55,7 @@ const ShoeDetails = ({shoe,containerStyles}:{shoe:Shoe,containerStyles:string}) 
             </div>
             <div className="flex flex-col gap-2 justify-start">
                 <div className="mt-20 md:mt-0">
-                    <h1 className="md:text-3xl text-2xl font-bold capitalize">{shoe?.manufacturer || "NeverBe"}</h1>
+                    <h1 className="md:text-3xl text-2xl font-bold capitalize">{shoe?.manufacturer || "No Data"}</h1>
                     <p className="md:text-2xl text-xl capitalize">{shoe?.name ||
                         <Skeleton animation="wave" sx={{background: "rgb(243 244 246)", width: '5rem'}}/>}</p>
                 </div>
@@ -82,13 +83,13 @@ const ShoeDetails = ({shoe,containerStyles}:{shoe:Shoe,containerStyles:string}) 
                         <button onClick={() => dispatch(setQuantity("b"))}
                                 className={`bg-gray-200 rounded-full p-2 ${!selectedSize ? 'opacity-50' : 'hover:bg-gray-300'}`}
                                 disabled={!selectedSize}>
-                            <MdArrowBackIos/>
+                            <BiMinus/>
                         </button>
                         <p className="font-medium text-xl">{qty}</p>
                         <button onClick={() => dispatch(setQuantity("f"))}
                                 className={`bg-gray-200 rounded-full p-2 ${!selectedSize ? 'opacity-50' : 'hover:bg-gray-300'}`}
                                 disabled={!selectedSize}>
-                            <MdArrowForwardIos/>
+                            <BiPlus/>
                         </button>
                     </div>
                     <div className="mt-5 flex justify-center items-center">

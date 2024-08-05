@@ -3,7 +3,7 @@ import Header from "@/components/Header";
 import Hero from "@/components/sections/home/Hero";
 import Popular from "@/components/sections/home/Popular";
 import Arrival from "@/components/sections/home/Arrival";
-import Footer from "@/components/sections/home/Footer";
+import Footer from "@/components/Footer";
 import Promotion from "@/components/sections/home/Promotion";
 import {useSelector} from "react-redux";
 import {RootState} from "@/lib/store";

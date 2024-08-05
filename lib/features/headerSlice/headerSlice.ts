@@ -1,13 +1,13 @@
 import {createSlice} from "@reduxjs/toolkit";
 
 interface Header {
-    showMenu: boolean;
+    showNav: boolean;
     showLoginDialog: boolean;
     showSearchDialog: boolean;
 }
 
 const initialState: Header = {
-    showMenu: false,
+    showNav: false,
     showLoginDialog: false,
     showSearchDialog: false
 }
@@ -18,7 +18,7 @@ const headerSlice = createSlice(
         initialState,
         reducers: {
             setShowMenu: (state, action) => {
-                state.showMenu = action.payload
+                state.showNav = action.payload
             },
             showLoginDialog: (state) => {
                 state.showLoginDialog = true
