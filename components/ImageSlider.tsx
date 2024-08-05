@@ -23,8 +23,9 @@ export default function ImageSlider({images, imageStyles}: { images: Slide[], im
                     '--swiper-pagination-color': '#97E13E',
                 }}
                 autoplay={{
-                    delay: 2000,
+                    delay: 6000,
                     disableOnInteraction: false,
+                    pauseOnMouseEnter: true,
                 }}
                 pagination={{
                     dynamicBullets: true,

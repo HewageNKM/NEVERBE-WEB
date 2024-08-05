@@ -11,3 +11,7 @@
     scrollbar-width: none;
     -ms-overflow-style: none;
 }
+
+.swiper-button-next, .swiper-button-prev {
+    color: black;
+}

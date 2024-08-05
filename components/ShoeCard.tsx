@@ -104,7 +104,7 @@ const ShoeCard = ({shoe, type}: {
                     <motion.div className="lg:block hidden" initial={{opacity: 0, y: "2vh"}}
                                 animate={{opacity: 1, y: 0}}>
                         <Button disabled={outOfStock} onClick={() => setAddToCart(true)}
-                                className={`bg-primary hover:bg-primary-100 text-white mt-2 p-1 rounded-md w-full text-center ${outOfStock && "opacity-50"}`}>Add
+                                className={`bg-primary font-medium hover:bg-primary-100 text-white mt-2 p-1 rounded-md w-full text-center ${outOfStock && "opacity-50"}`}>Add
                             to
                             Cart</Button>
 
@@ -112,7 +112,7 @@ const ShoeCard = ({shoe, type}: {
                 )}
             </AnimatePresence>
             {!addToCart && (<Button disabled={outOfStock} onClick={() => setAddToCart(true)}
-                                    className="bg-primary lg:hidden block hover:bg-primary-100 text-white mt-2 p-1 rounded-md w-full text-center">Add
+                                    className="bg-primary lg:hidden font-medium block hover:bg-primary-100 text-white mt-2 p-1 rounded-md w-full text-center">Add
                 to
                 Cart</Button>)}
             {type === "new" &&
