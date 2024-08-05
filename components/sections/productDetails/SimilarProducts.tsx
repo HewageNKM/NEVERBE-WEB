@@ -22,7 +22,7 @@ const SimilarProducts = ({shoe, containerStyles}: { shoe: Shoe, containerStyles:
                     )) : (<EmptyState title="Opps!" subTitle="No Similar Products"/>)}
                 </div>
                 <Button variant={"text"} color={"primary"}
-                        className="text-primary text-lg font-medium">
+                        className="text-primary mt-20 text-lg font-medium">
                     Load More
                 </Button>
             </div>
