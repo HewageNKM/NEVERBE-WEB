@@ -36,7 +36,7 @@ const ShoeDetails = ({shoe,containerStyles}:{shoe:Shoe,containerStyles:string}) 
     }
     return (
         <div
-            className={`w-full relative mt-20 lg:mt-12 flex flex-col md:grid md:grid-cols-2 justify-center lg:flex-row gap-10 lg:gap-20 ${containerStyles}`}>
+            className={`w-full relative mt-20 lg:mt-12 flex flex-col md:grid md:grid-cols-2 justify-center items-center lg:flex-row gap-10 lg:gap-20 ${containerStyles}`}>
             <div className="h-[60vh] md:h-[90vh] w-full">
                 {shoe?.thumbnail ? (<Image src={selectedSlide || shoe.thumbnail} width={2000} height={2000}
                                           className="w-full shadow rounded-sm bg-contain h-[60vh] md:h-[90vh]"

@@ -3,17 +3,24 @@ import Image from "next/image";
 import Link from "next/link";
 import {Button, Rating} from "@mui/material";
 import {AnimatePresence, motion} from "framer-motion";
+import {AppDispatch} from "@/lib/store";
+import {useDispatch} from "react-redux";
+import {addItemToCart} from "@/lib/features/cartSlice/cartSlice";
 
 const ShoeCard = ({shoe, type}: {
     shoe: Shoe,
     type?: string
 }) => {
+    const dispatch:AppDispatch = useDispatch();
     const [outOfStock, setOutOfStock] = useState(false);
     const [addToCart, setAddToCart] = useState(false);
     const [isMouseOver, setIsMouseOver] = useState(false);
     const [selectedSize, setSelectedSize] = useState<number>(0);
 
-
+    const addToCartHandler = () => {
+        dispatch(addItemToCart({item: shoe, quantity: 1, size: selectedSize}))
+        setAddToCart(false)
+    }
     const setAvailableSizes = (size: number, index: number) => {
         const stocks = shoe.stocks;
         return <motion.button initial={{opacity: 0, y: "1vh"}}
@@ -44,7 +51,7 @@ const ShoeCard = ({shoe, type}: {
              onMouseLeave={() => {
                  setIsMouseOver(false)
              }}
-             className={`flex cursor-pointer transition-all duration-500 relative p-2  flex-col w-[15rem] ${addToCart ? "h-[27.5rem]" : "h-[22rem]"}`}>
+             className={`flex cursor-pointer  transition-all duration-500 relative p-2  flex-col w-[15rem] ${addToCart ? "h-[27.5rem]" : "h-[22rem]"}`}>
             <Link href={`/products/shoes/${shoe.shoeId}`} target='_blank'>
                 <div>
                     <Image src={shoe.thumbnail} alt=""
@@ -94,8 +101,7 @@ const ShoeCard = ({shoe, type}: {
                                 setSelectedSize(0)
                                 setIsMouseOver(false)
                             }} className="bg-red-600 hover:bg-red-700 text-white w-[6rem]">Cancel</Button>
-                            <Button onClick={() => {
-                            }} variant="contained"
+                            <Button disabled={ selectedSize == 0 } onClick={()=>addToCartHandler()} variant="contained"
                                     className="bg-primary w-[6rem] hover:bg-primary-100 text-white">Continue</Button>
                         </motion.div>
                     </motion.div>

@@ -11,27 +11,28 @@ import {AnimatePresence} from "framer-motion";
 import LoginModel from "@/components/LoginModel";
 import SearchModel from "@/components/SearchModel";
 import Accessories from "@/components/sections/home/Accessories";
+import CartModal from "@/components/CartModal";
 
 const Home = () => {
-    const showLoginDialog = useSelector((state: RootState) => state.headerSlice.showLoginDialog);
-    const showSearchDialog = useSelector((state: RootState) => state.headerSlice.showSearchDialog);
+    const {showLoginDialog, showSearchDialog, showCartDialog} = useSelector((state: RootState) => state.headerSlice);
+
     return (
         <main className="w-full overflow-clip relative h-full ">
-            <Header containerStyles="px-4 py-4"/>
             <Hero containerStyles=""/>
             <Promotion containerStyles="px-4 py-4"/>
             <Popular containerStyles="px-4 py-4"/>
             <Arrival containerStyles="px-4 py-4"/>
             <Accessories containerStyles="px-4 py-4"/>
-            <Footer/>
+
             <AnimatePresence>
                 {showLoginDialog && (
                     <LoginModel/>
                 )}
-            </AnimatePresence>
-            <AnimatePresence>
                 {showSearchDialog && (
                     <SearchModel/>
+                )}
+                {showCartDialog && (
+                    <CartModal/>
                 )}
             </AnimatePresence>
         </main>

@@ -1,8 +1,6 @@
 import React, {useEffect} from 'react';
 import {useRouter} from "next/router";
-import Header from "@/components/Header";
 import ShoeDetails from "@/components/sections/productDetails/ShoeDetails";
-import Footer from "@/components/Footer";
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "@/lib/store";
 import {getShoeDetails} from "@/lib/features/shoeDetailsSlice/shoeDetailsSlice";
@@ -11,6 +9,7 @@ import SimilarProducts from "@/components/sections/productDetails/SimilarProduct
 import ReviewModel from "@/components/ReviewModel";
 import {AnimatePresence} from "framer-motion";
 import LoginModel from "@/components/LoginModel";
+import SearchModel from "@/components/SearchModel";
 
 const Id = () => {
     const dispatch: AppDispatch = useDispatch();
@@ -18,23 +17,25 @@ const Id = () => {
     const addReviewDialog = useSelector((state: RootState) => state.shoeReviewSlice.reviewAddDialog);
     const shoe = useSelector((state: RootState) => state.shoeDetailsSlice.shoeDetails);
     const showLoginDialog = useSelector((state: RootState) => state.headerSlice.showLoginDialog);
+    const showSearchDialog = useSelector((state: RootState) => state.headerSlice.showSearchDialog);
     useEffect(() => {
         dispatch(getShoeDetails(router.query.id as string));
     }, [router.query.id, dispatch]);
 
     return (
         <main className="w-full relative overflow-clip h-full">
-            <Header containerStyles='px-5 md:px-10 py-4'/>
             <ShoeDetails shoe={shoe} containerStyles='px-5 md:px-10 py-4'/>
             <ShoeReview shoe={shoe} containerStyles='px-5 md:px-10 py-4'/>
             <SimilarProducts shoe={shoe} containerStyles='px-5 md:px-10 py-4'/>
-            <Footer/>
             <AnimatePresence>
                 {addReviewDialog && (
                     <ReviewModel/>
                 )}
                 {showLoginDialog && (
                     <LoginModel/>
+                )}
+                {showSearchDialog && (
+                    <SearchModel/>
                 )}
             </AnimatePresence>
 

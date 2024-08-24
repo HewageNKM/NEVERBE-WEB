@@ -50,7 +50,11 @@ interface Review{
         seconds:number
     }
 }
-
+interface CartItem{
+    item:Shoe
+    quantity:number,
+    size:number
+}
 interface Slide {
     slideId: string
     slideUrl: string
