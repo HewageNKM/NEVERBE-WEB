@@ -18,8 +18,11 @@ const ShoeCard = ({shoe, type}: {
     const [selectedSize, setSelectedSize] = useState<number>(0);
 
     const addToCartHandler = () => {
+
         dispatch(addItemToCart({item: shoe, quantity: 1, size: selectedSize}))
         setAddToCart(false)
+        setSelectedSize(0)
+        setIsMouseOver(false)
     }
     const setAvailableSizes = (size: number, index: number) => {
         const stocks = shoe.stocks;

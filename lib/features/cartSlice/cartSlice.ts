@@ -12,18 +12,27 @@ const cartSlice = createSlice({
     name: "cartSlice",
     initialState,
     reducers: {
+        setCart: (state, action) => {
+            state.items = action.payload
+        },
         addItemToCart: (state, action) => {
-            state.items.push(action.payload)
+            const item = action.payload
+            const index = state.items.findIndex(cartItem => (cartItem.item.shoeId === item.item.shoeId && cartItem.size === item.size))
+            if (index === -1) {
+                state.items.push(item)
+            } else {
+                state.items[index].quantity += item.quantity
+                state.items = [...state.items]
+            }
+            window.localStorage.setItem("cart", JSON.stringify(state.items))
         },
         removeItemFromCart: (state, action) => {
-            state.items = state.items.filter(item => item.item.shoeId !== action.payload)
+            const item = action.payload
+            state.items = state.items.filter(cartItem => !(cartItem.item.shoeId == item.item.shoeId && cartItem.size == item.size))
+            window.localStorage.setItem("cart", JSON.stringify(state.items))
+
         },
         updateQuantityInCart: (state, action) => {
-            const index = state.items.findIndex(item => item.item.shoeId === action.payload.shoeId)
-            state.items[index].quantity = action.payload.quantity;
-            if (state.items[index].quantity <= 0) {
-                state.items = state.items.filter(item => item.item.shoeId !== action.payload.shoeId)
-            }
         }
     }
 });
@@ -32,5 +41,6 @@ export default cartSlice.reducer
 export const {
     addItemToCart,
     removeItemFromCart,
-    updateQuantityInCart
+    updateQuantityInCart,
+    setCart
 } = cartSlice.actions

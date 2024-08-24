@@ -6,17 +6,20 @@ import Backdrop from "@/components/Backdrop";
 import {AppDispatch, RootState} from "@/lib/store";
 import {useDispatch, useSelector} from "react-redux";
 import Image from "next/image";
+import {BiMinus, BiPlus} from "react-icons/bi";
+import {removeItemFromCart} from "@/lib/features/cartSlice/cartSlice";
 
 const CartModal = () => {
-    const dispatch: AppDispatch = useDispatch();
     const cart = useSelector((state: RootState) => state.cartSlice.items);
+    const dispatch:AppDispatch = useDispatch();
+
     return (
         <Backdrop containerStyles="w-[100%] z-50 fixed top-0 left-0 flex justify-end h-[100%] bg-opacity-70 bg-black">
             <motion.div className="bg-white relative w-full lg:w-[30vw] h-full z-50 p-5 rounded"
                         initial={{opacity: 0, x: '100vw'}} animate={{opacity: 1, x: '0'}}
                         transition={{type: "spring", damping: 28, stiffness: 200}} exit={{opacity: 0, x: '100vw'}}>
                 <h1 className="text-2xl font-bold">Cart</h1>
-                <div className="w-full lg:w-[30vw] mt-1 overflow-auto">
+                <div className="w-full lg:w-[28vw] mt-1 overflow-auto">
                     <table className="w-full lg:min-w-[28vw]">
                         <tbody>
                         <tr className="border">
@@ -25,17 +28,35 @@ const CartModal = () => {
                             <th>Quantity</th>
                         </tr>
                         {cart.map((item, index) => (
-                            <tr  key={index} className="capitalize text-sm font-semibold">
+                            <tr key={index} className="capitalize text-sm font-semibold">
                                 <td className="border p-2 flex gap-1 items-center flex-row">
                                     <div>
-                                        <Image src={item.item.thumbnail} alt={index.toString()} width={100} height={100} className="w-10 rounded h-10"/>
+                                        <Image src={item.item.thumbnail} alt={index.toString()} width={100} height={100}
+                                               className="w-10 rounded h-10"/>
                                     </div>
                                     <div>
-                                        {item.item.name +", size "+item.size}
+                                        {item.item.name + ", size " + item.size}
                                     </div>
                                 </td>
-                                <td className="border ">රු {item.item.sellingPrice}</td>
-                                <td className="border ">{item.quantity}</td>
+                                <td className="border">රු{item.item.sellingPrice}</td>
+                                <td className="border">
+                                    <div className="flex flex-row justify-center gap-1">
+                                        <button className="bg-slate-200 rounded-full p-1">
+                                            <BiPlus/>
+                                        </button>
+                                        <p>
+                                            {item.quantity}
+                                        </p>
+                                        <button className="bg-slate-200 rounded-full p-1">
+                                            <BiMinus/>
+                                        </button>
+                                    </div>
+                                    <div className="flex mt-2 w-full justify-center items-center">
+                                        <button className="text-[.5rem] px-1 rounded-lg text-white bg-red-500 font-bold" onClick={() => dispatch(removeItemFromCart(item))}>
+                                            Remove
+                                        </button>
+                                    </div>
+                                </td>
                             </tr>
                         ))}
                         </tbody>

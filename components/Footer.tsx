@@ -4,7 +4,7 @@ import Link from "next/link";
 const Footer = () => {
     return (
         <footer className="bg-black w-full bottom-0 mt-20">
-            <div className="text-white flex-row h-[2.7rem] p-2 flex gap-3">
+            <div className="text-white flex-row p-2 flex gap-3">
                 <p>
                     © {new Date().getFullYear().toString()} Never Be All Right Reserved.
                 </p>

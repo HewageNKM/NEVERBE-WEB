@@ -43,14 +43,6 @@ export const filterOptions = [
         value:"all"
     },
     {
-        title:"New Arrivals",
-        value:"na"
-    },
-    {
-        title:"Popular",
-        value:"p"
-    },
-    {
         title:"Low to High",
         value:"lh"
     },

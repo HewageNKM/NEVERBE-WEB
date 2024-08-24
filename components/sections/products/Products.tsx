@@ -5,7 +5,12 @@ const Products = ({containerStyles}:{containerStyles:string}) => {
 
     })
     return (
-        <div className={`${containerStyles} mt-3 w-full h-full`}>
+        <div className={`${containerStyles} relative  mt-3 w-full h-full  flex flex-row justify-between`}>
+            <div className="">
+                <h1 className="text-2xl font-semibold">Filter</h1>
+                <div>
+                </div>
+            </div>
             <div  className="flex-wrap flex gap-5 flex-row">
                 Products
             </div>

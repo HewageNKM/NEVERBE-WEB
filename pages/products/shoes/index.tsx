@@ -13,7 +13,7 @@ import CartModal from "@/components/CartModal";
 const Index = () => {
     const {showLoginDialog, showSearchDialog, showCartDialog} = useSelector((state: RootState) => state.headerSlice);
     return (
-        <div className="w-full relative justify-between flex flex-col overflow-clip min-h-screen">
+        <div className="relative justify-between flex flex-col overflow-clip">
             <ProductHero containerStyles='px-5 md:px-10 py-4'/>
             <Products containerStyles='px-5 md:px-10 py-4'/>
             <AnimatePresence>
