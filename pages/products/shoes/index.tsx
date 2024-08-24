@@ -1,8 +1,5 @@
 import React, {useEffect} from 'react';
-import Footer from "@/components/Footer";
 import Products from "@/components/sections/products/Products";
-import Filters from "@/components/sections/products/Filters";
-import Header from "@/components/Header";
 import LoginModel from "@/components/LoginModel";
 import {AnimatePresence} from "framer-motion";
 import {useDispatch, useSelector} from "react-redux";
