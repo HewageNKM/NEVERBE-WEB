@@ -99,31 +99,31 @@ const ShoeCard = ({shoe, type}: {
                         <motion.div initial={{opacity: 0, y: "1vh"}} animate={{opacity: 1, y: 0}}
                                     transition={{duration: 0.5}} exit={{opacity: 0, y: '1vh'}}
                                     className='w-full mt-2 justify-between items-center gap-2 flex-row flex'>
-                            <Button onClick={() => {
+                            <button onClick={() => {
                                 setAddToCart(false)
                                 setSelectedSize(0)
                                 setIsMouseOver(false)
-                            }} className="bg-red-600 hover:bg-red-700 text-white w-[6rem]">Cancel</Button>
-                            <Button disabled={ selectedSize == 0 } onClick={()=>addToCartHandler()} variant="contained"
-                                    className="bg-primary w-[6rem] hover:bg-primary-100 text-white">Continue</Button>
+                            }} className="bg-red-600 hover:bg-red-700 text-white rounded-lg p-1 w-[6rem]">Cancel</button>
+                            <button disabled={ selectedSize == 0 } onClick={()=>addToCartHandler()}
+                                    className="bg-primary w-[6rem] hover:bg-primary-100 rounded-lg  p-1 text-white">Continue</button>
                         </motion.div>
                     </motion.div>
                 )}
                 {(isMouseOver && !addToCart) && (
                     <motion.div className="lg:block hidden" initial={{opacity: 0, y: "2vh"}}
                                 animate={{opacity: 1, y: 0}}>
-                        <Button disabled={outOfStock} onClick={() => setAddToCart(true)}
+                        <button disabled={outOfStock} onClick={() => setAddToCart(true)}
                                 className={`bg-primary font-medium hover:bg-primary-100 text-white mt-2 p-1 rounded-md w-full text-center ${outOfStock && "opacity-50"}`}>Add
                             to
-                            Cart</Button>
+                            Cart</button>
 
                     </motion.div>
                 )}
             </AnimatePresence>
-            {!addToCart && (<Button disabled={outOfStock} onClick={() => setAddToCart(true)}
+            {!addToCart && (<button disabled={outOfStock} onClick={() => setAddToCart(true)}
                                     className="bg-primary lg:hidden font-medium block hover:bg-primary-100 text-white mt-2 p-1 rounded-md w-full text-center">Add
                 to
-                Cart</Button>)}
+                Cart</button>)}
             {type === "new" &&
                 <div
                     className="bg-green-400 font-light absolute text-white top-1 left-1 text-sm w-fit p-1">New</div>}

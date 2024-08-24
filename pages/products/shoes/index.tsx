@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import Footer from "@/components/Footer";
-import ProductHero from "@/components/sections/products/ProductHero";
 import Products from "@/components/sections/products/Products";
+import Filters from "@/components/sections/products/Filters";
 import Header from "@/components/Header";
 import LoginModel from "@/components/LoginModel";
 import {AnimatePresence} from "framer-motion";
@@ -22,8 +22,7 @@ const Index = () => {
     });
 
     return (
-        <div className="relative justify-between flex flex-col overflow-clip">
-            <ProductHero containerStyles='px-5 md:px-10 py-4'/>
+        <div className="relative justify-between flex flex-col min-h-screen overflow-clip">
             <Products containerStyles='px-5 md:px-10 py-4'/>
             <AnimatePresence>
                 {showLoginDialog && (
