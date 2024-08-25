@@ -50,8 +50,26 @@ interface Review{
         seconds:number
     }
 }
-
+interface CartItem{
+    item:Shoe
+    quantity:number,
+    size:number
+}
 interface Slide {
     slideId: string
     slideUrl: string
+}
+
+interface Shop{
+    address:string
+    contact:{
+        email:string
+        telephone:string
+        mobile:string
+    }
+    socials:{
+        facebook:string
+        instagram:string
+        tiktok:string
+    }
 }

@@ -8,6 +8,9 @@ import similarProductsSlice from "@/lib/features/similarProductsSlice/similarPro
 import headerSlice from "@/lib/features/headerSlice/headerSlice";
 import promotionsSlice from "@/lib/features/promotionsSlice/promotionsSlice";
 import accessoriesSlice from "@/lib/features/accessoriesSlice/accessoriesSlice";
+import cartSlice from "@/lib/features/cartSlice/cartSlice";
+import productSlice from "@/lib/features/productSlice/productSlice";
+import footerSlice from "@/lib/features/footerSlice/footerSlice";
 
 export const store = configureStore({
     reducer: {
@@ -19,7 +22,10 @@ export const store = configureStore({
         similarProductsSlice,
         headerSlice,
         promotionsSlice,
-        accessoriesSlice
+        accessoriesSlice,
+        cartSlice,
+        productSlice,
+        footerSlice
     }
 });
 

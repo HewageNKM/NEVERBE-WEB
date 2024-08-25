@@ -4,12 +4,14 @@ interface Header {
     showNav: boolean;
     showLoginDialog: boolean;
     showSearchDialog: boolean;
+    showCartDialog: boolean;
 }
 
 const initialState: Header = {
     showNav: false,
     showLoginDialog: false,
-    showSearchDialog: false
+    showSearchDialog: false,
+    showCartDialog: false
 }
 
 const headerSlice = createSlice(
@@ -31,10 +33,24 @@ const headerSlice = createSlice(
             },
             closeSearchDialog: (state) => {
                 state.showSearchDialog = false
+            },
+            showCartDialog: (state) => {
+                state.showCartDialog = true
+            },
+            closeCartDialog: (state) => {
+                state.showCartDialog = false
             }
         }
     }
 )
 
 export default headerSlice.reducer
-export const {setShowMenu,closeLoginDialog,showSearchDialog,closeSearchDialog,showLoginDialog} = headerSlice.actions
+export const {
+    setShowMenu,
+    closeLoginDialog,
+    showSearchDialog,
+    closeSearchDialog,
+    showLoginDialog,
+    showCartDialog,
+    closeCartDialog
+} = headerSlice.actions

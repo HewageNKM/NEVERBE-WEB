@@ -14,12 +14,12 @@ const SimilarProducts = ({shoe, containerStyles}: { shoe: Shoe, containerStyles:
     }, [dispatch, shoe?.for])
     return (
         <div className={`mt-20 w-full ${containerStyles}`}>
-            <h1 className="text-5xl font-bold">Similar Products</h1>
+            <h1 className="text-5xl font-bold">Similar Filters</h1>
             <div className="flex flex-col gap-5 justify-center mt-10 items-center">
                 <div className="flex-row justify-center flex-wrap flex gap-10 items-center">
                     {similarProducts?.length > 0 ? similarProducts.map((shoe, index) => (
                         <ShoeCard key={index} shoe={shoe}/>
-                    )) : (<EmptyState title="Opps!" subTitle="No Similar Products"/>)}
+                    )) : (<EmptyState title="Opps!" subTitle="No Similar Filters"/>)}
                 </div>
                 <Button variant={"text"} color={"primary"}
                         className="text-primary mt-20 text-lg font-medium">

@@ -3,17 +3,27 @@ import Image from "next/image";
 import Link from "next/link";
 import {Button, Rating} from "@mui/material";
 import {AnimatePresence, motion} from "framer-motion";
+import {AppDispatch} from "@/lib/store";
+import {useDispatch} from "react-redux";
+import {addItemToCart} from "@/lib/features/cartSlice/cartSlice";
 
 const ShoeCard = ({shoe, type}: {
     shoe: Shoe,
     type?: string
 }) => {
+    const dispatch:AppDispatch = useDispatch();
     const [outOfStock, setOutOfStock] = useState(false);
     const [addToCart, setAddToCart] = useState(false);
     const [isMouseOver, setIsMouseOver] = useState(false);
     const [selectedSize, setSelectedSize] = useState<number>(0);
 
+    const addToCartHandler = () => {
 
+        dispatch(addItemToCart({item: shoe, quantity: 1, size: selectedSize}))
+        setAddToCart(false)
+        setSelectedSize(0)
+        setIsMouseOver(false)
+    }
     const setAvailableSizes = (size: number, index: number) => {
         const stocks = shoe.stocks;
         return <motion.button initial={{opacity: 0, y: "1vh"}}
@@ -44,7 +54,7 @@ const ShoeCard = ({shoe, type}: {
              onMouseLeave={() => {
                  setIsMouseOver(false)
              }}
-             className={`flex cursor-pointer transition-all duration-500 relative p-2  flex-col w-[15rem] ${addToCart ? "h-[27.5rem]" : "h-[22rem]"}`}>
+             className={`flex cursor-pointer  transition-all duration-500 relative p-2  flex-col w-[15rem] ${addToCart ? "h-[27.5rem]" : "h-[22rem]"}`}>
             <Link href={`/products/shoes/${shoe.shoeId}`} target='_blank'>
                 <div>
                     <Image src={shoe.thumbnail} alt=""
@@ -89,32 +99,31 @@ const ShoeCard = ({shoe, type}: {
                         <motion.div initial={{opacity: 0, y: "1vh"}} animate={{opacity: 1, y: 0}}
                                     transition={{duration: 0.5}} exit={{opacity: 0, y: '1vh'}}
                                     className='w-full mt-2 justify-between items-center gap-2 flex-row flex'>
-                            <Button onClick={() => {
+                            <button onClick={() => {
                                 setAddToCart(false)
                                 setSelectedSize(0)
                                 setIsMouseOver(false)
-                            }} className="bg-red-600 hover:bg-red-700 text-white w-[6rem]">Cancel</Button>
-                            <Button onClick={() => {
-                            }} variant="contained"
-                                    className="bg-primary w-[6rem] hover:bg-primary-100 text-white">Continue</Button>
+                            }} className="bg-red-600 hover:bg-red-700 text-white rounded-lg p-1 w-[6rem]">Cancel</button>
+                            <button disabled={ selectedSize == 0 } onClick={()=>addToCartHandler()}
+                                    className="bg-primary w-[6rem] hover:bg-primary-100 rounded-lg  p-1 text-white">Continue</button>
                         </motion.div>
                     </motion.div>
                 )}
                 {(isMouseOver && !addToCart) && (
                     <motion.div className="lg:block hidden" initial={{opacity: 0, y: "2vh"}}
                                 animate={{opacity: 1, y: 0}}>
-                        <Button disabled={outOfStock} onClick={() => setAddToCart(true)}
+                        <button disabled={outOfStock} onClick={() => setAddToCart(true)}
                                 className={`bg-primary font-medium hover:bg-primary-100 text-white mt-2 p-1 rounded-md w-full text-center ${outOfStock && "opacity-50"}`}>Add
                             to
-                            Cart</Button>
+                            Cart</button>
 
                     </motion.div>
                 )}
             </AnimatePresence>
-            {!addToCart && (<Button disabled={outOfStock} onClick={() => setAddToCart(true)}
+            {!addToCart && (<button disabled={outOfStock} onClick={() => setAddToCart(true)}
                                     className="bg-primary lg:hidden font-medium block hover:bg-primary-100 text-white mt-2 p-1 rounded-md w-full text-center">Add
                 to
-                Cart</Button>)}
+                Cart</button>)}
             {type === "new" &&
                 <div
                     className="bg-green-400 font-light absolute text-white top-1 left-1 text-sm w-fit p-1">New</div>}

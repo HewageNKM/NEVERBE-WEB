@@ -43,14 +43,6 @@ export const filterOptions = [
         value:"all"
     },
     {
-        title:"New Arrivals",
-        value:"na"
-    },
-    {
-        title:"Popular",
-        value:"p"
-    },
-    {
         title:"Low to High",
         value:"lh"
     },
@@ -62,4 +54,9 @@ export const filterOptions = [
         title:"Rating",
         value:"r"
     }
+]
+
+
+export const sizes = [
+    35,36,37,38,39,40,41,42,43,44,45,46,47,48
 ]
