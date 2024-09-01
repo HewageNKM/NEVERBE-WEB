@@ -1,5 +1,5 @@
 'use client';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import BorderButton from "@/components/BorderButton";
 import ImageSlider from "@/components/ImageSlider";
 import {Skeleton} from "@mui/material";
@@ -10,11 +10,11 @@ import Image from "next/image";
 import {authentic, payment, shipping} from "@/assets";
 import Link from "next/link";
 
-const Hero = ({containerStyles}:{containerStyles:string}) => {
-    const dispatch:AppDispatch = useDispatch();
-    const {sliders, isLoading} = useSelector((state:RootState)  => state.sliderSlice)
+const Hero = ({containerStyles}: { containerStyles: string }) => {
+    const dispatch: AppDispatch = useDispatch();
+    const {sliders, isLoading} = useSelector((state: RootState) => state.sliderSlice)
     useEffect(() => {
-       dispatch(getSliders())
+        dispatch(getSliders())
     }, [dispatch])
     return (
         <div className={`relative mt-16 flex flex-col lg:mt-2 ${containerStyles}`}>
@@ -23,7 +23,8 @@ const Hero = ({containerStyles}:{containerStyles:string}) => {
                 <div className="relative w-[100vw]">
                     <ImageSlider images={sliders} imageStyles="w-[100vw] h-[45vh] lg:h-[85vh] bg-cover"/>
                     <div className="absolute flex-col gap-7 flex z-30 bottom-10 left-10 lg:bottom-16 lg:left-16">
-                        <h2 className="text-sm line-clamp-2 lg:text-3xl lg:line-clamp-1 font-semibold text-white">Wear It, Like You
+                        <h2 className="text-sm line-clamp-2 lg:text-3xl lg:line-clamp-1 font-semibold text-white">Wear
+                            It, Like You
                             Never Before</h2>
                         <Link href="/products">
                             <BorderButton

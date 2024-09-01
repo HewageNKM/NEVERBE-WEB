@@ -3,12 +3,12 @@ import {getDocs, query, where} from "firebase/firestore";
 import {reviewsCollectionRef} from "@/firebase/Firebase";
 
 interface ShoeReview{
-    reviewAddDialog:boolean,
+    showReviewAddDialog:boolean,
     reviews: Review[]
 }
 
 const initialState:ShoeReview = {
-    reviewAddDialog:false,
+    showReviewAddDialog:false,
     reviews:[]
 }
 
@@ -17,10 +17,10 @@ const shoeReviewSlice = createSlice({
     initialState,
     reducers:{
         openReviewDialog:(state) => {
-            state.reviewAddDialog = true
+            state.showReviewAddDialog = true
         },
         closeReviewDialog:(state) => {
-            state.reviewAddDialog = false
+            state.showReviewAddDialog = false
         }
     },
     extraReducers:(builder) => {

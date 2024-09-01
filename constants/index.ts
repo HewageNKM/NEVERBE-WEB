@@ -60,11 +60,11 @@ export const shoeSizes = [
 export const allSizes = [
     35,36,37,38,39,40,41,42,43,44,45,46,47,48,
     "100ml","200ml","250ml","500ml","750ml","1L",
-    "S","M","L","XL","XXL","XXXL"
+    "S","M","L","XL"
 ]
 export const accSizes = [
     "100ml","200ml","250ml","500ml","750ml","1L",
-    "S","M","L","XL","XXL","XXXL"
+    "S","M","L","XL"
 ]
 export const socialMedia = [
     {

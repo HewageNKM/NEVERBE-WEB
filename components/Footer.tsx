@@ -19,6 +19,7 @@ const Footer = () => {
     useEffect(() => {
         dispatch(getShops())
     }, [dispatch]);
+
     return (
         <footer className="bg-primary-100 relative flex flex-col justify-between px-8 pt-4 w-full mt-20">
             <div className="flex flex-row flex-wrap md:gap-0 gap-5 justify-between">

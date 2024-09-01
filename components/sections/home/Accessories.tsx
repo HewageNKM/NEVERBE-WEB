@@ -1,12 +1,11 @@
 import React from 'react';
-import ShoeCard from "@/components/ShoeCard";
 import EmptyState from "@/components/EmptyState";
 import Button from "@/components/Button";
 import {useSelector} from "react-redux";
 import {RootState} from "@/lib/store";
 
-const Accessories = ({containerStyles}:{containerStyles:string}) => {
-    const accessories = useSelector((state:RootState) => state.accessoriesSlice.accessories);
+const Accessories = ({containerStyles}: { containerStyles: string }) => {
+    const accessories = useSelector((state: RootState) => state.accessoriesSlice.accessories);
     return (
         <div className={`mt-10 ${containerStyles}`}>
             <div className={`mt-20 ${containerStyles}`}>

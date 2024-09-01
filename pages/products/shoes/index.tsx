@@ -1,39 +1,25 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import Products from "@/components/sections/products/Products";
-import LoginModel from "@/components/LoginModel";
 import {AnimatePresence} from "framer-motion";
-import {useDispatch, useSelector} from "react-redux";
-import {AppDispatch, RootState} from "@/lib/store";
-import SearchModel from "@/components/SearchModel";
-import CartModal from "@/components/CartModal";
-import {setCart} from "@/lib/features/cartSlice/cartSlice";
+import {useSelector} from "react-redux";
+import {RootState} from "@/lib/store";
+import Hero from "@/components/sections/products/Hero";
+import Filters from "@/components/Filters";
 
 const Index = () => {
-    const {showLoginDialog, showSearchDialog, showCartDialog} = useSelector((state: RootState) => state.headerSlice);
-
-    const dispatch: AppDispatch = useDispatch();
-
-    useEffect(() => {
-        const cart = window.localStorage.getItem("cart");
-        dispatch(setCart(cart ? JSON.parse(cart) : []))
-    });
+    const {showFilter} = useSelector((state: RootState) => state.filterSlice);
 
     return (
         <div className="relative justify-between flex flex-col min-h-screen overflow-clip">
-            <Products containerStyles='px-5 md:px-10 py-4' type="shoe"/>
+            <Hero containerStyles="px-8 mt-2"/>
+            <Products containerStyles="px-8 mt-10"/>
             <AnimatePresence>
-                {showLoginDialog && (
-                    <LoginModel/>
-                )}
-                {showSearchDialog && (
-                    <SearchModel/>
-                )}
-                {showCartDialog && (
-                    <CartModal/>
+                {showFilter && (
+                    <Filters containerStyles="" type="shoe"/>
                 )}
             </AnimatePresence>
         </div>
     );
-};
+}
 
 export default Index;
