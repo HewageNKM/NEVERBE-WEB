@@ -68,8 +68,6 @@ const ShoeCard = ({shoe, type}: {
                     </div>
                     <div>
                         <h2 className="line-clamp-1 font-bold text-lg capitalize">{shoe.manufacturer}</h2>
-                    </div>
-                    <div>
                         <h2 className="line-clamp-1 text-slate-400 font-bold text-sm capitalize">{shoe.name}</h2>
                     </div>
                     <div className="flex flex-row flex-wrap justify-between items-center">

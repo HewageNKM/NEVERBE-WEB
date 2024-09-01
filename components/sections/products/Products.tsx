@@ -1,14 +1,16 @@
 import React, {useEffect} from 'react';
 import {AiFillFilter} from "react-icons/ai";
-import {filterOptions, menu, sizes} from "@/constants";
+import {filterOptions, menu, shoeSizes} from "@/constants";
 import ShoeCard from "@/components/ShoeCard";
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "@/lib/store";
 import {getProducts} from "@/lib/features/productSlice/productSlice";
 import {FaArrowDown, FaArrowUp} from "react-icons/fa";
 import Filters from "@/components/sections/products/Filters";
+import {CiFilter} from "react-icons/ci";
+import {IoFilter} from "react-icons/io5";
 
-const Products = ({containerStyles}: { containerStyles: string }) => {
+const Products = ({containerStyles, type}: { containerStyles: string, type:string}) => {
     const products = useSelector((state:RootState) => state.productSlice.products);
     const dispatch:AppDispatch = useDispatch();
 
@@ -16,13 +18,18 @@ const Products = ({containerStyles}: { containerStyles: string }) => {
         dispatch(getProducts());
     }, [dispatch]);
     return (
-        <div className={`${containerStyles} mt-2 w-full flex-row flex gap-5`}>
-            <div className="flex flex-col gap-5">
+        <div className={`${containerStyles} mt-2 w-full flex-row flex-wrap flex gap-5`}>
+            <div className="flex w-full flex-col gap-5">
                 <div className="w-full">
                     <h1 className="text-4xl font-bold">Products</h1>
                     <h2 className="text-sm capitalize font-light">The best place to find the best products</h2>
                 </div>
-                <div className="w-full flex justify-start items-center">
+                <div className="w-full flex items-center justify-between">
+                    <div>
+                        <button>
+                            <IoFilter size={30} className="text-primary"/>
+                        </button>
+                    </div>
                     <label className="flex flex-row gap-2 justify-center items-center">
                         <div className="flex justify-center w-full items-center gap-2">
                             <AiFillFilter size={25} className="text-primary"/>
@@ -37,10 +44,9 @@ const Products = ({containerStyles}: { containerStyles: string }) => {
                         </select>
                     </label>
                 </div>
-                <Filters  containerStyles=""/>
             </div>
             <div className="flex w-full justify-center">
-                <div className="flex-wrap flex pb-20 md:gap-10 gap-28 w-full min-h-screen justify-center flex-row">
+                <div className="flex-wrap flex pb-20 lg:gap-20 gap-28 w-full min-h-screen justify-center flex-row">
                     {products.map((product, index) => (
                         <ShoeCard shoe={product} key={index}/>
                     ))}

@@ -25,7 +25,7 @@ const Hero = ({containerStyles}:{containerStyles:string}) => {
                     <div className="absolute flex-col gap-7 flex z-30 bottom-10 left-10 lg:bottom-16 lg:left-16">
                         <h2 className="text-sm line-clamp-2 lg:text-3xl lg:line-clamp-1 font-semibold text-white">Wear It, Like You
                             Never Before</h2>
-                        <Link href="/products/shoes">
+                        <Link href="/products">
                             <BorderButton
                                 buttonStyles="border-[1.4px] absolute -top-1.5 -left-1.5 p-1 w-[8rem] h-[2.4rem] text-center border-white lg:text-xl text-sm text-white hover:text-black hover:bg-primary"
                                 title="Shop Now" imageUrl=""

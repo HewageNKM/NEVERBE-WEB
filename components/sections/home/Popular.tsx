@@ -27,7 +27,7 @@ const Popular = ({containerStyles}: { containerStyles: string }) => {
                 <div className="w-[60vw] h-[1.8px] bg-primary-100"/>
             </div>
             <div className="flex-col mt-8 justify-center items-center flex gap-10">
-                <div className="flex-row justify-center flex-wrap flex md:gap-10 gap-28 items-center">
+                <div className="flex-row justify-center flex-wrap lg:gap-20 flex gap-28 items-center">
                     {popular.length > 0 ? popular.map((shoe, index) => (
                         <ShoeCard key={index} shoe={shoe} type="popular"/>
                     )) : (<EmptyState title="Opps!" subTitle="No Popular"/>)}

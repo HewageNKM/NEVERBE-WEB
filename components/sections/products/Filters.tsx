@@ -1,8 +1,8 @@
 import React from 'react';
-import {menu, sizes} from "@/constants";
+import {accSizes, allSizes, menu, shoeSizes} from "@/constants";
 import {FaArrowDown, FaArrowUp} from "react-icons/fa";
 
-const Filters = ({containerStyles}: { containerStyles: string }) => {
+const Filters = ({containerStyles,type}: { containerStyles: string,type:string }) => {
 
     const [expandedSizes, setExpandedSizes] = React.useState(false);
     const [expandedBrands, setExpandedBrands] = React.useState(false);
@@ -32,12 +32,30 @@ const Filters = ({containerStyles}: { containerStyles: string }) => {
                                 </button>
                             </div>
                             <ul className="mt-2">
-                                {expandedSizes && sizes.map((size, index) => (
+                                {type === 'all' && expandedSizes && allSizes.map((size, index) => (
+                                    <li key={index} className="flex-row flex gap-1">
+                                        <input type="checkbox" name="size" id={size.toString()}/>
+                                        <label className="font-medium">{size}</label>
+                                    </li>
+                                ))}
+                                {type === 'shoe' && expandedSizes && shoeSizes.map((size, index) => (
+                                    <li key={index} className="flex-row flex gap-1">
+                                        <input type="checkbox" name="size" id={size.toString()}/>
+                                        <label className="font-medium">{size}</label>
+                                    </li>
+                                ))}
+                                {type == "acc" && expandedSizes && accSizes.map((size, index) => (
+                                    <li key={index} className="flex-row flex gap-1">
+                                        <input type="checkbox" name="size" id={size.toString()}/>
+                                        <label className="font-medium">{size}</label>
+                                    </li>
+                                ))}
+                                {/*{expandedSizes && shoeSizes.map((size, index) => (
                                     <li key={index} className="flex-row flex gap-1">
                                         <input type="checkbox" name="size" id={size.toString()}/>
                                         <label className="font-medium">{"Size " + size}</label>
                                     </li>
-                                ))}
+                                ))}*/}
                             </ul>
                         </div>
                         <div>

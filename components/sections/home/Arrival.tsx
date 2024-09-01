@@ -27,7 +27,7 @@ const Arrival = ({containerStyles}:{containerStyles:string}) => {
                 <div className="w-[60vw] h-[1.8px] bg-primary-100"/>
             </div>
             <div className="flex-col mt-8 justify-center items-center flex gap-10">
-                <div className="flex-row justify-center flex-wrap flex md:gap-10 gap-28 items-center">
+                <div className="flex-row justify-center flex-wrap flex lg:gap-20 gap-28 items-center">
                     {arrival.length > 0 ? arrival.map((shoe, index) => (
                         <ShoeCard key={index} shoe={shoe} type="new"/>
                     )) : (<EmptyState title="Opps!" subTitle="No New Arrivals"/>)}

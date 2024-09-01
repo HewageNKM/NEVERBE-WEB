@@ -36,7 +36,6 @@ export const  menu = [
         url:""
     },
 ]
-
 export const filterOptions = [
     {
         title:"All",
@@ -55,8 +54,57 @@ export const filterOptions = [
         value:"r"
     }
 ]
-
-
-export const sizes = [
+export const shoeSizes = [
     35,36,37,38,39,40,41,42,43,44,45,46,47,48
+]
+export const allSizes = [
+    35,36,37,38,39,40,41,42,43,44,45,46,47,48,
+    "100ml","200ml","250ml","500ml","750ml","1L",
+    "S","M","L","XL","XXL","XXXL"
+]
+export const accSizes = [
+    "100ml","200ml","250ml","500ml","750ml","1L",
+    "S","M","L","XL","XXL","XXXL"
+]
+export const socialMedia = [
+    {
+        title:"neverbe196",
+        icon:"FaWhatsapp",
+        url:""},
+    {
+        title:"neverbe196",
+        icon:"FaInstagram",
+        url:""},
+    {
+        title:"neverbe196",
+        icon:"FaFacebook",
+        url:""
+    },
+    {
+        title:"neverbe196",
+        icon:"FaTiktok",
+        url:""
+    }
+]
+export  const  resources = [
+    {
+        title:"Shop",
+        url:"/"
+    },
+    {
+        title:"About Us",
+        url:""
+    },
+    {
+        title:"Track Orders",
+        url:""
+    },
+    {
+        title:"Privacy Policy",
+        url:""
+    },
+    {
+        title:"Terms & Conditions",
+        url:""
+    }
 ]
