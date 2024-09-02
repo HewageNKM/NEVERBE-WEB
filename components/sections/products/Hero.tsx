@@ -28,7 +28,7 @@ const Hero = ({containerStyles}:{containerStyles:string}) => {
                     </div>
                     <select className="p-1 w-fit text-primary font-medium border-2 border-primary rounded-md"
                             defaultValue="all"
-                            onChange={(event) => {
+                            onChange={() => {
                             }}>
                         {filterOptions.map((filter, index) => (
                             <option key={index} className="text-primary font-bold"

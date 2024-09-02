@@ -1,3 +1,4 @@
+import loading from "./loading.json";
 export const  menu = [
     {
         title:"Nike",
@@ -108,3 +109,4 @@ export  const  resources = [
         url:""
     }
 ]
+export {loading}

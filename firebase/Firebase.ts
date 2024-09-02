@@ -23,3 +23,4 @@ export const slidersCollectionRef = collection(db, 'sliders');
 export const shoesCollectionRef = collection(db, 'shoes');
 export const reviewsCollectionRef = collection(db, 'reviews')
 export const accessoriesCollectionRef = collection(db, 'accessories');
+export const cartCollectionRef = collection(db, 'cart');

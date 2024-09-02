@@ -1,6 +1,5 @@
 import React from 'react';
 import Image from "next/image";
-import {MdArrowBackIos, MdArrowForwardIos} from "react-icons/md";
 import {Skeleton} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "@/lib/store";
@@ -11,9 +10,11 @@ import {
     setSelectedSlide
 } from "@/lib/features/shoeDetailsSlice/shoeDetailsSlice";
 import {BiMinus, BiPlus} from "react-icons/bi";
+import {addItemToCart} from "@/lib/features/cartSlice/cartSlice";
 
-const ShoeDetails = ({shoe,containerStyles}:{shoe:Shoe,containerStyles:string}) => {
+const ShoeDetails = ({shoe, containerStyles}: { shoe: Shoe, containerStyles: string }) => {
     const dispatch: AppDispatch = useDispatch();
+
     const {
         available,
         selectedSlide,
@@ -21,6 +22,14 @@ const ShoeDetails = ({shoe,containerStyles}:{shoe:Shoe,containerStyles:string}) 
         qty,
     } = useSelector((state: RootState) => state.shoeDetailsSlice)
 
+    const addToCartHandler = () => {
+
+        dispatch(addItemToCart({item: shoe, quantity: qty, size: selectedSize}))
+        dispatch(setAvailable(0))
+        dispatch(setQuantity("reset"))
+        dispatch(setSelectedSize(0))
+
+    }
 
     const getAvailable = (size: number, index: number) => {
         const stocks = shoe.stocks;
@@ -31,16 +40,13 @@ const ShoeDetails = ({shoe,containerStyles}:{shoe:Shoe,containerStyles:string}) 
                        className={`capitalize p-2 rounded-md ${selectedSize === size ? 'bg-primary text-white' : 'bg-gray-200 text-black'}     ${stocks[size] <= 0 && 'opacity-50'}`}
                        disabled={stocks[size] <= 0}>{size}</button>
     }
-    const addToCart = () => {
-        alert(`Added ${qty} ${shoe.name} to cart`)
-    }
     return (
         <div
             className={`w-full relative mt-20 lg:mt-12 flex flex-col md:grid md:grid-cols-2 justify-center items-center lg:flex-row gap-10 lg:gap-20 ${containerStyles}`}>
             <div className="h-[60vh] md:h-[90vh] w-full">
                 {shoe?.thumbnail ? (<Image src={selectedSlide || shoe.thumbnail} width={2000} height={2000}
-                                          className="w-full shadow rounded-sm bg-contain h-[60vh] md:h-[90vh]"
-                                          alt={shoe.description}/>) : (
+                                           className="w-full shadow rounded-sm bg-contain h-[60vh] md:h-[90vh]"
+                                           alt={shoe.description}/>) : (
                     <Skeleton animation="wave" sx={{background: "rgb(243 244 246)", width: '100%', height: '70%'}}/>)}
                 <div className="flex mt-3 flex-row gap-4 justify-center items-center w-full">
                     {shoe?.images?.map((url: string, index: number) => (
@@ -93,7 +99,7 @@ const ShoeDetails = ({shoe,containerStyles}:{shoe:Shoe,containerStyles:string}) 
                         </button>
                     </div>
                     <div className="mt-5 flex justify-center items-center">
-                        <button disabled={qty <= 0} onClick={() => addToCart()}
+                        <button disabled={qty <= 0} onClick={() => addToCartHandler()}
                                 className={`bg-primary w-full text-lg leading-5 tracking-wide font-medium text-white rounded-md p-3 ${qty <= 0 && 'opacity-40'}`}>Add
                             to
                             Cart

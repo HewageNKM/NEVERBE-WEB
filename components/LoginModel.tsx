@@ -14,7 +14,7 @@ const LoginModel = () => {
     const state = useSelector((state: RootState) => state.authSlice.state);
     const dispatch: AppDispatch = useDispatch();
     return (
-        <Backdrop containerStyles="w-[100%] z-50 fixed top-0 left-0 flex justify-center items-center h-[100%] bg-opacity-70 bg-black">
+        <Backdrop containerStyles="w-[100%] z-50 fixed top-0 left-0 flex justify-center items-center h-[100%] bg-opacity-60 bg-black">
             <motion.div exit={{opacity: 0, x: '100vw'}} initial={{x: "-100vw", opacity: 0}}
                         animate={{opacity: 1, x: 0}}
                         transition={{type: "spring", damping: 28, stiffness: 200}}
