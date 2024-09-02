@@ -40,11 +40,16 @@ const shoeDetailsSlice = createSlice({
             if (action.payload === "f") {
                 if (state.qty + 1 > state.shoeDetails.stocks[state.selectedSize]) return;
                 state.qty += 1;
+                state.shoeDetails.stocks[state.selectedSize] -= 1;
                 state.available -= 1;
             } else if (action.payload === "b") {
                 if (state.qty <= 0) return;
                 state.qty -= 1;
+                state.shoeDetails.stocks[state.selectedSize] += 1;
                 state.available += 1;
+            }else if(action.payload === "reset"){
+                state.qty = 0;
+                state.available = 0;
             }
         },
         setAvailable: (state, action) => {

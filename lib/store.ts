@@ -11,6 +11,7 @@ import accessoriesSlice from "@/lib/features/accessoriesSlice/accessoriesSlice";
 import cartSlice from "@/lib/features/cartSlice/cartSlice";
 import productSlice from "@/lib/features/productSlice/productSlice";
 import footerSlice from "@/lib/features/footerSlice/footerSlice";
+import filterSlice from "@/lib/features/filterSlice/filterSlice";
 
 export const store = configureStore({
     reducer: {
@@ -25,7 +26,8 @@ export const store = configureStore({
         accessoriesSlice,
         cartSlice,
         productSlice,
-        footerSlice
+        footerSlice,
+        filterSlice
     }
 });
 

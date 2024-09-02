@@ -9,7 +9,7 @@ import {closeReviewDialog} from "@/lib/features/shoeReviewSlice/shoeReviewSlice"
 const ReviewModel = () => {
     const dispatch: AppDispatch = useDispatch();
     return (
-        <Backdrop containerStyles="w-[100%] z-50 fixed top-0 left-0 flex justify-center items-center h-[100%] bg-opacity-70 bg-black">
+        <Backdrop containerStyles="w-[100%] z-50 fixed top-0 left-0 flex justify-center items-center h-[100%] bg-opacity-60 bg-black">
             <motion.div
                 transition={{type: "spring", damping: 28, stiffness: 200}}
                 initial={

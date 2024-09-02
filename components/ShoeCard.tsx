@@ -3,27 +3,30 @@ import Image from "next/image";
 import Link from "next/link";
 import {Button, Rating} from "@mui/material";
 import {AnimatePresence, motion} from "framer-motion";
-import {AppDispatch} from "@/lib/store";
-import {useDispatch} from "react-redux";
-import {addItemToCart} from "@/lib/features/cartSlice/cartSlice";
+import {AppDispatch, RootState} from "@/lib/store";
+import {useDispatch, useSelector} from "react-redux";
+import {addItemToCart, updateStocks} from "@/lib/features/cartSlice/cartSlice";
+import Lottie from "lottie-react";
+import {loading} from "@/constants";
 
 const ShoeCard = ({shoe, type}: {
     shoe: Shoe,
     type?: string
 }) => {
+
+    const {isLoading} = useSelector((state: RootState) => state.cartSlice);
+
     const dispatch:AppDispatch = useDispatch();
     const [outOfStock, setOutOfStock] = useState(false);
     const [addToCart, setAddToCart] = useState(false);
     const [isMouseOver, setIsMouseOver] = useState(false);
     const [selectedSize, setSelectedSize] = useState<number>(0);
 
-    const addToCartHandler = () => {
-
-        dispatch(addItemToCart({item: shoe, quantity: 1, size: selectedSize}))
-        setAddToCart(false)
-        setSelectedSize(0)
-        setIsMouseOver(false)
+    // Update stock on Firestore, After validating and updating the stock set item to Cart
+    const addToCartHandler = async () => {
+        await dispatch(updateStocks({shoeId: shoe.shoeId, size: selectedSize,qty:1}))
     }
+
     const setAvailableSizes = (size: number, index: number) => {
         const stocks = shoe.stocks;
         return <motion.button initial={{opacity: 0, y: "1vh"}}
@@ -46,16 +49,18 @@ const ShoeCard = ({shoe, type}: {
             setOutOfStock(true)
         }
     }
+
     useEffect(() => {
         checkStocksAvailability()
     })
+
     return (
         <div onMouseEnter={() => setIsMouseOver(true)}
              onMouseLeave={() => {
                  setIsMouseOver(false)
              }}
              className={`flex cursor-pointer  transition-all duration-500 relative p-2  flex-col w-[15rem] ${addToCart ? "h-[27.5rem]" : "h-[22rem]"}`}>
-            <Link href={`/products/shoes/${shoe.shoeId}`} target='_blank'>
+            <Link href={`/products/${shoe.shoeId}`}>
                 <div>
                     <Image src={shoe.thumbnail} alt=""
                            className="w-full md:w-[15rem] rounded-lg h-[17rem] bg-contain" width={2000}
@@ -68,8 +73,6 @@ const ShoeCard = ({shoe, type}: {
                     </div>
                     <div>
                         <h2 className="line-clamp-1 font-bold text-lg capitalize">{shoe.manufacturer}</h2>
-                    </div>
-                    <div>
                         <h2 className="line-clamp-1 text-slate-400 font-bold text-sm capitalize">{shoe.name}</h2>
                     </div>
                     <div className="flex flex-row flex-wrap justify-between items-center">
@@ -104,8 +107,10 @@ const ShoeCard = ({shoe, type}: {
                                 setSelectedSize(0)
                                 setIsMouseOver(false)
                             }} className="bg-red-600 hover:bg-red-700 text-white rounded-lg p-1 w-[6rem]">Cancel</button>
-                            <button disabled={ selectedSize == 0 } onClick={()=>addToCartHandler()}
-                                    className="bg-primary w-[6rem] hover:bg-primary-100 rounded-lg  p-1 text-white">Continue</button>
+                            <button disabled={ selectedSize == 0 || isLoading} onClick={()=>addToCartHandler()}
+                                    className="bg-primary w-[6rem] flex justify-center items-center hover:bg-primary-100 rounded-lg  p-1 text-white">
+                                {isLoading ? <Lottie animationData={loading} className="w-6 h-6"/>: <p>Continue</p>}
+                            </button>
                         </motion.div>
                     </motion.div>
                 )}
