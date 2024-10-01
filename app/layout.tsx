@@ -3,6 +3,8 @@ import {Roboto} from "next/font/google";
 import "../style/globals.css";
 import StoreProvider from "@/app/components/StoreProvider";
 import AuthProvider from "@/app/components/AuthProvider";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 const inter = Roboto({weight: "400", subsets: ["latin"]});
 
@@ -17,7 +19,9 @@ export default function RootLayout({children}: Readonly<{ children: React.ReactN
         <body className={inter.className}>
         <StoreProvider>
             <AuthProvider>
+                <Header/>
                 {children}
+                <Footer/>
             </AuthProvider>
         </StoreProvider>
         </body>
