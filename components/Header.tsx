@@ -1,60 +1,47 @@
-'use client';
 import React from 'react';
+import {IoCart, IoMenu, IoSearch} from "react-icons/io5";
 import Link from "next/link";
-import {CiSearch, CiShoppingCart} from "react-icons/ci";
-import {CgMenu} from "react-icons/cg";
-import {useDispatch, useSelector} from "react-redux";
-import {AppDispatch, RootState} from "@/lib/store";
-import {showCartDialog, showLoginDialog, showSearchDialog} from "@/lib/features/headerSlice/headerSlice";
 import {RxAvatar} from "react-icons/rx";
+import {menuItems} from "@/constants";
 
-const Header = ({containerStyles}: { containerStyles: string }) => {
-    const dispatch: AppDispatch = useDispatch();
-    const {isLoggedIn} = useSelector((state: RootState) => state.authSlice);
-    const cartItems = useSelector((state: RootState) => state.cartSlice.items);
+const Header = () => {
     return (
-        <div>
-            <div className={`w-full flex-row ${containerStyles} mb-10`}>
-                <header className="flex relative justify-between w-full items-center">
-                    <div className="absolute left-0 top-0">
-                        <Link href="/"><p className="lg:text-3xl text-center text-2xl font-bold">NEVERBE</p></Link>
-                    </div>
-                    <nav className="lg:flex w-full justify-center hidden items-center gap-8">
-                        <ul className="flex gap-10">
-                            <li className="text-xl font-bold hover:text-slate-700">
-                                <Link href="/">Brands</Link>
+        <header className="w-full">
+            <div className="px-8 pt-4 flex items-center gap-10 relative">
+                <Link href="/" className="text-xl tracking-wide md:text-3xl font-bold">NEVERBE</Link>
+                <ul className="flex-row hidden absolute lg:flex w-full justify-center items-center">
+                    <div className="flex flex-row gap-10">
+                        {menuItems.map((item, index) => (
+                            <li key={index} className="text-centertext-lg font-medium hover:text-primary lg:transition-all lg:duration-500 md:text-2xl">
+                                <Link href={item.url}>{item.title}</Link>
                             </li>
-                            <li className="text-xl font-bold hover:text-slate-700">
-                                <Link href="/">Accessories</Link>
-                            </li>
-                        </ul>
-                    </nav>
-                    <div className="flex flex-row absolute gap-2 items-center justify-center right-0 top-0">
-                        <button className="rounded-full p-1 lg:p-1.5" onClick={() => {
-                            dispatch(showSearchDialog())
-                        }}>
-                            <CiSearch size={30}/>
-                        </button>
-                        <button onClick={() => dispatch(showLoginDialog())}
-                                className="rounded-full text-black p-1 lg:p-2">
-                            <RxAvatar size={30}/>
-                        </button>
-                        <div className="relative rounded-full p-1 lg:p-1.5">
-                            <button onClick={() => dispatch(showCartDialog())} className="">
-                                <CiShoppingCart size={30}/>
-                            </button>
-                            <div
-                                className="absolute -top-2 -right-2 bg-primary text-sm text-white rounded-full w-5 h-5 flex items-center justify-center">{cartItems.length}</div>
-                        </div>
-                        <div className="relative rounded-full p-1 lg:p-1.5 lg:hidden">
-                            <CgMenu size={30}/>
-                        </div>
+                        ))}
                     </div>
-                    <div>
+                </ul>
+                <div className="lg:flex-row absolute right-2 justify-center items-center gap-5 hidden lg:flex">
+                    <div className="relative">
+                        <input type="text"
+                               className="bg-gray-200 w-[16rem] h-10 rounded-lg px-4 py-2 pr-16 font-light text-primary"
+                               placeholder="Search"/>
+                        <button className="bg-primary text-white px-4 h-10 py-2 rounded-lg absolute right-0"><IoSearch/>
+                        </button>
                     </div>
-                </header>
+                    <button className="bg-primary rounded-full p-1">
+                        <IoCart size={40} color="white"/>
+                    </button>
+                    <div
+                        className="bg-primary text-white font-medium px-4 py-1 cursor-pointer rounded-lg flex flex-row justify-center items-center gap-2">
+                        <RxAvatar size={40} color="white"/>
+                        <button>Sign In/Up</button>
+                    </div>
+                </div>
+                <div className="lg:hidden block">
+                    <button>
+                        <IoMenu size={40}/>
+                    </button>
+                </div>
             </div>
-        </div>
+        </header>
     );
 };
 

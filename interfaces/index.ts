@@ -1,75 +1,23 @@
-interface Shoe{
-    brand:string
-    discount:number
-    createdAt:{
-        seconds:number
+export interface Customer {
+    id: number;
+    name: string;
+    email: string;
+    phone: string;
+    address: {
+        street: string;
+        city: string;
+        state: string;
+        zip: string;
     }
-    updatedAt:{}
-    shoeId:string
-    manufacturer:string
-    name:string
-    color:string
-    description:string
-    for:string
-    thumbnail:string
-    rating:number
-    reviews:number
-    sellingPrice:number
-    sizes:number[]
-    stocks:number[]
-    images:string[]
+    createdAt: string;
+    updatedAt: string;
 }
 
-interface Accessory{
-    createdAt:{
-        seconds:number
-    }
-    updatedAt:{
-        seconds:number
-    }
-    accessoryId:string
-    discount:number
-    manufacturer:string
-    name:string
-    thumbnail:string
-    rating:number
-    reviews:number
-    sellingPrice:number
-    sizes:number[]
-    stocks:number[]
-    images:string[]
-}
-
-interface Review{
-    review:{
-        rating:number
-        description:string
-    }
-    username:string
-    createdAt:{
-        seconds:number
-    }
-}
-interface CartItem{
-    item:Shoe
-    quantity:number,
-    size:number
-}
-interface Slide {
-    slideId: string
-    slideUrl: string
-}
-
-interface Shop{
-    address:string
-    contact:{
-        email:string
-        telephone:string
-        mobile:string
-    }
-    socials:{
-        facebook:string
-        instagram:string
-        tiktok:string
-    }
+export interface User {
+    id: string;
+    username: string;
+    email: string;
+    role: string;
+    createdAt: string;
+    updatedAt: string;
 }
