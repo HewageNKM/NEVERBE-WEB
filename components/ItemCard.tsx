@@ -1,9 +1,36 @@
-import React from 'react';
+"use client"
+import React, {useEffect, useState} from 'react';
 import {Item} from "@/interfaces";
 import Image from "next/image";
 import Link from "next/link";
 
 const ItemCard = ({item,flag}:{item:Item,flag:string}) => {
+    const [outOfStocks, setOutOfStocks] = useState(false);
+
+    const checkOutOfStocks = () => {
+
+        let iCount = 0;
+        for (let i = 0; i < item.variants.length; i++) {
+            let vCount = 0;
+            for (let j = 0; j < item.variants[i].sizes.length; j++) {
+                if (item.variants[i].sizes[j].stock == 0) {
+                    vCount++;
+                }
+            }
+            if (vCount === item.variants[i].sizes.length) {
+                iCount++;
+            }
+        }
+
+        if (iCount === item.variants.length) {
+            setOutOfStocks(true);
+        }
+    }
+
+    useEffect(() => {
+        checkOutOfStocks();
+    });
+
     return (
         <div className="md:w-[16rem] md:h-[25rem] w-full shadow relative rounded-lg">
             <Link href={`/products/overview/${item.itemId.toLowerCase()}`}>
@@ -29,6 +56,9 @@ const ItemCard = ({item,flag}:{item:Item,flag:string}) => {
                 {item.discount > 0 &&
                     <h2 className="right-0 bg-red-500 text-white p-1 font-medium">{item.discount + "%"}</h2>}
             </div>
+            {outOfStocks && (<div className="bg-white absolute top-0 left-0 w-full h-full bg-opacity-60 flex justify-center items-center">
+                <h2 className=" bg-red-500 text-white p-1 font-medium">Out of Stock</h2>
+            </div>)}
         </div>
     );
 };

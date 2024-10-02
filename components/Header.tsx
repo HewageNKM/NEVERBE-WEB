@@ -20,7 +20,7 @@ const Header = () => {
                 </div>
             </ul>
             <div className="px-8 pt-4 flex items-center justify-between gap-10 relative">
-                <Link href="/" className="text-xl tracking-wide md:text-3xl font-bold">NEVERBE</Link>
+                <Link href="/" className="text-xl z-50 tracking-wide md:text-3xl font-bold">NEVERBE</Link>
                 <div className="lg:flex-row absolute right-2 justify-center items-center gap-5 hidden lg:flex">
 
                     <button className="bg-primary text-center p-1 text-white rounded-lg"><IoSearch
