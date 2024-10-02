@@ -1,10 +1,12 @@
 "use client"
 import React from 'react';
+import Hero from "@/app/components/Hero";
 
 const Home = () => {
 
     return (
-        <main className="w-full overflow-clip relative flex-col justify-between min-h-screen">
+        <main className="w-full relative">
+            <Hero />
         </main>
     )
 }

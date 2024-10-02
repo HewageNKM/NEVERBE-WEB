@@ -1,9 +1,11 @@
 import React from 'react';
+import ImagesSlider from "@/app/components/ImagesSlider";
 
 const Hero = () => {
     return (
-        <header className="w-full">
-        </header>
+        <div className="w-full bg-slate-200 mt-10">
+            <ImagesSlider images={[]}/>
+        </div>
     );
 };
 
