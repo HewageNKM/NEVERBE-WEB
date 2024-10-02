@@ -10,7 +10,7 @@ const BrandsPopupMenu = ({setShowBrands}:{setShowBrands:any}) => {
                     exit={{opacity: 0, y: '2vh'}}
                     transition={{duration: 0.2}}
                     className="w-full z-50 hidden lg:flex justify-center absolute">
-            <div onMouseEnter={() => setShowBrands(true)} className="flex w-fit bg-slate-100 p-4 flex-row gap-10 flex-wrap mt-8 shadow-primary rounded-lg">
+            <div onMouseEnter={() => setShowBrands(true)} className="flex w-fit bg-white p-4 flex-row gap-10 flex-wrap mt-8 shadow-primary rounded-lg">
                 {brands.map((brand, index) => (
                     <div key={index}>
                         <h2 className="font-semibold text-3xl"> {brand.name}</h2>

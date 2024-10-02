@@ -1,0 +1,24 @@
+import React from 'react';
+import {getInventory} from "@/firebase/serviceAPI";
+import {Item} from "@/interfaces";
+import ItemCard from "@/components/ItemCard";
+
+const NewArrivals = async () => {
+    const items:Item[] = await getInventory();
+    return (
+        <div>
+            <div className="px-8 py-4">
+                <div>
+                    <h1 className="font-semibold text-3xl">New Arrivals</h1>
+                </div>
+                <div className="mt-5">
+                    {items.map((item: Item) => (
+                           <ItemCard item={item} key={item.itemId} flag="new"/>
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default NewArrivals;

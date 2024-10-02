@@ -6,7 +6,7 @@ import {IoLogoTiktok} from "react-icons/io5";
 const Footer = () => {
     return (
         <footer className="w-full bg-primary flex text-white">
-            <div className="px-4 py-2 flex flex-row justify-between w-full gap-10 items-center flex-wrap">
+            <div className="px-4 py-2 flex pb-10 flex-row justify-between w-full gap-10 items-center flex-wrap">
                 <div className="flex flex-col gap-2">
                     <h2 className="text-2xl font-bold">NEVERBE</h2>
                     <ul className="flex flex-col gap-1 mt-1">

@@ -19,9 +19,7 @@ export default function RootLayout({children}: Readonly<{ children: React.ReactN
         <body className={inter.className}>
         <StoreProvider>
             <AuthProvider>
-                <Header />
                 {children}
-                <Footer />
             </AuthProvider>
         </StoreProvider>
         </body>

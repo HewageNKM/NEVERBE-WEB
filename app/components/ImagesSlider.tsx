@@ -1,13 +1,12 @@
+"use client"
 import React from 'react';
-import { Swiper, SwiperSlide } from 'swiper/react';
-
+import {Swiper, SwiperSlide} from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/pagination';
 
-import { Pagination } from 'swiper/modules';
-import Image from "next/image";
+import {Pagination} from 'swiper/modules';
 
-const ImagesSlider = ({images}:{images:object[]}) => {
+const ImagesSlider = ({images}: { images: object[] }) => {
     return (
         <>
             <Swiper
