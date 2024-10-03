@@ -1,3 +1,13 @@
+import {
+    AdidasLogo, CrossLogo,
+    DeliveryImage,
+    GoodsImage,
+    MoneyImage,
+    NewBalanceLogo,
+    NikeLogo, PoloLogo,
+    SupportImage
+} from "@/assets/images";
+
 export const brands = [
     {
         name: 'Nike',
@@ -122,4 +132,48 @@ export const accessoriesSizes = [
     "L",
     "XL",
     "200ml"
+]
+export const whyUs = [
+    {
+        title: "Low Prices",
+        description: "We offer the lowest prices, deals and promotions.",
+        image: MoneyImage
+    },
+    {
+        title: "Customer Service",
+        description: "customer service is our top priority.",
+        image: SupportImage
+    },
+    {
+        title: "Largest Collection",
+        description: "We have the largest collection of products in the market.",
+        image: GoodsImage
+    },
+    {
+        title: "Fast Shipping",
+        description: "We deliver your products withing couples of days.",
+        image: DeliveryImage
+    }
+]
+export const brandsLogo = [
+    {
+        name:"Nike",
+        image:NikeLogo
+    },
+    {
+        name:"Adidas",
+        image:AdidasLogo
+    },
+    {
+        name:"New Balance",
+        image:NewBalanceLogo
+    },
+    {
+        name:"Cross",
+        image:CrossLogo
+    },
+    {
+        name:"Polo",
+        image: PoloLogo
+    }
 ]

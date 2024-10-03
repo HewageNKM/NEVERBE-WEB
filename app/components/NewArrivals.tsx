@@ -9,7 +9,7 @@ const NewArrivals = async () => {
         <div>
             <div className="px-8 py-4">
                 <div>
-                    <h1 className="font-semibold text-3xl">New Arrivals</h1>
+                    <h1 className="font-bold text-4xl">New Arrivals</h1>
                 </div>
                 <div className="mt-5">
                     {items.map((item: Item) => (

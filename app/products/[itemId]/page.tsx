@@ -71,7 +71,7 @@ const Page = () => {
         <div className="w-full">
             <div className="px-8 py-4">
                 <h1 className="md:text-4xl text-2xl font-bold tracking-wider mt-10">Product Portfolio</h1>
-                <div className="flex flex-row ga-1 text-blue-500 items-center text-lg">
+                <div className="flex flex-row ga-1 text-blue-500 items-center text-sm md:text-lg">
                     <Link href={"/"}>Home</Link>
                     <Link href={"/products"}>/Products/</Link>
                     {item ? (<Link href={`/products/${item?.itemId}`}> {item?.itemId}</Link>) : (
