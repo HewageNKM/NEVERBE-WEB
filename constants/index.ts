@@ -99,7 +99,8 @@ export const sortingOptions = [
 ]
 export const productTypes = [
     {name:"All", value:"all"},
-    {name:"Wearables", value:"wearables"},
+    {name:"Shoe", value:"shoe"},
+    {name:"Scandals", value:"scandals"},
     {name:"Accessories", value:"accessories"},
 ]
 export const wearableSizes = [

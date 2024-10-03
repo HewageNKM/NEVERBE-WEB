@@ -114,7 +114,7 @@ const Filter = () => {
                                     ))}
                                 </div>
                             )}
-                            {selectedType == "wearables" && (
+                            {(selectedType == "shoe" || "scandals") && (
                                 <div className="flex mt-2 flex-row gap-5 text-2xl flex-wrap items-center">
                                     {wearableSizes.map((size, index) => (
                                         <label key={index} className="flex items-center gap-2 cursor-pointer">
