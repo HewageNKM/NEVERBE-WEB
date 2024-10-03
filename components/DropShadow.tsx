@@ -2,7 +2,7 @@ import React, {ReactNode} from 'react';
 
 const DropShadow = ({containerStyle,children}:{containerStyle:string,children:ReactNode}) => {
     return (
-        <div className={`fixed bg-black z-50 bg-opacity-60 w-full min-h-screen ${containerStyle}`}>
+        <div className={`fixed top-0 bg-black z-50 bg-opacity-60 w-full min-h-screen ${containerStyle}`}>
             {children}
         </div>
     );
