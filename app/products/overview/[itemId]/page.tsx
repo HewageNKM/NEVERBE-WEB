@@ -12,7 +12,6 @@ const Page = () => {
     const [selectedVariant, setSelectedVariant] = useState({} as Variant);
     const [selectedSize, setSelectedSize] = useState(null);
     const [qty, setQty] = useState(0)
-
     const {itemId} = useParams();
     useEffect(() => {
         getItemById(itemId).then((item) => {
