@@ -32,21 +32,20 @@ const ItemCard = ({item,flag}:{item:Item,flag:string}) => {
     });
 
     return (
-        <div className="md:w-[16rem] md:h-[25rem] w-full shadow relative rounded-lg">
+        <div className="w-[16rem] lg:w-[20rem] transition-all h-[26.5rem] lg:h-[30.5rem] shadow relative rounded-lg">
             <Link href={`/products/${item.itemId.toLowerCase()}`}>
                 <div>
                     <Image width={300} height={300} src={item.thumbnail} alt={item.name}
-                           className="md:w-[16rem] w-full md:h-[17rem] rounded-t-lg"/>
+                           className="w-[16rem] h-[17rem] lg:h-[21rem] lg:w-[20rem] rounded-t-lg"/>
                 </div>
-                <div className="capitalize px-2 flex flex-col gap-1 mt-2 md:text-xl text-lg font-medium">
+                <div className="capitalize px-2 transition-all flex flex-col gap-1 mt-2 md:text-2xl text-xl font-medium">
                     <h2 className="text-primary font-semibold tracking-wider">{item.name}</h2>
-                    <div className="flex justify-between">
-                        <p className="text-red-500">{"Rs. " + item.sellingPrice}</p>
-                        {item.discount > 0 &&
-                            <p className="line-through text-gray-500">{"Rs. " + (item.sellingPrice + (item.sellingPrice * item.discount / 100)).toFixed(2)}</p>}
+                    <div className="flex flex-col justify-between">
+                        {item.discount > 0 && <p className="line-through text-gray-500">{"Rs. " + (item.sellingPrice + (item.sellingPrice * item.discount / 100)).toFixed(2)}</p>}
+                        <p className="text-red-500">{"Rs. " + item.sellingPrice.toFixed(2)}</p>
                     </div>
                     <div className="w-full flex items-end justify-end">
-                        <p className="text-xl text-yellow-400 font-medium">{item.variants.length + " Colors"}</p>
+                        <p className="text-2xl text-yellow-400 font-medium">{item.variants.length + " Colors"}</p>
                     </div>
                 </div>
                 <h2 className="absolute top-0 capitalize bg-black text-white p-1 font-medium">{item.manufacturer}</h2>

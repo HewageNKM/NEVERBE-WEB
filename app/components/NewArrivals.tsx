@@ -1,10 +1,10 @@
 import React from 'react';
-import {getInventory} from "@/firebase/serviceAPI";
+import {getInventoryByRecent} from "@/firebase/serviceAPI";
 import {Item} from "@/interfaces";
 import ItemCard from "@/components/ItemCard";
 
 const NewArrivals = async () => {
-    const items:Item[] = await getInventory();
+    const items:Item[] = await getInventoryByRecent();
     return (
         <div>
             <div className="px-8 py-4">

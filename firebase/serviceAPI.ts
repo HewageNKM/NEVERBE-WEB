@@ -8,6 +8,15 @@ export const signAnonymousUser = async () => {
     return await signInAnonymously(auth);
 };
 
+export const getInventoryByRecent = async () =>{
+    let docs = await getDocs(inventoryCollectionRef);
+    let items: Item[] = [];
+    docs.forEach(doc => {
+        items.push(doc.data() as Item);
+    })
+
+    return items;
+}
 export const getInventory = async () =>{
     let docs = await getDocs(inventoryCollectionRef);
     let items: Item[] = [];
