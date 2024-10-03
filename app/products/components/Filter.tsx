@@ -23,6 +23,14 @@ const Filter = () => {
         }
     }
 
+    const addSize = (value:string) => {
+        if(selectedSizes.includes(value)){
+            setSelectedSizes(selectedSizes.filter(size => size !== value))
+        } else {
+            setSelectedSizes([...selectedSizes, value])
+        }
+    }
+
     useEffect(() => {
 
     }, [selectedBrands,selectedType,selectedSizes]);
@@ -43,7 +51,10 @@ const Filter = () => {
                                     <input
                                         checked={selectedType === type.value}
                                         type="radio"
-                                        onChange={() => setSelectedType(type.value)}
+                                        onChange={() => {
+                                            setSelectedType(type.value)
+                                            setSelectedSizes([])
+                                        }}
                                         className="form-radio h-5 w-5 text-blue-600 transition duration-150 ease-in-out focus:ring-2 focus:ring-blue-500"
                                     />
                                     <span className="text-gray-800 font-medium">{type.name}</span>
@@ -81,7 +92,7 @@ const Filter = () => {
                                             value={size}
                                             checked={selectedSizes.includes(size)}
                                             type="checkbox"
-                                            onChange={() => setSelectedSizes([...selectedSizes, size])}
+                                            onChange={() => addSize(size)}
                                             className="form-checkbox h-5 w-5 text-blue-600 transition duration-150 ease-in-out rounded focus:ring-2 focus:ring-blue-500"
                                         />
                                         <span className="text-gray-800 font-medium">Size {size}</span>
@@ -94,7 +105,7 @@ const Filter = () => {
                                                 value={size}
                                                 checked={selectedSizes.includes(size)}
                                                 type="checkbox"
-                                                onChange={() => setSelectedSizes([...selectedSizes, size])}
+                                                onChange={() => addSize(size)}
                                                 className="form-checkbox h-5 w-5 text-blue-600 transition duration-150 ease-in-out rounded focus:ring-2 focus:ring-blue-500"
                                             />
                                             <span className="text-gray-800 font-medium">{size}</span>
@@ -111,7 +122,7 @@ const Filter = () => {
                                                 value={size}
                                                 checked={selectedSizes.includes(size)}
                                                 type="checkbox"
-                                                onChange={() => setSelectedSizes([...selectedSizes, size])}
+                                                onChange={() => addSize(size)}
                                                 className="form-checkbox h-5 w-5 text-blue-600 transition duration-150 ease-in-out rounded focus:ring-2 focus:ring-blue-500"
                                             />
                                             <span className="text-gray-800 font-medium">Size {size}</span>
@@ -128,7 +139,7 @@ const Filter = () => {
                                                 value={size}
                                                 checked={selectedSizes.includes(size)}
                                                 type="checkbox"
-                                                onChange={() => setSelectedSizes([...selectedSizes, size])}
+                                                onChange={() => addSize(size)}
                                                 className="form-checkbox h-5 w-5 text-blue-600 transition duration-150 ease-in-out rounded focus:ring-2 focus:ring-blue-500"
                                             />
                                             <span className="text-gray-800 font-medium">{size}</span>
