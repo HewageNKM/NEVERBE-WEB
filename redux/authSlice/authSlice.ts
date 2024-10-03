@@ -1,11 +1,12 @@
-import {Customer, User} from "@/interfaces";
+import {User} from "@/interfaces";
 import {createSlice} from "@reduxjs/toolkit";
 
 interface AuthSlice {
     user: User | null;
     isLoading: boolean;
 }
-const initialState:AuthSlice = {
+
+const initialState: AuthSlice = {
     user: null,
     isLoading: true
 }

@@ -1,0 +1,54 @@
+import {CartItem} from "@/interfaces";
+import {createSlice} from "@reduxjs/toolkit";
+
+interface CartSlice {
+    cart: CartItem[];
+    showCart: boolean;
+}
+
+const initialState: CartSlice = {
+    cart: [],
+    showCart: false
+}
+
+const cartSlice = createSlice({
+    name: 'cart',
+    initialState,
+    reducers: {
+        initializeCart(state) {
+            const cart = window.localStorage.getItem('NEVERBECart');
+            if (cart) {
+                state.cart = JSON.parse(cart);
+            } else {
+                state.cart = [];
+                window.localStorage.setItem('NEVERBECart', JSON.stringify([]));
+            }
+        },
+        pushToCart(state, action) {
+            state.cart.push(action.payload)
+            window.localStorage.setItem('NEVERBECart', JSON.stringify(state.cart));
+        },
+        removeFromCart(state, action) {
+            const items = window.localStorage.getItem('NEVERBECart');
+            state.cart = JSON.parse(<string>items).filter((item: CartItem) => item.itemId !== action.payload.itemId || item.variantId !== action.payload.variantId || item.size !== action.payload.size);
+            window.localStorage.setItem('NEVERBECart', JSON.stringify(state.cart));
+        },
+        updateQuantity(state, action) {
+            const {itemId, quantity} = action.payload;
+            const item = state.cart.find(item => item.itemId === itemId);
+            if (item) {
+                item.quantity = quantity;
+            }
+            window.localStorage.setItem('NEVERBECart', JSON.stringify(state.cart));
+        },
+        showCart(state) {
+            state.showCart = true;
+        },
+        hideCart(state) {
+            state.showCart = false
+        }
+    }
+});
+
+export const {initializeCart, pushToCart, removeFromCart, updateQuantity, showCart, hideCart} = cartSlice.actions;
+export default cartSlice.reducer;

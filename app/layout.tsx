@@ -2,15 +2,16 @@ import type {Metadata} from "next";
 import {Roboto} from "next/font/google";
 import "../style/globals.css";
 import StoreProvider from "@/app/components/StoreProvider";
-import AuthProvider from "@/app/components/AuthProvider";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import GlobalProvider from "@/app/components/GlobalProvider";
 
 const inter = Roboto({weight: "400", subsets: ["latin"]});
 
 export const metadata: Metadata = {
     title: "NEVERBE",
-    description: "Shoe Selling Ecommerce Website at affordable prices",
+    description: "Wearable Selling Ecommerce Website at affordable prices",
+    category: "Ecommerce",
+    keywords: ["shoes", "ecommerce", "fashion", "clothing", "accessories"],
+
 }
 
 export default function RootLayout({children}: Readonly<{ children: React.ReactNode; }>) {
@@ -18,9 +19,9 @@ export default function RootLayout({children}: Readonly<{ children: React.ReactN
         <html lang="en">
         <body className={inter.className}>
         <StoreProvider>
-            <AuthProvider>
+            <GlobalProvider>
                 {children}
-            </AuthProvider>
+            </GlobalProvider>
         </StoreProvider>
         </body>
         </html>

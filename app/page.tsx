@@ -8,6 +8,7 @@ const Home = () => {
         <main className="w-full relative">
             <Hero />
             <NewArrivals />
+
         </main>
     )
 }

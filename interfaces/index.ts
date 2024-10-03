@@ -43,3 +43,14 @@ export interface Variant {
     images: string[],
     sizes: Size[],
 }
+
+export interface CartItem {
+    itemId: string,
+    variantId: string,
+    name: string,
+    variantName: string,
+    thumbnail: string,
+    size: string,
+    quantity: number,
+    price: number,
+}
