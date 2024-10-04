@@ -303,19 +303,76 @@ export const address = [
         name:"Delgoda"
     }
 ];
-
 export const socialMedia: SocialMedia[] = [
     { icon: IoLogoFacebook, name: "Facebook", url: "" },
     { icon: IoLogoInstagram, name: "Instagram", url: "" },
     { icon: IoLogoTiktok, name: "Tiktok", url: "https://www.tiktok.com/@neverbe196?_t=8qG86zTXl2d&_r=1" },
 ];
-
 export const informationLinks: FooterLink[] = [
     { title: "FAQ", url: "" },
     { title: "Shipping & Returns", url: "/policies/shipping-return-policy" },
     { title: "Terms & Conditions", url: "/policies/terms-conditions" },
     { title: "Privacy Policy", url: "/policies/privacy-policy" },
 ];
+export const privacyPolicy = {
+    company: 'Watch Line',
+    website: 'https://neverbe.lk',
+    serviceName: 'NEVERBE',
+    lastUpdated: '2024-10-04',
+    sections: {
+        intro: `Watch Line (“us”, “we”, or “our”) operates the https://neverbe.lk website (the “Service”).
+
+    This page informs you of our policies regarding the collection, use, and disclosure of personal data when you use our Service and the choices you have associated with that data.
+
+    We use your data to provide and improve the Service. By using the Service, you agree to the collection and use of information in accordance with this policy. Unless otherwise defined in this Privacy Policy, terms used in this Privacy Policy have the same meanings as in our Terms and Conditions, accessible from `,
+        informationCollection: {
+            personalData: `While using our Service, we may ask you to provide us with certain personally identifiable information that can be used to contact or identify you (“Personal Data”). Personally identifiable information may include, but is not limited to:
+
+      - Email address
+      - First name and last name
+      - Phone number
+      - Address, Province, ZIP/Postal code, City/District
+      - National ID Card or Passport Number
+      - Cookies and Usage Data
+      - IP Address`,
+            usageData: `We may also collect information how the Service is accessed and used (“Usage Data”). This Usage Data may include information such as your computer’s Internet Protocol address (e.g. IP address), browser type, browser version, the pages of our Service that you visit, the time and date of your visit, the time spent on those pages, unique device identifiers and other diagnostic data.`,
+        },
+        trackingCookies: {
+            description: `We use cookies and similar tracking technologies to track the activity on our Service and hold certain information. You can instruct your browser to refuse all cookies or to indicate when a cookie is being sent.`,
+            examples: [
+                'Session Cookies: We use Session Cookies to operate our Service.',
+                'Preference Cookies: We use Preference Cookies to remember your preferences and various settings.',
+                'Security Cookies: We use Security Cookies for security purposes.',
+            ],
+        },
+        useOfData: [
+            'To provide and maintain the Service',
+            'To notify you about changes to our Service',
+            'To provide customer care and support',
+            'To provide analysis or valuable information to improve the Service',
+            'To monitor the usage of the Service',
+            'To detect, prevent and address technical issues',
+        ],
+        transferOfData: `Your information, including Personal Data, may be transferred to — and maintained on — computers located outside of your country or jurisdiction where data protection laws may differ. By providing us your data, you agree to the transfer.`,
+        disclosureOfData: {
+            legalRequirements: [
+                'To comply with a legal obligation',
+                'To protect and defend the rights or property of NEVERBE',
+                'To prevent or investigate possible wrongdoing in connection with the Service',
+                'To protect the personal safety of users of the Service or the public',
+                'To protect against legal liability',
+            ],
+        },
+        securityOfData: `We strive to use commercially acceptable means to protect your Personal Data but cannot guarantee its absolute security.`,
+        serviceProviders: `We may employ third party companies to facilitate our Service, provide the Service on our behalf, perform Service-related services, or assist us in analyzing how our Service is used.`,
+        analytics: {
+            googleAnalytics: `Google Analytics is a web analytics service that tracks and reports website traffic. You can opt out by installing the Google Analytics opt-out browser add-on.`,
+        },
+        linksToOtherSites: `Our Service may contain links to other sites that are not operated by us. We are not responsible for the content, privacy policies, or practices of any third-party sites or services.`,
+        childrenPrivacy: `Our Service does not address anyone under the age of 18. We do not knowingly collect personally identifiable information from anyone under 18.`,
+        changesToPrivacyPolicy: `We may update our Privacy Policy from time to time. You are advised to review this Privacy Policy periodically for any changes. Changes are effective when posted on this page.`,
+    },
+};
 
 //Todo: Add phone number and landline number
 export const contactInfo = [
