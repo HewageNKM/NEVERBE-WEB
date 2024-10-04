@@ -1,7 +1,7 @@
-import {auth, inventoryCollectionRef} from "@/firebase/Config";
+import {auth, inventoryCollectionRef, slidersCollectionRef} from "@/firebase/Config";
 import {signInAnonymously} from "firebase/auth";
 import {doc, getDoc, getDocs, limit, orderBy} from "@firebase/firestore";
-import {Item} from "@/interfaces";
+import {Item, Slide} from "@/interfaces";
 import {query} from "@firebase/database";
 
 
@@ -39,4 +39,14 @@ export const getItemById = async (itemId: string) => {
 
 export const getHotsProducts = async () => {
     return [];
+}
+
+export const getSliders = async () => {
+    let docs = await getDocs(slidersCollectionRef);
+    let sliders: Slide[] = [];
+    docs.forEach(doc => {
+        sliders.push(doc.data() as Slide);
+    })
+
+    return sliders;
 }

@@ -18,3 +18,4 @@ export const auth = getAuth(app);
 
 export const shopCollectionRef = collection(db, 'shops');
 export const inventoryCollectionRef = collection(db, 'inventory');
+export const slidersCollectionRef = collection(db, 'sliders');

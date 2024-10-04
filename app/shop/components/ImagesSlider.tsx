@@ -5,8 +5,10 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 
 import {Pagination} from 'swiper/modules';
+import Image from "next/image";
+import {Slide} from "@/interfaces";
 
-const ImagesSlider = ({images}: { images: object[] }) => {
+const ImagesSlider = ({images}: { images: Slide[] }) => {
     return (
         <>
             <Swiper
@@ -14,19 +16,11 @@ const ImagesSlider = ({images}: { images: object[] }) => {
                     dynamicBullets: true,
                 }}
                 modules={[Pagination]}
-                className="w-full"
+                className="w-full relative"
             >
                 {images.map((image, index) => (
                     <SwiperSlide key={index}>
-                        <SwiperSlide>Slide 1</SwiperSlide>
-                        <SwiperSlide>Slide 2</SwiperSlide>
-                        <SwiperSlide>Slide 3</SwiperSlide>
-                        <SwiperSlide>Slide 4</SwiperSlide>
-                        <SwiperSlide>Slide 5</SwiperSlide>
-                        <SwiperSlide>Slide 6</SwiperSlide>
-                        <SwiperSlide>Slide 7</SwiperSlide>
-                        <SwiperSlide>Slide 8</SwiperSlide>
-                        <SwiperSlide>Slide 9</SwiperSlide>
+                        <Image src={image.url} alt={image.fileName} width={1980} height={750} className="w-full bg-auto h-fit"/>
                     </SwiperSlide>
                 ))}
             </Swiper>
