@@ -1,6 +1,7 @@
 import React from 'react';
 import {faqs} from "@/constants";
 import FaqCard from "@/app/shop/components/FAQCard";
+import Link from "next/link";
 
 const Faq = () => {
     return (
@@ -13,6 +14,11 @@ const Faq = () => {
                     {faqs.map((faq, index) => (
                         <FaqCard index={index} faq={faq} key={index}/>
                     ))}
+                </div>
+                <div className="mt-5">
+                    <Link href="#footer" className="md:text-lg text-xs tracking-wide">
+                        *Terms and conditions apply.
+                    </Link>
                 </div>
             </div>
         </div>

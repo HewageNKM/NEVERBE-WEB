@@ -5,7 +5,7 @@ import {whyUs} from "@/constants";
 const WhyUs = () => {
     return (
         <div className="w-full">
-            <div className="px-8 py-4 mt-16">
+            <div className="px-8 py-4 mt-20">
                 <div>
                     <h1 className="font-bold text-4xl">Why Us?</h1>
                 </div>

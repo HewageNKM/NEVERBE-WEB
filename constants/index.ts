@@ -365,6 +365,15 @@ export const faqs = [
         answer: "We deliver the product within 6-10 days of purchase."
     }
 ]
+export const payHere = {
+    shortBannerWhite: "https://www.payhere.lk/downloads/images/payhere_short_banner.png",
+    shortBannerBlue: "https://www.payhere.lk/downloads/images/payhere_short_banner_dark.png",
+    longWhiteBanner: "https://www.payhere.lk/downloads/images/payhere_long_banner.png",
+    longBlueBanner: "https://www.payhere.lk/downloads/images/payhere_long_banner_dark.png",
+    squareBannerWhite: "https://www.payhere.lk/downloads/images/payhere_square_banner.png",
+    squareBannerBlue: "https://www.payhere.lk/downloads/images/payhere_square_banner_dark.png",
+
+}
 //Todo: Add phone number and landline number
 export const contactInfo = [
     {

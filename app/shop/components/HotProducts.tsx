@@ -6,7 +6,7 @@ import EmptyState from "@/components/EmptyState";
 const HotProducts = async () => {
     const items = await getHotsProducts();
     return (
-        <div className="w-full">
+        <div className="w-full mt-20">
             <div className="px-8 py-8">
                 <h1 className="font-bold text-4xl">Hot Products</h1>
 

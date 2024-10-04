@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import {address, contactInfo, informationLinks, socialMedia} from "@/constants";
+import {address, contactInfo, informationLinks, payHere, socialMedia} from "@/constants";
 import Image from "next/image";
 import {Logo} from "@/assets/images";
 import {GoLocation} from "react-icons/go";
@@ -8,11 +8,11 @@ import {GoLocation} from "react-icons/go";
 const Footer = () => {
     return (
         <footer className="w-full bg-primary text-white py-8">
-            <div className="container px-8 mx-auto flex flex-col md:flex-row justify-between gap-10">
-                <div className="flex flex-row gap-4 md:justify-center justify-start items-center">
-                    <div className="">
+            <div className="flex md:justify-center lg:justify-between md:flex-wrap flex-col md:flex-row p-8 gap-10">
+                <div className="flex flex-col md:flex-row gap-4 md:justify-center justify-start md:items-center">
+                    <Link href="/">
                         <Image src={Logo} alt={"NEVERBELogo"} width={100} height={100}/>
-                    </div>
+                    </Link>
                     <ul className="flex flex-col gap-4">
                         <h2 className="text-3xl font-bold">Address</h2>
                         <div className="flex flex-row gap-2">
@@ -42,7 +42,7 @@ const Footer = () => {
                     </ul>
                 </div>
 
-                <div className="flex flex-col gap-4">
+                <div id="footer" className="flex flex-col gap-4">
                     <h2 className="text-3xl font-bold">Information</h2>
                     <ul className="flex flex-col gap-2">
                         {informationLinks.map((link, index) => (
@@ -64,6 +64,19 @@ const Footer = () => {
                             </li>
                         ))}
                     </ul>
+                </div>
+            </div>
+            <div className="mt-10 w-full flex-col flex gap-2 justify-center items-center">
+                <p className="text-lg font-medium text-center">© {new Date().getFullYear().toString()} NEVERBE.
+                    All Rights Reserved.</p>
+                <p className="font-medium text-base">Develop By <Link href={"https://hewagenkm.github.io/"}>Nadun
+                    Malwenna</Link></p>
+            </div>
+            <div className="px-8 w-full mt-5 justify-center items-center">
+                <div className="flex justify-center items-center">
+
+                    <Image src={payHere.longWhiteBanner} width={400}
+                           height={200} alt="PayhereLogo"/>
                 </div>
             </div>
         </footer>
