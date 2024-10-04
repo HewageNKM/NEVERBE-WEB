@@ -1,20 +1,9 @@
-import {
-    AdidasLogo,
-    CrossLogo,
-    DeliveryImage,
-    GoodsImage,
-    MoneyImage,
-    NewBalanceLogo,
-    NikeLogo,
-    PoloLogo,
-    SupportImage
-} from "@/assets/images";
+import {DeliveryImage, GoodsImage, MoneyImage, SupportImage} from "@/assets/images";
 import {FooterLink, SocialMedia} from "@/interfaces";
-import {IoLogoTiktok, IoPhoneLandscape} from "react-icons/io5";
+import {IoLogoTiktok} from "react-icons/io5";
 import {IoLogoFacebook, IoLogoInstagram} from "react-icons/io";
 import {MdEmail} from "react-icons/md";
-import {BiMobile} from "react-icons/bi";
-import {TbDeviceLandlinePhone} from "react-icons/tb";
+import {FaMobile, FaPhone} from "react-icons/fa";
 
 export const brands = [
     {
@@ -155,7 +144,7 @@ export const accessoriesSizes = [
 export const whyUs = [
     {
         title: "Low Prices",
-        description: "We offer the lowest prices, deals and promotions.",
+        description: "We offer the lowest prices, best deals and promotions.",
         image: MoneyImage
     },
     {
@@ -172,28 +161,6 @@ export const whyUs = [
         title: "Fast Shipping",
         description: "We deliver your products withing couples of days.",
         image: DeliveryImage
-    }
-]
-export const brandsLogo = [
-    {
-        name: "Nike",
-        image: NikeLogo
-    },
-    {
-        name: "Adidas",
-        image: AdidasLogo
-    },
-    {
-        name: "New Balance",
-        image: NewBalanceLogo
-    },
-    {
-        name: "Cross",
-        image: CrossLogo
-    },
-    {
-        name: "Polo",
-        image: PoloLogo
     }
 ]
 export const termsAndConditions = [
@@ -294,25 +261,24 @@ export const shippingReturnPolicy = [
 ];
 export const address = [
     {
-        name:"330/40/10,"
+        name: "330/40/10,"
     },
     {
-        name:"New Kandy Road,"
+        name: "New Kandy Road,"
     },
     {
-        name:"Delgoda"
+        name: "Delgoda"
     }
 ];
 export const socialMedia: SocialMedia[] = [
-    { icon: IoLogoFacebook, name: "Facebook", url: "" },
-    { icon: IoLogoInstagram, name: "Instagram", url: "" },
-    { icon: IoLogoTiktok, name: "Tiktok", url: "https://www.tiktok.com/@neverbe196?_t=8qG86zTXl2d&_r=1" },
+    {icon: IoLogoFacebook, name: "Facebook", url: ""},
+    {icon: IoLogoInstagram, name: "Instagram", url: ""},
+    {icon: IoLogoTiktok, name: "Tiktok", url: "https://www.tiktok.com/@neverbe196?_t=8qG86zTXl2d&_r=1"},
 ];
 export const informationLinks: FooterLink[] = [
-    { title: "FAQ", url: "" },
-    { title: "Shipping & Returns", url: "/policies/shipping-return-policy" },
-    { title: "Terms & Conditions", url: "/policies/terms-conditions" },
-    { title: "Privacy Policy", url: "/policies/privacy-policy" },
+    {title: "Shipping & Returns", url: "/policies/shipping-return-policy"},
+    {title: "Terms & Conditions", url: "/policies/terms-conditions"},
+    {title: "Privacy Policy", url: "/policies/privacy-policy"},
 ];
 export const privacyPolicy = {
     company: 'Watch Line',
@@ -369,24 +335,49 @@ export const privacyPolicy = {
             googleAnalytics: `Google Analytics is a web analytics service that tracks and reports website traffic. You can opt out by installing the Google Analytics opt-out browser add-on.`,
         },
         linksToOtherSites: `Our Service may contain links to other sites that are not operated by us. We are not responsible for the content, privacy policies, or practices of any third-party sites or services.`,
-        childrenPrivacy: `Our Service does not address anyone under the age of 18. We do not knowingly collect personally identifiable information from anyone under 18.`,
+        childrenPrivacy: `Our Service does not address anyone under the age of 12. We do not knowingly collect personally identifiable information from anyone under 12.`,
         changesToPrivacyPolicy: `We may update our Privacy Policy from time to time. You are advised to review this Privacy Policy periodically for any changes. Changes are effective when posted on this page.`,
     },
 };
-
+export const faqs = [
+    {
+        question: "What is the return policy?",
+        answer: "You can return the product within 7 days of purchase."
+    },
+    {
+        question: "What is the shipping policy?",
+        answer: "We ship the product within 2 days of purchase."
+    },
+    {
+        question: "What is the refund policy?",
+        answer: "You can refund the product within 7 days of purchase."
+    },
+    {
+        question: "What is the exchange policy?",
+        answer: "You can exchange the product within 7 days of purchase."
+    },
+    {
+        question: "What is the payment method?",
+        answer: "We accept all types of payment methods."
+    },
+    {
+        question: "What is the delivery time?",
+        answer: "We deliver the product within 6-10 days of purchase."
+    }
+]
 //Todo: Add phone number and landline number
 export const contactInfo = [
     {
         icon: MdEmail,
-        content:"info.neverbe@gmail.com"
+        content: "info.neverbe@gmail.com"
     },
     {
-        icon: BiMobile,
-        content:""
+        icon: FaMobile,
+        content: ""
     },
     {
-        icon: TbDeviceLandlinePhone,
-        content:""
+        icon: FaPhone,
+        content: ""
     }
 
 ];

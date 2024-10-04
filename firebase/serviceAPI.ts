@@ -36,3 +36,7 @@ export const getItemById = async (itemId: string) => {
     const itemDoc = await getDoc(itemDocRef);
     return itemDoc.data() as Item;
 }
+
+export const getHotsProducts = async () => {
+    return [];
+}

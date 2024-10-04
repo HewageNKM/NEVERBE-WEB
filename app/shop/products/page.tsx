@@ -10,11 +10,11 @@ export const metadata: Metadata = {
 
 const Page = () => {
     return (
-        <div className="w-full relative lg:mt-32 md:mt-20">
+        <div className="w-full relative lg:mt-32 md:mt-20 mt-10">
             <div className="px-8 py-4">
                 <h1 className="md:text-4xl text-2xl font-bold tracking-wider mt-10">Products</h1>
                 <div className="flex flex-row items-center text-blue-500 text-sm md:text-lg">
-                    <Link href={"/public"}>Home</Link>
+                    <Link href={"/"}>Home</Link>
                     <Link href={"/products"}>/Products</Link>
                 </div>
                 <div className="w-full">

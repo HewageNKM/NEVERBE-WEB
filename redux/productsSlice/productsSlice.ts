@@ -4,10 +4,16 @@ import {getInventory} from "@/firebase/serviceAPI";
 
 interface ProductsSlice{
     products: Item[],
-    showFilter: boolean
+    showFilter: boolean,
+    selectedType: string,
+    selectedBrands: string[],
+    selectedSizes: string[]
 }
 
 const initialState: ProductsSlice = {
+    selectedBrands: [],
+    selectedSizes: [],
+    selectedType: "all",
     products: [],
     showFilter: false
 }
@@ -18,6 +24,15 @@ const productsSlice = createSlice({
     reducers: {
         toggleFilter: (state) => {
             state.showFilter = !state.showFilter;
+        },
+        setSelectedType: (state, action) => {
+            state.selectedType = action.payload;
+        },
+        setSelectedBrands: (state, action) => {
+            state.selectedBrands = action.payload;
+        },
+        setSelectedSizes: (state, action) => {
+            state.selectedSizes = action.payload;
         }
     },
     extraReducers: (builder) => {
@@ -36,5 +51,5 @@ export const initializeProducts = createAsyncThunk('products/getProducts', async
     }
 });
 
-export const {toggleFilter} = productsSlice.actions;
+export const {toggleFilter,setSelectedBrands,setSelectedType,setSelectedSizes} = productsSlice.actions;
 export default productsSlice.reducer;

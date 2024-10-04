@@ -2,6 +2,7 @@ import React from 'react';
 import {getInventoryByRecent} from "@/firebase/serviceAPI";
 import {Item} from "@/interfaces";
 import ItemCard from "@/components/ItemCard";
+import EmptyState from "@/components/EmptyState";
 
 const NewArrivals = async () => {
     const items:Item[] = await getInventoryByRecent();
@@ -15,6 +16,7 @@ const NewArrivals = async () => {
                     {items.map((item: Item) => (
                            <ItemCard item={item} key={item.itemId} flag="new"/>
                     ))}
+                    {items.length === 0 && (<EmptyState message="No new arrivals"/>)}
                 </div>
             </div>
         </div>
