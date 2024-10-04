@@ -1,5 +1,5 @@
 import React from 'react';
-import ImagesSlider from "@/app/components/ImagesSlider";
+import ImagesSlider from "@/app/shop/components/ImagesSlider";
 
 const Hero = () => {
     return (

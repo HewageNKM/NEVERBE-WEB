@@ -11,7 +11,7 @@ const NewArrivals = async () => {
                 <div>
                     <h1 className="font-bold text-4xl">New Arrivals</h1>
                 </div>
-                <div className="mt-5">
+                <div className="mt-10 flex flex-row gap-5 justify-center lg:justify-start lg:items-start items-center">
                     {items.map((item: Item) => (
                            <ItemCard item={item} key={item.itemId} flag="new"/>
                     ))}

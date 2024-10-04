@@ -18,12 +18,12 @@ const Header = () => {
         <header className="w-full mt-4 relative" onMouseLeave={() => setShowBrands(false)}>
             <ul className="flex-row z-40 hidden mt-3 absolute lg:flex w-full justify-center items-center">
                 <div className="flex z-50 flex-row gap-10">
-                    <Link href="/products" className="text-3xl hover:text-primary transition-all font-bold tracking-widest">
+                    <Link href="/shop/products" className="text-3xl hover:text-primary transition-all font-bold tracking-widest">
                         <h2>Shop Now</h2></Link>
-                    <Link onMouseEnter={() => setShowBrands(true)} href="/products"
+                    <Link onMouseEnter={() => setShowBrands(true)} href="/shop/products"
                           className="text-3xl hover:text-primary transition-all font-bold tracking-widest">
                         <h2>Brands</h2></Link>
-                    <Link href="/products" className="text-3xl hover:text-primary transition-all font-bold tracking-widest">
+                    <Link href="/shop/products" className="text-3xl hover:text-primary transition-all font-bold tracking-widest">
                         <h2>Accessories</h2></Link>
                 </div>
             </ul>

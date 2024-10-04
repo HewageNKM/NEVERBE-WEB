@@ -33,7 +33,7 @@ const ItemCard = ({item,flag}:{item:Item,flag:string}) => {
 
     return (
         <div className="w-[16rem] lg:w-[20rem] transition-all h-[26.5rem] lg:h-[30.5rem] shadow relative rounded-lg">
-            <Link href={`/products/${item.itemId.toLowerCase()}`}>
+            <Link href={`/shop/products/${item.itemId.toLowerCase()}`}>
                 <div>
                     <Image width={300} height={300} src={item.thumbnail} alt={item.name}
                            className="w-[16rem] h-[17rem] lg:h-[21rem] lg:w-[20rem] rounded-t-lg"/>

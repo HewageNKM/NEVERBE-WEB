@@ -43,7 +43,7 @@ const Cart = () => {
                                 </div>
                                 </td>
                                 <td className="p-3 border-b capitalize text-sm md:text-lg">
-                                    {item.name + " | " + item.variantName + " | Size " + item.size}
+                                    {item.name + " | " + item.variantName + " | SizeChart " + item.size}
                                 </td>
                                 <td className="p-3 border-b text-sm md:text-lg">{item.quantity}</td>
                                 <td className="p-3 border-b text-sm md:text-lg">{item.price * item.quantity}</td>

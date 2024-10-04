@@ -1,65 +1,56 @@
-import React from 'react';
+import React from "react";
 import Link from "next/link";
-import {IoLogoFacebook, IoLogoInstagram} from "react-icons/io";
-import {IoLogoTiktok} from "react-icons/io5";
+import { address, socialMedia, informationLinks, contactInfo } from "@/constants";
 
 const Footer = () => {
     return (
-        <footer className="w-full bg-primary flex text-white">
-            <div className="px-4 py-2 flex pb-10 flex-row justify-between w-full gap-10 items-center flex-wrap">
+        <footer className="w-full bg-primary text-white py-8">
+            <div className="container mx-auto flex flex-col md:flex-row justify-between gap-10">
+                <div className="flex flex-col gap-4">
+                    <h2 className="text-3xl font-bold">NEVERBE</h2>
+                    <ul className="flex flex-col gap-2">
+                        {address.map((link, index) => (
+                            <li key={index} className="text-lg hover:text-gray-300 transition duration-200">
+                                <p>{link.name}</p>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+
+                <div className="flex flex-col gap-4">
+                    <h2 className="text-3xl font-bold">Follow Us</h2>
+                    <ul className="flex flex-col gap-2">
+                        {socialMedia.map((media, index) => (
+                            <li key={index} className="flex items-center gap-2 text-lg">
+                                <Link href={media.url} target="_blank">
+                                    <media.icon size={30} />
+                                </Link>
+                                <span>{media.name}</span>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+
+                <div className="flex flex-col gap-4">
+                    <h2 className="text-3xl font-bold">Information</h2>
+                    <ul className="flex flex-col gap-2">
+                        {informationLinks.map((link, index) => (
+                            <li key={index} className="text-lg hover:text-gray-300 transition duration-200">
+                                <Link href={link.url}>{link.title}</Link>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+
                 <div className="flex flex-col gap-2">
-                    <h2 className="text-2xl font-bold">NEVERBE</h2>
-                    <ul className="flex flex-col gap-1 mt-1">
-                        <li className="text-lg"><Link href="">About Us</Link></li>
-                        <li className="text-lg"><Link href="">Terms & Conditions</Link></li>
-                        <li className="text-lg"><Link href="">Privacy Policy</Link></li>
-                    </ul>
-                </div>
-                <div>
-                    <h2 className="text-2xl font-bold">Follow Us</h2>
-                    <ul className="flex flex-col gap-1 mt-1">
-                        <li className="text-lg flex flex-row justify-start gap-1 items-center">
-                            <Link href="">
-                            <IoLogoFacebook size={30}/>
-                            </Link>
-                            <p>
-                                Facebook
-                            </p>
-                        </li>
-                        <li className="text-lg flex flex-row justify-start gap-1 items-center">
-                            <Link href="">
-                            <IoLogoInstagram size={30}/>
-                            </Link>
-                            <p>
-                                Instagram
-                            </p>
-                        </li>
-                        <li className="text-lg flex flex-row justify-start gap-1 items-center">
-                            <Link href="">
-                            <IoLogoTiktok size={30}/>
-                            </Link>
-                            <p>
-                                Tiktok
-                            </p>
-                        </li>
-                    </ul>
-                </div>
-                <div>
-                    <h2 className="text-2xl font-bold">Information</h2>
-                    <ul className="flex flex-col gap-1 mt-1">
-                        <li className="text-lg"><Link href="">FAQ</Link></li>
-                        <li className="text-lg"><Link href="">Shipping & Returns</Link></li>
-                        <li className="text-lg"><Link href="">Tracking</Link></li>
-                    </ul>
-                </div>
-                <div className="flex flex-col gap-2">
-                    <h2 className="text-2xl font-bold">Contact Us</h2>
-                    <ul>
-                        <li className="text-xl font-bold">NEVERBE</li>
-                        <li className="text-lg">
-                            330/4/10, New Kandy Road,
-                        </li>
-                        <li className="text-lg"> Delgoda, Gampaha,</li>
+                    <h2 className="text-3xl font-bold">Contact Us</h2>
+                    <ul className="flex flex-col gap-2">
+                        {contactInfo.map((info, index) => (
+                            <li key={index} className="text-lg hover:text-gray-300 transition duration-200 flex flex-row gap-1">
+                                <info.icon size={30} />
+                                <p>{info.content}</p>
+                            </li>
+                        ))}
                     </ul>
                 </div>
             </div>
