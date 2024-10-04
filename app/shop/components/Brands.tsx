@@ -5,7 +5,7 @@ import Image from "next/image";
 const Brands = () => {
     return (
         <div className="w-full bg-slate-100">
-            <div className="p-8 mt-16">
+            <div className="p-8 mt-10">
                 <ul className="flex w-full mt-5 flex-wrap gap-10 flex-row justify-center items-center">
                     {brands.map((item, index) => (
                         <li key={index} className="flex w-[22rem] flex-col justify-center items-center">

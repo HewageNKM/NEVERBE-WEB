@@ -7,7 +7,7 @@ import EmptyState from "@/components/EmptyState";
 const NewArrivals = async () => {
     const items:Item[] = await getInventoryByRecent();
     return (
-        <div className="w-full mt-20">
+        <div className="w-full mt-10">
             <div className="px-8 py-4">
                 <div>
                     <h1 className="font-bold text-4xl">New Arrivals</h1>

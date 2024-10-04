@@ -5,7 +5,7 @@ import Link from "next/link";
 
 const Faq = () => {
     return (
-        <div className="w-full">
+        <div className="w-full mt-10">
             <div className="p-8">
                 <h1 className="text-4xl font-bold">
                     FAQ

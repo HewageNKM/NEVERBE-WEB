@@ -20,7 +20,7 @@ const ImagesSlider = ({images}: { images: Slide[] }) => {
             >
                 {images.map((image, index) => (
                     <SwiperSlide key={index}>
-                        <Image src={image.url} alt={image.fileName} width={1980} height={750} className="w-full bg-auto h-fit"/>
+                        <Image layout={"responsive"} src={image.url} alt={image.fileName} width={1980} height={750} className="w-full h-auto object-cover"/>
                     </SwiperSlide>
                 ))}
             </Swiper>

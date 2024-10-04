@@ -5,7 +5,7 @@ import {getSliders} from "@/firebase/serviceAPI";
 const Hero = async () => {
     const sliders = await getSliders();
     return (
-        <div className="w-full bg-slate-200 mt-32">
+        <div className="w-full bg-slate-200 mt-20 md:mt-28 lg:mt-32">
             <ImagesSlider images={sliders}/>
         </div>
     );
