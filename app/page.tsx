@@ -1,8 +1,11 @@
-import {redirect} from "next/navigation";
-
-
-const Home = () => {
-    return redirect("/shop");
+export async function getServerSideProps() {
+    return {
+        redirect: {
+            destination: '/shop',
+            permanent: false,
+        },
+    };
 }
 
+const Home = () => null;
 export default Home;
