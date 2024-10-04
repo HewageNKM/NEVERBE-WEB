@@ -9,7 +9,7 @@ const BrandsPopupMenu = ({setShowBrands}:{setShowBrands:any}) => {
                     animate={{opacity: 1, y: 0}}
                     exit={{opacity: 0, y: '2vh'}}
                     transition={{duration: 0.2}}
-                    className="w-full z-50 hidden lg:flex justify-center absolute">
+                    className="w-full z-50 hidden lg:flex top-[6rem] justify-center absolute">
             <div onMouseEnter={() => setShowBrands(true)} className="flex w-fit bg-white p-4 flex-row gap-10 flex-wrap mt-8 shadow-primary rounded-lg">
                 {brands.map((brand, index) => (
                     <div key={index}>

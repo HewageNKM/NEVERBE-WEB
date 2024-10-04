@@ -13,7 +13,7 @@ const Page = async ({params}: { params: { itemId: string } }) => {
 
     if(!item) return notFound();
     return (
-        <div className="w-full">
+        <div className="w-full lg:mt-32 md:mt-20">
             <div className="px-8 py-4">
                 <ProductHero item={item}/>
                 <SizeChart image={SizeImage}/>

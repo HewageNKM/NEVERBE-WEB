@@ -1,13 +1,17 @@
 import React from "react";
 import Link from "next/link";
 import { address, socialMedia, informationLinks, contactInfo } from "@/constants";
+import Image from "next/image";
+import {Logo} from "@/assets/images";
 
 const Footer = () => {
     return (
         <footer className="w-full bg-primary text-white py-8">
-            <div className="container mx-auto flex flex-col md:flex-row justify-between gap-10">
+            <div className="container px-8 mx-auto flex flex-col md:flex-row justify-between gap-10">
                 <div className="flex flex-col gap-4">
-                    <h2 className="text-3xl font-bold">NEVERBE</h2>
+                    <div className="">
+                        <Image src={Logo} alt={"NEVERBE"} width={100} height={100} />
+                    </div>
                     <ul className="flex flex-col gap-2">
                         {address.map((link, index) => (
                             <li key={index} className="text-lg hover:text-gray-300 transition duration-200">

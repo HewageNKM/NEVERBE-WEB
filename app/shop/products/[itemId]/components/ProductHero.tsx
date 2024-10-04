@@ -57,8 +57,8 @@ const ProductHero = ({item}:{item:Item}) => {
         <div>
             <h1 className="md:text-4xl text-2xl font-bold tracking-wider mt-10">Product Portfolio</h1>
             <div className="flex flex-row ga-1 text-blue-500 items-center text-sm md:text-lg">
-                <Link href={"/public"}>Home</Link>
-                <Link href={"/products"}>/Products/</Link>
+                <Link href={"/"}>Home</Link>
+                <Link href={"/shop/products"}>/Products/</Link>
                 <Link href={`/app/shop/products/${item.itemId}`}> {item.itemId}</Link>
             </div>
             <div className="grid md:grid-cols-2 grid-cols-1 gap-6 md:gap-10 mt-10">

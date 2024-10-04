@@ -8,6 +8,8 @@ import BrandsPopupMenu from "@/components/BrandsPopupMenu";
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "@/redux/store";
 import {showCart} from "@/redux/cartSlice/cartSlice";
+import Image from "next/image";
+import {Logo} from "@/assets/images";
 
 const Header = () => {
     const [showBrands, setShowBrands] = useState(false);
@@ -15,21 +17,35 @@ const Header = () => {
     const dispatch:AppDispatch = useDispatch();
 
     return (
-        <header className="w-full mt-4 relative" onMouseLeave={() => setShowBrands(false)}>
-            <ul className="flex-row z-40 hidden mt-3 absolute lg:flex w-full justify-center items-center">
-                <div className="flex z-50 flex-row gap-10">
-                    <Link href="/shop/products" className="text-3xl hover:text-primary transition-all font-bold tracking-widest">
+        <header className="w-full relative" onMouseLeave={() => setShowBrands(false)}>
+            <Link href="/" className="z-50 absolute top-0 left-0 font-bold">
+                <Image src={Logo} alt="NEVERBE_Logo" width={200} height={200} className="cursor-pointer md:h-36 md:w-36 h-28 w-28"/>
+            </Link>
+            <div className="lg:hidden z-50 flex flex-row gap-2 absolute right-5 top-7">
+                <button onClick={() => dispatch(showCart())} className="bg-primary rounded-full p-1 relative">
+                    <IoCart size={35} color="white"/>
+                    <div
+                        className="absolute -top-5 -right-2 font-bold bg-primary text-white rounded-full w-7 h-7 flex justify-center items-center">{cartItems.length}</div>
+                </button>
+                <button className="bg-primary text-center p-1 text-white rounded-lg">
+                    <IoMenu size={40} color="white"/>
+                </button>
+            </div>
+            <ul className="flex-row z-40 hidden mt-16 absolute lg:flex w-full justify-center items-center">
+                <div className="flex z-50 flex-row gap-10 lg:gap-8">
+                    <Link href="/shop/products"
+                          className="lg:text-[1.8rem] xl:text-3xl hover:text-primary transition-all font-bold tracking-widest">
                         <h2>Shop Now</h2></Link>
                     <Link onMouseEnter={() => setShowBrands(true)} href="/shop/products"
-                          className="text-3xl hover:text-primary transition-all font-bold tracking-widest">
+                          className="lg:text-[1.8rem] xl:text-3xl hover:text-primary transition-all font-bold tracking-widest">
                         <h2>Brands</h2></Link>
-                    <Link href="/shop/products" className="text-3xl hover:text-primary transition-all font-bold tracking-widest">
+                    <Link href="/shop/products"
+                          className="lg:text-[1.8rem] xl:text-3xl hover:text-primary transition-all font-bold tracking-widest">
                         <h2>Accessories</h2></Link>
                 </div>
             </ul>
-            <div className="px-8 pt-4  flex items-center justify-between gap-10 relative">
-                <Link href="/" className="text-3xl z-50 tracking-wide md:text-4xl font-bold">NEVERBE</Link>
-                <div className="lg:flex-row z-50 absolute right-2 justify-center items-center gap-5 hidden lg:flex">
+            <div className="px-8 pt-12 flex justify-between gap-10 relative">
+                <div className="lg:flex-row z-50 absolute right-2 justify-center items-center gap-3 hidden lg:flex">
                     <button onClick={() => dispatch(showCart())} className="bg-primary rounded-full p-1 relative">
                         <IoCart size={40} color="white"/>
                         <div
@@ -39,19 +55,8 @@ const Header = () => {
                         size={40} color="white"/></button>
                     <div
                         className="bg-primary text-white font-bold tracking-wider px-4 py-1 cursor-pointer rounded-lg flex flex-row justify-center items-center gap-2">
-                        <RxAvatar size={40} color="white"/>
-                        <button>Sign In/Up</button>
+                        <button><RxAvatar size={40} color="white"/></button>
                     </div>
-                </div>
-                <div className="lg:hidden flex flex-row gap-2 ">
-                    <button onClick={() => dispatch(showCart())} className="bg-primary rounded-full p-1 relative">
-                        <IoCart size={35} color="white"/>
-                        <div
-                            className="absolute -top-5 -right-2 font-bold bg-primary text-white rounded-full w-7 h-7 flex justify-center items-center">{cartItems.length}</div>
-                    </button>
-                    <button className="bg-primary text-center p-1 text-white rounded-lg">
-                        <IoMenu size={40} color="white"/>
-                    </button>
                 </div>
             </div>
             <AnimatePresence>

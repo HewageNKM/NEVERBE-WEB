@@ -8,6 +8,7 @@ import AdidasLogo from './adidas.png';
 import NewBalanceLogo from './new-balance.png';
 import CrossLogo from './cross.png';
 import PoloLogo from './polo.png';
+import Logo from './logo.png';
 
 export
 {
@@ -20,5 +21,6 @@ export
     AdidasLogo,
     NewBalanceLogo,
     CrossLogo,
-    PoloLogo
+    PoloLogo,
+    Logo
 };

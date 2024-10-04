@@ -3,7 +3,7 @@ import { shippingReturnPolicy } from "@/constants";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Returns & Refund Policy",
+    title: "Shipping, Returns & Refund Policy",
 };
 
 const ShippingReturnPolicyPage = () => {

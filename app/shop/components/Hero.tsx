@@ -3,7 +3,7 @@ import ImagesSlider from "@/app/shop/components/ImagesSlider";
 
 const Hero = () => {
     return (
-        <div className="w-full bg-slate-200 mt-10">
+        <div className="w-full bg-slate-200 mt-32">
             <ImagesSlider images={[]}/>
         </div>
     );
