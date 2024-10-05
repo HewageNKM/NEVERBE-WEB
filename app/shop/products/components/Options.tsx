@@ -1,13 +1,19 @@
 "use client"
-import React from 'react';
+import React, {useEffect} from 'react';
 import {RxMixerHorizontal} from "react-icons/rx";
-import {useDispatch} from "react-redux";
-import {AppDispatch} from "@/redux/store";
-import {toggleFilter} from "@/redux/productsSlice/productsSlice";
+import {useDispatch, useSelector} from "react-redux";
+import {AppDispatch, RootState} from "@/redux/store";
+import {filterProducts, setSelectedSort, toggleFilter} from "@/redux/productsSlice/productsSlice";
 import {sortingOptions} from "@/constants";
 
 const Options = () => {
     const dispatch:AppDispatch = useDispatch();
+    const selectedSort = useSelector((state:RootState) => state.productsSlice.selectedSort);
+
+    useEffect(() => {
+        dispatch(filterProducts());
+    }, [dispatch, selectedSort]);
+
     return (
         <section className="mt-10 flex flex-row gap-2 md:text-lg text-sm justify-between w-full">
             <div
@@ -17,7 +23,7 @@ const Options = () => {
             </div>
             <div>
                 <label>
-                    <select defaultValue="" className="p-2 rounded-lg font-medium bg-slate-200">
+                    <select onChange={(event)=>dispatch(setSelectedSort(event.target.value))} defaultValue={selectedSort} className="p-2 rounded-lg font-medium bg-slate-200">
                         {sortingOptions.map((option, index) => (
                             <option key={index} value={option.value} className="bg-white font-medium">{option.name}</option>
                         ))}

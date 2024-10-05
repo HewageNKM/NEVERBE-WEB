@@ -29,7 +29,7 @@ export const brands = [
                 url: "/products/brands/nike/react"
             },
             {
-                name: "Scandals",
+                name: "Slippers",
                 url: "/products/brands/nike/scandals"
             }
         ]
@@ -48,7 +48,7 @@ export const brands = [
                 url: "/products/brands/adidas/samba"
             },
             {
-                name: "Scandals",
+                name: "Slippers",
                 url: "/products/brands/adidas/scandals"
             }
         ]
@@ -59,7 +59,7 @@ export const brands = [
         url: '/products/brands/puma',
         titles: [
             {
-                name: "Scandals",
+                name: "Slippers",
                 url: "/products/brands/new-balance/scandals"
             }
         ]
@@ -70,7 +70,7 @@ export const brands = [
         url: '/products/brands/reebok',
         titles: [
             {
-                name: "Scandals",
+                name: "Slippers",
                 url: "/products/brands/new-balance/scandals"
             }
         ]
@@ -81,7 +81,7 @@ export const brands = [
         url: '/products/brands/polo',
         titles: [
             {
-                name: "Scandals",
+                name: "Slippers",
                 url: "/products/brands/polo/scandals"
             }
         ]
@@ -92,7 +92,7 @@ export const brands = [
         url: "/products/brands/mlb",
         titles: [
             {
-                name: "Scandals",
+                name: "Slippers",
                 url: "/products/brands/mlb/scandals"
             }
         ]
@@ -110,17 +110,14 @@ export const sortingOptions = [
     {
         name: 'Price: High to Low',
         value: 'hl'
-    },
-    {
-        name: 'Newest Arrivals',
-        value: 'newest'
     }
 ]
 export const productTypes = [
     {name: "All", value: "all"},
     {name: "Shoe", value: "shoe"},
-    {name: "Scandals", value: "scandals"},
-    {name: "Accessories", value: "accessories"},
+    {name: "Slippers", value: "slippers"},
+    {name: "Socks", value: "socks"},
+    {name: "Other Accessories", value: "other accessories"},
 ]
 export const wearableSizes = [
     "36",

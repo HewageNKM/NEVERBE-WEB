@@ -9,40 +9,53 @@ const inter = Inter({subsets: ["latin"]});
 
 export const metadata: Metadata = {
     title: {
-        default: "NEVERBE - Quality Branded Copy Shoes in Sri Lanka.",
-        template: "%s | NEVERBE - Quality Branded Copy Shoes in Sri Lanka.",
+        default: "NEVERBE - Premium Branded Copy Shoes in Sri Lanka",
+        template: "%s | NEVERBE - Premium Branded Copy Shoes in Sri Lanka",
     },
-    description: "Discover NEVERBE, your premier ecommerce destination for high-quality branded copy shoes and accessories in Sri Lanka. Enjoy a seamless shopping experience with fast delivery and exceptional customer service.",
+    metadataBase: new URL("https://neverbe.lk"),
+    alternates: {
+        canonical: "https://neverbe.lk/",
+    },
+    description:
+        "NEVERBE is Sri Lanka's premier online store for high-quality branded copy shoes and accessories. Shop from top brands with fast delivery and excellent customer support.",
     category: "Ecommerce",
+    keywords: [
+        "NEVERBE", "NEVERBE Sri Lanka", "NEVERBE Shoes", "Branded Copy Shoes Sri Lanka",
+        "Adidas Sri Lanka", "Nike Sri Lanka", "Copy Shoes Sri Lanka", "Fashion Accessories Sri Lanka",
+        "Online Shop Sri Lanka", "Quality Shoes Sri Lanka", "Ecommerce Sri Lanka"
+    ],
     twitter: {
-        images: [
-            {
-                url: "./assets/images/logo.png",
-                alt: "NEVERBE_Logo",
-            },
-        ],
         card: "summary_large_image",
         site: "@neverbe",
         creator: "@neverbe",
-        title: "NEVERBE - Quality Branded Copy Shoes in Sri Lanka.",
-        description: "Discover NEVERBE, your premier ecommerce destination for high-quality branded copy shoes and accessories in Sri Lanka. Enjoy a seamless shopping experience with fast delivery and exceptional customer service.",
-    },
-    openGraph: {
+        title: "NEVERBE - Premium Branded Copy Shoes in Sri Lanka",
+        description:
+            "NEVERBE is Sri Lanka's top destination for branded copy shoes. Enjoy seamless shopping with fast shipping and quality service.",
         images: [
             {
-                url: "https://neverbe.lk/api/og",
-                alt: "NEVERBE_Logo",
+                url: "https://neverbe.lk/assets/images/logo.png",
+                alt: "NEVERBE Logo",
                 width: 260,
                 height: 260,
             },
         ],
+    },
+    openGraph: {
         type: "website",
         locale: "en_US",
         siteName: "NEVERBE",
-        title: "NEVERBE - Quality Branded Copy Shoes in Sri Lanka.",
-        description: "Discover NEVERBE, your premier ecommerce destination for high-quality branded copy shoes and accessories in Sri Lanka. Enjoy a seamless shopping experience with fast delivery and exceptional customer service.",
+        title: "NEVERBE - Premium Branded Copy Shoes in Sri Lanka",
+        description:
+            "Discover NEVERBE, Sri Lanka's best ecommerce platform for branded copy shoes and accessories with fast delivery and superior service.",
+        images: [
+            {
+                url: "https://neverbe.lk/assets/images/logo.png",
+                alt: "NEVERBE Logo",
+                width: 260,
+                height: 260,
+            },
+        ],
     },
-    keywords: ["NEVERBE", "NEVERBE Sri Lanka", "NEVERBE Shoes", "NEVERBE Accessories", "NEVERBE Shop", "NEVERBE Online Shop", "NEVERBE Ecommerce", "NEVERBE Quality Shoes", "NEVERBE Quality Accessories", "NEVERBE Branded Shoes", "NEVERBE Branded Accessories", "NEVERBE Copy Shoes", "NEVERBE Copy Accessories", "NEVERBE Sri Lanka Shop", "NEVERBE Sri Lanka Online Shop", "NEVERBE Sri Lanka Ecommerce", "NEVERBE Sri Lanka Quality Shoes", "NEVERBE Sri Lanka Quality Accessories", "NEVERBE Sri Lanka Branded Shoes", "NEVERBE Sri Lanka Branded Accessories", "NEVERBE Sri Lanka Copy Shoes", "NEVERBE Sri Lanka Copy Accessories", "Nike Shoes Sri Lanka", "Adidas Shoes Sri Lanka", "New Balance Shoes Sri Lanka"],
 }
 
 export default function RootLayout({children}: Readonly<{ children: React.ReactNode; }>) {
