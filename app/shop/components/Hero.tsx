@@ -1,13 +1,34 @@
 import React from 'react';
 import ImagesSlider from "@/app/shop/components/ImagesSlider";
 import {getSliders} from "@/firebase/serviceAPI";
+import Link from "next/link";
+import {IoCar} from "react-icons/io5";
+import {BiCart} from "react-icons/bi";
+import {offlineSlides} from "@/constants";
+import {Slide} from "@/interfaces";
 
 const Hero = async () => {
-    const sliders = await getSliders();
+
+    let sliders:Slide[] = []
+
+    try {
+         sliders = await getSliders();
+    }catch (e) {
+        console.log(e);
+    }
+
     return (
-        <div className="w-full bg-slate-200 mt-20 md:mt-28 lg:mt-32">
-            <ImagesSlider images={sliders}/>
-        </div>
+        <section className="w-full mt-20 md:mt-28 lg:mt-32">
+            <ImagesSlider images={sliders || offlineSlides}/>
+            <div className="mt-5 lg:hidden block px-8">
+                <Link href={"/shop/products"}>
+                    <div className="bg-primary text-xl md:text-2xl w-fit p-2 font-bold flex-row flex justify-center items-center gap-1 text-white">
+                        <h3>Shop Now</h3>
+                        <span><BiCart size={30}/></span>
+                    </div>
+                </Link>
+            </div>
+        </section>
     );
 };
 

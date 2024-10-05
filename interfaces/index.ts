@@ -69,5 +69,5 @@ export interface SocialMedia {
 
 export interface Slide {
     fileName: string;
-    url: string;
+    url: any;
 }

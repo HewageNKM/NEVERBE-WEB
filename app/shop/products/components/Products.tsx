@@ -15,12 +15,12 @@ const Products = () => {
     }, [dispatch]);
 
     return (
-        <div className="flex flex-row flex-wrap gap-5 mt-20 mb-10">
+        <section className="flex flex-row flex-wrap gap-5 mt-20 mb-10">
             {items.map((item, index) => (
                 <ItemCard item={item} flag={""} key={item.itemId}/>
             ))}
             {items.length === 0 && <EmptyState message={"Products Not Available!"}/>}
-        </div>
+        </section>
     );
 };
 

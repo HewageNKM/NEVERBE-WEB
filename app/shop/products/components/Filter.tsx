@@ -35,7 +35,7 @@ const Filter = () => {
 
     return (
         <DropShadow containerStyle="flex justify-start items-start">
-            <motion.div initial={{opacity: 0, x: "-100vw"}}
+            <motion.section initial={{opacity: 0, x: "-100vw"}}
                         animate={{opacity: 1, x: 0}}
                         exit={{opacity: 0, x: "-100vw"}}
                         transition={{type: "tween", duration: 0.4, delay: 0.1}}
@@ -155,7 +155,7 @@ const Filter = () => {
                 <button className="top-0 right-0 absolute">
                     <IoClose onClick={() => dispatch(toggleFilter())} size={40}/>
                 </button>
-            </motion.div>
+            </motion.section>
         </DropShadow>
     );
 };

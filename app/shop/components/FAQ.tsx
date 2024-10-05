@@ -5,23 +5,25 @@ import Link from "next/link";
 
 const Faq = () => {
     return (
-        <div className="w-full mt-10">
+        <section className="w-full mt-10">
             <div className="p-8">
                 <h1 className="text-4xl font-bold">
                     FAQ
                 </h1>
-                <div className="flex flex-row flex-wrap justify-center gap-10 mt-10 w-full">
+                <ul className="flex flex-row flex-wrap justify-center gap-10 mt-10 w-full">
                     {faqs.map((faq, index) => (
-                        <FaqCard index={index} faq={faq} key={index}/>
+                        <li key={index}>
+                            <FaqCard index={index} faq={faq}/>
+                        </li>
                     ))}
-                </div>
+                </ul>
                 <div className="mt-5">
-                    <Link href="#footer" className="md:text-lg text-xs tracking-wide">
+                    <Link href={"#footer"} className="md:text-lg text-xs tracking-wide">
                         *Terms and conditions apply.
                     </Link>
                 </div>
             </div>
-        </div>
+        </section>
     );
 };
 

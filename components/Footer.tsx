@@ -7,25 +7,27 @@ import {GoLocation} from "react-icons/go";
 
 const Footer = () => {
     return (
-        <footer className="w-full bg-primary text-white py-8">
+        <footer className="w-full bg-primary text-white py-4">
             <div className="flex md:justify-center lg:justify-between md:flex-wrap flex-col md:flex-row p-8 gap-10">
                 <div className="flex flex-col md:flex-row gap-4 md:justify-center justify-start md:items-center">
                     <Link href="/">
-                        <Image src={Logo} alt={"NEVERBELogo"} width={100} height={100}/>
+                        <figure>
+                            <Image src={Logo} alt={"NEVERBELogo"} width={100} height={100}/>
+                        </figure>
                     </Link>
-                    <ul className="flex flex-col gap-4">
+                    <div className="flex flex-col gap-4">
                         <h2 className="text-3xl font-bold">Address</h2>
                         <div className="flex flex-row gap-2">
                             <GoLocation size={30}/>
-                            <div className="flex flex-col gap-2">
+                            <ul className="flex flex-col gap-2">
                                 {address.map((link, index) => (
                                     <li key={index} className="text-lg">
                                         <p>{link.name}</p>
                                     </li>
                                 ))}
-                            </div>
+                            </ul>
                         </div>
-                    </ul>
+                    </div>
                 </div>
 
                 <div className="flex flex-col gap-4">
@@ -66,18 +68,17 @@ const Footer = () => {
                     </ul>
                 </div>
             </div>
-            <div className="mt-10 w-full flex-col flex gap-2 justify-center items-center">
+            <div
+                className="mt-10 w-full flex-row lg:justify-evenly justify-center flex-wrap flex gap-5 px-8 items-center">
                 <p className="text-lg font-medium text-center">© {new Date().getFullYear().toString()} NEVERBE.
                     All Rights Reserved.</p>
                 <p className="font-medium text-base">Develop By <Link href={"https://hewagenkm.github.io/"}>Nadun
                     Malwenna</Link></p>
-            </div>
-            <div className="px-8 w-full mt-5 justify-center items-center">
-                <div className="flex justify-center items-center">
+                <figure className="flex justify-center items-center">
 
                     <Image src={payHere.longWhiteBanner} width={400}
                            height={200} alt="PayhereLogo"/>
-                </div>
+                </figure>
             </div>
         </footer>
     );

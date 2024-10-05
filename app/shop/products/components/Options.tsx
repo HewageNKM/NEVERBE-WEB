@@ -9,7 +9,7 @@ import {sortingOptions} from "@/constants";
 const Options = () => {
     const dispatch:AppDispatch = useDispatch();
     return (
-        <div className="mt-10 flex flex-row gap-2 md:text-lg text-sm justify-between w-full">
+        <section className="mt-10 flex flex-row gap-2 md:text-lg text-sm justify-between w-full">
             <div
                 className="flex font-semibold tracking-wide flex-row gap-2 justify-center items-center">
                 <button onClick={()=>dispatch(toggleFilter())}>Filters</button>
@@ -24,7 +24,7 @@ const Options = () => {
                     </select>
                 </label>
             </div>
-        </div>
+        </section>
     );
 };
 

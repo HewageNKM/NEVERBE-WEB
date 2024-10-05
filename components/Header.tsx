@@ -23,38 +23,44 @@ const Header = () => {
             </Link>
             <div className="lg:hidden z-50 flex flex-row gap-2 absolute right-5 top-7">
                 <button onClick={() => dispatch(showCart())} className="bg-primary rounded-full p-1 relative">
-                    <IoCart size={35} color="white"/>
+                    <IoCart size={40} color="white"/>
                     <div
                         className="absolute -top-5 -right-2 font-bold bg-primary text-white rounded-full w-7 h-7 flex justify-center items-center">{cartItems.length}</div>
                 </button>
-                <button className="bg-primary text-center p-1 text-white rounded-lg">
+                <button className="bg-primary text-center p-1 text-white rounded-full">
                     <IoMenu size={40} color="white"/>
                 </button>
             </div>
-            <ul className="flex-row z-40 hidden mt-16 absolute lg:flex w-full justify-center items-center">
-                <div className="flex z-50 flex-row gap-10 lg:gap-8">
-                    <Link href="/shop/products"
-                          className="lg:text-[1.8rem] xl:text-3xl hover:text-primary transition-all font-bold tracking-widest">
-                        <h2>Shop Now</h2></Link>
-                    <Link onMouseEnter={() => setShowBrands(true)} href="/shop/products"
-                          className="lg:text-[1.8rem] xl:text-3xl hover:text-primary transition-all font-bold tracking-widest">
-                        <h2>Brands</h2></Link>
-                    <Link href="/shop/products"
-                          className="lg:text-[1.8rem] xl:text-3xl hover:text-primary transition-all font-bold tracking-widest">
-                        <h2>Accessories</h2></Link>
-                </div>
-            </ul>
+            <div className="flex-row z-40 hidden mt-16 absolute lg:flex w-full justify-center items-center">
+                <ul className="flex z-50 flex-row gap-10 lg:gap-8">
+                   <li>
+                       <Link href="/shop/products"
+                             className="lg:text-[1.8rem] xl:text-3xl hover:text-primary transition-all font-bold tracking-widest">
+                           <h2>Shop Now</h2></Link>
+                   </li>
+                    <li>
+                        <Link onMouseEnter={() => setShowBrands(true)} href="/shop/products"
+                              className="lg:text-[1.8rem] xl:text-3xl hover:text-primary transition-all font-bold tracking-widest">
+                            <h2>Brands</h2></Link>
+                    </li>
+                    <li>
+                        <Link href="/shop/products"
+                              className="lg:text-[1.8rem] xl:text-3xl hover:text-primary transition-all font-bold tracking-widest">
+                            <h2>Accessories</h2></Link>
+                    </li>
+                </ul>
+            </div>
             <div className="px-8 pt-12 flex justify-between gap-10 relative">
                 <div className="lg:flex-row z-50 absolute right-2 justify-center items-center gap-3 hidden lg:flex">
-                    <button onClick={() => dispatch(showCart())} className="bg-primary rounded-full p-1 relative">
+                    <button onClick={() => dispatch(showCart())} className="bg-primary rounded-full p-2 relative">
                         <IoCart size={40} color="white"/>
                         <div
                             className="absolute -top-5 -right-2 font-bold bg-primary text-white rounded-full w-7 h-7 flex justify-center items-center">{cartItems.length}</div>
                     </button>
-                    <button className="bg-primary text-center p-1 text-white rounded-lg"><IoSearch
+                    <button className="bg-primary text-center p-2 text-white rounded-full"><IoSearch
                         size={40} color="white"/></button>
                     <div
-                        className="bg-primary text-white font-bold tracking-wider px-4 py-1 cursor-pointer rounded-lg flex flex-row justify-center items-center gap-2">
+                        className="bg-primary text-white font-bold tracking-wider p-2 cursor-pointer rounded-full flex flex-row justify-center items-center gap-2">
                         <button><RxAvatar size={40} color="white"/></button>
                     </div>
                 </div>

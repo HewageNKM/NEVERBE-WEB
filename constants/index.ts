@@ -1,9 +1,10 @@
 import {DeliveryImage, GoodsImage, MoneyImage, SupportImage} from "@/assets/images";
-import {FooterLink, SocialMedia} from "@/interfaces";
+import {FooterLink, Slide, SocialMedia} from "@/interfaces";
 import {IoLogoTiktok} from "react-icons/io5";
 import {IoLogoFacebook, IoLogoInstagram} from "react-icons/io";
 import {MdEmail} from "react-icons/md";
 import {FaMobile, FaPhone} from "react-icons/fa";
+import {PaymentSlide} from "@/assets/slides";
 
 export const brands = [
     {
@@ -201,7 +202,7 @@ export const shippingReturnPolicy = [
     {
         title: "Return Eligibility",
         description:
-            "We accept returns on unworn, unused items with their original packaging intact. To be eligible for a return, please initiate the return process within 7 days of receiving your order.",
+            "We accept returns on unworn, unused items with their original packaging intact. To be eligible for a return, please initiate the return process within 7 days of receiving your order. Accessories, such as socks and insoles, are final sale and cannot be returned.",
     },
     {
         title: "Initiating a Return",
@@ -345,14 +346,6 @@ export const faqs = [
         answer: "You can return the product within 7 days of purchase."
     },
     {
-        question: "What is the shipping policy?",
-        answer: "We ship the product within 2 days of purchase."
-    },
-    {
-        question: "What is the refund policy?",
-        answer: "You can refund the product within 7 days of purchase."
-    },
-    {
         question: "What is the exchange policy?",
         answer: "You can exchange the product within 7 days of purchase."
     },
@@ -363,6 +356,32 @@ export const faqs = [
     {
         question: "What is the delivery time?",
         answer: "We deliver the product within 6-10 days of purchase."
+    },
+    {
+        question: "What is the shipping policy?",
+        answer: "We ship the product within 2 days of purchase."
+    },
+    {
+        question: "What is the refund policy?",
+        answer: "You can refund the product within 7 days of purchase."
+    },
+    {
+        question: "Do you provide a warranty?",
+        answer: "No, we do not provide a warranty for our products."
+    },
+    {
+        question: "Are the products original?",
+        answer: "Our products are high-quality copies made in Vietnam, not original."
+    }
+];
+export const offlineSlides:Slide[] = [
+    {
+        fileName:"payment",
+        url: PaymentSlide
+    },
+    {
+        fileName: "delivery",
+        url: DeliveryImage
     }
 ]
 export const payHere = {

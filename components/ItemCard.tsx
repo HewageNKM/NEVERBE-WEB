@@ -34,10 +34,10 @@ const ItemCard = ({item,flag}:{item:Item,flag:string}) => {
     return (
         <div className="w-[16rem] lg:w-[20rem] transition-all h-[26.5rem] lg:h-[30.5rem] shadow relative rounded-lg">
             <Link href={`/shop/products/${item.itemId.toLowerCase()}`}>
-                <div>
+                <figure>
                     <Image width={300} height={300} src={item.thumbnail} alt={item.name}
                            className="w-[16rem] h-[17rem] lg:h-[21rem] lg:w-[20rem] rounded-t-lg"/>
-                </div>
+                </figure>
                 <div className="capitalize px-2 transition-all flex flex-col gap-1 mt-2 md:text-2xl text-xl font-medium">
                     <h2 className="text-primary font-semibold tracking-wider">{item.name}</h2>
                     <div className="flex flex-col justify-between">
