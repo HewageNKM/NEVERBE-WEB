@@ -1,12 +1,24 @@
 import {auth, inventoryCollectionRef, slidersCollectionRef} from "@/firebase/Config";
-import {signInAnonymously} from "firebase/auth";
+import {onAuthStateChanged, signInAnonymously} from "firebase/auth";
 import {doc, getDoc, getDocs, limit, orderBy} from "@firebase/firestore";
 import {Item, Slide} from "@/interfaces";
 import {query} from "@firebase/database";
 
 
-export const signAnonymousUser = async () => {
-    return await signInAnonymously(auth);
+export const signUser = async (callBack: any) => {
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            callBack(user);
+        } else {
+            signInAnonymously(auth)
+                .then((userCredential) => {
+                    callBack(userCredential.user);
+                })
+                .catch((error) => {
+                    console.log('Error signing in anonymously:', error);
+                });
+        }
+    })
 };
 
 export const getInventoryByRecent = async () => {
