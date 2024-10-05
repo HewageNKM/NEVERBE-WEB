@@ -10,11 +10,13 @@ import {AppDispatch, RootState} from "@/redux/store";
 import {showCart} from "@/redux/cartSlice/cartSlice";
 import Image from "next/image";
 import {Logo} from "@/assets/images";
+import Menu from "@/components/Menu";
 
 const Header = () => {
     const [showBrands, setShowBrands] = useState(false);
     const cartItems = useSelector((state:RootState) => state.cartSlice.cart);
     const dispatch:AppDispatch = useDispatch();
+    const [showMenu, setShowMenu] = useState(false);
 
     return (
         <header className="w-full relative" onMouseLeave={() => setShowBrands(false)}>
@@ -27,7 +29,7 @@ const Header = () => {
                     <div
                         className="absolute -top-5 -right-2 font-bold bg-primary text-white rounded-full w-7 h-7 flex justify-center items-center">{cartItems.length}</div>
                 </button>
-                <button className="bg-primary text-center p-1 text-white rounded-full">
+                <button onClick={()=>setShowMenu(true)} className="bg-primary text-center p-1 text-white rounded-full">
                     <IoMenu size={40} color="white"/>
                 </button>
             </div>
@@ -69,7 +71,11 @@ const Header = () => {
                 {showBrands && (
                     <BrandsPopupMenu setShowBrands={setShowBrands}/>
                 )}
+                {showMenu && (
+                    <Menu setShowMenu={setShowMenu}/>
+                )}
             </AnimatePresence>
+
         </header>
     );
 };
