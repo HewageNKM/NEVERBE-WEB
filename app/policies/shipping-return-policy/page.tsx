@@ -4,6 +4,13 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
     title: "Shipping, Returns & Refund Policy",
+    twitter:{
+        card: "summary",
+        site: "@neverbe",
+        creator: "@neverbe",
+        title: "Shipping, Returns & Refund Policy",
+        description: "NEVERBE Shipping, Returns & Refund Policy",
+    }
 };
 
 const ShippingReturnPolicyPage = () => {

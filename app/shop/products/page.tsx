@@ -5,6 +5,27 @@ import {Metadata} from "next";
 
 export const metadata: Metadata = {
     title: "Products",
+    twitter:{
+        card: "summary",
+        site: "@neverbe",
+        creator: "@neverbe",
+        title: "Products",
+        description: "NEVERBE Products",
+    },
+    openGraph:{
+        title: "Products",
+        description: "NEVERBE Products",
+        url: "https://neverbe.lk/shop/products",
+        type: "website",
+        images: [
+            {
+                url: "https://neverbe.lk/api/og",
+                width: 260,
+                height: 260,
+                alt: "NEVERBE_Logo",
+            },
+        ],
+    }
 }
 
 const Page = () => {

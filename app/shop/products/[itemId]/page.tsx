@@ -8,7 +8,29 @@ import {Item} from "@/interfaces";
 
 export const metadata = {
     title: "Product Portfolio",
+    twitter:{
+        card: "summary",
+        site: "@neverbe",
+        creator: "@neverbe",
+        title: "Product Portfolio",
+        description: "NEVERBE Product Portfolio",
+    },
+    openGraph: {
+        title: "Product Portfolio",
+        description: "NEVERBE Product Portfolio",
+        url: "https://neverbe.lk/shop/products/[itemId]",
+        type: "website",
+        images: [
+            {
+                url: "https://neverbe.lk/api/og",
+                width: 260,
+                height: 260,
+                alt: "NEVERBE_Logo",
+            },
+        ],
+    }
 };
+
 const Page = async ({params}: { params: { itemId: string } }) => {
     //@ts-ignore
     let item:Item = null;

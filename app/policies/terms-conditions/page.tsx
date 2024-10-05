@@ -4,6 +4,13 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
     title: "Terms & Conditions",
+    twitter:{
+        card: "summary",
+        site: "@neverbe",
+        creator: "@neverbe",
+        title: "Terms & Conditions",
+        description: "NEVERBE Terms & Conditions",
+    }
 };
 
 const Page = () => {
