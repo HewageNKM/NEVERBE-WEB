@@ -14,14 +14,15 @@ import Menu from "@/components/Menu";
 
 const Header = () => {
     const [showBrands, setShowBrands] = useState(false);
-    const cartItems = useSelector((state:RootState) => state.cartSlice.cart);
-    const dispatch:AppDispatch = useDispatch();
+    const cartItems = useSelector((state: RootState) => state.cartSlice.cart);
+    const dispatch: AppDispatch = useDispatch();
     const [showMenu, setShowMenu] = useState(false);
 
     return (
         <header className="w-full relative" onMouseLeave={() => setShowBrands(false)}>
             <Link href="/" className="z-50 absolute top-0 left-0 font-bold">
-                <Image src={Logo} alt="NEVERBE_Logo" width={200} height={200} className="cursor-pointer md:h-36 md:w-36 h-28 w-28"/>
+                <Image src={Logo} alt="NEVERBE_Logo" width={200} height={200}
+                       className="cursor-pointer md:h-36 md:w-36 h-28 w-28"/>
             </Link>
             <div className="lg:hidden z-50 flex flex-row gap-2 absolute right-5 top-7">
                 <button onClick={() => dispatch(showCart())} className="bg-primary rounded-full p-1 relative">
@@ -29,17 +30,18 @@ const Header = () => {
                     <div
                         className="absolute -top-5 -right-2 font-bold bg-primary text-white rounded-full w-7 h-7 flex justify-center items-center">{cartItems.length}</div>
                 </button>
-                <button onClick={()=>setShowMenu(true)} className="bg-primary text-center p-1 text-white rounded-full">
+                <button onClick={() => setShowMenu(true)}
+                        className="bg-primary text-center p-1 text-white rounded-full">
                     <IoMenu size={40} color="white"/>
                 </button>
             </div>
             <div className="flex-row z-40 hidden mt-16 absolute lg:flex w-full justify-center items-center">
                 <ul className="flex z-50 flex-row gap-10 lg:gap-8">
-                   <li>
-                       <Link href="/shop/products"
-                             className="lg:text-[1.8rem] xl:text-3xl hover:text-primary transition-all font-bold tracking-widest">
-                           <h2>Shop Now</h2></Link>
-                   </li>
+                    <li>
+                        <Link href="/shop/products"
+                              className="lg:text-[1.8rem] xl:text-3xl hover:text-primary transition-all font-bold tracking-widest">
+                            <h2>Shop Now</h2></Link>
+                    </li>
                     <li>
                         <Link onMouseEnter={() => setShowBrands(true)} href="/shop/products"
                               className="lg:text-[1.8rem] xl:text-3xl hover:text-primary transition-all font-bold tracking-widest">
