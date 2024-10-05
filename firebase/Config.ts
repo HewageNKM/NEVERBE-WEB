@@ -1,6 +1,7 @@
 import {initializeApp} from "firebase/app";
 import {collection, getFirestore} from "firebase/firestore";
 import {getAuth} from "firebase/auth";
+import {getAnalytics, isSupported} from "@firebase/analytics";
 
 const firebaseConfig = {
     apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -12,10 +13,18 @@ const firebaseConfig = {
     measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
 };
 
+
 export const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
 export const auth = getAuth(app);
 
-export const shopCollectionRef = collection(db, 'shops');
+export  let analytics;
+isSupported().then((supported) => {
+    if (supported) {
+        analytics = getAnalytics(app);
+    }
+}).catch((error) => {
+    console.error("Analytics not supported:", error);
+});
 export const inventoryCollectionRef = collection(db, 'inventory');
 export const slidersCollectionRef = collection(db, 'sliders');

@@ -1,25 +1,8 @@
-import {auth, inventoryCollectionRef, slidersCollectionRef} from "@/firebase/Config";
-import {onAuthStateChanged, signInAnonymously} from "firebase/auth";
+import {analytics, inventoryCollectionRef, slidersCollectionRef} from "@/firebase/Config";
 import {doc, getDoc, getDocs, limit, orderBy} from "@firebase/firestore";
 import {Item, Slide} from "@/interfaces";
 import {query} from "@firebase/database";
-
-
-export const signUser = async (callBack: any) => {
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            callBack(user);
-        } else {
-            signInAnonymously(auth)
-                .then((userCredential) => {
-                    callBack(userCredential.user);
-                })
-                .catch((error) => {
-                    console.log('Error signing in anonymously:', error);
-                });
-        }
-    })
-};
+import {logEvent} from "@firebase/analytics";
 
 export const getInventoryByRecent = async () => {
     const recentInventoryDataQuery = query(inventoryCollectionRef, orderBy('createdAt', 'desc'), limit(12));
@@ -61,4 +44,9 @@ export const getSliders = async () => {
     })
 
     return sliders;
+}
+
+export const log = async (eventName: string, eventParams: any) => {
+    logEvent(analytics, eventName, eventParams);
+    console.log(eventName, eventParams);
 }

@@ -26,7 +26,6 @@ export interface Item {
     itemId: string,
     type: string,
     brand: string,
-    createdAt: string,
     thumbnail:string,
     variants: Variant[],
     manufacturer: string,

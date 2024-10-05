@@ -17,9 +17,9 @@ const Hero = async () => {
     }
 
     return (
-        <section className="w-full mt-20 md:mt-28 lg:mt-32">
+        <section className="w-full mt-20 md:mt-28 lg:mt-28">
             <ImagesSlider images={sliders || offlineSlides}/>
-            <div className="mt-5 lg:hidden block px-8">
+            <div className="mt-5 lg:hidden block w-[12rem]">
                 <Link href={"/shop/products"}>
                     <div
                         className="bg-primary text-xl md:text-2xl w-fit p-2 font-bold flex-row flex justify-center items-center gap-1 text-white">
