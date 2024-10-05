@@ -2,6 +2,8 @@ import type {Metadata} from "next";
 import {Inter} from "next/font/google";
 import "../style/globals.css";
 import StoreProvider from "@/app/shop/components/StoreProvider";
+import { SpeedInsights } from '@vercel/speed-insights/next';
+import {Analytics} from "@vercel/analytics/react";
 
 const inter = Inter({subsets: ["latin"]});
 
@@ -49,6 +51,8 @@ export default function RootLayout({children}: Readonly<{ children: React.ReactN
         <body className={inter.className}>
         <StoreProvider>
             {children}
+            <SpeedInsights />
+            <Analytics />
         </StoreProvider>
         </body>
         </html>
