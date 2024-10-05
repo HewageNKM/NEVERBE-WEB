@@ -8,7 +8,7 @@ import FAQ from "@/app/shop/components/FAQ";
 
 const Page = () => {
     return (
-        <main className="w-full relative">
+        <main className="w-full relative overflow-clip">
             <Hero/>
             <HotProducts />
             <NewArrivals/>

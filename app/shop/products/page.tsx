@@ -30,7 +30,7 @@ export const metadata: Metadata = {
 
 const Page = () => {
     return (
-        <main className="w-full relative lg:mt-32 md:mt-20 mt-10">
+        <main className="w-full relative lg:mt-32 md:mt-20 mt-10 overflow-clip">
             <div className="px-8 py-4">
                 <h1 className="md:text-4xl text-2xl font-bold tracking-wider mt-10">Products</h1>
                 <div className="w-full">

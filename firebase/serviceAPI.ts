@@ -5,7 +5,7 @@ import {query} from "@firebase/database";
 import {logEvent} from "@firebase/analytics";
 
 export const getInventoryByRecent = async () => {
-    const recentInventoryDataQuery = query(inventoryCollectionRef, orderBy('createdAt', 'desc'), limit(12));
+    const recentInventoryDataQuery = query(inventoryCollectionRef, orderBy('createdAt', 'desc'), limit(16));
     const docs = await getDocs(recentInventoryDataQuery);
 
     let items: Item[] = [];

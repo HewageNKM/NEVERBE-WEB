@@ -15,17 +15,15 @@ const Products = () => {
     }, [dispatch]);
 
     return (
-        <section className="w-full mt-20">
-            <ul className="flex flex-row flex-wrap gap-5">
+        <section className="w-full mt-20 mb-10">
+            <ul className="flex flex-row flex-wrap justify-evenly lg:gap-20 md:gap-16 gap-10">
                 {items.map((item, index) => (
                     <li key={index}>
                         <ItemCard item={item} flag={""} key={item.itemId}/>
                     </li>
                 ))}
-                <li>
-                    {items.length === 0 && <EmptyState message={"Products Not Available!"}/>}
-                </li>
             </ul>
+            {items.length === 0 && <EmptyState message={"Products Not Available!"}/>}
         </section>
     );
 };
