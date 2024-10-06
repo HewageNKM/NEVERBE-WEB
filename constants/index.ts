@@ -114,10 +114,10 @@ export const sortingOptions = [
 ]
 export const productTypes = [
     {name: "All", value: "all"},
-    {name: "Shoe", value: "shoe"},
+    {name: "Shoes", value: "shoes"},
     {name: "Slippers", value: "slippers"},
     {name: "Socks", value: "socks"},
-    {name: "Other Accessories", value: "other accessories"},
+    {name: "Other Accessories", value: "accessories"},
 ]
 export const wearableSizes = [
     "36",

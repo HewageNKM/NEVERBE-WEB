@@ -32,6 +32,8 @@ export interface Item {
     name: string,
     sellingPrice: number,
     discount: number,
+    createdAt: { seconds: number, nanoseconds: number },
+    updatedAt: { seconds: number, nanoseconds: number },
 }
 export interface Size{
     size: string,

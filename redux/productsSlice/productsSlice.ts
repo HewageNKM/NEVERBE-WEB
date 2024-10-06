@@ -38,19 +38,49 @@ const productsSlice = createSlice({
         },
         setSelectedSort: (state, action) => {
             state.selectedSort = action.payload;
+        },
+        resetFilter: (state) => {
+            state.selectedBrands = [];
+            state.selectedSizes = [];
+            state.selectedType = "all";
+            state.selectedSort = "";
         }
     },
     extraReducers: (builder) => {
         builder.addCase(initializeProducts.fulfilled, (state, action) => {
             state.products = action.payload;
         }).addCase(filterProducts.fulfilled, (state, action) => {
-            // Todo: Implement filterProducts.fulfilled
+
+            //Filter by brand
+            if(state.selectedType == "all") {
+                state.products = action.payload;
+            }else if(state.selectedType == "shoes"){
+                state.products = action.payload.filter((item) => item.type == "shoes");
+            }else if(state.selectedType == "accessories"){
+                state.products = action.payload.filter((item) => item.type == "accessories");
+            }else if(state.selectedType == "slippers"){
+                state.products = action.payload.filter((item) => item.type == "slippers");
+            }else if (state.selectedType == "socks"){
+                state.products = action.payload.filter((item) => item.type == "socks");
+            }
+
+            //Filter by brand
+            if(state.selectedBrands.length > 0) {
+                state.products = state.products.filter((item) => state.selectedBrands.includes(item.manufacturer));
+            }
+
+            //Filter by size
+            if(state.selectedSizes.length > 0) {
+                state.products = state.products.filter((item) => item.variants.some((variant) => variant.sizes.some((size) => state.selectedSizes.includes(size.size))));
+            }
 
             if(state.selectedSort != "") {
                 if(state.selectedSort === "lh") {
                     state.products = state.products.sort((a, b) => a.sellingPrice - b.sellingPrice);
                 } else if(state.selectedSort === "hl") {
                     state.products = state.products.sort((a, b) => b.sellingPrice - a.sellingPrice);
+                }else if(state.selectedSort == ""){
+                    state.products = action.payload
                 }
             }
         });
@@ -66,7 +96,7 @@ export const initializeProducts = createAsyncThunk('products/getProducts', async
     }
 });
 
-export const {toggleFilter,setSelectedBrands,setSelectedType,setSelectedSizes,setSelectedSort} = productsSlice.actions;
+export const {toggleFilter,setSelectedBrands,setSelectedType,setSelectedSizes,setSelectedSort,resetFilter} = productsSlice.actions;
 export default productsSlice.reducer;
 
 export const filterProducts = createAsyncThunk('products/getFilterProducts', async (arg, thunkAPI) => {

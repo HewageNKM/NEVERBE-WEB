@@ -5,8 +5,15 @@ import {IoClose} from "react-icons/io5";
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "@/redux/store";
 import {motion} from "framer-motion";
-import {setSelectedBrands, setSelectedSizes, setSelectedType, toggleFilter} from "@/redux/productsSlice/productsSlice";
+import {
+    filterProducts, resetFilter,
+    setSelectedBrands,
+    setSelectedSizes,
+    setSelectedType,
+    toggleFilter
+} from "@/redux/productsSlice/productsSlice";
 import {accessoriesSizes, brands, productTypes, wearableSizes} from "@/constants";
+import {BiReset} from "react-icons/bi";
 
 const Filter = () => {
     const {selectedSizes, selectedType, selectedBrands} = useSelector((state: RootState) => state.productsSlice);
@@ -30,16 +37,16 @@ const Filter = () => {
     }
 
     useEffect(() => {
-
-    }, [selectedBrands, selectedType, selectedSizes]);
+        dispatch(filterProducts())
+    }, [selectedBrands, selectedType, selectedSizes, dispatch]);
 
     return (
         <DropShadow containerStyle="flex justify-start items-start">
             <motion.section initial={{opacity: 0, x: "-100vw"}}
-                        animate={{opacity: 1, x: 0}}
-                        exit={{opacity: 0, x: "-100vw"}}
-                        transition={{type: "tween", duration: 0.4, delay: 0.1}}
-                        className="bg-white px-4 pr-12 rounded-r-lg min-h-screen w-full md:w-[60vw] lg:w-[30vw] py-2 relative">
+                            animate={{opacity: 1, x: 0}}
+                            exit={{opacity: 0, x: "-100vw"}}
+                            transition={{type: "tween", duration: 0.4, delay: 0.1}}
+                            className="bg-white px-4 pr-12 rounded-r-lg min-h-screen w-full md:w-[60vw] lg:w-[30vw] py-2 relative">
                 <h1 className="text-4xl font-bold tracking-wider">Filters</h1>
                 <div className="h-[90vh] overflow-auto mt-5 flex-col flex gap-8">
                     <div className="mt-5 px-2">
@@ -115,7 +122,7 @@ const Filter = () => {
                                     ))}
                                 </div>
                             )}
-                            {(selectedType == "shoe" || selectedType == "scandals") && (
+                            {(selectedType == "shoes" || selectedType == "slippers") && (
                                 <div className="flex mt-2 flex-row gap-5 text-2xl flex-wrap items-center">
                                     {wearableSizes.map((size, index) => (
                                         <label key={index} className="flex items-center gap-2 cursor-pointer">
@@ -152,9 +159,14 @@ const Filter = () => {
                         </div>
                     </div>
                 </div>
-                <button className="top-0 right-0 absolute">
-                    <IoClose onClick={() => dispatch(toggleFilter())} size={40}/>
-                </button>
+                <div className="top-0 right-0 absolute flex flex-row gap-5">
+                    <button  className="bg-yellow-400 flex mt-1 p-0.5 rounded-lg flex-row text-white justify-center items-center text-sm font-bold md:text-lg">
+                        <BiReset onClick={() => dispatch(resetFilter())} size={35}/>
+                    </button>
+                    <button>
+                        <IoClose onClick={() => dispatch(toggleFilter())} size={40}/>
+                    </button>
+                </div>
             </motion.section>
         </DropShadow>
     );
