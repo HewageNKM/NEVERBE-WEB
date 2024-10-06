@@ -44,7 +44,7 @@ const Page = async ({params}: { params: { itemId: string } }) => {
     if(!item) return notFound();
 
     return (
-        <main className="w-full lg:mt-32 md:mt-20 mt-10 overflow-clip">
+        <main className="w-full lg:mt-24 md:mt-20 mt-10 overflow-clip">
             <div className="px-8 py-4">
                 <ProductHero item={item}/>
                 <SizeChart image={SizeImage}/>
