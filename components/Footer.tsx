@@ -35,10 +35,10 @@ const Footer = () => {
                     <ul className="flex flex-col gap-2">
                         {socialMedia.map((media, index) => (
                             <li key={index} className="flex items-center gap-2 text-lg">
-                                <Link href={media.url} target="_blank">
+                                <Link href={media.url} target="_blank" className="flex flex-row gap-2">
                                     <media.icon size={30}/>
+                                    <span>{media.name}</span>
                                 </Link>
-                                <span>{media.name}</span>
                             </li>
                         ))}
                     </ul>
@@ -60,7 +60,7 @@ const Footer = () => {
                     <ul className="flex flex-col gap-2">
                         {contactInfo.map((info, index) => (
                             <li key={index}
-                                className="text-lg flex flex-row gap-1">
+                                className="text-lg flex flex-row gap-2">
                                 <info.icon size={30}/>
                                 <p>{info.content}</p>
                             </li>

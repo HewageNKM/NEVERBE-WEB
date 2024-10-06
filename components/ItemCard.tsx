@@ -6,9 +6,14 @@ import Link from "next/link";
 
 const ItemCard = ({item,flag}:{item:Item,flag:string}) => {
     const [outOfStocks, setOutOfStocks] = useState(false);
+    const [outOfStocksLabel, setOutOfStocksLabel] = useState("Out of Stock");
 
     const checkOutOfStocks = () => {
-
+        if(item.variants.length === 0){
+            setOutOfStocks(true);
+            setOutOfStocksLabel("Coming Soon");
+            return;
+        }
         let iCount = 0;
         for (let i = 0; i < item.variants.length; i++) {
             let vCount = 0;
@@ -32,7 +37,7 @@ const ItemCard = ({item,flag}:{item:Item,flag:string}) => {
     });
 
     return (
-        <div className="w-[16rem] lg:w-[20rem] transition-all h-[26.5rem] lg:h-[30.5rem] shadow relative rounded-lg">
+        <div className="w-[16rem] lg:w-[20rem] transition-all h-[25.5rem] lg:h-[30.5rem] shadow relative rounded-lg">
             <Link href={`/shop/products/${item.itemId.toLowerCase()}`}>
                 <figure>
                     <Image width={300} height={300} src={item.thumbnail} alt={item.name}
@@ -45,7 +50,7 @@ const ItemCard = ({item,flag}:{item:Item,flag:string}) => {
                         <p className="text-red-500">{"Rs. " + item.sellingPrice.toFixed(2)}</p>
                     </div>
                     <div className="w-full flex items-end justify-end">
-                        <p className="text-2xl text-yellow-400 font-medium">{item.variants.length + " Colors"}</p>
+                        <p className="md:text-2xl text-xl text-yellow-400 font-medium">{item.variants.length + `${item.type == "shoes" ? " Colors":" Sizes"}`}</p>
                     </div>
                 </div>
                 <h2 className="absolute top-0 capitalize bg-black text-white p-1 font-medium">{item.manufacturer}</h2>
@@ -56,7 +61,7 @@ const ItemCard = ({item,flag}:{item:Item,flag:string}) => {
                     <h2 className="right-0 bg-red-500 text-white p-1 font-medium">{item.discount + "%"}</h2>}
             </div>
             {outOfStocks && (<div className="bg-white absolute top-0 left-0 w-full h-full bg-opacity-60 flex justify-center items-center">
-                <h2 className=" bg-red-500 text-white p-1 font-medium">Out of Stock</h2>
+                <h2 className={`text-white p-1 font-medium ${outOfStocksLabel === "Coming Soon" ? "bg-yellow-500":"bg-red-500"}`} >{outOfStocksLabel}</h2>
             </div>)}
         </div>
     );
