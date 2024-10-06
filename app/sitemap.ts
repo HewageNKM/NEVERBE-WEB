@@ -25,7 +25,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             lastModified: new Date(),
         },
         {
-            url: `https://neverbe.lk/shop/account`,
+            url: `https://neverbe.lk/account`,
             lastModified: new Date(),
         },
         ...paths,

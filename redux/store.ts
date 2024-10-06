@@ -8,6 +8,9 @@ export const makeStore = () => {
             cartSlice,
             productsSlice
         },
+        middleware: (getDefaultMiddleware) => getDefaultMiddleware(
+            {serializableCheck: false}
+        )
     })
 }
 export type AppStore = ReturnType<typeof makeStore>

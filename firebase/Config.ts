@@ -18,7 +18,7 @@ export const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
 export const auth = getAuth(app);
 
-export  let analytics;
+export let analytics;
 isSupported().then((supported) => {
     if (supported) {
         analytics = getAnalytics(app);

@@ -11,12 +11,14 @@ import {showCart} from "@/redux/cartSlice/cartSlice";
 import Image from "next/image";
 import {Logo} from "@/assets/images";
 import Menu from "@/components/Menu";
+import Search from "@/components/Search";
 
 const Header = () => {
     const [showBrands, setShowBrands] = useState(false);
     const cartItems = useSelector((state: RootState) => state.cartSlice.cart);
     const dispatch: AppDispatch = useDispatch();
     const [showMenu, setShowMenu] = useState(false);
+    const [showSearch, setShowSearch] = useState(false);
 
     return (
         <header className="w-full relative" onMouseLeave={() => setShowBrands(false)}>
@@ -25,6 +27,9 @@ const Header = () => {
                        className="cursor-pointer md:h-36 md:w-36 h-28 w-28"/>
             </Link>
             <div className="lg:hidden z-50 flex flex-row gap-2 absolute right-5 top-7">
+                <button onClick={() => setShowSearch(true)}
+                        className="bg-primary text-center p-1 text-white rounded-full"><IoSearch
+                    size={40} color="white"/></button>
                 <button onClick={() => dispatch(showCart())} className="bg-primary rounded-full p-1 relative">
                     <IoCart size={40} color="white"/>
                     <div
@@ -50,7 +55,8 @@ const Header = () => {
                     <li>
                         <Link href="/shop/products"
                               className="lg:text-[1.8rem] xl:text-3xl hover:text-primary transition-all font-bold tracking-widest">
-                            <h2>Accessories</h2></Link>
+                            <h2>Accessories</h2>
+                        </Link>
                     </li>
                 </ul>
             </div>
@@ -61,7 +67,7 @@ const Header = () => {
                         <div
                             className="absolute -top-5 -right-2 font-bold bg-primary text-white rounded-full w-7 h-7 flex justify-center items-center">{cartItems.length}</div>
                     </button>
-                    <button className="bg-primary text-center p-2 text-white rounded-full"><IoSearch
+                    <button onClick={()=> setShowSearch(true)} className="bg-primary text-center p-2 text-white rounded-full"><IoSearch
                         size={40} color="white"/></button>
                     <div
                         className="bg-primary text-white font-bold tracking-wider p-2 cursor-pointer rounded-full flex flex-row justify-center items-center gap-2">
@@ -76,6 +82,11 @@ const Header = () => {
                 {showMenu && (
                     <Menu setShowMenu={setShowMenu}/>
                 )}
+                {
+                    showSearch && (
+                        <Search setShowSearch={setShowSearch}/>
+                    )
+                }
             </AnimatePresence>
 
         </header>

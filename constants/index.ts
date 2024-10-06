@@ -10,90 +10,118 @@ export const brands = [
     {
         name: 'Nike',
         value: 'nike',
-        url: '/products/brands/nike',
+        url: "/shop/products",
         titles: [
             {
                 name: "Air Max",
-                url: "/products/brands/nike/air-max"
+                url: "/shop/products"
             },
             {
-                name: "Air Force",
-                url: "/products/brands/nike/air-force"
+                name: "Air",
+                url: "/shop/products"
             },
             {
                 name: "Jordan",
-                url: "/products/brands/nike/jordan"
+                url: "/shop/products"
             },
             {
                 name: "SB",
-                url: "/products/brands/nike/react"
+                url: "/shop/products"
             },
             {
                 name: "Slippers",
-                url: "/products/brands/nike/scandals"
+                url: "/shop/products"
+            },
+            {
+                name: "Other",
+                url: "/shop/products"
             }
         ]
     },
     {
         name: 'Adidas',
         value: 'adidas',
-        url: '/products/brands/adidas',
+        url: "/shop/products",
         titles: [
             {
                 name: "Campus",
-                url: "/products/brands/adidas/campus"
+                url: "/shop/products"
             },
             {
                 name: "Samba",
-                url: "/products/brands/adidas/samba"
+                url: "/shop/products"
             },
             {
                 name: "Slippers",
-                url: "/products/brands/adidas/scandals"
+                url: "/shop/products"
+            },
+            {
+                name: "Other",
+                url: "/shop/products"
             }
         ]
     },
     {
         name: 'New Balance',
         value: 'new-balance',
-        url: '/products/brands/puma',
+        url: "/shop/products",
         titles: [
             {
                 name: "Slippers",
-                url: "/products/brands/new-balance/scandals"
+                url: "/shop/products"
+            },
+            {
+                name: "Other",
+                url: "/shop/products"
             }
         ]
     },
     {
         name: 'Cross',
         value: 'cross',
-        url: '/products/brands/reebok',
+        url: '/products/brands',
         titles: [
             {
                 name: "Slippers",
-                url: "/products/brands/new-balance/scandals"
+                url: "/products"
+            },
+            {
+                name: "Other",
+                url: "/shop/products"
             }
         ]
     },
     {
         name: 'Polo',
         value: 'polo',
-        url: '/products/brands/polo',
+        url: '/shop/products',
         titles: [
             {
                 name: "Slippers",
-                url: "/products/brands/polo/scandals"
+                url: "/shop/products"
+            },
+            {
+                name: "Other",
+                url: "/shop/products"
             }
         ]
     },
     {
         name: "MLB",
         value: "mlb",
-        url: "/products/brands/mlb",
+        url: "/shop/products",
         titles: [
             {
+                name: "Chunky",
+                url: "/shop/products"
+            },
+            {
                 name: "Slippers",
-                url: "/products/brands/mlb/scandals"
+                url: "/shop/products"
+            },
+            {
+                name: "Other",
+                url: "/shop/products"
             }
         ]
     }
@@ -371,9 +399,9 @@ export const faqs = [
         answer: "Our products are high-quality copies made in Vietnam, not original."
     }
 ];
-export const offlineSlides:Slide[] = [
+export const offlineSlides: Slide[] = [
     {
-        fileName:"payment",
+        fileName: "payment",
         url: PaymentSlide
     },
     {

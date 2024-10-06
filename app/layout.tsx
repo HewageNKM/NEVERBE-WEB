@@ -1,11 +1,11 @@
 import type {Metadata} from "next";
-import {Inter} from "next/font/google";
+import {Lato} from "next/font/google";
 import "../style/globals.css";
 import StoreProvider from "@/app/shop/components/StoreProvider";
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import {Analytics} from "@vercel/analytics/react";
 
-const inter = Inter({subsets: ["latin"]});
+const lato = Lato({weight:"400",subsets:["latin"]});
 
 export const metadata: Metadata = {
     title: {
@@ -61,7 +61,7 @@ export const metadata: Metadata = {
 export default function RootLayout({children}: Readonly<{ children: React.ReactNode; }>) {
     return (
         <html lang="en" className="scroll-smooth">
-        <body className={inter.className}>
+        <body className={lato.className}>
         <StoreProvider>
             {children}
             <SpeedInsights />

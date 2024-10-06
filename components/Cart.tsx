@@ -18,7 +18,7 @@ const Cart = () => {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: "100vw" }}
                 transition={{ type: "tween" ,duration: 0.4,delay: 0.1}}
-                className="px-8 py-4 w-full lg:w-[40vw] rounded-l-lg bg-white min-h-screen relative shadow-lg"
+                className="px-8 py-4 w-full lg:w-[40vw] rounded-l-lg bg-white h-screen relative shadow-lg"
             >
                 <h1 className="text-4xl font-bold tracking-wider border-b pb-4">Cart</h1>
                 <div className="overflow-auto h-[70vh] mt-5">

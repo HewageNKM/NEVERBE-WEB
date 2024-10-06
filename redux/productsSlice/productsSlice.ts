@@ -1,6 +1,6 @@
 import {Item} from "@/interfaces";
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import {getInventory} from "@/firebase/serviceAPI";
+import {getInventory, getItemsByBrandName} from "@/firebase/serviceAPI";
 
 interface ProductsSlice{
     products: Item[],
@@ -96,9 +96,6 @@ export const initializeProducts = createAsyncThunk('products/getProducts', async
     }
 });
 
-export const {toggleFilter,setSelectedBrands,setSelectedType,setSelectedSizes,setSelectedSort,resetFilter} = productsSlice.actions;
-export default productsSlice.reducer;
-
 export const filterProducts = createAsyncThunk('products/getFilterProducts', async (arg, thunkAPI) => {
 
     try {
@@ -108,3 +105,6 @@ export const filterProducts = createAsyncThunk('products/getFilterProducts', asy
         return thunkAPI.rejectWithValue(e);
     }
 });
+
+export const {toggleFilter,setSelectedBrands,setSelectedType,setSelectedSizes,setSelectedSort,resetFilter} = productsSlice.actions;
+export default productsSlice.reducer;
