@@ -1,14 +1,20 @@
 "use client"
-import React from 'react';
+import React, {useEffect} from 'react';
 import {useSelector} from "react-redux";
 import {RootState} from "@/redux/store";
 import Image from "next/image";
 import {IoLockClosed} from "react-icons/io5";
 import {paymentOptions} from "@/constants";
+import {notFound} from "next/navigation";
 
 const PaymentDetails = () => {
     const cartItems = useSelector((state: RootState) => state.cartSlice.cart);
     const {} = useSelector((state: RootState) => state.paymentSlice);
+    useEffect(() => {
+        if (cartItems.length === 0) {
+            notFound();
+        }
+    })
     return (
         <section className="flex flex-col justify-center items-start">
             <h1 className="lg:text-4xl text-3xl font-bold tracking-wide">Payment Details</h1>
@@ -57,7 +63,8 @@ const PaymentDetails = () => {
                 <ul className="mt-5 flex flex-col gap-6">
                     {paymentOptions.map((option, index) => (
                         <li
-                            onClick={()=>{}}
+                            onClick={() => {
+                            }}
                             key={index}
                             className="flex flex-row items-center gap-4 p-4 border rounded-lg shadow-sm transition-all hover:shadow-md hover:bg-gray-100"
                         >
@@ -81,7 +88,8 @@ const PaymentDetails = () => {
                                         {option.name}
                                     </label>
                                 )}
-                                {option.description && (<p className="font-medium flex flex-wrap">{option.description}</p>)}
+                                {option.description && (
+                                    <p className="font-medium flex flex-wrap">{option.description}</p>)}
                             </div>
                         </li>
                     ))}

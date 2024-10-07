@@ -40,7 +40,15 @@ export const getItemsByBrandName = async (name:string) => {
 export const getItemById = async (itemId: string) => {
     const itemDocRef = doc(inventoryCollectionRef, itemId);
     const itemDoc = await getDoc(itemDocRef);
-    return itemDoc.data() as Item;
+    if (itemDoc.exists()) {
+        const itemData = itemDoc.data();
+        return {
+            ...itemData,
+            createdAt: itemData.createdAt.toDate().toISOString(),
+        } as Item;
+    } else {
+        return null;
+    }
 }
 
 export const getHotsProducts = async () => {
