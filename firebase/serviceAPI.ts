@@ -11,7 +11,11 @@ export const getInventoryByRecent = async () => {
     let items: Item[] = [];
 
     docs.forEach(doc => {
-        items.push(doc.data() as Item);
+        const itemData = doc.data();
+        items.push({
+            ...itemData,
+            createdAt: itemData.createdAt.toDate().toISOString(), // Convert to ISO string
+        } as Item);
     })
 
     return items;
@@ -20,7 +24,11 @@ export const getInventory = async () => {
     let docs = await getDocs(inventoryCollectionRef);
     let items: Item[] = [];
     docs.forEach(doc => {
-        items.push(doc.data() as Item);
+        const itemData = doc.data();
+        items.push({
+            ...itemData,
+            createdAt: itemData.createdAt.toDate().toISOString(), // Convert to ISO string
+        } as Item);
     })
 
     return items;
@@ -31,7 +39,11 @@ export const getItemsByManufacturer = async (name:string) => {
     const docs = await getDocs(brandItemsQuery);
     let items: Item[] = [];
     docs.forEach(doc => {
-        items.push(doc.data() as Item);
+        const itemData = doc.data();
+        items.push({
+            ...itemData,
+            createdAt: itemData.createdAt.toDate().toISOString(), // Convert to ISO string
+        } as Item);
     })
 
     return items;
@@ -42,7 +54,11 @@ export const getItemsByManufacturerAndBrandName = async (manufacture:string,name
     const docs = await getDocs(brandItemsQuery);
     let items: Item[] = [];
     docs.forEach(doc => {
-        items.push(doc.data() as Item);
+        const itemData = doc.data();
+        items.push({
+            ...itemData,
+            createdAt: itemData.createdAt.toDate().toISOString(), // Convert to ISO string
+        } as Item);
     })
     return items;
 }

@@ -60,7 +60,7 @@ const Header = () => {
                 </ul>
             </div>
             <div className="px-8 pt-12 flex justify-between gap-10 relative">
-                <div className="lg:flex-row z-50 absolute right-2 justify-center items-center gap-3 hidden lg:flex">
+                <div className="lg:flex-row z-50 absolute right-5 justify-center items-center gap-3 hidden lg:flex">
                     <button onClick={() => setShowSearch(true)}
                             className="bg-primary text-center p-2 text-white rounded-full"><IoSearch
                         size={40} color="white"/></button>
