@@ -71,7 +71,7 @@ export const brands = [
     {
         name: 'Cross',
         value: 'cross',
-        url: '/products/manufacturers/cross',
+        url: '/shop/products/manufacturers/cross',
         titles: []
     },
     {
