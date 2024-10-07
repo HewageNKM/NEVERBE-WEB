@@ -44,12 +44,13 @@ const productsSlice = createSlice({
             state.selectedSizes = [];
             state.selectedType = "all";
             state.selectedSort = "";
+        },
+        setProducts: (state, action) => {
+            state.products = action.payload;
         }
     },
     extraReducers: (builder) => {
-        builder.addCase(initializeProducts.fulfilled, (state, action) => {
-            state.products = action.payload;
-        }).addCase(filterProducts.fulfilled, (state, action) => {
+        builder.addCase(filterProducts.fulfilled, (state, action) => {
 
             //Filter by brand
             if (state.selectedType == "all") {
@@ -87,15 +88,6 @@ const productsSlice = createSlice({
     }
 });
 
-export const initializeProducts = createAsyncThunk('products/getProducts', async (arg, thunkAPI) => {
-    try {
-        return await getInventory();
-    } catch (e) {
-        console.log(e);
-        return thunkAPI.rejectWithValue(e);
-    }
-});
-
 export const filterProducts = createAsyncThunk('products/getFilterProducts', async (arg, thunkAPI) => {
 
     try {
@@ -112,6 +104,7 @@ export const {
     setSelectedType,
     setSelectedSizes,
     setSelectedSort,
-    resetFilter
+    resetFilter,
+    setProducts
 } = productsSlice.actions;
 export default productsSlice.reducer;

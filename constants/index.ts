@@ -10,80 +10,80 @@ export const brands = [
     {
         name: 'Nike',
         value: 'nike',
-        url: "/shop/products",
+        url: "/shop/products//manufacturers/nike",
         titles: [
             {
                 name: "Air Max",
-                url: "/shop/products"
+                url: "/shop/products/manufacturers/nike/air-max"
             },
             {
                 name: "Air",
-                url: "/shop/products"
+                url: "/shop/products/manufacturers/nike/air"
             },
             {
                 name: "Jordan",
-                url: "/shop/products"
+                url: "/shop/products//manufacturers/nike/jordan"
             },
             {
                 name: "SB",
-                url: "/shop/products"
+                url: "/shop/products/manufacturers/nike/sb"
             },
             {
                 name: "Slippers",
-                url: "/shop/products"
+                url: "/shop/products//manufacturers/nike/slippers"
             },
             {
                 name: "Other",
-                url: "/shop/products"
+                url: "/shop/products//manufacturers/nike/other"
             }
         ]
     },
     {
         name: 'Adidas',
         value: 'adidas',
-        url: "/shop/products",
+        url: "/shop/products/manufacturers/adidas",
         titles: [
             {
                 name: "Campus",
-                url: "/shop/products"
+                url: "/shop/products/manufacturers/adidas/campus"
             },
             {
                 name: "Samba",
-                url: "/shop/products"
+                url: "/shop/products/manufacturers/adidas/samba"
             },
             {
                 name: "Slippers",
-                url: "/shop/products"
+                url: "/shop/products/manufacturers/adidas/slippers"
             },
             {
                 name: "Other",
-                url: "/shop/products"
+                url: "/shop/products/manufacturers/adidas/other"
             }
         ]
     },
     {
         name: 'New Balance',
         value: 'new-balance',
-        url: "/shop/products",
+        url: "/shop/products/manufacturers/new-balance",
         titles: [
         ]
     },
     {
         name: 'Cross',
         value: 'cross',
-        url: '/products/brands',
+        url: '/products/manufacturers/cross',
         titles: []
     },
     {
         name: 'Polo',
         value: 'polo',
-        url: '/shop/products',
+        url: '/shop/products/manufacturers/polo',
         titles: []
     },
     {
         name: "MLB",
         value: "mlb",
-        url: "/shop/products",
+        url: "/shop/products/manufacturers/mlb",
         titles: []
     }
 ]

@@ -14,7 +14,7 @@ const BrandsPopupMenu = ({setShowBrands}: { setShowBrands: any }) => {
                  className="flex w-fit bg-white text-slate-500 p-4 flex-row gap-10 flex-wrap mt-8 shadow-primary rounded-lg">
                 {brands.map((brand, index) => (
                     <div key={index}>
-                        <Link href="/shop/products">
+                        <Link href={brand.url}>
                             <h2 className="font-semibold hover:border-b-slate-500 h-9 hover:border-b-2  text-3xl"> {brand.name}</h2>
                         </Link>
                          <ul className="mt-1 flex text-primary flex-col gap-2 text-xl">

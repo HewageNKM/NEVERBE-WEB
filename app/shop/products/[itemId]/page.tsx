@@ -36,6 +36,7 @@ const Page = async ({params}: { params: { itemId: string } }) => {
     let item:Item = null;
 
     try {
+        // @ts-ignore
         item = await getItemById(params.itemId);
     }catch (e){
         console.log(e);

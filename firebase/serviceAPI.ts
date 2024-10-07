@@ -1,5 +1,5 @@
 import {analytics, inventoryCollectionRef, slidersCollectionRef} from "@/firebase/Config";
-import {doc, getDoc, getDocs, limit, orderBy, where} from "@firebase/firestore";
+import {and, doc, getDoc, getDocs, limit, orderBy, where} from "@firebase/firestore";
 import {Item, Slide} from "@/interfaces";
 import {query} from "@firebase/database";
 import {logEvent} from "@firebase/analytics";
@@ -26,14 +26,24 @@ export const getInventory = async () => {
     return items;
 }
 
-export const getItemsByBrandName = async (name:string) => {
-    const brandItemsQuery = query(inventoryCollectionRef, where('brand', '==', name));
+export const getItemsByManufacturer = async (name:string) => {
+    const brandItemsQuery = query(inventoryCollectionRef, where('manufacturer', '==', name));
     const docs = await getDocs(brandItemsQuery);
     let items: Item[] = [];
     docs.forEach(doc => {
         items.push(doc.data() as Item);
     })
 
+    return items;
+}
+
+export const getItemsByManufacturerAndBrandName = async (manufacture:string,name:string) => {
+    const brandItemsQuery = query(inventoryCollectionRef, where('manufacturer', '==', manufacture), and(where('brand', '==', name)));
+    const docs = await getDocs(brandItemsQuery);
+    let items: Item[] = [];
+    docs.forEach(doc => {
+        items.push(doc.data() as Item);
+    })
     return items;
 }
 
