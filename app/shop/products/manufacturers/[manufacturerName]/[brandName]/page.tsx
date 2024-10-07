@@ -2,6 +2,34 @@ import React from 'react';
 import {getItemsByManufacturerAndBrandName} from "@/firebase/serviceAPI";
 import Products from "@/app/shop/products/components/Products";
 import {Item} from "@/interfaces";
+import {Metadata} from "next";
+
+
+export const metadata: Metadata = {
+    title: "Manufacturer X Brand",
+    twitter:{
+        card: "summary",
+        site: "@neverbe",
+        creator: "@neverbe",
+        title: "Manufacturer X Brand",
+        description: "NEVERBE Products By Manufacture X Brand",
+    },
+    openGraph:{
+        title: "Manufacturer X Brand",
+        description: "NEVERBE Products By Manufacture X Brand",
+        url: "https://neverbe.lk/shop/products/manufacturers/[name]/[brandName]",
+        type: "website",
+        images: [
+            {
+                url: "https://neverbe.lk/api/og",
+                width: 260,
+                height: 260,
+                alt: "NEVERBE_Logo",
+            },
+        ],
+    },
+}
+
 
 const Page = async ({params}: { params: { manufacturerName: string, brandName: string } }) => {
     let items: Item[] = [];

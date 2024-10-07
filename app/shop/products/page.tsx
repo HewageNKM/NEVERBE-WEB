@@ -26,7 +26,7 @@ export const metadata: Metadata = {
                 alt: "NEVERBE_Logo",
             },
         ],
-    }
+    },
 }
 
 const Page = async () => {
