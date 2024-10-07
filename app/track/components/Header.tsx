@@ -11,7 +11,6 @@ const Header = () => {
                     <Image src={Logo} alt={"Neverbe"} width={200} height={200}
                            className="cursor-pointer md:h-56 md:w-56 h-36 w-36"/>
                 </Link>
-
             </figure>
             <h1 className="lg:text-4xl text-3xl text-center font-bold tracking-wide">Track Your Order
                 Status</h1>
