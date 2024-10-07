@@ -7,9 +7,11 @@ import {IoClose} from "react-icons/io5";
 import {motion} from "framer-motion";
 import {hideCart, removeFromCart} from "@/redux/cartSlice/cartSlice";
 import Image from "next/image";
+import {useRouter} from "next/navigation";
 const Cart = () => {
     const cartItems = useSelector((state:RootState) => state.cartSlice.cart);
     const dispatch:AppDispatch = useDispatch();
+    const router = useRouter();
 
     return (
         <DropShadow containerStyle="flex justify-end items-end">
@@ -68,7 +70,12 @@ const Cart = () => {
                         <h1 className="md:text-2xl text-lg font-bold">Total Items: {cartItems.length}</h1>
                         <h1 className="md:text-2xl text-lg font-bold">Total: Rs. {cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0)}</h1>
                     </div>
-                    <button className="bg-primary text-white px-4 py-2 mt-5 rounded-lg w-full">Checkout</button>
+                    <button className="bg-primary text-white px-4 py-2 mt-5 rounded-lg w-full" onClick={()=>{
+                        if(cartItems.length == 0 ) return;
+
+                        dispatch(hideCart());
+                        router.push("/shop/checkout");
+                    }}>Checkout</button>
                 </div>
             </motion.div>
         </DropShadow>

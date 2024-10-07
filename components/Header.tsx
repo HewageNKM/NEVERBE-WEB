@@ -2,7 +2,6 @@
 import React, {useState} from 'react';
 import {IoCart, IoMenu, IoSearch} from "react-icons/io5";
 import Link from "next/link";
-import {RxAvatar} from "react-icons/rx";
 import {AnimatePresence} from "framer-motion";
 import BrandsPopupMenu from "@/components/BrandsPopupMenu";
 import {useDispatch, useSelector} from "react-redux";
@@ -62,17 +61,14 @@ const Header = () => {
             </div>
             <div className="px-8 pt-12 flex justify-between gap-10 relative">
                 <div className="lg:flex-row z-50 absolute right-2 justify-center items-center gap-3 hidden lg:flex">
+                    <button onClick={() => setShowSearch(true)}
+                            className="bg-primary text-center p-2 text-white rounded-full"><IoSearch
+                        size={40} color="white"/></button>
                     <button onClick={() => dispatch(showCart())} className="bg-primary rounded-full p-2 relative">
                         <IoCart size={40} color="white"/>
                         <div
                             className="absolute -top-5 -right-2 font-bold bg-primary text-white rounded-full w-7 h-7 flex justify-center items-center">{cartItems.length}</div>
                     </button>
-                    <button onClick={()=> setShowSearch(true)} className="bg-primary text-center p-2 text-white rounded-full"><IoSearch
-                        size={40} color="white"/></button>
-                    <div
-                        className="bg-primary text-white font-bold tracking-wider p-2 cursor-pointer rounded-full flex flex-row justify-center items-center gap-2">
-                        <button><RxAvatar size={40} color="white"/></button>
-                    </div>
                 </div>
             </div>
             <AnimatePresence>

@@ -66,64 +66,25 @@ export const brands = [
         value: 'new-balance',
         url: "/shop/products",
         titles: [
-            {
-                name: "Slippers",
-                url: "/shop/products"
-            },
-            {
-                name: "Other",
-                url: "/shop/products"
-            }
         ]
     },
     {
         name: 'Cross',
         value: 'cross',
         url: '/products/brands',
-        titles: [
-            {
-                name: "Slippers",
-                url: "/products"
-            },
-            {
-                name: "Other",
-                url: "/shop/products"
-            }
-        ]
+        titles: []
     },
     {
         name: 'Polo',
         value: 'polo',
         url: '/shop/products',
-        titles: [
-            {
-                name: "Slippers",
-                url: "/shop/products"
-            },
-            {
-                name: "Other",
-                url: "/shop/products"
-            }
-        ]
+        titles: []
     },
     {
         name: "MLB",
         value: "mlb",
         url: "/shop/products",
-        titles: [
-            {
-                name: "Chunky",
-                url: "/shop/products"
-            },
-            {
-                name: "Slippers",
-                url: "/shop/products"
-            },
-            {
-                name: "Other",
-                url: "/shop/products"
-            }
-        ]
+        titles: []
     }
 ]
 export const sortingOptions = [
@@ -305,6 +266,7 @@ export const informationLinks: FooterLink[] = [
     {title: "Shipping & Returns", url: "/policies/shipping-return-policy"},
     {title: "Terms & Conditions", url: "/policies/terms-conditions"},
     {title: "Privacy Policy", url: "/policies/privacy-policy"},
+    {title: "Tracking Orders", url: "/track"},
 ];
 export const privacyPolicy = {
     company: 'Watch Line',
@@ -418,6 +380,18 @@ export const payHere = {
     squareBannerBlue: "https://www.payhere.lk/downloads/images/payhere_square_banner_dark.png",
 
 }
+export const paymentOptions = [
+    {
+        name: "PayHere",
+        value: "payhere",
+        image: payHere.squareBannerBlue,
+        description: null
+    }, {
+        name: "COD (Cash On Delivery)",
+        value: "cod",
+        image: null,
+        description: "Pay after receiving your order at your doorstep."
+    }]
 //Todo: Add phone number and landline number
 export const contactInfo = [
     {
@@ -426,11 +400,11 @@ export const contactInfo = [
     },
     {
         icon: FaMobile,
-        content: ""
+        content: "+94 72 924 9999"
     },
     {
         icon: FaPhone,
-        content: ""
+        content: "+94 70 388 7800"
     }
 
 ];
