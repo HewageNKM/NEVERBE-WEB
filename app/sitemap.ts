@@ -69,6 +69,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             url: 'https://neverbe.lk/track',
             lastModified: new Date(),
             priority: 0.5,
+        },
+        {
+            url: 'https://neverbe.lk/down',
+            lastModified: new Date(),
+            priority: 0,
         }
     ]
 }

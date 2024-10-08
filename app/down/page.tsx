@@ -3,6 +3,13 @@ import Link from "next/link";
 import {IoArrowBack} from "react-icons/io5";
 import Image from "next/image";
 import {Logo} from "@/assets/images";
+import {Metadata} from "next";
+
+
+export const metadata:Metadata = {
+    title:"Down"
+}
+
 
 const Page = () => {
     return (

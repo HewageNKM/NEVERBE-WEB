@@ -33,7 +33,7 @@ export const metadata: Metadata = {
             "NEVERBE is Sri Lanka's top destination for branded copy shoes. Enjoy seamless shopping with fast shipping and quality service.",
         images: [
             {
-                url: "https://neverbe.lk/assets/images/logo.png",
+                url: "https://neverbe.lk/api/og",
                 alt: "NEVERBE Logo",
                 width: 260,
                 height: 260,
@@ -41,6 +41,7 @@ export const metadata: Metadata = {
         ],
     },
     openGraph: {
+        url: "https://neverbe.lk",
         type: "website",
         locale: "en_US",
         siteName: "NEVERBE",
@@ -49,7 +50,7 @@ export const metadata: Metadata = {
             "Discover NEVERBE, Sri Lanka's best ecommerce platform for branded copy shoes and accessories with fast delivery and superior service.",
         images: [
             {
-                url: "https://neverbe.lk/assets/images/logo.png",
+                url: "https://neverbe.lk/api/og",
                 alt: "NEVERBE Logo",
                 width: 260,
                 height: 260,
