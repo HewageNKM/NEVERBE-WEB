@@ -61,7 +61,7 @@ const ItemCard = ({item,flag}:{item:Item,flag:string}) => {
                     <h2 className="right-0 bg-red-500 text-white p-1 font-medium">{item.discount + "%"}</h2>}
             </div>
             {outOfStocks && (<div className="bg-white absolute top-0 left-0 w-full h-full bg-opacity-60 flex justify-center items-center">
-                <h2 className={`text-white p-1 font-medium ${outOfStocksLabel === "Coming Soon" ? "bg-yellow-500":"bg-red-500"}`} >{outOfStocksLabel}</h2>
+                <h2 className={`text-white p-2 rounded-lg font-bold tracking-wide ${outOfStocksLabel === "Coming Soon" ? "bg-yellow-500":"bg-red-500"}`} >{outOfStocksLabel}</h2>
             </div>)}
         </div>
     );

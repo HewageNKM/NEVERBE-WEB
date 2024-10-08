@@ -3,7 +3,7 @@ import {FooterLink, Slide, SocialMedia} from "@/interfaces";
 import {IoLogoTiktok} from "react-icons/io5";
 import {IoLogoFacebook, IoLogoInstagram} from "react-icons/io";
 import {MdEmail} from "react-icons/md";
-import {FaMobile, FaPhone} from "react-icons/fa";
+import {FaMobile} from "react-icons/fa";
 import {PaymentSlide} from "@/assets/slides";
 
 export const brands = [
@@ -65,8 +65,7 @@ export const brands = [
         name: 'New Balance',
         value: 'new-balance',
         url: "/shop/products/manufacturers/new-balance",
-        titles: [
-        ]
+        titles: []
     },
     {
         name: 'Cross',
@@ -392,7 +391,6 @@ export const paymentOptions = [
         image: null,
         description: "Pay after receiving your order at your doorstep."
     }]
-//Todo: Add phone number and landline number
 export const contactInfo = [
     {
         icon: MdEmail,

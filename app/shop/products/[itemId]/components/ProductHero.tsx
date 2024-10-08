@@ -1,5 +1,5 @@
 "use client"
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Skeleton from "@/components/Skeleton";
 import Image from "next/image";
 import {CartItem, Item, Size, Variant} from "@/interfaces";
@@ -18,6 +18,9 @@ const ProductHero = ({item}: { item: Item }) => {
     });
     const [selectedSize, setSelectedSize] = useState<Size>({size: "", stock: 0});
     const [qty, setQty] = useState(0)
+    const [outOfStocks, setOutOfStocks] = useState(false);
+    const [outOfStocksLabel, setOutOfStocksLabel] = useState("Out of Stock");
+
 
     const dispatch: AppDispatch = useDispatch();
 
@@ -57,8 +60,34 @@ const ProductHero = ({item}: { item: Item }) => {
         setQty(0)
         setSelectedImage(item.thumbnail)
     }
+    const checkOutOfStocks = () => {
+        if(item.variants.length === 0){
+            setOutOfStocks(true);
+            setOutOfStocksLabel("Coming Soon");
+            return;
+        }
+        let iCount = 0;
+        for (let i = 0; i < item.variants.length; i++) {
+            let vCount = 0;
+            for (let j = 0; j < item.variants[i].sizes.length; j++) {
+                if (item.variants[i].sizes[j].stock == 0) {
+                    vCount++;
+                }
+            }
+            if (vCount === item.variants[i].sizes.length) {
+                iCount++;
+            }
+        }
+
+        if (iCount === item.variants.length) {
+            setOutOfStocks(true);
+        }
+    }
+    useEffect(() => {
+        checkOutOfStocks();
+    }, [item]);
     return (
-        <section className="w-full">
+        <section className="w-full relative">
             <h1 className="md:text-4xl text-2xl font-bold tracking-wider mt-10">Product Portfolio</h1>
             <div className="grid md:grid-cols-2 grid-cols-1 gap-6 md:gap-10 mt-10">
                 <div className="flex flex-row items-center justify-center flex-wrap gap-5">
@@ -151,6 +180,9 @@ const ProductHero = ({item}: { item: Item }) => {
                     </div>
                 </div>
             </div>
+            {outOfStocks && (<div className="bg-white absolute top-0 left-0 w-full h-full bg-opacity-60 flex justify-center items-center">
+                <h2 className={`text-white p-2 rounded-lg text-lg lg:text-xl font-bold tracking-wide ${outOfStocksLabel === "Coming Soon" ? "bg-yellow-500":"bg-red-500"}`} >{outOfStocksLabel}</h2>
+            </div>)}
         </section>
     );
 };

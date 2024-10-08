@@ -23,10 +23,12 @@ const ImagesSlider = ({images}: { images: Slide[] }) => {
                 className="w-full relative"
             >
                 {images.map((image, index) => (
-                    <SwiperSlide key={index}>
-                        <figure>
-                            <Image src={image.url} alt={image.fileName} width={1980}
-                                   height={1080} />
+                    <SwiperSlide key={index} className="w-full">
+                        <figure className="w-full h-full">
+                            <picture>
+                                <source srcSet={image.urls.mobile} type="image/png" media="(max-width: 640px)"/>
+                                <Image width={1920} height={1080} src={image.urls.default} alt={image.fileName} className="w-full h-full"/>
+                            </picture>
                         </figure>
                     </SwiperSlide>
                 ))}

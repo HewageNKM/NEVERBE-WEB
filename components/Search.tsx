@@ -16,9 +16,8 @@ const Search = ({setShowSearch}:{setShowSearch:any}) => {
                 transition={{ type: "tween" ,duration: 0.4,delay: 0.1}}
                 className="bg-white p-4 pt-10 w-[88vw] md:w-[50vw] lg:w-[30vw] h-fit rounded-lg relative">
                 <form onSubmit={()=>{}} className="relative">
-                    <legend className="text-lg text-primary font-bold">Type Name</legend>
-                    <input type="text" placeholder="Search..." className="border-b-2 focus:outline-none mt-1 font-medium rounded-lg border-b-primary p-2 pr-10 w-full"/>
-                    <button className="right-1 top-8 absolute">
+                    <input type="text" placeholder="Search..." className="border-b-2 focus:outline-none font-medium rounded-lg border-b-primary p-2 pr-10 w-full"/>
+                    <button className="right-1 top-2 absolute">
                         <IoSearch size={30}/>
                     </button>
                 </form>
