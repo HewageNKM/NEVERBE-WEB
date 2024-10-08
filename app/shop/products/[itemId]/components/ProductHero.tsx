@@ -127,7 +127,7 @@ const ProductHero = ({item}: { item: Item }) => {
                                     <button onClick={() => {
                                         setSelectedVariant(variant)
                                         setSelectedImage(variant.images[0])
-                                        setSelectedSize({} as Size)
+                                        setSelectedSize({size: "", stock: 0})
                                         setQty(0)
                                     }}
                                             className={`uppercase p-2 rounded-lg ${selectedVariant?.variantId === variant.variantId ? "bg-primary" : "bg-slate-200"}`}>
@@ -161,12 +161,12 @@ const ProductHero = ({item}: { item: Item }) => {
                     <div className="mt-2">
                         <h2 className="text-4xl text-yellow-400 font-medium">Quantity</h2>
                         <div className="flex gap-6 mt-2 flex-row justify-center items-center md:justify-start">
-                            <button disabled={!selectedSize} onClick={() => setQuantity("dec")}
+                            <button disabled={selectedSize.stock == 0} onClick={() => setQuantity("dec")}
                                     className="bg-slate-200 p-2 rounded-full">
                                 <IoRemove size={20}/>
                             </button>
                             <p className="text-3xl">{qty}</p>
-                            <button disabled={!selectedSize} onClick={() => setQuantity("in")}
+                            <button disabled={selectedSize.stock == 0} onClick={() => setQuantity("in")}
                                     className="bg-slate-200 p-2 rounded-full">
                                 <IoAdd size={20}/>
                             </button>

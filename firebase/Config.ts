@@ -2,6 +2,7 @@ import {initializeApp} from "firebase/app";
 import {collection, getFirestore} from "firebase/firestore";
 import {getAuth} from "firebase/auth";
 import {getAnalytics, isSupported} from "@firebase/analytics";
+import {getRemoteConfig} from "@firebase/remote-config";
 
 const firebaseConfig = {
     apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -16,7 +17,6 @@ const firebaseConfig = {
 
 export const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
-export const auth = getAuth(app);
 
 export let analytics;
 isSupported().then((supported) => {

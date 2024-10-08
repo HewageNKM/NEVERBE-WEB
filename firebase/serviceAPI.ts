@@ -1,8 +1,9 @@
-import {analytics, inventoryCollectionRef, slidersCollectionRef} from "@/firebase/Config";
+import {analytics, inventoryCollectionRef, remoteConfig, slidersCollectionRef} from "@/firebase/Config";
 import {and, doc, getDoc, getDocs, limit, orderBy, where} from "@firebase/firestore";
 import {Item, Slide} from "@/interfaces";
 import {query} from "@firebase/database";
 import {logEvent} from "@firebase/analytics";
+import {getValue} from "@firebase/remote-config";
 
 export const getInventoryByRecent = async () => {
     const recentInventoryDataQuery = query(inventoryCollectionRef, orderBy('createdAt', 'desc'), limit(16));
@@ -89,9 +90,4 @@ export const getSliders = async () => {
     })
 
     return sliders;
-}
-
-export const log = async (eventName: string, eventParams: any) => {
-    logEvent(analytics, eventName, eventParams);
-    console.log(eventName, eventParams);
 }
