@@ -403,8 +403,8 @@ export const contactInfo = [
         content: "+94 72 924 9999"
     },
     {
-        icon: FaPhone,
-        content: "+94 70 388 7800"
+        icon: FaMobile,
+        content: "+94 70 520 8999"
     }
 
 ];

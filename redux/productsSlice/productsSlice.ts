@@ -1,18 +1,19 @@
 import {Item} from "@/interfaces";
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import {getInventory} from "@/firebase/serviceAPI";
+import {WritableDraft} from "immer";
 
 interface ProductsSlice {
     products: Item[],
     showFilter: boolean,
     selectedType: string,
-    selectedBrands: string[],
+    selectedManufacturers: string[],
     selectedSizes: string[],
     selectedSort: string
 }
 
 const initialState: ProductsSlice = {
-    selectedBrands: [],
+    selectedManufacturers: [],
     selectedSizes: [],
     selectedType: "all",
     products: [],
@@ -30,17 +31,17 @@ const productsSlice = createSlice({
         setSelectedType: (state, action) => {
             state.selectedType = action.payload;
         },
-        setSelectedBrands: (state, action) => {
-            state.selectedBrands = action.payload;
-        },
         setSelectedSizes: (state, action) => {
             state.selectedSizes = action.payload;
         },
         setSelectedSort: (state, action) => {
             state.selectedSort = action.payload;
         },
+        setSelectedManufacturers: (state, action) => {
+            state.selectedManufacturers = action.payload;
+        },
         resetFilter: (state) => {
-            state.selectedBrands = [];
+            state.selectedManufacturers = [];
             state.selectedSizes = [];
             state.selectedType = "all";
             state.selectedSort = "";
@@ -52,7 +53,7 @@ const productsSlice = createSlice({
     extraReducers: (builder) => {
         builder.addCase(filterProducts.fulfilled, (state, action) => {
 
-            //Filter by brand
+            //ManufacturersFilter by brand
             if (state.selectedType == "all") {
                 state.products = action.payload;
             } else if (state.selectedType == "shoes") {
@@ -65,28 +66,34 @@ const productsSlice = createSlice({
                 state.products = action.payload.filter((item) => item.type == "socks");
             }
 
-            //Filter by brand
-            if (state.selectedBrands.length > 0) {
-                state.products = state.products.filter((item) => state.selectedBrands.includes(item.manufacturer));
+            //ManufacturersFilter by brand
+            if (state.selectedManufacturers.length > 0) {
+                state.products = state.products.filter((item) => state.selectedManufacturers.includes(item.manufacturer));
             }
 
-            //Filter by size
+            //ManufacturersFilter by size
             if (state.selectedSizes.length > 0) {
                 state.products = state.products.filter((item) => item.variants.some((variant) => variant.sizes.some((size) => state.selectedSizes.includes(size.size))));
             }
 
-            if (state.selectedSort != "") {
-                if (state.selectedSort === "lh") {
-                    state.products = state.products.sort((a, b) => a.sellingPrice - b.sellingPrice);
-                } else if (state.selectedSort === "hl") {
-                    state.products = state.products.sort((a, b) => b.sellingPrice - a.sellingPrice);
-                } else if (state.selectedSort == "") {
-                    state.products = action.payload
-                }
-            }
+            sort(state, action);
+        }).addCase(sortProducts.fulfilled, (state, action) => {
+            sort(state, action);
         });
     }
 });
+
+export const sort = (state: WritableDraft<ProductsSlice>, action: any) => {
+    if (state.selectedSort != "") {
+        if (state.selectedSort === "lh") {
+            state.products = state.products.sort((a, b) => a.sellingPrice - b.sellingPrice);
+        } else if (state.selectedSort === "hl") {
+            state.products = state.products.sort((a, b) => b.sellingPrice - a.sellingPrice);
+        } else if (state.selectedSort == "") {
+            state.products = action.payload
+        }
+    }
+}
 
 export const filterProducts = createAsyncThunk('products/getFilterProducts', async (arg, thunkAPI) => {
 
@@ -98,13 +105,23 @@ export const filterProducts = createAsyncThunk('products/getFilterProducts', asy
     }
 });
 
+export const sortProducts = createAsyncThunk('products/getSortProductsByPrice', async (arg, thunkAPI) => {
+
+    try {
+        return await getInventory();
+    } catch (e) {
+        console.log(e);
+        return thunkAPI.rejectWithValue(e);
+    }
+});
+
 export const {
     toggleFilter,
-    setSelectedBrands,
     setSelectedType,
     setSelectedSizes,
     setSelectedSort,
     resetFilter,
-    setProducts
+    setProducts,
+    setSelectedManufacturers,
 } = productsSlice.actions;
 export default productsSlice.reducer;

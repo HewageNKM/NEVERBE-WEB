@@ -6,8 +6,9 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "@/redux/store";
 import {motion} from "framer-motion";
 import {
-    filterProducts, resetFilter,
-    setSelectedBrands,
+    filterProducts,
+    resetFilter,
+    setSelectedManufacturers,
     setSelectedSizes,
     setSelectedType,
     toggleFilter
@@ -16,15 +17,15 @@ import {accessoriesSizes, brands, productTypes, wearableSizes} from "@/constants
 import {BiReset} from "react-icons/bi";
 
 const Filter = () => {
-    const {selectedSizes, selectedType, selectedBrands} = useSelector((state: RootState) => state.productsSlice);
+    const {selectedSizes, selectedType, selectedManufacturers} = useSelector((state: RootState) => state.productsSlice);
     const dispatch: AppDispatch = useDispatch();
 
 
     const addBrand = (value: string) => {
-        if (selectedBrands.includes(value)) {
-            dispatch(setSelectedBrands(selectedBrands.filter(brand => brand !== value)))
+        if (selectedManufacturers.includes(value)) {
+            dispatch(setSelectedManufacturers(selectedManufacturers.filter(brand => brand !== value)))
         } else {
-            dispatch(setSelectedBrands([...selectedBrands, value]))
+            dispatch(setSelectedManufacturers([...selectedManufacturers, value]))
         }
     }
 
@@ -38,7 +39,7 @@ const Filter = () => {
 
     useEffect(() => {
         dispatch(filterProducts())
-    }, [selectedBrands, selectedType, selectedSizes, dispatch]);
+    }, [selectedManufacturers, selectedType, selectedSizes, dispatch]);
 
     return (
         <DropShadow containerStyle="flex justify-start items-start">
@@ -78,7 +79,7 @@ const Filter = () => {
                                 <label key={index} className="flex items-center gap-2 cursor-pointer">
                                     <input
                                         value={brand.value}
-                                        checked={selectedBrands.includes(brand.value)}
+                                        checked={selectedManufacturers.includes(brand.value)}
                                         type="checkbox"
                                         onChange={() => addBrand(brand.value)}
                                         className="form-checkbox h-5 w-5 text-blue-600 transition duration-150 ease-in-out rounded focus:ring-2 focus:ring-blue-500"
@@ -160,7 +161,8 @@ const Filter = () => {
                     </div>
                 </div>
                 <div className="top-0 right-0 absolute flex flex-row gap-5">
-                    <button  className="bg-yellow-400 flex mt-1 p-0.5 rounded-lg flex-row text-white justify-center items-center text-sm font-bold md:text-lg">
+                    <button
+                        className="bg-yellow-400 flex mt-1 p-0.5 rounded-lg flex-row text-white justify-center items-center text-sm font-bold md:text-lg">
                         <BiReset onClick={() => dispatch(resetFilter())} size={35}/>
                     </button>
                     <button>

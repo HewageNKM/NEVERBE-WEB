@@ -3,6 +3,7 @@ import {getItemsByManufacturerAndBrandName} from "@/firebase/serviceAPI";
 import Products from "@/app/shop/products/components/Products";
 import {Item} from "@/interfaces";
 import {Metadata} from "next";
+import SortingOptions from "@/app/shop/products/manufacturers/[manufacturerName]/components/SortingOptions";
 
 
 export const metadata: Metadata = {
@@ -44,6 +45,7 @@ const Page = async ({params}: { params: { manufacturerName: string, brandName: s
             <div className="px-8 py-4">
                 <h1 className="md:text-4xl text-2xl capitalize font-bold tracking-wider mt-10">{params.manufacturerName} &gt; {params.brandName}({items.length})</h1>
                 <div className="w-full">
+                    <SortingOptions />
                     <Products items={items}/>
                 </div>
             </div>
