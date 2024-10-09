@@ -1,19 +1,23 @@
 "use client"
 import md5 from 'crypto-js/md5';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import AddressDetails from "@/app/shop/checkout/components/AddressDetails";
 import PaymentDetails from "@/app/shop/checkout/components/PaymentDetails";
 import {useSelector} from "react-redux";
 import {RootState} from "@/redux/store";
 import {CartItem} from "@/interfaces";
 import {calculateShipping} from "@/util";
+import {redirect, RedirectType} from "next/navigation";
 
 const CheckoutForm = () => {
     const [paymentType, setPaymentType] = useState("payhere")
     const [saveAddress, setSaveAddress] = useState(false)
 
     const cartItems: CartItem[] = useSelector((state: RootState) => state.cartSlice.cart);
-
+    // ToDo Remove
+    useEffect(() => {
+        redirect("/down",RedirectType.replace)
+    }, []);
     const onPaymentFormSubmit = async (evt: any) => {
         evt.preventDefault()
         try {
