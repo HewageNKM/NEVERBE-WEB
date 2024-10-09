@@ -22,19 +22,21 @@ export async function POST(req: Request) {
         console.log("/////////////////////////////////////////////////////////REQUEST BODY/////////////////////////////////////////////////////////")
         console.log(`Merchant ID:${merchant_id}, Order ID:${order_id}, Payment ID:${payment_id}, Amount:${payhere_amount}, Currency:${payhere_currency}, Status Code:${status_code}, MD5Sig:${md5sig}, Method:${method}`)
         console.log("////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////")
-
+        console.log()
         const merchantSecret = process.env.NEXT_PUBLIC_PAYHERE_MERCHANT_SECRET;
         const hashedSecret = md5(merchantSecret).toString().toUpperCase();
 
-        const local_md5sig = md5(merchant_id + order_id + payhere_amount + payhere_currency + hashedSecret).toString().toUpperCase();
+        const local_md5sig = md5(merchant_id + order_id + payhere_amount + payhere_currency + status_code + hashedSecret);
 
         console.log("/////////////////////////////////////////////////////////LOCAL MD5SIG/////////////////////////////////////////////////////////")
         console.log(local_md5sig)
         console.log("////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////")
+        console.log()
 
         console.log("/////////////////////////////////////////////////////////MD5SIG/////////////////////////////////////////////////////////")
         console.log(md5sig)
         console.log("////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////")
+        console.log()
 
         if (local_md5sig !== md5sig) {
             return NextResponse.json({message: 'Unauthorized Different Signatures'}, {status: 401})
@@ -45,11 +47,14 @@ export async function POST(req: Request) {
             console.log("/////////////////////////////////////////////////////////PAYMENT SUCCESSFUL/////////////////////////////////////////////////////////")
             console.log(`Merchant ID:${merchant_id}, Order ID:${order_id}, Payment ID:${payment_id}, Amount:${payhere_amount}, Currency:${payhere_currency}, Status Code:${status_code}, MD5Sig:${md5sig}, Method:${method}`)
             console.log("////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////")
+            console.log()
 
         } else if (status_code === '-2') {
             console.log("/////////////////////////////////////////////////////////PAYMENT FAILED/////////////////////////////////////////////////////////")
             console.log(`Merchant ID:${merchant_id}, Order ID:${order_id}, Payment ID:${payment_id}, Amount:${payhere_amount}, Currency:${payhere_currency}, Status Code:${status_code}, MD5Sig:${md5sig}, Method:${method}`)
             console.log("////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////")
+            console.log()
+
             return NextResponse.json({message: 'Payment Failed'}, {status: 400})
         } else if (status_code == "-1") {
             console.log("/////////////////////////////////////////////////////////PAYMENT CANCELED/////////////////////////////////////////////////////////")
@@ -61,12 +66,16 @@ export async function POST(req: Request) {
             console.log("/////////////////////////////////////////////////////////PAYMENT CHARGEDBACK/////////////////////////////////////////////////////////")
             console.log(`Merchant ID:${merchant_id}, Order ID:${order_id}, Payment ID:${payment_id}, Amount:${payhere_amount}, Currency:${payhere_currency}, Status Code:${status_code}, MD5Sig:${md5sig}, Method:${method}`)
             console.log("////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////")
+            console.log()
+
             return NextResponse.json({message: 'Payment Pending'}, {status: 400})
 
         } else if (status_code == "0") {
             console.log("/////////////////////////////////////////////////////////PAYMENT PENDING/////////////////////////////////////////////////////////")
             console.log(`Merchant ID:${merchant_id}, Order ID:${order_id}, Payment ID:${payment_id}, Amount:${payhere_amount}, Currency:${payhere_currency}, Status Code:${status_code}, MD5Sig:${md5sig}, Method:${method}`)
             console.log("////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////")
+            console.log()
+
             return NextResponse.json({message: 'Payment Pending'}, {status: 400})
         }
     } catch (e) {
