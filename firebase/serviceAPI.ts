@@ -1,9 +1,7 @@
-import {analytics, inventoryCollectionRef, remoteConfig, slidersCollectionRef} from "@/firebase/Config";
+import {inventoryCollectionRef, slidersCollectionRef} from "@/firebase/Config";
 import {and, doc, getDoc, getDocs, limit, orderBy, where} from "@firebase/firestore";
 import {Item, Slide} from "@/interfaces";
 import {query} from "@firebase/database";
-import {logEvent} from "@firebase/analytics";
-import {getValue} from "@firebase/remote-config";
 
 export const getInventoryByRecent = async () => {
     const recentInventoryDataQuery = query(inventoryCollectionRef, orderBy('createdAt', 'desc'), limit(16));
@@ -35,7 +33,7 @@ export const getInventory = async () => {
     return items;
 }
 
-export const getItemsByManufacturer = async (name:string) => {
+export const getItemsByManufacturer = async (name: string) => {
     const brandItemsQuery = query(inventoryCollectionRef, where('manufacturer', '==', name));
     const docs = await getDocs(brandItemsQuery);
     let items: Item[] = [];
@@ -50,7 +48,7 @@ export const getItemsByManufacturer = async (name:string) => {
     return items;
 }
 
-export const getItemsByManufacturerAndBrandName = async (manufacture:string,name:string) => {
+export const getItemsByManufacturerAndBrandName = async (manufacture: string, name: string) => {
     const brandItemsQuery = query(inventoryCollectionRef, where('manufacturer', '==', manufacture), and(where('brand', '==', name)));
     const docs = await getDocs(brandItemsQuery);
     let items: Item[] = [];

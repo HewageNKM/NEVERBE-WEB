@@ -3,7 +3,7 @@ import {ImageResponse} from "next/og";
 export async function GET() {
     return new ImageResponse(
         (
-            <div
+            <h1
                 style={{
                     display: "flex",
                     justifyContent: "center",
@@ -13,16 +13,15 @@ export async function GET() {
                     fontSize: "3rem",
                     fontWeight: "bolder",
                     color: "#fff",
-                    borderRadius: "9999px",
-                    backgroundColor: "#97E13E",
+                    backgroundColor: "#000"
                 }}
             >
                 ©NEVERBE
-            </div>
+            </h1>
         ),
         {
-            width: 260,
-            height: 260,
+            width: 300,
+            height: 300,
 
         },
     );

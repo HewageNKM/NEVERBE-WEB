@@ -80,8 +80,7 @@ const Cart = () => {
                         if (cartItems.length == 0) return;
 
                         dispatch(hideCart());
-                        // ToDo Remove This Line When Production is complete
-                        router.push("/down");
+                        router.push("/shop/checkout");
                     }}>Checkout
                     </button>
                 </div>
