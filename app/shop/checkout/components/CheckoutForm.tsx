@@ -33,7 +33,7 @@ const CheckoutForm = () => {
 
             formData.set("merchant_id", merchantId);
             formData.set("return_url", `${process.env.NEXT_PUBLIC_BASE_URL}/shop/checkout/success`);
-            formData.set("cancel_url", `${process.env.NEXT_PUBLIC_BASE_URL}/api/checkout/fail`);
+            formData.set("cancel_url", `${process.env.NEXT_PUBLIC_BASE_URL}/shop/checkout/fail`);
             formData.set("notify_url", `${process.env.NEXT_PUBLIC_BASE_URL}/api/payhere`);
             formData.set("first_name", evt.target.first_name.value);
             formData.set("last_name", evt.target.last_name.value);
