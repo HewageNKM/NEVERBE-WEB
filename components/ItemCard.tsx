@@ -34,7 +34,7 @@ const ItemCard = ({item,flag}:{item:Item,flag:string}) => {
 
     useEffect(() => {
         checkOutOfStocks();
-    });
+    },[item]);
 
     return (
         <div className="w-[16rem] lg:w-[20rem] transition-all h-[25.5rem] lg:h-[30.5rem] shadow relative rounded-lg">
