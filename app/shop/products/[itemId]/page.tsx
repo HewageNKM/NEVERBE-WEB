@@ -4,6 +4,7 @@ import ProductHero from "@/app/shop/products/[itemId]/components/ProductHero";
 import SizeChart from "@/app/shop/products/[itemId]/components/SizeChart";
 import {notFound} from "next/navigation";
 import {Item} from "@/interfaces";
+import {getItemById} from "@/firebase/firebaseAdmin";
 
 export const metadata = {
     title: "Product Portfolio",
