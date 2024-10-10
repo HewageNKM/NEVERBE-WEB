@@ -114,7 +114,20 @@ const PaymentDetails = ({
                 </ul>
 
             </div>
-            <div className="w-full justify-center items-center mt-5 flex">
+            <div className="mt-5 capitalize flex flex-col">
+                <h3 className="text-red-500 text-xl">
+                    <strong>
+                        Do not refresh or close the page while the payment is processing.
+                    </strong>
+                </h3>
+                <h3>
+                    <em className="font-medium">
+                        By clicking the <strong>&quot;Proceed to Payment&quot;</strong> button, you agree to our Terms of Service and
+                        Privacy Policy.
+                    </em>
+                </h3>
+            </div>
+            <div className="w-full justify-center items-center mt-3 flex">
                 <button
                     disabled={cartItems.length == 0}
                     type="submit"

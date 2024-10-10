@@ -16,8 +16,29 @@ export const adminFirestore = admin.firestore();
 export const adminAuth = admin.auth();
 
 export const addNewOrder = async (order: Order) => {
+    for (const orderItem of order.items) {
+        const itemDoc = await adminFirestore.collection('inventory').doc(orderItem.itemId).get();
+        const inventoryItem = itemDoc.data() as Item;
+
+        inventoryItem.variants.forEach(variant => {
+            if (variant.variantId === orderItem.variantId) {
+                variant.sizes.forEach(size => {
+                    if (size.size === orderItem.size) {
+                        if(size.stock < orderItem.quantity) {
+                            throw new Error("Insufficient Stock")
+                        }
+                        size.stock -= orderItem.quantity;
+                    }
+                });
+            }
+        });
+
+        await adminFirestore.collection('inventory').doc(orderItem.itemId).set(inventoryItem);
+    }
+
     return await adminFirestore.collection('orders').doc(order.orderId).set(order);
 }
+
 export const updatePayment = async (orderId:string, paymentId:string) => {
     return await adminFirestore.collection('orders').doc(orderId).update({paymentId: paymentId, paymentStatus: "Paid"});
 }

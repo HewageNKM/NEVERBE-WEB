@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from "next/link";
-import {getOrderById} from "@/firebase/firebaseAdmin";
+import {deleteOrderByIdAndRestock, getOrderById} from "@/firebase/firebaseAdmin";
 import {notFound} from "next/navigation";
 import SuccessAnimationComponents from "@/app/shop/checkout/success/components/SuccessAnimationComponents";
 
@@ -8,9 +8,17 @@ const Page = async ({searchParams}: { searchParams: { order_id: string } }) => {
     const orderId = searchParams.order_id;
     const order = await getOrderById(orderId);
 
-    if (!order) {
-        return notFound();
+    try {
+        if (!order) {
+            return notFound();
+
+        }
+        await deleteOrderByIdAndRestock(orderId);
+
+    }catch (e: any) {
+        console.log(e.message)
     }
+
     return (
         <main className="w-full md:mt-20 mb-10 lg:mt-28 mt-16 flex justify-center items-center">
             <div className="w-fit h-[18rem] p-8 flex flex-col gap-5 justify-center items-center">
