@@ -1,23 +1,8 @@
 import React from 'react';
 import Link from "next/link";
-import {deleteOrderByIdAndRestock, getOrderById} from "@/firebase/firebaseAdmin";
-import {notFound} from "next/navigation";
 import SuccessAnimationComponents from "@/app/shop/checkout/success/components/SuccessAnimationComponents";
 
-const Page = async ({searchParams}: { searchParams: { order_id: string } }) => {
-    const orderId = searchParams.order_id;
-    const order = await getOrderById(orderId);
-
-    try {
-        if (!order) {
-            return notFound();
-
-        }
-        await deleteOrderByIdAndRestock(orderId);
-
-    }catch (e: any) {
-        console.log(e.message)
-    }
+const Page = () => {
 
     return (
         <main className="w-full md:mt-20 mb-10 lg:mt-28 mt-16 flex justify-center items-center">
@@ -25,13 +10,8 @@ const Page = async ({searchParams}: { searchParams: { order_id: string } }) => {
                 <SuccessAnimationComponents/>
                 <div
                     className="font-bold gap-3 flex flex-col md:text-xl lg:text-2xl justify-center items-center capitalize text-green-500 text-lg">
-                    <label className="text-center capitalize text-slate-500">
-                        <span>Order ID:</span>
-                        <input value={order.orderId}
-                               className="w-full p-2 focus:outline-none border-slate-300 border rounded-lg"/>
-                    </label>
                     <h3 className="text-center">
-                        Sorry, Your order is failed!
+                        Sorry, Your order placed has been failed!
                     </h3>
                     <Link href="/" className="text-blue-500 md:text-lg text-sm">
                         Go back to home
