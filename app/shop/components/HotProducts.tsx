@@ -1,8 +1,8 @@
 import React from 'react';
-import {getHotsProducts} from "@/firebase/serviceAPI";
 import ItemCard from "@/components/ItemCard";
 import EmptyState from "@/components/EmptyState";
 import {Item} from "@/interfaces";
+import {getHotsProducts} from "@/firebase/firebaseClient";
 
 const HotProducts = async () => {
     let items:Item[] = []

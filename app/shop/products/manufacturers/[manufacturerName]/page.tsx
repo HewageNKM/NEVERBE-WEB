@@ -1,9 +1,9 @@
 import React from 'react';
-import {getItemsByManufacturer} from "@/firebase/serviceAPI";
 import Products from "@/app/shop/products/components/Products";
 import {Item} from "@/interfaces";
 import {Metadata} from "next";
 import SortingOptions from "@/app/shop/products/manufacturers/[manufacturerName]/components/SortingOptions";
+import {getItemsByField} from "@/firebase/firebaseAdmin";
 
 export const metadata: Metadata = {
     title: "Manufacturer",
@@ -34,7 +34,7 @@ const Page = async ({params}: { params: { manufacturerName: string } }) => {
     let items: Item[] = [];
 
     try {
-        items = await getItemsByManufacturer(params.manufacturerName);
+        items = await getItemsByField(params.manufacturerName, "manufacturer");
     } catch (e: any) {
         console.log(e.message)
     }

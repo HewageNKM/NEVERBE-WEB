@@ -42,6 +42,16 @@ export interface CartItem {
     price: number,
 }
 
+export interface OrderItem {
+    itemId: string,
+    variantId: string,
+    name: string,
+    variantName: string,
+    size: string,
+    quantity: number,
+    price: number,
+}
+
 export interface FooterLink {
     title: string;
     url: string;
@@ -59,4 +69,13 @@ export interface Slide {
         default: string;
         mobile: string;
     };
+}
+
+export interface Order {
+    orderId: string,
+    paymentId: string,
+    items: OrderItem[],
+    paymentStatus: string,
+    createdAt: Date,
+    updatedAt: Date,
 }

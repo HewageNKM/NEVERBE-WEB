@@ -1,10 +1,10 @@
 import React from 'react';
 import ImagesSlider from "@/app/shop/components/ImagesSlider";
-import {getSliders} from "@/firebase/serviceAPI";
 import Link from "next/link";
 import {BiCart} from "react-icons/bi";
 import {offlineSlides} from "@/constants";
 import {Slide} from "@/interfaces";
+import {getSliders} from "@/firebase/firebaseAdmin";
 
 const Hero = async () => {
 

@@ -1,7 +1,7 @@
 import {Item} from "@/interfaces";
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import {getInventory} from "@/firebase/serviceAPI";
 import {WritableDraft} from "immer";
+import {getInventory} from "@/firebase/firebaseClient";
 
 interface ProductsSlice {
     products: Item[],

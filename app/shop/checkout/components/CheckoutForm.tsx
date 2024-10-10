@@ -5,19 +5,18 @@ import AddressDetails from "@/app/shop/checkout/components/AddressDetails";
 import PaymentDetails from "@/app/shop/checkout/components/PaymentDetails";
 import {useSelector} from "react-redux";
 import {RootState} from "@/redux/store";
-import {CartItem} from "@/interfaces";
+import {CartItem, Order} from "@/interfaces";
 import {calculateShipping} from "@/util";
-import {redirect, RedirectType} from "next/navigation";
+import {redirect} from "next/navigation";
 
 const CheckoutForm = () => {
     const [paymentType, setPaymentType] = useState("payhere")
     const [saveAddress, setSaveAddress] = useState(false)
 
-    const cartItems: CartItem[] = useSelector((state: RootState) => state.cartSlice.cart);
-    // ToDo Remove
     useEffect(() => {
-        redirect("/down",RedirectType.replace)
+        redirect("/down")
     }, []);
+    const cartItems: CartItem[] = useSelector((state: RootState) => state.cartSlice.cart);
     const onPaymentFormSubmit = async (evt: any) => {
         evt.preventDefault()
         try {
@@ -53,7 +52,6 @@ const CheckoutForm = () => {
             formData.set("hash", hash);
 
 
-
             const submitForm = document.createElement('form');
             submitForm.method = 'POST';
             submitForm.action = process.env.NEXT_PUBLIC_PAYHERE_URL;
@@ -69,9 +67,17 @@ const CheckoutForm = () => {
 
             document.body.appendChild(submitForm);
 
+            const newOrder: Order = {
+                createdAt: new Date(),
+                items: cartItems,
+                orderId: orderId,
+                paymentId: "",
+                status: "Pending",
+                updatedAt: new Date()
+            }
             if (cartItems.length !== 0) {
                 if (paymentType == "payhere") {
-                    submitForm.submit();
+                    //submitForm.submit();
                     console.log("Payhere")
                 } else if (paymentType == "cod") {
                     console.log("COD")

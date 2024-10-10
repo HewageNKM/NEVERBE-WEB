@@ -2,7 +2,8 @@ import React from 'react';
 import Products from "@/app/shop/products/components/Products";
 import Options from "@/app/shop/products/components/Options";
 import {Metadata} from "next";
-import {getInventory} from "@/firebase/serviceAPI";
+import {getAllInventoryItems} from "@/firebase/firebaseAdmin";
+import {Item} from "@/interfaces";
 
 export const metadata: Metadata = {
     title: "Products",
@@ -30,7 +31,14 @@ export const metadata: Metadata = {
 }
 
 const Page = async () => {
-   const items = await getInventory();
+    let items:Item[] = [];
+
+    try {
+        items = await getAllInventoryItems();
+    }catch (e){
+        console.log(e);
+    }
+
     return (
         <main className="w-full relative lg:mt-32 md:mt-20 mt-10 overflow-clip">
             <div className="px-8 py-4">

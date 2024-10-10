@@ -1,14 +1,14 @@
 import React from 'react';
-import {getInventoryByRecent} from "@/firebase/serviceAPI";
 import {Item} from "@/interfaces";
 import ItemCard from "@/components/ItemCard";
 import EmptyState from "@/components/EmptyState";
+import {getRecentItems} from "@/firebase/firebaseAdmin";
 
 const NewArrivals = async () => {
     let items: Item[] = [];
 
     try {
-         items = await getInventoryByRecent();
+         items = await getRecentItems();
     } catch (e) {
         console.log(e);
     }
