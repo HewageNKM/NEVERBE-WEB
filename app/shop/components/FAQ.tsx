@@ -7,9 +7,16 @@ const Faq = () => {
     return (
         <section className="w-full mt-10">
             <div className="p-8">
-                <h1 className="text-4xl font-bold">
-                    FAQ
-                </h1>
+                <div>
+                    <h2 className="text-4xl font-bold">
+                        <strong>
+                            FAQ
+                        </strong>
+                    </h2>
+                    <h3 className="text-xl md:text-2xl text-primary mt-2">
+                        Frequently asked questions
+                    </h3>
+                </div>
                 <ul className="flex flex-row flex-wrap justify-center gap-10 mt-10 w-full">
                     {faqs.map((faq, index) => (
                         <li key={index}>

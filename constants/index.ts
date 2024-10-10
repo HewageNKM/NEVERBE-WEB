@@ -1,11 +1,49 @@
 import {DeliveryImage, GoodsImage, MoneyImage, SupportImage} from "@/assets/images";
-import {FooterLink, Slide, SocialMedia} from "@/interfaces";
+import {FooterLink, SocialMedia} from "@/interfaces";
 import {IoLogoTiktok} from "react-icons/io5";
 import {IoLogoFacebook, IoLogoInstagram} from "react-icons/io";
 import {MdEmail} from "react-icons/md";
 import {FaMobile} from "react-icons/fa";
-import {PaymentSlide} from "@/assets/slides";
 
+export const seoKeywords: string[] = [
+    "never be lk",
+    "neverbe",
+    "shoes sri lanka",
+    "shoes online sri lanka",
+    "sneakers sri lanka",
+    "copy shoes sri lanka",
+    "brand copy shoes sri lanka",
+    "nike sri lanka",
+    "nike colombo",
+    "nike gampaha",
+    "adidas sri lanka",
+    "adidas colombo",
+    "adidas gampaha",
+    "new balance sri lanka",
+    "new balance colombo",
+    "new balance gampaha",
+    "puma sri lanka",
+    "puma colombo",
+    "puma gampaha",
+    "mens shoes sri lanka",
+    "womens shoes sri lanka",
+    "slippers sri lanka",
+    "sandals sri lanka",
+    "shoe store sri lanka",
+    "shoe shop sri lanka",
+    "shoe shopping sri lanka",
+    "shoe store online sri lanka",
+    "shoe shop online sri lanka",
+    "shoe shopping online sri lanka",
+    "copy shoes colombo",
+    "copy shoes gampaha",
+    "brand copy shoes colombo",
+    "brand copy shoes gampaha",
+    "mens shoes colombo",
+    "mens shoes gampaha",
+    "womens shoes colombo",
+    "womens shoes gampaha"
+];
 export const brands = [
     {
         name: 'Nike',
@@ -245,17 +283,11 @@ export const shippingReturnPolicy = [
             "If you have any further questions about our shipping process or need assistance with your order, please don’t hesitate to contact us.",
     },
 ];
-export const address = [
-    {
-        name: "330/40/10,"
-    },
-    {
-        name: "New Kandy Road,"
-    },
-    {
-        name: "Delgoda"
-    }
-];
+export const address = {
+    address: "330/40/10, New Kandy Road, Delgoda",
+    map: "https://maps.app.goo.gl/zpXm2euKTW8Eee486"
+}
+
 export const socialMedia: SocialMedia[] = [
     {icon: IoLogoFacebook, name: "Facebook", url: ""},
     {icon: IoLogoInstagram, name: "Instagram", url: ""},
@@ -360,16 +392,6 @@ export const faqs = [
         answer: "Our products are high-quality copies made in Vietnam, not original."
     }
 ];
-export const offlineSlides: Slide[] = [
-    {
-        fileName: "payment",
-        url: PaymentSlide
-    },
-    {
-        fileName: "delivery",
-        url: DeliveryImage
-    }
-]
 export const payHere = {
     shortBannerWhite: "https://www.payhere.lk/downloads/images/payhere_short_banner.png",
     shortBannerBlue: "https://www.payhere.lk/downloads/images/payhere_short_banner_dark.png",

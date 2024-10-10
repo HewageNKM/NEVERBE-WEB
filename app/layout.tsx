@@ -5,6 +5,7 @@ import StoreProvider from "@/app/components/StoreProvider";
 import {SpeedInsights} from '@vercel/speed-insights/next';
 import {Analytics} from "@vercel/analytics/react";
 import AuthProvider from "@/app/components/AuthProvider";
+import {seoKeywords} from "@/constants";
 
 const lato = Lato({weight: "400", subsets: ["latin"]});
 
@@ -15,23 +16,19 @@ export const metadata: Metadata = {
     },
     metadataBase: new URL("https://neverbe.lk"),
     alternates: {
-        canonical: "https://neverbe.lk/",
+        canonical: "https://neverbe.lk/shop",
     },
     description:
-        "NEVERBE is Sri Lanka's premier online store for high-quality branded copy shoes and accessories. Shop from top brands with fast delivery and excellent customer support.",
+        "NEVERBE is Sri Lanka's premier online store for high-quality branded copy shoes and accessories. Shop from top brands with fast delivery.",
     category: "Ecommerce",
-    keywords: [
-        "NEVERBE", "NEVERBE Sri Lanka", "NEVERBE Shoes", "Branded Copy Shoes Sri Lanka",
-        "Adidas Sri Lanka", "Nike Sri Lanka", "Copy Shoes Sri Lanka", "Fashion Accessories Sri Lanka",
-        "Online Shop Sri Lanka", "Quality Shoes Sri Lanka", "Ecommerce Sri Lanka"
-    ],
+    keywords: seoKeywords,
     twitter: {
         card: "summary_large_image",
         site: "@neverbe",
         creator: "@neverbe",
         title: "NEVERBE - Premium Branded Copy Shoes in Sri Lanka",
         description:
-            "NEVERBE is Sri Lanka's top destination for branded copy shoes. Enjoy seamless shopping with fast shipping and quality service.",
+            "NEVERBE is Sri Lanka's premier online store for high-quality branded copy shoes and accessories. Shop from top brands with fast delivery.",
         images: [
             {
                 url: "https://neverbe.lk/api/og",

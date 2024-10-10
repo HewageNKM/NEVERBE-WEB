@@ -20,21 +20,23 @@ const ShippingReturnPolicyPage = () => {
                 <h1 className="lg:text-6xl md:text-5xl text-3xl font-extrabold text-gray-900 tracking-wide text-center">
                     Shipping, Returns & Refund Policy
                 </h1>
-                <div className="mt-10 flex-col flex gap-10 w-full">
-                    {shippingReturnPolicy.map((item, index) => (
-                        <div
-                            key={index}
-                            className="flex flex-col gap-3 p-6 bg-white rounded-lg shadow-md transition duration-300 hover:shadow-lg"
-                        >
-                            <h2 className="md:text-2xl font-bold text-xl text-gray-800">
-                                {index + 1 + ". " + item.title}
-                            </h2>
-                            <p className="text-md md:text-lg text-gray-600 leading-relaxed">
-                                {item.description}
-                            </p>
-                        </div>
-                    ))}
-                </div>
+                <article>
+                    <div className="mt-10 flex-col flex gap-10 w-full">
+                        {shippingReturnPolicy.map((item, index) => (
+                            <div
+                                key={index}
+                                className="flex flex-col gap-3 p-6 bg-white rounded-lg shadow-md transition duration-300 hover:shadow-lg"
+                            >
+                                <h2 className="md:text-2xl font-bold text-xl text-gray-800">
+                                    {index + 1 + ". " + item.title}
+                                </h2>
+                                <p className="text-md md:text-lg text-gray-600 leading-relaxed">
+                                    {item.description}
+                                </p>
+                            </div>
+                        ))}
+                    </div>
+                </article>
             </div>
         </div>
     );

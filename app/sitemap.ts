@@ -26,7 +26,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             priority: 0.8,
         }));
     const allProductsByManufacturersXBrands = items.map((item) => {
-        const url = `${process.env.NEXT_PUBLIC_BASE_URL}/shop/products/brands/${item.manufacturer}/${item.brand}`;
+        const url = `${process.env.NEXT_PUBLIC_BASE_URL}/shop/products/manufacturers/${item.manufacturer}/${item.brand}`;
         return {
             url,
             lastModified: new Date(),

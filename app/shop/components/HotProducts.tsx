@@ -2,7 +2,7 @@ import React from 'react';
 import ItemCard from "@/components/ItemCard";
 import EmptyState from "@/components/EmptyState";
 import {Item} from "@/interfaces";
-import {getHotsProducts} from "@/firebase/firebaseClient";
+import {getHotsProducts} from "@/firebase/firebaseAdmin";
 
 const HotProducts = async () => {
     let items:Item[] = []
@@ -14,8 +14,10 @@ const HotProducts = async () => {
     return (
         <section className="w-full mt-10">
             <div className="px-8 py-8">
-                <h1 className="font-bold text-4xl">Hot Products</h1>
-
+                <div>
+                    <h2 className="text-4xl"><strong>Hot Products</strong></h2>
+                    <h3 className="md:text-2xl text-xl text-primary mt-2">Check out our best selling Products</h3>
+                </div>
                 <div className="mt-8 w-full flex justify-center items-center">
                     <ul className="flex flex-row flex-wrap gap-4">
                         <li>

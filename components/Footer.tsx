@@ -20,11 +20,11 @@ const Footer = () => {
                         <div className="flex flex-row gap-2">
                             <GoLocation size={30}/>
                             <ul className="flex flex-col gap-2">
-                                {address.map((link, index) => (
-                                    <li key={index} className="text-lg">
-                                        <p>{link.name}</p>
+                                <Link target="_blank" href={address.map}>
+                                    <li className="text-lg w-[10rem]">
+                                        <p>{address.address}</p>
                                     </li>
-                                ))}
+                                </Link>
                             </ul>
                         </div>
                     </div>

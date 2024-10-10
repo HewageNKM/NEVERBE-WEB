@@ -17,7 +17,8 @@ const NewArrivals = async () => {
         <section className="w-full mt-10">
             <div className="px-8 py-4 w-full">
                 <div>
-                    <h1 className="font-bold text-4xl">New Arrivals</h1>
+                    <h2 className="text-4xl"><strong>New Arrivals</strong></h2>
+                    <h3 className="md:text-2xl text-xl text-primary mt-2">Check out our latest products</h3>
                 </div>
                 <ul className="mt-10 flex flex-row flex-wrap lg:gap-20 justify-evenly md:gap-16 gap-10 w-full">
                     {items.map((item: Item) => (

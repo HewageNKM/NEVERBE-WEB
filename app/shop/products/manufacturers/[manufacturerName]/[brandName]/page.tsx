@@ -41,13 +41,13 @@ const Page = async ({params}: { params: { manufacturerName: string, brandName: s
 
     return (
         <main className="w-full relative lg:mt-32 md:mt-20 mt-10 overflow-clip">
-            <div className="px-8 py-4">
+            <section className="px-8 py-4">
                 <h1 className="md:text-4xl text-2xl capitalize font-bold tracking-wider mt-10">{params.manufacturerName} &gt; {params.brandName}({items.length})</h1>
                 <div className="w-full">
                     <SortingOptions />
                     <Products items={items}/>
                 </div>
-            </div>
+            </section>
         </main>
     );
 };

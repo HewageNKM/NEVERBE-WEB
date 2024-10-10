@@ -56,9 +56,9 @@ const ItemCard = ({item,flag}:{item:Item,flag:string}) => {
                 <h2 className="absolute top-0 capitalize bg-black text-white p-1 font-medium">{item.manufacturer}</h2>
             </Link>
             <div className='absolute top-0 right-0 flex flex-col gap-1'>
-                {flag === "new" && <h2 className="right-0 bg-green-500 text-white p-1 font-medium">New</h2>}
+                {flag === "new" && <h3 className="right-0 bg-green-500 text-white p-1 font-medium">New</h3>}
                 {item.discount > 0 &&
-                    <h2 className="right-0 bg-red-500 text-white p-1 font-medium">{item.discount + "%"}</h2>}
+                    <h3 className="right-0 bg-red-500 text-white p-1 font-medium">{item.discount + "%"}</h3>}
             </div>
             {outOfStocks && (<div className="bg-white absolute top-0 left-0 w-full h-full bg-opacity-60 flex justify-center items-center">
                 <h2 className={`text-white p-2 rounded-lg font-bold tracking-wide ${outOfStocksLabel === "Coming Soon" ? "bg-yellow-500":"bg-red-500"}`} >{outOfStocksLabel}</h2>

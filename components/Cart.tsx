@@ -23,7 +23,7 @@ const Cart = () => {
                 transition={{type: "tween", duration: 0.4, delay: 0.1}}
                 className="px-8 py-4 w-full lg:w-[40vw] rounded-l-lg bg-white h-screen relative shadow-lg"
             >
-                <h1 className="text-4xl font-bold tracking-wider border-b pb-4">Cart</h1>
+                <h2 className="text-4xl font-bold tracking-wider border-b pb-4">Cart</h2>
                 <div className="overflow-auto h-[70vh] mt-5">
                     <table className="w-full border-separate border-spacing-2">
                         <thead className="bg-gray-100">

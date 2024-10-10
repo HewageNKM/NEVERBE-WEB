@@ -48,10 +48,10 @@ const Filter = () => {
                             exit={{opacity: 0, x: "-100vw"}}
                             transition={{type: "tween", duration: 0.4, delay: 0.1}}
                             className="bg-white px-4 pr-12 rounded-r-lg min-h-screen w-full md:w-[60vw] lg:w-[30vw] py-2 relative">
-                <h1 className="text-4xl font-bold tracking-wider">Filters</h1>
+                <h2 className="text-4xl tracking-wider"><strong>Filter</strong></h2>
                 <div className="h-[90vh] overflow-auto mt-5 flex-col flex gap-8">
                     <div className="mt-5 px-2">
-                        <h2 className="text-3xl font-bold">Type</h2>
+                        <h3 className="text-3xl"><strong>Type</strong></h3>
                         <div className="flex mt-2 flex-row gap-5 text-2xl flex-wrap items-center">
                             {productTypes.map((type, index) => (
                                 <label key={index} className="flex items-center gap-2 cursor-pointer">
@@ -73,7 +73,7 @@ const Filter = () => {
                         </div>
                     </div>
                     <div className="mt-5 px-2">
-                        <h2 className="text-3xl font-bold">Brands</h2>
+                        <h3 className="text-3xl"><strong>Brands</strong></h3>
                         <div className="flex mt-2 flex-row gap-5 text-2xl flex-wrap items-center">
                             {brands.map((brand, index) => (
                                 <label key={index} className="flex items-center gap-2 cursor-pointer">
@@ -91,7 +91,7 @@ const Filter = () => {
                         </div>
                     </div>
                     <div className="px-2">
-                        <h2 className="text-4xl font-bold  mt-5">Sizes</h2>
+                        <h3 className="text-4xl mt-5"><strong>Sizes</strong></h3>
                         <div className="mt-2 ">
                             {selectedType == "all" && (
                                 <div className="flex mt-2 flex-row gap-5 text-2xl flex-wrap items-center">
