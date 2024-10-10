@@ -1,5 +1,6 @@
 import {NextResponse} from "next/server";
 import md5 from "crypto-js/md5";
+import {deleteOrderByIdAndRestock, updatePayment} from "@/firebase/firebaseAdmin";
 
 
 export async function POST(req: Request) {
@@ -30,9 +31,9 @@ export async function POST(req: Request) {
 
         console.log("/////////////////////////////////////////////////////////LOCAL MD5SIG/////////////////////////////////////////////////////////")
         console.log(local_md5sig)
-        console.log("////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////")
+        console.log("/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////")
 
-        console.log("/////////////////////////////////////////////////////////MD5SIG/////////////////////////////////////////////////////////")
+        console.log("/////////////////////////////////////////////////////////MD5SIG//////////////////////////////////////////////////////////////")
         console.log(md5sig)
         console.log("////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////")
 
@@ -45,29 +46,16 @@ export async function POST(req: Request) {
             console.log("/////////////////////////////////////////////////////////PAYMENT SUCCESSFUL/////////////////////////////////////////////////////////")
             console.log(`Merchant ID:${merchant_id}, Order ID:${order_id}, Payment ID:${payment_id}, Amount:${payhere_amount}, Currency:${payhere_currency}, Status Code:${status_code}, MD5Sig:${md5sig}, Method:${method}`)
             console.log("////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////")
+            await updateTable(order_id, payment_id)
 
-        } else if (status_code === '-2') {
+            return NextResponse.json({message: `Payment Successful ${status_code}`}, {status: 200})
+        } else {
             console.log("/////////////////////////////////////////////////////////PAYMENT FAILED/////////////////////////////////////////////////////////")
             console.log(`Merchant ID:${merchant_id}, Order ID:${order_id}, Payment ID:${payment_id}, Amount:${payhere_amount}, Currency:${payhere_currency}, Status Code:${status_code}, MD5Sig:${md5sig}, Method:${method}`)
             console.log("////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////")
-            return NextResponse.json({message: 'Payment Failed'}, {status: 400})
-        } else if (status_code == "-1") {
-            console.log("/////////////////////////////////////////////////////////PAYMENT CANCELED/////////////////////////////////////////////////////////")
-            console.log(`Merchant ID:${merchant_id}, Order ID:${order_id}, Payment ID:${payment_id}, Amount:${payhere_amount}, Currency:${payhere_currency}, Status Code:${status_code}, MD5Sig:${md5sig}, Method:${method}`)
-            console.log("////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////")
-            return NextResponse.json({message: 'Payment Canceled'}, {status: 400})
+            await deleteOrderByIdAndRestock(order_id)
 
-        } else if (status_code == "-3") {
-            console.log("/////////////////////////////////////////////////////////PAYMENT CHARGEDBACK/////////////////////////////////////////////////////////")
-            console.log(`Merchant ID:${merchant_id}, Order ID:${order_id}, Payment ID:${payment_id}, Amount:${payhere_amount}, Currency:${payhere_currency}, Status Code:${status_code}, MD5Sig:${md5sig}, Method:${method}`)
-            console.log("////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////")
-            return NextResponse.json({message: 'Payment Pending'}, {status: 400})
-
-        } else if (status_code == "0") {
-            console.log("/////////////////////////////////////////////////////////PAYMENT PENDING/////////////////////////////////////////////////////////")
-            console.log(`Merchant ID:${merchant_id}, Order ID:${order_id}, Payment ID:${payment_id}, Amount:${payhere_amount}, Currency:${payhere_currency}, Status Code:${status_code}, MD5Sig:${md5sig}, Method:${method}`)
-            console.log("////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////")
-            return NextResponse.json({message: 'Payment Pending'}, {status: 400})
+            return NextResponse.json({message: `Payment Failed ${status_code}`}, {status: 400})
         }
     } catch (e) {
         console.log(e)
@@ -99,10 +87,11 @@ const decodeUrl = (body: any) => {
     }
 }
 
-const updateTable = (orderId: string, paymentId: string) => {
-    //update the table
+const updateTable = async (orderId: string, paymentId: string) => {
+
     console.log("/////////////////////////////////////////////////////////UPDATING TABLE/////////////////////////////////////////////////////////")
     console.log(`Order ID:${orderId}, Payment ID:${paymentId}`)
-    console.log("////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////")
+    console.log("////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////")
 
+   await updatePayment(orderId, paymentId)
 }

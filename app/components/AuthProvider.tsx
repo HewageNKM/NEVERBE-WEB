@@ -1,14 +1,20 @@
 "use client"
-import React, {ReactNode, useEffect} from 'react';
+import React, {ReactNode, useEffect, useState} from 'react';
 import {signUser} from "@/firebase/firebaseClient";
+import LoadingScreen from "@/components/LoadingScreen";
 
 const AuthProvider = ({children}: { children: ReactNode }) => {
+    const [isLoading, setIsLoading] = useState(true)
     useEffect(() => {
-        signUser();
+        signUser().then(()=>{
+            setIsLoading(false)
+        }).catch(()=>{
+            setIsLoading(false)
+        });
     });
     return (
         <>
-            {children}
+            {isLoading ? <LoadingScreen/>:children}
         </>
     );
 };

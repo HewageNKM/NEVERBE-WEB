@@ -59,4 +59,8 @@ export const signUser =  async () => {
     })
 }
 
+export const getIdToken = async () => {
+    return auth.currentUser?.getIdToken();
+}
+
 
