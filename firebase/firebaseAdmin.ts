@@ -39,8 +39,8 @@ export const addNewOrder = async (order: Order) => {
     return await adminFirestore.collection('orders').doc(order.orderId).set(order);
 }
 
-export const updatePayment = async (orderId:string, paymentId:string) => {
-    return await adminFirestore.collection('orders').doc(orderId).update({paymentId: paymentId, paymentStatus: "Paid"});
+export const updatePayment = async (orderId:string, paymentId:string,status:string) => {
+    return await adminFirestore.collection('orders').doc(orderId).update({paymentId: paymentId, paymentStatus: status});
 }
 export const deleteOrderByIdAndRestock = async (orderId: string) => {
     const doc = await adminFirestore.collection("orders").doc(orderId).get();
@@ -62,6 +62,7 @@ export const deleteOrderByIdAndRestock = async (orderId: string) => {
 
         await adminFirestore.collection('inventory').doc(orderItem.itemId).set(inventoryItem);
     }
+    return await adminFirestore.collection('orders').doc(orderId).delete();
 
 }
 export const getOrderById = async (orderId:string) => {

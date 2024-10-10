@@ -46,14 +46,14 @@ export async function POST(req: Request) {
             console.log("/////////////////////////////////////////////////////////PAYMENT SUCCESSFUL/////////////////////////////////////////////////////////")
             console.log(`Merchant ID:${merchant_id}, Order ID:${order_id}, Payment ID:${payment_id}, Amount:${payhere_amount}, Currency:${payhere_currency}, Status Code:${status_code}, MD5Sig:${md5sig}, Method:${method}`)
             console.log("////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////")
-            await updateTable(order_id, payment_id)
+            await updatePayment(order_id, payment_id, "Paid")
 
             return NextResponse.json({message: `Payment Successful ${status_code}`}, {status: 200})
         } else {
             console.log("/////////////////////////////////////////////////////////PAYMENT FAILED/////////////////////////////////////////////////////////")
             console.log(`Merchant ID:${merchant_id}, Order ID:${order_id}, Payment ID:${payment_id}, Amount:${payhere_amount}, Currency:${payhere_currency}, Status Code:${status_code}, MD5Sig:${md5sig}, Method:${method}`)
             console.log("////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////")
-            await deleteOrderByIdAndRestock(order_id)
+            await updatePayment(order_id, payment_id, "Failed")
 
             return NextResponse.json({message: `Payment Failed ${status_code}`}, {status: 400})
         }
@@ -85,13 +85,4 @@ const decodeUrl = (body: any) => {
         md5sig,
         method,
     }
-}
-
-const updateTable = async (orderId: string, paymentId: string) => {
-
-    console.log("/////////////////////////////////////////////////////////UPDATING TABLE/////////////////////////////////////////////////////////")
-    console.log(`Order ID:${orderId}, Payment ID:${paymentId}`)
-    console.log("////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////")
-
-   await updatePayment(orderId, paymentId)
 }

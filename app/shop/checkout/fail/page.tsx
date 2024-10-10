@@ -9,7 +9,7 @@ const Page = () => {
             <div className="w-fit h-[18rem] p-8 flex flex-col gap-5 justify-center items-center">
                 <FailAnimationComponent/>
                 <div
-                    className="font-bold gap-3 flex flex-col md:text-xl lg:text-2xl justify-center items-center capitalize text-green-500 text-lg">
+                    className="font-bold gap-3 flex flex-col md:text-xl lg:text-2xl justify-center items-center capitalize text-red-500 text-lg">
                     <h3 className="text-center">
                         Sorry, Your order placement has been failed!
                     </h3>
