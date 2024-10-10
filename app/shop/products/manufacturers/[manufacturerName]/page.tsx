@@ -17,7 +17,6 @@ export const metadata: Metadata = {
     openGraph:{
         title: "Manufacturer",
         description: "NEVERBE Products By Manufacture",
-        url: "https://neverbe.lk/shop/products/manufacturers/[name]",
         type: "website",
         images: [
             {

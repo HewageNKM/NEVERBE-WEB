@@ -1,9 +1,9 @@
 import type { MetadataRoute } from 'next'
-import {getInventory} from "@/firebase/serviceAPI";
+import {getAllInventoryItems} from "@/firebase/firebaseAdmin";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
-    const items = await getInventory();
+    const items = await getAllInventoryItems();
 
     const allProducts = items.map((item) => ({
         url: `${process.env.NEXT_PUBLIC_BASE_URL}/shop/products/${item.itemId}`,
