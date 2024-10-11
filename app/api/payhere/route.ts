@@ -1,13 +1,10 @@
 import {NextResponse} from "next/server";
 import md5 from "crypto-js/md5";
-import {deleteOrderByIdAndRestock, updatePayment} from "@/firebase/firebaseAdmin";
+import {updatePayment} from "@/firebase/firebaseAdmin";
 
 
 export async function POST(req: Request) {
     try {
-        if (req.method !== 'POST') {
-            return NextResponse.json({message: 'Method Not Allowed'}, {status: 405})
-        }
         const body = await req.text();
         const {
             merchant_id,
@@ -27,7 +24,7 @@ export async function POST(req: Request) {
         const merchantSecret = process.env.NEXT_PUBLIC_PAYHERE_MERCHANT_SECRET;
         const hashedSecret = md5(merchantSecret).toString().toUpperCase();
 
-        const local_md5sig  = md5(merchant_id + order_id + payhere_amount + payhere_currency + status_code + hashedSecret).toString().toUpperCase();
+        const local_md5sig = md5(merchant_id + order_id + payhere_amount + payhere_currency + status_code + hashedSecret).toString().toUpperCase();
 
         console.log("/////////////////////////////////////////////////////////LOCAL MD5SIG/////////////////////////////////////////////////////////")
         console.log(local_md5sig)

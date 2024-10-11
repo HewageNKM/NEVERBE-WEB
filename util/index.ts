@@ -1,6 +1,9 @@
-import {CartItem} from "@/interfaces";
+'use client'
+import {CartItem, Order} from "@/interfaces";
+import {getIdToken} from "@/firebase/firebaseClient";
+import axios from "axios";
 
-export const calculateShipping = (cartItems:CartItem[]) => {
+export const calculateShipping = (cartItems: CartItem[]) => {
     if (cartItems.length === 0) {
         return 0;
     }
@@ -25,4 +28,18 @@ export const calculateShipping = (cartItems:CartItem[]) => {
     }
 
     return shippingCost;
+}
+
+export const addNewOrder = async (newOrder: Order,) => {
+    const token = await getIdToken();
+    return axios({
+        method: 'post',
+        url: "/api/orders",
+        data: JSON.stringify(newOrder),
+
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        }
+    });
 }

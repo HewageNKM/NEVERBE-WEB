@@ -287,7 +287,6 @@ export const address = {
     address: "330/40/10, New Kandy Road, Delgoda",
     map: "https://maps.app.goo.gl/zpXm2euKTW8Eee486"
 }
-
 export const socialMedia: SocialMedia[] = [
     {icon: IoLogoFacebook, name: "Facebook", url: ""},
     {icon: IoLogoInstagram, name: "Instagram", url: ""},
@@ -428,3 +427,7 @@ export const contactInfo = [
     }
 
 ];
+export const paymentMethods = {
+    PayHere:"PayHere",
+    COD:"COD"
+}

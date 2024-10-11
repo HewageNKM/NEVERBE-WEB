@@ -36,13 +36,18 @@ export const addNewOrder = async (order: Order) => {
         await adminFirestore.collection('inventory').doc(orderItem.itemId).set(inventoryItem);
     }
 
-    return await adminFirestore.collection('orders').doc(order.orderId).set(order);
+    return await adminFirestore.collection('orders').doc(order.orderId).set({
+        ...order,
+        createdAt: admin.firestore.Timestamp.now(),
+        updatedAt: admin.firestore.Timestamp.now(),
+    });
 }
 
 export const updatePayment = async (orderId:string, paymentId:string,status:string) => {
-    return await adminFirestore.collection('orders').doc(orderId).update({paymentId: paymentId, paymentStatus: status});
+    return await adminFirestore.collection('orders').doc(orderId).update({paymentId: paymentId, paymentStatus: status, updatedAt: admin.firestore.Timestamp.now()});
 }
-export const deleteOrderByIdAndRestock = async (orderId: string) => {
+
+/*export const deleteOrderByIdAndRestock = async (orderId: string) => {
     const doc = await adminFirestore.collection("orders").doc(orderId).get();
     const order: Order = doc.data() as Order;
 
@@ -64,7 +69,8 @@ export const deleteOrderByIdAndRestock = async (orderId: string) => {
     }
     return await adminFirestore.collection('orders').doc(orderId).delete();
 
-}
+}*/
+
 export const getOrderById = async (orderId:string) => {
     const doc = await adminFirestore.collection('orders').doc(orderId).get();
     return doc.data() as Order;
@@ -159,4 +165,3 @@ export const verifyToken = async (req:any) => {
     // Verify the ID token using Firebase Admin SDK
     return await adminAuth.verifyIdToken(idToken);
 }
-

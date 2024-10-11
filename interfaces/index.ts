@@ -76,6 +76,21 @@ export interface Order {
     paymentId: string,
     items: OrderItem[],
     paymentStatus: string,
+    paymentMethod: string,
+    restocked: boolean,
+    customer: Customer,
+    shippingCost: number,
     createdAt: Date,
     updatedAt: Date,
+}
+
+export interface Customer {
+    id: string;
+    name: string;
+    email: string;
+    phone: string;
+    address: string;
+    city: string;
+    createdAt: Date;
+    updatedAt: Date;
 }

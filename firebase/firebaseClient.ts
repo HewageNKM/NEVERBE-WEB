@@ -19,7 +19,7 @@ const firebaseConfig = {
 
 const clientApp = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 const db = getFirestore(clientApp);
-const auth = getAuth(clientApp);
+export const auth = getAuth(clientApp);
 
 let analytics;
 isSupported().then((supported) => {

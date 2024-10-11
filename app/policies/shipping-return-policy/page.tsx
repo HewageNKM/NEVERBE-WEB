@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 
 const ShippingReturnPolicyPage = () => {
     return (
-        <div className="w-full min-h-screen bg-gray-50">
+        <main className="w-full min-h-screen lg:mt-24 md:mt-16 mt-10  bg-gray-50">
             <div className="lg:px-48 md:px-24 px-8 py-16 flex justify-center items-center flex-col gap-12">
                 <h1 className="lg:text-6xl md:text-5xl text-3xl font-extrabold text-gray-900 tracking-wide text-center">
                     Shipping, Returns & Refund Policy
@@ -38,7 +38,7 @@ const ShippingReturnPolicyPage = () => {
                     </div>
                 </article>
             </div>
-        </div>
+        </main>
     );
 };
 

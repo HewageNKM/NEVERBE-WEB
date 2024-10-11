@@ -1,5 +1,5 @@
 import React from 'react';
-import ImagesSlider from "@/app/shop/components/ImagesSlider";
+import ImagesSlider from "@/app/components/ImagesSlider";
 import Link from "next/link";
 import {BiCart} from "react-icons/bi";
 import {Slide} from "@/interfaces";

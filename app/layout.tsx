@@ -4,7 +4,7 @@ import "../style/globals.css";
 import StoreProvider from "@/app/components/StoreProvider";
 import {SpeedInsights} from '@vercel/speed-insights/next';
 import {Analytics} from "@vercel/analytics/react";
-import AuthProvider from "@/app/components/AuthProvider";
+import GlobalProvider from "@/app/components/GlobalProvider";
 import {seoKeywords} from "@/constants";
 
 const lato = Lato({weight: "400", subsets: ["latin"]});
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     },
     metadataBase: new URL("https://neverbe.lk"),
     alternates: {
-        canonical: "https://neverbe.lk/shop",
+        canonical: "https://neverbe.lk",
     },
     description:
         "NEVERBE is Sri Lanka's premier online store for high-quality branded copy shoes and accessories. Shop from top brands with fast delivery.",
@@ -62,9 +62,9 @@ export default function RootLayout({children}: Readonly<{ children: React.ReactN
         <html lang="en" className="scroll-smooth">
         <body className={lato.className}>
         <StoreProvider>
-            <AuthProvider>
+            <GlobalProvider>
                 {children}
-            </AuthProvider>
+            </GlobalProvider>
             <SpeedInsights/>
             <Analytics/>
         </StoreProvider>

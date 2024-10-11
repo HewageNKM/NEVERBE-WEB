@@ -1,6 +1,6 @@
 import React from 'react';
 import {faqs} from "@/constants";
-import FaqCard from "@/app/shop/components/FAQCard";
+import FaqCard from "@/app/components/FAQCard";
 import Link from "next/link";
 
 const Faq = () => {
