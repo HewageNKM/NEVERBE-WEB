@@ -15,17 +15,20 @@ exports.scheduledFirestoreCleanup = functions.pubsub
 
       const twoHoursAgo = new Date(Date.now() - 2 * 60 * 60 * 1000);
 
+      // Only process orders that are "Failed" and haven't been restocked
       const failedOrdersSnapshot = await orderCollectionRef
         .where("paymentStatus", "==", "Failed")
         .where("createdAt", "<=", twoHoursAgo)
+        .where("restocked", "==", false) // Skip orders already restocked
         .get();
 
       if (failedOrdersSnapshot.empty) {
-        console.log("No failed orders found.");
+        console.log("No failed orders to restock.");
         return null;
       }
 
-      console.log(`Found ${failedOrdersSnapshot.size} failed orders.`);
+      console.log(`Found ${failedOrdersSnapshot.size}
+       failed orders to restock.`);
 
       let batch = db.batch();
       let opCounts = 0;
@@ -34,6 +37,8 @@ exports.scheduledFirestoreCleanup = functions.pubsub
       for (const orderDoc of failedOrdersSnapshot.docs) {
         const orderData = orderDoc.data() as Order;
         const orderItems = orderData.items;
+
+        let inventoryUpdated = false; // Track if inventory was updated
 
         for (const orderItem of orderItems) {
           const inventoryDocRef = inventoryCollectionRef.doc(orderItem.itemId);
@@ -49,6 +54,7 @@ exports.scheduledFirestoreCleanup = functions.pubsub
                   if (size.size === orderItem.size) {
                     size.stock += orderItem.quantity;
                     variantFound = true;
+                    inventoryUpdated = true;
                   }
                 });
               }
@@ -69,19 +75,33 @@ exports.scheduledFirestoreCleanup = functions.pubsub
               console.warn(`Variant or size not found for ${orderItem.itemId}`);
             }
           } else {
-            console.warn(`document not found for ${orderItem.itemId}`);
+            console.warn(`Document not found for ${orderItem.itemId}`);
           }
         }
-        // Orders are no longer deleted, only inventory is restocked
+
+        if (inventoryUpdated) {
+          // Mark the order as restocked
+          batch.update(orderDoc.ref, {restocked: true});
+          opCounts += 1;
+
+          if (opCounts >= BATCH_LIMIT) {
+            // Commit the current batch and start a new one
+            await batch.commit();
+            console.log(`Committed a batch of ${opCounts} operations.`);
+            batch = db.batch();
+            opCounts = 0;
+          }
+        }
       }
+
       // Commit any remaining operations in the batch
       if (opCounts > 0) {
         await batch.commit();
       }
+
       return null;
     } catch (error) {
       console.error("Error during scheduledFirestoreCleanup:", error);
-      // Optionally, you can implement retry logic or alerting mechanisms here
       return null;
     }
   });
