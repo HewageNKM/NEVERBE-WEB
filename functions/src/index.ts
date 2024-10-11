@@ -5,40 +5,106 @@ admin.initializeApp();
 
 const db = admin.firestore();
 
-// Cloud Function scheduled to run every 2 hours
+// Interfaces
+interface OrderItem {
+    itemId: string;
+    variantId: string;
+    name: string;
+    variantName: string;
+    size: string;
+    quantity: number;
+    price: number;
+}
+
+export interface Order {
+    orderId: string;
+    paymentId: string;
+    items: OrderItem[];
+    paymentStatus: string;
+    createdAt: FirebaseFirestore.Timestamp;
+    updatedAt: FirebaseFirestore.Timestamp;
+    paymentMethod: string;
+    restocked: boolean;
+}
+
+export interface Variant {
+    variantId: string;
+    variantName: string;
+    images: string[];
+    sizes: Size[];
+}
+
+export interface Item {
+    itemId: string;
+    type: string;
+    brand: string;
+    thumbnail: string;
+    variants: Variant[];
+    manufacturer: string;
+    name: string;
+    sellingPrice: number;
+    discount: number;
+    createdAt: FirebaseFirestore.Timestamp;
+    updatedAt: FirebaseFirestore.Timestamp;
+}
+
+export interface Size {
+    size: string;
+    stock: number;
+}
+
+// Cloud Function scheduled to run every hour
 exports.scheduledFirestoreCleanup = functions.pubsub
-  .schedule("every 2 hours")
+  .schedule("every 1 hours")
   .onRun(async (context) => {
     try {
       const orderCollectionRef = db.collection("orders");
       const inventoryCollectionRef = db.collection("inventory");
 
-      const twoHoursAgo = new Date(Date.now() - 2 * 60 * 60 * 1000);
+      const twoHoursAgo = admin.firestore.Timestamp
+        .fromDate(new Date(Date.now() - 2 * 60 * 60 * 1000));
 
-      // Only process orders that are "Failed" and haven't been restocked
-      const failedOrdersSnapshot = await orderCollectionRef
-        .where("paymentStatus", "==", "Failed")
+      // Fetch PayHere failed and pending orders
+      const payhereFailedOrdersQuery = orderCollectionRef
+        .where("paymentMethod", "==", "PayHere")
+        .where("restocked", "==", false)
         .where("createdAt", "<=", twoHoursAgo)
-        .where("restocked", "==", false) // Skip orders already restocked
-        .get();
+        .where("paymentStatus", "in", ["Failed", "Pending"]);
 
-      if (failedOrdersSnapshot.empty) {
+      // Fetch COD failed orders
+      const codFailedOrdersQuery = orderCollectionRef
+        .where("paymentMethod", "==", "COD")
+        .where("restocked", "==", false)
+        .where("createdAt", "<=", twoHoursAgo)
+        .where("paymentStatus", "==", "Failed");
+
+      // Execute both queries in parallel
+      const [payhereFailedOrders, codFailedOrders] = await Promise.all([
+        payhereFailedOrdersQuery.get(),
+        codFailedOrdersQuery.get(),
+      ]);
+
+      // Combine both query results
+      const allFailedOrders =
+          [...payhereFailedOrders.docs, ...codFailedOrders.docs];
+
+      if (allFailedOrders.length === 0) {
         console.log("No failed orders to restock.");
         return null;
       }
 
-      console.log(`Found ${failedOrdersSnapshot.size}
-       failed orders to restock.`);
+      console.log(`Found ${allFailedOrders.length} failed orders to restock.`);
 
       let batch = db.batch();
       let opCounts = 0;
       const BATCH_LIMIT = 450;
 
-      for (const orderDoc of failedOrdersSnapshot.docs) {
+      for (const orderDoc of allFailedOrders) {
         const orderData = orderDoc.data() as Order;
         const orderItems = orderData.items;
 
         let inventoryUpdated = false; // Track if inventory was updated
+        let paymentStatusToUpdate: string | null = null;
 
         for (const orderItem of orderItems) {
           const inventoryDocRef = inventoryCollectionRef.doc(orderItem.itemId);
@@ -72,16 +138,30 @@ exports.scheduledFirestoreCleanup = functions.pubsub
                 opCounts = 0;
               }
             } else {
-              console.warn(`Variant or size not found for ${orderItem.itemId}`);
+              console.warn(`Variant or size not found for
+               itemId: ${orderItem.itemId}, variantId: 
+               ${orderItem.variantId}, size: ${orderItem.size}`);
             }
           } else {
-            console.warn(`Document not found for ${orderItem.itemId}`);
+            console.warn(`Inventory document not
+             found for itemId: ${orderItem.itemId}`);
           }
         }
 
         if (inventoryUpdated) {
-          // Mark the order as restocked
-          batch.update(orderDoc.ref, {restocked: true});
+          // For PayHere orders with 'Pending' status, update to 'Failed'
+          if (orderData.paymentMethod === "PayHere" &&
+              orderData.paymentStatus === "Pending") {
+            paymentStatusToUpdate = "Failed";
+          }
+
+          // Prepare the update data
+          const updateData: Partial<Order> = {restocked: true};
+          if (paymentStatusToUpdate) {
+            updateData.paymentStatus = paymentStatusToUpdate;
+          }
+
+          batch.update(orderDoc.ref, updateData);
           opCounts += 1;
 
           if (opCounts >= BATCH_LIMIT) {
@@ -97,57 +177,13 @@ exports.scheduledFirestoreCleanup = functions.pubsub
       // Commit any remaining operations in the batch
       if (opCounts > 0) {
         await batch.commit();
+        console.log(`Committed the final batch of ${opCounts} operations.`);
       }
 
+      console.log("Scheduled Firestore cleanup completed successfully.");
       return null;
     } catch (error) {
       console.error("Error during scheduledFirestoreCleanup:", error);
       return null;
     }
   });
-
-
-interface OrderItem {
-    itemId: string,
-    variantId: string,
-    name: string,
-    variantName: string,
-    size: string,
-    quantity: number,
-    price: number,
-}
-
-export interface Order {
-    orderId: string,
-    paymentId: string,
-    items: OrderItem[],
-    paymentStatus: string,
-    createdAt: Date,
-    updatedAt: Date,
-}
-
-export interface Variant {
-    variantId: string,
-    variantName: string,
-    images: string[],
-    sizes: Size[],
-}
-
-export interface Item {
-    itemId: string,
-    type: string,
-    brand: string,
-    thumbnail: string,
-    variants: Variant[],
-    manufacturer: string,
-    name: string,
-    sellingPrice: number,
-    discount: number,
-    createdAt: { seconds: number, nanoseconds: number },
-    updatedAt: { seconds: number, nanoseconds: number },
-}
-
-export interface Size {
-    size: string,
-    stock: number,
-}
