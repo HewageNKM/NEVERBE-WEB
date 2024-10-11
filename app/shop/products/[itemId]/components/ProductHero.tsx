@@ -1,12 +1,12 @@
 "use client"
 import React, {useEffect, useState} from 'react';
-import Skeleton from "@/components/Skeleton";
 import Image from "next/image";
 import {CartItem, Item, Size, Variant} from "@/interfaces";
 import {IoAdd, IoRemove} from "react-icons/io5";
 import {AppDispatch} from "@/redux/store";
 import {useDispatch} from "react-redux";
 import {pushToCart} from "@/redux/cartSlice/cartSlice";
+import Skeleton from "@/components/Skeleton";
 
 const ProductHero = ({item}: { item: Item }) => {
     const [selectedImage, setSelectedImage] = useState(item.thumbnail)
@@ -61,7 +61,7 @@ const ProductHero = ({item}: { item: Item }) => {
         setSelectedImage(item.thumbnail)
     }
     const checkOutOfStocks = () => {
-        if(item.variants.length === 0){
+        if (item.variants.length === 0) {
             setOutOfStocks(true);
             setOutOfStocksLabel("Coming Soon");
             return;
@@ -180,8 +180,10 @@ const ProductHero = ({item}: { item: Item }) => {
                     </div>
                 </div>
             </div>
-            {outOfStocks && (<div className="bg-white absolute top-0 left-0 w-full h-full bg-opacity-60 flex justify-center items-center">
-                <h2 className={`text-white p-2 rounded-lg text-lg lg:text-xl tracking-wide ${outOfStocksLabel === "Coming Soon" ? "bg-yellow-500":"bg-red-500"}`} ><strong>{outOfStocksLabel}</strong></h2>
+            {outOfStocks && (<div
+                className="bg-white absolute top-0 left-0 w-full h-full bg-opacity-60 flex justify-center items-center">
+                <h2 className={`text-white p-2 rounded-lg text-lg lg:text-xl tracking-wide ${outOfStocksLabel === "Coming Soon" ? "bg-yellow-500" : "bg-red-500"}`}>
+                    <strong>{outOfStocksLabel}</strong></h2>
             </div>)}
         </section>
     );
