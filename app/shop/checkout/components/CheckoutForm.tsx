@@ -24,7 +24,7 @@ const CheckoutForm = () => {
         city: "",
         createdAt: new Date(),
         email: "",
-        id: window.crypto.randomUUID().toLowerCase(),
+        id: "",
         name: "",
         phone: "",
         updatedAt: new Date()
@@ -109,32 +109,32 @@ const CheckoutForm = () => {
             newOrder.customer = newCustomer;
             setCustomer(newCustomer)
             if (cartItems.length !== 0) {
-                 if (paymentType == "payhere") {
-                     newOrder.paymentMethod = paymentMethods.PayHere;
-                     const response = await addNewOrder(newOrder);
-                     if (response.status === 200) {
-                         dispatch(clearCart())
-                         setLoading(false)
-                         saveAddressToLocalStorage()
-                         submitForm.submit();
-                     } else {
-                         console.log("Error adding order")
-                     }
+                if (paymentType == "payhere") {
+                    newOrder.paymentMethod = paymentMethods.PayHere;
+                    const response = await addNewOrder(newOrder);
+                    if (response.status === 200) {
+                        dispatch(clearCart())
+                        setLoading(false)
+                        saveAddressToLocalStorage()
+                        submitForm.submit();
+                    } else {
+                        console.log("Error adding order")
+                    }
 
-                 } else if (paymentType == "cod") {
-                     newOrder.paymentMethod = paymentMethods.COD;
-                     const response = await addNewOrder(newOrder);
-                     if (response.status === 200) {
-                         dispatch(clearCart())
-                         setLoading(false)
-                         saveAddressToLocalStorage()
-                         router.replace("/shop/checkout/success?orderId=" + orderId)
-                     }else {
-                         console.log("Error adding order")
-                     }
-                 } else {
-                     new Error("Payment type not found")
-                 }
+                } else if (paymentType == "cod") {
+                    newOrder.paymentMethod = paymentMethods.COD;
+                    const response = await addNewOrder(newOrder);
+                    if (response.status === 200) {
+                        dispatch(clearCart())
+                        setLoading(false)
+                        saveAddressToLocalStorage()
+                        router.replace("/shop/checkout/success?orderId=" + orderId)
+                    } else {
+                        console.log("Error adding order")
+                    }
+                } else {
+                    new Error("Payment type not found")
+                }
             } else {
                 console.log("Cart is empty")
             }
@@ -163,9 +163,9 @@ const CheckoutForm = () => {
     }
 
     const saveAddressToLocalStorage = () => {
-        if(saveAddress){
+        if (saveAddress) {
             window.localStorage.setItem("neverbeCustomer", JSON.stringify(customer))
-        }else {
+        } else {
             window.localStorage.removeItem("neverbeCustomer")
         }
     }
