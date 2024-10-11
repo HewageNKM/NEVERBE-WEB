@@ -17,14 +17,27 @@ interface OrderItem {
 }
 
 export interface Order {
-    orderId: string;
-    paymentId: string;
-    items: OrderItem[];
-    paymentStatus: string;
-    createdAt: FirebaseFirestore.Timestamp;
-    updatedAt: FirebaseFirestore.Timestamp;
-    paymentMethod: string;
-    restocked: boolean;
+    orderId: string,
+    paymentId: string,
+    items: OrderItem[],
+    paymentStatus: string,
+    paymentMethod: string,
+    restocked: boolean,
+    shippingCost: number,
+    customer: Customer,
+    createdAt: Date,
+    updatedAt: Date,
+}
+
+export interface Customer {
+    id: string;
+    name: string;
+    email: string;
+    phone: string;
+    address: string;
+    city: string;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 export interface Variant {
@@ -54,7 +67,7 @@ export interface Size {
 }
 
 // Cloud Function scheduled to run every hour
-exports.scheduledFirestoreCleanup = functions.pubsub
+exports.scheduledOrdersCleanup = functions.pubsub
   .schedule("every 1 hours")
   .onRun(async (context) => {
     try {
@@ -86,7 +99,7 @@ exports.scheduledFirestoreCleanup = functions.pubsub
 
       // Combine both query results
       const allFailedOrders =
-          [...payhereFailedOrders.docs, ...codFailedOrders.docs];
+                [...payhereFailedOrders.docs, ...codFailedOrders.docs];
 
       if (allFailedOrders.length === 0) {
         console.log("No failed orders to restock.");
@@ -151,7 +164,7 @@ exports.scheduledFirestoreCleanup = functions.pubsub
         if (inventoryUpdated) {
           // For PayHere orders with 'Pending' status, update to 'Failed'
           if (orderData.paymentMethod === "PayHere" &&
-              orderData.paymentStatus === "Pending") {
+                        orderData.paymentStatus === "Pending") {
             paymentStatusToUpdate = "Failed";
           }
 
@@ -187,3 +200,115 @@ exports.scheduledFirestoreCleanup = functions.pubsub
       return null;
     }
   });
+
+
+// Helper function to send email using the Firestore template
+const sendEmail = async (
+  to: string, templateName: string, templateData: object
+) => {
+  await db.collection("mail").add({
+    to: to,
+    template: {
+      name: templateName,
+      data: templateData,
+    },
+  });
+};
+
+const getTotal = (items: OrderItem[]): number => {
+  return items.reduce((total, item) => total + item.price, 0);
+};
+
+exports.onOrderPaymentStateChanges = functions.firestore
+  .document("orders/{orderId}")
+  .onWrite(async (change, context) => {
+    const orderId = context.params.orderId;
+    let orderData = null;
+    let previousOrderData = null;
+
+    try {
+      orderData = change.after.exists ?
+        (change.after.data() as Order) : null;
+      previousOrderData = change.before.exists ?
+        (change.before.data() as Order) : null;
+    } catch (error) {
+      console.error(`Error retrieving order data for orderId:
+       ${orderId}`, error);
+      return null; // Early exit if data retrieval fails
+    }
+
+    // If the order was deleted or there's no new data, exit
+    if (!orderData) {
+      return null;
+    }
+
+    const {
+      paymentMethod, paymentStatus, items,
+      customer, shippingCost,
+    } = orderData;
+    const customerEmail = customer.email.trim();
+
+    const templateData = {
+      name: customer.name,
+      orderId: orderId,
+      items: items,
+      shippingCost: shippingCost,
+      total: getTotal(items) + shippingCost,
+    };
+
+    try {
+      // 1. Handle new COD order creation
+      if (!previousOrderData && paymentMethod === "COD" &&
+                paymentStatus === "Pending") {
+        // New COD order created, send order confirmation email
+        await sendEmail(customerEmail, "orderConfirmed", templateData);
+        console.log(`Order confirmation email sent for COD order ${orderId}`);
+      }
+
+      // 2. Handle COD order payment status update to Failed
+      if (
+        previousOrderData &&
+                paymentMethod === "COD" &&
+                previousOrderData.paymentStatus === "Pending" &&
+                paymentStatus === "Failed"
+      ) {
+        // COD order payment status updated to 'Failed', send failed order email
+        await sendEmail(customerEmail, "orderFailed", templateData);
+        console.log(`Order failed email sent for COD order ${orderId}`);
+      }
+
+      // 3. Handle PayHere payment update to Paid
+      if (
+        previousOrderData &&
+                paymentMethod === "PayHere" &&
+                previousOrderData.paymentStatus === "Pending" &&
+                paymentStatus === "Paid"
+      ) {
+        // PayHere order payment status updated to 'Paid',
+        // send order confirmation email
+        await sendEmail(customerEmail,
+          "orderConfirmed", templateData);
+        console.log(`Order confirmation email sent for PayHere order
+         ${orderId}`);
+      }
+
+      // 4. Handle PayHere payment update to Failed
+      if (
+        previousOrderData &&
+                paymentMethod === "PayHere" &&
+                previousOrderData.paymentStatus === "Pending" &&
+                paymentStatus === "Failed"
+      ) {
+        // PayHere order payment status updated to 'Failed',
+        // send failed order email
+        await sendEmail(customerEmail, "orderFailed", templateData);
+        console.log(`Order failed email sent for PayHere order ${orderId}`);
+      }
+    } catch (error) {
+      console.error(`Error processing order ${orderId}:`, error);
+      return null; // Ensures the function doesn't break on error
+    }
+
+    return null;
+  });
+
