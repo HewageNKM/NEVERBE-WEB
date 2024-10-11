@@ -17,7 +17,7 @@ exports.scheduledFirestoreCleanup = functions.pubsub
 
       const failedOrdersSnapshot = await orderCollectionRef
         .where("paymentStatus", "==", "Failed")
-        .where("createdAt", "<", twoHoursAgo)
+        .where("createdAt", "<=", twoHoursAgo)
         .get();
 
       if (failedOrdersSnapshot.empty) {
@@ -72,19 +72,8 @@ exports.scheduledFirestoreCleanup = functions.pubsub
             console.warn(`document not found for ${orderItem.itemId}`);
           }
         }
-
-        // Delete the failed order
-        batch.delete(orderDoc.ref);
-        opCounts += 1;
-
-        if (opCounts >= BATCH_LIMIT) {
-          await batch.commit();
-          console.log(`Committed a batch of ${opCounts} operations.`);
-          batch = db.batch();
-          opCounts = 0;
-        }
+        // Orders are no longer deleted, only inventory is restocked
       }
-
       // Commit any remaining operations in the batch
       if (opCounts > 0) {
         await batch.commit();
