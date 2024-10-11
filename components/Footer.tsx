@@ -59,10 +59,11 @@ const Footer = () => {
                     <h2 className="text-3xl font-bold">Contact Us</h2>
                     <ul className="flex flex-col gap-2">
                         {contactInfo.map((info, index) => (
-                            <li key={index}
-                                className="text-lg flex flex-row gap-2">
-                                <info.icon size={30}/>
-                                <p>{info.content}</p>
+                            <li key={index} >
+                                <Link className="text-lg flex flex-row gap-2" href={info.link} target="_blank">
+                                    <info.icon size={30}/>
+                                    <p>{info.content}</p>
+                                </Link>
                             </li>
                         ))}
                     </ul>
@@ -74,11 +75,14 @@ const Footer = () => {
                     All Rights Reserved.</p>
                 <p className="font-medium text-base">Develop By <Link href={"https://hewagenkm.github.io/"}>Nadun
                     Malwenna</Link></p>
-                <figure className="flex justify-center items-center">
+                <Link href={payHere.payHereLink} target="_blank">
+                    <figure className="flex justify-center items-center">
 
-                    <Image src={payHere.longWhiteBanner} width={400}
-                           height={200} alt="PayhereLogo"/>
-                </figure>
+                        <Image src={payHere.longWhiteBanner} width={400}
+                               height={200} alt="PayhereLogo"/>
+                    </figure>
+                </Link>
+
             </div>
         </footer>
     );

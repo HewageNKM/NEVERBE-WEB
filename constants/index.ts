@@ -398,6 +398,7 @@ export const payHere = {
     longBlueBanner: "https://www.payhere.lk/downloads/images/payhere_long_banner_dark.png",
     squareBannerWhite: "https://www.payhere.lk/downloads/images/payhere_square_banner.png",
     squareBannerBlue: "https://www.payhere.lk/downloads/images/payhere_square_banner_dark.png",
+    payHereLink: "https://www.payhere.lk/"
 
 }
 export const paymentOptions = [
@@ -415,15 +416,18 @@ export const paymentOptions = [
 export const contactInfo = [
     {
         icon: MdEmail,
-        content: "info.neverbe@gmail.com"
+        content: "info.neverbe@gmail.com",
+        link: "mailto:info.neverbe@gmnail.com"
     },
     {
         icon: FaMobile,
-        content: "+94 72 924 9999"
+        content: "+94 72 924 9999",
+        link: "tel:+94729249999"
     },
     {
         icon: FaMobile,
-        content: "+94 70 520 8999"
+        content: "+94 70 520 8999",
+        link: "tel:+94705208999"
     }
 
 ];

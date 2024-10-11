@@ -19,8 +19,7 @@ const GlobalProvider = ({children}: { children: ReactNode }) => {
     });
 
     return (
-        <main className="w-full relative flex flex-col justify-between h-full overflow-clip">
-
+        <main className="w-full relative flex flex-col justify-between min-h-screen overflow-clip">
             <Header/>
             {children}
             <Footer/>
