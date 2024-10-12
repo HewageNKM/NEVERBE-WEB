@@ -22,7 +22,7 @@ const PaymentDetails = ({
         <div className="flex flex-col justify-center items-start">
             <h1 className="lg:text-4xl text-3xl font-bold tracking-wide">Payment Details</h1>
             <div className="max-h-[60vh] w-[80vw] overflow-auto mt-10 lg:w-full">
-                <table className="w-full border-separate border-spacing-2">
+                <table className="w-full max-h-[50vh] border-separate border-spacing-2">
                     <thead className="bg-gray-100">
                     <tr>
                         <th className="text-left p-3 border-b">Item</th>
@@ -115,11 +115,6 @@ const PaymentDetails = ({
 
             </div>
             <div className="mt-5 capitalize flex flex-col">
-                <h3 className="text-red-500 text-xl">
-                    <strong>
-                        Do not refresh or close the page while the payment is processing.
-                    </strong>
-                </h3>
                 <h3>
                     <em className="font-medium">
                         By clicking the <strong>&quot;Proceed to Payment&quot;</strong> button, you agree to our Terms of Service and

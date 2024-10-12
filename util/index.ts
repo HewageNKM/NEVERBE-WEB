@@ -31,6 +31,16 @@ export const calculateShipping = (cartItems: CartItem[]) => {
 
     return shippingCost;
 }
+export const generateOrderId = (prefix: string = "ORD"): string => {
+    // Generate a random alphanumeric string of 6 characters
+    const randomStr = Math.random().toString(36).substring(2, 8).toUpperCase();
+
+    // Get the current timestamp in base36 for compactness
+    const timestamp = Date.now().toString(36).toUpperCase();
+
+    // Combine the prefix, timestamp, and random string for uniqueness
+    return `${prefix}-${timestamp}-${randomStr}`;
+}
 
 
 export const addNewOrder = async (newOrder: Order,) => {

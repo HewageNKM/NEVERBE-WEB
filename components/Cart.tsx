@@ -24,7 +24,7 @@ const Cart = () => {
                 className="px-8 py-4 w-full lg:w-[40vw] rounded-l-lg bg-white h-screen relative shadow-lg"
             >
                 <h2 className="text-4xl font-bold tracking-wider border-b pb-4">Cart</h2>
-                <div className="overflow-auto h-[70vh] mt-5">
+                <div className="overflow-auto h-[75vh] mt-5">
                     <table className="w-full border-separate border-spacing-2">
                         <thead className="bg-gray-100">
                         <tr>
@@ -76,12 +76,13 @@ const Cart = () => {
                         <h1 className="md:text-2xl text-lg font-bold">Total:
                             Rs. {cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0)}</h1>
                     </div>
-                    <button className="bg-primary text-white px-4 py-2 mt-5 rounded-lg w-full" onClick={() => {
+                    <button className="bg-primary text-white px-4 py-2 mt-5 tracking-wide md:text-2xl lg:text-3xl rounded-lg w-full" onClick={() => {
                         if (cartItems.length == 0) return;
 
                         dispatch(hideCart());
                         router.push("/shop/checkout");
-                    }}>Checkout
+                    }}>
+                        <strong>Checkout</strong>
                     </button>
                 </div>
             </motion.div>
