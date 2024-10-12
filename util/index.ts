@@ -7,13 +7,15 @@ export const calculateShipping = (cartItems: CartItem[]) => {
     if (cartItems.length === 0) {
         return 0;
     }
+
     // Constants for shipping cost
     const firstKgCost = 350;
     const additionalKgCost = 150;
 
-    // Calculate total weight of all items in the cart in grams
+    // Calculate total weight of all items in the cart in grams based on item type
     let totalWeight = cartItems.reduce((total, item) => {
-        return total + (750 * item.quantity);
+        const itemWeight = item.type === "accessories" ? 250 : 650; // 250g for accessories, 650g for shoes
+        return total + (itemWeight * item.quantity);
     }, 0);
 
     // Convert total weight to kg
@@ -29,6 +31,7 @@ export const calculateShipping = (cartItems: CartItem[]) => {
 
     return shippingCost;
 }
+
 
 export const addNewOrder = async (newOrder: Order,) => {
     const token = await getIdToken();

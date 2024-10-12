@@ -38,6 +38,7 @@ export interface CartItem {
     variantName: string,
     thumbnail: string,
     size: string,
+    type: string,
     quantity: number,
     price: number,
 }
@@ -77,7 +78,6 @@ export interface Order {
     items: OrderItem[],
     paymentStatus: string,
     paymentMethod: string,
-    restocked: boolean,
     customer: Customer,
     shippingCost: number,
     createdAt: Date,

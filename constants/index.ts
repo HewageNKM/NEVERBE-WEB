@@ -122,7 +122,13 @@ export const brands = [
         value: "mlb",
         url: "/shop/products/manufacturers/mlb",
         titles: []
-    }
+    },
+    {
+        name: "Luvion Vuitton",
+        value: "lv",
+        url: "/shop/products/manufacturers/lv",
+        titles: []
+    },
 ]
 export const sortingOptions = [
     {
@@ -141,9 +147,8 @@ export const sortingOptions = [
 export const productTypes = [
     {name: "All", value: "all"},
     {name: "Shoes", value: "shoes"},
-    {name: "Slippers", value: "slippers"},
-    {name: "Socks", value: "socks"},
-    {name: "Other Accessories", value: "accessories"},
+    {name: "Sandals", value: "Sandals"},
+    {name: "Accessories", value: "accessories"},
 ]
 export const wearableSizes = [
     "36",
@@ -288,7 +293,7 @@ export const address = {
     map: "https://maps.app.goo.gl/zpXm2euKTW8Eee486"
 }
 export const socialMedia: SocialMedia[] = [
-    {icon: IoLogoFacebook, name: "Facebook", url: ""},
+    {icon: IoLogoFacebook, name: "Facebook", url: "https://www.facebook.com/people/Neverbe/100063602461310/"},
     {icon: IoLogoInstagram, name: "Instagram", url: ""},
     {icon: IoLogoTiktok, name: "Tiktok", url: "https://www.tiktok.com/@neverbe196?_t=8qG86zTXl2d&_r=1"},
 ];

@@ -37,7 +37,7 @@ const ItemCard = ({item,flag}:{item:Item,flag:string}) => {
     },[item]);
 
     return (
-        <div className="w-[16rem] lg:w-[20rem] transition-all h-[25.5rem] lg:h-[30.5rem] shadow relative rounded-lg">
+        <article className="w-[16rem] lg:w-[20rem] transition-all h-[25.5rem] lg:h-[30.5rem] shadow relative rounded-lg">
             <Link href={`/shop/products/${item.itemId.toLowerCase()}`}>
                 <figure>
                     <Image width={300} height={300} src={item.thumbnail} alt={item.name}
@@ -63,7 +63,7 @@ const ItemCard = ({item,flag}:{item:Item,flag:string}) => {
             {outOfStocks && (<div className="bg-white absolute top-0 left-0 w-full h-full bg-opacity-60 flex justify-center items-center">
                 <h2 className={`text-white p-2 rounded-lg font-bold tracking-wide ${outOfStocksLabel === "Coming Soon" ? "bg-yellow-500":"bg-red-500"}`} >{outOfStocksLabel}</h2>
             </div>)}
-        </div>
+        </article>
     );
 };
 

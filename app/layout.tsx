@@ -11,24 +11,24 @@ const lato = Lato({weight: "400", subsets: ["latin"]});
 
 export const metadata: Metadata = {
     title: {
-        default: "NEVERBE - Premium Branded Copy Shoes in Sri Lanka",
-        template: "%s | NEVERBE - Premium Branded Copy Shoes in Sri Lanka",
+        default: "NEVERBE - Premium in Sri Lanka",
+        template: "%s | NEVERBE - Premium Shoes in Sri Lanka",
     },
     metadataBase: new URL("https://neverbe.lk"),
     alternates: {
         canonical: "https://neverbe.lk",
     },
     description:
-        "NEVERBE is Sri Lanka's premier online store for high-quality branded copy shoes and accessories. Shop from top brands with fast delivery.",
+        "NEVERBE is Sri Lanka's premier online store for high-quality branded copy shoes and accessories.",
     category: "Ecommerce",
     keywords: seoKeywords,
     twitter: {
         card: "summary_large_image",
         site: "@neverbe",
         creator: "@neverbe",
-        title: "NEVERBE - Premium Branded Copy Shoes in Sri Lanka",
+        title: "NEVERBE - Premium Shoes in Sri Lanka",
         description:
-            "NEVERBE is Sri Lanka's premier online store for high-quality branded copy shoes and accessories. Shop from top brands with fast delivery.",
+            "NEVERBE is Sri Lanka's premier online store for high-quality branded copy shoes and accessories.",
         images: [
             {
                 url: "https://neverbe.lk/api/og",

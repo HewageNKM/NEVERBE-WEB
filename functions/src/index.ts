@@ -1,5 +1,7 @@
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
+import axios from "axios";
+import {adminNotify, getOrderFailed, getOrderSuccess} from "./SMSTemplates";
 
 admin.initializeApp();
 
@@ -22,7 +24,6 @@ export interface Order {
     items: OrderItem[],
     paymentStatus: string,
     paymentMethod: string,
-    restocked: boolean,
     shippingCost: number,
     customer: Customer,
     createdAt: Date,
@@ -67,6 +68,7 @@ export interface Size {
 }
 
 // Cloud Function scheduled to run every hour
+// Cloud Function scheduled to run every hour
 exports.scheduledOrdersCleanup = functions.pubsub
   .schedule("every 1 hours")
   .onRun(async (context) => {
@@ -80,14 +82,12 @@ exports.scheduledOrdersCleanup = functions.pubsub
       // Fetch PayHere failed and pending orders
       const payhereFailedOrdersQuery = orderCollectionRef
         .where("paymentMethod", "==", "PayHere")
-        .where("restocked", "==", false)
         .where("createdAt", "<=", twoHoursAgo)
         .where("paymentStatus", "in", ["Failed", "Pending"]);
 
       // Fetch COD failed orders
       const codFailedOrdersQuery = orderCollectionRef
         .where("paymentMethod", "==", "COD")
-        .where("restocked", "==", false)
         .where("createdAt", "<=", twoHoursAgo)
         .where("paymentStatus", "==", "Failed");
 
@@ -106,7 +106,8 @@ exports.scheduledOrdersCleanup = functions.pubsub
         return null;
       }
 
-      console.log(`Found ${allFailedOrders.length} failed orders to restock.`);
+      console.log(`Found ${allFailedOrders.length} 
+      failed orders to restock and delete.`);
 
       let batch = db.batch();
       let opCounts = 0;
@@ -115,9 +116,6 @@ exports.scheduledOrdersCleanup = functions.pubsub
       for (const orderDoc of allFailedOrders) {
         const orderData = orderDoc.data() as Order;
         const orderItems = orderData.items;
-
-        let inventoryUpdated = false; // Track if inventory was updated
-        let paymentStatusToUpdate: string | null = null;
 
         for (const orderItem of orderItems) {
           const inventoryDocRef = inventoryCollectionRef.doc(orderItem.itemId);
@@ -133,7 +131,6 @@ exports.scheduledOrdersCleanup = functions.pubsub
                   if (size.size === orderItem.size) {
                     size.stock += orderItem.quantity;
                     variantFound = true;
-                    inventoryUpdated = true;
                   }
                 });
               }
@@ -151,39 +148,26 @@ exports.scheduledOrdersCleanup = functions.pubsub
                 opCounts = 0;
               }
             } else {
-              console.warn(`Variant or size not found for
-               itemId: ${orderItem.itemId}, variantId: 
-               ${orderItem.variantId}, size: ${orderItem.size}`);
+              console.warn(`Variant or size not found for itemId: 
+              ${orderItem.itemId}, variantId: ${orderItem.variantId}, 
+              size: ${orderItem.size}`);
             }
           } else {
-            console.warn(`Inventory document not
-             found for itemId: ${orderItem.itemId}`);
+            console.warn(`Inventory document not found for itemId:
+             ${orderItem.itemId}`);
           }
         }
 
-        if (inventoryUpdated) {
-          // For PayHere orders with 'Pending' status, update to 'Failed'
-          if (orderData.paymentMethod === "PayHere" &&
-                        orderData.paymentStatus === "Pending") {
-            paymentStatusToUpdate = "Failed";
-          }
+        // After restocking, delete the order
+        batch.delete(orderDoc.ref); // Delete the order
+        opCounts += 1;
 
-          // Prepare the update data
-          const updateData: Partial<Order> = {restocked: true};
-          if (paymentStatusToUpdate) {
-            updateData.paymentStatus = paymentStatusToUpdate;
-          }
-
-          batch.update(orderDoc.ref, updateData);
-          opCounts += 1;
-
-          if (opCounts >= BATCH_LIMIT) {
-            // Commit the current batch and start a new one
-            await batch.commit();
-            console.log(`Committed a batch of ${opCounts} operations.`);
-            batch = db.batch();
-            opCounts = 0;
-          }
+        if (opCounts >= BATCH_LIMIT) {
+          // Commit the current batch and start a new one
+          await batch.commit();
+          console.log(`Committed a batch of ${opCounts} operations.`);
+          batch = db.batch();
+          opCounts = 0;
         }
       }
 
@@ -193,17 +177,18 @@ exports.scheduledOrdersCleanup = functions.pubsub
         console.log(`Committed the final batch of ${opCounts} operations.`);
       }
 
-      console.log("Scheduled Firestore cleanup completed successfully.");
+      console.log("Scheduled Firestore cleanup and " +
+                "deletion completed successfully.");
       return null;
     } catch (error) {
-      console.error("Error during scheduledFirestoreCleanup:", error);
+      console.error("Error during scheduledOrdersCleanup:", error);
       return null;
     }
   });
 
 
 // Helper function to send email using the Firestore template
-const sendEmail = async (
+const sendClientEmail = async (
   to: string, templateName: string, templateData: object
 ) => {
   await db.collection("mail").add({
@@ -215,6 +200,46 @@ const sendEmail = async (
   });
 };
 
+const sendClientSMS = async (
+  to: string, templateData: string
+) => {
+  await axios({
+    method: "POST",
+    url: "https://api.textit.biz/",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Basic ${process.env.TEXTITBIZ_API_KEY}`,
+    },
+    data: {
+      to: to,
+      text: templateData,
+    },
+  });
+};
+
+const sendAdminSMS = async (templateData:string) => {
+  await axios({
+    method: "POST",
+    url: "https://api.textit.biz/",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Basic ${process.env.TEXTITBIZ_API_KEY}`,
+    },
+    data: {
+      to: "94705208999",
+      text: templateData,
+    },
+  });
+};
+const sendAdminEmail = async (templateData:object, templateName:string) => {
+  await db.collection("mail").add({
+    to: "info.neverbe@gmail.com",
+    template: {
+      name: templateName,
+      data: templateData,
+    },
+  });
+};
 const getTotal = (items: OrderItem[]): number => {
   return items.reduce((total, item) => total + item.price, 0);
 };
@@ -254,6 +279,7 @@ exports.onOrderPaymentStateChanges = functions.firestore
       items: items,
       shippingCost: shippingCost,
       total: getTotal(items) + shippingCost,
+      paymentMethod: paymentMethod,
     };
 
     try {
@@ -261,7 +287,12 @@ exports.onOrderPaymentStateChanges = functions.firestore
       if (!previousOrderData && paymentMethod === "COD" &&
                 paymentStatus === "Pending") {
         // New COD order created, send order confirmation email
-        await sendEmail(customerEmail, "orderConfirmed", templateData);
+        await sendClientEmail(customerEmail, "orderConfirmed", templateData);
+        await sendClientSMS(customer.phone, getOrderSuccess(orderId,
+          getTotal(items)+shippingCost, customer.address, paymentMethod));
+        await sendAdminSMS(adminNotify(orderId, paymentMethod,
+          getTotal(items)+shippingCost));
+        await sendAdminEmail(templateData, "adminOrderNotify");
         console.log(`Order confirmation email sent for COD order ${orderId}`);
       }
 
@@ -273,7 +304,9 @@ exports.onOrderPaymentStateChanges = functions.firestore
                 paymentStatus === "Failed"
       ) {
         // COD order payment status updated to 'Failed', send failed order email
-        await sendEmail(customerEmail, "orderFailed", templateData);
+        await sendClientEmail(customerEmail, "orderFailed", templateData);
+        await sendClientSMS(customer.phone,
+          getOrderFailed(orderId, getTotal(items)+shippingCost, paymentMethod));
         console.log(`Order failed email sent for COD order ${orderId}`);
       }
 
@@ -286,8 +319,13 @@ exports.onOrderPaymentStateChanges = functions.firestore
       ) {
         // PayHere order payment status updated to 'Paid',
         // send order confirmation email
-        await sendEmail(customerEmail,
+        await sendClientEmail(customerEmail,
           "orderConfirmed", templateData);
+        await sendClientSMS(customer.phone, getOrderSuccess(orderId,
+          getTotal(items)+shippingCost, customer.address, paymentMethod));
+        await sendAdminSMS(adminNotify(orderId, paymentMethod,
+          getTotal(items)+shippingCost));
+        await sendAdminEmail(templateData, "adminOrderNotify");
         console.log(`Order confirmation email sent for PayHere order
          ${orderId}`);
       }
@@ -301,7 +339,9 @@ exports.onOrderPaymentStateChanges = functions.firestore
       ) {
         // PayHere order payment status updated to 'Failed',
         // send failed order email
-        await sendEmail(customerEmail, "orderFailed", templateData);
+        await sendClientEmail(customerEmail, "orderFailed", templateData);
+        await sendClientSMS(customer.phone,
+          getOrderFailed(orderId, getTotal(items)+shippingCost, paymentMethod));
         console.log(`Order failed email sent for PayHere order ${orderId}`);
       }
     } catch (error) {

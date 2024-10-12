@@ -48,6 +48,7 @@ const ProductHero = ({item}: { item: Item }) => {
             thumbnail: selectedVariant.images[0],
             size: selectedSize.size,
             quantity: qty,
+            type: item.type,
             price: item.sellingPrice
         }
 
@@ -89,7 +90,7 @@ const ProductHero = ({item}: { item: Item }) => {
     return (
         <section className="w-full relative">
             <h1 className="md:text-4xl text-2xl tracking-wider mt-10"><strong>Product Portfolio</strong></h1>
-            <div className="grid md:grid-cols-2 grid-cols-1 gap-6 md:gap-10 mt-10">
+            <article className="grid md:grid-cols-2 grid-cols-1 gap-6 md:gap-10 mt-10">
                 <div className="flex flex-row items-center justify-center flex-wrap gap-5">
                     <Image src={selectedImage} alt={item.name} width={300} height={300}
                            className={"md:w-[40vw] md:h-[65vh] w-full h-[45vh] rounded-lg"}/>
@@ -179,7 +180,7 @@ const ProductHero = ({item}: { item: Item }) => {
                         </button>
                     </div>
                 </div>
-            </div>
+            </article>
             {outOfStocks && (<div
                 className="bg-white absolute top-0 left-0 w-full h-full bg-opacity-60 flex justify-center items-center">
                 <h2 className={`text-white p-2 rounded-lg text-lg lg:text-xl tracking-wide ${outOfStocksLabel === "Coming Soon" ? "bg-yellow-500" : "bg-red-500"}`}>
