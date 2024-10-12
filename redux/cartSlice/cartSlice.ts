@@ -25,7 +25,22 @@ const cartSlice = createSlice({
             }
         },
         pushToCart(state, action) {
-            state.cart.push(action.payload)
+            let itemCart:any = window.localStorage.getItem('NEVERBECart');
+            if (itemCart) {
+                itemCart = JSON.parse(itemCart) as CartItem[];
+                let doesExist = false;
+                state.cart = itemCart.map((item: CartItem) => {
+                    if (item.itemId === action.payload.itemId && item.variantId === action.payload.variantId && item.size === action.payload.size) {
+                        item.quantity += action.payload.quantity;
+                        doesExist = true;
+                        return item;
+                    }
+                    return item;
+                });
+                if (!doesExist) {
+                    state.cart.push(action.payload);
+                }
+            }
             window.localStorage.setItem('NEVERBECart', JSON.stringify(state.cart));
         },
         removeFromCart(state, action) {
