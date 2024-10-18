@@ -89,7 +89,7 @@ const ProductHero = ({item}: { item: Item }) => {
     }, [item]);
     return (
         <section className="w-full relative">
-            <h1 className="md:text-4xl text-2xl tracking-wider mt-10"><strong>Product Portfolio</strong></h1>
+            <h1 className="md:text-4xl text-2xl tracking-wider mt-10"><strong>{item.name.toUpperCase() || "Product"} Portfolio</strong></h1>
             <article className="grid md:grid-cols-2 grid-cols-1 gap-6 md:gap-10 mt-10">
                 <div className="flex flex-row items-center justify-center flex-wrap gap-5">
                     <Image src={selectedImage} alt={item.name} width={300} height={300}

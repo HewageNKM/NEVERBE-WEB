@@ -1,10 +1,36 @@
 // Constants and Configurations
+import {firestore} from "firebase-admin";
+import Timestamp = firestore.Timestamp;
+
 export const TEXTIT_API_URL = "https://api.textit.biz/";
 export const TEXTIT_AUTH = "Basic 20e5gkd160cdecea7dtd26cfadh8421";
 export const ADMIN_PHONE = "94705208999";
-export const ADMIN_EMAIL = "info.neverbe@gmail.com";
+export const ADMIN_EMAIL = "neverbe.info@gmail.com";
 export const BATCH_LIMIT = 450;
 
+export interface Order {
+    orderId: string,
+    paymentId: string,
+    items: OrderItem[],
+    paymentStatus: string,
+    paymentMethod: string,
+    customer: Customer,
+    shippingCost: number,
+    tracking: Tracking | null,
+    createdAt: Timestamp,
+    updatedAt: Timestamp,
+}
+
+export interface Tracking {
+    id:string
+    trackingNumber: string;
+    status: string;
+
+    trackingCompany: string;
+    trackingUrl: string;
+    createdAt: Timestamp;
+    updatedAt: Timestamp;
+}
 // Enums for better type safety
 export enum PaymentMethod {
     PayHere = "PayHere",
@@ -26,18 +52,6 @@ export interface OrderItem {
     size: string;
     quantity: number;
     price: number;
-}
-
-export interface Order {
-    orderId: string;
-    paymentId: string;
-    items: OrderItem[];
-    paymentStatus: PaymentStatus;
-    paymentMethod: PaymentMethod;
-    shippingCost: number;
-    customer: Customer;
-    createdAt: FirebaseFirestore.Timestamp;
-    updatedAt: FirebaseFirestore.Timestamp;
 }
 
 export interface Customer {

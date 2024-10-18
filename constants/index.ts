@@ -51,10 +51,6 @@ export const brands = [
         url: "/shop/products//manufacturers/nike",
         titles: [
             {
-                name: "Air Max",
-                url: "/shop/products/manufacturers/nike/air-max"
-            },
-            {
                 name: "Air",
                 url: "/shop/products/manufacturers/nike/air"
             },
@@ -67,8 +63,8 @@ export const brands = [
                 url: "/shop/products/manufacturers/nike/sb"
             },
             {
-                name: "Slippers",
-                url: "/shop/products//manufacturers/nike/slippers"
+                name: "Sandals",
+                url: "/shop/products//manufacturers/nike/Sandals"
             },
             {
                 name: "Other",
@@ -90,8 +86,8 @@ export const brands = [
                 url: "/shop/products/manufacturers/adidas/samba"
             },
             {
-                name: "Slippers",
-                url: "/shop/products/manufacturers/adidas/slippers"
+                name: "Sandals",
+                url: "/shop/products/manufacturers/adidas/sandals"
             },
             {
                 name: "Other",
@@ -103,30 +99,81 @@ export const brands = [
         name: 'New Balance',
         value: 'new-balance',
         url: "/shop/products/manufacturers/new-balance",
-        titles: []
+        titles: [
+            {
+                name: "Sandals",
+                url: "/shop/products/manufacturers/nb/sandals"
+            },
+            {
+                name: "Other",
+                url: "/shop/products/manufacturers/nb/other"
+            }
+        ]
     },
     {
         name: 'Cross',
         value: 'cross',
         url: '/shop/products/manufacturers/cross',
-        titles: []
+        titles: [
+            {
+                name: "Sandals",
+                url: "/shop/products/manufacturers/cross/sandals"
+            },
+            {
+                name: "Other",
+                url: "/shop/products/manufacturers/cross/other"
+            }
+        ]
     },
     {
         name: 'Polo',
         value: 'polo',
         url: '/shop/products/manufacturers/polo',
-        titles: []
+        titles: [
+            {
+                name: "Sandals",
+                url: "/shop/products/manufacturers/polo/sandals"
+            },
+            {
+                name: "Other",
+                url: "/shop/products/manufacturers/polo/other"
+            }
+        ]
     },
     {
         name: "MLB",
         value: "mlb",
         url: "/shop/products/manufacturers/mlb",
-        titles: []
+        titles: [
+            {
+                name: "Sandals",
+                url: "/shop/products/manufacturers/mlb/sandals"
+            },
+            {
+                name: "Other",
+                url: "/shop/products/manufacturers/mlb/other"
+            }
+        ]
     },
     {
         name: "Luvion Vuitton",
         value: "lv",
         url: "/shop/products/manufacturers/lv",
+        titles: [
+            {
+                name: "Sandals",
+                url: "/shop/products/manufacturers/lv/sandals"
+            },
+            {
+                name: "Other",
+                url: "/shop/products/manufacturers/lv/other"
+            }
+        ]
+    },
+    {
+        name: "Budget Shoes",
+        value: "bs",
+        url: "/shop/products/manufacturers/bs",
         titles: []
     },
 ]
@@ -290,7 +337,7 @@ export const shippingReturnPolicy = [
 ];
 export const address = {
     address: "330/40/10, New Kandy Road, Delgoda",
-    map: "https://maps.app.goo.gl/zpXm2euKTW8Eee486"
+    map: "https://maps.app.goo.gl/7eFH4HxJBnPQ96uQ9"
 }
 export const socialMedia: SocialMedia[] = [
     {icon: IoLogoFacebook, name: "Facebook", url: "https://www.facebook.com/people/Neverbe/100063602461310/"},
@@ -421,8 +468,8 @@ export const paymentOptions = [
 export const contactInfo = [
     {
         icon: MdEmail,
-        content: "info.neverbe@gmail.com",
-        link: "mailto:info.neverbe@gmnail.com"
+        content: "neverbe.info@gmail.com",
+        link: "mailto:neverbe.info@gmail.com"
     },
     {
         icon: FaMobile,

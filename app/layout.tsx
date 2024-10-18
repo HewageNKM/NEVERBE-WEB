@@ -12,7 +12,7 @@ const lato = Lato({weight: "400", subsets: ["latin"]});
 export const metadata: Metadata = {
     title: {
         default: "NEVERBE - Premium in Sri Lanka",
-        template: "%s | NEVERBE - Premium Shoes in Sri Lanka",
+        template: "%s - NEVERBE",
     },
     metadataBase: new URL("https://neverbe.lk"),
     alternates: {
@@ -60,6 +60,9 @@ export const metadata: Metadata = {
 export default function RootLayout({children}: Readonly<{ children: React.ReactNode; }>) {
     return (
         <html lang="en" className="scroll-smooth">
+        <head>
+            <meta name="google-site-verification" content="iuTN4Zvxq_2cUx2dmsxCL4iHvCUZdkGOw3k7EVPsBoo"/>
+        </head>
         <body className={lato.className}>
         <StoreProvider>
             <GlobalProvider>

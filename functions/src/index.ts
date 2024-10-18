@@ -34,13 +34,14 @@ exports.scheduledOrdersCleanup = functions.pubsub
       const orderCollection = db.collection("orders");
       const inventoryCollection = db.collection("inventory");
 
-      const twoHoursAgo = admin.firestore.Timestamp
-        .fromDate(new Date(Date.now() - 2 * 60 * 60 * 1000));
+      const halfHourAgo = admin.firestore.Timestamp
+        .fromDate(new Date(Date.now() - 30 * 60 * 1000));
+
 
       // Fetch failed and pending PayHere orders
       const payhereFailedOrders = await orderCollection
         .where("paymentMethod", "==", PaymentMethod.PayHere)
-        .where("createdAt", "<=", twoHoursAgo)
+        .where("createdAt", "<=", halfHourAgo)
         .where("paymentStatus", "in",
           [PaymentStatus.Failed, PaymentStatus.Pending])
         .get();
@@ -48,7 +49,7 @@ exports.scheduledOrdersCleanup = functions.pubsub
       // Fetch failed COD orders
       const codFailedOrders = await orderCollection
         .where("paymentMethod", "==", PaymentMethod.COD)
-        .where("createdAt", "<=", twoHoursAgo)
+        .where("createdAt", "<=", halfHourAgo)
         .where("paymentStatus", "==", PaymentStatus.Failed)
         .get();
 
