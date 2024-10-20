@@ -1,11 +1,11 @@
 import React from 'react';
-import { termsAndConditions } from "@/constants";
-import { Metadata } from "next";
+import {termsAndConditions} from "@/constants";
+import {Metadata} from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
     title: "Terms & Conditions",
-    twitter:{
+    twitter: {
         card: "summary",
         site: "@neverbe",
         creator: "@neverbe",
@@ -38,8 +38,7 @@ const Page = () => {
                 </article>
                 <div>
                     <p className="text-gray-600 text-center">
-                        If you have any questions, feel free to <Link href="/contact"
-                                                                      className="text-blue-500 hover:border-b-blue-500 hover:border-b ">contact
+                        If you have any questions, feel free to <Link href="/contact" className="text-blue-500 hover:border-b-blue-500 hover:border-b ">contact
                         us.</Link>
                     </p>
                 </div>
