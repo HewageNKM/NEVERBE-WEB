@@ -1,8 +1,8 @@
 import React from 'react';
 import Link from "next/link";
 import SuccessAnimationComponents from './components/SuccessAnimationComponents';
-import {getOrderById} from "@/firebase/firebaseAdmin";
-import {notFound} from "next/navigation";
+import { getOrderById } from "@/firebase/firebaseAdmin";
+import { notFound } from "next/navigation";
 
 const Page = async ({ searchParams }: { searchParams: { order_id: string } }) => {
     const orderId = searchParams.order_id;
@@ -10,29 +10,41 @@ const Page = async ({ searchParams }: { searchParams: { order_id: string } }) =>
 
     try {
         order = await getOrderById(orderId);
-        if(!order) {
-            return  notFound();
+        if (!order) {
+            return notFound();
         }
-    }catch (e: any) {
-        console.log(e.message)
+    } catch (e: any) {
+        console.log(e.message);
     }
-    
+
     return (
-        <main className="w-full md:mt-20 mb-10 lg:mt-28 mt-16 flex justify-center items-center">
-            <div className="w-fit p-8 flex flex-col gap-5 justify-center items-center">
+        <main className="w-full min-h-screen flex justify-center items-center">
+            <div className="bg-white shadow-custom rounded-lg p-10 flex flex-col gap-6 justify-center items-center max-w-lg">
+                {/* Success Animation */}
                 <SuccessAnimationComponents />
-                <div className="font-bold gap-3 flex flex-col md:text-xl lg:text-2xl justify-center items-center capitalize text-green-500 text-lg">
-                    <label className="text-center capitalize text-slate-500">
-                        <span>Order ID:</span>
-                        <input value={order?.orderId} className="w-full p-2 focus:outline-none border-slate-300 border rounded-lg"/>
+
+                {/* Order Details */}
+                <div className="text-center">
+                    <label className="block font-semibold text-gray-700 mb-2">
+                        <span className="text-lg">Order ID:</span>
+                        <input
+                            value={order?.orderId}
+                            readOnly
+                            className="mt-2 w-full p-2 text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:border-blue-500"
+                        />
                     </label>
-                    <h3 className="text-center">
-                        Order Payment is {order?.paymentStatus}!, Check your email for confirmation
+                    <h3 className="text-2xl font-bold text-green-600 mt-4">
+                        Payment {order?.paymentStatus}!
                     </h3>
-                    <Link href="/" className="text-blue-500 md:text-lg text-sm">
-                        Go back to home
-                    </Link>
+                    <p className="text-gray-600 mt-2 text-lg">
+                        Check your email for confirmation and further details.
+                    </p>
                 </div>
+
+                {/* Back to Home Link */}
+                <Link href="/" className="mt-6 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all text-lg">
+                    Go Back Home
+                </Link>
             </div>
         </main>
     );

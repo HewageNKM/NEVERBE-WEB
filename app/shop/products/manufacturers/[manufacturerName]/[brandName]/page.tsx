@@ -7,13 +7,13 @@ import { getItemsByTwoField } from "@/firebase/firebaseAdmin";
 import EmptyState from "@/components/EmptyState";
 
 export async function generateMetadata({ params }: { params: { manufacturerName: string; brandName: string } }): Promise<Metadata> {
-    const title = `${params.manufacturerName.toUpperCase()} | ${params.brandName.toUpperCase()}`;
+    const title = `${params.manufacturerName.toUpperCase().replace("%20"," ")} | ${params.brandName.toUpperCase().replace("%20"," ")}`;
     const description = `Discover the latest products by ${params.brandName} from ${params.manufacturerName} at NEVERBE. Shop now for quality items and special offers.`;
 
     return {
         title,
         description,
-        keywords: `${params.manufacturerName}, ${params.brandName}, NEVERBE, online shopping, products`,
+        keywords: `${params.manufacturerName.replace("%20"," ")}, ${params.brandName.replace("%20"," ")}, NEVERBE, online shopping, products`,
         twitter: {
             card: "summary",
             site: "@neverbe",
@@ -24,6 +24,7 @@ export async function generateMetadata({ params }: { params: { manufacturerName:
         openGraph: {
             title,
             description,
+            url: `https://neverbe.lk/shop/products/manufacturers/${params.manufacturerName.replace("%20"," ")}/${params.brandName.replace("%20"," ")}`,
             type: "website",
             images: [
                 {
@@ -41,23 +42,23 @@ const Page = async ({ params }: { params: { manufacturerName: string; brandName:
     let items: Item[] = [];
 
     try {
-        items = await getItemsByTwoField(params.manufacturerName, params.brandName, "manufacturer", "brand");
+        items = await getItemsByTwoField(params.manufacturerName.replace("%20"," "), params.brandName.replace("%20"," "), "manufacturer", "brand");
     } catch (e) {
         console.error("Error fetching items:", e);
     }
 
     return (
-        <main className="w-full relative lg:mt-32 md:mt-20 mt-10 overflow-clip">
-            <section className="px-8 py-4">
-                <h1 className="md:text-4xl text-2xl font-bold uppercase tracking-wider mt-10">
-                    {params.manufacturerName} &gt; {params.brandName} ({items.length})
+        <main className="w-full relative lg:mt-32 md:mt-20 mt-10 overflow-hidden">
+            <section className="px-8 py-6">
+                <h1 className="md:text-4xl text-3xl font-bold uppercase tracking-wider mt-10 text-gray-800">
+                    {params.manufacturerName.replace("%20"," ")} &gt; {params.brandName.replace("%20"," ")} ({items.length})
                 </h1>
-                <div className="w-full">
+                <div className="w-full mt-4">
                     <SortingOptions />
                     {items.length > 0 ? (
                         <Products items={items} />
                     ) : (
-                       <EmptyState message={`No products found for ${params.manufacturerName} &gt; ${params.brandName}.`}/>
+                        <EmptyState message={`No products found for ${params.manufacturerName.replace("%20"," ")} &gt; ${params.brandName}.`} />
                     )}
                 </div>
             </section>

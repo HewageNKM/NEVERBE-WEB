@@ -31,7 +31,7 @@ const NewArrivals = async () => {
                     ) : error ? ( // Error state
                         <p className="text-red-500">{error}</p>
                     ) : items.length > 0 ? ( // Render items
-                        <ul className="flex flex-row flex-wrap lg:gap-20 justify-evenly md:gap-16 gap-10 w-full">
+                        <ul className="grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-3 lg:grid-cols-4 w-full">
                             {items.map((item: Item) => (
                                 <li key={item.itemId}>
                                     <ItemCard item={item} flag="new" />

@@ -1,6 +1,7 @@
 import React from 'react';
 import {Metadata} from 'next';
 import {privacyPolicy} from '@/constants';
+import Link from "next/link";
 
 export const metadata: Metadata = {
     title: 'Privacy Policy',
@@ -15,7 +16,8 @@ export const metadata: Metadata = {
 
 const Page = () => {
     return (
-        <main className="privacy-policy lg:mt-24 md:mt-16 mt-10 max-w-4xl mx-auto pt-10 p-4 sm:p-6 md:p-8 text-gray-800">
+        <main
+            className="privacy-policy lg:mt-24 md:mt-16 mt-10 max-w-4xl mx-auto pt-10 p-4 sm:p-6 md:p-8 text-gray-800">
             <h1 className="text-3xl sm:text-4xl font-bold mb-6 text-center">Privacy Policy</h1>
             <article>
                 <p className="mb-6 leading-relaxed">
@@ -105,6 +107,13 @@ const Page = () => {
                     <p className="leading-relaxed">{privacyPolicy.sections.changesToPrivacyPolicy}</p>
                 </section>
             </article>
+            <div>
+                <p className="text-gray-600 text-center mt-10">
+                    If you have any questions, feel free to <Link href="/contact"
+                                                                  className="text-blue-500 hover:border-b-blue-500 hover:border-b ">contact
+                    us.</Link>
+                </p>
+            </div>
         </main>
     );
 };

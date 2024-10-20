@@ -7,7 +7,7 @@ import { getItemsByField } from "@/firebase/firebaseAdmin";
 import EmptyState from "@/components/EmptyState";
 
 export async function generateMetadata({ params }: { params: { manufacturerName: string } }): Promise<Metadata> {
-    const manufacturerName = params.manufacturerName.toUpperCase();
+    const manufacturerName = params.manufacturerName.toUpperCase().replace("%20"," ")
     const title = `${manufacturerName} Products - NEVERBE`;
 
     return {
@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: { params: { manufacturerName:
             title,
             description: `Discover the latest products from ${manufacturerName} at NEVERBE.`,
             type: "website",
-            url: `https://neverbe.lk/shop/products/${params.manufacturerName}`,
+            url: `https://neverbe.lk/shop/products/${params.manufacturerName.replace("%20"," ")}`,
             images: [
                 {
                     url: "https://neverbe.lk/api/og",
@@ -42,23 +42,23 @@ const Page = async ({ params }: { params: { manufacturerName: string } }) => {
     let items: Item[] = [];
 
     try {
-        items = await getItemsByField(params.manufacturerName, "manufacturer");
+        items = await getItemsByField(params.manufacturerName.replace("%20"," "), "manufacturer");
     } catch (e: any) {
         console.error("Error fetching items:", e.message);
     }
 
     return (
-        <main className="w-full relative lg:mt-32 md:mt-20 mt-10 overflow-clip">
-            <div className="px-8 py-4">
-                <h1 className="md:text-4xl text-2xl capitalize font-bold tracking-wider mt-10">
-                    {params.manufacturerName} ({items.length})
+        <main className="w-full relative lg:mt-32 md:mt-20 mt-10 overflow-hidden">
+            <div className="px-8 py-6">
+                <h1 className="md:text-4xl text-3xl capitalize font-bold tracking-wider mt-10 text-gray-800">
+                    {params.manufacturerName.replace("%20"," ")} ({items.length})
                 </h1>
-                <div className="w-full">
+                <div className="w-full mt-4">
                     <SortingOptions />
                     {items.length > 0 ? (
                         <Products items={items} />
                     ) : (
-                        <EmptyState  message={`No products found for ${params.manufacturerName.toUpperCase()}`}/>
+                        <EmptyState message={`No products found for ${params.manufacturerName.toUpperCase().replace("%20"," ")}`} />
                     )}
                 </div>
             </div>

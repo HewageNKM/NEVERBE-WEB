@@ -4,6 +4,7 @@ import {IoLogoTiktok} from "react-icons/io5";
 import {IoLogoFacebook, IoLogoInstagram} from "react-icons/io";
 import {MdEmail} from "react-icons/md";
 import {FaMobile} from "react-icons/fa";
+import {FaMessage, FaPhone} from "react-icons/fa6";
 
 export const seoKeywords: string[] = [
     "never be lk",
@@ -97,16 +98,16 @@ export const brands = [
     },
     {
         name: 'New Balance',
-        value: 'new-balance',
-        url: "/shop/products/manufacturers/new-balance",
+        value: 'new balance',
+        url: "/shop/products/manufacturers/new balance",
         titles: [
             {
                 name: "Sandals",
-                url: "/shop/products/manufacturers/nb/sandals"
+                url: "/shop/products/manufacturers/new balance/sandals"
             },
             {
                 name: "Other",
-                url: "/shop/products/manufacturers/nb/other"
+                url: "/shop/products/manufacturers/new balance/other"
             }
         ]
     },
@@ -157,23 +158,23 @@ export const brands = [
     },
     {
         name: "Luvion Vuitton",
-        value: "lv",
-        url: "/shop/products/manufacturers/lv",
+        value: "luvion-vuitton",
+        url: "/shop/products/manufacturers/luvion vuitton",
         titles: [
             {
                 name: "Sandals",
-                url: "/shop/products/manufacturers/lv/sandals"
+                url: "/shop/products/manufacturers/luvion vuitton/sandals"
             },
             {
                 name: "Other",
-                url: "/shop/products/manufacturers/lv/other"
+                url: "/shop/products/manufacturers/luvion vuitton/other"
             }
         ]
     },
     {
         name: "Budget Shoes",
-        value: "bs",
-        url: "/shop/products/manufacturers/bs",
+        value: "budget shoes",
+        url: "/shop/products/manufacturers/budgetn shoes",
         titles: []
     },
 ]
@@ -267,10 +268,6 @@ export const termsAndConditions = [
     {
         title: "Governing Law",
         description: "These Terms and Conditions are governed by and construed in accordance with the laws of Sri Lanka. Any disputes arising from or related to these terms shall be subject to the exclusive jurisdiction of the courts of Sri Lanka."
-    },
-    {
-        title: "Contact Information",
-        description: "By using our website and making a purchase, you acknowledge that you have read, understood, and agree to abide by these Terms and Conditions. If you have any questions, concerns, or need assistance, please contact us."
     }
 ]
 export const shippingReturnPolicy = [
@@ -328,12 +325,7 @@ export const shippingReturnPolicy = [
         title: "Shipping Restrictions",
         description:
             "Please note that we currently only offer shipping within Sri Lanka. We apologize for any inconvenience this may cause to our international customers.",
-    },
-    {
-        title: "Need Assistance",
-        description:
-            "If you have any further questions about our shipping process or need assistance with your order, please don’t hesitate to contact us.",
-    },
+    }
 ];
 export const address = {
     address: "330/40/10, New Kandy Road, Delgoda",
@@ -468,8 +460,13 @@ export const paymentOptions = [
 export const contactInfo = [
     {
         icon: MdEmail,
-        content: "neverbe.info@gmail.com",
-        link: "mailto:neverbe.info@gmail.com"
+        content: "info@neverbe.lk",
+        link: "info@neverbe.lk"
+    },
+    {
+        icon:FaMessage,
+        content:"Send us a message",
+        link:"/contact"
     },
     {
         icon: FaMobile,
@@ -477,13 +474,18 @@ export const contactInfo = [
         link: "tel:+94729249999"
     },
     {
-        icon: FaMobile,
+        icon: FaPhone,
         content: "+94 70 520 8999",
         link: "tel:+94705208999"
-    }
+    },
 
 ];
 export const paymentMethods = {
     PayHere:"PayHere",
     COD:"COD"
+}
+export enum ContactUs {
+    infoEmail="info@neverbe.lk",
+    supportEmail="support@neverbe.lk",
+    embeddedMap="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d7920.379213809781!2d80.01265924429379!3d6.986933221248742!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae2fff7a1993cd9%3A0x19b93ace8a7b3b80!2sNEVERBE!5e0!3m2!1sen!2slk!4v1729443817724!5m2!1sen!2slk"
 }

@@ -84,6 +84,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             url: 'https://neverbe.lk/checkout/cancel',
             lastModified: new Date(),
             priority: 0.1,
+        },
+        {
+            url: 'https://neverbe.lk/contact',
+            lastModified: new Date(),
+            priority: 0.1,
         }
     ]
 }

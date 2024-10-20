@@ -1,10 +1,12 @@
+import {Timestamp} from "@firebase/firestore";
+
 export interface User {
     id: string;
     username: string;
     email: string;
     role: string;
-    createdAt: string;
-    updatedAt: string;
+    createdAt: Timestamp;
+    updatedAt: Timestamp;
 }
 
 export interface Item {
@@ -17,8 +19,8 @@ export interface Item {
     name: string,
     sellingPrice: number,
     discount: number,
-    createdAt: { seconds: number, nanoseconds: number },
-    updatedAt: { seconds: number, nanoseconds: number },
+    createdAt: Timestamp | null,
+    updatedAt: Timestamp | null,
 }
 export interface Size{
     size: string,
@@ -80,8 +82,8 @@ export interface Order {
     paymentMethod: string,
     customer: Customer,
     shippingCost: number,
-    createdAt: Date,
-    updatedAt: Date,
+    createdAt: Timestamp | null,
+    updatedAt: Timestamp | null,
 }
 
 export interface Customer {
@@ -91,6 +93,6 @@ export interface Customer {
     phone: string;
     address: string;
     city: string;
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt: Timestamp | null;
+    updatedAt: Timestamp | null;
 }

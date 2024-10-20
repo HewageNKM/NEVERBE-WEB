@@ -1,5 +1,5 @@
 import type {Metadata} from "next";
-import {Lato} from "next/font/google";
+import {Roboto} from "next/font/google";
 import "../style/globals.css";
 import StoreProvider from "@/app/components/StoreProvider";
 import {SpeedInsights} from '@vercel/speed-insights/next';
@@ -7,7 +7,7 @@ import {Analytics} from "@vercel/analytics/react";
 import GlobalProvider from "@/app/components/GlobalProvider";
 import {seoKeywords} from "@/constants";
 
-const lato = Lato({weight: "400", subsets: ["latin"]});
+const roboto = Roboto({weight: "400", subsets: ["latin"]});
 
 export const metadata: Metadata = {
     title: {
@@ -60,10 +60,7 @@ export const metadata: Metadata = {
 export default function RootLayout({children}: Readonly<{ children: React.ReactNode; }>) {
     return (
         <html lang="en" className="scroll-smooth">
-        <head>
-            <meta name="google-site-verification" content="iuTN4Zvxq_2cUx2dmsxCL4iHvCUZdkGOw3k7EVPsBoo"/>
-        </head>
-        <body className={lato.className}>
+        <body className={roboto.className}>
         <StoreProvider>
             <GlobalProvider>
                 {children}

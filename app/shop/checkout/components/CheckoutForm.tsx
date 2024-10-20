@@ -6,10 +6,11 @@ import PaymentDetails from "@/app/shop/checkout/components/PaymentDetails";
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "@/redux/store";
 import {CartItem, Customer, Order, OrderItem} from "@/interfaces";
-import {addNewOrder, calculateShipping} from "@/util";
+import {addNewOrder, calculateShipping, generateOrderId} from "@/util";
 import {paymentMethods} from "@/constants";
 import {clearCart} from "@/redux/cartSlice/cartSlice";
-import {redirect, useRouter} from "next/navigation";
+import {useRouter} from "next/navigation";
+import {Timestamp} from "@firebase/firestore";
 
 
 const CheckoutForm = () => {
@@ -22,12 +23,12 @@ const CheckoutForm = () => {
     const [customer, setCustomer] = useState({
         address: "",
         city: "",
-        createdAt: new Date(),
+        createdAt: Timestamp.now(),
         email: "",
         id: "",
         name: "",
         phone: "",
-        updatedAt: new Date()
+        updatedAt: Timestamp.now()
     })
 
     const cartItems: CartItem[] = useSelector((state: RootState) => state.cartSlice.cart);
@@ -42,13 +43,17 @@ const CheckoutForm = () => {
 
             const hashedSecret = md5(merchantSecret).toString().toUpperCase();
             const merchantId = process.env.NEXT_PUBLIC_PAYHERE_MERCHANT_ID;
-            const orderId = window.crypto.randomUUID().toLowerCase();
+            const orderId = generateOrderId(paymentType.toUpperCase());
 
             const currency = 'LKR';
             const amount = await getTotal();
             const amountFormated = parseFloat(amount).toLocaleString('en-us', {minimumFractionDigits: 2}).replaceAll(',', '');
             const hash = md5(merchantId + orderId + amountFormated + currency + hashedSecret).toString().toUpperCase();
 
+            if(!/^947\d{8}$/.test(evt.target.phone.value)){
+                alert("Invalid Format")
+                return;
+            }
 
             formData.set("merchant_id", merchantId);
             formData.set("return_url", `${process.env.NEXT_PUBLIC_BASE_URL}/shop/checkout/success`);
@@ -84,27 +89,26 @@ const CheckoutForm = () => {
             document.body.appendChild(submitForm);
 
             const newOrder: Order = {
-                createdAt: new Date(),
+                createdAt: Timestamp.now(),
                 items: cartItems as OrderItem[],
                 orderId: orderId,
                 paymentId: "",
                 paymentStatus: "Pending",
                 paymentMethod: "",
                 shippingCost: calculateShipping(cartItems),
-                restocked: false,
                 customer: customer,
-                updatedAt: new Date()
+                updatedAt: Timestamp.now()
             }
 
             const newCustomer: Customer = {
                 address: evt.target.address.value,
                 city: evt.target.city.value,
-                createdAt: new Date(),
+                createdAt: Timestamp.now(),
                 email: evt.target.email.value,
                 id: window.crypto.randomUUID().toLowerCase(),
                 name: evt.target.first_name.value + " " + evt.target.last_name.value,
                 phone: evt.target.phone.value,
-                updatedAt: new Date()
+                updatedAt: Timestamp.now()
             }
             newOrder.customer = newCustomer;
             setCustomer(newCustomer)
@@ -128,7 +132,7 @@ const CheckoutForm = () => {
                         dispatch(clearCart())
                         setLoading(false)
                         saveAddressToLocalStorage()
-                        router.replace("/shop/checkout/success?orderId=" + orderId)
+                        router.replace("/shop/checkout/success?order_id=" + orderId)
                     } else {
                         console.log("Error adding order")
                     }
@@ -147,7 +151,6 @@ const CheckoutForm = () => {
     }
 
     useEffect(() => {
-        redirect("/down")
         const customer = window.localStorage.getItem("neverbeCustomer");
         if (customer) {
             setCustomer(JSON.parse(customer as string) as Customer)

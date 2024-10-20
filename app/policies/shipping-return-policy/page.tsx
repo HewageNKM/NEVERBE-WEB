@@ -1,6 +1,7 @@
 import React from 'react';
 import { shippingReturnPolicy } from "@/constants";
 import { Metadata } from "next";
+import Link from "next/link";
 
 export const metadata: Metadata = {
     title: "Shipping, Returns & Refund Policy",
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
 
 const ShippingReturnPolicyPage = () => {
     return (
-        <main className="w-full min-h-screen lg:mt-24 md:mt-16 mt-10  bg-gray-50">
+        <main className="w-full min-h-screen lg:mt-24 md:mt-16 mt-10">
             <div className="lg:px-48 md:px-24 px-8 py-16 flex justify-center items-center flex-col gap-12">
                 <h1 className="lg:text-6xl md:text-5xl text-3xl font-extrabold text-gray-900 tracking-wide text-center">
                     Shipping, Returns & Refund Policy
@@ -25,7 +26,7 @@ const ShippingReturnPolicyPage = () => {
                         {shippingReturnPolicy.map((item, index) => (
                             <div
                                 key={index}
-                                className="flex flex-col gap-3 p-6 bg-white rounded-lg shadow-md transition duration-300 hover:shadow-lg"
+                                className="flex flex-col gap-3 p-6 bg-white rounded-lg shadow-custom transition duration-300 hover:shadow-lg"
                             >
                                 <h2 className="md:text-2xl font-bold text-xl text-gray-800">
                                     {index + 1 + ". " + item.title}
@@ -37,6 +38,11 @@ const ShippingReturnPolicyPage = () => {
                         ))}
                     </div>
                 </article>
+                <div>
+                    <p className="text-gray-600 text-center">
+                        If you have any questions, feel free to <Link href="/contact" className="text-blue-500 hover:border-b-blue-500 hover:border-b ">contact us.</Link>
+                    </p>
+                </div>
             </div>
         </main>
     );

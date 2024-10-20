@@ -1,30 +1,30 @@
-"use client"
-import React, {useEffect} from 'react';
+"use client";
+import React, { useEffect } from 'react';
 import ItemCard from "@/components/ItemCard";
-import {useDispatch, useSelector} from "react-redux";
-import {AppDispatch, RootState} from "@/redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/redux/store";
 import EmptyState from "@/components/EmptyState";
 import { Item } from '@/interfaces';
-import {setProducts} from "@/redux/productsSlice/productsSlice";
+import { setProducts } from "@/redux/productsSlice/productsSlice";
 
-const Products = ({items}:{items:Item[]}) => {
+const Products = ({ items }: { items: Item[] }) => {
     const dispatch: AppDispatch = useDispatch();
-    const products = useSelector((state:RootState) => state.productsSlice.products);
+    const products = useSelector((state: RootState) => state.productsSlice.products);
 
     useEffect(() => {
-        dispatch(setProducts(items))
+        dispatch(setProducts(items));
     }, [dispatch, items]);
 
     return (
         <section className="w-full mt-20 mb-10">
-            <ul className="flex flex-row flex-wrap justify-evenly lg:gap-20 md:gap-16 gap-10">
-                {products.map((item, index) => (
-                    <li key={index}>
-                        <ItemCard item={item} flag={""} key={item.itemId}/>
+            <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+                {products.map((item) => (
+                    <li key={item.itemId}>
+                        <ItemCard item={item} flag={""} />
                     </li>
                 ))}
             </ul>
-            {products.length === 0 && <EmptyState message={"Products Not Available!"}/>}
+            {products.length === 0 && <EmptyState message={"Products Not Available!"} />}
         </section>
     );
 };

@@ -24,8 +24,8 @@ export async function generateMetadata({ params }: { params: { itemId: string } 
         };
     }
 
-    const title = `${item.name.toUpperCase()} - NEVERBE`;
-    const description = `Explore the ${item.name.toUpperCase()} on NEVERBE.`;
+    const title = `${item.name} - NEVERBE`;
+    const description = `Explore the ${item.name} on NEVERBE.`;
 
     return {
         title,
