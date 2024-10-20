@@ -68,18 +68,18 @@ export const addNewOrder = async (order: Order) => {
         ...order,
         customer: {
             ...order.customer,
-            createdAt: admin.firestore.Timestamp.now(),
-            updatedAt: admin.firestore.Timestamp.now(),
+            createdAt: Date.now().toLocaleString(),
+            updatedAt: Date.now().toLocaleString(),
         },
-        createdAt: admin.firestore.Timestamp.now(),
-        updatedAt: admin.firestore.Timestamp.now(),
+        createdAt: Date.now().toLocaleString(),
+        updatedAt: Date.now().toLocaleString(),
     });
 };
 
 
 
 export const updatePayment = async (orderId:string, paymentId:string,status:string) => {
-    return await adminFirestore.collection('orders').doc(orderId).update({paymentId: paymentId, paymentStatus: status, updatedAt: admin.firestore.Timestamp.now()});
+    return await adminFirestore.collection('orders').doc(orderId).update({paymentId: paymentId, paymentStatus: status, updatedAt: Date.now().toLocaleString()});
 }
 
 export const getOrderById = async (orderId:string) => {

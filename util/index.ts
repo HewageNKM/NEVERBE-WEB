@@ -32,16 +32,11 @@ export const calculateShipping = (cartItems: CartItem[]) => {
     return shippingCost;
 }
 export const generateOrderId = (): string => {
-    // Generate a random alphanumeric string of 5 characters
-    const randomStr = Math.random().toString(36).substring(2, 7).toUpperCase();
+    const randomStr = Math.random().toString(36).substring(2, 4).toLowerCase(); // 2 characters
+    const timestamp = Date.now().toString(36).slice(-3).toLowerCase(); // 3 character
 
-    // Get the current timestamp in base36 for compactness
-    const timestamp = Date.now().toString(36).toUpperCase();
-
-    // Combine the timestamp and random string for uniqueness
     return `${timestamp}${randomStr}`;
 };
-
 
 
 export const addNewOrder = async (newOrder: Order,) => {

@@ -1,31 +1,31 @@
-import {Timestamp} from "@firebase/firestore";
-
 export interface User {
     id: string;
     username: string;
     email: string;
     role: string;
-    createdAt: Timestamp;
-    updatedAt: Timestamp;
+    createdAt: string;
+    updatedAt: string;
 }
 
 export interface Item {
     itemId: string,
     type: string,
     brand: string,
-    thumbnail:string,
+    thumbnail: string,
     variants: Variant[],
     manufacturer: string,
     name: string,
     sellingPrice: number,
     discount: number,
-    createdAt: Timestamp | null,
-    updatedAt: Timestamp | null,
+    createdAt: string | null,
+    updatedAt: string | null,
 }
-export interface Size{
+
+export interface Size {
     size: string,
     stock: number,
 }
+
 export interface Variant {
     variantId: string,
     variantName: string,
@@ -82,8 +82,8 @@ export interface Order {
     paymentMethod: string,
     customer: Customer,
     shippingCost: number,
-    createdAt: Timestamp | null,
-    updatedAt: Timestamp | null,
+    createdAt: string | null,
+    updatedAt: string | null,
 }
 
 export interface Customer {
@@ -93,6 +93,6 @@ export interface Customer {
     phone: string;
     address: string;
     city: string;
-    createdAt: Timestamp | null;
-    updatedAt: Timestamp | null;
+    createdAt: string | null;
+    updatedAt: string | null;
 }
