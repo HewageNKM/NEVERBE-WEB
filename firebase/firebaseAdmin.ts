@@ -57,7 +57,7 @@ export const addNewOrder = async (order: Order) => {
 
     // Update the inventory in a single batch operation
     const batch = adminFirestore.batch();
-    inventoryUpdates.forEach(({ itemId, inventoryItem }) => {
+    inventoryUpdates.forEach(({itemId, inventoryItem}) => {
         const itemRef = adminFirestore.collection('inventory').doc(itemId);
         batch.set(itemRef, inventoryItem);
     });
@@ -68,21 +68,24 @@ export const addNewOrder = async (order: Order) => {
         ...order,
         customer: {
             ...order.customer,
-            createdAt: Date.now().toLocaleString(),
-            updatedAt: Date.now().toLocaleString(),
+            createdAt: admin.firestore.Timestamp.now(),
+            updatedAt: admin.firestore.Timestamp.now(),
         },
-        createdAt: Date.now().toLocaleString(),
-        updatedAt: Date.now().toLocaleString(),
+        createdAt: admin.firestore.Timestamp.now(),
+        updatedAt: admin.firestore.Timestamp.now(),
     });
 };
 
 
-
-export const updatePayment = async (orderId:string, paymentId:string,status:string) => {
-    return await adminFirestore.collection('orders').doc(orderId).update({paymentId: paymentId, paymentStatus: status, updatedAt: Date.now().toLocaleString()});
+export const updatePayment = async (orderId: string, paymentId: string, status: string) => {
+    return await adminFirestore.collection('orders').doc(orderId).update({
+        paymentId: paymentId,
+        paymentStatus: status,
+        updatedAt: admin.firestore.Timestamp.now()
+    });
 }
 
-export const getOrderById = async (orderId:string) => {
+export const getOrderById = async (orderId: string) => {
     const doc = await adminFirestore.collection('orders').doc(orderId).get();
     return doc.data() as Order;
 }
@@ -183,8 +186,8 @@ export const getItemsByField = async (name: string, fieldName: string) => {
         const itemData = doc.data();
         items.push({
             ...itemData,
-            createdAt:null,
-            updatedAt:null,
+            createdAt: null,
+            updatedAt: null,
         } as Item);
     })
     return items;
@@ -202,7 +205,7 @@ export const getItemsByTwoField = async (firstValue: string, secondValue: string
     })
     return items;
 }
-export const verifyToken = async (req:any) => {
+export const verifyToken = async (req: any) => {
     const authHeader = req.headers.get("authorization");
 
     if (!authHeader || !authHeader.startsWith("Bearer ")) {

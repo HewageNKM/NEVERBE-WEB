@@ -32,10 +32,10 @@ export const calculateShipping = (cartItems: CartItem[]) => {
     return shippingCost;
 }
 export const generateOrderId = (): string => {
-    const randomStr = Math.random().toString(36).substring(2, 4).toLowerCase(); // 2 characters
-    const timestamp = Date.now().toString(36).slice(-3).toLowerCase(); // 3 character
+    const randomStr = Math.random().toString(36).substring(2, 5) // 3 characters
+    const timestamp = Date.now().toString(36).slice(-3) // 3 character
 
-    return `${timestamp}${randomStr}`;
+    return `${timestamp}${randomStr}`.toUpperCase();
 };
 
 
