@@ -50,15 +50,17 @@ const Page = async ({ params }: { params: { manufacturerName: string; brandName:
     return (
         <main className="w-full relative lg:mt-32 md:mt-20 mt-10 overflow-hidden">
             <section className="px-8 py-6">
-                <h1 className="md:text-4xl text-3xl font-bold uppercase tracking-wider mt-10 text-gray-800">
+                <h1 className="md:text-3xl text-lg font-bold uppercase tracking-wider mt-10 text-gray-800">
                     {params.manufacturerName.replace("%20"," ")} &gt; {params.brandName.replace("%20"," ")} ({items.length})
                 </h1>
-                <div className="w-full mt-4">
+                <div className="w-full">
                     <SortingOptions />
                     {items.length > 0 ? (
                         <Products items={items} />
                     ) : (
-                        <EmptyState message={`No products found for ${params.manufacturerName.replace("%20"," ")} &gt; ${params.brandName}.`} />
+                        <div className="mt-10">
+                            <EmptyState message={`No products found for ${params.manufacturerName.replace("%20"," ").toUpperCase()} ${params.brandName}.`} />
+                        </div>
                     )}
                 </div>
             </section>

@@ -53,7 +53,7 @@ const ItemCard = ({ item, flag }: { item: Item, flag: string }) => {
                         </p>
                     </div>
                 </header>
-                <h2 className="absolute top-0 left-0 capitalize bg-black text-white p-1 text-sm">{item.manufacturer}</h2>
+                <h2 className="absolute top-0 left-0 capitalize bg-black text-white p-1 text-sm">{item.manufacturer.replace("-"," ")}</h2>
             </Link>
             <div className="absolute top-0 right-0 flex flex-col gap-1 p-1">
                 {flag === "new" && (

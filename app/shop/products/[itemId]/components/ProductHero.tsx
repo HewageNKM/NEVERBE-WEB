@@ -115,7 +115,7 @@ const ProductHero = ({ item }: { item: Item }) => {
     return (
         <section className="w-full relative">
             <h1 className="md:text-4xl text-2xl tracking-wider mt-10 text-gray-800 font-extrabold">
-                {item.name || "Product"} Collection
+                {item.name || "Product"}
             </h1>
             <article className="grid md:grid-cols-2 grid-cols-1 lg:gap-20 gap-6 mt-10">
                 <div className="flex flex-col gap-6 items-center">
