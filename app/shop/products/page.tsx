@@ -1,10 +1,10 @@
 import React from 'react';
 import Products from "@/app/shop/products/components/Products";
 import Options from "@/app/shop/products/components/Options";
-import { Metadata } from "next";
-import { getAllInventoryItems } from "@/firebase/firebaseAdmin";
-import { Item } from "@/interfaces";
+import {Metadata} from "next";
+import {Item} from "@/interfaces";
 import EmptyState from "@/components/EmptyState";
+import {getAllInventoryItems} from "@/firebase/firebaseAdmin";
 
 export const metadata: Metadata = {
     title: "NEVERBE Products - Shop Online",
@@ -47,9 +47,9 @@ const Page = async () => {
             <div className="px-8 py-4">
                 <h1 className="md:text-4xl text-2xl tracking-wider mt-10"><strong>Products</strong></h1>
                 <div className="w-full">
-                    <Options />
+                    <Options/>
                     {items.length > 0 ? (
-                        <Products items={items} />
+                        <Products items={items}/>
                     ) : (
                         <EmptyState message="No products available at this time."/>
                     )}
@@ -59,4 +59,5 @@ const Page = async () => {
     );
 };
 
+export const dynamic = 'force-dynamic';
 export default Page;

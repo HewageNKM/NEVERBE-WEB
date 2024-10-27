@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import { Item } from "@/interfaces";
 import { getItemById } from "@/firebase/firebaseAdmin";
 import { Metadata } from "next";
+import {unstable_noStore} from "next/cache";
 
 // Dynamically generate metadata
 export async function generateMetadata({ params }: { params: { itemId: string } }): Promise<Metadata> {
