@@ -149,9 +149,7 @@ const CheckoutForm = () => {
             saveAddressToLocalStorage()
         }
     }
-    useEffect(() => {
-        redirect("/down")
-    }, []);
+
     useEffect(() => {
         const customer = window.localStorage.getItem("neverbeCustomer");
         if (customer) {
