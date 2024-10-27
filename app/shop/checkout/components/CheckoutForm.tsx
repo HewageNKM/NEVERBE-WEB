@@ -9,7 +9,7 @@ import {CartItem, Customer, Order, OrderItem} from "@/interfaces";
 import {addNewOrder, calculateShipping, generateOrderId} from "@/util";
 import {paymentMethods} from "@/constants";
 import {clearCart} from "@/redux/cartSlice/cartSlice";
-import {useRouter} from "next/navigation";
+import {redirect, useRouter} from "next/navigation";
 import {Timestamp} from "@firebase/firestore";
 
 
@@ -149,7 +149,9 @@ const CheckoutForm = () => {
             saveAddressToLocalStorage()
         }
     }
-
+    useEffect(() => {
+        redirect("/down")
+    }, []);
     useEffect(() => {
         const customer = window.localStorage.getItem("neverbeCustomer");
         if (customer) {

@@ -188,7 +188,7 @@ const ProductHero = ({ item }: { item: Item }) => {
                                             setSelectedSize({ size: "", stock: 0 });
                                             setQty(0);
                                         }}
-                                        className={`rounded-md p-2 ${
+                                        className={`rounded-md p-2 capitalize ${
                                             selectedVariant.variantId === variant.variantId
                                                 ? "bg-primary text-white"
                                                 : "bg-gray-200"
