@@ -127,7 +127,7 @@ const ProductHero = ({ item }: { item: Item }) => {
                         className="relative lg:h-[60vh] lg:w-[40vw] w-full bg-cover rounded-xl shadow-md overflow-hidden"
                     >
                         <Image
-                            src={selectedImage}
+                            src={selectedImage.url}
                             alt={item.name}
                             width={400}
                             height={500}

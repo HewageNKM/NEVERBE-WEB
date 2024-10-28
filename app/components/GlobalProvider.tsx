@@ -8,6 +8,7 @@ import {AnimatePresence} from "framer-motion";
 import Cart from "@/components/Cart";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import {redirect} from "next/navigation";
 
 const GlobalProvider = ({children}: { children: ReactNode }) => {
     const dispatch: AppDispatch = useDispatch();
@@ -16,6 +17,12 @@ const GlobalProvider = ({children}: { children: ReactNode }) => {
     useEffect(() => {
         signUser();
         dispatch(initializeCart())
+    });
+
+    useEffect(() => {
+        if (!process.env.NEXT_PUBLIC_IS_LIVE) {
+            redirect("/down")
+        }
     });
 
     return (

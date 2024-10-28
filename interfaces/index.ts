@@ -13,7 +13,10 @@ export interface Item {
     itemId: string,
     type: string,
     brand: string,
-    thumbnail: string,
+    thumbnail: {
+        file:string,
+        url:string,
+    },
     variants: Variant[],
     manufacturer: string,
     name: string,

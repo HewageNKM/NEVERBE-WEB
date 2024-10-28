@@ -31,7 +31,7 @@ const ItemCard = ({ item, flag }: { item: Item, flag: string }) => {
                     <Image
                         width={300}
                         height={300}
-                        src={item.thumbnail}
+                        src={item.thumbnail.url}
                         alt={item.name}
                         className="w-full h-[150px] sm:h-[200px] object-cover transition-transform duration-300 hover:scale-110"
                         priority // Load this image with high priority for better performance

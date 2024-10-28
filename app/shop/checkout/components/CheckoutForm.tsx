@@ -50,7 +50,7 @@ const CheckoutForm = () => {
             const amountFormated = parseFloat(amount).toLocaleString('en-us', {minimumFractionDigits: 2}).replaceAll(',', '');
             const hash = md5(merchantId + orderId + amountFormated + currency + hashedSecret).toString().toUpperCase();
 
-            if(!/^947\d{8}$/.test(evt.target.phone.value)){
+            if (!/^947\d{8}$/.test(evt.target.phone.value)) {
                 alert("Invalid Format")
                 return;
             }
