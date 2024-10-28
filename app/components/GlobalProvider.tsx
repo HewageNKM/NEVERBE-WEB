@@ -19,12 +19,6 @@ const GlobalProvider = ({children}: { children: ReactNode }) => {
         dispatch(initializeCart())
     });
 
-    useEffect(() => {
-        if (!process.env.NEXT_PUBLIC_IS_LIVE) {
-            redirect("/down")
-        }
-    });
-
     return (
         <main className="w-full relative flex flex-col justify-between min-h-screen overflow-clip">
             <Header/>

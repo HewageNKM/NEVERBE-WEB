@@ -150,6 +150,11 @@ const CheckoutForm = () => {
         }
     }
     useEffect(() => {
+        if(process.env.NEXT_PUBLIC_IS_LIVE === "false"){
+            redirect("/down")
+        }
+    });
+    useEffect(() => {
         const customer = window.localStorage.getItem("neverbeCustomer");
         if (customer) {
             setCustomer(JSON.parse(customer as string) as Customer)
