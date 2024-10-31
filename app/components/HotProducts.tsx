@@ -15,7 +15,7 @@ const HotProducts = async ({hotItems}:{hotItems:Item[]}) => {
                 </div>
                 <div className="mt-8 w-full flex justify-center items-center">
                     {hotItems.length > 0 ? ( // Render items
-                        <ul className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 w-full">
+                        <ul className="grid grid-cols-2 gap-2 md:gap-4 md:grid-cols-3 lg:grid-cols-7 w-full">
                             {hotItems.map((item: Item) => (
                                 <li key={item.itemId}>
                                     <ItemCard item={item} flag={"hot"} />

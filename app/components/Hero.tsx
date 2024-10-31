@@ -7,12 +7,12 @@ import {Slide} from "@/interfaces";
 const Hero = async ({slides}: { slides: Slide[] }) => {
     return (
         <section className="w-full mt-20 md:mt-28 lg:mt-28">
-            <header className='flex flex-col gap-1 py-2'>
-                <h1 className="text-5xl font-bold"><strong>NEVERBE</strong></h1>
-                <h2 className="md:text-2xl text-xl text-primary mt-2">The Best Online Shopping Experience</h2>
-            </header>
             <ImagesSlider images={slides}/>
-            <div className="mt-5 lg:hidden block w-[12rem]">
+            <div className="mt-5 lg:hidden flex flex-col gap-5 w-[12rem]">
+                <header className='flex flex-col gap-1 py-2'>
+                    <h1 className="text-5xl font-bold"><strong>NEVERBE</strong></h1>
+                    <h2 className="md:text-2xl text-xl text-primary mt-2">The Best Online Shopping Experience</h2>
+                </header>
                 <Link href="/shop/products">
                     <div
                         className="bg-primary text-xl md:text-2xl w-fit p-2 font-bold flex-row flex justify-center items-center gap-1 text-white">

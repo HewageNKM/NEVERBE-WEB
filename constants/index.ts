@@ -158,7 +158,7 @@ export const brands = [
     },
     {
         name: "Luvion Vuitton",
-        value: "luvion-vuitton",
+        value: "luvion vuitton",
         url: "/shop/products/manufacturers/luvion vuitton",
         titles: [
             {

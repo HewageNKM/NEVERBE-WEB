@@ -99,8 +99,8 @@ const ProductHero = ({ item }: { item: Item }) => {
         const rect = imageRef.current.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
-        const xPercent = (x / rect.width) * 100;
-        const yPercent = (y / rect.height) * 100;
+        const xPercent = ((x / rect.width) * 100).toFixed(2);
+        const yPercent = ((y / rect.height) * 100).toFixed(2);
 
         zoomRef.current.style.backgroundPosition = `${xPercent}% ${yPercent}%`;
         zoomRef.current.style.display = "block";
@@ -124,7 +124,7 @@ const ProductHero = ({ item }: { item: Item }) => {
                         ref={imageRef}
                         onMouseMove={handleZoom}
                         onMouseLeave={removeZoom}
-                        className="relative lg:h-[60vh] lg:w-[40vw] w-full bg-cover rounded-xl shadow-md overflow-hidden"
+                        className="relative lg:h-[60vh] lg:w-[40vw] w-full bg-cover rounded-xl overflow-hidden"
                     >
                         <Image
                             src={selectedImage.url}
@@ -135,9 +135,9 @@ const ProductHero = ({ item }: { item: Item }) => {
                         />
                         <div
                             ref={zoomRef}
-                            className="absolute inset-0 bg-no-repeat bg-cover rounded-lg"
+                            className="absolute inset-0 bg-no-repeat bg-cover pointer-events-none"
                             style={{
-                                backgroundImage: `url(${selectedImage})`,
+                                backgroundImage: `url(${selectedImage.url})`,
                                 display: "none",
                                 backgroundSize: "200%", // Adjust zoom level here
                             }}
@@ -153,7 +153,7 @@ const ProductHero = ({ item }: { item: Item }) => {
                                     }`}
                                 >
                                     <Image
-                                        src={image}
+                                        src={image.url}
                                         alt={item.name}
                                         width={70}
                                         height={70}
@@ -178,7 +178,7 @@ const ProductHero = ({ item }: { item: Item }) => {
                     </div>
                     <div className="mt-4">
                         <h3 className="text-lg font-medium text-gray-700">Available Colors</h3>
-                        <ul className="flex gap-4 mt-2">
+                        <ul className="flex gap-4 mt-2 flex-wrap">
                             {item.variants.map((variant, index) => (
                                 <li key={index}>
                                     <button
@@ -188,7 +188,7 @@ const ProductHero = ({ item }: { item: Item }) => {
                                             setSelectedSize({ size: "", stock: 0 });
                                             setQty(0);
                                         }}
-                                        className={`rounded-md p-2 capitalize ${
+                                        className={`rounded-md p-2 text-sm capitalize ${
                                             selectedVariant.variantId === variant.variantId
                                                 ? "bg-primary text-white"
                                                 : "bg-gray-200"

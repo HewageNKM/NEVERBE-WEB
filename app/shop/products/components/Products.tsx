@@ -17,10 +17,10 @@ const Products = ({ items }: { items: Item[] }) => {
 
     return (
         <section className="w-full mt-20 mb-10">
-            <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+            <ul className="grid grid-cols-2 gap-2 md:gap-4 md:grid-cols-3 lg:grid-cols-7 w-full">
                 {products.map((item) => (
                     <li key={item.itemId}>
-                        <ItemCard item={item} flag={""} />
+                    <ItemCard item={item} flag={""} />
                     </li>
                 ))}
             </ul>
