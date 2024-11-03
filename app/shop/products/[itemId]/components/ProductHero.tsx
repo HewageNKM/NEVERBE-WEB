@@ -6,6 +6,7 @@ import { IoAdd, IoRemove } from "react-icons/io5";
 import { AppDispatch } from "@/redux/store";
 import { useDispatch } from "react-redux";
 import { pushToCart } from "@/redux/cartSlice/cartSlice";
+import {any} from "prop-types";
 
 const ProductHero = ({ item }: { item: Item }) => {
     const [selectedImage, setSelectedImage] = useState(item.thumbnail);
@@ -47,7 +48,7 @@ const ProductHero = ({ item }: { item: Item }) => {
             variantId: selectedVariant.variantId,
             name: item.name,
             variantName: selectedVariant.variantName,
-            thumbnail: selectedVariant.images[0],
+            thumbnail: selectedVariant.images[0].url,
             size: selectedSize.size,
             quantity: qty,
             type: item.type,

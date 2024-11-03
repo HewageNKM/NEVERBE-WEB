@@ -34,7 +34,10 @@ export interface Size {
 export interface Variant {
     variantId: string,
     variantName: string,
-    images: string[],
+    images: [{
+        file: string,
+        url: string,
+    }],
     sizes: Size[],
 }
 
