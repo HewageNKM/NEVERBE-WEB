@@ -22,7 +22,6 @@ const Options = () => {
                 <RxMixerHorizontal size={25}/>
             </div>
             <div className="flex flex-col">
-                <label htmlFor="sorting" className="text-lg font-bold">Sort by</label>
                 <select
                     id="sorting"
                     onChange={(event) => dispatch(setSelectedSort(event.target.value))}

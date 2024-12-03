@@ -8,10 +8,10 @@ import {AnimatePresence} from "framer-motion";
 import Cart from "@/components/Cart";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import {redirect} from "next/navigation";
 
 const GlobalProvider = ({children}: { children: ReactNode }) => {
     const dispatch: AppDispatch = useDispatch();
+
     const showCart = useSelector((state: RootState) => state.cartSlice.showCart);
 
     useEffect(() => {

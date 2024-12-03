@@ -18,7 +18,7 @@ const ImagesSlider = ({ images }: { images: Slide[] }) => {
                 dynamicBullets: true,
             }}
             modules={[Pagination, Autoplay]}
-            className="w-full relative"
+            className="w-full relative mt-5"
         >
             {images.map((image, index) => (
                 <SwiperSlide key={index} className="w-full">

@@ -7,7 +7,6 @@ import HotProducts from "@/app/components/HotProducts";
 import FAQ from "@/app/components/FAQ";
 import {Item, Slide} from "@/interfaces";
 import {getHotProducts, getRecentItems, getSliders} from "@/firebase/firebaseAdmin";
-import hotProducts from "@/app/components/HotProducts";
 
 const Page = async () => {
     let arrivals: Item[] = [];

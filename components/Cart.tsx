@@ -44,13 +44,12 @@ const Cart = () => {
                             Rs. {cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0)}</h1>
                     </div>
                     <button
-                        className="bg-primary text-white px-4 py-2 mt-5 tracking-wide md:text-2xl lg:text-3xl rounded-lg w-full"
+                        className="bg-primary disabled:cursor-not-allowed bg-opacity-60 text-white px-4 py-2 mt-5 tracking-wide md:text-2xl lg:text-3xl rounded-lg w-full"
                         onClick={() => {
-                            if (cartItems.length === 0) return;
-
                             dispatch(hideCart());
                             router.push("/shop/checkout");
                         }}
+                        disabled={cartItems.length === 0}
                     >
                         <strong>Checkout</strong>
                     </button>

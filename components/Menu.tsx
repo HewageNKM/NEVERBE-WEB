@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import DropShadow from "@/components/DropShadow";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -7,50 +7,21 @@ import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import { brands } from "@/constants";
 
 const Menu = ({ setShowMenu }: { setShowMenu: any }) => {
-    const [showBrands, setShowBrands] = useState(false);
+    const [expandedBrand, setExpandedBrand] = useState<string | null>(null);
+
+    const toggleBrand = (brandValue: string) => {
+        setExpandedBrand((prev) => (prev === brandValue ? null : brandValue));
+    };
 
     return (
-        <DropShadow containerStyle="flex justify-center items-center">
+        <DropShadow containerStyle="fixed inset-0 flex justify-end items-start">
             <motion.div
-                initial={{ opacity: 0, x: '100vw' }}
+                initial={{ opacity: 0, x: "100vw" }}
                 animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: '100vw' }}
+                exit={{ opacity: 0, x: "100vw" }}
                 transition={{ duration: 0.3 }}
-                className="p-8 bg-white rounded-lg shadow-lg relative flex flex-col justify-center items-start max-h-screen max-w-full"
+                className="w-[80vw] h-full bg-white rounded-l-lg shadow-lg relative flex flex-col p-6"
             >
-                <nav className="flex flex-col mt-5 text-lg md:text-xl font-semibold justify-evenly items-start gap-5 w-full">
-                    <ul className="flex flex-col gap-5 w-full">
-                        <li onClick={()=>setShowMenu(false)}>
-                            <Link href="/shop/products" className="transition-colors duration-200 hover:text-blue-600" aria-label="Shop Now">Shop Now</Link>
-                        </li>
-                        <li>
-                            <button
-                                onClick={() => setShowBrands(prevState => !prevState)}
-                                aria-expanded={showBrands}
-                                aria-controls="brand-list"
-                                className="flex flex-row justify-between items-center w-full p-2 rounded-md hover:bg-gray-100 transition-colors duration-200"
-                            >
-                                <span>Brands</span>
-                                {showBrands ? <MdKeyboardArrowUp size={30} /> : <MdKeyboardArrowDown size={30} />}
-                            </button>
-
-                            <ul
-                                id="brand-list"
-                                className={`overflow-auto w-full mt-2 flex flex-col gap-2 text-slate-500 transition-all duration-300 ${showBrands ? 'max-h-[50vh] block' : 'max-h-0 hidden'}`}
-                                style={{ overflowY: showBrands ? 'auto' : 'hidden' }}
-                            >
-                                {brands.map((brand, index) => (
-                                    <li key={index} onClick={() => setShowMenu(false)}>
-                                        <Link href={brand.url} className="font-semibold text-lg hover:text-blue-600 transition-colors duration-200">{brand.name}</Link>
-                                    </li>
-                                ))}
-                            </ul>
-                        </li>
-                        <li onClick={()=>setShowMenu(false)}>
-                            <Link href="/shop/products" className="transition-colors duration-200 hover:text-blue-600">Accessories</Link>
-                        </li>
-                    </ul>
-                </nav>
                 <button
                     onClick={() => setShowMenu(false)}
                     className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors duration-200"
@@ -58,6 +29,76 @@ const Menu = ({ setShowMenu }: { setShowMenu: any }) => {
                 >
                     <IoClose size={30} />
                 </button>
+                <nav className="mt-8 text-lg font-semibold flex flex-col gap-5">
+                    <Link
+                        href="/shop/products"
+                        className="hover:text-blue-600 transition-colors duration-200"
+                        onClick={() => setShowMenu(false)}
+                    >
+                        Shop Now
+                    </Link>
+
+                    <div className="relative">
+                        <button
+                            onClick={() => toggleBrand("brands")}
+                            aria-expanded={!!expandedBrand}
+                            className="w-full flex justify-between items-center p-2 rounded-md hover:bg-gray-100 transition-colors duration-200"
+                        >
+                            <span>Brands</span>
+                            {expandedBrand ? (
+                                <MdKeyboardArrowUp size={24} />
+                            ) : (
+                                <MdKeyboardArrowDown size={24} />
+                            )}
+                        </button>
+                        {expandedBrand && (
+                            <ul
+                                className="mt-2 max-h-[50vh] overflow-auto flex flex-col gap-3 bg-gray-50 p-3 rounded-md shadow-inner"
+                                id="brand-list"
+                            >
+                                {brands.map((brand) => (
+                                    <li key={brand.value} className="flex flex-col">
+                                        <button
+                                            onClick={() => toggleBrand(brand.value)}
+                                            aria-expanded={expandedBrand === brand.value}
+                                            className="w-full text-left flex justify-between items-center hover:text-blue-600"
+                                        >
+                                            {brand.name}
+                                            {expandedBrand === brand.value ? (
+                                                <MdKeyboardArrowUp size={20} />
+                                            ) : (
+                                                <MdKeyboardArrowDown size={20} />
+                                            )}
+                                        </button>
+                                        {expandedBrand === brand.value && (
+                                            <ul className="mt-2 pl-4 flex flex-col gap-2 text-sm text-slate-600">
+                                                {brand.titles.map((title) => (
+                                                    <li key={title.url}>
+                                                        <Link
+                                                            href={title.url}
+                                                            className="hover:text-blue-500"
+                                                            onClick={() => setShowMenu(false)}
+                                                        >
+                                                            {title.name}
+                                                        </Link>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        )}
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
+                    </div>
+
+                    <Link
+                        href="/shop/products"
+                        className="hover:text-blue-600 transition-colors duration-200"
+                        onClick={() => setShowMenu(false)}
+                    >
+                        Accessories
+                    </Link>
+                </nav>
             </motion.div>
         </DropShadow>
     );

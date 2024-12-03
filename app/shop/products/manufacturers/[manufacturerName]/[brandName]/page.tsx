@@ -48,7 +48,7 @@ const Page = async ({ params }: { params: { manufacturerName: string; brandName:
     }
 
     return (
-        <main className="w-full relative lg:mt-32 md:mt-20 mt-10 overflow-hidden">
+        <main className="w-full relative lg:mt-32 md:mt-20 mt-20 overflow-hidden">
             <section className="px-8 py-6">
                 <h1 className="md:text-3xl text-lg font-bold uppercase tracking-wider mt-10 text-gray-800">
                     {params.manufacturerName.replace("%20"," ")} &gt; {params.brandName.replace("%20"," ")} ({items.length})

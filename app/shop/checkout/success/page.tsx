@@ -25,12 +25,12 @@ const Page = async ({ searchParams }: { searchParams: { order_id: string } }) =>
 
                 {/* Order Details */}
                 <div className="text-center">
-                    <label className="block font-semibold text-gray-700 mb-2">
+                    <label className="font-semibold flex  justify-center items-center flex-col gap-1 text-gray-700 mb-2">
                         <span className="text-lg">Order ID:</span>
                         <input
                             value={order?.orderId}
                             readOnly
-                            className="mt-2 w-full p-2 text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:border-blue-500"
+                            className="mt-2 w-fit p-2 text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:border-blue-500"
                         />
                     </label>
                     <h3 className="text-2xl font-bold text-green-600 mt-4">

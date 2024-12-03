@@ -89,6 +89,7 @@ const CheckoutForm = () => {
             document.body.appendChild(submitForm);
 
             const newOrder: Order = {
+                from: "Website",
                 createdAt: Timestamp.now(),
                 items: cartItems as OrderItem[],
                 orderId: orderId,

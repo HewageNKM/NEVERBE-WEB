@@ -11,7 +11,7 @@ const roboto = Roboto({weight: "400", subsets: ["latin"]});
 
 export const metadata: Metadata = {
     title: {
-        default: "NEVERBE - Premium in Sri Lanka",
+        default: "NEVERBE - Premium Sneakers in Sri Lanka",
         template: "%s - NEVERBE",
     },
     metadataBase: new URL("https://neverbe.lk"),

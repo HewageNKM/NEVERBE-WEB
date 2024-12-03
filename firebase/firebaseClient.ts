@@ -16,7 +16,6 @@ const firebaseConfig = {
 };
 
 const clientApp = !getApps().length ? initializeApp(firebaseConfig) : getApp();
-const db = getFirestore(clientApp);
 export const auth = getAuth(clientApp);
 
 let analytics;
@@ -27,30 +26,6 @@ isSupported().then((supported) => {
 }).catch((error) => {
     console.error("Analytics not supported:", error);
 });
-
-const inventoryCollectionRef = collection(db, 'inventory');
-
-export const getInventory = async () => {
-    try {
-        const docs = await getDocs(inventoryCollectionRef);
-        const items: Item[] = [];
-
-        docs.forEach((doc) => {
-            const itemData = doc.data();
-            items.push({
-                ...itemData,
-                createdAt: itemData.createdAt.toDate().toISOString(),
-            } as Item);
-            console.log(`Fetched Item ID: ${doc.id}`);
-        });
-
-        console.log(`Total items fetched: ${items.length}`);
-        return items;
-    } catch (error) {
-        console.error("Error fetching inventory:", error);
-        throw error;
-    }
-};
 
 export const signUser = async () => {
     onAuthStateChanged(auth, async (user) => {

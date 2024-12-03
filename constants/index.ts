@@ -68,8 +68,8 @@ export const brands = [
                 url: "/shop/products//manufacturers/nike/Sandals"
             },
             {
-                name: "Other",
-                url: "/shop/products//manufacturers/nike/other"
+                name: "All",
+                url: "/shop/products//manufacturers/nike/All"
             }
         ]
     },
@@ -91,8 +91,8 @@ export const brands = [
                 url: "/shop/products/manufacturers/adidas/sandals"
             },
             {
-                name: "Other",
-                url: "/shop/products/manufacturers/adidas/other"
+                name: "All",
+                url: "/shop/products/manufacturers/adidas/all"
             }
         ]
     },
@@ -106,8 +106,8 @@ export const brands = [
                 url: "/shop/products/manufacturers/new balance/sandals"
             },
             {
-                name: "Other",
-                url: "/shop/products/manufacturers/new balance/other"
+                name: "All",
+                url: "/shop/products/manufacturers/new balance/all"
             }
         ]
     },
@@ -121,8 +121,8 @@ export const brands = [
                 url: "/shop/products/manufacturers/cross/sandals"
             },
             {
-                name: "Other",
-                url: "/shop/products/manufacturers/cross/other"
+                name: "All",
+                url: "/shop/products/manufacturers/cross/all"
             }
         ]
     },
@@ -151,8 +151,8 @@ export const brands = [
                 url: "/shop/products/manufacturers/mlb/sandals"
             },
             {
-                name: "Other",
-                url: "/shop/products/manufacturers/mlb/other"
+                name: "All",
+                url: "/shop/products/manufacturers/mlb/all"
             }
         ]
     },
@@ -162,20 +162,37 @@ export const brands = [
         url: "/shop/products/manufacturers/luvion vuitton",
         titles: [
             {
+                name:"Trainer",
+                url:"/shop/products/manufacturers/luvion vuitton/trainer"
+            },
+            {
                 name: "Sandals",
                 url: "/shop/products/manufacturers/luvion vuitton/sandals"
             },
             {
-                name: "Other",
-                url: "/shop/products/manufacturers/luvion vuitton/other"
+                name: "All",
+                url: "/shop/products/manufacturers/luvion vuitton/all"
             }
         ]
     },
     {
         name: "Budget Shoes",
         value: "budget shoes",
-        url: "/shop/products/manufacturers/budgetn shoes",
-        titles: []
+        url: "/shop/products/manufacturers/china",
+        titles: [
+            {
+                name:"Nike",
+                url:"/shop/products/manufacturers/china/nike"
+            },
+            {
+                name: "Adidas",
+                url: "/shop/products/manufacturers/china/adidas"
+            },
+            {
+                name: "All",
+                url: "/shop/products/manufacturers/china/all"
+            },
+        ]
     },
 ]
 export const sortingOptions = [

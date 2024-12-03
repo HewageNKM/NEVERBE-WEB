@@ -1,7 +1,8 @@
 import {Item} from "@/interfaces";
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import {WritableDraft} from "immer";
-import {getInventory} from "@/firebase/firebaseClient";
+import axios from "axios";
+import {getIdToken} from "@/firebase/firebaseClient";
 
 interface ProductsSlice {
     products: Item[],
@@ -96,9 +97,16 @@ export const sort = (state: WritableDraft<ProductsSlice>, action: any) => {
 }
 
 export const filterProducts = createAsyncThunk('products/getFilterProducts', async (arg, thunkAPI) => {
-
     try {
-        return await getInventory();
+        const token = await getIdToken();
+        const response = await axios({
+            method: 'GET',
+            url: '/api/inventory',
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return response.data;
     } catch (e) {
         console.log(e);
         return thunkAPI.rejectWithValue(e);
@@ -106,9 +114,16 @@ export const filterProducts = createAsyncThunk('products/getFilterProducts', asy
 });
 
 export const sortProducts = createAsyncThunk('products/getSortProductsByPrice', async (arg, thunkAPI) => {
-
     try {
-        return await getInventory();
+        const token = await getIdToken();
+        const response = await axios({
+            method: 'GET',
+            url: '/api/inventory',
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return response.data;
     } catch (e) {
         console.log(e);
         return thunkAPI.rejectWithValue(e);

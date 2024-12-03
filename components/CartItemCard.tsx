@@ -14,7 +14,6 @@ const CartItemCard = ({item}:{item:CartItem}) => {
                 alt={item.variantName}
                 width={80}
                 height={80}
-                className="w-20 h-20 rounded-lg object-cover"
             />
             <div className="flex-grow ml-4">
                 <h3 className="text-lg font-semibold">{item.name}</h3>

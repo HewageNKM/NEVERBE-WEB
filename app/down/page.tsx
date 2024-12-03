@@ -19,7 +19,7 @@ const Page = () => (
                 We&apos;re currently making improvements to enhance your experience. Please check back shortly.
             </p>
             <div className="mt-8">
-                <Link href="/" className="inline-flex items-center gap-2 px-6 py-3 rounded-lg text-lg font-medium bg-blue-600 text-white hover:bg-blue-700 focus:ring-4 focus:ring-blue-500 focus:outline-none transition duration-300 ease-in-out transform hover:-translate-y-1">
+                <Link href="/" className="inline-flex items-center gap-2 px-6 py-3 rounded-lg text-lg font-medium bg-primary-100 text-white hover:bg-primary-300 focus:ring-4 focus:ring-blue-500 focus:outline-none transition duration-300 ease-in-out transform hover:-translate-y-1">
                     <IoArrowBack className="text-2xl" />
                     Back to Shop
                 </Link>

@@ -4,6 +4,7 @@ import { IoMail } from "react-icons/io5";
 import {ContactUs} from "@/constants";
 
 const ContactPage = () => {
+
     return (
         <div className="flex lg:mt-28 flex-col items-center bg-white py-10">
             {/* Contact Info Section */}
@@ -77,7 +78,7 @@ const ContactPage = () => {
                     </div>
                     <button
                         type="submit"
-                        className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-all">
+                        className="bg-primary-100 text-white hover:bg-primary-300  py-2 px-4 rounded-lg transition-all">
                         Send Message
                     </button>
                 </form>
