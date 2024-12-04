@@ -1,5 +1,5 @@
 import admin, {credential} from 'firebase-admin';
-import {Item, Order, Slide} from "@/interfaces";
+import {Item, Message, Order, Slide} from "@/interfaces";
 
 // Initialize Firebase Admin SDK if it hasn't been initialized already
 if (!admin.apps.length) {
@@ -120,10 +120,10 @@ export const getOrderById = async (orderId: string) => {
 export const getAllInventoryItems = async () => {
     try {
         console.log("Fetching all inventory items.");
-        const docs = await adminFirestore.collection('inventory').where("status","==","Active").get();
+        const docs = await adminFirestore.collection('inventory').where("status", "==", "Active").get();
         const items: Item[] = [];
         docs.forEach(doc => {
-            if(doc.data()?.listing == "Active"){
+            if (doc.data()?.listing == "Active") {
                 items.push({...doc.data(), createdAt: null, updatedAt: null} as Item);
             }
         });
@@ -255,6 +255,10 @@ export const getItemsByField = async (name: string, fieldName: string) => {
 export const getItemsByTwoField = async (firstValue: string, secondValue: string, firstFieldName: string, secondFieldName: string) => {
     try {
         console.log(`Fetching items where ${firstFieldName} == ${firstValue} and ${secondFieldName} == ${secondValue}`);
+        if (secondValue == "all") {
+            console.log(`Fetching items where ${firstFieldName} == ${firstValue}`);
+            return getItemsByField(firstValue, firstFieldName);
+        }
         const docs = await adminFirestore.collection('inventory').where(firstFieldName, '==', firstValue).where(secondFieldName, '==', secondValue).get();
         const items: Item[] = [];
         docs.forEach(doc => {
@@ -285,6 +289,28 @@ export const verifyToken = async (req: any) => {
         const idToken = authHeader.split(" ")[1];
         console.log("Verifying ID token.");
         return await adminAuth.verifyIdToken(idToken);
+    } catch (e) {
+        console.log(e)
+        throw e;
+    }
+};
+
+export const sendEmail = async (msg: Message) => {
+    try {
+        console.log(`Sending email to: ${msg.email}, with subject: ${msg.subject}, and message: ${msg.message}`)
+        await admin.firestore().collection('mail').add({
+            to: "info@neverbe.lk",
+            template: {
+                name: "inquiryEmail",
+                data: {
+                    name: msg.name,
+                    email: msg.email,
+                    subject: msg.subject,
+                    message: msg.message
+                }
+            }
+        });
+        console.log("Email sent successfully.");
     } catch (e) {
         console.log(e)
         throw e;
