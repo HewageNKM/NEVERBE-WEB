@@ -6,11 +6,12 @@ import PaymentDetails from "@/app/shop/checkout/components/PaymentDetails";
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "@/redux/store";
 import {CartItem, Customer, Order, OrderItem} from "@/interfaces";
-import {addNewOrder, calculateShipping, generateOrderId} from "@/util";
 import {paymentMethods} from "@/constants";
 import {clearCart} from "@/redux/cartSlice/cartSlice";
 import {redirect, useRouter} from "next/navigation";
 import {Timestamp} from "@firebase/firestore";
+import {calculateShipping, generateOrderId} from "@/util";
+import {addNewOrder} from "@/actions/orderAction";
 
 
 const CheckoutForm = () => {
@@ -43,7 +44,7 @@ const CheckoutForm = () => {
 
             const hashedSecret = md5(merchantSecret).toString().toUpperCase();
             const merchantId = process.env.NEXT_PUBLIC_PAYHERE_MERCHANT_ID;
-            const orderId = generateOrderId(paymentType.toUpperCase());
+            const orderId = generateOrderId("Website");
 
             const currency = 'LKR';
             const amount = await getTotal();

@@ -92,7 +92,7 @@ const Menu = ({ setShowMenu }: { setShowMenu: any }) => {
                     </div>
 
                     <Link
-                        href="/shop/products"
+                        href="/shop/products/accessories"
                         className="hover:text-blue-600 transition-colors duration-200"
                         onClick={() => setShowMenu(false)}
                     >

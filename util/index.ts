@@ -1,7 +1,5 @@
 'use client'
-import {CartItem, Order} from "@/interfaces";
-import {getIdToken} from "@/firebase/firebaseClient";
-import axios from "axios";
+import {CartItem} from "@/interfaces";
 
 export const calculateShipping = (cartItems: CartItem[]) => {
     if (cartItems.length === 0) {
@@ -31,24 +29,17 @@ export const calculateShipping = (cartItems: CartItem[]) => {
 
     return shippingCost;
 }
-export const generateOrderId = (): string => {
-    const randomStr = Math.random().toString(36).substring(2, 5) // 3 characters
-    const timestamp = Date.now().toString(36).slice(-3) // 3 character
+export const generateOrderId = (location: "Store" | "Website"): string => {
+    // Short timestamp based on seconds
+    const timestamp = Math.floor(Date.now() / 1000).toString().slice(-6);
 
-    return `${timestamp}${randomStr}`.toUpperCase();
+    // A random 3-character alphanumeric string for extra randomness
+    const randomPart = Math.random().toString(36).substring(2, 2).toLowerCase();
+
+    // Add location identifier (e.g., "st" for Store, "wb" for Website)
+    const locationPart = location === "Store" ? "st" : "wb";
+
+    // Combine parts into a final 12-character order ID
+    return `ORD-${locationPart}-${timestamp}-${randomPart}`.toLowerCase();
 };
 
-
-export const addNewOrder = async (newOrder: Order,) => {
-    const token = await getIdToken();
-    return axios({
-        method: 'post',
-        url: "/api/orders",
-        data: JSON.stringify(newOrder),
-
-        headers: {
-            "Authorization": `Bearer ${token}`,
-            'Content-Type': 'application/json'
-        }
-    });
-}
