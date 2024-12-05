@@ -43,7 +43,7 @@ const Page = async () => {
     }
 
     return (
-        <main className="w-full relative lg:mt-32 md:mt-20 mt-20  overflow-clip">
+        <main className="w-full relative lg:mt-32 md:mt-20 mt-24 overflow-clip">
             <div className="px-8 py-4">
                 <h1 className="md:text-4xl text-2xl tracking-wider mt-10"><strong>Products({items.length})</strong></h1>
                 <div className="w-full">
