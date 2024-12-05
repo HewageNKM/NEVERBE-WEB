@@ -76,7 +76,7 @@ const Header = () => {
                     </li>
                     <li>
                         <Link
-                            href="/shop/products"
+                            href="/shop/products/accessories"
                             className="lg:text-[1.8rem] xl:text-3xl font-bold tracking-widest hover:text-primary transition-colors"
                         >
                             Accessories

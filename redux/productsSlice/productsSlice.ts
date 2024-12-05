@@ -8,6 +8,7 @@ interface ProductsSlice {
     products: Item[],
     showFilter: boolean,
     selectedType: string,
+    productType: "shoes" | "accessories" | "sandals" | "all",
     selectedManufacturers: string[],
     selectedSizes: string[],
     selectedSort: string
@@ -16,6 +17,7 @@ interface ProductsSlice {
 const initialState: ProductsSlice = {
     selectedManufacturers: [],
     selectedSizes: [],
+    productType:"all",
     selectedType: "all",
     products: [],
     showFilter: false,
@@ -49,7 +51,11 @@ const productsSlice = createSlice({
         },
         setProducts: (state, action) => {
             state.products = action.payload;
+        },
+        setProductType: (state, action) => {
+            state.productType = action.payload;
         }
+
     },
     extraReducers: (builder) => {
         builder.addCase(filterProducts.fulfilled, (state, action) => {
@@ -138,5 +144,6 @@ export const {
     resetFilter,
     setProducts,
     setSelectedManufacturers,
+    setProductType
 } = productsSlice.actions;
 export default productsSlice.reducer;

@@ -1,9 +1,10 @@
 "use client";
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "@/redux/store";
-import { setSelectedSort, sortProducts } from "@/redux/productsSlice/productsSlice";
-import { sortingOptions } from "@/constants";
+import React, {useEffect} from 'react';
+import {useDispatch, useSelector} from "react-redux";
+import {AppDispatch, RootState} from "@/redux/store";
+import {setSelectedSort, sortProducts} from "@/redux/productsSlice/productsSlice";
+import {sortingOptions} from "@/constants";
+import {IoFilter} from "react-icons/io5";
 
 const Options = () => {
     const dispatch: AppDispatch = useDispatch();
@@ -15,15 +16,20 @@ const Options = () => {
 
     return (
         <section className="mt-10 flex flex-row  items-center justify-end w-full">
-            <div className="flex flex-col">
+            <div className="flex-row flex gap-2 justify-center items-center">
+                <IoFilter size={25}/>
                 <select
                     id="sorting"
                     onChange={(event) => dispatch(setSelectedSort(event.target.value))}
                     defaultValue={selectedSort}
-                    className="p-2 rounded-lg font-medium bg-slate-200 border border-slate-300 hover:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-200"
+                    className="appearance-none p-2 w-fit rounded-lg font-medium bg-slate-100 border border-slate-300 hover:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-200 text-gray-700"
                 >
                     {sortingOptions.map((option, index) => (
-                        <option key={index} value={option.value} className="bg-white font-medium">
+                        <option
+                            key={index}
+                            value={option.value}
+                            className="bg-white text-gray-700 font-medium"
+                        >
                             {option.name}
                         </option>
                     ))}

@@ -17,7 +17,7 @@ import { accessoriesSizes, brands, productTypes, wearableSizes } from "@/constan
 import { BiReset } from "react-icons/bi";
 
 const Filter = () => {
-    const { selectedSizes, selectedType, selectedManufacturers } = useSelector((state: RootState) => state.productsSlice);
+    const { selectedSizes, selectedType, selectedManufacturers,productType } = useSelector((state: RootState) => state.productsSlice);
     const dispatch: AppDispatch = useDispatch();
 
     const addBrand = (value: string) => {
@@ -52,11 +52,12 @@ const Filter = () => {
                 <h2 className="text-4xl font-bold tracking-wider mb-4">Filter</h2>
                 <div className="h-[90vh] overflow-auto mt-4 flex-col flex gap-8">
                     {/* Type Section */}
-                    <div className="mt-5 px-2">
+                    {productType == "all" && (<div className="mt-5 px-2">
                         <h3 className="text-3xl font-semibold"><strong>Type</strong></h3>
                         <div className="flex mt-2 flex-row gap-5 text-2xl flex-wrap items-center">
                             {productTypes.map((type, index) => (
-                                <label key={index} className="flex items-center gap-2 cursor-pointer hover:bg-gray-100 rounded p-2 transition duration-200">
+                                <label key={index}
+                                       className="flex items-center gap-2 cursor-pointer hover:bg-gray-100 rounded p-2 transition duration-200">
                                     <input
                                         checked={selectedType === type.value}
                                         type="radio"
@@ -70,13 +71,14 @@ const Filter = () => {
                                 </label>
                             ))}
                         </div>
-                    </div>
+                    </div>)}
                     {/* Brands Section */}
                     <div className="mt-5 px-2">
                         <h3 className="text-3xl font-semibold"><strong>Brands</strong></h3>
                         <div className="flex mt-2 flex-row gap-5 text-2xl flex-wrap items-center">
                             {brands.map((brand, index) => (
-                                <label key={index} className="flex items-center gap-2 cursor-pointer hover:bg-gray-100 rounded p-2 transition duration-200">
+                                <label key={index}
+                                       className="flex items-center gap-2 cursor-pointer hover:bg-gray-100 rounded p-2 transition duration-200">
                                     <input
                                         value={brand.value}
                                         checked={selectedManufacturers.includes(brand.value)}

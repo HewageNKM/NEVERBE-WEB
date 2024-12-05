@@ -197,7 +197,7 @@ export const brands = [
 ]
 export const sortingOptions = [
     {
-        name: "Sort By",
+        name: "Not Selected",
         value: ""
     },
     {
