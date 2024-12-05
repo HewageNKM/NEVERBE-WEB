@@ -10,11 +10,9 @@ const Page = async ({ searchParams }: { searchParams: { order_id: string } }) =>
 
     try {
         order = await getOrderById(orderId);
-        if (!order) {
-            return notFound();
-        }
     } catch (e: any) {
         console.log(e.message);
+        return notFound();
     }
 
     return (

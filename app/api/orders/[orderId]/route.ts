@@ -6,11 +6,7 @@ export async function GET(req: Request, {params}: {params: {orderId: string}}) {
 
         console.log("Order ID: " + params.orderId)
         const order = await getOrderById(params.orderId);
-        if(order) {
-            return new Response(JSON.stringify(order), {status: 200})
-        }else {
-            return new Response(`Order not found`, {status: 404})
-        }
+        return new Response(JSON.stringify(order), {status: 200})
     }catch (e:any) {
         console.log(e)
         return new Response(`Unauthorized ${e.message}`, {status: 401})

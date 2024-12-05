@@ -86,7 +86,7 @@ const Header = () => {
             </div>
 
             {/* Cart Icon for Desktop */}
-            <div className="hidden lg:flex absolute top-8 right-5 items-center gap-3">
+            <div className="hidden lg:flex absolute top-8 z-50 right-5 items-center gap-3">
                 <button
                     onClick={() => dispatch(showCart())}
                     className="text-black rounded-full p-2 relative hover:bg-gray-200 transition-colors"

@@ -6,7 +6,7 @@ import {Slide} from "@/interfaces";
 
 const Hero = async ({slides}: { slides: Slide[] }) => {
     return (
-        <section className="w-full mt-20 md:mt-28 lg:mt-28">
+        <section className="w-full mt-20 md:mt-28 lg:mt-32">
             <ImagesSlider images={slides}/>
             <div className="mt-5 lg:hidden flex flex-col gap-5 w-[12rem]">
                 <header className='flex flex-col gap-1 py-2'>

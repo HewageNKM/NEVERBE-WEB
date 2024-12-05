@@ -16,7 +16,6 @@ const Options = () => {
     return (
         <section className="mt-10 flex flex-row  items-center justify-end w-full">
             <div className="flex flex-col">
-                <label htmlFor="sorting" className="text-lg font-bold">Sort by</label>
                 <select
                     id="sorting"
                     onChange={(event) => dispatch(setSelectedSort(event.target.value))}

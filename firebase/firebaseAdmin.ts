@@ -109,6 +109,9 @@ export const getOrderById = async (orderId: string) => {
     try {
         console.log(`Fetching order by ID: ${orderId}`);
         const doc = await adminFirestore.collection('orders').doc(orderId).get();
+        if(!doc.exists) {
+            throw new Error(`Order with ID ${orderId} not found.`);
+        }
         return doc.data() as Order;
     } catch (e) {
         console.log(e)
