@@ -32,8 +32,8 @@ export const metadata: Metadata = {
 const ContactPage = () => {
 
     return (
-        <div className="flex lg:mt-28 flex-col items-center bg-white py-10">
-            <div className="w-full max-w-4xl p-6 bg-white rounded-lg shadow-custom">
+        <div className="flex mt-28 flex-col items-center py-10">
+            <div className="w-full max-w-4xl p-6 bg-white rounded-lg">
                 <h1 className="text-4xl font-bold mb-8 text-center text-gray-800">Contact Us</h1>
                 <EmailMapSection />
                 <MessageForm />

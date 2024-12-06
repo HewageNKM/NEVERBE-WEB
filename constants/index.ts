@@ -289,59 +289,54 @@ export const termsAndConditions = [
 ]
 export const shippingReturnPolicy = [
     {
-        title: "Return Eligibility",
+        title: "Exchange Eligibility",
         description:
-            "We accept returns on unworn, unused items with their original packaging intact. To be eligible for a return, please initiate the return process within 7 days of receiving your order. Accessories, such as socks and insoles, are final sale and cannot be returned.",
+            "We offer exchanges on unworn, unused items with their original packaging intact. Accessories, such as socks and insoles, are final sale and cannot be exchanged. To be eligible for an exchange, please initiate the process within 7 days of purchasing your order."
     },
     {
-        title: "Initiating a Return",
+        title: "Initiating an Exchange",
         description:
-            "If you would like to return an item, please contact our customer service team to request a return authorization. Once approved, you can send the item back to us using a trackable shipping method.",
+            "If you would like to exchange an item, please contact our customer service team to request an exchange authorization. Once approved, you can send the item back to us using a trackable shipping method."
     },
     {
-        title: "Refund Process",
+        title: "Exchange Process",
         description:
-            "Once we receive your returned item and inspect it for any damage or signs of wear, we will process your refund accordingly. Refunds will be issued to the original payment method used for the purchase.",
+            "Once we receive your returned item and inspect it for any damage or signs of wear, we will process your exchange request. Exchanges are subject to availability of the requested size or color."
     },
     {
         title: "Return Shipping",
         description:
-            "Customers are responsible for the cost of return shipping, unless the return is due to a mistake on our part (e.g., wrong item sent, defective product). In such cases, we will provide a prepaid shipping label for the return.",
-    },
-    {
-        title: "Exchanges",
-        description:
-            "If you would like to exchange an item for a different size or color, please contact our customer service team for assistance. We will do our best to accommodate your exchange request, subject to availability.",
+            "Customers are responsible for the cost of return shipping unless the exchange is due to a mistake on our part (e.g., wrong item sent, defective product). In such cases, we will provide a prepaid shipping label for the return."
     },
     {
         title: "More Information",
         description:
-            "For more information on our returns and refunds policy, please refer to our Terms and Conditions or contact our customer service team for assistance.",
+            "For more information on our exchange policy, please refer to our Terms and Conditions or contact our customer service team for assistance."
     },
     {
         title: "Shipping Methods",
         description:
-            "We offer standard shipping within Colombo and its surrounding areas. Your order will be carefully packed and delivered to your doorstep via our trusted courier partners.",
+            "We offer standard shipping within Sri Lanka. Your order will be carefully packed and delivered to your doorstep via our trusted courier partners."
     },
     {
         title: "Shipping Fees",
         description:
-            "Shipping fees are calculated based on your location and the total weight of your order. You can view the shipping cost during the checkout process before finalizing your purchase.",
+            "Shipping fees are calculated based on your location and the total weight of your order. You can view the shipping cost during the checkout process before finalizing your purchase."
     },
     {
         title: "Shipping Times",
         description:
-            "Orders are typically processed and shipped within 1-2 business days. Delivery times may vary depending on your location, but most orders  are delivered within 2-6 business days.",
+            "Orders are typically processed and shipped within 1-2 business days. Delivery times may vary depending on your location, but most orders are delivered within 2-6 business days."
     },
     {
         title: "Order Tracking",
         description:
-            "Once your order has been shipped, you will receive a shipping confirmation email with a tracking number. You can use this tracking number to monitor the status of your delivery online.",
+            "Once your order has been shipped, you will receive a shipping confirmation email with a tracking number. You can use this tracking number to monitor the status of your delivery online."
     },
     {
         title: "Shipping Restrictions",
         description:
-            "Please note that we currently only offer shipping within Sri Lanka. We apologize for any inconvenience this may cause to our international customers.",
+            "Please note that we currently only offer shipping within Sri Lanka. We apologize for any inconvenience this may cause to our international customers."
     }
 ];
 export const address = {
@@ -357,7 +352,6 @@ export const informationLinks: FooterLink[] = [
     {title: "Shipping & Returns", url: "/policies/shipping-return-policy"},
     {title: "Terms & Conditions", url: "/policies/terms-conditions"},
     {title: "Privacy Policy", url: "/policies/privacy-policy"},
-    {title: "Tracking Orders", url: "/track"},
 ];
 export const privacyPolicy = {
     company: 'Watch Line',

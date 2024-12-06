@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 const Page = () => {
     return (
         <main
-            className="privacy-policy lg:mt-24 md:mt-16 mt-10 max-w-4xl mx-auto pt-10 p-4 sm:p-6 md:p-8 text-gray-800">
+            className="privacy-policy w-full lg:mt-32 mt-24 max-w-4xl mx-auto pt-10 p-4 sm:p-6 md:p-8 text-gray-800">
             <h1 className="text-3xl sm:text-4xl font-bold mb-6 text-center">Privacy Policy</h1>
             <article>
                 <p className="mb-6 leading-relaxed">
