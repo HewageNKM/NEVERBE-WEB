@@ -69,7 +69,7 @@ export const brands = [
             },
             {
                 name: "All",
-                url: "/shop/products//manufacturers/nike/All"
+                url: "/shop/products//manufacturers/nike/all"
             }
         ]
     },
