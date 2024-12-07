@@ -434,10 +434,6 @@ export const faqs = [
         answer: "We ship the product within 2 days of purchase."
     },
     {
-        question: "What is the refund policy?",
-        answer: "You can refund the product within 7 days of purchase."
-    },
-    {
         question: "Do you provide a warranty?",
         answer: "No, we do not provide a warranty for our products."
     },
