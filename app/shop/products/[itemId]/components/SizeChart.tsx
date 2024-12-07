@@ -11,8 +11,8 @@ const SizeChart = () => {
                 <table className="table-auto border-collapse border border-gray-300 w-full text-sm md:text-base">
                     <thead>
                     <tr className="bg-gray-200">
-                        <th className="border border-gray-300 px-4 py-2 text-left">US - Women's</th>
-                        <th className="border border-gray-300 px-4 py-2 text-left">US - Men's</th>
+                        <th className="border border-gray-300 px-4 py-2 text-left">US - Women&apos;s</th>
+                        <th className="border border-gray-300 px-4 py-2 text-left">US - Men&apos;s</th>
                         <th className="border border-gray-300 px-4 py-2 text-left">UK</th>
                         <th className="border border-gray-300 px-4 py-2 text-left">CM</th>
                         <th className="border border-gray-300 px-4 py-2 text-left">EU</th>
