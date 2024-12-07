@@ -1,10 +1,9 @@
 import React from 'react';
 import ItemCard from "@/components/ItemCard";
 import EmptyState from "@/components/EmptyState";
-import { Item } from "@/interfaces";
-import {getHotProducts} from "@/firebase/firebaseAdmin";
+import {Item} from "@/interfaces";
 
-const HotProducts = async ({hotItems}:{hotItems:Item[]}) => {
+const HotProducts = async ({hotItems}: { hotItems: Item[] }) => {
 
     return (
         <section className="w-full mt-10">
@@ -18,12 +17,12 @@ const HotProducts = async ({hotItems}:{hotItems:Item[]}) => {
                         <ul className="grid grid-cols-2 gap-2 md:gap-4 md:grid-cols-3 lg:grid-cols-7 w-full">
                             {hotItems.map((item: Item) => (
                                 <li key={item.itemId}>
-                                    <ItemCard item={item} flag={"hot"} />
+                                    <ItemCard item={item} flag={"hot"}/>
                                 </li>
                             ))}
                         </ul>
                     ) : ( // Empty state
-                        <EmptyState message="No hot products available!" />
+                        <EmptyState message="No hot products available!"/>
                     )}
                 </div>
             </div>

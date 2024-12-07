@@ -496,3 +496,26 @@ export enum ContactUs {
     supportEmail="support@neverbe.lk",
     embeddedMap="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d7920.379213809781!2d80.01265924429379!3d6.986933221248742!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae2fff7a1993cd9%3A0x19b93ace8a7b3b80!2sNEVERBE!5e0!3m2!1sen!2slk!4v1729443817724!5m2!1sen!2slk"
 }
+export const sizeData = [
+    { "US - Women's": "4", "US - Men's": "2.5", "UK": "1.5", "CM": "21", "EU": "34.5" },
+    { "US - Women's": "4.5", "US - Men's": "3", "UK": "2", "CM": "21.5", "EU": "35" },
+    { "US - Women's": "5", "US - Men's": "3.5", "UK": "2.5", "CM": "22", "EU": "35.5" },
+    { "US - Women's": "5.5", "US - Men's": "4", "UK": "3", "CM": "22.5", "EU": "36" },
+    { "US - Women's": "6", "US - Men's": "4.5", "UK": "3.5", "CM": "23", "EU": "36.5" },
+    { "US - Women's": "6.5", "US - Men's": "5", "UK": "4", "CM": "23.5", "EU": "37.5" },
+    { "US - Women's": "7", "US - Men's": "5.5", "UK": "4.5", "CM": "24", "EU": "38" },
+    { "US - Women's": "7.5", "US - Men's": "6", "UK": "5", "CM": "24.5", "EU": "38.5" },
+    { "US - Women's": "8", "US - Men's": "6.5", "UK": "5.5", "CM": "25", "EU": "39" },
+    { "US - Women's": "8.5", "US - Men's": "7", "UK": "6", "CM": "25.5", "EU": "40" },
+    { "US - Women's": "9", "US - Men's": "7.5", "UK": "6.5", "CM": "26", "EU": "40.5" },
+    { "US - Women's": "9.5", "US - Men's": "8", "UK": "7", "CM": "26.5", "EU": "41" },
+    { "US - Women's": "10", "US - Men's": "8.5", "UK": "7.5", "CM": "27", "EU": "42" },
+    { "US - Women's": "10.5", "US - Men's": "9", "UK": "8", "CM": "27.5", "EU": "42.5" },
+    { "US - Women's": "11", "US - Men's": "9.5", "UK": "8.5", "CM": "28", "EU": "43" },
+    { "US - Women's": "11.5", "US - Men's": "10", "UK": "9", "CM": "28.5", "EU": "44" },
+    { "US - Women's": "12", "US - Men's": "10.5", "UK": "9.5", "CM": "29", "EU": "44.5" },
+    { "US - Women's": "12.5", "US - Men's": "11", "UK": "10", "CM": "29.5", "EU": "45" },
+    { "US - Women's": "13", "US - Men's": "11.5", "UK": "10.5", "CM": "30", "EU": "46" },
+    { "US - Women's": "13.5", "US - Men's": "12", "UK": "11", "CM": "30.5", "EU": "46.5" },
+    { "US - Women's": "14", "US - Men's": "12.5", "UK": "11.5", "CM": "31", "EU": "47" },
+];

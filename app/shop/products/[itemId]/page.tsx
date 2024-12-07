@@ -1,15 +1,14 @@
 import React from 'react';
-import { SizeImage } from "@/assets/images";
 import ProductHero from "@/app/shop/products/[itemId]/components/ProductHero";
 import SizeChart from "@/app/shop/products/[itemId]/components/SizeChart";
-import { notFound } from "next/navigation";
-import { Item } from "@/interfaces";
-import { getItemById } from "@/firebase/firebaseAdmin";
-import { Metadata } from "next";
-import {unstable_noStore} from "next/cache";
+import {notFound} from "next/navigation";
+import {Item} from "@/interfaces";
+import {getItemById, getSimilarItems} from "@/firebase/firebaseAdmin";
+import {Metadata} from "next";
+import SimilarProducts from "@/app/shop/products/[itemId]/components/SimilarProducts";
 
 // Dynamically generate metadata
-export async function generateMetadata({ params }: { params: { itemId: string } }): Promise<Metadata> {
+export async function generateMetadata({params}: { params: { itemId: string } }): Promise<Metadata> {
     let item: Item | null = null;
 
     try {
@@ -53,7 +52,7 @@ export async function generateMetadata({ params }: { params: { itemId: string } 
     };
 }
 
-const Page = async ({ params }: { params: { itemId: string } }) => {
+const Page = async ({params}: { params: { itemId: string } }) => {
     let item: Item | null = null;
 
     try {
@@ -64,14 +63,23 @@ const Page = async ({ params }: { params: { itemId: string } }) => {
 
     if (!item) return notFound();
 
+    let similarItems: Item[] = [];
+
+    try {
+        similarItems = await getSimilarItems(item.itemId);
+    } catch (e) {
+        console.error("Error fetching similar items:", e.message);
+    }
+
     return (
-        <main className="w-full lg:mt-24 md:mt-20 mt-10 overflow-clip">
+        <main className="w-full lg:mt-32 md:mt-24 overflow-clip">
             <div className="px-8 py-4">
-                <ProductHero item={item} />
-                <SizeChart image={SizeImage} />
+                <ProductHero item={item}/>
+                <SizeChart />
+                <SimilarProducts items={similarItems}/>
             </div>
         </main>
     );
 };
-
+export const dynamic = 'force-dynamic';
 export default Page;

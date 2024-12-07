@@ -68,4 +68,5 @@ const Page = async ({ params }: { params: { manufacturerName: string; brandName:
     );
 };
 
+export const dynamic = 'force-dynamic';
 export default Page;

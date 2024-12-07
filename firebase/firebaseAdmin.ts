@@ -109,7 +109,7 @@ export const getOrderById = async (orderId: string) => {
     try {
         console.log(`Fetching order by ID: ${orderId}`);
         const doc = await adminFirestore.collection('orders').doc(orderId).get();
-        if(!doc.exists) {
+        if (!doc.exists) {
             throw new Error(`Order with ID ${orderId} not found.`);
         }
         return doc.data() as Order;
@@ -141,7 +141,7 @@ export const getAllInventoryItems = async () => {
 // Function to fetch recent inventory items based on creation date
 export const getRecentItems = async () => {
     console.log("Fetching recent inventory items.");
-    const docs = await adminFirestore.collection('inventory').where("status", "==", "Active").orderBy('createdAt', 'desc').limit(16).get();
+    const docs = await adminFirestore.collection('inventory').where("status", '==', "Active").orderBy('createdAt', 'desc').limit(30).get();
     const items: Item[] = [];
     docs.forEach(doc => {
         if (doc.data()?.listing == "Active") {
@@ -188,18 +188,21 @@ export const getHotProducts = async () => {
         for (const itemId of sortedItems) {
             const itemDoc = await adminFirestore.collection('inventory').doc(itemId).get();
             if (itemDoc.exists) {
-                if (itemDoc.data()?.status == "Active") {
-                    if (itemDoc.data()?.listing == "Active") {
+                if (itemDoc.data()?.status === "Active") {
+                    if (itemDoc.data()?.listing === "Active") {
                         console.log(`Item found with ID ${itemDoc.data()?.itemId}`);
                         hotProducts.push({...itemDoc.data(), createdAt: null, updatedAt: null} as Item);
                     }
                 }
             }
+            if (hotProducts.length === 14) {
+                break; // Exit the loop once we have 14 hot products
+            }
         }
         console.log("Total hot products fetched:", hotProducts.length);
         return hotProducts;
     } catch (e) {
-        console.log(e)
+        console.log(e);
         throw e;
     }
 };
@@ -276,6 +279,48 @@ export const getItemsByTwoField = async (firstValue: string, secondValue: string
         return items;
     } catch (e) {
         console.log(e)
+        throw e;
+    }
+};
+export const getSimilarItems = async (itemId: string) => {
+    try {
+        console.log(`Fetching similar items for item ID: ${itemId}`);
+
+        // Fetch the item document by ID
+        const itemDoc = await adminFirestore.collection('inventory').doc(itemId).get();
+        if (!itemDoc.exists) {
+            throw new Error(`Item with ID ${itemId} not found.`);
+        }
+
+        const item = itemDoc.data() as Item;
+
+        // Fetch items with matching type and brand
+        const similarItemsQuery = await adminFirestore
+            .collection('inventory')
+            .where("type", "==", item.type)
+            .where("brand", "==", item.brand)
+            .limit(10)
+            .get();
+        const items:Item[] = [];
+        // Process and filter the results
+        const similarItems = similarItemsQuery.docs.filter(doc => doc.id !== itemId) // Exclude the original item
+            .map(doc => {
+                return {...doc.data(), itemId: doc.id, createdAt: null, updatedAt: null} as Item;
+            });
+
+        similarItems.forEach(doc => {
+            if (doc.status == "Active") {
+                if (doc.listing == "Active") {
+                    console.log(`Item found with ID ${doc.itemId}`);
+                    items.push({...doc, createdAt: null, updatedAt: null} as Item);
+                }
+            }
+        });
+
+        console.log("Total similar items fetched:", similarItems.length);
+        return items;
+    } catch (e) {
+        console.error("Error fetching similar items:", e);
         throw e;
     }
 };
