@@ -72,7 +72,7 @@ const Page = async ({params}: { params: { itemId: string } }) => {
     }
 
     return (
-        <main className="w-full lg:mt-32 md:mt-24 overflow-clip">
+        <main className="w-full lg:mt-32 mt-20 md:mt-28 overflow-clip">
             <div className="px-8 py-4">
                 <ProductHero item={item}/>
                 <SizeChart />
