@@ -1,15 +1,41 @@
-import React from 'react';
-import { motion } from "framer-motion";
-import { brands } from "@/constants";
+'use client';
+import React, {useEffect, useState} from 'react';
+import {motion} from "framer-motion";
 import Link from "next/link";
+import {useSelector} from "react-redux";
+import {RootState} from "@/redux/store";
+import axios from "axios";
+import {auth} from "@/firebase/firebaseClient";
+import {Brand} from "@/interfaces";
 
-const BrandsPopupMenu = ({ setShowBrands }: { setShowBrands: React.Dispatch<React.SetStateAction<boolean>> }) => {
+const BrandsPopupMenu = ({setShowBrands}: { setShowBrands: React.Dispatch<React.SetStateAction<boolean>> }) => {
+    const {user} = useSelector((state: RootState) => state.authSlice);
+    const [brands, setBrands] = useState<Brand[] | []>([])
+    useEffect(() => {
+        fetchBrands();
+    }, [user]);
+    const fetchBrands = async () => {
+        try {
+            const token = await auth.currentUser?.getIdToken();
+            const res = await axios({
+                method: 'GET',
+                url: '/api/brands',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            setBrands(res.data);
+        } catch (e: any) {
+            console.log(e.message);
+        }
+    }
     return (
         <motion.div
-            initial={{ opacity: 0, y: '2vh' }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: '2vh' }}
-            transition={{ duration: 0.2 }}
+            initial={{opacity: 0, y: '2vh'}}
+            animate={{opacity: 1, y: 0}}
+            exit={{opacity: 0, y: '2vh'}}
+            transition={{duration: 0.2}}
             className="w-full mx-2 z-50 hidden lg:flex top-[7rem] justify-center absolute"
         >
             <nav
@@ -17,7 +43,8 @@ const BrandsPopupMenu = ({ setShowBrands }: { setShowBrands: React.Dispatch<Reac
                 className="flex w-fit bg-white text-slate-600 p-6 flex-row gap-8 flex-wrap shadow-lg rounded-xl border border-gray-200"
                 aria-label="Brand Navigation"
             >
-                {brands.map((brand, index) => (
+
+                {brands?.map((brand, index) => (
                     <div key={index} className="min-w-[10rem]">
                         <Link href={brand.url} aria-label={`View products from ${brand.name}`}>
                             <h2 className="font-bold text-xl text-gray-800 hover:text-primary-100 transition-colors">
@@ -39,6 +66,7 @@ const BrandsPopupMenu = ({ setShowBrands }: { setShowBrands: React.Dispatch<Reac
                         </ul>
                     </div>
                 ))}
+
             </nav>
         </motion.div>
     );

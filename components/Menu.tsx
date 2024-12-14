@@ -1,13 +1,39 @@
-import React, { useState } from "react";
+"use client"
+import React, {useEffect, useState} from "react";
 import DropShadow from "@/components/DropShadow";
 import Link from "next/link";
-import { motion } from "framer-motion";
-import { IoClose } from "react-icons/io5";
-import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
-import { brands } from "@/constants";
+import {motion} from "framer-motion";
+import {IoClose} from "react-icons/io5";
+import {MdKeyboardArrowDown, MdKeyboardArrowUp} from "react-icons/md";
+import {useSelector} from "react-redux";
+import {RootState} from "@/redux/store";
+import {Brand} from "@/interfaces";
+import {auth} from "@/firebase/firebaseClient";
+import axios from "axios";
 
-const Menu = ({ setShowMenu }: { setShowMenu: any }) => {
+const Menu = ({setShowMenu}: { setShowMenu: any }) => {
     const [expandedBrand, setExpandedBrand] = useState<string | null>(null);
+    const {user} = useSelector((state: RootState) => state.authSlice);
+    const [brands, setBrands] = useState<Brand[] | []>([])
+    useEffect(() => {
+        fetchBrands();
+    }, [user]);
+    const fetchBrands = async () => {
+        try {
+            const token = await auth.currentUser?.getIdToken();
+            const res = await axios({
+                method: 'GET',
+                url: '/api/brands',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            setBrands(res.data);
+        } catch (e: any) {
+            console.log(e.message);
+        }
+    }
 
     const toggleBrand = (brandValue: string) => {
         setExpandedBrand((prev) => (prev === brandValue ? null : brandValue));
@@ -16,10 +42,10 @@ const Menu = ({ setShowMenu }: { setShowMenu: any }) => {
     return (
         <DropShadow containerStyle="fixed inset-0 flex justify-end items-start">
             <motion.div
-                initial={{ opacity: 0, x: "100vw" }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: "100vw" }}
-                transition={{ duration: 0.3 }}
+                initial={{opacity: 0, x: "100vw"}}
+                animate={{opacity: 1, x: 0}}
+                exit={{opacity: 0, x: "100vw"}}
+                transition={{duration: 0.3}}
                 className="w-[80vw] h-full bg-white rounded-l-lg shadow-lg relative flex flex-col p-6"
             >
                 <button
@@ -27,7 +53,7 @@ const Menu = ({ setShowMenu }: { setShowMenu: any }) => {
                     className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors duration-200"
                     aria-label="Close Menu"
                 >
-                    <IoClose size={30} />
+                    <IoClose size={30}/>
                 </button>
                 <nav className="mt-8 text-lg font-semibold flex flex-col gap-5">
                     <Link
@@ -46,9 +72,9 @@ const Menu = ({ setShowMenu }: { setShowMenu: any }) => {
                         >
                             <span>Brands</span>
                             {expandedBrand ? (
-                                <MdKeyboardArrowUp size={24} />
+                                <MdKeyboardArrowUp size={24}/>
                             ) : (
-                                <MdKeyboardArrowDown size={24} />
+                                <MdKeyboardArrowDown size={24}/>
                             )}
                         </button>
                         {expandedBrand && (
@@ -65,9 +91,9 @@ const Menu = ({ setShowMenu }: { setShowMenu: any }) => {
                                         >
                                             {brand.name}
                                             {expandedBrand === brand.value ? (
-                                                <MdKeyboardArrowUp size={20} />
+                                                <MdKeyboardArrowUp size={20}/>
                                             ) : (
-                                                <MdKeyboardArrowDown size={20} />
+                                                <MdKeyboardArrowDown size={20}/>
                                             )}
                                         </button>
                                         {expandedBrand === brand.value && (

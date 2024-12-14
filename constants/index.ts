@@ -49,151 +49,36 @@ export const brands = [
     {
         name: 'Nike',
         value: 'nike',
-        url: "/shop/products//manufacturers/nike",
-        titles: [
-            {
-                name: "Air",
-                url: "/shop/products/manufacturers/nike/air"
-            },
-            {
-                name: "Jordan",
-                url: "/shop/products//manufacturers/nike/jordan"
-            },
-            {
-                name: "SB",
-                url: "/shop/products/manufacturers/nike/sb"
-            },
-            {
-                name: "Sandals",
-                url: "/shop/products//manufacturers/nike/Sandals"
-            },
-            {
-                name: "All",
-                url: "/shop/products//manufacturers/nike/all"
-            }
-        ]
     },
     {
         name: 'Adidas',
         value: 'adidas',
-        url: "/shop/products/manufacturers/adidas",
-        titles: [
-            {
-                name: "Campus",
-                url: "/shop/products/manufacturers/adidas/campus"
-            },
-            {
-                name: "Samba",
-                url: "/shop/products/manufacturers/adidas/samba"
-            },
-            {
-                name: "Sandals",
-                url: "/shop/products/manufacturers/adidas/sandals"
-            },
-            {
-                name: "All",
-                url: "/shop/products/manufacturers/adidas/all"
-            }
-        ]
+
     },
     {
         name: 'New Balance',
         value: 'new balance',
-        url: "/shop/products/manufacturers/new balance",
-        titles: [
-            {
-                name: "Sandals",
-                url: "/shop/products/manufacturers/new balance/sandals"
-            },
-            {
-                name: "All",
-                url: "/shop/products/manufacturers/new balance/all"
-            }
-        ]
+
     },
     {
         name: 'Cross',
         value: 'cross',
-        url: '/shop/products/manufacturers/cross',
-        titles: [
-            {
-                name: "Sandals",
-                url: "/shop/products/manufacturers/cross/sandals"
-            },
-            {
-                name: "All",
-                url: "/shop/products/manufacturers/cross/all"
-            }
-        ]
+
     },
     {
         name: 'Polo',
         value: 'polo',
         url: '/shop/products/manufacturers/polo',
-        titles: [
-            {
-                name: "Sandals",
-                url: "/shop/products/manufacturers/polo/sandals"
-            },
-            {
-                name: "Other",
-                url: "/shop/products/manufacturers/polo/other"
-            }
-        ]
+
     },
     {
         name: "MLB",
         value: "mlb",
-        url: "/shop/products/manufacturers/mlb",
-        titles: [
-            {
-                name: "Sandals",
-                url: "/shop/products/manufacturers/mlb/sandals"
-            },
-            {
-                name: "All",
-                url: "/shop/products/manufacturers/mlb/all"
-            }
-        ]
     },
     {
         name: "Luvion Vuitton",
         value: "luvion vuitton",
-        url: "/shop/products/manufacturers/luvion vuitton",
-        titles: [
-            {
-                name:"Trainer",
-                url:"/shop/products/manufacturers/luvion vuitton/trainer"
-            },
-            {
-                name: "Sandals",
-                url: "/shop/products/manufacturers/luvion vuitton/sandals"
-            },
-            {
-                name: "All",
-                url: "/shop/products/manufacturers/luvion vuitton/all"
-            }
-        ]
-    },
-    {
-        name: "Budget Shoes",
-        value: "budget shoes",
-        url: "/shop/products/manufacturers/china",
-        titles: [
-            {
-                name:"Nike",
-                url:"/shop/products/manufacturers/china/nike"
-            },
-            {
-                name: "Adidas",
-                url: "/shop/products/manufacturers/china/adidas"
-            },
-            {
-                name: "All",
-                url: "/shop/products/manufacturers/china/all"
-            },
-        ]
-    },
+    }
 ]
 export const sortingOptions = [
     {

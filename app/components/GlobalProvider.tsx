@@ -1,6 +1,6 @@
 "use client"
 import React, {ReactNode, useEffect} from 'react';
-import {signUser} from "@/firebase/firebaseClient";
+import {auth} from "@/firebase/firebaseClient";
 import {AppDispatch, RootState} from "@/redux/store";
 import {useDispatch, useSelector} from "react-redux";
 import {initializeCart} from "@/redux/cartSlice/cartSlice";
@@ -8,6 +8,8 @@ import {AnimatePresence} from "framer-motion";
 import Cart from "@/components/Cart";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import {onAuthStateChanged, signInAnonymously} from "firebase/auth";
+import {setUser} from "@/redux/authSlice/authSlice";
 
 const GlobalProvider = ({children}: { children: ReactNode }) => {
     const dispatch: AppDispatch = useDispatch();
@@ -15,7 +17,23 @@ const GlobalProvider = ({children}: { children: ReactNode }) => {
     const showCart = useSelector((state: RootState) => state.cartSlice.showCart);
 
     useEffect(() => {
-        signUser();
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                const uid = user.uid;
+                console.log("User Exists: " + uid);
+                dispatch(setUser(user));
+            } else {
+                const usr = window.localStorage.getItem("neverbeUser");
+                if (!usr) {
+                    const user = await signInAnonymously(auth);
+                    console.log("New User Logged: " + user.user.uid);
+                    window.localStorage.setItem("neverbeUser", user.user.uid);
+                    dispatch(setUser(user));
+                } else {
+                    console.log("User Exists: " + usr);
+                }
+            }
+        });
         dispatch(initializeCart())
     });
 

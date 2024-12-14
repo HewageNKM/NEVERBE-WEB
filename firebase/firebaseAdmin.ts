@@ -301,7 +301,7 @@ export const getSimilarItems = async (itemId: string) => {
             .where("brand", "==", item.brand)
             .limit(10)
             .get();
-        const items:Item[] = [];
+        const items: Item[] = [];
         // Process and filter the results
         const similarItems = similarItemsQuery.docs.filter(doc => doc.id !== itemId) // Exclude the original item
             .map(doc => {
@@ -362,5 +362,63 @@ export const sendEmail = async (msg: Message) => {
     } catch (e) {
         console.log(e)
         throw e;
+    }
+};
+// Helper function to capitalize words
+const capitalizeWords = (str: string) => {
+    return str
+        .split(" ")
+        .map(word => (word.length === 2 ? word.toUpperCase() : word.charAt(0).toUpperCase() + word.slice(1)))
+        .join(" ");
+};
+
+export const getBrandsFromInventory = async () => {
+    try {
+        console.log("Generating brands from inventory.");
+
+        const inventorySnapshot = await adminFirestore
+            .collection("inventory")
+            .where("status", "==", "Active")
+            .where("listing", "==", "Active")
+            .get();
+
+        const manufacturers: Record<string, Set<string>> = {};
+
+        // Iterate through inventory items
+        inventorySnapshot.forEach(doc => {
+            const data = doc.data();
+            const manufacturer = data.manufacturer?.toLowerCase();
+            const brandTitle = data.brand?.toLowerCase();
+
+            if (manufacturer) {
+                if (!manufacturers[manufacturer]) {
+                    manufacturers[manufacturer] = new Set();
+                }
+                if (brandTitle) {
+                    manufacturers[manufacturer].add(brandTitle);
+                }
+                // Add a default "All" title for each manufacturer
+                manufacturers[manufacturer].add("all");
+            }
+        });
+
+        // Map manufacturers and their titles to the brands array
+        const brandsArray = Object.entries(manufacturers).map(([manufacturer, titles]) => ({
+            name: capitalizeWords(manufacturer), // Capitalize manufacturer name
+            value: manufacturer,
+            url: `/shop/products/manufacturers/${manufacturer}`,
+            titles: Array.from(titles)
+                .sort((a, b) => (a === "all" ? 1 : b === "all" ? -1 : a.localeCompare(b))) // Sort, ensuring "all" is last
+                .map(title => ({
+                    name: capitalizeWords(title), // Capitalize title
+                    url: `/shop/products/manufacturers/${manufacturer}/${title}`,
+                })),
+        }));
+
+        console.log("Brands successfully generated:", brandsArray);
+        return brandsArray;
+    } catch (error) {
+        console.error("Error generating brands:", error);
+        throw error;
     }
 };

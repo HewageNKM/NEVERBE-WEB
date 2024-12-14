@@ -7,6 +7,13 @@ export interface Message {
     message: string;
 }
 
+export interface Brand {
+    name: string;
+    value: string;
+    url: string;
+    titles: { name: string; url: string }[];
+}
+
 export interface Item {
     itemId: string,
     type: string,

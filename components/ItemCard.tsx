@@ -49,7 +49,7 @@ const ItemCard = ({ item, flag }: { item: Item, flag: string }) => {
                     </div>
                     <div className="flex justify-between items-center">
                         <p className="text-sm sm:text-lg text-yellow-400 font-medium">
-                            {item.variants.length} {item.type === "shoes" ? "Colors" : "Sizes"}
+                            {item.variants.length} Colors
                         </p>
                     </div>
                 </header>
