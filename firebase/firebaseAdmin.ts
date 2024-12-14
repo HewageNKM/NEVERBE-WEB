@@ -374,7 +374,7 @@ const capitalizeWords = (str: string) => {
 
 export const getBrandsFromInventory = async () => {
     try {
-        console.log("Generating brands from inventory.");
+        console.log("Generating brands grouped by types from inventory.");
 
         const inventorySnapshot = await adminFirestore
             .collection("inventory")
@@ -382,43 +382,53 @@ export const getBrandsFromInventory = async () => {
             .where("listing", "==", "Active")
             .get();
 
-        const manufacturers: Record<string, Set<string>> = {};
+        const manufacturers: Record<string, Record<string, Set<string>>> = {};
 
         // Iterate through inventory items
         inventorySnapshot.forEach(doc => {
             const data = doc.data();
             const manufacturer = data.manufacturer?.toLowerCase();
             const brandTitle = data.brand?.toLowerCase();
+            const type = data.type?.toLowerCase();
 
             if (manufacturer) {
                 if (!manufacturers[manufacturer]) {
-                    manufacturers[manufacturer] = new Set();
+                    manufacturers[manufacturer] = {}; // Initialize manufacturer
                 }
-                if (brandTitle) {
-                    manufacturers[manufacturer].add(brandTitle);
+                if (type) {
+                    if (!manufacturers[manufacturer][type]) {
+                        manufacturers[manufacturer][type] = new Set(); // Initialize type group
+                    }
+                    if (brandTitle) {
+                        manufacturers[manufacturer][type].add(brandTitle);
+                    }
+                    // Add a default "All" title for each type group
                 }
-                // Add a default "All" title for each manufacturer
-                manufacturers[manufacturer].add("all");
+                manufacturers[manufacturer][type].add("all");
             }
         });
 
-        // Map manufacturers and their titles to the brands array
-        const brandsArray = Object.entries(manufacturers).map(([manufacturer, titles]) => ({
+        // Map manufacturers and their grouped types to the brands array
+        const brandsArray = Object.entries(manufacturers).map(([manufacturer, types]) => ({
             name: capitalizeWords(manufacturer), // Capitalize manufacturer name
             value: manufacturer,
             url: `/shop/products/manufacturers/${manufacturer}`,
-            titles: Array.from(titles)
-                .sort((a, b) => (a === "all" ? 1 : b === "all" ? -1 : a.localeCompare(b))) // Sort, ensuring "all" is last
-                .map(title => ({
-                    name: capitalizeWords(title), // Capitalize title
-                    url: `/shop/products/manufacturers/${manufacturer}/${title}`,
-                })),
+            types: Object.entries(types).map(([type, titles]) => ({
+                name: capitalizeWords(type), // Capitalize type name (e.g., Shoes)
+                url: `/shop/products/manufacturers/${manufacturer}`,
+                titles: Array.from(titles)
+                    .sort((a, b) => (a === "all" ? 1 : b === "all" ? -1 : a.localeCompare(b))) // Sort, ensuring "all" is last
+                    .map(title => ({
+                        name: capitalizeWords(title), // Capitalize title
+                        url: `/shop/products/manufacturers/${manufacturer}/${title}`,
+                    })),
+            })),
         }));
 
-        console.log("Brands successfully generated:", brandsArray);
+        console.log("Brands successfully generated with types:", brandsArray);
         return brandsArray;
     } catch (error) {
-        console.error("Error generating brands:", error);
+        console.error("Error generating brands with types:", error);
         throw error;
     }
 };

@@ -8,11 +8,23 @@ export interface Message {
 }
 
 export interface Brand {
-    name: string;
-    value: string;
-    url: string;
-    titles: { name: string; url: string }[];
+    name: string; // Manufacturer name, e.g., "Nike"
+    value: string; // Manufacturer key, e.g., "nike"
+    url: string; // URL to the manufacturer's main page
+    types: Type[]; // Array of types (e.g., Shoes, Sandals, Accessories) grouped under this manufacturer
 }
+
+export interface Type {
+    name: string; // Type name, e.g., "Shoes"
+    url: string; // URL to the type's main page under the manufacturer
+    titles: Title[]; // Array of brand titles under this type
+}
+
+export interface Title {
+    name: string; // Brand title name, e.g., "Running Shoes"
+    url: string; // URL to this specific title's page
+}
+
 
 export interface Item {
     itemId: string,

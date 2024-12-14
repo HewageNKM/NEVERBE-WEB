@@ -1,13 +1,13 @@
 "use client"
-import React, {useState} from "react";
+import React, { useState } from "react";
 import DropShadow from "@/components/DropShadow";
 import Link from "next/link";
-import {motion} from "framer-motion";
-import {IoClose} from "react-icons/io5";
-import {MdKeyboardArrowDown, MdKeyboardArrowUp} from "react-icons/md";
-import {Brand} from "@/interfaces";
+import { motion } from "framer-motion";
+import { IoClose } from "react-icons/io5";
+import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
+import { Brand } from "@/interfaces"; // Assuming Brand type is defined
 
-const Menu = ({setShowMenu, brands}: { setShowMenu: any, brands: Brand[] }) => {
+const Menu = ({ setShowMenu, brands }: { setShowMenu: any, brands: Brand[] }) => {
     const [expandedBrand, setExpandedBrand] = useState<string | null>(null);
 
     const toggleBrand = (brandValue: string) => {
@@ -17,10 +17,10 @@ const Menu = ({setShowMenu, brands}: { setShowMenu: any, brands: Brand[] }) => {
     return (
         <DropShadow containerStyle="fixed inset-0 flex justify-end items-start">
             <motion.div
-                initial={{opacity: 0, x: "100vw"}}
-                animate={{opacity: 1, x: 0}}
-                exit={{opacity: 0, x: "100vw"}}
-                transition={{duration: 0.3}}
+                initial={{ opacity: 0, x: "100vw" }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: "100vw" }}
+                transition={{ duration: 0.3 }}
                 className="w-[80vw] h-full bg-white rounded-l-lg shadow-lg relative flex flex-col p-6"
             >
                 <button
@@ -28,7 +28,7 @@ const Menu = ({setShowMenu, brands}: { setShowMenu: any, brands: Brand[] }) => {
                     className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors duration-200"
                     aria-label="Close Menu"
                 >
-                    <IoClose size={30}/>
+                    <IoClose size={30} />
                 </button>
                 <nav className="mt-8 text-lg font-semibold flex flex-col gap-5">
                     <Link
@@ -47,9 +47,9 @@ const Menu = ({setShowMenu, brands}: { setShowMenu: any, brands: Brand[] }) => {
                         >
                             <span>Brands</span>
                             {expandedBrand ? (
-                                <MdKeyboardArrowUp size={24}/>
+                                <MdKeyboardArrowUp size={24} />
                             ) : (
-                                <MdKeyboardArrowDown size={24}/>
+                                <MdKeyboardArrowDown size={24} />
                             )}
                         </button>
                         {expandedBrand && (
@@ -66,22 +66,35 @@ const Menu = ({setShowMenu, brands}: { setShowMenu: any, brands: Brand[] }) => {
                                         >
                                             {brand.name}
                                             {expandedBrand === brand.value ? (
-                                                <MdKeyboardArrowUp size={20}/>
+                                                <MdKeyboardArrowUp size={20} />
                                             ) : (
-                                                <MdKeyboardArrowDown size={20}/>
+                                                <MdKeyboardArrowDown size={20} />
                                             )}
                                         </button>
                                         {expandedBrand === brand.value && (
                                             <ul className="mt-2 pl-4 flex flex-col gap-2 text-sm text-slate-600">
-                                                {brand.titles.map((title) => (
-                                                    <li key={title.url}>
+                                                {brand.types.map((type) => (
+                                                    <li key={type.url}>
                                                         <Link
-                                                            href={title.url}
+                                                            href={type.url}
                                                             className="hover:text-blue-500"
                                                             onClick={() => setShowMenu(false)}
                                                         >
-                                                            {title.name}
+                                                            {type.name}
                                                         </Link>
+                                                        <ul className="mt-2 pl-4 flex flex-col gap-2 text-sm text-slate-600">
+                                                            {type.titles.map((title) => (
+                                                                <li key={title.url}>
+                                                                    <Link
+                                                                        href={title.url}
+                                                                        className="hover:text-blue-500"
+                                                                        onClick={() => setShowMenu(false)}
+                                                                    >
+                                                                        {title.name}
+                                                                    </Link>
+                                                                </li>
+                                                            ))}
+                                                        </ul>
                                                     </li>
                                                 ))}
                                             </ul>
