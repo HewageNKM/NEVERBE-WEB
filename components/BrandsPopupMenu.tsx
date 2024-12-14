@@ -1,35 +1,13 @@
 'use client';
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {motion} from "framer-motion";
 import Link from "next/link";
-import {useSelector} from "react-redux";
-import {RootState} from "@/redux/store";
-import axios from "axios";
-import {auth} from "@/firebase/firebaseClient";
 import {Brand} from "@/interfaces";
 
-const BrandsPopupMenu = ({setShowBrands}: { setShowBrands: React.Dispatch<React.SetStateAction<boolean>> }) => {
-    const {user} = useSelector((state: RootState) => state.authSlice);
-    const [brands, setBrands] = useState<Brand[] | []>([])
-    useEffect(() => {
-        fetchBrands();
-    }, [user]);
-    const fetchBrands = async () => {
-        try {
-            const token = await auth.currentUser?.getIdToken();
-            const res = await axios({
-                method: 'GET',
-                url: '/api/brands',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`
-                }
-            });
-            setBrands(res.data);
-        } catch (e: any) {
-            console.log(e.message);
-        }
-    }
+const BrandsPopupMenu = ({setShowBrands, brands}: {
+    setShowBrands: React.Dispatch<React.SetStateAction<boolean>>,
+    brands: Brand[]
+}) => {
     return (
         <motion.div
             initial={{opacity: 0, y: '2vh'}}

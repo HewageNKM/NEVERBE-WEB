@@ -1,39 +1,14 @@
 "use client"
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import DropShadow from "@/components/DropShadow";
 import Link from "next/link";
 import {motion} from "framer-motion";
 import {IoClose} from "react-icons/io5";
 import {MdKeyboardArrowDown, MdKeyboardArrowUp} from "react-icons/md";
-import {useSelector} from "react-redux";
-import {RootState} from "@/redux/store";
 import {Brand} from "@/interfaces";
-import {auth} from "@/firebase/firebaseClient";
-import axios from "axios";
 
-const Menu = ({setShowMenu}: { setShowMenu: any }) => {
+const Menu = ({setShowMenu, brands}: { setShowMenu: any, brands: Brand[] }) => {
     const [expandedBrand, setExpandedBrand] = useState<string | null>(null);
-    const {user} = useSelector((state: RootState) => state.authSlice);
-    const [brands, setBrands] = useState<Brand[] | []>([])
-    useEffect(() => {
-        fetchBrands();
-    }, [user]);
-    const fetchBrands = async () => {
-        try {
-            const token = await auth.currentUser?.getIdToken();
-            const res = await axios({
-                method: 'GET',
-                url: '/api/brands',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`
-                }
-            });
-            setBrands(res.data);
-        } catch (e: any) {
-            console.log(e.message);
-        }
-    }
 
     const toggleBrand = (brandValue: string) => {
         setExpandedBrand((prev) => (prev === brandValue ? null : brandValue));

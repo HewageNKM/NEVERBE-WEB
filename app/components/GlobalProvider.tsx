@@ -20,17 +20,16 @@ const GlobalProvider = ({children}: { children: ReactNode }) => {
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 const uid = user.uid;
-                console.log("User Exists: " + uid);
                 dispatch(setUser(user));
+                window.localStorage.setItem("neverbeUser", user);
             } else {
                 const usr = window.localStorage.getItem("neverbeUser");
                 if (!usr) {
                     const user = await signInAnonymously(auth);
-                    console.log("New User Logged: " + user.user.uid);
-                    window.localStorage.setItem("neverbeUser", user.user.uid);
+                    window.localStorage.setItem("neverbeUser", user.user);
                     dispatch(setUser(user));
                 } else {
-                    console.log("User Exists: " + usr);
+                    dispatch(setUser(user));
                 }
             }
         });

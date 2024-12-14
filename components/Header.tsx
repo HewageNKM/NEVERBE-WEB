@@ -1,21 +1,47 @@
 "use client"
-import React, { useState } from 'react';
-import { IoCartOutline, IoMenuOutline } from "react-icons/io5";
+import React, {useEffect, useState} from 'react';
+import {IoCartOutline, IoMenuOutline} from "react-icons/io5";
 import Link from "next/link";
-import { AnimatePresence } from "framer-motion";
+import {AnimatePresence} from "framer-motion";
 import BrandsPopupMenu from "@/components/BrandsPopupMenu";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "@/redux/store";
-import { showCart } from "@/redux/cartSlice/cartSlice";
+import {useDispatch, useSelector} from "react-redux";
+import {AppDispatch, RootState} from "@/redux/store";
+import {showCart} from "@/redux/cartSlice/cartSlice";
 import Image from "next/image";
-import { Logo } from "@/assets/images";
+import {Logo} from "@/assets/images";
 import Menu from "@/components/Menu";
+import {Brand} from "@/interfaces";
+import {auth} from "@/firebase/firebaseClient";
+import axios from "axios";
 
 const Header = () => {
     const [showBrands, setShowBrands] = useState(false);
     const [showMenu, setShowMenu] = useState(false);
     const cartItems = useSelector((state: RootState) => state.cartSlice.cart);
     const dispatch: AppDispatch = useDispatch();
+    const [brands, setBrands] = useState<Brand[] | []>([])
+    const {user} = useSelector((state: RootState) => state.authSlice);
+
+
+    useEffect(() => {
+        fetchBrands();
+    }, [user]);
+    const fetchBrands = async () => {
+        try {
+            const token = await auth.currentUser?.getIdToken();
+            const res = await axios({
+                method: 'GET',
+                url: '/api/brands',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            setBrands(res.data);
+        } catch (e: any) {
+            console.log(e.message);
+        }
+    }
 
     return (
         <header className="w-full relative" onMouseLeave={() => setShowBrands(false)}>
@@ -38,7 +64,7 @@ const Header = () => {
                     className="text-black rounded-full p-2 relative hover:bg-gray-200 transition-colors"
                     aria-label="View Cart"
                 >
-                    <IoCartOutline size={40} />
+                    <IoCartOutline size={40}/>
                     <div
                         className="absolute -top-2 -right-1 text-xl font-bold text-black flex justify-center items-center">
                         {cartItems.length}
@@ -50,7 +76,7 @@ const Header = () => {
                     className="text-black text-center p-1 rounded-full hover:bg-gray-200 transition-colors"
                     aria-label="Open Menu"
                 >
-                    <IoMenuOutline size={40} />
+                    <IoMenuOutline size={40}/>
                 </button>
             </div>
 
@@ -92,7 +118,7 @@ const Header = () => {
                     className="text-black rounded-full p-2 relative hover:bg-gray-200 transition-colors"
                     aria-label="View Cart"
                 >
-                    <IoCartOutline size={40} />
+                    <IoCartOutline size={40}/>
                     <div
                         className="absolute -top-2 -right-1 text-xl font-bold text-black flex justify-center items-center">
                         {cartItems.length}
@@ -102,8 +128,8 @@ const Header = () => {
 
             {/* Popups */}
             <AnimatePresence>
-                {showBrands && <BrandsPopupMenu setShowBrands={setShowBrands} />}
-                {showMenu && <Menu setShowMenu={setShowMenu} />}
+                {showBrands && <BrandsPopupMenu setShowBrands={setShowBrands} brands={brands}/>}
+                {showMenu && <Menu setShowMenu={setShowMenu} brands={brands}/>}
             </AnimatePresence>
         </header>
     );
