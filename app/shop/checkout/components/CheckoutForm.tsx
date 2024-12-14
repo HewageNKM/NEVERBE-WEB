@@ -51,8 +51,8 @@ const CheckoutForm = () => {
             const amountFormated = parseFloat(amount).toLocaleString('en-us', {minimumFractionDigits: 2}).replaceAll(',', '');
             const hash = md5(merchantId + orderId + amountFormated + currency + hashedSecret).toString().toUpperCase();
 
-            if (!/^947\d{8}$/.test(evt.target.phone.value)) {
-                alert("Invalid Format")
+            if (!/^07\d{8}$/.test(evt.target.phone.value)) {
+                alert("Invalid mobile number")
                 return;
             }
 
@@ -63,7 +63,7 @@ const CheckoutForm = () => {
             formData.set("first_name", evt.target.first_name.value);
             formData.set("last_name", evt.target.last_name.value);
             formData.set("email", evt.target.email.value);
-            formData.set("phone", evt.target.phone.value);
+            formData.set("phone", evt.target.phone.value.replace(/^0/, '94').trim());
             formData.set("address", evt.target.address.value);
             formData.set("city", evt.target.city.value);
             formData.set("country", "Sri Lanka");

@@ -53,9 +53,9 @@ const AddressDetails = ({
                 </label>
 
                 <label className="flex flex-col gap-2 w-full">
-                    <span className="font-medium md:text-xl text-lg">Phone (9477093343)</span>
+                    <span className="font-medium md:text-xl text-lg">Mobile</span>
                     <input
-                        placeholder="94777668765"
+                        placeholder="0777668765"
                         type="text"
                         defaultValue={customer.phone}
                         className="px-4 py-2 focus:outline-none border-slate-300 rounded-lg border-2"
