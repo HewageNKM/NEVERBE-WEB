@@ -21,25 +21,27 @@ const Cart = () => {
                 animate={{opacity: 1, x: 0}}
                 exit={{opacity: 0, x: "100vw"}}
                 transition={{type: "tween", duration: 0.4, delay: 0.1}}
-                className="px-6 py-4 overflow-x-auto w-full lg:w-[40vw] lg:rounded-l-lg bg-white h-screen relative shadow-lg overflow-y-auto"
+                className="px-6 py-4 overflow-x-auto w-full lg:w-[40vw] flex flex-col justify-between lg:rounded-l-lg bg-white h-screen relative shadow-lg overflow-y-auto"
             >
-                <h2 className="text-4xl font-bold tracking-wider border-b pb-4">Cart</h2>
-                <ul className="mt-5 flex overflow-x-auto max-h-screen flex-col justify-start gap-4">
-                    {cartItems.map((item, index) => (
-                        <li key={index}>
-                            <CartItemCard item={item}/>
-                        </li>
-                    ))}
-                </ul>
+                <div className="flex flex-col">
+                    <h2 className="text-4xl font-bold tracking-wider border-b pb-4">Cart</h2>
+                    <ul className="mt-5 flex overflow-x-auto max-h-screen flex-col justify-start gap-4">
+                        {cartItems.map((item, index) => (
+                            <li key={index}>
+                                <CartItemCard item={item}/>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
                 <button
                     onClick={() => dispatch(hideCart())}
                     className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors"
                 >
                     <IoClose size={40}/>
                 </button>
-                <div className="mt-5 w-[95%] fixed bottom-4">
+                <div className="mt-5 px-2 w-full">
                     <div className="flex justify-between">
-                        <h1 className="md:text-2xl text-lg font-bold">Total Items: {cartItems.length}</h1>
+                    <h1 className="md:text-2xl text-lg font-bold">Total Items: {cartItems.length}</h1>
                         <h1 className="md:text-2xl text-lg font-bold">Total:
                             Rs. {cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0)}</h1>
                     </div>
