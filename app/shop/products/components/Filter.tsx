@@ -60,7 +60,7 @@ const Filter = () => {
     useEffect(() => {
         dispatch(filterProducts());
         fetchBrand();
-    }, [selectedManufacturers, selectedType, selectedSizes, dispatch]);
+    }, [selectedManufacturers, selectedType, selectedSizes, dispatch,user]);
 
     return (
         <DropShadow containerStyle="flex justify-start items-start">
