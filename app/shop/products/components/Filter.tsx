@@ -1,5 +1,5 @@
 "use client";
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import DropShadow from "@/components/DropShadow";
 import {IoClose} from "react-icons/io5";
 import {useDispatch, useSelector} from "react-redux";
@@ -13,11 +13,15 @@ import {
     setSelectedType,
     toggleFilter
 } from "@/redux/productsSlice/productsSlice";
-import {accessoriesSizes, brands, productTypes, wearableSizes} from "@/constants";
+import {accessoriesSizes, productTypes, wearableSizes} from "@/constants";
 import {BiReset} from "react-icons/bi";
+import axios from "axios";
+import {auth} from "@/firebase/firebaseClient";
 
 const Filter = () => {
     const {selectedSizes, selectedType, selectedManufacturers} = useSelector((state: RootState) => state.productsSlice);
+    const {user} = useSelector((state: RootState) => state.authSlice);
+    const [brands, setBrands] = useState([])
     const dispatch: AppDispatch = useDispatch();
 
     const addBrand = (value: string) => {
@@ -36,8 +40,26 @@ const Filter = () => {
         }
     }
 
+    const fetchBrand = async () => {
+        try {
+            const token = await auth.currentUser?.getIdToken();
+            const res = await axios({
+                method: 'GET',
+                url: '/api/brands',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            setBrands(res.data);
+        } catch (e: any) {
+            console.log(e.message);
+        }
+    }
+
     useEffect(() => {
         dispatch(filterProducts());
+        fetchBrand();
     }, [selectedManufacturers, selectedType, selectedSizes, dispatch]);
 
     return (
