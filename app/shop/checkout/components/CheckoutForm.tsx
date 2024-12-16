@@ -97,7 +97,7 @@ const CheckoutForm = () => {
                 paymentId: "",
                 paymentStatus: "Pending",
                 paymentMethod: "",
-                shippingCost: calculateShipping(cartItems),
+                shippingCost: 0,
                 customer: customer,
                 updatedAt: Timestamp.now()
             }
@@ -128,7 +128,7 @@ const CheckoutForm = () => {
                     }
 
                 } else if (paymentType == "cod") {
-                    newOrder.paymentMethod = paymentMethods.COD;
+                    /*newOrder.paymentMethod = paymentMethods.COD;
                     const response = await addNewOrder(newOrder);
                     if (response.status === 200) {
                         dispatch(clearCart())
@@ -137,7 +137,7 @@ const CheckoutForm = () => {
                         router.replace("/shop/checkout/success?order_id=" + orderId)
                     } else {
                         console.log("Error adding order")
-                    }
+                    }*/
                 } else {
                     new Error("Payment type not found")
                 }
@@ -168,7 +168,7 @@ const CheckoutForm = () => {
         cartItems.forEach((item: CartItem) => {
             total += item.price * item.quantity;
         })
-        return total + calculateShipping(cartItems);
+        return total
     }
 
     const saveAddressToLocalStorage = () => {

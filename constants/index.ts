@@ -343,11 +343,6 @@ export const paymentOptions = [
         value: "payhere",
         image: payHere.squareBannerBlue,
         description: null
-    }, {
-        name: "COD (Cash On Delivery)",
-        value: "cod",
-        image: null,
-        description: "Pay after receiving your order at your doorstep."
     }]
 export const contactInfo = [
     {
@@ -374,7 +369,6 @@ export const contactInfo = [
 ];
 export const paymentMethods = {
     PayHere:"PayHere",
-    COD:"COD"
 }
 export enum ContactUs {
     infoEmail="info@neverbe.lk",
