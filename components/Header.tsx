@@ -46,7 +46,7 @@ const Header = () => {
     return (
         <header className="w-full relative" onMouseLeave={() => setShowBrands(false)}>
             {/* Logo */}
-            <Link href="/" className="z-50 absolute top-0 left-0">
+            <Link href="/" className="z-40 absolute top-0 left-0">
                 <Image
                     src={Logo}
                     alt="NEVERBE Logo"

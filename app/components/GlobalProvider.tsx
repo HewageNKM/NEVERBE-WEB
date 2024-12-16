@@ -19,18 +19,12 @@ const GlobalProvider = ({children}: { children: ReactNode }) => {
     useEffect(() => {
         onAuthStateChanged(auth, async (user) => {
             if (user) {
-                const uid = user.uid;
                 dispatch(setUser(user));
-                window.localStorage.setItem("neverbeUser", user);
+                console.log("User Logged In");
             } else {
-                const usr = window.localStorage.getItem("neverbeUser");
-                if (!usr) {
-                    const user = await signInAnonymously(auth);
-                    window.localStorage.setItem("neverbeUser", user.user);
-                    dispatch(setUser(user));
-                } else {
-                    dispatch(setUser(user));
-                }
+                const user = await signInAnonymously(auth);
+                dispatch(setUser(user));
+                console.log("User Logged In");
             }
         });
         dispatch(initializeCart())

@@ -8,9 +8,9 @@ import {AppDispatch, RootState} from "@/redux/store";
 import {CartItem, Customer, Order, OrderItem} from "@/interfaces";
 import {paymentMethods} from "@/constants";
 import {clearCart} from "@/redux/cartSlice/cartSlice";
-import {redirect, useRouter} from "next/navigation";
+import {redirect} from "next/navigation";
 import {Timestamp} from "@firebase/firestore";
-import {calculateShipping, generateOrderId} from "@/util";
+import {generateOrderId} from "@/util";
 import {addNewOrder} from "@/actions/orderAction";
 
 
@@ -19,7 +19,6 @@ const CheckoutForm = () => {
     const [paymentType, setPaymentType] = useState("payhere")
     const [saveAddress, setSaveAddress] = useState(true)
     const [loading, setLoading] = useState(false)
-    const router = useRouter();
 
     const [customer, setCustomer] = useState({
         address: "",
@@ -152,7 +151,7 @@ const CheckoutForm = () => {
         }
     }
     useEffect(() => {
-        if(process.env.NEXT_PUBLIC_IS_LIVE === "false"){
+        if (process.env.NEXT_PUBLIC_IS_LIVE === "false") {
             redirect("/down")
         }
     });
@@ -186,7 +185,7 @@ const CheckoutForm = () => {
                 <PaymentDetails setPaymentType={setPaymentType} paymentType={paymentType}/>
             </form>
             {loading && <div
-                className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center">
+                className="fixed z-50 top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center">
                 <div className='flex space-x-2 justify-center items-center h-screen'>
                     <span className='sr-only'>Loading...</span>
                     <div className='h-8 w-8 bg-white rounded-full animate-bounce [animation-delay:-0.3s]'></div>
