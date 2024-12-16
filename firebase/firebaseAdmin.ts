@@ -404,7 +404,6 @@ export const getBrandsFromInventory = async () => {
                     }
                     // Add a default "All" title for each type group
                 }
-                manufacturers[manufacturer][type].add("all");
             }
         });
 

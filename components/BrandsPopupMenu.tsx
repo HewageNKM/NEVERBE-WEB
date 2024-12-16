@@ -29,7 +29,7 @@ const BrandsPopupMenu = ({ setShowBrands, brands }: {
                             </h2>
                         </Link>
                         {brand.types.map((type, typeIndex) => (
-                            <div key={typeIndex} className="mt-4">
+                            <div key={typeIndex} className="mt-3">
                                 <h3 className="text-lg font-semibold">{type.name}</h3>
                                 <ul className="mt-2 flex flex-col gap-2 text-base">
                                     {type.titles.map((title, titleIndex) => (
