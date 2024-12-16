@@ -34,7 +34,7 @@ const PaymentDetails = ({
                 <div className="mt-4 flex flex-col items-end space-y-2 text-lg">
                     <h3 className="text-2xl font-bold">
                         Total:
-                        Rs. {cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0) + calculateShipping(cartItems)}
+                        Rs. {cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0)}
                     </h3>
                 </div>
             </div>
