@@ -8,7 +8,6 @@ interface ProductsSlice {
     products: Item[],
     showFilter: boolean,
     selectedType: string,
-    productType: "shoes" | "accessories" | "sandals" | "all",
     selectedManufacturers: string[],
     selectedSizes: string[],
     selectedSort: string
@@ -17,7 +16,6 @@ interface ProductsSlice {
 const initialState: ProductsSlice = {
     selectedManufacturers: [],
     selectedSizes: [],
-    productType:"all",
     selectedType: "all",
     products: [],
     showFilter: false,
@@ -51,9 +49,6 @@ const productsSlice = createSlice({
         },
         setProducts: (state, action) => {
             state.products = action.payload;
-        },
-        setProductType: (state, action) => {
-            state.productType = action.payload;
         }
 
     },
@@ -67,10 +62,8 @@ const productsSlice = createSlice({
                 state.products = action.payload.filter((item) => item.type == "shoes");
             } else if (state.selectedType == "accessories") {
                 state.products = action.payload.filter((item) => item.type == "accessories");
-            } else if (state.selectedType == "slippers") {
-                state.products = action.payload.filter((item) => item.type == "slippers");
-            } else if (state.selectedType == "socks") {
-                state.products = action.payload.filter((item) => item.type == "socks");
+            } else if (state.selectedType == "sandals") {
+                state.products = action.payload.filter((item) => item.type == "sandals");
             }
 
             //ManufacturersFilter by brand
@@ -144,6 +137,5 @@ export const {
     resetFilter,
     setProducts,
     setSelectedManufacturers,
-    setProductType
 } = productsSlice.actions;
 export default productsSlice.reducer;

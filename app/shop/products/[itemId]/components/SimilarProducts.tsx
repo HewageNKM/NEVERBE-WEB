@@ -10,9 +10,9 @@ const SimilarProducts = ({ items }: { items: Item[] }) => {
                 <div>
                     <h2 className="md:text-4xl text-2xl font-bold">Similar Products</h2>
                 </div>
-                <div className="mt-8 overflow-x-auto hide-scrollbar">
+                <div className="my-8 overflow-x-auto hide-scrollbar">
                     {items.length > 0 ? ( // Render items
-                        <ul className="flex gap-4">
+                        <ul className="grid grid-cols-1 gap-2 md:gap-4 md:grid-cols-3 lg:grid-cols-5 w-full">
                             {items.map((item: Item) => (
                                 <li key={item.itemId} className="flex-shrink-0 w-60">
                                     <ItemCard item={item} flag={"hot"} />

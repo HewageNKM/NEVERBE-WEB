@@ -6,12 +6,12 @@ const Brands = () => {
     return (
         <section className="w-full bg-slate-100" aria-labelledby="brands-section">
             <h2 id="brands-section"
-                className="text-center text-4xl md:text-5xl lg:text-6xl font-bold md:mt-8 mt-4 mb-4">Our Brands</h2>
-            <div className="p-8 mt-8">
-                <ul className="flex w-full mt-5 flex-wrap gap-10 flex-row justify-center items-center" role="list">
+                className="text-center text-2xl md:text-4xl lg:text-6xl font-bold md:mt-8 mt-4 mb-4">Our Brands</h2>
+            <div className="p-8 mt-2">
+                <ul className="flex w-full flex-wrap gap-10 flex-row justify-center items-center" role="list">
                     {brands.map((item, index) => (
                         <li key={index} className="flex w-[22rem] flex-col justify-center items-center" role="listitem">
-                            <h3 className="lg:text-5xl md:text-4xl text-3xl text-center">
+                            <h3 className="lg:text-4xl md:text-3xl text-xl text-center">
                                 <strong>{item.name}</strong>
                             </h3>
                             {/* Uncomment and add images if available

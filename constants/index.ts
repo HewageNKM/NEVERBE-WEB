@@ -97,7 +97,7 @@ export const sortingOptions = [
 export const productTypes = [
     {name: "All", value: "all"},
     {name: "Shoes", value: "shoes"},
-    {name: "Sandals", value: "Sandals"},
+    {name: "Sandals", value: "sandals"},
     {name: "Accessories", value: "accessories"},
 ]
 export const wearableSizes = [
@@ -229,7 +229,7 @@ export const address = {
     map: "https://maps.app.goo.gl/7eFH4HxJBnPQ96uQ9"
 }
 export const socialMedia: SocialMedia[] = [
-    {icon: IoLogoFacebook, name: "Facebook", url: "https://www.facebook.com/people/Neverbe/100063602461310/"},
+    {icon: IoLogoFacebook, name: "Facebook", url: "https://www.facebook.com/profile.php?id=61565999153582"},
     {icon: IoLogoInstagram, name: "Instagram", url: ""},
     {icon: IoLogoTiktok, name: "Tiktok", url: "https://www.tiktok.com/@neverbe196?_t=8qG86zTXl2d&_r=1"},
 ];

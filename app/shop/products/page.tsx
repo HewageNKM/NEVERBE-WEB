@@ -45,9 +45,9 @@ const Page = async () => {
     return (
         <main className="w-full relative lg:mt-32 md:mt-20 mt-24 overflow-clip">
             <div className="px-8 py-4">
-                <h1 className="md:text-4xl text-2xl tracking-wider mt-10"><strong>Products({items.length})</strong></h1>
+                <h1 className="md:text-2xl text-xl tracking-wider mt-10"><strong>Products({items.length})</strong></h1>
                 <div className="w-full">
-                    <Options productType="all"/>
+                    <Options />
                     {items.length > 0 ? (
                         <Products items={items}/>
                     ) : (

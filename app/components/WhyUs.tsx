@@ -7,8 +7,8 @@ const WhyUs = () => {
         <section className="w-full">
             <div className="px-8 py-4 mt-20">
                 <header>
-                    <h2 className="font-bold text-4xl"><strong>Why Us?</strong></h2>
-                    <h3 className="md:text-2xl text-xl text-primary mt-2">We are the best in the business</h3>
+                    <h2 className="font-bold text-2xl md:text-4xl"><strong>Why Us?</strong></h2>
+                    <h3 className="md:text-xl text-lg text-primary mt-2">We are the best in the business</h3>
                 </header>
                 <div className="flex w-full mt-5 flex-wrap gap-10 lg:gap-0 justify-evenly items-center">
                     {whyUs.map((item, index) => (
@@ -25,7 +25,7 @@ const WhyUs = () => {
                                 />
                                 <figcaption className="mt-2 text-center">{item.title}</figcaption>
                             </figure>
-                            <p className="text-center text-lg font-light text-slate-600">{item.description}</p>
+                            <p className="text-center md:text-lg text-sm font-light text-slate-600">{item.description}</p>
                         </div>
                     ))}
                 </div>

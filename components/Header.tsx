@@ -81,12 +81,12 @@ const Header = () => {
             </div>
 
             {/* Desktop Navigation */}
-            <div className="hidden lg:flex flex-row z-40 mt-16 absolute w-full justify-center items-center">
+            <div className="hidden lg:flex flex-row z-30 mt-16 absolute w-full justify-center items-center">
                 <ul className="flex flex-row gap-8">
                     <li>
                         <Link
                             href="/shop/products"
-                            className="lg:text-[1.8rem] xl:text-3xl font-bold tracking-widest hover:text-primary transition-colors"
+                            className="lg:text-[1.3rem] xl:text-3xl font-bold tracking-widest hover:text-primary transition-colors"
                         >
                             Shop Now
                         </Link>
@@ -95,7 +95,7 @@ const Header = () => {
                         <Link
                             href="/shop/products"
                             onMouseEnter={() => setShowBrands(true)}
-                            className="lg:text-[1.8rem] xl:text-3xl font-bold tracking-widest hover:text-primary transition-colors"
+                            className="lg:text-[1.3rem] xl:text-3xl font-bold tracking-widest hover:text-primary transition-colors"
                         >
                             Brands
                         </Link>
@@ -103,7 +103,7 @@ const Header = () => {
                     <li>
                         <Link
                             href="/shop/products/accessories"
-                            className="lg:text-[1.8rem] xl:text-3xl font-bold tracking-widest hover:text-primary transition-colors"
+                            className="lg:text-[1.3rem] xl:text-3xl font-bold tracking-widest hover:text-primary transition-colors"
                         >
                             Accessories
                         </Link>

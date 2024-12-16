@@ -9,8 +9,8 @@ const HotProducts = async ({hotItems}: { hotItems: Item[] }) => {
         <section className="w-full mt-10">
             <div className="px-8 py-8">
                 <div>
-                    <h2 className="text-4xl"><strong>Hot Products</strong></h2>
-                    <h3 className="md:text-2xl text-xl text-primary mt-2">Check out our best-selling products</h3>
+                    <h2 className="md:text-4xl text-2xl"><strong>Hot Products</strong></h2>
+                    <h3 className="md:text-xl text-lg text-primary mt-2">Check out our best-selling products</h3>
                 </div>
                 <div className="mt-8 w-full flex justify-center items-center">
                     {hotItems.length > 0 ? ( // Render items

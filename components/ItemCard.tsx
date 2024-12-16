@@ -48,7 +48,7 @@ const ItemCard = ({ item, flag }: { item: Item, flag: string }) => {
                         <p className="text-red-500 text-sm md:text-lg font-bold">Rs. {item.sellingPrice.toFixed(2)}</p>
                     </div>
                     <div className="flex justify-between items-center">
-                        <p className="text-sm sm:text-lg text-yellow-400 font-medium">
+                        <p className="text-sm sm:text-lg font-semibold">
                             {item.variants.length} Colors
                         </p>
                     </div>

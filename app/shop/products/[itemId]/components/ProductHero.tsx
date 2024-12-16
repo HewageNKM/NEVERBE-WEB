@@ -115,7 +115,7 @@ const ProductHero = ({ item }: { item: Item }) => {
 
     return (
         <section className="w-full relative">
-            <h1 className="md:text-4xl text-2xl tracking-wider mt-10 text-gray-800 font-extrabold">
+            <h1 className="md:text-2xl text-xl tracking-wider mt-10 text-gray-800 font-extrabold">
                 {item.name || "Product"}
             </h1>
             <article className="grid md:grid-cols-2 grid-cols-1 lg:gap-20 gap-6 mt-10">
@@ -168,9 +168,9 @@ const ProductHero = ({ item }: { item: Item }) => {
                 {/* Rest of the Product Details */}
                 <div className="flex flex-col gap-4">
                     <p className="text-lg font-medium capitalize text-gray-600">{item.manufacturer}</p>
-                    <h2 className="text-3xl font-extrabold text-gray-900">{item.name}</h2>
+                    <h2 className="text-xl font-extrabold text-gray-900">{item.name}</h2>
                     <div className="text-gray-900 flex items-center space-x-3">
-                        <span className="text-2xl font-semibold text-red-500">{"Rs. " + item.sellingPrice}</span>
+                        <span className="text-lg font-semibold text-red-500">{"Rs. " + item.sellingPrice}</span>
                         {item.discount > 0 && (
                             <span className="line-through text-lg text-gray-500">
                                 {"Rs. " + (item.sellingPrice + (item.sellingPrice * item.discount) / 100).toFixed(2)}

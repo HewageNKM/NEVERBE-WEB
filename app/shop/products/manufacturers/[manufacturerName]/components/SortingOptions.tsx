@@ -22,13 +22,13 @@ const Options = () => {
                     id="sorting"
                     onChange={(event) => dispatch(setSelectedSort(event.target.value))}
                     defaultValue={selectedSort}
-                    className="appearance-none p-2 w-fit rounded-lg font-medium bg-slate-100 border border-slate-300 hover:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-200 text-gray-700"
+                    className="appearance-none text-sm p-2 w-fit rounded-lg font-medium bg-slate-100 border border-slate-300 hover:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-200 text-gray-700"
                 >
                     {sortingOptions.map((option, index) => (
                         <option
                             key={index}
                             value={option.value}
-                            className="bg-white text-gray-700 font-medium"
+                            className="bg-white text-gray-700"
                         >
                             {option.name}
                         </option>
