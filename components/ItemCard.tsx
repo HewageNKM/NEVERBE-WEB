@@ -25,7 +25,7 @@ const ItemCard = ({ item }: { item: Item }) => {
     }, [item]);
 
     return (
-        <article className="relative w-full h-auto max-w-xs transition-transform duration-300 transform hover:scale-105 shadow-lg rounded-lg overflow-hidden bg-white">
+        <article className="relative w-[8rem] md:w-[13rem]  h-auto max-w-xs transition-transform duration-300 transform hover:scale-105 shadow-lg rounded-lg overflow-hidden bg-white">
             <Link href={`/collections/products/${item.itemId.toLowerCase()}`} aria-label={`View details for ${item.name}`}>
                 <figure className="relative overflow-hidden rounded-lg">
                     <Image
@@ -39,13 +39,13 @@ const ItemCard = ({ item }: { item: Item }) => {
                 </figure>
                 <header className="p-4 flex flex-col gap-1">
                     <h2 className="text-primary font-semibold text-sm md:text-lg">{item.name}</h2>
-                    <div className="flex flex-col justify-between">
+                    <div className="flex flex-row items-center flex-wrap gap-1">
                         {item.discount > 0 && (
-                            <p className="line-through text-gray-500 text-sm">
+                            <p className="line-through font-bold text-gray-500 text-sm">
                                 Rs. {(item.sellingPrice + (item.sellingPrice * item.discount / 100)).toFixed(2)}
                             </p>
                         )}
-                        <p className="text-red-500 text-sm md:text-lg font-bold">Rs. {item.sellingPrice.toFixed(2)}</p>
+                        <p className="text-red-500 text-sm font-bold">Rs. {item.sellingPrice.toFixed(2)}</p>
                     </div>
                     <div className="flex justify-between items-center">
                         <p className="text-sm sm:text-lg font-semibold">

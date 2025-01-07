@@ -11,7 +11,7 @@ const Footer = () => {
             <div className="flex md:justify-center lg:justify-between md:flex-wrap flex-col md:flex-row p-8 gap-10">
                 <div className="flex flex-col md:flex-row gap-4 md:justify-center justify-start md:items-center">
                     <Link href="/" aria-label="Go to home page">
-                        <figure className="bg-black p-2 rounded-full">
+                        <figure className="bg-black p-2 w-fit rounded-full">
                             <Image src={Logo} alt="NEVERBE Logo" width={100} height={100} />
                         </figure>
                     </Link>

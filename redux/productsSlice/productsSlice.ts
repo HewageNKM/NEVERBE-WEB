@@ -1,8 +1,7 @@
 import {Item} from "@/interfaces";
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import {WritableDraft} from "immer";
-import axios from "axios";
-import {getIdToken} from "@/firebase/firebaseClient";
+import {getProducts} from "@/actions/inventoryAction";
 
 interface ProductsSlice {
     products: Item[],
@@ -53,7 +52,7 @@ const productsSlice = createSlice({
 
     },
     extraReducers: (builder) => {
-        builder.addCase(filterProducts.fulfilled, (state, action) => {
+        builder.addCase(getInventory.fulfilled, (state, action) => {
 
             //ManufacturersFilter by brand
             if (state.selectedType == "all") {
@@ -75,11 +74,8 @@ const productsSlice = createSlice({
             if (state.selectedSizes.length > 0) {
                 state.products = state.products.filter((item) => item.variants.some((variant) => variant.sizes.some((size) => state.selectedSizes.includes(size.size))));
             }
-
             sort(state, action);
-        }).addCase(sortProducts.fulfilled, (state, action) => {
-            sort(state, action);
-        });
+        })
     }
 });
 
@@ -95,34 +91,9 @@ export const sort = (state: WritableDraft<ProductsSlice>, action: any) => {
     }
 }
 
-export const filterProducts = createAsyncThunk('products/getFilterProducts', async (arg, thunkAPI) => {
+export const getInventory = createAsyncThunk('products/getFilterProducts', async (arg, thunkAPI) => {
     try {
-        const token = await getIdToken();
-        const response = await axios({
-            method: 'GET',
-            url: '/api/inventory',
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
-        return response.data;
-    } catch (e) {
-        console.log(e);
-        return thunkAPI.rejectWithValue(e);
-    }
-});
-
-export const sortProducts = createAsyncThunk('products/getSortProductsByPrice', async (arg, thunkAPI) => {
-    try {
-        const token = await getIdToken();
-        const response = await axios({
-            method: 'GET',
-            url: '/api/inventory',
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
-        return response.data;
+        return await getProducts();
     } catch (e) {
         console.log(e);
         return thunkAPI.rejectWithValue(e);

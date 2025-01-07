@@ -30,6 +30,8 @@ export interface Item {
     itemId: string,
     type: string,
     brand: string,
+    description: string,
+    keywords: string[],
     thumbnail: {
         file:string,
         url:string,

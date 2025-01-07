@@ -13,7 +13,7 @@ const Header = () => {
     const dispatch: AppDispatch = useDispatch();
 
     return (
-        <header className="z-50 bg-black w-full">
+        <header className="z-50 bg-black w-full fixed">
             <div className="flex justify-between items-center p-4">
                 <figure className="hidden lg:block p-1">
                     <Link href={"/"}>
@@ -37,7 +37,7 @@ const Header = () => {
                             <Link href={"/about"} className="hover:text-primary-100">About Us</Link>
                         </li>
                         <li>
-                            <Link href={"/contact"} className="hover:text-primary-100" s>Contact Us</Link>
+                            <Link href={"/contact"} className="hover:text-primary-100">Contact Us</Link>
                         </li>
                     </ul>
                 </nav>

@@ -3,7 +3,7 @@ import React, {ReactNode} from 'react';
 import {useSelector} from "react-redux";
 import {RootState} from "@/redux/store";
 import {AnimatePresence} from "framer-motion";
-import Filter from "@/app/collections/products/components/Filter";
+import PopUpFilter from "@/app/collections/products/components/PopUpFilter";
 import { Analytics } from "@vercel/analytics/react";
 
 const Layout = ({children}:{children:ReactNode}) => {
@@ -13,7 +13,7 @@ const Layout = ({children}:{children:ReactNode}) => {
         <div className="w-full relative">
             {children}
             <AnimatePresence>
-                {showFilter && (<Filter />)}
+                {showFilter && (<PopUpFilter />)}
             </AnimatePresence>
             <Analytics />
         </div>
