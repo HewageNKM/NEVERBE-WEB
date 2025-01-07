@@ -16,11 +16,13 @@ import {
 import {accessoriesSizes, productTypes, wearableSizes} from "@/constants";
 import {BiReset} from "react-icons/bi";
 import {getBrands} from "@/actions/inventoryAction";
+import Skeleton from "@/components/Skeleton";
 
 const PopUpFilter = () => {
-    const {selectedSizes, selectedType, selectedManufacturers} = useSelector((state: RootState) => state.productsSlice);
+    const {selectedSizes, selectedType, selectedManufacturers, selectedSort} = useSelector((state: RootState) => state.productsSlice);
     const {user} = useSelector((state: RootState) => state.authSlice);
     const [brands, setBrands] = useState([])
+    const [isBrandsLoading, setIsBrandsLoading] = useState(true);
     const dispatch: AppDispatch = useDispatch();
 
     const addBrand = (value: string) => {
@@ -43,14 +45,16 @@ const PopUpFilter = () => {
         try {
             const brands = await getBrands();
             setBrands(brands);
+            setIsBrandsLoading(false);
         } catch (e: any) {
             console.log(e.message);
+            setIsBrandsLoading(false);
         }
     }
 
     useEffect(() => {
         dispatch(getInventory());
-    }, [selectedManufacturers, selectedType, selectedSizes, dispatch, user]);
+    }, [selectedManufacturers, selectedType, selectedSizes, dispatch, user,selectedSort]);
 
     useEffect(() => {
         if (user) {
@@ -93,7 +97,7 @@ const PopUpFilter = () => {
                     {/* Brands Section */}
                     <div className="mt-5 px-2">
                         <h3 className="text-xl font-semibold"><strong>Brands</strong></h3>
-                        <div className="flex mt-2 flex-row gap-5 text-lg flex-wrap items-center">
+                        <div className="flex relative mt-2 flex-row gap-5 text-lg flex-wrap items-center">
                             {brands.map((brand, index) => (
                                 <label key={index}
                                        className="flex items-center gap-2 cursor-pointer hover:bg-gray-100 rounded p-2 transition duration-200">
@@ -107,6 +111,11 @@ const PopUpFilter = () => {
                                     <span className="text-gray-800 font-medium">{brand.name}</span>
                                 </label>
                             ))}
+                            {isBrandsLoading && (
+                                <div className="w-full h-16">
+                                    <Skeleton />
+                                </div>
+                            )}
                         </div>
                     </div>
                     {/* Sizes Section */}

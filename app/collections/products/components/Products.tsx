@@ -34,14 +34,14 @@ const Products = ({items}: { items: Item[] }) => {
                             <FiFilter size={30} className="text-gray-500"/>
                         </button>
                     </div>
-                    <div>
+                    <div className="flex items-center space-x-2">
                         <IoFilter size={30} className="text-gray-500"/>
                         <div className="relative">
                             <select
                                 id="sorting"
                                 onChange={(event) => dispatch(setSelectedSort(event.target.value))}
                                 defaultValue={selectedSort}
-                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                className="bg-white text-gray-700 font-medium border border-gray-300 rounded-md p-2 cursor-pointer"
                             >
                                 {sortingOptions.map((option, index) => (
                                     <option
@@ -55,6 +55,7 @@ const Products = ({items}: { items: Item[] }) => {
                             </select>
                         </div>
                     </div>
+
                 </div>
                 <ul className="flex flex-row gap-3 md:gap-10 flex-wrap mt-5 w-full">
                     {products.map((item) => (
@@ -63,8 +64,8 @@ const Products = ({items}: { items: Item[] }) => {
                         </li>
                     ))}
                 </ul>
+                {products.length === 0 && <EmptyState message={"Products Not Available!"}/>}
             </div>
-            {products.length === 0 && <EmptyState message={"Products Not Available!"}/>}
         </section>
     );
 };

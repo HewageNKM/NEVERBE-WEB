@@ -1,6 +1,6 @@
 import {auth, getIdToken} from "@/firebase/firebaseClient";
 import axios from "axios";
-import {brandsURL} from "@/app/urls";
+import {brandsURL, getInventoryURL} from "@/app/urls";
 
 export const getBrands = async () => {
     try {
@@ -24,7 +24,7 @@ export const getProducts = async () => {
       const token = await getIdToken();
       const response = await axios({
           method: 'GET',
-          url: '/api/inventory',
+          url: getInventoryURL,
           headers: {
               Authorization: `Bearer ${token}`
           }
