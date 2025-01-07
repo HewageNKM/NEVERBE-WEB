@@ -1,11 +1,11 @@
 import React from 'react';
-import ProductHero from "@/app/shop/products/[itemId]/components/ProductHero";
-import SizeChart from "@/app/shop/products/[itemId]/components/SizeChart";
+import ProductHero from "@/app/collections/products/[itemId]/components/ProductHero";
+import SizeChart from "@/app/collections/products/[itemId]/components/SizeChart";
 import {notFound} from "next/navigation";
 import {Item} from "@/interfaces";
 import {getItemById, getSimilarItems} from "@/firebase/firebaseAdmin";
 import {Metadata} from "next";
-import SimilarProducts from "@/app/shop/products/[itemId]/components/SimilarProducts";
+import SimilarProducts from "@/app/collections/products/[itemId]/components/SimilarProducts";
 
 // Dynamically generate metadata
 export async function generateMetadata({params}: { params: { itemId: string } }): Promise<Metadata> {

@@ -15,8 +15,7 @@ import {
 } from "@/redux/productsSlice/productsSlice";
 import {accessoriesSizes, productTypes, wearableSizes} from "@/constants";
 import {BiReset} from "react-icons/bi";
-import axios from "axios";
-import {auth} from "@/firebase/firebaseClient";
+import {getBrands} from "@/actions/inventoryAction";
 
 const Filter = () => {
     const {selectedSizes, selectedType, selectedManufacturers} = useSelector((state: RootState) => state.productsSlice);
@@ -42,16 +41,8 @@ const Filter = () => {
 
     const fetchBrand = async () => {
         try {
-            const token = await auth.currentUser?.getIdToken();
-            const res = await axios({
-                method: 'GET',
-                url: '/api/brands',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`
-                }
-            });
-            setBrands(res.data);
+            const brands = await getBrands();
+            setBrands(brands);
         } catch (e: any) {
             console.log(e.message);
         }
@@ -60,7 +51,7 @@ const Filter = () => {
     useEffect(() => {
         dispatch(filterProducts());
         fetchBrand();
-    }, [selectedManufacturers, selectedType, selectedSizes, dispatch,user]);
+    }, [selectedManufacturers, selectedType, selectedSizes, dispatch, user]);
 
     return (
         <DropShadow containerStyle="flex justify-start items-start">

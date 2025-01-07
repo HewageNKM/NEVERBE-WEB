@@ -1,136 +1,66 @@
 "use client"
-import React, {useEffect, useState} from 'react';
-import {IoCartOutline, IoMenuOutline} from "react-icons/io5";
-import Link from "next/link";
-import {AnimatePresence} from "framer-motion";
-import BrandsPopupMenu from "@/components/BrandsPopupMenu";
+import React from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "@/redux/store";
 import {showCart} from "@/redux/cartSlice/cartSlice";
+import {IoCartOutline, IoMenu, IoSearch} from "react-icons/io5";
+import Link from "next/link";
 import Image from "next/image";
-import {Logo} from "@/assets/images";
-import Menu from "@/components/Menu";
-import {Brand} from "@/interfaces";
-import {auth} from "@/firebase/firebaseClient";
-import axios from "axios";
+import {Banner, Logo} from "@/assets/images";
 
 const Header = () => {
-    const [showBrands, setShowBrands] = useState(false);
-    const [showMenu, setShowMenu] = useState(false);
     const cartItems = useSelector((state: RootState) => state.cartSlice.cart);
     const dispatch: AppDispatch = useDispatch();
-    const [brands, setBrands] = useState<Brand[] | []>([])
-    const {user} = useSelector((state: RootState) => state.authSlice);
-
-
-    useEffect(() => {
-        fetchBrands();
-    }, [user]);
-    const fetchBrands = async () => {
-        try {
-            const token = await auth.currentUser?.getIdToken();
-            const res = await axios({
-                method: 'GET',
-                url: '/api/brands',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`
-                }
-            });
-            setBrands(res.data);
-        } catch (e: any) {
-            console.log(e.message);
-        }
-    }
 
     return (
-        <header className="w-full relative" onMouseLeave={() => setShowBrands(false)}>
-            {/* Logo */}
-            <Link href="/" className="z-40 absolute top-0 left-0">
-                <Image
-                    src={Logo}
-                    alt="NEVERBE Logo"
-                    width={200}
-                    height={200}
-                    className="cursor-pointer md:h-36 md:w-36 h-28 w-28"
-                />
-            </Link>
-
-            {/* Mobile Header */}
-            <div className="lg:hidden z-50 flex flex-row gap-3 absolute right-5 top-7">
-                {/* Cart Button */}
-                <button
-                    onClick={() => dispatch(showCart())}
-                    className="text-black rounded-full p-2 relative hover:bg-gray-200 transition-colors"
-                    aria-label="View Cart"
-                >
-                    <IoCartOutline size={40}/>
-                    <div
-                        className="absolute -top-2 -right-1 text-xl font-bold text-black flex justify-center items-center">
-                        {cartItems.length}
+        <header className="z-50 bg-black w-full">
+            <div className="flex justify-between items-center p-4">
+                <figure className="hidden lg:block p-1">
+                    <Link href={"/"}>
+                        <Image src={Logo} alt={"Logo"} width={100} height={100}/>
+                    </Link>
+                </figure>
+                <figure className="lg:hidden block">
+                    <Link href={"/"}>
+                        <Image src={Banner} alt={"Banner"} width={180} height={180}/>
+                    </Link>
+                </figure>
+                <nav className="hidden lg:block">
+                    <ul className="flex text-white gap-4 text-xl">
+                        <li>
+                            <Link href={"/"} className="hover:text-primary-100">Home</Link>
+                        </li>
+                        <li>
+                            <Link href={"/collections/products"} className="hover:text-primary-100">Shop</Link>
+                        </li>
+                        <li>
+                            <Link href={"/about"} className="hover:text-primary-100">About Us</Link>
+                        </li>
+                        <li>
+                            <Link href={"/contact"} className="hover:text-primary-100" s>Contact Us</Link>
+                        </li>
+                    </ul>
+                </nav>
+                <div className="flex text-white  flex-row gap-3 items-center">
+                    <div className="relative hidden lg:block w-fit">
+                        <IoSearch size={20} className="top-2 text-gray-600 right-2 absolute"/>
+                        <input type="text" placeholder="search for products"
+                               className="py-2 pr-8 text-black px-4 w-[15rem] rounded-md text-sm"/>
                     </div>
-                </button>
-                {/* Menu Button */}
-                <button
-                    onClick={() => setShowMenu(true)}
-                    className="text-black text-center p-1 rounded-full hover:bg-gray-200 transition-colors"
-                    aria-label="Open Menu"
-                >
-                    <IoMenuOutline size={40}/>
-                </button>
-            </div>
-
-            {/* Desktop Navigation */}
-            <div className="hidden lg:flex flex-row z-30 mt-16 absolute w-full justify-center items-center">
-                <ul className="flex flex-row gap-8">
-                    <li>
-                        <Link
-                            href="/shop/products"
-                            className="lg:text-[1.3rem] xl:text-3xl font-bold tracking-widest hover:text-primary transition-colors"
-                        >
-                            Shop Now
-                        </Link>
-                    </li>
-                    <li>
-                        <Link
-                            href="/shop/products"
-                            onMouseEnter={() => setShowBrands(true)}
-                            className="lg:text-[1.3rem] xl:text-3xl font-bold tracking-widest hover:text-primary transition-colors"
-                        >
-                            Brands
-                        </Link>
-                    </li>
-                    <li>
-                        <Link
-                            href="/shop/products/accessories"
-                            className="lg:text-[1.3rem] xl:text-3xl font-bold tracking-widest hover:text-primary transition-colors"
-                        >
-                            Accessories
-                        </Link>
-                    </li>
-                </ul>
-            </div>
-
-            {/* Cart Icon for Desktop */}
-            <div className="hidden lg:flex absolute top-8 z-50 right-5 items-center gap-3">
-                <button
-                    onClick={() => dispatch(showCart())}
-                    className="text-black rounded-full p-2 relative hover:bg-gray-200 transition-colors"
-                    aria-label="View Cart"
-                >
-                    <IoCartOutline size={40}/>
-                    <div
-                        className="absolute -top-2 -right-1 text-xl font-bold text-black flex justify-center items-center">
-                        {cartItems.length}
+                    <div className="relative p-2 hover:bg-gray-900 rounded-full">
+                        <button className="text-white" onClick={() => dispatch(showCart())}>
+                            <IoCartOutline size={30}/>
+                        </button>
+                        <span className="absolute -top-2 p-1 right-0 bg-primary text-white text-xs rounded-full ">
+                        {cartItems.length}</span>
                     </div>
-                </button>
+                    <div className="lg:hidden block">
+                        <button>
+                            <IoMenu size={30}/>
+                        </button>
+                    </div>
+                </div>
             </div>
-
-            {/* Popups */}
-            <AnimatePresence>
-                {showBrands && <BrandsPopupMenu setShowBrands={setShowBrands} brands={brands}/>}
-                {showMenu && <Menu setShowMenu={setShowMenu} brands={brands}/>}
-            </AnimatePresence>
         </header>
     );
 };

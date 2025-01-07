@@ -8,7 +8,7 @@ const NewArrivals = async ({arrivals: arrivals}:{arrivals:Item[]}) => {
 
     return (
         <section className="w-full mt-10">
-            <div className="md:px-8 py-4 px-4 w-full">
+            <div className="lg:px-24 px-4 w-full">
                 <div>
                     <h2 className="md:text-4xl text-2xl"><strong>New Arrivals</strong></h2>
                     <h3 className="md:text-xl text-lg text-primary mt-2">Check out our latest products</h3>
@@ -18,7 +18,7 @@ const NewArrivals = async ({arrivals: arrivals}:{arrivals:Item[]}) => {
                         <ul className="grid grid-cols-2 gap-2 md:gap-4 md:grid-cols-3 lg:grid-cols-7 w-full">
                             {arrivals.map((item: Item) => (
                                 <li key={item.itemId}>
-                                    <ItemCard item={item} flag="new" />
+                                    <ItemCard item={item} />
                                 </li>
                             ))}
                         </ul>

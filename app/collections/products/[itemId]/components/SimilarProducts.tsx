@@ -15,7 +15,7 @@ const SimilarProducts = ({ items }: { items: Item[] }) => {
                         <ul className="grid grid-cols-1 gap-2 md:gap-4 md:grid-cols-3 lg:grid-cols-5 w-full">
                             {items.map((item: Item) => (
                                 <li key={item.itemId} className="flex-shrink-0 w-60">
-                                    <ItemCard item={item} flag={"hot"} />
+                                    <ItemCard item={item} />
                                 </li>
                             ))}
                         </ul>

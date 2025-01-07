@@ -38,7 +38,7 @@ const Menu = ({ setShowMenu, brands }: { setShowMenu: any; brands: Brand[] }) =>
                 <nav className="mt-10 text-lg font-semibold flex flex-col gap-6">
                     {/* Shop Now Link */}
                     <Link
-                        href="/shop/products"
+                        href="/app/collections/products"
                         className="text-gray-700 p-3 hover:text-blue-600 transition-colors duration-200"
                         onClick={() => setShowMenu(false)}
                     >
@@ -111,7 +111,7 @@ const Menu = ({ setShowMenu, brands }: { setShowMenu: any; brands: Brand[] }) =>
 
                     {/* Accessories Link */}
                     <Link
-                        href="/shop/products/accessories"
+                        href="/app/collections/products/accessories"
                         className="text-gray-700 p-3 hover:text-blue-600 transition-colors duration-200"
                         onClick={() => setShowMenu(false)}
                     >

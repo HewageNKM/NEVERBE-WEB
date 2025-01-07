@@ -6,7 +6,7 @@ const FaqCard = ({ faq, index }: { faq: { question: string, answer: string }, in
     const [showAnswer, setShowAnswer] = useState(false);
 
     return (
-        <div className={`rounded-lg transition-all duration-300 border p-2 w-fit ${showAnswer ? "lg:h-[6rem] h-[7.5rem]" : "h-[3.5rem] lg:h-[3rem]"}`}>
+        <div className={`rounded-lg transition-all duration-300 border p-2 w-fit ${showAnswer ? "lg:h-[6rem] h-[7.5rem]" : "h-[3.7rem] lg:h-[3rem]"}`}>
             <button
                 onClick={() => setShowAnswer(!showAnswer)}
                 aria-expanded={showAnswer}

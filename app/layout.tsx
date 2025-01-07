@@ -11,7 +11,7 @@ const roboto = Roboto({weight: "400", subsets: ["latin"]});
 
 export const metadata: Metadata = {
     title: {
-        default: "NEVERBE - Premium Sneakers in Sri Lanka",
+        default: "NEVERBE",
         template: "%s - NEVERBE",
     },
     metadataBase: new URL("https://neverbe.lk"),
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
         card: "summary_large_image",
         site: "@neverbe",
         creator: "@neverbe",
-        title: "NEVERBE - Premium Shoes in Sri Lanka",
+        title: "NEVERBE",
         description:
             "NEVERBE is Sri Lanka's premier online store for high-quality branded copy shoes and accessories.",
         images: [

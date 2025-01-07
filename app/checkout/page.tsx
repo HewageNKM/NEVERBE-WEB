@@ -1,6 +1,6 @@
 import React from 'react';
 import {Metadata} from "next";
-import CheckoutForm from "@/app/shop/checkout/components/CheckoutForm";
+import CheckoutForm from "@/app/checkout/components/CheckoutForm";
 
 export const metadata: Metadata = {
     title: "Checkout"

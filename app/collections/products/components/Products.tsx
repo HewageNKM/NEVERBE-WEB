@@ -20,7 +20,7 @@ const Products = ({ items }: { items: Item[] }) => {
             <ul className="grid grid-cols-2 gap-2 md:gap-4 md:grid-cols-3 lg:grid-cols-7 w-full">
                 {products.map((item) => (
                     <li key={item.itemId}>
-                    <ItemCard item={item} flag={""} />
+                    <ItemCard item={item} />
                     </li>
                 ))}
             </ul>

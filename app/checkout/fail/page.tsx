@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from "next/link";
-import FailAnimationComponent from "@/app/shop/checkout/fail/components/FailAnimationComponent";
+import FailAnimationComponent from "@/app/checkout/fail/components/FailAnimationComponent";
 import {IoHeadset} from "react-icons/io5";
 
 
@@ -32,7 +32,7 @@ const Page = () => {
                 </div>
 
                 {/* Action Button */}
-                <Link href="/"
+                <Link href="/public"
                       className="mt-6 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all text-lg">
                     Back to Home
                 </Link>

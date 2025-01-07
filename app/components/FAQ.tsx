@@ -5,7 +5,7 @@ import Link from "next/link";
 
 const Faq = () => {
     return (
-        <section className="w-full mt-10" aria-labelledby="faq-section">
+        <section className="w-full mt-10 lg:px-24 px-2" aria-labelledby="faq-section">
             <h2 id="faq-section" className="md:text-4xl text-2xl font-bold px-8">
                 <strong>FAQ</strong>
             </h2>

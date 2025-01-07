@@ -411,15 +411,15 @@ export const getBrandsFromInventory = async () => {
         const brandsArray = Object.entries(manufacturers).map(([manufacturer, types]) => ({
             name: capitalizeWords(manufacturer), // Capitalize manufacturer name
             value: manufacturer,
-            url: `/shop/products/manufacturers/${manufacturer}`,
+            url: `/collections/products?manufacturer=${manufacturer}`,
             types: Object.entries(types).map(([type, titles]) => ({
                 name: capitalizeWords(type), // Capitalize type name (e.g., Shoes)
-                url: `/shop/products/manufacturers/${manufacturer}`,
+                url: `/collections/products?manufacturer=${manufacturer}`,
                 titles: Array.from(titles)
                     .sort((a, b) => (a === "all" ? 1 : b === "all" ? -1 : a.localeCompare(b))) // Sort, ensuring "all" is last
                     .map(title => ({
                         name: capitalizeWords(title), // Capitalize title
-                        url: `/shop/products/manufacturers/${manufacturer}/${title}`,
+                        url: `/collections/products?manufacturer=${manufacturer}&brand=${title}`,
                     })),
             })),
         }));

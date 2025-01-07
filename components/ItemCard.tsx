@@ -4,7 +4,7 @@ import { Item } from "@/interfaces";
 import Image from "next/image";
 import Link from "next/link";
 
-const ItemCard = ({ item, flag }: { item: Item, flag: string }) => {
+const ItemCard = ({ item }: { item: Item }) => {
     const [outOfStocks, setOutOfStocks] = useState(false);
     const [outOfStocksLabel, setOutOfStocksLabel] = useState("Out of Stock");
 
@@ -26,7 +26,7 @@ const ItemCard = ({ item, flag }: { item: Item, flag: string }) => {
 
     return (
         <article className="relative w-full h-auto max-w-xs transition-transform duration-300 transform hover:scale-105 shadow-lg rounded-lg overflow-hidden bg-white">
-            <Link href={`/shop/products/${item.itemId.toLowerCase()}`} aria-label={`View details for ${item.name}`}>
+            <Link href={`/collections/products/${item.itemId.toLowerCase()}`} aria-label={`View details for ${item.name}`}>
                 <figure className="relative overflow-hidden rounded-lg">
                     <Image
                         width={300}
@@ -56,9 +56,6 @@ const ItemCard = ({ item, flag }: { item: Item, flag: string }) => {
                 <h2 className="absolute top-0 left-0 capitalize bg-black text-white p-1 text-sm">{item.manufacturer.replace("-"," ")}</h2>
             </Link>
             <div className="absolute top-0 right-0 flex flex-col gap-1 p-1">
-                {flag === "new" && (
-                    <span className="bg-green-500 text-white p-1 rounded-md font-medium text-sm">New</span>
-                )}
                 {item.discount > 0 && (
                     <span className="bg-red-500 text-white p-1 rounded-md font-medium text-sm">{item.discount}%</span>
                 )}

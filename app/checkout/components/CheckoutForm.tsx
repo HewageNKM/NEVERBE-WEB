@@ -1,8 +1,8 @@
 "use client"
 import md5 from 'crypto-js/md5';
 import React, {useEffect, useState} from 'react';
-import AddressDetails from "@/app/shop/checkout/components/AddressDetails";
-import PaymentDetails from "@/app/shop/checkout/components/PaymentDetails";
+import AddressDetails from "@/app/checkout/components/AddressDetails";
+import PaymentDetails from "@/app/checkout/components/PaymentDetails";
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "@/redux/store";
 import {CartItem, Customer, Order, OrderItem} from "@/interfaces";
@@ -39,10 +39,10 @@ const CheckoutForm = () => {
         try {
             const form = evt.target;
             const formData = new FormData(form);
-            const merchantSecret = process.env.NEXT_PUBLIC_PAYHERE_MERCHANT_SECRET;
+            const merchantSecret = process.env.NEXT_PUBLIC_IPG_MERCHANT_SECRET;
 
             const hashedSecret = md5(merchantSecret).toString().toUpperCase();
-            const merchantId = process.env.NEXT_PUBLIC_PAYHERE_MERCHANT_ID;
+            const merchantId = process.env.NEXT_PUBLIC_IPG_MERCHANT_ID;
             const orderId = generateOrderId("Website");
 
             const currency = 'LKR';
@@ -58,7 +58,7 @@ const CheckoutForm = () => {
             formData.set("merchant_id", merchantId);
             formData.set("return_url", `${process.env.NEXT_PUBLIC_BASE_URL}/shop/checkout/success`);
             formData.set("cancel_url", `${process.env.NEXT_PUBLIC_BASE_URL}/shop/checkout/fail`);
-            formData.set("notify_url", `${process.env.NEXT_PUBLIC_BASE_URL}/api/payhere`);
+            formData.set("notify_url", `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/ipg`);
             formData.set("first_name", evt.target.first_name.value);
             formData.set("last_name", evt.target.last_name.value);
             formData.set("email", evt.target.email.value);
@@ -75,7 +75,7 @@ const CheckoutForm = () => {
 
             const submitForm = document.createElement('form');
             submitForm.method = 'POST';
-            submitForm.action = process.env.NEXT_PUBLIC_PAYHERE_URL;
+            submitForm.action = process.env.NEXT_PUBLIC_IPG_URL;
 
             // Append hidden input fields to the new form
             for (const [key, value] of formData.entries()) {

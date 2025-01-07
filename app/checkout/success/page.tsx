@@ -40,7 +40,7 @@ const Page = async ({ searchParams }: { searchParams: { order_id: string } }) =>
                 </div>
 
                 {/* Back to Home Link */}
-                <Link href="/" className="mt-6 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all text-lg">
+                <Link href="/public" className="mt-6 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all text-lg">
                     Go Back Home
                 </Link>
             </div>

@@ -225,7 +225,7 @@ export const shippingReturnPolicy = [
     }
 ];
 export const address = {
-    address: "330/40/10, New Kandy Road, Delgoda",
+    address: "330/4/10, New Kandy Road, Delgoda",
     map: "https://maps.app.goo.gl/7eFH4HxJBnPQ96uQ9"
 }
 export const socialMedia: SocialMedia[] = [
@@ -368,7 +368,7 @@ export const contactInfo = [
 
 ];
 export const paymentMethods = {
-    PayHere:"PayHere",
+    PayHere:"IPG",
 }
 export enum ContactUs {
     infoEmail="info@neverbe.lk",

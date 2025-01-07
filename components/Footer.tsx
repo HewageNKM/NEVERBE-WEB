@@ -7,11 +7,11 @@ import { GoLocation } from "react-icons/go";
 
 const Footer = () => {
     return (
-        <footer className="w-full bg-primary text-white py-4">
+        <footer className="w-full bg-primary text-white py-4 lg:px-24 px-16">
             <div className="flex md:justify-center lg:justify-between md:flex-wrap flex-col md:flex-row p-8 gap-10">
                 <div className="flex flex-col md:flex-row gap-4 md:justify-center justify-start md:items-center">
                     <Link href="/" aria-label="Go to home page">
-                        <figure>
+                        <figure className="bg-black p-2 rounded-full">
                             <Image src={Logo} alt="NEVERBE Logo" width={100} height={100} />
                         </figure>
                     </Link>
@@ -71,7 +71,7 @@ const Footer = () => {
             </div>
             <div className="mt-10 w-full flex-row lg:justify-evenly justify-center flex-wrap flex gap-5 px-8 items-center">
                 <p className="text-lg font-medium text-center">© {new Date().getFullYear().toString()} NEVERBE. All Rights Reserved.</p>
-                <p className="font-medium text-base">Developed By <Link href={"https://hewagenkm.github.io/"}>Nadun Malwenna</Link></p>
+                <p className="font-medium text-base">Developed By <Link href={"https://github.com/EthanBlake00"}>Ethan Blake</Link></p>
                 <Link href={payHere.payHereLink} target="_blank" rel="noopener noreferrer">
                     <figure className="flex justify-center items-center">
                         <Image src={payHere.longWhiteBanner} width={400} height={200} alt="PayHere Logo" />

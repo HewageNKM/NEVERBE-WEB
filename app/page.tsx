@@ -3,16 +3,15 @@ import Hero from "@/app/components/Hero";
 import NewArrivals from "@/app/components/NewArrivals";
 import WhyUs from "@/app/components/WhyUs";
 import Brands from "@/app/components/Brands";
-import HotProducts from "@/app/components/HotProducts";
+import PopularProducts from "@/app/components/PopularProducts";
 import FAQ from "@/app/components/FAQ";
 import {Item, Slide} from "@/interfaces";
 import {getHotProducts, getRecentItems, getSliders} from "@/firebase/firebaseAdmin";
 
 const Page = async () => {
-    let arrivals: Item[] = [];
-    let hotItems: Item[] = [];
-    let sliders: Slide[] = [];
-
+    const arrivals: Item[] = [];
+    const hotItems: Item[] = [];
+    const sliders: Slide[] = [];
 
     try {
         arrivals.push(...await getRecentItems());
@@ -25,7 +24,7 @@ const Page = async () => {
     return (
         <>
             <Hero slides={sliders}/>
-            <HotProducts hotItems={hotItems}/>
+            <PopularProducts hotItems={hotItems}/>
             <NewArrivals arrivals={arrivals}/>
             <WhyUs/>
             <Brands/>
