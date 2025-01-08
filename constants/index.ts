@@ -230,7 +230,7 @@ export const address = {
 }
 export const socialMedia: SocialMedia[] = [
     {icon: IoLogoFacebook, name: "Facebook", url: "https://www.facebook.com/profile.php?id=61565999153582"},
-    {icon: IoLogoInstagram, name: "Instagram", url: ""},
+    {icon: IoLogoInstagram, name: "Instagram", url: "https://www.instagram.com/neverbe.196"},
     {icon: IoLogoTiktok, name: "Tiktok", url: "https://www.tiktok.com/@neverbe196?_t=8qG86zTXl2d&_r=1"},
 ];
 export const informationLinks: FooterLink[] = [

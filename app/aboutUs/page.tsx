@@ -23,7 +23,7 @@ const AboutUs = () => {
                         <p className="text-gray-600 text-lg leading-relaxed">
                             At NEVERBE, we take pride in offering high-quality replicas of globally renowned shoe brands.
                             Our commitment is to bring unparalleled style and comfort to every customer while maintaining
-                            affordable prices. Whether you're looking for everyday essentials or statement footwear, we've
+                            affordable prices. Whether you&apos;re looking for everyday essentials or statement footwear, we&apos;ve
                             got you covered.
                         </p>
                     </section>
@@ -78,7 +78,7 @@ const AboutUs = () => {
                     <section className="bg-indigo-600 text-white rounded-lg shadow-xl p-8">
                         <h2 className="text-3xl font-semibold mb-4">Get in Touch</h2>
                         <p className="text-lg mb-4">
-                            We’re here to assist you. Reach out to us anytime:
+                            We&apos;re here to assist you. Reach out to us anytime:
                         </p>
                         <p className="text-lg">
                             <span className="font-medium">Phone:</span> <Link href="tel:+94771234567" className="underline">+94 70 520 8999</Link>
