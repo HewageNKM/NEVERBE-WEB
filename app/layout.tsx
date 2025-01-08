@@ -19,7 +19,7 @@ export const metadata: Metadata = {
         canonical: "https://neverbe.lk",
     },
     description:
-        "NEVERBE is Sri Lanka's premier online store for high-quality branded copy shoes and accessories.",
+        "NEVERBE is Sri Lanka's premier online store for high-quality Nike, adidas, New Balance and more copy shoes and accessories.",
     category: "Ecommerce",
     keywords: seoKeywords,
     twitter: {
@@ -27,11 +27,10 @@ export const metadata: Metadata = {
         site: "@neverbe",
         creator: "@neverbe",
         title: "NEVERBE",
-        description:
-            "NEVERBE is Sri Lanka's premier online store for high-quality branded copy shoes and accessories.",
+        description: "NEVERBE is Sri Lanka's premier online store for high-quality Nike, adidas, New Balance and more copy shoes and accessories.",
         images: [
             {
-                url: "https://neverbe.lk/api/og",
+                url: "https://neverbe.lk/api/v1/og",
                 alt: "NEVERBE Logo",
                 width: 260,
                 height: 260,
@@ -43,9 +42,8 @@ export const metadata: Metadata = {
         type: "website",
         locale: "en_US",
         siteName: "NEVERBE",
-        title: "NEVERBE - Premium Branded Copy Shoes in Sri Lanka",
-        description:
-            "Discover NEVERBE, Sri Lanka's best ecommerce platform for branded copy shoes and accessories with fast delivery and superior service.",
+        title: "NEVERBE",
+        description: "Discover NEVERBE is Sri Lanka's premier online store for high-quality Nike, adidas, New Balance and more copy shoes and accessories. with fast delivery and superior service.",
         images: [
             {
                 url: "https://neverbe.lk/api/og",

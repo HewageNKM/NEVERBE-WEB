@@ -2,7 +2,6 @@
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "@/redux/store";
-import {motion} from "framer-motion";
 import {
     getInventory,
     resetFilter,
@@ -16,7 +15,12 @@ import {getBrands} from "@/actions/inventoryAction";
 import Skeleton from "@/components/Skeleton";
 
 const Filter = () => {
-    const {selectedSizes, selectedType, selectedManufacturers,selectedSort} = useSelector((state: RootState) => state.productsSlice);
+    const {
+        selectedSizes,
+        selectedType,
+        selectedManufacturers,
+        selectedSort
+    } = useSelector((state: RootState) => state.productsSlice);
     const {user} = useSelector((state: RootState) => state.authSlice);
     const [brands, setBrands] = useState([])
     const [isBrandsLoading, setIsBrandsLoading] = useState(true);
@@ -51,19 +55,19 @@ const Filter = () => {
 
     useEffect(() => {
         dispatch(getInventory());
-    }, [selectedManufacturers, selectedType, selectedSizes, dispatch, user,selectedSort]);
+    }, [selectedManufacturers, selectedType, selectedSizes, dispatch, user, selectedSort]);
 
     useEffect(() => {
-        if(user){
+        if (user) {
             fetchBrand();
         }
     }, [user]);
 
     return (
-        <section className="flex justify-start items-start border-r-2 w-fit">
+        <section className="flex justify-start items-start border-r-2 w-fit h-full overflow-auto hide-scrollbar">
             <div className="hidden lg:block lg:w-[20vw] relative">
                 <h2 className="text-2xl font-bold tracking-wider mb-4">Filter</h2>
-                <div className="h-[90vh] overflow-auto hide-scrollbar mt-4 flex-col flex gap-8">
+                <div className="mt-4 flex-col flex gap-8">
                     {/* Type Section */}
                     <div className="mt-5 px-2">
                         <h3 className="text-xl font-semibold"><strong>Type</strong></h3>
@@ -104,7 +108,7 @@ const Filter = () => {
                             ))}
                             {isBrandsLoading && (
                                 <div className="w-full h-16">
-                                    <Skeleton />
+                                    <Skeleton/>
                                 </div>
                             )}
                         </div>

@@ -57,7 +57,7 @@ const Products = ({items}: { items: Item[] }) => {
                     </div>
 
                 </div>
-                <ul className="flex flex-row gap-3 md:gap-10 flex-wrap mt-5 w-full">
+                <ul className="flex flex-row gap-1 mb-10 md:gap-10 flex-wrap mt-5 w-full">
                     {products.map((item) => (
                         <li key={item.itemId}>
                             <ItemCard item={item}/>

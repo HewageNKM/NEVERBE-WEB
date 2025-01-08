@@ -5,27 +5,27 @@ import {Metadata} from "next";
 import {Item} from "@/interfaces";
 import EmptyState from "@/components/EmptyState";
 import {getAllInventoryItems} from "@/firebase/firebaseAdmin";
+import {seoKeywords} from "@/constants";
 
 export const metadata: Metadata = {
     title: "Products",
-    description: "Explore a wide range of products available at NEVERBE. Shop the latest items and enjoy a great online shopping experience." +
-        "Nike, Adidas, New Balance",
-    keywords: "NEVERBE, online shopping, products, latest items",
+    description: "Explore a wide range of products available at NEVERBE. Nike, Adidas, Puma, New Balance Vietnam high copy shoes, flip flop, sandals, slides and more.",
+    keywords: seoKeywords,
     twitter: {
         card: "summary",
         site: "@neverbe",
         creator: "@neverbe",
         title: "Products",
-        description: "Explore a wide range of products available at NEVERBE.",
+        description: "Explore a wide range of products available at NEVERBE. Nike, Adidas, Puma, New Balance Vietnam high copy shoes, flip flop, sandals, slides and more.",
     },
     openGraph: {
         title: "Products",
-        description: "Explore a wide range of products available at NEVERBE.",
-        url: "https://neverbe.lk/shop/products",
+        description: "Explore a wide range of products available at NEVERBE. Nike, Adidas, Puma, New Balance Vietnam high copy shoes, flip flop, sandals, slides and more.",
+        url: "https://neverbe.lk/collections/products",
         type: "website",
         images: [
             {
-                url: "https://neverbe.lk/api/og",
+                url: "https://neverbe.lk/api/v1/og",
                 width: 260,
                 height: 260,
                 alt: "NEVERBE Logo",
@@ -44,7 +44,7 @@ const Page = async () => {
     }
 
     return (
-        <main className="w-full relative lg:mt-32 md:mt-20 mb-5 lg:mb-10 mt-16 overflow-clip">
+        <main className="w-full relative lg:mt-32 md:mt-20 mb-10 lg:mb-10 mt-16 overflow-clip">
             <div className="w-full">
                 <ProductsHeader count={items.length}/>
                 <div className="px-4">
