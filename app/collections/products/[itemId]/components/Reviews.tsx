@@ -77,9 +77,9 @@ const Reviews = ({itemId}: { itemId: string }) => {
             setCaptchaValue(null);
             setShowReviewForm(false);
             fetchReviews();
-            setIsProcessing(false);
         } catch (e) {
             console.error("Failed to submit review: ", e);
+        }finally {
             setIsProcessing(false);
         }
     };
@@ -98,11 +98,12 @@ const Reviews = ({itemId}: { itemId: string }) => {
                 isUserReviewed: res.isUserReviewed,
                 userReview: res.userReview
             })
-            setIsLoading(false);
             console.log("Reviews: ", res);
             setReviewReport(res);
         } catch (e) {
             console.error("Failed to fetch reviews: ", e);
+        }finally {
+            setIsLoading(false);
         }
     }
 

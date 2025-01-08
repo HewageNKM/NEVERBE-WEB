@@ -1,6 +1,7 @@
 import {auth} from "@/firebase/firebaseClient";
 import {Review} from "@/interfaces";
 import axios from "axios";
+import {reviewsURL} from "@/app/urls";
 
 export const getAllReviewsById = async (itemId: string) => {
     try {
@@ -8,7 +9,7 @@ export const getAllReviewsById = async (itemId: string) => {
         const uid = auth.currentUser?.uid;
         const res = await axios({
             method: 'GET',
-            url: '/api/v1/reviews?itemId=' + itemId+"&userId="+uid,
+            url: reviewsURL+'?itemId=' + itemId+"&userId="+uid,
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${token}`
@@ -24,7 +25,7 @@ export const addNewReview = async (review: Review, recaptchaToken: string) => {
         const token = await auth.currentUser?.getIdToken();
         const res = await axios({
             method: 'POST',
-            url: '/api/v1/reviews?recaptchaToken=' + recaptchaToken,
+            url: reviewsURL+'?recaptchaToken=' + recaptchaToken,
 
             data: review,
             headers: {
@@ -43,7 +44,7 @@ export const deleteReview = async (reviewId: string) => {
         const token = await auth.currentUser?.getIdToken();
         const res = await axios({
             method: 'DELETE',
-            url: '/api/v1/reviews/'+reviewId,
+            url: reviewsURL+reviewId,
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${token}`
