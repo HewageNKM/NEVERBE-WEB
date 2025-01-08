@@ -44,7 +44,7 @@ const Reviews = ({itemId}: { itemId: string }) => {
             await deleteReview(reviewId);
             fetchReviews();
         } catch (e) {
-            console.error("Failed to delete review: ",reviewId, e);
+            console.error("Failed to delete review: ", reviewId, e);
         }
     }
     const submitReview = async (evt) => {
@@ -99,6 +99,7 @@ const Reviews = ({itemId}: { itemId: string }) => {
                 userReview: res.userReview
             })
             setIsLoading(false);
+            console.log("Reviews: ", res);
             setReviewReport(res);
         } catch (e) {
             console.error("Failed to fetch reviews: ", e);
@@ -125,14 +126,21 @@ const Reviews = ({itemId}: { itemId: string }) => {
                     {reviewReport.isUserReviewed ? "Already Reviewed" : "Add Review"}
                 </button>
             </div>
-            <div className="w-full my-5">
-                {(reviewReport.reviews.length <= 0 && !isLoading) ? (
+            <div className="w-full pt-10">
+                {(reviewReport.reviews.length <= 0 && !isLoading && !reviewReport.userReview) ? (
                     <EmptyState message="No reviews available"/>
                 ) : (
-                    <ul className="flex-row flex lg:gap-10 md:gap-6 gap-2 w-full hide-scrollbar overflow-x-auto">
+                    <ul className="flex-row flex flex-wrap lg:gap-10 md:gap-6 gap-2 w-full hide-scrollbar overflow-x-auto">
+                        {reviewReport.userReview && (
+                            <li className="p-4 shadow-sm rounded-lg" key={0}>
+                                <ReviewCard onDelete={onReviewDelete} review={reviewReport.userReview}
+                                            userReviewId={reviewReport.userReview.reviewId}/>
+                            </li>
+                        )}
                         {reviewReport.reviews.map((review, index) => (
                             <li key={index} className="p-4 shadow-sm rounded-lg">
-                                <ReviewCard onDelete={onReviewDelete} review={review} userReviewId={reviewReport.userReview?.reviewId || ""}/>
+                                <ReviewCard onDelete={onReviewDelete} review={review}
+                                            userReviewId={reviewReport.userReview?.reviewId || ""}/>
                             </li>
                         ))}
                     </ul>

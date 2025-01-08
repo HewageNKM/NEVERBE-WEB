@@ -387,7 +387,13 @@ export const deleteReviewById = async (reviewId: string) => {
 export const getReviewByItemId = async (itemId: string, userId: string) => {
     try {
         console.log(`Fetching review by item ID: ${itemId}`);
-        const docs = await adminFirestore.collection('reviews').where("itemId", "==", itemId).limit(20).orderBy("createdAt", "desc").get();
+        const docs = await adminFirestore
+            .collection('reviews')
+            .where("itemId", "==", itemId)
+            .orderBy("createdAt", "desc")
+            .limit(10)
+            .get();
+
         if (docs.empty) {
             console.log(`No reviews found where itemId == ${itemId}`);
             return {
@@ -395,40 +401,58 @@ export const getReviewByItemId = async (itemId: string, userId: string) => {
                 totalReviews: 0,
                 isUserReviewed: false,
                 userReview: null,
-            }
+            };
         }
+
         const totalDocs = await adminFirestore.collection('reviews').where("itemId", "==", itemId).get();
         const totalReviews = totalDocs.size;
-        const isUserReviewed = docs.docs.some(doc => (doc.data().userId === userId && doc.data().itemId === itemId));
-        let userReview = await adminFirestore.collection('reviews').where("itemId", "==", itemId).where("userId", "==", userId).get();
-        if (!userReview.empty) {
+
+        // Check if the user has reviewed the item
+        const isUserReviewed = docs.docs.some(doc => doc.data().userId === userId && doc.data().itemId === itemId);
+
+        // Fetch the user's review separately
+        let userReviewSnapshot = await adminFirestore
+            .collection('reviews')
+            .where("itemId", "==", itemId)
+            .where("userId", "==", userId)
+            .get();
+
+        let userReview = null;
+        if (!userReviewSnapshot.empty) {
             console.log(`User review found where itemId == ${itemId} and userId == ${userId}`);
-            userReview = userReview.docs[0].data() as Review;
+            const userReviewDoc = userReviewSnapshot.docs[0];
+            userReview = {
+                ...userReviewDoc.data(),
+                createdAt: userReviewDoc.data().createdAt.toDate().toLocaleString(),
+                updatedAt: userReviewDoc.data().updatedAt.toDate().toLocaleString(),
+            };
         } else {
-            userReview = null;
             console.log(`User review not found where itemId == ${itemId} and userId == ${userId}`);
         }
-        const reviews: Review[] = [];
-        docs.forEach(doc => {
-            const data = doc.data() as Review;
-            reviews.push({
-                ...data,
+
+        // Map the reviews and remove the user's review if present
+        const reviews: Review[] = docs.docs
+            .map(doc => ({
+                ...doc.data(),
                 createdAt: doc.data().createdAt.toDate().toLocaleString(),
                 updatedAt: doc.data().updatedAt.toDate().toLocaleString(),
-            });
-        });
+            }))
+            .filter(review => review?.reviewId !== userReview?.reviewId); // Exclude user's review
+
         console.log(`Total reviews fetched where itemId == ${itemId}:`, reviews.length);
+
         return {
             reviews,
             totalReviews,
             isUserReviewed,
             userReview,
-        }
+        };
     } catch (e) {
-        console.log(e)
+        console.log(e);
         throw e;
     }
-}
+};
+
 export const sendEmail = async (msg: Message, token: string) => {
     try {
         console.log(`Sending email to: ${msg.email}, with subject: ${msg.subject}, and message: ${msg.message}`)
