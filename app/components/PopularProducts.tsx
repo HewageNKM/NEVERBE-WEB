@@ -11,7 +11,7 @@ const PopularProducts = ({ hotItems }: { hotItems: Item[] }) => {
             <div className="lg:px-24 px-4 py-8">
                 <div>
                     <h2 className="md:text-4xl text-2xl font-bold text-gray-800">Popular Products</h2>
-                    <h3 className="md:text-xl text-lg text-red-600 mt-2">
+                    <h3 className="md:text-xl text-lg text-primary-100 mt-2">
                         Check out our best-selling products
                     </h3>
                 </div>

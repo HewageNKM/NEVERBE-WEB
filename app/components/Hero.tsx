@@ -6,7 +6,7 @@ import {Slide} from "@/interfaces";
 
 const Hero = async ({slides}: { slides: Slide[] }) => {
     return (
-        <section className="w-full mt-24 md:mt-28 lg:mt-32">
+        <section className="w-full mt-24 md:mt-28 lg:mt-[7rem]">
             <ImagesSlider images={slides}/>
         </section>
     );

@@ -1,5 +1,6 @@
 import admin, {credential} from 'firebase-admin';
-import {Item, Message, Order, Slide} from "@/interfaces";
+import {Item, Message, Order, Review, Slide} from "@/interfaces";
+import axios from "axios";
 
 // Initialize Firebase Admin SDK if it hasn't been initialized already
 if (!admin.apps.length) {
@@ -342,10 +343,100 @@ export const verifyToken = async (req: any) => {
         throw e;
     }
 };
-
-export const sendEmail = async (msg: Message) => {
+const verifyCaptchaToken = async (token: string) => {
+    try {
+        console.log("Sending reCAPTCHA verification request.");
+        const secret = process.env.RECAPTCHA_SECRET_KEY;
+        const response = await axios({
+            method: 'POST',
+            url: `https://www.google.com/recaptcha/api/siteverify?secret=${secret}&response=${token}`,
+        });
+        console.log("reCAPTCHA verification response:", response.data);
+        return response.data.success;
+    } catch (e) {
+        console.log(e)
+        throw e;
+    }
+}
+export const addNewReview = async (review: Review, token: string) => {
+    try {
+        const res = await verifyCaptchaToken(token);
+        if (!res) {
+            throw new Error("reCAPTCHA verification failed.");
+        }
+        console.log("Adding new review:", review.reviewId);
+        return await adminFirestore.collection('reviews').doc(review.reviewId).set({
+            ...review,
+            createdAt: admin.firestore.Timestamp.fromDate(new Date(review.createdAt)),
+            updatedAt: admin.firestore.Timestamp.fromDate(new Date(review.updatedAt)),
+        });
+    } catch (e) {
+        console.log(e)
+        throw e;
+    }
+}
+export const deleteReviewById = async (reviewId: string) => {
+    try {
+        console.log(`Deleting review: ${reviewId}`);
+        return await adminFirestore.collection('reviews').doc(reviewId).delete();
+    } catch (e) {
+        console.log(e)
+        throw e;
+    }
+}
+export const getReviewByItemId = async (itemId: string, userId: string) => {
+    try {
+        console.log(`Fetching review by item ID: ${itemId}`);
+        const docs = await adminFirestore.collection('reviews').where("itemId", "==", itemId).limit(20).orderBy("createdAt", "desc").get();
+        if (docs.empty) {
+            console.log(`No reviews found where itemId == ${itemId}`);
+            return {
+                reviews: [],
+                totalReviews: 0,
+                isUserReviewed: false,
+                userReview: null,
+            }
+        }
+        const totalDocs = await adminFirestore.collection('reviews').where("itemId", "==", itemId).get();
+        const totalReviews = totalDocs.size;
+        const isUserReviewed = docs.docs.some(doc => (doc.data().userId === userId && doc.data().itemId === itemId));
+        let userReview = await adminFirestore.collection('reviews').where("itemId", "==", itemId).where("userId", "==", userId).get();
+        if (!userReview.empty) {
+            console.log(`User review found where itemId == ${itemId} and userId == ${userId}`);
+            userReview = userReview.docs[0].data() as Review;
+        } else {
+            userReview = null;
+            console.log(`User review not found where itemId == ${itemId} and userId == ${userId}`);
+        }
+        const reviews: Review[] = [];
+        docs.forEach(doc => {
+            const data = doc.data() as Review;
+            reviews.push({
+                ...data,
+                createdAt: doc.data().createdAt.toDate().toLocaleString(),
+                updatedAt: doc.data().updatedAt.toDate().toLocaleString(),
+            });
+        });
+        console.log(`Total reviews fetched where itemId == ${itemId}:`, reviews.length);
+        return {
+            reviews,
+            totalReviews,
+            isUserReviewed,
+            userReview,
+        }
+    } catch (e) {
+        console.log(e)
+        throw e;
+    }
+}
+export const sendEmail = async (msg: Message, token: string) => {
     try {
         console.log(`Sending email to: ${msg.email}, with subject: ${msg.subject}, and message: ${msg.message}`)
+        const res = await verifyCaptchaToken(token);
+        if (!res) {
+            throw new Error("reCAPTCHA verification failed.");
+        }
+        console.log("reCAPTCHA verification result:", res);
         await admin.firestore().collection('mail').add({
             to: "info@neverbe.lk",
             template: {

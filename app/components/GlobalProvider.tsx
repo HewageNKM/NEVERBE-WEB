@@ -24,7 +24,7 @@ const GlobalProvider = ({children}: { children: ReactNode }) => {
             } else {
                 const user = await signInAnonymously(auth);
                 dispatch(setUser(user));
-                console.log("User Logged In");
+                console.log("New User Logged In");
             }
         });
         dispatch(initializeCart())

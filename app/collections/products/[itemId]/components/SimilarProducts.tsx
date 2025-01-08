@@ -5,16 +5,16 @@ import EmptyState from "@/components/EmptyState";
 
 const SimilarProducts = ({ items }: { items: Item[] }) => {
     return (
-        <section className="w-full mt-10">
-            <div>
+        <section className="w-full my-10">
+            <div className="w-full">
                 <div>
-                    <h2 className="md:text-4xl text-2xl font-bold">Similar Products</h2>
+                    <h2 className="md:text-2xl text-xl text-gray-800 tracking-wide font-bold">Similar Products</h2>
                 </div>
-                <div className="my-8 overflow-x-auto hide-scrollbar">
+                <div className="my-8 overflow-x-auto hide-scrollbar w-full">
                     {items.length > 0 ? ( // Render items
-                        <ul className="grid grid-cols-1 gap-2 md:gap-4 md:grid-cols-3 lg:grid-cols-5 w-full">
+                        <ul className="flex flex-row flex-wrap gap-3 md:gap-6 lg:gap-10 mb-10 w-full">
                             {items.map((item: Item) => (
-                                <li key={item.itemId} className="flex-shrink-0 w-60">
+                                <li key={item.itemId}>
                                     <ItemCard item={item} />
                                 </li>
                             ))}

@@ -4,7 +4,7 @@ import {sizeData} from "@/constants";
 const SizeChart = () => {
     return (
         <section className="mt-20" aria-labelledby="size-chart-heading">
-            <h2 id="size-chart-heading" className="md:text-4xl text-2xl font-bold tracking-wider">
+            <h2 id="size-chart-heading" className="md:text-2xl text-xl text-gray-800 font-bold tracking-wide">
                 Size Chart
             </h2>
             <div className="overflow-x-auto mt-5">

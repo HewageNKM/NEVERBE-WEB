@@ -5,6 +5,7 @@ import SupportImage from './support.png';
 import Logo from './logo.png';
 import Banner from './banner.png';
 import ShoesBackground from './shoes background.jpg';
+import Avatar from './avatar.png';
 
 export
 {
@@ -14,5 +15,6 @@ export
     SupportImage,
     Logo,
     Banner,
-    ShoesBackground
+    ShoesBackground,
+    Avatar
 };

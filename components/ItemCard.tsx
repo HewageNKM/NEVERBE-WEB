@@ -38,19 +38,28 @@ const ItemCard = ({ item }: { item: Item }) => {
                     />
                 </figure>
                 <header className="p-4 flex flex-col gap-1">
-                    <h2 className="text-primary font-bold text-sm md:text-lg">{item.name}</h2>
+                    <h2 className="font-bold text-sm md:text-lg">{item.name}</h2>
                     <div className="flex flex-row items-center flex-wrap gap-1">
+                        <p className="text-red-500 text-sm font-bold">Rs. {item.sellingPrice.toFixed(2)}</p>
                         {item.discount > 0 && (
                             <p className="line-through font-bold text-gray-500 text-sm">
                                 Rs. {(item.sellingPrice + (item.sellingPrice * item.discount / 100)).toFixed(2)}
                             </p>
                         )}
-                        <p className="text-red-500 text-sm font-bold">Rs. {item.sellingPrice.toFixed(2)}</p>
                     </div>
                     <div className="flex justify-between items-center">
                         <p className="text-sm sm:text-lg font-bold">
                             {item.variants.length} Colors
                         </p>
+                    </div>
+                    <div className="text-sm font-medium text-slate-500">
+                        Size ({[
+                            ...new Set(
+                                item.variants
+                                    .map(variant => variant.sizes.map(size => size.size))
+                                    .flat()
+                            )
+                    ].join(", ")})
                     </div>
                 </header>
                 <h2 className="absolute top-0 left-0 capitalize bg-black text-white p-1 text-sm">{item.manufacturer.replace("-"," ")}</h2>

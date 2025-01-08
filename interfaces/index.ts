@@ -6,7 +6,16 @@ export interface Message {
     name: string;
     message: string;
 }
-
+export interface Review {
+    reviewId: string;
+    itemId: string;
+    rating: number;
+    review: string;
+    userId: string;
+    userName: string;
+    createdAt: Timestamp | string;
+    updatedAt: Timestamp | string;
+}
 export interface Brand {
     name: string; // Manufacturer name, e.g., "Nike"
     value: string; // Manufacturer key, e.g., "nike"

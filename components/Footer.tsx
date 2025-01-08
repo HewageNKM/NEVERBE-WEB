@@ -7,7 +7,7 @@ import { GoLocation } from "react-icons/go";
 
 const Footer = () => {
     return (
-        <footer className="w-full bg-primary text-white py-4 lg:px-24 px-16">
+        <footer className="w-full bg-primary text-white py-4 lg:px-24 md:px-16 px-4">
             <div className="flex md:justify-center lg:justify-between md:flex-wrap flex-col md:flex-row p-8 gap-10">
                 <div className="flex flex-col md:flex-row gap-4 md:justify-center justify-start md:items-center">
                     <Link href="/" aria-label="Go to home page">
