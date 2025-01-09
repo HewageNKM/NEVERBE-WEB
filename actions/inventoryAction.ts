@@ -40,7 +40,23 @@ export const getInventoryByManufacturer = async (name:string) => {
         const token = await getIdToken();
         const response = await axios({
             method: 'GET',
-            url: getInventoryURL+`/manufacturers/${name}`,
+            url: getInventoryURL+`?manufacturer=${name}`,
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return response.data;
+    }catch (e) {
+        throw e
+    }
+}
+
+export const getInventoryByTwoFields = async (value1:string,value2:string,field1:string,field2:string) => {
+    try {
+        const token = await getIdToken();
+        const response = await axios({
+            method: 'GET',
+            url: getInventoryURL+`?${field1}=${value1}&${field2}=${value2}`,
             headers: {
                 Authorization: `Bearer ${token}`
             }
