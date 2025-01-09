@@ -8,7 +8,7 @@ import {AppDispatch, RootState} from "@/redux/store";
 import {CartItem, Customer, Order, OrderItem} from "@/interfaces";
 import {paymentMethods} from "@/constants";
 import {clearCart} from "@/redux/cartSlice/cartSlice";
-import {redirect, useRouter} from "next/navigation";
+import {useRouter} from "next/navigation";
 import {generateOrderId} from "@/util";
 import {addNewOrder} from "@/actions/orderAction";
 import ComponentLoader from "@/components/ComponentLoader";
@@ -39,7 +39,7 @@ const CheckoutForm = () => {
 
     const cartItems: CartItem[] = useSelector((state: RootState) => state.cartSlice.cart);
     const onPaymentFormSubmit = async (evt: any) => {
-       let orderId = "";
+        let orderId = "";
         try {
             setLoading(true)
             evt.preventDefault()
@@ -127,7 +127,7 @@ const CheckoutForm = () => {
             if (cartItems.length !== 0) {
                 if (paymentType == "ipg") {
                     newOrder.paymentMethod = paymentMethods.IPG;
-                    await addNewOrder(newOrder,captchaValue);
+                    await addNewOrder(newOrder, captchaValue);
                     dispatch(clearCart())
                     setLoading(false)
                     saveAddressToLocalStorage()
@@ -180,7 +180,7 @@ const CheckoutForm = () => {
                                 setCaptchaError={setCaptchaError} setCaptchaValue={setCaptchaValue}
                                 recaptchaRef={recaptchaRef}/>
             </form>
-            {loading && <ComponentLoader />}
+            {loading && <ComponentLoader/>}
         </div>
     )
 }
