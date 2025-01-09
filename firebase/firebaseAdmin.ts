@@ -18,7 +18,7 @@ export const adminFirestore = admin.firestore();
 export const adminAuth = admin.auth();
 
 // Function to add a new order, update inventory, and handle stock checks
-export const addNewOrder = async (order: Order,token:string) => {
+export const addNewOrder = async (order: Order, token: string) => {
     try {
         console.log("Adding new order:", order.orderId);
         const res = await verifyCaptchaToken(token);
@@ -269,15 +269,12 @@ export const getItemsByTwoField = async (firstValue: string, secondValue: string
             console.log(`Fetching items where ${firstFieldName} == ${firstValue}`);
             return getItemsByField(firstValue, firstFieldName);
         }
-        const docs = await adminFirestore.collection('inventory').where(firstFieldName, '==', firstValue).where(secondFieldName, '==', secondValue).get();
+        const docs = await adminFirestore.collection('inventory').where(firstFieldName, '==', firstValue).where(secondFieldName, '==', secondValue).where("listing", "==", "Active").where("status", "==", "Active").get();
         const items: Item[] = [];
         docs.forEach(doc => {
-            if (doc.data()?.status == "Active") {
-                if (doc.data()?.listing == "Active") {
-                    console.log(`Item found with ID ${doc.data().itemId}`);
-                    items.push({...doc.data(), createdAt: null, updatedAt: null} as Item);
-                }
-            }
+            console.log(`Item found with ID ${doc.data().itemId}`);
+            items.push({...doc.data(), createdAt: null, updatedAt: null} as Item);
+
         });
         console.log(`Total items fetched where ${firstFieldName} == ${firstValue} and ${secondFieldName} == ${secondValue}:`, items.length);
         return items;
@@ -458,11 +455,11 @@ export const getReviewByItemId = async (itemId: string, userId: string) => {
         throw e;
     }
 };
-export const calculateTotalRating = (reviews:Review[]) => {
+export const calculateTotalRating = (reviews: Review[]) => {
     try {
         console.log("Calculating total rating from reviews.");
         return reviews.reduce((acc, review) => acc + review.rating, 0);
-    }catch (e) {
+    } catch (e) {
 
     }
 }

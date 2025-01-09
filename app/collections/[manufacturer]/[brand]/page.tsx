@@ -1,7 +1,7 @@
 import React from 'react';
 import {Item} from "@/interfaces";
 import {Metadata} from "next";
-import {getItemsByField} from "@/firebase/firebaseAdmin";
+import {getItemsByField, getItemsByTwoField} from "@/firebase/firebaseAdmin";
 import BrandProducts from "@/app/collections/[manufacturer]/[brand]/components/BrandProducts";
 import BrandHeader from './components/BrandHeader';
 
@@ -44,7 +44,7 @@ const Page = async ({params}: { params: { manufacturer: string; brand: string } 
     const brand = params.brand.replace("%20", " ");
     const manufacturer = params.manufacturer.replace("%20", " ");
     try {
-        items = await getItemsByField(params.brand.replace("%20", " "), "brand");
+        items = await getItemsByTwoField(manufacturer, brand, "manufacturer", "brand");
     } catch (e) {
         console.error("Error fetching items:", e);
     }

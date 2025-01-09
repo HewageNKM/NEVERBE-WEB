@@ -61,6 +61,7 @@ export const getInventoryByTwoFields = async (value1:string,value2:string,field1
                 Authorization: `Bearer ${token}`
             }
         });
+        console.log(response.data)
         return response.data;
     }catch (e) {
         throw e
