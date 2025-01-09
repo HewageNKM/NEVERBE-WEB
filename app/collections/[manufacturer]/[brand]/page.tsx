@@ -1,7 +1,7 @@
 import React from 'react';
 import {Item} from "@/interfaces";
 import {Metadata} from "next";
-import {getItemsByField, getItemsByTwoField} from "@/firebase/firebaseAdmin";
+import {getItemsByTwoField} from "@/firebase/firebaseAdmin";
 import BrandProducts from "@/app/collections/[manufacturer]/[brand]/components/BrandProducts";
 import BrandHeader from './components/BrandHeader';
 
