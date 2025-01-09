@@ -1,38 +1,25 @@
 "use client";
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "@/redux/store";
 import {
-    getInventory,
+    getItemsByManufacturer,
     resetFilter,
-    setSelectedManufacturers,
     setSelectedSizes,
     setSelectedType
-} from "@/redux/productsSlice/productsSlice";
+} from "@/redux/manufacturerSlice/manufacturerSlice";
 import {accessoriesSizes, productTypes, wearableSizes} from "@/constants";
 import {BiReset} from "react-icons/bi";
-import {getBrands} from "@/actions/inventoryAction";
-import Skeleton from "@/components/Skeleton";
 
-const Filter = () => {
+const ManufacturerFilter = ({manufacturer}: { manufacturer: string }) => {
     const {
         selectedSizes,
         selectedType,
-        selectedManufacturers,
         selectedSort
-    } = useSelector((state: RootState) => state.productsSlice);
+    } = useSelector((state: RootState) => state.manufacturerSlice);
     const {user} = useSelector((state: RootState) => state.authSlice);
-    const [brands, setBrands] = useState([])
-    const [isBrandsLoading, setIsBrandsLoading] = useState(true);
     const dispatch: AppDispatch = useDispatch();
 
-    const addBrand = (value: string) => {
-        if (selectedManufacturers.includes(value)) {
-            dispatch(setSelectedManufacturers(selectedManufacturers.filter(brand => brand !== value)));
-        } else {
-            dispatch(setSelectedManufacturers([...selectedManufacturers, value]));
-        }
-    }
 
     const addSize = (value: string) => {
         if (selectedSizes.includes(value)) {
@@ -42,29 +29,15 @@ const Filter = () => {
         }
     }
 
-    const fetchBrand = async () => {
-        try {
-            const brands = await getBrands();
-            setBrands(brands);
-            setIsBrandsLoading(false);
-        } catch (e: any) {
-            console.log(e.message);
-            setIsBrandsLoading(false);
-        }
-    }
-
     useEffect(() => {
-        dispatch(getInventory());
-    }, [selectedManufacturers, selectedType, selectedSizes, dispatch, user, selectedSort]);
-
-    useEffect(() => {
-        if (user) {
-            fetchBrand();
+        if (user && manufacturer) {
+            dispatch(getItemsByManufacturer(manufacturer));
         }
-    }, [user]);
+    }, [selectedType, selectedSizes, dispatch, user, selectedSort, manufacturer]);
+
 
     return (
-        <section className="flex justify-start items-start border-r-2 w-fit h-full overflow-auto hide-scrollbar">
+        <section className="flex justify-start items-start border-r-2 mb-10 w-fit h-full overflow-auto hide-scrollbar">
             <div className="hidden lg:block lg:w-[20vw] relative">
                 <h2 className="text-2xl font-bold tracking-wider mb-4">Filter</h2>
                 <div className="mt-4 flex-col flex gap-8">
@@ -87,30 +60,6 @@ const Filter = () => {
                                     <span className="text-gray-800 font-medium">{type.name}</span>
                                 </label>
                             ))}
-                        </div>
-                    </div>
-                    {/* Brands Section */}
-                    <div className="mt-5 px-2">
-                        <h3 className="text-xl font-semibold"><strong>Brands</strong></h3>
-                        <div className="flex relative mt-2 flex-row gap-5 text-lg flex-wrap items-center">
-                            {brands.map((brand, index) => (
-                                <label key={index}
-                                       className="flex items-center gap-2 cursor-pointer hover:bg-gray-100 rounded p-2 transition duration-200">
-                                    <input
-                                        value={brand.value}
-                                        checked={selectedManufacturers.includes(brand.value)}
-                                        type="checkbox"
-                                        onChange={() => addBrand(brand.value)}
-                                        className="form-checkbox h-5 w-5 text-blue-600 transition duration-150 ease-in-out rounded focus:ring-2 focus:ring-blue-500"
-                                    />
-                                    <span className="text-gray-800 font-medium">{brand.name}</span>
-                                </label>
-                            ))}
-                            {isBrandsLoading && (
-                                <div className="w-full h-16">
-                                    <Skeleton/>
-                                </div>
-                            )}
                         </div>
                     </div>
                     {/* Sizes Section */}
@@ -197,4 +146,4 @@ const Filter = () => {
     );
 };
 
-export default Filter;
+export default ManufacturerFilter;

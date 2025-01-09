@@ -1,12 +1,18 @@
 "use client";
-import React, { useEffect, useState } from 'react';
-import { Item } from "@/interfaces";
+import React, {useEffect, useState} from 'react';
+import {Item} from "@/interfaces";
 import Image from "next/image";
 import Link from "next/link";
+import {useSelector} from "react-redux";
+import {RootState} from "@/redux/store";
+import {getAllReviewsById} from "@/actions/itemDetailsAction";
+import ReactStars from "react-stars";
 
-const ItemCard = ({ item }: { item: Item }) => {
+const ItemCard = ({item}: { item: Item }) => {
     const [outOfStocks, setOutOfStocks] = useState(false);
     const [outOfStocksLabel, setOutOfStocksLabel] = useState("Out of Stock");
+    const {user} = useSelector((state: RootState) => state.authSlice);
+    const [totalRating, setTotalRating] = useState(0)
 
     const checkOutOfStocks = () => {
         if (item.variants.length === 0) {
@@ -19,14 +25,26 @@ const ItemCard = ({ item }: { item: Item }) => {
         );
         setOutOfStocks(allOutOfStock);
     };
-
+    const getRating = async () => {
+        try {
+            const {totalRating} = await getAllReviewsById(item.itemId);
+            setTotalRating(totalRating);
+        } catch (error) {
+            console.error(error)
+        }
+    }
     useEffect(() => {
-        checkOutOfStocks();
-    }, [item]);
+        if (user) {
+            checkOutOfStocks();
+            getRating();
+        }
+    }, [item, user]);
 
     return (
-        <article className="relative w-[8rem] md:w-[13rem]  h-auto max-w-xs transition-transform duration-300 transform hover:scale-105 shadow-lg rounded-lg overflow-hidden bg-white">
-            <Link href={`/collections/products/${item.itemId.toLowerCase()}`} aria-label={`View details for ${item.name}`}>
+        <article
+            className="relative w-[8rem] md:w-[13rem]  h-auto max-w-xs transition-transform duration-300 transform hover:scale-105 shadow-lg rounded-lg overflow-hidden bg-white">
+            <Link href={`/collections/products/${item.itemId.toLowerCase()}`}
+                  aria-label={`View details for ${item.name}`}>
                 <figure className="relative overflow-hidden rounded-lg">
                     <Image
                         width={300}
@@ -39,6 +57,19 @@ const ItemCard = ({ item }: { item: Item }) => {
                 </figure>
                 <header className="p-4 flex flex-col gap-1">
                     <h2 className="font-bold text-sm md:text-lg">{item.name}</h2>
+                    <div className="flex flex-row gap-1 items-center font-bold">
+                        <div className="md:block hidden">
+                            <ReactStars edit={false}
+                                        value={totalRating} count={5}
+                                        size={25} color2={'#ffd700'}/>
+                        </div>
+                        <div className="md:hidden block">
+                            <ReactStars edit={false}
+                                        value={totalRating} count={1}
+                                        size={18} color2={'#ffd700'}/>
+                        </div>
+                        <span>({totalRating})</span>
+                    </div>
                     <div className="flex flex-row items-center flex-wrap gap-1">
                         <p className="text-red-500 text-sm font-bold">Rs. {item.sellingPrice.toFixed(2)}</p>
                         {item.discount > 0 && (
@@ -53,16 +84,23 @@ const ItemCard = ({ item }: { item: Item }) => {
                         </p>
                     </div>
                     <div className="text-sm font-medium text-slate-500">
-                        Size ({[
-                            ...new Set(
-                                item.variants
-                                    .map(variant => variant.sizes.map(size => size.size))
-                                    .flat()
-                            )
-                    ].join(", ")})
+                        {item.type === "shoes" || item.type === "sandals" ? (
+                            `Size (UK): ${
+                                item.variants.length > 0 && item.variants[0].sizes.length > 0
+                                    ? `${Math.min(...item.variants[0].sizes.map(s => s.size))} - ${Math.max(...item.variants[0].sizes.map(s => s.size))}`
+                                    : "N/A"
+                            }`
+                        ) : item.type === "accessories" ? (
+                            `Sizes: ${
+                                item.variants.length > 0 && item.variants[0].sizes.length > 0
+                                    ? item.variants[0].sizes.map(s => s.size).join(", ")
+                                    : "N/A"
+                            }`
+                        ) : null}
                     </div>
+
                 </header>
-                <h2 className="absolute top-0 left-0 capitalize bg-black text-white p-1 text-sm">{item.manufacturer.replace("-"," ")}</h2>
+                <h2 className="absolute top-0 left-0 capitalize bg-black text-white p-1 text-sm">{item.manufacturer.replace("-", " ")}</h2>
             </Link>
             <div className="absolute top-0 right-0 flex flex-col gap-1 p-1">
                 {item.discount > 0 && (

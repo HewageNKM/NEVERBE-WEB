@@ -51,7 +51,7 @@ const Page = async () => {
                     {items.length > 0 ? (
                         <Products items={items}/>
                     ) : (
-                        <EmptyState message="No products available at this time."/>
+                        <EmptyState heading="No products available at this time."/>
                     )}
                 </div>
             </div>

@@ -397,6 +397,7 @@ export const getReviewByItemId = async (itemId: string, userId: string) => {
         if (docs.empty) {
             console.log(`No reviews found where itemId == ${itemId}`);
             return {
+                totalRating: 0,
                 reviews: [],
                 totalReviews: 0,
                 isUserReviewed: false,
@@ -406,6 +407,7 @@ export const getReviewByItemId = async (itemId: string, userId: string) => {
 
         const totalDocs = await adminFirestore.collection('reviews').where("itemId", "==", itemId).get();
         const totalReviews = totalDocs.size;
+        const totalRating = calculateTotalRating(docs.docs.map(doc => doc.data() as Review));
 
         // Check if the user has reviewed the item
         const isUserReviewed = docs.docs.some(doc => doc.data().userId === userId && doc.data().itemId === itemId);
@@ -446,13 +448,21 @@ export const getReviewByItemId = async (itemId: string, userId: string) => {
             totalReviews,
             isUserReviewed,
             userReview,
+            totalRating,
         };
     } catch (e) {
         console.log(e);
         throw e;
     }
 };
+export const calculateTotalRating = (reviews:Review[]) => {
+    try {
+        console.log("Calculating total rating from reviews.");
+        return reviews.reduce((acc, review) => acc + review.rating, 0);
+    }catch (e) {
 
+    }
+}
 export const sendEmail = async (msg: Message, token: string) => {
     try {
         console.log(`Sending email to: ${msg.email}, with subject: ${msg.subject}, and message: ${msg.message}`)
@@ -489,7 +499,7 @@ const capitalizeWords = (str: string) => {
 
 export const getBrandsFromInventory = async () => {
     try {
-        console.log("Generating brands grouped by types from inventory.");
+        console.log("Generating brands from inventory.");
 
         const inventorySnapshot = await adminFirestore
             .collection("inventory")
@@ -497,52 +507,39 @@ export const getBrandsFromInventory = async () => {
             .where("listing", "==", "Active")
             .get();
 
-        const manufacturers: Record<string, Record<string, Set<string>>> = {};
+        const manufacturers: Record<string, Set<string>> = {};
 
         // Iterate through inventory items
         inventorySnapshot.forEach(doc => {
             const data = doc.data();
             const manufacturer = data.manufacturer?.toLowerCase();
             const brandTitle = data.brand?.toLowerCase();
-            const type = data.type?.toLowerCase();
 
-            if (manufacturer) {
+            if (manufacturer && brandTitle) {
                 if (!manufacturers[manufacturer]) {
-                    manufacturers[manufacturer] = {}; // Initialize manufacturer
+                    manufacturers[manufacturer] = new Set(); // Initialize manufacturer
                 }
-                if (type) {
-                    if (!manufacturers[manufacturer][type]) {
-                        manufacturers[manufacturer][type] = new Set(); // Initialize type group
-                    }
-                    if (brandTitle) {
-                        manufacturers[manufacturer][type].add(brandTitle);
-                    }
-                    // Add a default "All" title for each type group
-                }
+                manufacturers[manufacturer].add(brandTitle); // Add brand title to manufacturer
             }
         });
 
-        // Map manufacturers and their grouped types to the brands array
-        const brandsArray = Object.entries(manufacturers).map(([manufacturer, types]) => ({
+        // Map manufacturers and their brand titles to the brands array
+        const brandsArray = Object.entries(manufacturers).map(([manufacturer, titles]) => ({
             name: capitalizeWords(manufacturer), // Capitalize manufacturer name
             value: manufacturer,
-            url: `/collections/products?manufacturer=${manufacturer}`,
-            types: Object.entries(types).map(([type, titles]) => ({
-                name: capitalizeWords(type), // Capitalize type name (e.g., Shoes)
-                url: `/collections/products?manufacturer=${manufacturer}`,
-                titles: Array.from(titles)
-                    .sort((a, b) => (a === "all" ? 1 : b === "all" ? -1 : a.localeCompare(b))) // Sort, ensuring "all" is last
-                    .map(title => ({
-                        name: capitalizeWords(title), // Capitalize title
-                        url: `/collections/products?manufacturer=${manufacturer}&brand=${title}`,
-                    })),
-            })),
+            url: `/collections/${manufacturer}`,
+            brands: Array.from(titles)
+                .sort()
+                .map(title => ({
+                    name: capitalizeWords(title), // Capitalize brand title
+                    url: `/collections/${manufacturer}/${title}`,
+                })),
         }));
 
-        console.log("Brands successfully generated with types:", brandsArray);
+        console.log("Brands successfully generated:", brandsArray);
         return brandsArray;
     } catch (error) {
-        console.error("Error generating brands with types:", error);
+        console.error("Error generating brands:", error);
         throw error;
     }
 };

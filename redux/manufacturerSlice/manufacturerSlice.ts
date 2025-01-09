@@ -1,32 +1,32 @@
 import {Item} from "@/interfaces";
-import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import {WritableDraft} from "immer";
-import {getProducts} from "@/actions/inventoryAction";
+import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
+import {getInventoryByManufacturer} from "@/actions/inventoryAction";
 
-interface ProductsSlice {
-    products: Item[],
+interface ManufacturerSlice {
+    products: Item[];
+    isLoading: boolean;
+    error: string | null;
     showFilter: boolean,
-    isLoading: boolean,
     selectedType: string,
-    error: string | null,
     selectedManufacturers: string[],
     selectedSizes: string[],
     selectedSort: string
 }
 
-const initialState: ProductsSlice = {
+const initialState: ManufacturerSlice = {
     selectedManufacturers: [],
-    isLoading: false,
-    error: null,
     selectedSizes: [],
+    error: null,
+    isLoading: false,
     selectedType: "all",
     products: [],
     showFilter: false,
     selectedSort: ""
 }
 
-const productsSlice = createSlice({
-    name: 'products',
+const manufacturerSlice = createSlice({
+    name: 'manufacturerSlice',
     initialState,
     reducers: {
         toggleFilter: (state) => {
@@ -56,22 +56,18 @@ const productsSlice = createSlice({
 
     },
     extraReducers: (builder) => {
-        builder.addCase(getInventory.fulfilled, (state, action) => {
-
+        builder
+            .addCase(getItemsByManufacturer.pending, (state) => {state.isLoading = true;}
+        ).addCase(getItemsByManufacturer.fulfilled, (state, action) => {
             //ManufacturersFilter by brand
             if (state.selectedType == "all") {
                 state.products = action.payload;
             } else if (state.selectedType == "shoes") {
-                state.products = action.payload.filter((item) => item.type == "shoes");
+                state.products = action.payload.filter((item: Item) => item.type == "shoes");
             } else if (state.selectedType == "accessories") {
-                state.products = action.payload.filter((item) => item.type == "accessories");
+                state.products = action.payload.filter((item: Item) => item.type == "accessories");
             } else if (state.selectedType == "sandals") {
-                state.products = action.payload.filter((item) => item.type == "sandals");
-            }
-
-            //ManufacturersFilter by brand
-            if (state.selectedManufacturers.length > 0) {
-                state.products = state.products.filter((item) => state.selectedManufacturers.includes(item.manufacturer));
+                state.products = action.payload.filter((item: Item) => item.type == "sandals");
             }
 
             //ManufacturersFilter by size
@@ -81,16 +77,13 @@ const productsSlice = createSlice({
             sort(state, action);
             state.isLoading = false;
             state.error = null;
-        }).addCase(getInventory.pending, (state) => {
-            state.isLoading = true
-        }).addCase(getInventory.rejected, (state, action) => {
-            state.error = action.error.message || null;
+        }).addCase(getItemsByManufacturer.rejected, (state, action) => {
+            state.error = action.error.message || "Something went wrong";
             state.isLoading = false;
         })
     }
 });
-
-const sort = (state: WritableDraft<ProductsSlice>, action: any) => {
+export const sort = (state: WritableDraft<ManufacturerSlice>, action: any) => {
     if (state.selectedSort != "") {
         if (state.selectedSort === "lh") {
             state.products = state.products.sort((a, b) => a.sellingPrice - b.sellingPrice);
@@ -102,15 +95,15 @@ const sort = (state: WritableDraft<ProductsSlice>, action: any) => {
     }
 }
 
-export const getInventory = createAsyncThunk('products/getFilterProducts', async (arg, thunkAPI) => {
+export const getItemsByManufacturer = createAsyncThunk('products/getItemByManufacturer', async (name:string, thunkAPI) => {
     try {
-        return await getProducts();
+        console.log("Fetching items by manufacturer", name);
+        return await getInventoryByManufacturer(name);
     } catch (e) {
         console.log(e);
         return thunkAPI.rejectWithValue(e);
     }
 });
-
 export const {
     toggleFilter,
     setSelectedType,
@@ -118,6 +111,6 @@ export const {
     setSelectedSort,
     resetFilter,
     setProducts,
-    setSelectedManufacturers,
-} = productsSlice.actions;
-export default productsSlice.reducer;
+} = manufacturerSlice.actions;
+export default manufacturerSlice.reducer;
+

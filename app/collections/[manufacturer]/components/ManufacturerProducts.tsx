@@ -5,27 +5,27 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "@/redux/store";
 import EmptyState from "@/components/EmptyState";
 import {Item} from '@/interfaces';
-import {setProducts, setSelectedSort, toggleFilter} from "@/redux/productsSlice/productsSlice";
-import ProductsFilter from "@/app/collections/products/components/ProductsFilter";
+import {setProducts, setSelectedSort, toggleFilter} from "@/redux/manufacturerSlice/manufacturerSlice";
 import {IoFilter} from "react-icons/io5";
 import {sortingOptions} from "@/constants";
 import {FiFilter} from "react-icons/fi";
+import ManufacturerFilter from "@/app/collections/[manufacturer]/components/ManufacturerFilter";
 import ComponentLoader from "@/components/ComponentLoader";
 
-const Products = ({items}: { items: Item[] }) => {
+const Products = ({items, manufacturer}: { items: Item[], manufacturer: string }) => {
     const dispatch: AppDispatch = useDispatch();
-    const {products, isLoading, error} = useSelector((state: RootState) => state.productsSlice);
-    const selectedSort = useSelector((state: RootState) => state.productsSlice.selectedSort);
+    const {products, selectedSort, isLoading, error} = useSelector((state: RootState) => state.manufacturerSlice);
 
 
     useEffect(() => {
+        window.localStorage.setItem("manufacturer", manufacturer);
         dispatch(setProducts(items));
-    }, [dispatch, items]);
+    }, [dispatch, items,manufacturer]);
 
     return (
         <section className="w-full flex lg:grid lg:grid-cols-5 lg:gap-32 pt-5 flex-row">
             <div className="lg:block hidden">
-                <ProductsFilter />
+                <ManufacturerFilter manufacturer={manufacturer}/>
             </div>
             <div className="col-span-4 w-full relative">
                 <div className="flex-row flex gap-2 lg:justify-end justify-between items-center">
@@ -67,7 +67,7 @@ const Products = ({items}: { items: Item[] }) => {
                 </ul>
                 {(products.length === 0 && !isLoading) && <EmptyState heading={"Products Not Available!"}/>}
                 {isLoading && <ComponentLoader/>}
-                {error && <EmptyState heading={"An error occurred!"} subHeading={error}/>}
+                {error && <EmptyState heading={"Error Fetching Products!"} subHeading={error}/>}
             </div>
         </section>
     );

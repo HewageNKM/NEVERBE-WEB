@@ -5,8 +5,7 @@ import { Item } from "@/interfaces";
 
 const PopularProducts = ({ hotItems }: { hotItems: Item[] }) => {
     return (
-        <section
-            className="w-full mt-10"
+        <section className="w-full my-10"
         >
             <div className="lg:px-24 px-4 py-8">
                 <div>
@@ -17,7 +16,7 @@ const PopularProducts = ({ hotItems }: { hotItems: Item[] }) => {
                 </div>
                 <div className="mt-8 w-full flex justify-center items-center">
                     {hotItems.length > 0 ? (
-                        <ul className="grid grid-cols-2 gap-2 md:gap-4 md:grid-cols-3 lg:grid-cols-7 w-full">
+                        <ul className="flex flex-row gap-5 mb-10 md:gap-10 flex-wrap mt-5 w-full">
                             {hotItems.map((item: Item) => (
                                 <li key={item.itemId}>
                                     <ItemCard item={item} />
@@ -25,7 +24,7 @@ const PopularProducts = ({ hotItems }: { hotItems: Item[] }) => {
                             ))}
                         </ul>
                     ) : (
-                        <EmptyState message="No hot products available!" />
+                        <EmptyState heading="No hot products available!" />
                     )}
                 </div>
             </div>

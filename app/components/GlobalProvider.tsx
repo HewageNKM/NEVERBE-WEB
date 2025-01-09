@@ -10,11 +10,13 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import {onAuthStateChanged, signInAnonymously} from "firebase/auth";
 import {setUser} from "@/redux/authSlice/authSlice";
+import Login from "@/components/Login";
 
 const GlobalProvider = ({children}: { children: ReactNode }) => {
     const dispatch: AppDispatch = useDispatch();
 
     const showCart = useSelector((state: RootState) => state.cartSlice.showCart);
+    const showLoginForm = useSelector((state: RootState) => state.authSlice.showLoginForm);
 
     useEffect(() => {
         onAuthStateChanged(auth, async (user) => {
@@ -37,6 +39,9 @@ const GlobalProvider = ({children}: { children: ReactNode }) => {
             <Footer/>
             <AnimatePresence>
                 {showCart && (<Cart/>)}
+            </AnimatePresence>
+            <AnimatePresence>
+                {showLoginForm && (<Login />)}
             </AnimatePresence>
         </main>
     );

@@ -34,3 +34,19 @@ export const getProducts = async () => {
       throw e
   }
 }
+
+export const getInventoryByManufacturer = async (name:string) => {
+    try {
+        const token = await getIdToken();
+        const response = await axios({
+            method: 'GET',
+            url: getInventoryURL+`/manufacturers/${name}`,
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return response.data;
+    }catch (e) {
+        throw e
+    }
+}

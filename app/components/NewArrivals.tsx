@@ -7,7 +7,7 @@ import { getRecentItems } from "@/firebase/firebaseAdmin";
 const NewArrivals = async ({arrivals: arrivals}:{arrivals:Item[]}) => {
 
     return (
-        <section className="w-full mt-10">
+        <section className="w-full my-12">
             <div className="lg:px-24 px-4 w-full">
                 <div>
                     <h2 className="md:text-4xl text-2xl"><strong>New Arrivals</strong></h2>
@@ -15,7 +15,7 @@ const NewArrivals = async ({arrivals: arrivals}:{arrivals:Item[]}) => {
                 </div>
                 <div className="mt-10">
                     {arrivals.length > 0 ? ( // Render items
-                        <ul className="grid grid-cols-2 gap-2 md:gap-4 md:grid-cols-3 lg:grid-cols-7 w-full">
+                        <ul className="flex flex-row gap-5 mb-10 md:gap-10 flex-wrap mt-5 w-full">
                             {arrivals.map((item: Item) => (
                                 <li key={item.itemId}>
                                     <ItemCard item={item} />
@@ -23,7 +23,7 @@ const NewArrivals = async ({arrivals: arrivals}:{arrivals:Item[]}) => {
                             ))}
                         </ul>
                     ) : ( // Empty state
-                        <EmptyState message="No new arrivals" />
+                        <EmptyState heading="No new arrivals" />
                     )}
                 </div>
             </div>

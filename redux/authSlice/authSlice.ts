@@ -3,10 +3,12 @@ import {User} from "@firebase/auth-types";
 
 interface AuthSlice {
     user: User | null;
+    showLoginForm: boolean;
 }
 
 const initialState: AuthSlice = {
     user: null,
+    showLoginForm: false,
 };
 
 const authSlice = createSlice({
@@ -16,8 +18,11 @@ const authSlice = createSlice({
         setUser: (state, action: PayloadAction<User | null>) => {
             state.user = action.payload;
         },
+        setShowLoginForm: (state, action: PayloadAction<boolean>) => {
+            state.showLoginForm = action.payload;
+        },
     },
 });
 
-export const {setUser} = authSlice.actions;
+export const {setUser,setShowLoginForm} = authSlice.actions;
 export default authSlice.reducer;

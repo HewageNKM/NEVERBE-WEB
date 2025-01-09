@@ -6,14 +6,16 @@ import ReCAPTCHA from "react-google-recaptcha";
 import ReactStars from 'react-stars'
 import {addNewReview, deleteReview, getAllReviewsById} from "@/actions/itemDetailsAction";
 import Skeleton from "@/components/Skeleton";
-import {useSelector} from "react-redux";
-import {RootState} from "@/redux/store";
+import {useDispatch, useSelector} from "react-redux";
+import {AppDispatch, RootState} from "@/redux/store";
 import {Review} from "@/interfaces";
 import ReviewCard from "./ReviewCard";
+import {setShowLoginForm} from "@/redux/authSlice/authSlice";
 
 
 const Reviews = ({itemId}: { itemId: string }) => {
     const {user} = useSelector((state: RootState) => state.authSlice);
+    const dispatch:AppDispatch = useDispatch();
     const [captchaValue, setCaptchaValue] = useState<string | null>(null);
     const [captchaError, setCaptchaError] = useState(false); // For tracking CAPTCHA errors
     const recaptchaRef = React.createRef<ReCAPTCHA>();
@@ -35,7 +37,12 @@ const Reviews = ({itemId}: { itemId: string }) => {
     const [showReviewForm, setShowReviewForm] = useState(false);
 
     const handleAddReviewClick = () => {
-        setShowReviewForm((prev) => !prev);
+        if(user?.isAnonymous){
+            dispatch(setShowLoginForm(true));
+            return;
+        }else {
+            setShowReviewForm((prev) => !prev);
+        }
     };
     const onReviewDelete = async (reviewId: string) => {
         try {
@@ -114,22 +121,23 @@ const Reviews = ({itemId}: { itemId: string }) => {
     }, [user]);
 
     return (
-        <section className="py-10">
+        <section className="py-10" id={"rating"}>
             <div className="flex w-full justify-between items-center">
                 <h2 className="text-2xl tracking-wide font-bold text-gray-900">
                     Reviews ({reviewReport.totalReviews})
                 </h2>
                 <button
-                    disabled={reviewReport.isUserReviewed || isProcessing}
+                    disabled={reviewReport.isUserReviewed || isProcessing || !user}
                     onClick={handleAddReviewClick}
                     className="text-white md:text-sm text-xs md:px-4 px-2 py-1  disabled:cursor-not-allowed disabled:bg-opacity-60 md:py-2 rounded-md shadow-md bg-primary-100 hover:bg-primary-200"
                 >
                     {reviewReport.isUserReviewed ? "Already Reviewed" : "Add Review"}
+                    {!user && " (User Loading)"}
                 </button>
             </div>
             <div className="w-full pt-10">
                 {(reviewReport.reviews.length <= 0 && !isLoading && !reviewReport.userReview) ? (
-                    <EmptyState message="No reviews available"/>
+                    <EmptyState heading="No reviews available"/>
                 ) : (
                     <ul className="flex-row flex flex-wrap lg:gap-10 md:gap-6 gap-2 w-full hide-scrollbar overflow-x-auto">
                         {reviewReport.userReview && (

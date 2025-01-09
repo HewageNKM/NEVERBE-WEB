@@ -2,13 +2,15 @@ import {configureStore} from '@reduxjs/toolkit'
 import cartSlice from "@/redux/cartSlice/cartSlice";
 import productsSlice from "@/redux/productsSlice/productsSlice";
 import authSlice from "@/redux/authSlice/authSlice";
+import manufacturerSlice from './manufacturerSlice/manufacturerSlice';
 
 export const makeStore = () => {
     return configureStore({
         reducer: {
             cartSlice,
             productsSlice,
-            authSlice
+            authSlice,
+            manufacturerSlice
         },
         middleware: (getDefaultMiddleware) => getDefaultMiddleware(
             {serializableCheck: false}

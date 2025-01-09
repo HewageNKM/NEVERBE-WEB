@@ -20,7 +20,7 @@ const SimilarProducts = ({ items }: { items: Item[] }) => {
                             ))}
                         </ul>
                     ) : ( // Empty state
-                        <EmptyState message="No similar products available!" />
+                        <EmptyState heading="No similar products available!" />
                     )}
                 </div>
             </div>

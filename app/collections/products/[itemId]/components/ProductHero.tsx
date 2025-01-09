@@ -1,15 +1,16 @@
 "use client";
-import React, { useEffect, useState, useRef } from "react";
+import React, {useEffect, useRef, useState} from "react";
 import Image from "next/image";
-import { CartItem, Item, Size, Variant } from "@/interfaces";
-import { IoAdd, IoRemove } from "react-icons/io5";
-import { AppDispatch } from "@/redux/store";
-import { useDispatch } from "react-redux";
-import { pushToCart } from "@/redux/cartSlice/cartSlice";
-import {any} from "prop-types";
+import {CartItem, Item, Size, Variant} from "@/interfaces";
+import {IoAdd, IoRemove} from "react-icons/io5";
+import {AppDispatch, RootState} from "@/redux/store";
+import {useDispatch, useSelector} from "react-redux";
+import {pushToCart} from "@/redux/cartSlice/cartSlice";
 import Link from "next/link";
+import {getAllReviewsById} from "@/actions/itemDetailsAction";
+import ReactStars from "react-stars";
 
-const ProductHero = ({ item }: { item: Item }) => {
+const ProductHero = ({item}: { item: Item }) => {
     const [selectedImage, setSelectedImage] = useState(item.thumbnail);
     const [selectedVariant, setSelectedVariant] = useState<Variant>({
         variantId: "",
@@ -17,10 +18,12 @@ const ProductHero = ({ item }: { item: Item }) => {
         images: [],
         sizes: [],
     });
-    const [selectedSize, setSelectedSize] = useState<Size>({ size: "", stock: 0 });
+    const [selectedSize, setSelectedSize] = useState<Size>({size: "", stock: 0});
     const [qty, setQty] = useState(0);
     const [outOfStocks, setOutOfStocks] = useState(false);
     const [outOfStocksLabel, setOutOfStocksLabel] = useState("Out of Stock");
+    const [totalRating, setTotalRating] = useState(0)
+    const {user} = useSelector((state: RootState) => state.authSlice);
 
     const dispatch: AppDispatch = useDispatch();
 
@@ -61,8 +64,8 @@ const ProductHero = ({ item }: { item: Item }) => {
     };
 
     const reset = () => {
-        setSelectedVariant({ variantId: "", variantName: "", images: [], sizes: [] });
-        setSelectedSize({ size: "", stock: 0 });
+        setSelectedVariant({variantId: "", variantName: "", images: [], sizes: []});
+        setSelectedSize({size: "", stock: 0});
         setQty(0);
         setSelectedImage(item.thumbnail);
     };
@@ -92,8 +95,20 @@ const ProductHero = ({ item }: { item: Item }) => {
     };
 
     useEffect(() => {
-        checkOutOfStocks();
-    }, [item]);
+        if (user) {
+            checkOutOfStocks();
+            getRating()
+        }
+    }, [item, user]);
+
+    const getRating = async () => {
+        try {
+            const {totalRating} = await getAllReviewsById(item.itemId);
+            setTotalRating(totalRating)
+        } catch (e) {
+            console.log(e)
+        }
+    }
 
     const handleZoom = (e: React.MouseEvent) => {
         if (!zoomRef.current || !imageRef.current) return;
@@ -117,7 +132,8 @@ const ProductHero = ({ item }: { item: Item }) => {
     return (
         <section className="w-full relative flex-content flex-col">
             <div>
-                <div className="md:text-2xl flex flex-row gap-1 text-xl tracking-wider mt-10 text-gray-800 font-extrabold">
+                <div
+                    className="md:text-2xl flex flex-row gap-1 text-xl tracking-wider mt-10 text-gray-800 font-extrabold">
                 <span className="hover:border-b-2 border-gray-800 h-7">
                     <Link href={"/collections/products"}>
                           Products
@@ -180,6 +196,14 @@ const ProductHero = ({ item }: { item: Item }) => {
                     <div className="flex flex-col gap-4">
                         <p className="text-lg font-medium capitalize text-gray-600">{item.manufacturer}</p>
                         <h2 className="text-xl font-extrabold text-gray-900">{item.name}</h2>
+                        <Link href={"#rating"} className="flex flex-row gap-1 items-center font-bold">
+                            <ReactStars edit={false}
+                                        value={totalRating} count={5}
+                                        size={25} color2={'#ffd700'}/>
+                            <span>
+                                ({totalRating})
+                            </span>
+                        </Link>
                         <div className="text-gray-900 flex items-center space-x-3">
                             <span className="text-lg font-semibold text-red-500">{"Rs. " + item.sellingPrice}</span>
                             {item.discount > 0 && (
@@ -197,7 +221,7 @@ const ProductHero = ({ item }: { item: Item }) => {
                                             onClick={() => {
                                                 setSelectedVariant(variant);
                                                 setSelectedImage(variant.images[0]);
-                                                setSelectedSize({ size: "", stock: 0 });
+                                                setSelectedSize({size: "", stock: 0});
                                                 setQty(0);
                                             }}
                                             className={`rounded-md p-2 text-sm capitalize ${
@@ -246,7 +270,7 @@ const ProductHero = ({ item }: { item: Item }) => {
                                     disabled={qty == 0}
                                     className="bg-gray-200 p-2 rounded-full text-gray-700 hover:bg-gray-300 disabled:opacity-50"
                                 >
-                                    <IoRemove size={20} />
+                                    <IoRemove size={20}/>
                                 </button>
                                 <span className="text-lg font-medium text-gray-800">{qty}</span>
                                 <button
@@ -254,7 +278,7 @@ const ProductHero = ({ item }: { item: Item }) => {
                                     disabled={selectedSize.stock == 0}
                                     className="bg-gray-200 p-2 rounded-full text-gray-700 hover:bg-gray-300 disabled:opacity-50"
                                 >
-                                    <IoAdd size={20} />
+                                    <IoAdd size={20}/>
                                 </button>
                             </div>
                         </div>
