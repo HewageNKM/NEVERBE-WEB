@@ -5,15 +5,24 @@ import {RootState} from "@/redux/store";
 import Image from "next/image";
 import {IoLockClosed} from "react-icons/io5";
 import {paymentOptions} from "@/constants";
-import {calculateShipping} from "@/util";
 import CartItemCard from "@/components/CartItemCard";
+import ReCAPTCHA from "react-google-recaptcha";
 
 const PaymentDetails = ({
                             setPaymentType,
                             paymentType,
+    captchaError,
+    setCaptchaError,
+    setCaptchaValue,
+    recaptchaRef
                         }: {
     setPaymentType: React.Dispatch<React.SetStateAction<string>>;
     paymentType: string;
+    recaptchaRef: React.RefObject<ReCAPTCHA>;
+    setCaptchaValue: React.Dispatch<React.SetStateAction<string | null>>;
+    setCaptchaError: React.Dispatch<React.SetStateAction<boolean>>;
+    captchaError: boolean;
+
 }) => {
     const cartItems = useSelector((state: RootState) => state.cartSlice.cart);
 
@@ -34,8 +43,14 @@ const PaymentDetails = ({
                 <div className="mt-4 flex flex-col items-end space-y-2 text-lg">
                     <h3 className="text-2xl font-bold">
                         Total:
-                        Rs. {cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0)}
+                        Rs. {cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0).toFixed(2)}
                     </h3>
+                </div>
+
+                <div className="mt-2">
+                    <p className="text-center uppercase text-sm font-bold text-red-500">
+                        ***pay for shipping when you receive your order.***
+                    </p>
                 </div>
             </div>
 
@@ -82,7 +97,26 @@ const PaymentDetails = ({
                     Service and Privacy Policy.
                 </p>
             </div>
-
+            <div>
+                <ReCAPTCHA
+                    sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ""}
+                    ref={recaptchaRef}
+                    onChange={(value) => {
+                        setCaptchaValue(value);
+                        setCaptchaError(false); // Clear error on valid input
+                    }}
+                    onExpired={() => {
+                        setCaptchaValue(null);
+                        setCaptchaError(true); // Show error on expiration
+                    }}
+                    className={`${
+                        captchaError ? "border-red-500" : ""
+                    }`}
+                />
+            </div>
+            <div>
+                {captchaError && (<p className="text-red-500 text-sm mt-2">Please verify that you are not a robot</p>)}
+            </div>
             <div className="w-full mt-5">
                 <button
                     disabled={cartItems.length === 0}

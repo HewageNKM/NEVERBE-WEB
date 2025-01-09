@@ -26,14 +26,17 @@ export async function POST(req: Request) {
 
         // Verify the MD5 signature
         if (local_md5sig !== md5sig) {
+            console.error("MD5 Signature mismatch");
             return NextResponse.json({ message: 'Unauthorized: Different Signatures' }, { status: 401 });
         }
 
         // Handle payment success or failure based on the status_code
         if (status_code === '2') {
+            console.log("Payment Successful");
             await updatePayment(order_id, payment_id, "Paid");
             return NextResponse.json({ message: `Payment Successful ${status_code}` }, { status: 200 });
         } else {
+            console.log("Payment Failed");
             await updatePayment(order_id, payment_id, "Failed");
             return NextResponse.json({ message: `Payment Failed ${status_code}` }, { status: 400 });
         }

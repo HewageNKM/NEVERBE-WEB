@@ -17,7 +17,7 @@ const Reviews = ({itemId}: { itemId: string }) => {
     const {user} = useSelector((state: RootState) => state.authSlice);
     const dispatch:AppDispatch = useDispatch();
     const [captchaValue, setCaptchaValue] = useState<string | null>(null);
-    const [captchaError, setCaptchaError] = useState(false); // For tracking CAPTCHA errors
+    const [captchaError, setCaptchaError] = useState(false);
     const recaptchaRef = React.createRef<ReCAPTCHA>();
     const [rating, setRating] = useState(5)
     const [isLoading, setIsLoading] = useState(true)

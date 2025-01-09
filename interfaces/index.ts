@@ -121,9 +121,8 @@ export interface Order {
     paymentMethod: string,
     customer: Customer,
     from: string,
-    shippingCost: number,
-    createdAt: Timestamp | null,
-    updatedAt: Timestamp | null,
+    createdAt: Timestamp | string,
+    updatedAt: Timestamp | string,
 }
 
 export interface Customer {
@@ -133,6 +132,6 @@ export interface Customer {
     phone: string;
     address: string;
     city: string;
-    createdAt: Timestamp | null;
-    updatedAt: Timestamp | null;
+    createdAt: Timestamp | string;
+    updatedAt: Timestamp | string;
 }

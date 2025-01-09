@@ -9,14 +9,12 @@ export async function POST(req: Request) {
 
         const order: Order = await req.json();
         console.log("Saving New Order: " + order.orderId)
-
-        const result = await addNewOrder(order);
-        console.log(result)
+        const token = new URL(req.url).searchParams.get('captchaToken') || "";
+        const result = await addNewOrder(order, token);
 
         if (!result) {
             return NextResponse.json({message: 'Order Not Added'}, {status: 400})
         }
-
         console.log("Saved New Order: " + order.orderId)
         return NextResponse.json({message: 'Order Added'}, {status: 200})
     } catch (e: any) {

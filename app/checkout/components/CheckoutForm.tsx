@@ -8,42 +8,54 @@ import {AppDispatch, RootState} from "@/redux/store";
 import {CartItem, Customer, Order, OrderItem} from "@/interfaces";
 import {paymentMethods} from "@/constants";
 import {clearCart} from "@/redux/cartSlice/cartSlice";
-import {redirect} from "next/navigation";
-import {Timestamp} from "@firebase/firestore";
+import {redirect, useRouter} from "next/navigation";
 import {generateOrderId} from "@/util";
 import {addNewOrder} from "@/actions/orderAction";
+import ComponentLoader from "@/components/ComponentLoader";
+import ReCAPTCHA from "react-google-recaptcha";
 
 
 const CheckoutForm = () => {
     const dispatch: AppDispatch = useDispatch();
-    const [paymentType, setPaymentType] = useState("payhere")
+    const [paymentType, setPaymentType] = useState("ipg")
     const [saveAddress, setSaveAddress] = useState(true)
     const [loading, setLoading] = useState(false)
+    const router = useRouter();
+
+    const [captchaValue, setCaptchaValue] = useState<string | null>(null);
+    const [captchaError, setCaptchaError] = useState(false);
+    const recaptchaRef = React.createRef<ReCAPTCHA>();
 
     const [customer, setCustomer] = useState({
         address: "",
         city: "",
-        createdAt: Timestamp.now(),
+        createdAt: new Date().toLocaleString(),
         email: "",
         id: "",
         name: "",
         phone: "",
-        updatedAt: Timestamp.now()
+        updatedAt: new Date().toLocaleString()
     })
 
     const cartItems: CartItem[] = useSelector((state: RootState) => state.cartSlice.cart);
     const onPaymentFormSubmit = async (evt: any) => {
-        setLoading(true)
-        evt.preventDefault()
-
+       let orderId = "";
         try {
+            setLoading(true)
+            evt.preventDefault()
+
+            if (!captchaValue) {
+                setCaptchaError(true)
+                setLoading(false)
+                return;
+            }
             const form = evt.target;
             const formData = new FormData(form);
             const merchantSecret = process.env.NEXT_PUBLIC_IPG_MERCHANT_SECRET;
 
             const hashedSecret = md5(merchantSecret).toString().toUpperCase();
             const merchantId = process.env.NEXT_PUBLIC_IPG_MERCHANT_ID;
-            const orderId = generateOrderId("Website");
+            orderId = generateOrderId("Website");
 
             const currency = 'LKR';
             const amount = await getTotal();
@@ -56,8 +68,8 @@ const CheckoutForm = () => {
             }
 
             formData.set("merchant_id", merchantId);
-            formData.set("return_url", `${process.env.NEXT_PUBLIC_BASE_URL}/shop/checkout/success`);
-            formData.set("cancel_url", `${process.env.NEXT_PUBLIC_BASE_URL}/shop/checkout/fail`);
+            formData.set("return_url", `${process.env.NEXT_PUBLIC_BASE_URL}/checkout/success`);
+            formData.set("cancel_url", `${process.env.NEXT_PUBLIC_BASE_URL}/checkout/fail`);
             formData.set("notify_url", `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/ipg`);
             formData.set("first_name", evt.target.first_name.value);
             formData.set("last_name", evt.target.last_name.value);
@@ -89,54 +101,39 @@ const CheckoutForm = () => {
             document.body.appendChild(submitForm);
 
             const newOrder: Order = {
-                from: "Website",
-                createdAt: Timestamp.now(),
+                from: "website",
                 items: cartItems as OrderItem[],
                 orderId: orderId,
                 paymentId: "",
-                paymentStatus: "Pending",
+                paymentStatus: "pending",
                 paymentMethod: "",
-                shippingCost: 0,
                 customer: customer,
-                updatedAt: Timestamp.now()
+                updatedAt: new Date().toLocaleString(),
+                createdAt: new Date().toLocaleString(),
             }
 
             const newCustomer: Customer = {
                 address: evt.target.address.value,
                 city: evt.target.city.value,
-                createdAt: Timestamp.now(),
                 email: evt.target.email.value,
                 id: window.crypto.randomUUID().toLowerCase(),
                 name: evt.target.first_name.value + " " + evt.target.last_name.value,
                 phone: evt.target.phone.value,
-                updatedAt: Timestamp.now()
+                createdAt: new Date().toLocaleString(),
+                updatedAt: new Date().toLocaleString()
             }
             newOrder.customer = newCustomer;
             setCustomer(newCustomer)
             if (cartItems.length !== 0) {
-                if (paymentType == "payhere") {
-                    newOrder.paymentMethod = paymentMethods.PayHere;
-                    const response = await addNewOrder(newOrder);
-                    if (response.status === 200) {
-                        dispatch(clearCart())
-                        setLoading(false)
-                        saveAddressToLocalStorage()
-                        submitForm.submit();
-                    } else {
-                        console.log("Error adding order")
-                    }
-
+                if (paymentType == "ipg") {
+                    newOrder.paymentMethod = paymentMethods.IPG;
+                    await addNewOrder(newOrder,captchaValue);
+                    dispatch(clearCart())
+                    setLoading(false)
+                    saveAddressToLocalStorage()
+                    submitForm.submit();
                 } else if (paymentType == "cod") {
-                    /*newOrder.paymentMethod = paymentMethods.COD;
-                    const response = await addNewOrder(newOrder);
-                    if (response.status === 200) {
-                        dispatch(clearCart())
-                        setLoading(false)
-                        saveAddressToLocalStorage()
-                        router.replace("/shop/checkout/success?order_id=" + orderId)
-                    } else {
-                        console.log("Error adding order")
-                    }*/
+                    // Upcoming feature
                 } else {
                     new Error("Payment type not found")
                 }
@@ -145,16 +142,13 @@ const CheckoutForm = () => {
             }
         } catch (e) {
             console.log(e)
+            router.replace("/checkout/fail?order_id=" + orderId)
         } finally {
             setLoading(false)
             saveAddressToLocalStorage()
         }
     }
-    useEffect(() => {
-        if (process.env.NEXT_PUBLIC_IS_LIVE === "false") {
-            redirect("/down")
-        }
-    });
+
     useEffect(() => {
         const customer = window.localStorage.getItem("neverbeCustomer");
         if (customer) {
@@ -182,20 +176,13 @@ const CheckoutForm = () => {
             <form onSubmit={(evt) => onPaymentFormSubmit(evt)}
                   className="flex flex-row flex-wrap justify-evenly lg:gap-32 gap-10 md:gap-20 mt-10">
                 <AddressDetails saveAddress={saveAddress} setSaveAddress={setSaveAddress} customer={customer}/>
-                <PaymentDetails setPaymentType={setPaymentType} paymentType={paymentType}/>
+                <PaymentDetails setPaymentType={setPaymentType} paymentType={paymentType} captchaError={captchaError}
+                                setCaptchaError={setCaptchaError} setCaptchaValue={setCaptchaValue}
+                                recaptchaRef={recaptchaRef}/>
             </form>
-            {loading && <div
-                className="fixed z-50 top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center">
-                <div className='flex space-x-2 justify-center items-center h-screen'>
-                    <span className='sr-only'>Loading...</span>
-                    <div className='h-8 w-8 bg-white rounded-full animate-bounce [animation-delay:-0.3s]'></div>
-                    <div className='h-8 w-8 bg-white rounded-full animate-bounce [animation-delay:-0.15s]'></div>
-                    <div className='h-8 w-8 bg-white rounded-full animate-bounce'></div>
-                </div>
-            </div>}
+            {loading && <ComponentLoader />}
         </div>
     )
-        ;
 }
 
 export default CheckoutForm;

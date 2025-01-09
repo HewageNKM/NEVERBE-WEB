@@ -51,7 +51,7 @@ const Cart = () => {
                         className="bg-primary disabled:cursor-not-allowed disabled:bg-opacity-60 text-white p-2 mt-5 tracking-wide md:text-xl lg:text-xl rounded-lg w-full"
                         onClick={() => {
                             dispatch(hideCart());
-                            router.push("/shop/checkout");
+                            router.push("/checkout");
                         }}
                         disabled={cartItems.length === 0}
                     >

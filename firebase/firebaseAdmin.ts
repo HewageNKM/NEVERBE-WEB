@@ -18,9 +18,13 @@ export const adminFirestore = admin.firestore();
 export const adminAuth = admin.auth();
 
 // Function to add a new order, update inventory, and handle stock checks
-export const addNewOrder = async (order: Order) => {
+export const addNewOrder = async (order: Order,token:string) => {
     try {
         console.log("Adding new order:", order.orderId);
+        const res = await verifyCaptchaToken(token);
+        if (!res) {
+            throw new Error("reCAPTCHA verification failed.");
+        }
 
         const inventoryUpdates = [];
 
@@ -78,11 +82,11 @@ export const addNewOrder = async (order: Order) => {
             ...order,
             customer: {
                 ...order.customer,
-                createdAt: admin.firestore.Timestamp.now(),
-                updatedAt: admin.firestore.Timestamp.now(),
+                createdAt: admin.firestore.Timestamp.fromDate(new Date(order.customer.createdAt)),
+                updatedAt: admin.firestore.Timestamp.fromDate(new Date(order.customer.updatedAt)),
             },
-            createdAt: admin.firestore.Timestamp.now(),
-            updatedAt: admin.firestore.Timestamp.now(),
+            createdAt: admin.firestore.Timestamp.fromDate(new Date(order.createdAt)),
+            updatedAt: admin.firestore.Timestamp.fromDate(new Date(order.updatedAt)),
         });
     } catch (e) {
         console.log(e)
@@ -97,7 +101,6 @@ export const updatePayment = async (orderId: string, paymentId: string, status: 
         return await adminFirestore.collection('orders').doc(orderId).update({
             paymentId: paymentId,
             paymentStatus: status,
-            updatedAt: admin.firestore.Timestamp.now()
         });
     } catch (e) {
         console.log(e)

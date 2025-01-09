@@ -339,8 +339,8 @@ export const payHere = {
 }
 export const paymentOptions = [
     {
-        name: "PayHere",
-        value: "payhere",
+        name: "ipg",
+        value: "ipg",
         image: payHere.squareBannerBlue,
         description: null
     }]
@@ -368,7 +368,7 @@ export const contactInfo = [
 
 ];
 export const paymentMethods = {
-    PayHere:"IPG",
+    IPG:"ipg",
 }
 export enum ContactUs {
     infoEmail="info@neverbe.lk",
