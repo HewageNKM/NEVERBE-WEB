@@ -4,9 +4,12 @@ import GoodsImage from './goods.png';
 import SupportImage from './support.png';
 import Logo from './logo.png';
 import Banner from './banner.png';
-import ShoesBackground from './shoes background.jpg';
 import Avatar from './avatar.png';
-
+import DefaultBG from './defaulBG.jpg';
+import NikeBG from './nikeBackgroundBG.png';
+import AdidasBG from './adidasBackgroundBG.png';
+import LuvionVuittonBG from './luvionvuttonBG.jpeg';
+import NewBalance from './newbalanceBackgroundBG.png';
 export
 {
     DeliveryImage,
@@ -15,6 +18,10 @@ export
     SupportImage,
     Logo,
     Banner,
-    ShoesBackground,
-    Avatar
+    Avatar,
+    DefaultBG,
+    NikeBG,
+    AdidasBG,
+    LuvionVuittonBG,
+    NewBalance
 };

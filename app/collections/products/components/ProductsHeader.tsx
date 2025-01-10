@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
 import { getInventory } from "@/redux/productsSlice/productsSlice";
 import Image from "next/image";
-import { ShoesBackground } from "@/assets/images";
+import {DefaultBG} from "@/assets/images";
 
 const ProductsHeader = ({ count }: { count: number }) => {
     const dispatch: AppDispatch = useDispatch();
@@ -19,7 +19,7 @@ const ProductsHeader = ({ count }: { count: number }) => {
             <div className="relative group overflow-hidden">
                 <figure className="transition-transform duration-300 ease-in-out group-hover:scale-105">
                     <Image
-                        src={ShoesBackground}
+                        src={DefaultBG}
                         alt="Shoes Background"
                         width={100}
                         height={100}

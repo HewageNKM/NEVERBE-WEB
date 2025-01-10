@@ -1,6 +1,6 @@
 import React from 'react';
 import Image from "next/image";
-import {ShoesBackground} from "@/assets/images";
+import {DefaultBG} from "@/assets/images";
 
 const ManufacturerHeader = ({count, manufacturer, brand}: { count: number, manufacturer: string, brand: string }) => {
 
@@ -9,7 +9,7 @@ const ManufacturerHeader = ({count, manufacturer, brand}: { count: number, manuf
             <div className="relative group overflow-hidden">
                 <figure className="transition-transform duration-300 ease-in-out group-hover:scale-105">
                     <Image
-                        src={ShoesBackground}
+                        src={DefaultBG}
                         alt="Shoes Background"
                         width={100}
                         height={100}
