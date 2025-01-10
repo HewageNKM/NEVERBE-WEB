@@ -97,7 +97,6 @@ export const sort = (state: WritableDraft<ManufacturerSlice>, action: any) => {
 
 export const getItemsByManufacturer = createAsyncThunk('products/getItemByManufacturer', async (name:string, thunkAPI) => {
     try {
-        console.log("Fetching items by manufacturer", name);
         return await getInventoryByManufacturer(name);
     } catch (e) {
         console.log(e);

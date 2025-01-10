@@ -118,6 +118,7 @@ export const accessoriesSizes = [
     "M",
     "L",
     "XL",
+    "Free Size",
     "200ml"
 ]
 export const whyUs = [

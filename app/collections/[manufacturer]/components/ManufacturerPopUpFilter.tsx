@@ -124,10 +124,10 @@ const ManufacturerPopUpFilter = () => {
                                         <label key={index}
                                                className="flex items-center gap-2 cursor-pointer hover:bg-gray-100 rounded p-2 transition duration-200">
                                             <input
-                                                value={size}
-                                                checked={selectedSizes.includes(size)}
+                                                value={size.toLowerCase()}
+                                                checked={selectedSizes.includes(size.toLowerCase())}
                                                 type="checkbox"
-                                                onChange={() => addSize(size)}
+                                                onChange={() => addSize(size.toLowerCase())}
                                                 className="form-checkbox h-5 w-5 text-blue-600 transition duration-150 ease-in-out rounded focus:ring-2 focus:ring-blue-500"
                                             />
                                             <span className="text-gray-800 font-medium">{size}</span>
@@ -143,7 +143,7 @@ const ManufacturerPopUpFilter = () => {
                         onClick={() => dispatch(resetFilter())}
                         className="bg-yellow-500 flex mt-1 rounded-full p-3 text-white justify-center items-center text-sm font-bold hover:bg-yellow-600 transition duration-200"
                     >
-                        <BiReset size={25}/>
+                    <BiReset size={25}/>
                     </button>
                     <button
                         onClick={() => dispatch(toggleFilter())}
