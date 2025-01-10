@@ -3,13 +3,17 @@ import {Item} from "@/interfaces";
 import SearchResultCard from "@/components/SearchResultCard";
 import {motion} from "framer-motion";
 
-const SearchDialog = ({results, onClick}: { results: Item[], onClick: () => void }) => {
+const SearchDialog = ({results, onClick, containerStyle}: {
+    results: Item[],
+    onClick: () => void,
+    containerStyle?: string
+}) => {
     return (
         <motion.div
             initial={{opacity: 0}}
             animate={{opacity: 1}}
             exit={{opacity: 0}}
-            className="max-w-md lg:min-w-[20rem] md:min-w-[15rem] max-h-[25rem] absolute z-30 bg-white text-black  shadow-custom rounded-b -t p-3 overflow-y-auto hide-scrollbar">
+            className={`max-w-md min-w-[18rem] max-h-[25rem] bg-white text-black  shadow-custom rounded-b p-3 overflow-y-auto hide-scrollbar ${containerStyle ? containerStyle : "z-30 absolute"}`}>
             {results.map((result, index) => (
                 <ul key={index} className="flex flex-col gap-3">
                     <li>

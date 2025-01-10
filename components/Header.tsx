@@ -11,6 +11,7 @@ import SearchDialog from "@/components/SearchDialog";
 import {getAlgoliaClient} from "@/util";
 import {Item} from "@/interfaces";
 import {AnimatePresence} from "framer-motion";
+import {toggleMenu} from "@/redux/headerSlice/headerSlice";
 
 const Header = () => {
     const cartItems = useSelector((state: RootState) => state.cartSlice.cart);
@@ -83,7 +84,7 @@ const Header = () => {
                         )}
                         <input value={search} type="text" placeholder="search for products"
                                onChange={(e) => searchItems(e)}
-                               className="py-2 pr-8 text-black px-4 md:w-[15rem] lg:w-[20rem] h-[2.5rem] rounded-md text-sm"/>
+                               className="py-2 pr-8 text-black px-4 w-[18rem] h-[2.5rem] rounded-md text-sm"/>
                         <AnimatePresence>
                             {(showSearchResult && items.length > 0) && <SearchDialog results={items} onClick={()=>{
                                 setShowSearchResult(false)
@@ -98,8 +99,8 @@ const Header = () => {
                         <span className="absolute -top-2 p-1 right-0 bg-primary text-white text-xs rounded-full ">
                         {cartItems.length}</span>
                     </div>
-                    <div className="lg:hidden block">
-                        <button>
+                    <div className="lg:hidden block ">
+                        <button onClick={()=> dispatch(toggleMenu(true))}>
                             <IoMenu size={30}/>
                         </button>
                     </div>

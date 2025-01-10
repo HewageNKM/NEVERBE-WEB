@@ -4,6 +4,7 @@ import productsSlice from "@/redux/productsSlice/productsSlice";
 import authSlice from "@/redux/authSlice/authSlice";
 import manufacturerSlice from './manufacturerSlice/manufacturerSlice';
 import brandSlice from "@/redux/brandSlice/brandSlice";
+import headerSlice from "@/redux/headerSlice/headerSlice";
 
 export const makeStore = () => {
     return configureStore({
@@ -12,7 +13,8 @@ export const makeStore = () => {
             productsSlice,
             authSlice,
             manufacturerSlice,
-            brandSlice
+            brandSlice,
+            headerSlice
         },
         middleware: (getDefaultMiddleware) => getDefaultMiddleware(
             {serializableCheck: false}
