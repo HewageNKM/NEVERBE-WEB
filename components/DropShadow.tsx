@@ -1,8 +1,8 @@
 import React, {ReactNode} from 'react';
 
-const DropShadow = ({containerStyle,children}:{containerStyle:string,children:ReactNode}) => {
+const DropShadow = ({containerStyle,children,onClick}:{containerStyle:string,children:ReactNode,onClick?:()=>void}) => {
     return (
-        <div className={`fixed top-0 bg-black z-50 bg-opacity-60 w-full min-h-screen ${containerStyle}`}>
+        <div onClick={onClick} className={`fixed top-0 bg-black z-50 bg-opacity-60 w-full min-h-screen ${containerStyle}`}>
             {children}
         </div>
     );

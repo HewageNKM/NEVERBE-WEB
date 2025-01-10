@@ -13,7 +13,7 @@ const SearchDialog = ({results, onClick, containerStyle}: {
             initial={{opacity: 0}}
             animate={{opacity: 1}}
             exit={{opacity: 0}}
-            className={`max-w-md min-w-[18rem] max-h-[25rem] bg-white text-black  shadow-custom rounded-b p-3 overflow-y-auto hide-scrollbar ${containerStyle ? containerStyle : "z-30 absolute"}`}>
+            className={`lg:max-w-md w-full min-w-[18rem] max-h-[25rem] bg-white text-black  shadow-custom rounded-b p-3 overflow-y-auto hide-scrollbar ${containerStyle ? containerStyle : "z-30 absolute"}`}>
             {results.map((result, index) => (
                 <ul key={index} className="flex flex-col gap-3">
                     <li>

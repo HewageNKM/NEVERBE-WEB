@@ -20,8 +20,6 @@ const GlobalProvider = ({children}: { children: ReactNode }) => {
     const showLoginForm = useSelector((state: RootState) => state.authSlice.showLoginForm);
     const showMenu = useSelector((state: RootState) => state.headerSlice.showMenu);
 
-    console.log(showMenu);
-
     useEffect(() => {
         onAuthStateChanged(auth, async (user) => {
             if (user) {
