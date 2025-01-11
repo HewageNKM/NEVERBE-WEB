@@ -9,8 +9,10 @@ import {pushToCart} from "@/redux/cartSlice/cartSlice";
 import Link from "next/link";
 import {getAllReviewsById} from "@/actions/itemDetailsAction";
 import ReactStars from "react-stars";
+import {useRouter} from "next/navigation";
 
 const ProductHero = ({item}: { item: Item }) => {
+    const router = useRouter();
     const [selectedImage, setSelectedImage] = useState(item.thumbnail);
     const [selectedVariant, setSelectedVariant] = useState<Variant>({
         variantId: "",
@@ -62,6 +64,11 @@ const ProductHero = ({item}: { item: Item }) => {
         dispatch(pushToCart(cartItem));
         reset();
     };
+
+    const buyNow = async () => {
+        await addToCart()
+        router.push("/checkout")
+    }
 
     const reset = () => {
         setSelectedVariant({variantId: "", variantName: "", images: [], sizes: []});
@@ -264,33 +271,54 @@ const ProductHero = ({item}: { item: Item }) => {
                         </div>
                         <div className="mt-4">
                             <h3 className="text-lg font-medium text-gray-700">Quantity</h3>
-                            <div className="flex items-center gap-4 mt-2">
+                            <div className="flex flex-row flex-wrap items-center gap-5 md:justify-start justify-center lg:gap-10">
+                                {/* Quantity Adjustment Section */}
+                                <div className="flex items-center gap-4 mt-2">
+                                    {/* Decrease Button */}
+                                    <button
+                                        onClick={() => setQuantity("dec")}
+                                        disabled={qty === 0}
+                                        className="bg-gray-200 p-2 rounded-full text-gray-700 hover:bg-gray-300 focus:ring-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
+                                        aria-label="Decrease quantity"
+                                    >
+                                        <IoRemove size={20}/>
+                                    </button>
+
+                                    {/* Quantity Display */}
+                                    <span className="text-lg font-medium text-gray-800">{qty}</span>
+
+                                    {/* Increase Button */}
+                                    <button
+                                        onClick={() => setQuantity("in")}
+                                        disabled={selectedSize.stock === 0}
+                                        className="bg-gray-200 p-2 rounded-full text-gray-700 hover:bg-gray-300 focus:ring-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
+                                        aria-label="Increase quantity"
+                                    >
+                                        <IoAdd size={20}/>
+                                    </button>
+                                </div>
+
+                                {/* Add to Cart Button */}
                                 <button
-                                    onClick={() => setQuantity("dec")}
-                                    disabled={qty == 0}
-                                    className="bg-gray-200 p-2 rounded-full text-gray-700 hover:bg-gray-300 disabled:opacity-50"
+                                    onClick={addToCart}
+                                    disabled={qty === 0}
+                                    className={`w-fit p-2 px-3 rounded-lg text-lg font-semibold text-white transition disabled:opacity-60 bg-primary-100 disabled:cursor-not-allowed`}
+                                    aria-label="Add to cart"
                                 >
-                                    <IoRemove size={20}/>
+                                    Add to Cart
                                 </button>
-                                <span className="text-lg font-medium text-gray-800">{qty}</span>
+
+                                {/* Buy Now Button */}
                                 <button
-                                    onClick={() => setQuantity("in")}
-                                    disabled={selectedSize.stock == 0}
-                                    className="bg-gray-200 p-2 rounded-full text-gray-700 hover:bg-gray-300 disabled:opacity-50"
+                                    onClick={buyNow}
+                                    disabled={qty === 0}
+                                    className="p-2 px-3 rounded-lg text-lg font-semibold disabled:cursor-not-allowed disabled:opacity-60 bg-yellow-500 text-white transition"
+                                    aria-label="Buy now"
                                 >
-                                    <IoAdd size={20}/>
+                                    Buy Now
                                 </button>
                             </div>
                         </div>
-                        <button
-                            onClick={addToCart}
-                            disabled={qty == 0}
-                            className={`w-full py-3 mt-6 rounded-lg text-lg font-semibold text-white transition ${
-                                qty > 0 ? "bg-primary hover:bg-primary-dark" : "bg-gray-400"
-                            }`}
-                        >
-                            Add to Cart
-                        </button>
                     </div>
                 </article>
                 {outOfStocks && (

@@ -45,41 +45,6 @@ export const seoKeywords: string[] = [
     "womens shoes colombo",
     "womens shoes gampaha"
 ];
-export const brands = [
-    {
-        name: 'Nike',
-        value: 'nike',
-    },
-    {
-        name: 'Adidas',
-        value: 'adidas',
-
-    },
-    {
-        name: 'New Balance',
-        value: 'new balance',
-
-    },
-    {
-        name: 'Cross',
-        value: 'cross',
-
-    },
-    {
-        name: 'Polo',
-        value: 'polo',
-        url: '/shop/products/manufacturers/polo',
-
-    },
-    {
-        name: "MLB",
-        value: "mlb",
-    },
-    {
-        name: "Luvion Vuitton",
-        value: "luvion vuitton",
-    }
-]
 export const sortingOptions = [
     {
         name: "Not Selected",
@@ -340,8 +305,8 @@ export const payHere = {
 }
 export const paymentOptions = [
     {
-        name: "ipg",
-        value: "ipg",
+        name: "PAYHERE",
+        value: "PAYHERE",
         image: payHere.squareBannerBlue,
         description: null
     }]
@@ -369,7 +334,7 @@ export const contactInfo = [
 
 ];
 export const paymentMethods = {
-    IPG:"ipg",
+    PAYHERE:"PAYHERE",
 }
 export enum ContactUs {
     infoEmail="info@neverbe.lk",

@@ -17,7 +17,7 @@ import ReCAPTCHA from "react-google-recaptcha";
 
 const CheckoutForm = () => {
     const dispatch: AppDispatch = useDispatch();
-    const [paymentType, setPaymentType] = useState("ipg")
+    const [paymentType, setPaymentType] = useState("PAYHERE")
     const [saveAddress, setSaveAddress] = useState(true)
     const [loading, setLoading] = useState(false)
     const router = useRouter();
@@ -101,11 +101,11 @@ const CheckoutForm = () => {
             document.body.appendChild(submitForm);
 
             const newOrder: Order = {
-                from: "website",
+                from: "Website",
                 items: cartItems as OrderItem[],
                 orderId: orderId,
                 paymentId: "",
-                paymentStatus: "pending",
+                paymentStatus: "Pending",
                 paymentMethod: "",
                 customer: customer,
                 updatedAt: new Date().toLocaleString(),
@@ -125,16 +125,18 @@ const CheckoutForm = () => {
             newOrder.customer = newCustomer;
             setCustomer(newCustomer)
             if (cartItems.length !== 0) {
-                if (paymentType == "ipg") {
-                    newOrder.paymentMethod = paymentMethods.IPG;
+                if (paymentType == "PAYHERE") {
+                    newOrder.paymentMethod = paymentMethods.PAYHERE;
                     await addNewOrder(newOrder, captchaValue);
                     dispatch(clearCart())
                     setLoading(false)
                     saveAddressToLocalStorage()
                     submitForm.submit();
-                } else if (paymentType == "cod") {
+                } else if (paymentType == "COD") {
                     // Upcoming feature
-                } else {
+                } else if("KOKO"){
+                    // Upcoming feature
+                }else {
                     new Error("Payment type not found")
                 }
             } else {
