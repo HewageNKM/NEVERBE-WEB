@@ -1,6 +1,7 @@
 import admin, {credential} from 'firebase-admin';
 import {Item, Message, Order, Review, Slide} from "@/interfaces";
 import axios from "axios";
+import Redis from "ioredis";
 
 // Initialize Firebase Admin SDK if it hasn't been initialized already
 if (!admin.apps.length) {
@@ -14,6 +15,7 @@ if (!admin.apps.length) {
     });
 }
 
+const redis = new Redis(process.env.REDIS_URL); // Initialize Redis
 export const adminFirestore = admin.firestore();
 export const adminAuth = admin.auth();
 
@@ -149,7 +151,6 @@ export const getRecentItems = async () => {
     const items: Item[] = [];
     docs.forEach(doc => {
         if (doc.data()?.listing == "Active") {
-            console.log(`Item found with ID ${doc.data().itemId}`);
             items.push({...doc.data(), createdAt: null, updatedAt: null} as Item);
         }
     });
@@ -536,10 +537,22 @@ export const getBrandsFromInventory = async () => {
                 })),
         }));
 
-        console.log("Brands successfully generated:", brandsArray);
+        console.log("Brands successfully generated");
         return brandsArray;
     } catch (error) {
         console.error("Error generating brands:", error);
         throw error;
     }
 };
+export async function rateLimiter({idToken, rateLimit = 5, windowSize = 60 * 1000,}: { idToken: string; rateLimit?: number; windowSize?: number; }): Promise<boolean> {
+    const key = `rate_limit:${idToken}`;
+    const currentCount = await redis.incr(key); // Increment request count for the token
+
+    if (currentCount === 1) {
+        console.log(`Setting expiration for token ${idToken}`);
+        await redis.expire(key, windowSize / 1000);
+    }
+    console.log(`Current count for token ${idToken}: ${currentCount}`);
+    return currentCount > rateLimit;
+}
+

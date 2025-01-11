@@ -8,17 +8,19 @@ const MessageForm = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [captchaValue, setCaptchaValue] = useState<string | null>(null);
     const [captchaError, setCaptchaError] = useState(false); // For tracking CAPTCHA errors
+    const [responseMessage, setResponseMessage] = useState<string | null>(null); // For showing response
     const recaptchaRef = React.createRef<ReCAPTCHA>();
 
-    const onMessageSubmit = async (evt) => {
+    const onMessageSubmit = async (evt: React.FormEvent<HTMLFormElement>) => {
         evt.preventDefault();
 
         if (!captchaValue) {
-            setCaptchaError(true); // Set error state
+            setCaptchaError(true);
             return;
         }
 
         setIsLoading(true);
+        setResponseMessage(null);
         const formData = new FormData(evt.target as HTMLFormElement);
         const name = formData.get("name");
         const email = formData.get("email");
@@ -43,12 +45,17 @@ const MessageForm = () => {
                     Authorization: `Bearer ${token}`,
                 },
             });
+
             evt.target.reset();
-            setCaptchaValue(null)
             setCaptchaError(false);
-            recaptchaRef.current?.reset();
+            setResponseMessage("Your message has been sent successfully!");
+            setTimeout(() => {
+                setResponseMessage(null);
+                window.location.reload();
+            },2000)
         } catch (e) {
             console.error("Error sending message:", e);
+            setResponseMessage(`Failed to send your message. Please try again.)`);
         } finally {
             setIsLoading(false);
         }
@@ -127,9 +134,20 @@ const MessageForm = () => {
                     type="submit"
                     className="bg-primary-100 disabled:bg-opacity-60 disabled:cursor-not-allowed text-white hover:bg-primary-300 py-2 px-4 rounded-lg transition-all"
                 >
-                    Send Message
+                    {isLoading ? "Sending..." : "Send Message"}
                 </button>
             </form>
+            {responseMessage && (
+                <p
+                    className={`mt-4 text-center text-sm ${
+                        responseMessage.includes("successfully")
+                            ? "text-green-500"
+                            : "text-red-500"
+                    }`}
+                >
+                    {responseMessage}
+                </p>
+            )}
         </div>
     );
 };
