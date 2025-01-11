@@ -20,6 +20,7 @@
 .DS_Store
 *.pem
 .env
+neverbe-18307-firebase-adminsdk-s3hrz-19f83c5111.json
 
 # debug
 npm-debug.log*
