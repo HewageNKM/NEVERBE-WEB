@@ -5,7 +5,6 @@ import {IoLogoFacebook, IoLogoInstagram} from "react-icons/io";
 import {MdEmail} from "react-icons/md";
 import {FaMobile} from "react-icons/fa";
 import {FaMessage, FaPhone} from "react-icons/fa6";
-
 export const seoKeywords: string[] = [
     "never be lk",
     "neverbe",
@@ -303,6 +302,7 @@ export const payHere = {
     payHereLink: "https://www.payhere.lk/"
 
 }
+export const PayHereFee = 3.3;
 export const paymentOptions = [
     {
         name: "PAYHERE",

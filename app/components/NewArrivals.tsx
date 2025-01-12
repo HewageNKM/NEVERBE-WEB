@@ -15,7 +15,7 @@ const NewArrivals = async ({arrivals: arrivals}:{arrivals:Item[]}) => {
                 </div>
                 <div className="mt-10">
                     {arrivals.length > 0 ? ( // Render items
-                        <ul className="flex flex-row gap-5 mb-10 md:gap-10 flex-wrap mt-5 w-full">
+                        <ul className="flex flex-row justify-center items-center md:justify-start gap-5 mb-10 md:gap-10 flex-wrap mt-5 w-full">
                             {arrivals.map((item: Item) => (
                                 <li key={item.itemId}>
                                     <ItemCard item={item} />

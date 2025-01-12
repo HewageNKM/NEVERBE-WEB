@@ -49,6 +49,7 @@ const ProductHero = ({item}: { item: Item }) => {
     };
 
     const addToCart = async () => {
+        const price = Math.round((item.sellingPrice - (item.discount * item.sellingPrice / 100)) / 10) * 10;
         const cartItem: CartItem = {
             itemId: item.itemId,
             variantId: selectedVariant.variantId,
@@ -58,7 +59,7 @@ const ProductHero = ({item}: { item: Item }) => {
             size: selectedSize.size,
             quantity: qty,
             type: item.type,
-            price: item.sellingPrice,
+            price: price,
         };
 
         dispatch(pushToCart(cartItem));
@@ -212,10 +213,10 @@ const ProductHero = ({item}: { item: Item }) => {
                             </span>
                         </Link>
                         <div className="text-gray-900 flex items-center space-x-3">
-                            <span className="text-lg font-semibold text-red-500">{"Rs. " + item.sellingPrice}</span>
+                            <span className="text-lg font-semibold text-red-500">{"Rs. " + (Math.round((item.sellingPrice - (item.discount * item.sellingPrice / 100)) / 10) * 10).toFixed(2)}</span>
                             {item.discount > 0 && (
                                 <span className="line-through text-lg text-gray-500">
-                                {"Rs. " + (item.sellingPrice + (item.sellingPrice * item.discount) / 100).toFixed(2)}
+                                {"Rs. " + (item.sellingPrice).toFixed(2)}
                             </span>
                             )}
                         </div>

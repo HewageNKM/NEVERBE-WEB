@@ -8,17 +8,6 @@ export async function POST(req: Request) {
         const idToken = await verifyToken(req);
         console.log("Token Verified: " + idToken.uid);
 
-        const isLimited = await rateLimiter({
-            idToken: idToken.uid,
-            rateLimit: 3,
-            windowSize: 60 * 1000,
-        });
-
-        if (isLimited) {
-            console.log(`Rate limit exceeded for token: ${idToken.uid}`);
-            return NextResponse.json({message: 'Too Many Requests'}, {status: 429});
-        }
-
         const captchaToken = new URL(req.url).searchParams.get('captchaToken');
         const json: Message = await req.json();
         await sendEmail(json, captchaToken);

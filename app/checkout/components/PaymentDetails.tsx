@@ -7,14 +7,16 @@ import {IoLockClosed} from "react-icons/io5";
 import {paymentOptions} from "@/constants";
 import CartItemCard from "@/components/CartItemCard";
 import ReCAPTCHA from "react-google-recaptcha";
+import {calculateFeesAndCharges, calculateShipping, calculateSubTotal} from "@/util";
+import {CartItem} from "@/interfaces";
 
 const PaymentDetails = ({
                             setPaymentType,
                             paymentType,
-    captchaError,
-    setCaptchaError,
-    setCaptchaValue,
-    recaptchaRef
+                            captchaError,
+                            setCaptchaError,
+                            setCaptchaValue,
+                            recaptchaRef
                         }: {
     setPaymentType: React.Dispatch<React.SetStateAction<string>>;
     paymentType: string;
@@ -26,6 +28,9 @@ const PaymentDetails = ({
 }) => {
     const cartItems = useSelector((state: RootState) => state.cartSlice.cart);
 
+    const calculateTotal = () => {
+        return cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
+    }
     return (
         <div className="flex flex-col justify-start items-start max-w-3xl mx-auto px-4 py-8">
             <h1 className="lg:text-4xl text-3xl font-bold tracking-wide mb-8">Payment Details</h1>
@@ -38,19 +43,24 @@ const PaymentDetails = ({
                 ))}
             </ul>
 
-            <div className="mt-8 w-full flex flex-col items-end text-lg font-semibold">
+            <div className="mt-8 w-full flex flex-col items-end text-lg">
                 <h3>Total Items: {cartItems.length}</h3>
-                <div className="mt-4 flex flex-col items-end space-y-2 text-lg">
-                    <h3 className="text-2xl font-bold">
-                        Total:
-                        Rs. {cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0).toFixed(2)}
+                <div className="mt-4 flex flex-col font-medium items-end space-y-2 text-lg">
+                    <h3 className="lg:text-xl text-lg">
+                        shipping and charges: Rs. {calculateFeesAndCharges(cartItems).toFixed(2)}
                     </h3>
-                </div>
-
-                <div className="mt-2">
-                    <p className="text-center uppercase text-sm font-bold text-red-500">
-                        ***pay for shipping when you receive your order.***
-                    </p>
+                    <h3 className="md:text-xl text-lg ">
+                        Total:
+                        Rs. {calculateTotal().toFixed(2)}
+                    </h3>
+                    <div className={"w-full border-b-2 border-gray-300"}/>
+                    <h3 className="md:text-xl text-lg font-semibold">
+                        Subtotal: Rs. {calculateSubTotal(cartItems).toFixed(2)}
+                    </h3>
+                    <div className={
+                        "w-full border-b-2 border-gray-300"
+                    }/>
+                    <div className={"w-full border-b-2 border-gray-300"}/>
                 </div>
             </div>
 

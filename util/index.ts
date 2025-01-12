@@ -1,6 +1,7 @@
 'use client'
 import {CartItem} from "@/interfaces";
 import {algoliasearch} from "algoliasearch";
+import {PayHereFee} from "@/constants";
 
 export const calculateShipping = (cartItems: CartItem[]) => {
     if (cartItems.length === 0) {
@@ -40,7 +41,16 @@ export const generateOrderId = (location: "Store" | "Website"): string => {
     // Combine parts into a final 12-character order ID
     return `ORD-${locationPart}-${timestamp}`.toLowerCase();
 };
-
+export const calculateFeesAndCharges = (cartItems: CartItem[]) => {
+    const total = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
+    const shipping = calculateShipping(cartItems);
+    return (total * PayHereFee / 100) + shipping;
+}
+export const calculateSubTotal = (items:CartItem[]) => {
+    const total = items.reduce((acc, item) => acc + item.price * item.quantity, 0);
+    const shipping = calculateShipping(items);
+    return (total * PayHereFee / 100) + shipping + total;
+}
 export const getAlgoliaClient = () => {
     const ALGOLIA_APP_ID = process.env.NEXT_PUBLIC_ALGOLIA_APP_ID;
     const ALGOLIA_SEARCH_KEY = process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_API_KEY;

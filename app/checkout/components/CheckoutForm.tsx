@@ -9,7 +9,7 @@ import {CartItem, Customer, Order, OrderItem} from "@/interfaces";
 import {paymentMethods} from "@/constants";
 import {clearCart} from "@/redux/cartSlice/cartSlice";
 import {useRouter} from "next/navigation";
-import {generateOrderId} from "@/util";
+import {calculateFeesAndCharges, calculateSubTotal, generateOrderId} from "@/util";
 import {addNewOrder} from "@/actions/orderAction";
 import ComponentLoader from "@/components/ComponentLoader";
 import ReCAPTCHA from "react-google-recaptcha";
@@ -58,7 +58,7 @@ const CheckoutForm = () => {
             orderId = generateOrderId("Website");
 
             const currency = 'LKR';
-            const amount = await getTotal();
+            const amount = calculateSubTotal(cartItems);
             const amountFormated = parseFloat(amount).toLocaleString('en-us', {minimumFractionDigits: 2}).replaceAll(',', '');
             const hash = md5(merchantId + orderId + amountFormated + currency + hashedSecret).toString().toUpperCase();
 
@@ -99,8 +99,9 @@ const CheckoutForm = () => {
             }
 
             document.body.appendChild(submitForm);
-
+            const feesAndCharges = calculateFeesAndCharges(cartItems);
             const newOrder: Order = {
+                feesAndCharges: feesAndCharges,
                 from: "Website",
                 items: cartItems as OrderItem[],
                 orderId: orderId,

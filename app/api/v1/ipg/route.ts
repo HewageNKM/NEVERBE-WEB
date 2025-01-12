@@ -15,7 +15,7 @@ export async function POST(req: Request) {
             md5sig,
             method
         } = decodeUrl(body);
-
+        console.log("Received payment notification:", { merchant_id, order_id, payment_id, payhere_amount, payhere_currency, status_code, md5sig, method });
         const merchantSecret = process.env.NEXT_PUBLIC_IPG_MERCHANT_SECRET;
         const hashedSecret = md5(merchantSecret).toString().toUpperCase();
 
@@ -26,6 +26,7 @@ export async function POST(req: Request) {
 
         // Verify the MD5 signature
         if (local_md5sig !== md5sig) {
+            console.info("OWN MD5 Signature: ", local_md5sig,"Received MD5 Signature: ", md5sig);
             console.error("MD5 Signature mismatch");
             return NextResponse.json({ message: 'Unauthorized: Different Signatures' }, { status: 401 });
         }

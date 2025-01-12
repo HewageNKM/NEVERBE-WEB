@@ -118,6 +118,7 @@ export interface Order {
     paymentId: string,
     items: OrderItem[],
     paymentStatus: string,
+    feesAndCharges: number,
     paymentMethod: string,
     customer: Customer,
     from: string,

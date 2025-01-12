@@ -16,7 +16,7 @@ const PopularProducts = ({ hotItems }: { hotItems: Item[] }) => {
                 </div>
                 <div className="mt-8 w-full flex justify-center items-center">
                     {hotItems.length > 0 ? (
-                        <ul className="flex flex-row gap-5 mb-10 md:gap-10 flex-wrap mt-5 w-full">
+                        <ul className="flex flex-row justify-center items-center md:justify-start gap-5 mb-10 md:gap-10 flex-wrap mt-5 w-full">
                             {hotItems.map((item: Item) => (
                                 <li key={item.itemId}>
                                     <ItemCard item={item} />
