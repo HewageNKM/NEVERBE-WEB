@@ -386,17 +386,17 @@ export const sizeData = [
 export const genderList = [
     {
         gender: "Men",
-        url: "/collections/men",
+        url: "/collections/products",
         image: MenBG
     },
     {
         gender: "Women",
-        url: "/collections/women",
+        url: "/collections/products",
         image: WomenBG
     },
     {
         gender: "Kids",
-        url: "/collections/kids",
+        url: "/collections/products",
         image: KidsBG
     }
 ]

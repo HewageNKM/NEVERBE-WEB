@@ -76,7 +76,6 @@ const Page = async ({params}: { params: { itemId: string } }) => {
         <main className="w-full lg:mt-32 mt-20 md:mt-28 overflow-clip">
             <div className="md:px-8 px-4 py-4">
                 <ProductHero item={item}/>
-                <SizeChart />
                 <Reviews itemId={item.itemId}/>
                 <SimilarProducts items={similarItems}/>
             </div>

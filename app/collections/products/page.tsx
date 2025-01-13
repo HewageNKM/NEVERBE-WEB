@@ -34,15 +34,17 @@ export const metadata: Metadata = {
     },
 };
 
-const Page = async () => {
+const Page = async ({searchParams}: { searchParams: { [key: string]: string } }) => {
+    const gender = searchParams.gender || 'all'; // Extract `gender` parameter
     let items: Item[] = [];
 
     try {
-        items = await getAllInventoryItems();
+        // Fetch items and filter by gender if applicable
+        items.push(...await getAllInventoryItems());
     } catch (e) {
         console.error("Error fetching items:", e);
     }
-
+    console.log(gender)
     return (
         <main className="w-full relative lg:mt-32 md:mt-20 mb-10 lg:mb-10 mt-16 overflow-clip">
             <div className="w-full">
@@ -59,5 +61,5 @@ const Page = async () => {
     );
 };
 
-export const dynamic = 'force-dynamic';
+export const dynamic = 'force-dynamic'; // Ensure the page is server-rendered dynamically
 export default Page;

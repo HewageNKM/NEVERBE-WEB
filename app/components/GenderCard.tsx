@@ -11,7 +11,7 @@ interface GenderCardProps {
 const GenderCard: React.FC<GenderCardProps> = ({ url, gender, image }) => {
     return (
         <article className="relative group w-[15rem] h-[20rem] lg:w-[22rem] lg:h-[30rem] lg:hover:shadow-lg transition-shadow duration-300 rounded-lg overflow-hidden">
-            <Link href={url} passHref>
+            <Link href={`${url}?gender=${gender.toLowerCase()}`} passHref>
                 <div className="relative w-full h-full">
                     <Image
                         width={100}
