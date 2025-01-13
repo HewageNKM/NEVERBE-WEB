@@ -35,7 +35,7 @@ export async function POST(req: Request) {
         if (status_code === '2') {
             console.log("Payment Successful");
             await updatePayment(order_id, payment_id, "Paid");
-            return NextResponse.json({ message: `Payment Successful ${status_code}` }, { status: 200 });
+            return NextResponse.json({ message: `Payment Successful ${status_code}` }, { status: 201 });
         } else {
             console.log("Payment Failed");
             await updatePayment(order_id, payment_id, "Failed");

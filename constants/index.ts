@@ -65,6 +65,12 @@ export const productTypes = [
     {name: "Accessories", value: "accessories"},
 ]
 export const wearableSizes = [
+    "30",
+    "31",
+    "32",
+    "33",
+    "34",
+    "35",
     "36",
     "37",
     "38",

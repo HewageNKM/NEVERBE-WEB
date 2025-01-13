@@ -42,7 +42,7 @@ const ItemCard = ({item}: { item: Item }) => {
 
     return (
         <article
-            className="relative w-[8rem] md:w-[13rem]  h-auto max-w-xs transition-transform duration-300 transform hover:scale-105 shadow-lg rounded-lg overflow-hidden bg-white">
+            className="relative w-[8rem] md:w-[13rem]  h-auto max-w-xs transition-transform duration-300 transform lg:hover:scale-105 shadow-lg rounded-lg overflow-hidden bg-white">
             <Link href={`/collections/products/${item.itemId.toLowerCase()}`}
                   aria-label={`View details for ${item.name}`}>
                 <figure className="relative overflow-hidden rounded-lg">

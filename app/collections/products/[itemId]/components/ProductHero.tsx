@@ -338,7 +338,7 @@ const ProductHero = ({item}: { item: Item }) => {
                 <h2 className="text-xl md:text-2xl font-bold tracking-wide text-gray-800">
                     Description
                 </h2>
-                <p className="pt-5 text-lg text-slate-600 text-center">
+                <p className="pt-5 text-lg text-slate-600 text-left">
                     {item.description || "No description available!"}
                 </p>
             </div>

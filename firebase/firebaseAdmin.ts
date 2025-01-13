@@ -28,70 +28,77 @@ export const addNewOrder = async (order: Order, token: string) => {
             throw new Error("reCAPTCHA verification failed.");
         }
 
-        const inventoryUpdates = [];
+         await adminFirestore.runTransaction(async (transaction) => {
+            const inventoryUpdates = [];
 
-        for (const orderItem of order.items) {
-            console.log(`Checking inventory for item: ${orderItem.itemId}, variant: ${orderItem.variantId}`);
+            for (const orderItem of order.items) {
+                console.log(`Checking inventory for item: ${orderItem.itemId}, variant: ${orderItem.variantId}`);
 
-            const itemDoc = await adminFirestore.collection('inventory').doc(orderItem.itemId).get();
+                const itemRef = adminFirestore.collection('inventory').doc(orderItem.itemId);
+                const itemDoc = await transaction.get(itemRef);
 
-            // Check if the item exists
-            if (!itemDoc.exists) {
-                throw new Error(`Item with ID ${orderItem.itemId} does not exist.`);
+                // Check if the item exists
+                if (!itemDoc.exists) {
+                    throw new Error(`Item with ID ${orderItem.itemId} does not exist.`);
+                }
+
+                const inventoryItem = itemDoc.data() as Item;
+
+                // Check if the variant exists
+                const variant = inventoryItem.variants.find(v => v.variantId === orderItem.variantId);
+                if (!variant) {
+                    throw new Error(`Variant with ID ${orderItem.variantId} does not exist for item ${orderItem.itemId}.`);
+                }
+
+                // Check if the size exists and has sufficient stock
+                const size = variant.sizes.find(s => s.size === orderItem.size);
+                if (!size) {
+                    throw new Error(`Size ${orderItem.size} does not exist for variant ${orderItem.variantId}.`);
+                }
+
+                if (size.stock < orderItem.quantity) {
+                    throw new Error("Insufficient Stock");
+                }
+
+                console.log(`Sufficient stock found. Deducting ${orderItem.quantity} units from stock.`);
+
+                // Deduct the stock
+                size.stock -= orderItem.quantity;
+
+                // Collect updates for transaction
+                inventoryUpdates.push({ itemRef, inventoryItem });
             }
 
-            const inventoryItem = itemDoc.data() as Item;
-
-            // Check if the variant exists
-            const variant = inventoryItem.variants.find(v => v.variantId === orderItem.variantId);
-            if (!variant) {
-                throw new Error(`Variant with ID ${orderItem.variantId} does not exist for item ${orderItem.itemId}.`);
-            }
-
-            // Check if the size exists and has sufficient stock
-            const size = variant.sizes.find(s => s.size === orderItem.size);
-            if (!size) {
-                throw new Error(`Size ${orderItem.size} does not exist for variant ${orderItem.variantId}.`);
-            }
-
-            if (size.stock < orderItem.quantity) {
-                throw new Error("Insufficient Stock");
-            }
-
-            console.log(`Sufficient stock found. Deducting ${orderItem.quantity} units from stock.`);
-
-            // Deduct the stock
-            size.stock -= orderItem.quantity;
-
-            // Prepare the updated inventory item for batch update
-            inventoryUpdates.push({
-                itemId: orderItem.itemId,
-                inventoryItem,
+            // Update inventory within the transaction
+            inventoryUpdates.forEach(({ itemRef, inventoryItem }) => {
+                transaction.set(itemRef, inventoryItem);
             });
+
+            console.log("Inventory updates queued.");
+
+            // Add the order to the `orders` collection
+            const orderRef = adminFirestore.collection('orders').doc(order.orderId);
+            transaction.set(orderRef, {
+                ...order,
+                customer: {
+                    ...order.customer,
+                    createdAt: admin.firestore.Timestamp.fromDate(new Date(order.customer.createdAt)),
+                    updatedAt: admin.firestore.Timestamp.fromDate(new Date(order.customer.updatedAt)),
+                },
+                createdAt: admin.firestore.Timestamp.fromDate(new Date(order.createdAt)),
+                updatedAt: admin.firestore.Timestamp.fromDate(new Date(order.updatedAt)),
+            });
+
+            console.log("Order queued for creation.");
+        });
+
+        console.log("Order and inventory updates successfully processed.");
+
+        return {
+            message: "Order successfully added.",
         }
-
-        // Batch update inventory
-        const batch = adminFirestore.batch();
-        inventoryUpdates.forEach(({itemId, inventoryItem}) => {
-            const itemRef = adminFirestore.collection('inventory').doc(itemId);
-            batch.set(itemRef, inventoryItem);
-        });
-        await batch.commit();
-        console.log("Inventory successfully updated.");
-
-        // Save the order in the orders collection
-        return await adminFirestore.collection('orders').doc(order.orderId).set({
-            ...order,
-            customer: {
-                ...order.customer,
-                createdAt: admin.firestore.Timestamp.fromDate(new Date(order.customer.createdAt)),
-                updatedAt: admin.firestore.Timestamp.fromDate(new Date(order.customer.updatedAt)),
-            },
-            createdAt: admin.firestore.Timestamp.fromDate(new Date(order.createdAt)),
-            updatedAt: admin.firestore.Timestamp.fromDate(new Date(order.updatedAt)),
-        });
     } catch (e) {
-        console.log(e)
+        console.error("Error adding new order:", e.message);
         throw e;
     }
 };
