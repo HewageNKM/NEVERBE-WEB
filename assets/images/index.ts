@@ -11,6 +11,9 @@ import AdidasBG from './adidasBackgroundBG.png';
 import LuvionVuittonBG from './luvionvuttonBG.jpeg';
 import NewBalance from './newbalanceBackgroundBG.png';
 import MenuCard from './menuCardBG.jpg'
+import KidsBG from './kidsBG.png';
+import MenBG from './menBG.jpg';
+import WomenBG from './womenBG.jpg';
 export
 {
     DeliveryImage,
@@ -25,5 +28,8 @@ export
     AdidasBG,
     LuvionVuittonBG,
     NewBalance,
-    MenuCard
+    MenuCard,
+    KidsBG,
+    WomenBG,
+    MenBG
 };

@@ -1,4 +1,4 @@
-import {DeliveryImage, GoodsImage, MoneyImage, SupportImage} from "@/assets/images";
+import {DeliveryImage, GoodsImage, KidsBG, MenBG, MoneyImage, SupportImage, WomenBG} from "@/assets/images";
 import {FooterLink, SocialMedia} from "@/interfaces";
 import {IoLogoTiktok} from "react-icons/io5";
 import {IoLogoFacebook, IoLogoInstagram} from "react-icons/io";
@@ -370,3 +370,20 @@ export const sizeData = [
     { "US - Women's": "13.5", "US - Men's": "12", "UK": "11", "CM": "30.5", "EU": "46.5" },
     { "US - Women's": "14", "US - Men's": "12.5", "UK": "11.5", "CM": "31", "EU": "47" },
 ];
+export const genderList = [
+    {
+        gender: "Men",
+        url: "/collections/men",
+        image: MenBG
+    },
+    {
+        gender: "Women",
+        url: "/collections/women",
+        image: WomenBG
+    },
+    {
+        gender: "Kids",
+        url: "/collections/kids",
+        image: KidsBG
+    }
+]
