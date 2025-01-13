@@ -65,6 +65,9 @@ export const productTypes = [
     {name: "Accessories", value: "accessories"},
 ]
 export const wearableSizes = [
+    "27",
+    "28",
+    "29",
     "30",
     "31",
     "32",
@@ -369,6 +372,16 @@ export const sizeData = [
     { "US - Women's": "13", "US - Men's": "11.5", "UK": "10.5", "CM": "30", "EU": "46" },
     { "US - Women's": "13.5", "US - Men's": "12", "UK": "11", "CM": "30.5", "EU": "46.5" },
     { "US - Women's": "14", "US - Men's": "12.5", "UK": "11.5", "CM": "31", "EU": "47" },
+    // Kids' sizes
+    { "US - Kids": "10", "UK": "9", "CM": "16", "EU": "27" },
+    { "US - Kids": "11", "UK": "10", "CM": "17", "EU": "28" },
+    { "US - Kids": "12", "UK": "11", "CM": "18", "EU": "29" },
+    { "US - Kids": "13", "UK": "12", "CM": "19", "EU": "30" },
+    { "US - Kids": "1", "UK": "13", "CM": "20", "EU": "31" },
+    { "US - Kids": "2", "UK": "1", "CM": "21", "EU": "32" },
+    { "US - Kids": "3", "UK": "2", "CM": "22", "EU": "33" },
+    { "US - Kids": "4", "UK": "3", "CM": "23", "EU": "34" },
+    { "US - Kids": "5", "UK": "4", "CM": "24", "EU": "35" },
 ];
 export const genderList = [
     {
