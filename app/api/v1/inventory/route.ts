@@ -1,5 +1,11 @@
 import {NextResponse} from "next/server";
-import {getAllInventoryItems, getItemsByField, getItemsByTwoField, verifyToken} from "@/firebase/firebaseAdmin";
+import {
+    getAllInventoryItems,
+    getAllInventoryItemsByGender,
+    getItemsByField,
+    getItemsByTwoField,
+    verifyToken
+} from "@/firebase/firebaseAdmin";
 
 export async function GET(req: Request) {
     try {
@@ -9,6 +15,7 @@ export async function GET(req: Request) {
         const url = new URL(req.url);
         const manufacturer = url.searchParams.get('manufacturer');
         const brand = url.searchParams.get('brand');
+        const gender = url.searchParams.get('gender') || 'all';
 
         if (manufacturer && brand) {
             console.log("Fetching Items for: " + manufacturer + " " + brand)
@@ -18,6 +25,11 @@ export async function GET(req: Request) {
         }else if(manufacturer && !brand){
             console.log("Fetching Items for: " + manufacturer)
             const items = await getItemsByField(manufacturer, "manufacturer");
+            console.log("Items Fetched: " + items.length)
+            return NextResponse.json(items, {status: 200})
+        }else if(gender !== "all" && (!brand && !manufacturer)){
+            console.log(`Fetching Items by ${gender}`)
+            const items = await getAllInventoryItemsByGender(gender)
             console.log("Items Fetched: " + items.length)
             return NextResponse.json(items, {status: 200})
         }else {

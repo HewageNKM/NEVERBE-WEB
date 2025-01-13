@@ -14,7 +14,7 @@ import {BiReset} from "react-icons/bi";
 import {getBrands} from "@/actions/inventoryAction";
 import Skeleton from "@/components/Skeleton";
 
-const ProductsFilter = () => {
+const ProductsFilter = ({gender}:{gender:string}) => {
     const {
         selectedSizes,
         selectedType,
@@ -54,7 +54,9 @@ const ProductsFilter = () => {
     }
 
     useEffect(() => {
-        dispatch(getInventory());
+        if(user){
+            dispatch(getInventory({gender}));
+        }
     }, [selectedManufacturers, selectedType, selectedSizes, dispatch, user, selectedSort]);
 
     useEffect(() => {

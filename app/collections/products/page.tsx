@@ -4,7 +4,7 @@ import ProductsHeader from "@/app/collections/products/components/ProductsHeader
 import {Metadata} from "next";
 import {Item} from "@/interfaces";
 import EmptyState from "@/components/EmptyState";
-import {getAllInventoryItems} from "@/firebase/firebaseAdmin";
+import {getAllInventoryItems, getAllInventoryItemsByGender} from "@/firebase/firebaseAdmin";
 import {seoKeywords} from "@/constants";
 
 export const metadata: Metadata = {
@@ -39,8 +39,11 @@ const Page = async ({searchParams}: { searchParams: { [key: string]: string } })
     let items: Item[] = [];
 
     try {
-        // Fetch items and filter by gender if applicable
-        items.push(...await getAllInventoryItems());
+        if (gender === "all"){
+            items.push(...await getAllInventoryItems());
+        } else {
+            items.push(...await getAllInventoryItemsByGender(gender));
+        }
     } catch (e) {
         console.error("Error fetching items:", e);
     }
@@ -48,10 +51,10 @@ const Page = async ({searchParams}: { searchParams: { [key: string]: string } })
     return (
         <main className="w-full relative lg:mt-32 md:mt-20 mb-10 lg:mb-10 mt-16 overflow-clip">
             <div className="w-full">
-                <ProductsHeader count={items.length}/>
+                <ProductsHeader gender={gender}/>
                 <div className="px-4">
                     {items.length > 0 ? (
-                        <Products items={items}/>
+                        <Products items={items} gender={gender}/>
                     ) : (
                         <EmptyState heading="No products available at this time."/>
                     )}

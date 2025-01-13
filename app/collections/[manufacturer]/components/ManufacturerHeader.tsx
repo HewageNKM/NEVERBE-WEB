@@ -1,22 +1,36 @@
-import React from 'react';
+"use client";
+import React, {useEffect} from 'react';
 import Image from "next/image";
 import {AdidasBG, DefaultBG, LuvionVuittonBG, NewBalance, NikeBG} from "@/assets/images";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "@/redux/store";
+import {getItemsByManufacturer} from "@/redux/manufacturerSlice/manufacturerSlice";
 
-const ManufacturerHeader = ({count, name}: { count: number, name: string }) => {
-const image = ()=>{
-    switch (name) {
-        case "nike":
-            return NikeBG;
-        case "adidas":
-            return AdidasBG
-        case 'new balance':
-            return NewBalance;
-        case 'luvion vuitton':
-            return LuvionVuittonBG;
-        default:
-            return DefaultBG;
+const ManufacturerHeader = ({name}: { name: string }) => {
+    const {selectedSort, products} = useSelector((state: RootState) => state.manufacturerSlice);
+    const {user} = useSelector((state: RootState) => state.authSlice);
+    const dispatch = useDispatch();
+
+    const image = () => {
+        switch (name) {
+            case "nike":
+                return NikeBG;
+            case "adidas":
+                return AdidasBG
+            case 'new balance':
+                return NewBalance;
+            case 'luvion vuitton':
+                return LuvionVuittonBG;
+            default:
+                return DefaultBG;
+        }
     }
-}
+
+    useEffect(() => {
+        if (user) {
+            dispatch(getItemsByManufacturer(name));
+        }
+    }, [selectedSort]);
     return (
         <section className="flex relative flex-col gap-4 md:text-lg text-sm justify-between w-full">
             <div className="relative group overflow-hidden">
@@ -33,7 +47,7 @@ const image = ()=>{
                     <h1 className="text-white text-lg md:text-3xl font-bold">
                         All Products <span className="capitalize">
                         by {name}
-                    </span> ({count || 0})
+                    </span> ({products.length || 0})
                     </h1>
                 </div>
             </div>

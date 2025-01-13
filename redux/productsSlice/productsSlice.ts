@@ -102,9 +102,9 @@ const sort = (state: WritableDraft<ProductsSlice>, action: any) => {
     }
 }
 
-export const getInventory = createAsyncThunk('products/getFilterProducts', async (arg, thunkAPI) => {
+export const getInventory = createAsyncThunk('products/getFilterProducts', async ({gender}:{gender:string}, thunkAPI) => {
     try {
-        return await getProducts();
+        return await getProducts(gender);
     } catch (e) {
         console.log(e);
         return thunkAPI.rejectWithValue(e);
