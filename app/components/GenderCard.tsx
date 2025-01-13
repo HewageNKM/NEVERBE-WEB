@@ -8,9 +8,9 @@ interface GenderCardProps {
     image: string;
 }
 
-const GenderCard: React.FC<GenderCardProps> = ({url, gender, image}) => {
+const GenderCard: React.FC<GenderCardProps> = ({ url, gender, image }) => {
     return (
-        <article className="relative group w-[15rem] h-[20rem] lg:hover:shadow-lg transition-shadow duration-300 rounded-lg overflow-hidden">
+        <article className="relative group w-[15rem] h-[20rem] lg:w-[22rem] lg:h-[30rem] lg:hover:shadow-lg transition-shadow duration-300 rounded-lg overflow-hidden">
             <Link href={url} passHref>
                 <div className="relative w-full h-full">
                     <Image
@@ -22,8 +22,8 @@ const GenderCard: React.FC<GenderCardProps> = ({url, gender, image}) => {
                     />
                 </div>
                 <div
-                    className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 lg:group-hover:opacity-100 transition-opacity duration-300">
-                    <h2 className="text-white text-lg md:text-xl lg:text-3xl font-semibold uppercase tracking-wide">
+                    className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center lg:opacity-0 lg:group-hover:opacity-100 opacity-100 transition-opacity duration-300">
+                    <h2 className="text-white text-xl md:text-2xl lg:text-3xl font-semibold uppercase tracking-wide">
                         {gender}
                     </h2>
                 </div>
