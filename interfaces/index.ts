@@ -6,6 +6,7 @@ export interface Message {
     name: string;
     message: string;
 }
+
 export interface Review {
     reviewId: string;
     itemId: string;
@@ -16,6 +17,7 @@ export interface Review {
     createdAt: Timestamp | string;
     updatedAt: Timestamp | string;
 }
+
 export interface Brand {
     name: string; // Manufacturer name, e.g., "Nike"
     value: string; // Manufacturer key, e.g., "nike"
@@ -42,8 +44,8 @@ export interface Item {
     description: string,
     keywords: string[],
     thumbnail: {
-        file:string,
-        url:string,
+        file: string,
+        url: string,
     },
     variants: Variant[],
     manufacturer: string,
@@ -114,7 +116,7 @@ export interface Slide {
 }
 
 export interface Order {
-    orderId: string,
+    orderId: string | null,
     paymentId: string,
     items: OrderItem[],
     paymentStatus: string,
@@ -133,6 +135,7 @@ export interface Customer {
     phone: string;
     address: string;
     city: string;
+    zip: string;
     createdAt: Timestamp | string;
     updatedAt: Timestamp | string;
 }

@@ -89,6 +89,18 @@ const AddressDetails = ({
                 </label>
 
                 <label className="flex flex-col gap-2 w-full md:w-[48%]">
+                    <span className="font-medium md:text-xl text-lg">Zip Code(Postal)</span>
+                    <input
+                        type="text"
+                        placeholder="11700"
+                        defaultValue={customer.zip}
+                        className="px-4 py-2 border-slate-300 focus:outline-none rounded-lg border-2"
+                        required
+                        name="zip"
+                    />
+                </label>
+
+                <label className="flex flex-col gap-2 w-full md:w-[48%]">
                     <span className="font-medium md:text-xl text-lg">Country</span>
                     <input
                         disabled

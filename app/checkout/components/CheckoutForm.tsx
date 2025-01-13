@@ -13,6 +13,7 @@ import {calculateFeesAndCharges, calculateSubTotal, generateOrderId} from "@/uti
 import {addNewOrder} from "@/actions/orderAction";
 import ComponentLoader from "@/components/ComponentLoader";
 import ReCAPTCHA from "react-google-recaptcha";
+import {auth} from "@/firebase/firebaseClient";
 
 
 const CheckoutForm = () => {
@@ -49,6 +50,7 @@ const CheckoutForm = () => {
                 setLoading(false)
                 return;
             }
+            const userId = auth.currentUser?.uid || null;
             const form = evt.target;
             const formData = new FormData(form);
             const merchantSecret = process.env.NEXT_PUBLIC_IPG_MERCHANT_SECRET;
@@ -101,6 +103,7 @@ const CheckoutForm = () => {
             document.body.appendChild(submitForm);
             const feesAndCharges = calculateFeesAndCharges(cartItems);
             const newOrder: Order = {
+                userId: userId,
                 feesAndCharges: feesAndCharges,
                 from: "Website",
                 items: cartItems as OrderItem[],
@@ -114,6 +117,7 @@ const CheckoutForm = () => {
             }
 
             const newCustomer: Customer = {
+                zip: evt.target.zip.value,
                 address: evt.target.address.value,
                 city: evt.target.city.value,
                 email: evt.target.email.value,
