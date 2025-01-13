@@ -53,7 +53,10 @@ const PopUpFilter = () => {
     }
 
     useEffect(() => {
-        dispatch(getInventory());
+        if (user) {
+            const gender = window.localStorage.getItem("gender") || "all";
+            dispatch(getInventory({gender}));
+        }
     }, [selectedManufacturers, selectedType, selectedSizes, dispatch, user,selectedSort]);
 
     useEffect(() => {

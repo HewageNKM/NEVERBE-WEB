@@ -19,12 +19,12 @@ export const getBrands = async () => {
     }
 }
 
-export const getProducts = async () => {
+export const getProducts = async (gender:string) => {
   try {
       const token = await getIdToken();
       const response = await axios({
           method: 'GET',
-          url: getInventoryURL,
+          url: getInventoryURL+"?gender="+gender,
           headers: {
               Authorization: `Bearer ${token}`
           }

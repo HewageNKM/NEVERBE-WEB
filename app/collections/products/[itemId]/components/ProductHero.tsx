@@ -10,6 +10,7 @@ import Link from "next/link";
 import {getAllReviewsById} from "@/actions/itemDetailsAction";
 import ReactStars from "react-stars";
 import {useRouter} from "next/navigation";
+import {sizeData} from "@/constants";
 
 const ProductHero = ({item}: { item: Item }) => {
     const router = useRouter();
@@ -26,6 +27,7 @@ const ProductHero = ({item}: { item: Item }) => {
     const [outOfStocksLabel, setOutOfStocksLabel] = useState("Out of Stock");
     const [totalRating, setTotalRating] = useState(0)
     const {user} = useSelector((state: RootState) => state.authSlice);
+    const [otherSizes, setOtherSizes] = useState({ukSize: "", usSize: "", cmSize: ""});
 
     const dispatch: AppDispatch = useDispatch();
 
@@ -136,6 +138,19 @@ const ProductHero = ({item}: { item: Item }) => {
     };
 
     if (!item) return <div>Loading product...</div>;
+
+    // Function to calculate sizes based on EU size
+    const calculateSizes = (euSize) => {
+        const size = sizeData.find(row => row["EU"] === euSize);
+        if (size) {
+            setOtherSizes({
+                uk: size["UK"],
+                us: size["US - Women's"] || size["US - Men's"] || size["US - Kids"],
+                cm: size["CM"],
+            })
+        }
+        return {};
+    };
 
     return (
         <section className="w-full relative flex-content flex-col">
@@ -255,6 +270,7 @@ const ProductHero = ({item}: { item: Item }) => {
                                         <button
                                             disabled={size.stock == 0}
                                             onClick={() => {
+                                                calculateSizes(size.size);
                                                 setSelectedSize(size);
                                                 setQty(0);
                                             }}
@@ -269,6 +285,24 @@ const ProductHero = ({item}: { item: Item }) => {
                                     </li>
                                 ))}
                             </ul>
+                            {
+                                // show UK, US and cm sizes converting EU sizes
+                                selectedSize.size && (
+                                    <div className="mt-2">
+                                        <ul className="flex gap-4 mt-2">
+                                            {
+                                                Object.keys(otherSizes).map((key, index) => (
+                                                    <li key={index}>
+                                                        <span className="text-gray-600 text-sm font-medium">
+                                                            {key.toUpperCase()}: {otherSizes[key]}
+                                                        </span>
+                                                    </li>
+                                                ))
+                                            }
+                                        </ul>
+                                    </div>
+                                )
+                            }
                         </div>
                         <div className="mt-4">
                             <h3 className="text-lg font-medium text-gray-700">Quantity</h3>

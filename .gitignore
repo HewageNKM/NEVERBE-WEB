@@ -19,8 +19,8 @@
 # misc
 .DS_Store
 *.pem
-.env.production
-.env.development
+util/.env.production
+util/.env.development
 neverbe-18307-firebase-adminsdk-s3hrz-19f83c5111.json
 
 # debug

@@ -15,7 +15,6 @@ if (!admin.apps.length) {
     });
 }
 
-const redis = new Redis(process.env.REDIS_URL); // Initialize Redis
 export const adminFirestore = admin.firestore();
 export const adminAuth = admin.auth();
 
@@ -28,7 +27,7 @@ export const addNewOrder = async (order: Order, token: string) => {
             throw new Error("reCAPTCHA verification failed.");
         }
 
-         await adminFirestore.runTransaction(async (transaction) => {
+        await adminFirestore.runTransaction(async (transaction) => {
             const inventoryUpdates = [];
 
             for (const orderItem of order.items) {
@@ -66,11 +65,11 @@ export const addNewOrder = async (order: Order, token: string) => {
                 size.stock -= orderItem.quantity;
 
                 // Collect updates for transaction
-                inventoryUpdates.push({ itemRef, inventoryItem });
+                inventoryUpdates.push({itemRef, inventoryItem});
             }
 
             // Update inventory within the transaction
-            inventoryUpdates.forEach(({ itemRef, inventoryItem }) => {
+            inventoryUpdates.forEach(({itemRef, inventoryItem}) => {
                 transaction.set(itemRef, inventoryItem);
             });
 
@@ -136,12 +135,27 @@ export const getOrderById = async (orderId: string) => {
 export const getAllInventoryItems = async () => {
     try {
         console.log("Fetching all inventory items.");
-        const docs = await adminFirestore.collection('inventory').where("status", "==", "Active").get();
+        const docs = await adminFirestore.collection('inventory').where("status", "==", "Active").where("listing", "==", "Active").get();
         const items: Item[] = [];
         docs.forEach(doc => {
-            if (doc.data()?.listing == "Active") {
-                items.push({...doc.data(), createdAt: null, updatedAt: null} as Item);
-            }
+            items.push({...doc.data(), createdAt: null, updatedAt: null} as Item);
+        });
+        console.log("Total inventory items fetched:", items.length);
+        return items;
+    } catch (e) {
+        console.log(e)
+        throw e;
+    }
+};
+
+// Function to get all items in inventory
+export const getAllInventoryItemsByGender = async (gender: string) => {
+    try {
+        console.log(`Fetching all inventory items by ${gender}`);
+        const docs = await adminFirestore.collection('inventory').where("status", "==", "Active").where("listing", "==", "Active").where("genders", "array-contains", gender).get();
+        const items: Item[] = [];
+        docs.forEach(doc => {
+            items.push({...doc.data(), createdAt: null, updatedAt: null} as Item);
         });
         console.log("Total inventory items fetched:", items.length);
         return items;
@@ -551,15 +565,4 @@ export const getBrandsFromInventory = async () => {
         throw error;
     }
 };
-export async function rateLimiter({idToken, rateLimit = 5, windowSize = 60 * 1000,}: { idToken: string; rateLimit?: number; windowSize?: number; }): Promise<boolean> {
-    const key = `rate_limit:${idToken}`;
-    const currentCount = await redis.incr(key); // Increment request count for the token
-
-    if (currentCount === 1) {
-        console.log(`Setting expiration for token ${idToken}`);
-        await redis.expire(key, windowSize / 1000);
-    }
-    console.log(`Current count for token ${idToken}: ${currentCount}`);
-    return currentCount > rateLimit;
-}
 

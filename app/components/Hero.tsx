@@ -11,19 +11,27 @@ const Hero = async ({slides}: { slides: Slide[] }) => {
         <section className="w-full mt-16 lg:mt-[7rem] flex flex-col gap-5">
             <ImagesSlider images={slides}/>
             <div className="md:mt5 mt-3 px-3 lg:px-8">
+                <h2 className="text-3xl lg:text-4xl font-semibold text-gray-800 text-center">
+                    Welcome to <strong>NEVERBE</strong>
+                </h2>
                 <p className="text-lg lg:text-xl text-gray-600 text-center mt-5">
                     The best place to shop for your favorite products
                 </p>
-                <ul className="flex mt-5 flex-wrap md:gap-24 gap-10 lg:mt-10 flex-row justify-center lg:gap-32">
-                    {
-                        genderList.map((gen, index) => (
-                            <li key={index}>
-                                <GenderCard url={gen.url} gender={gen.gender} image={gen.image}/>
-                            </li>
-                        ))
-                    }
-                </ul>
-                <div className="flex justify-center mt-5">
+                <div className={"flex flex-col gap-5 mt-5"}>
+                    <h3 className="text-gray-800 md:text-4xl font-bold text-2xl text-left mt-5">
+                        Explore our collection
+                    </h3>
+                    <ul className="flex mt-5 flex-wrap md:gap-24 gap-10 lg:mt-10 flex-row justify-evenly lg:gap-36">
+                        {
+                            genderList.map((gen, index) => (
+                                <li key={index}>
+                                    <GenderCard url={gen.url} gender={gen.gender} image={gen.image}/>
+                                </li>
+                            ))
+                        }
+                    </ul>
+                </div>
+                <div className="flex justify-center mt-5 lg:mt-10">
                     <Link href="/collections/products"
                           className="flex items-center px-6 py-3 bg-primary-100 text-white rounded-lg hover:bg-primary-200
                         transition-all text-lg">

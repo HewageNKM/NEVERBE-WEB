@@ -39,7 +39,15 @@ const ItemCard = ({item}: { item: Item }) => {
             getRating();
         }
     }, [item, user]);
-
+    const findRangeOfSizes = () => {
+        // Find min and max sizes from the sizes array of every variant
+        const sizes = item.variants.map(variant => variant.sizes.map(size => size.size));
+        if(sizes.length === 0) return "N/A";
+        const allSizes = sizes.flat();
+        const min = Math.min(...allSizes);
+        const max = Math.max(...allSizes);
+        return `${min} - ${max}`;
+    }
     return (
         <article
             className="relative w-[8rem] md:w-[13rem]  h-auto max-w-xs transition-transform duration-300 transform lg:hover:scale-105 shadow-lg rounded-lg overflow-hidden bg-white">
@@ -85,11 +93,7 @@ const ItemCard = ({item}: { item: Item }) => {
                     </div>
                     <div className="text-sm font-medium text-slate-500">
                         {item.type === "shoes" || item.type === "sandals" ? (
-                            `Size (UK): ${
-                                item.variants.length > 0 && item.variants[0].sizes.length > 0
-                                    ? `${Math.min(...item.variants[0].sizes.map(s => s.size))} - ${Math.max(...item.variants[0].sizes.map(s => s.size))}`
-                                    : "N/A"
-                            }`
+                            `Size (EU): ${findRangeOfSizes()}`
                         ) : item.type === "accessories" ? (
                             `Sizes: ${
                                 item.variants.length > 0 && item.variants[0].sizes.length > 0
