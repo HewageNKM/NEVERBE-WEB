@@ -6,16 +6,14 @@ import ReCAPTCHA from "react-google-recaptcha";
 import ReactStars from 'react-stars'
 import {addNewReview, deleteReview, getAllReviewsById} from "@/actions/itemDetailsAction";
 import Skeleton from "@/components/Skeleton";
-import {useDispatch, useSelector} from "react-redux";
-import {AppDispatch, RootState} from "@/redux/store";
+import {useSelector} from "react-redux";
+import {RootState} from "@/redux/store";
 import {Review} from "@/interfaces";
 import ReviewCard from "./ReviewCard";
-import {setShowLoginForm} from "@/redux/authSlice/authSlice";
 
 
 const Reviews = ({itemId}: { itemId: string }) => {
     const {user} = useSelector((state: RootState) => state.authSlice);
-    const dispatch:AppDispatch = useDispatch();
     const [captchaValue, setCaptchaValue] = useState<string | null>(null);
     const [captchaError, setCaptchaError] = useState(false);
     const recaptchaRef = React.createRef<ReCAPTCHA>();
@@ -37,12 +35,7 @@ const Reviews = ({itemId}: { itemId: string }) => {
     const [showReviewForm, setShowReviewForm] = useState(false);
 
     const handleAddReviewClick = () => {
-        if(user?.isAnonymous){
-            dispatch(setShowLoginForm(true));
-            return;
-        }else {
-            setShowReviewForm((prev) => !prev);
-        }
+        setShowReviewForm((prev) => !prev);
     };
     const onReviewDelete = async (reviewId: string) => {
         try {
@@ -86,7 +79,7 @@ const Reviews = ({itemId}: { itemId: string }) => {
             fetchReviews();
         } catch (e) {
             console.error("Failed to submit review: ", e);
-        }finally {
+        } finally {
             setIsProcessing(false);
         }
     };
@@ -109,7 +102,7 @@ const Reviews = ({itemId}: { itemId: string }) => {
             setReviewReport(res);
         } catch (e) {
             console.error("Failed to fetch reviews: ", e);
-        }finally {
+        } finally {
             setIsLoading(false);
         }
     }
