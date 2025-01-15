@@ -58,7 +58,7 @@ const Products = ({items, manufacturer}: { items: Item[], manufacturer: string }
                     </div>
 
                 </div>
-                <ul className="flex flex-row gap-5 mb-10 md:gap-10 flex-wrap mt-5 w-full">
+                <ul className="flex flex-row gap-5 mb-10 md:gap-10 flex-wrap mt-5 w-full justify-center items-center md:justify-start">
                     {products.map((item) => (
                         <li key={item.itemId}>
                             <ItemCard item={item}/>
