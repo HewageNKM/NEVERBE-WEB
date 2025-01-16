@@ -8,7 +8,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const allProducts = items.map((item) => ({
         url: `${process.env.NEXT_PUBLIC_BASE_URL}/collections/products/${item.itemId}`,
         lastModified: new Date(),
-        priority: 0.8,
+        priority: 0.6,
     }));
 
     const brands = await getBrandsFromInventory();
@@ -27,11 +27,32 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         {
             url: `${process.env.NEXT_PUBLIC_BASE_URL}`,
             priority: 1,
+            lastModified: new Date(),
+            changeFrequency:"daily"
         },
         {
             url: `https://neverbe.lk/collections/products`,
             lastModified: new Date(),
             priority: 0.9,
+            changeFrequency:"weekly"
+        },
+        {
+            url: `https://neverbe.lk/collections/products?gender=men`,
+            lastModified: new Date(),
+            priority: 0.9,
+            changeFrequency:"weekly"
+        },
+        {
+            url: `https://neverbe.lk/collections/products?gender=women`,
+            lastModified: new Date(),
+            priority: 0.9,
+            changeFrequency:"weekly"
+        },
+        {
+            url: `https://neverbe.lk/collections/products?gender=kids`,
+            lastModified: new Date(),
+            priority: 0.9,
+            changeFrequency:"weekly"
         },
         ...allProducts,
         ...getBrands,
