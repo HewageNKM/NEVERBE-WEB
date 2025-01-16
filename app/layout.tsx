@@ -1,13 +1,13 @@
-import type {Metadata} from "next";
-import {Roboto} from "next/font/google";
+import type { Metadata } from "next";
+import { Roboto } from "next/font/google";
 import "../style/globals.css";
 import StoreProvider from "@/app/components/StoreProvider";
-import {SpeedInsights} from '@vercel/speed-insights/next';
-import {Analytics} from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/react";
 import GlobalProvider from "@/app/components/GlobalProvider";
-import {seoKeywords} from "@/constants";
+import { seoKeywords } from "@/constants";
 
-const roboto = Roboto({weight: "400", subsets: ["latin"]});
+const roboto = Roboto({ weight: "400", subsets: ["latin"] });
 
 export const metadata: Metadata = {
     title: {
@@ -27,7 +27,8 @@ export const metadata: Metadata = {
         site: "@neverbe",
         creator: "@neverbe",
         title: "NEVERBE",
-        description: "NEVERBE is Sri Lanka's premier online store for high-quality Nike, adidas, New Balance and more copy shoes and accessories.",
+        description:
+            "NEVERBE is Sri Lanka's premier online store for high-quality Nike, adidas, New Balance and more copy shoes and accessories.",
         images: [
             {
                 url: "https://neverbe.lk/api/v1/og",
@@ -43,7 +44,8 @@ export const metadata: Metadata = {
         locale: "en_US",
         siteName: "NEVERBE",
         title: "NEVERBE",
-        description: "Discover NEVERBE is Sri Lanka's premier online store for high-quality Nike, adidas, New Balance and more copy shoes and accessories. with fast delivery and superior service.",
+        description:
+            "Discover NEVERBE is Sri Lanka's premier online store for high-quality Nike, adidas, New Balance and more copy shoes and accessories. with fast delivery and superior service.",
         images: [
             {
                 url: "https://neverbe.lk/api/og",
@@ -53,20 +55,72 @@ export const metadata: Metadata = {
             },
         ],
     },
-}
+};
 
-export default function RootLayout({children}: Readonly<{ children: React.ReactNode; }>) {
+export default function RootLayout({
+                                       children,
+                                   }: Readonly<{ children: React.ReactNode }>) {
+    const breadcrumbSchema = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+            {
+                "@type": "ListItem",
+                position: 1,
+                name: "Home",
+                item: "https://neverbe.lk",
+            },
+            {
+                "@type": "ListItem",
+                position: 2,
+                name: "Nike",
+                item: "https://neverbe.lk/collections/nike",
+            },
+            {
+                "@type": "ListItem",
+                position: 3,
+                name: "Products",
+                item: "https://neverbe.lk/collections/products",
+            },
+            {
+                "@type": "ListItem",
+                position: 4,
+                name: "Men",
+                item: "https://neverbe.lk/collections/products?gender=men",
+            },
+            {
+                "@type": "ListItem",
+                position: 5,
+                name: "Women",
+                item: "https://neverbe.lk/collections/products?gender=women"
+            },
+            {
+                "@type": "ListItem",
+                position: 6,
+                name: "Kids",
+                item: "https://neverbe.lk/collections/products?gender=kids"
+                }
+        ],
+    };
+
     return (
         <html lang="en" className="scroll-smooth">
+        <head>
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify(breadcrumbSchema),
+                }}
+            />
+            <title></title>
+        </head>
         <body className={roboto.className}>
         <StoreProvider>
-            <GlobalProvider>
-                {children}
-            </GlobalProvider>
-            <SpeedInsights/>
-            <Analytics/>
+            <GlobalProvider>{children}</GlobalProvider>
+            <SpeedInsights />
+            <Analytics />
         </StoreProvider>
         </body>
         </html>
-    )
+    );
 }
