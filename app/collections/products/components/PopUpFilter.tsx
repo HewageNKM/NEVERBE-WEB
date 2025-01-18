@@ -19,7 +19,12 @@ import {getBrands} from "@/actions/inventoryAction";
 import Skeleton from "@/components/Skeleton";
 
 const PopUpFilter = () => {
-    const {selectedSizes, selectedType, selectedManufacturers, selectedSort} = useSelector((state: RootState) => state.productsSlice);
+    const {
+        selectedSizes,
+        selectedType,
+        selectedManufacturers,
+        page
+    } = useSelector((state: RootState) => state.productsSlice);
     const {user} = useSelector((state: RootState) => state.authSlice);
     const [brands, setBrands] = useState([])
     const [isBrandsLoading, setIsBrandsLoading] = useState(true);
@@ -55,9 +60,9 @@ const PopUpFilter = () => {
     useEffect(() => {
         if (user) {
             const gender = window.localStorage.getItem("gender") || "all";
-            dispatch(getInventory({gender}));
+            dispatch(getInventory({gender, page}));
         }
-    }, [selectedManufacturers, selectedType, selectedSizes, dispatch, user,selectedSort]);
+    }, [selectedManufacturers, selectedType, selectedSizes, dispatch, user]);
 
     useEffect(() => {
         if (user) {
@@ -116,7 +121,7 @@ const PopUpFilter = () => {
                             ))}
                             {isBrandsLoading && (
                                 <div className="w-full h-16">
-                                    <Skeleton />
+                                    <Skeleton/>
                                 </div>
                             )}
                         </div>

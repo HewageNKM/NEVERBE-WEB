@@ -10,11 +10,14 @@ import {sortingOptions} from "@/constants";
 import {FiFilter} from "react-icons/fi";
 import ComponentLoader from "@/components/ComponentLoader";
 import BrandFilter from "@/app/collections/[manufacturer]/[brand]/components/BrandFilter";
-import {setProducts, setSelectedSort, toggleFilter} from "@/redux/brandSlice/brandSlice";
+import {getItemsByTwoField, setProducts, setSelectedSort, toggleFilter} from "@/redux/brandSlice/brandSlice";
+import Pagination from "@mui/material/Pagination";
+import {setPage} from "@/redux/brandSlice/brandSlice";
 
 const BrandProducts = ({items,manufacturer,brand}: { items: Item[],manufacturer:string, brand:string}) => {
     const dispatch: AppDispatch = useDispatch();
-    const {products, selectedSort, isLoading, error} = useSelector((state: RootState) => state.brandSlice);
+    const {user} = useSelector((state: RootState) => state.authSlice);
+    const {products, selectedSort, isLoading, error,page,size} = useSelector((state: RootState) => state.brandSlice);
 
     useEffect(() => {
         if(manufacturer && brand){
@@ -24,6 +27,13 @@ const BrandProducts = ({items,manufacturer,brand}: { items: Item[],manufacturer:
             dispatch(setProducts(items));
         }
     }, [manufacturer,brand]);
+
+    useEffect(() => {
+        if(user){
+            dispatch(getItemsByTwoField({value1:manufacturer,value2:brand,field1:"manufacturer",field2:"brand",page,size}));
+        }
+    }, [user,page,size,selectedSort,dispatch]);
+
     return (
         <section className="w-full flex lg:grid lg:grid-cols-5 lg:gap-32 pt-5 flex-row">
             <div className="lg:block hidden p-2 md:p-4">
@@ -60,13 +70,18 @@ const BrandProducts = ({items,manufacturer,brand}: { items: Item[],manufacturer:
                     </div>
 
                 </div>
-                <ul className="flex flex-row gap-5 mb-10 md:gap-10 flex-wrap mt-5 w-full justify-center items-center md:justify-start">
-                    {products.map((item) => (
-                        <li key={item.itemId}>
-                            <ItemCard item={item}/>
-                        </li>
-                    ))}
-                </ul>
+                <div className="w-full flex flex-col justify-between items-center">
+                    <ul className="flex flex-row gap-5 mb-10 md:gap-10 flex-wrap mt-5 w-full justify-center items-center md:justify-start">
+                        {products.map((item) => (
+                            <li key={item.itemId}>
+                                <ItemCard item={item}/>
+                            </li>
+                        ))}
+                    </ul>
+                    <Pagination count={10} variant="outlined" shape="rounded"
+                                onChange={(event, value) => dispatch(setPage(value))}
+                    />
+                </div>
                 {(products.length === 0 && !isLoading) && <EmptyState heading={"Products Not Available!"}/>}
                 {isLoading && <ComponentLoader/>}
                 {error && <EmptyState heading={"Error Fetching Products!"} subHeading={error}/>}

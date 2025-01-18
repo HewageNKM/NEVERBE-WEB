@@ -12,7 +12,8 @@ import {BiReset} from "react-icons/bi";
 const BrandTopUpFilter = () => {
     const {
         selectedSizes,
-        selectedSort
+        page,
+        size
     } = useSelector((state: RootState) => state.brandSlice);
     const {user} = useSelector((state: RootState) => state.authSlice);
     const dispatch: AppDispatch = useDispatch();
@@ -30,9 +31,9 @@ const BrandTopUpFilter = () => {
         if(user) {
             const manufacturer = window.localStorage.getItem('manufacturer');
             const brand = window.localStorage.getItem('brand');
-            dispatch(getItemsByTwoField({value1:manufacturer, value2:brand, field1:"manufacturer", field2:"brand"}));
+            dispatch(getItemsByTwoField({value1:manufacturer, value2:brand, field1:"manufacturer", field2:"brand",page,size}));
         }
-    }, [selectedSizes, dispatch, user, selectedSort]);
+    }, [selectedSizes, dispatch, user]);
     return (
         <DropShadow containerStyle="flex justify-start items-start">
             <motion.section

@@ -1,15 +1,12 @@
 "use client";
-import React, {useEffect} from 'react';
+import React from 'react';
 import Image from "next/image";
 import {AdidasBG, DefaultBG, LuvionVuittonBG, NewBalance, NikeBG} from "@/assets/images";
-import {useDispatch, useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 import {RootState} from "@/redux/store";
-import {getItemsByManufacturer} from "@/redux/manufacturerSlice/manufacturerSlice";
 
 const ManufacturerHeader = ({name}: { name: string }) => {
-    const {selectedSort, products} = useSelector((state: RootState) => state.manufacturerSlice);
-    const {user} = useSelector((state: RootState) => state.authSlice);
-    const dispatch = useDispatch();
+    const {products} = useSelector((state: RootState) => state.manufacturerSlice);
 
     const image = () => {
         switch (name) {
@@ -26,11 +23,6 @@ const ManufacturerHeader = ({name}: { name: string }) => {
         }
     }
 
-    useEffect(() => {
-        if (user) {
-            dispatch(getItemsByManufacturer(name));
-        }
-    }, [selectedSort]);
     return (
         <section className="flex relative flex-col gap-4 md:text-lg text-sm justify-between w-full">
             <div className="relative group overflow-hidden">

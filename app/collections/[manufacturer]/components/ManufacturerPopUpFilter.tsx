@@ -14,7 +14,8 @@ const ManufacturerPopUpFilter = () => {
     const {
         selectedSizes,
         selectedType,
-        selectedSort
+        page,
+        size,
     } = useSelector((state: RootState) => state.manufacturerSlice);
     const {user} = useSelector((state: RootState) => state.authSlice);
     const dispatch: AppDispatch = useDispatch();
@@ -31,9 +32,9 @@ const ManufacturerPopUpFilter = () => {
     useEffect(() => {
         const manufacturer = window.localStorage.getItem("manufacturer");
         if (user && manufacturer) {
-            dispatch(getItemsByManufacturer(manufacturer));
+            dispatch(getItemsByManufacturer({name:manufacturer,page,size}));
         }
-    }, [selectedType, selectedSizes, dispatch, user, selectedSort]);
+    }, [selectedType, selectedSizes, dispatch, user]);
 
     return (
         <DropShadow containerStyle="flex justify-start items-start">

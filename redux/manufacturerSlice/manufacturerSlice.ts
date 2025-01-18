@@ -6,6 +6,8 @@ import {getInventoryByManufacturer} from "@/actions/inventoryAction";
 interface ManufacturerSlice {
     products: Item[];
     isLoading: boolean;
+    page: number;
+    size: number;
     error: string | null;
     showFilter: boolean,
     selectedType: string,
@@ -17,6 +19,8 @@ interface ManufacturerSlice {
 const initialState: ManufacturerSlice = {
     selectedManufacturers: [],
     selectedSizes: [],
+    page: 1,
+    size: 20,
     error: null,
     isLoading: false,
     selectedType: "all",
@@ -52,8 +56,13 @@ const manufacturerSlice = createSlice({
         },
         setProducts: (state, action) => {
             state.products = action.payload;
+        },
+        setPage: (state, action) => {
+            state.page = action.payload;
+        },
+        setSize: (state, action) => {
+            state.size = action.payload;
         }
-
     },
     extraReducers: (builder) => {
         builder
@@ -95,9 +104,9 @@ export const sort = (state: WritableDraft<ManufacturerSlice>, action: any) => {
     }
 }
 
-export const getItemsByManufacturer = createAsyncThunk('products/getItemByManufacturer', async (name:string, thunkAPI) => {
+export const getItemsByManufacturer = createAsyncThunk('products/getItemByManufacturer', async ({name,page,size}:{name:string,page:number,size:number}, thunkAPI) => {
     try {
-        return await getInventoryByManufacturer(name);
+        return await getInventoryByManufacturer(name,page,size);
     } catch (e) {
         console.log(e);
         return thunkAPI.rejectWithValue(e);
@@ -110,6 +119,7 @@ export const {
     setSelectedSort,
     resetFilter,
     setProducts,
+    setSize,setPage
 } = manufacturerSlice.actions;
 export default manufacturerSlice.reducer;
 

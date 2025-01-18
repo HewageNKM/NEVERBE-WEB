@@ -1,26 +1,12 @@
 "use client"
-import React, {useEffect} from 'react';
+import React from 'react';
 import Image from "next/image";
 import {DefaultBG} from "@/assets/images";
-import {useDispatch, useSelector} from "react-redux";
-import {AppDispatch, RootState} from "@/redux/store";
-import {getItemsByTwoField} from "@/redux/brandSlice/brandSlice";
+import {useSelector} from "react-redux";
+import {RootState} from "@/redux/store";
 
 const ManufacturerHeader = ({manufacturer, brand}: { manufacturer: string, brand: string }) => {
-    const dispatch: AppDispatch = useDispatch();
-    const {products, selectedSort} = useSelector((state: RootState) => state.brandSlice);
-    const {user} = useSelector((state: RootState) => state.authSlice);
-
-    useEffect(() => {
-        if (user) {
-            dispatch(getItemsByTwoField({
-                value1: manufacturer,
-                value2: brand,
-                field1: "manufacturer",
-                field2: "brand"
-            }));
-        }
-    }, [selectedSort, user]);
+    const {products} = useSelector((state: RootState) => state.brandSlice);
     return (
         <section className="flex relative flex-col gap-4 md:text-lg text-sm justify-between w-full">
             <div className="relative group overflow-hidden">

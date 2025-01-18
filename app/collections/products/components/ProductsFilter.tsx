@@ -14,13 +14,12 @@ import {BiReset} from "react-icons/bi";
 import {getBrands} from "@/actions/inventoryAction";
 import Skeleton from "@/components/Skeleton";
 
-const ProductsFilter = ({gender}:{gender:string}) => {
+const ProductsFilter = ({gender}: { gender: string }) => {
     const {
         selectedSizes,
         selectedType,
         selectedManufacturers,
-        selectedSort,
-        page,
+        page
     } = useSelector((state: RootState) => state.productsSlice);
     const {user} = useSelector((state: RootState) => state.authSlice);
     const [brands, setBrands] = useState([])
@@ -55,10 +54,10 @@ const ProductsFilter = ({gender}:{gender:string}) => {
     }
 
     useEffect(() => {
-        if(user){
+        if (user) {
             dispatch(getInventory({gender, page}));
         }
-    }, [selectedManufacturers, selectedType, selectedSizes, dispatch, user, selectedSort,page]);
+    }, [selectedManufacturers, selectedType, selectedSizes, dispatch, user]);
 
     useEffect(() => {
         if (user) {

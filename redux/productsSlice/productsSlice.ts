@@ -58,7 +58,7 @@ const productsSlice = createSlice({
             state.products = action.payload;
         },
         setPage: (state, action) => {
-            state.size = action.payload;
+            state.page = action.payload;
         },
         setSize: (state, action) => {
             state.size = action.payload;
@@ -111,9 +111,9 @@ const sort = (state: WritableDraft<ProductsSlice>, action: any) => {
     }
 }
 
-export const getInventory = createAsyncThunk('products/getFilterProducts', async ({gender,page}:{gender:string,page:number}, thunkAPI) => {
+export const getInventory = createAsyncThunk('products/getFilterProducts', async ({gender,page,size}:{gender:string,page:number,size:number}, thunkAPI) => {
     try {
-        return await getProducts(gender,page);
+        return await getProducts(gender,page,size);
     } catch (e) {
         console.log(e);
         return thunkAPI.rejectWithValue(e);

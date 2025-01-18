@@ -10,10 +10,7 @@ import { seoKeywords } from "@/constants";
 const roboto = Roboto({ weight: "400", subsets: ["latin"] });
 
 export const metadata: Metadata = {
-    title: {
-        default: "NEVERBE",
-        template: "%s - NEVERBE",
-    },
+    title: "NEVERBE",
     metadataBase: new URL("https://neverbe.lk"),
     alternates: {
         canonical: "https://neverbe.lk",
@@ -69,37 +66,7 @@ export default function RootLayout({
                 position: 1,
                 name: "Home",
                 item: "https://neverbe.lk",
-            },
-            {
-                "@type": "ListItem",
-                position: 2,
-                name: "Nike",
-                item: "https://neverbe.lk/collections/nike",
-            },
-            {
-                "@type": "ListItem",
-                position: 3,
-                name: "Products",
-                item: "https://neverbe.lk/collections/products",
-            },
-            {
-                "@type": "ListItem",
-                position: 4,
-                name: "Men",
-                item: "https://neverbe.lk/collections/products?gender=men",
-            },
-            {
-                "@type": "ListItem",
-                position: 5,
-                name: "Women",
-                item: "https://neverbe.lk/collections/products?gender=women"
-            },
-            {
-                "@type": "ListItem",
-                position: 6,
-                name: "Kids",
-                item: "https://neverbe.lk/collections/products?gender=kids"
-                }
+            }
         ],
     };
 

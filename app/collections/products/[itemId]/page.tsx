@@ -1,6 +1,5 @@
 import React from 'react';
 import ProductHero from "@/app/collections/products/[itemId]/components/ProductHero";
-import SizeChart from "@/app/collections/products/[itemId]/components/SizeChart";
 import {notFound} from "next/navigation";
 import {Item} from "@/interfaces";
 import {getItemById, getSimilarItems} from "@/firebase/firebaseAdmin";

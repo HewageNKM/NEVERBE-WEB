@@ -1,21 +1,12 @@
 "use client";
-import React, {useEffect} from "react";
-import {useDispatch, useSelector} from "react-redux";
-import {AppDispatch, RootState} from "@/redux/store";
-import {getInventory} from "@/redux/productsSlice/productsSlice";
+import React from "react";
+import {useSelector} from "react-redux";
+import {RootState} from "@/redux/store";
 import Image from "next/image";
 import {DefaultBG} from "@/assets/images";
 
 const ProductsHeader = ({gender}: { gender: string }) => {
-    const dispatch: AppDispatch = useDispatch();
-    const {selectedSort, products} = useSelector((state: RootState) => state.productsSlice);
-    const {user} = useSelector((state: RootState) => state.authSlice);
-
-    useEffect(() => {
-        if (user) {
-            dispatch(getInventory({gender}));
-        }
-    }, [dispatch, selectedSort, user]);
+    const {products} = useSelector((state: RootState) => state.productsSlice);
 
     return (
         <section className="flex relative flex-col gap-4 md:text-lg text-sm justify-between w-full">
@@ -34,7 +25,7 @@ const ProductsHeader = ({gender}: { gender: string }) => {
                         <h1 className="text-white text-lg md:text-3xl font-bold">
                             {gender.toWellFormed()} ({products.length || 0})
                         </h1>
-                    ):(
+                    ) : (
                         <h1 className="text-white text-lg md:text-3xl font-bold">
                             All Products ({products.length || 0})
                         </h1>

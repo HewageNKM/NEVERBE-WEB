@@ -1,11 +1,12 @@
 "use client";
+import Pagination from '@mui/material/Pagination';
 import React, {useEffect} from 'react';
 import ItemCard from "@/components/ItemCard";
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "@/redux/store";
 import EmptyState from "@/components/EmptyState";
 import {Item} from '@/interfaces';
-import {setProducts, setSelectedSort, toggleFilter} from "@/redux/productsSlice/productsSlice";
+import {getInventory, setPage, setProducts, setSelectedSort, toggleFilter} from "@/redux/productsSlice/productsSlice";
 import ProductsFilter from "@/app/collections/products/components/ProductsFilter";
 import {IoFilter} from "react-icons/io5";
 import {sortingOptions} from "@/constants";
@@ -14,14 +15,21 @@ import ComponentLoader from "@/components/ComponentLoader";
 
 const Products = ({items, gender}: { items: Item[], gender: string }) => {
     const dispatch: AppDispatch = useDispatch();
-    const {products, isLoading, error, page} = useSelector((state: RootState) => state.productsSlice);
-    const selectedSort = useSelector((state: RootState) => state.productsSlice.selectedSort);
+    const {user} = useSelector((state: RootState) => state.authSlice);
+    const {products, isLoading, error, selectedSort, page,size} = useSelector((state: RootState) => state.productsSlice);
 
 
     useEffect(() => {
         window.localStorage.setItem("gender", gender);
         dispatch(setProducts(items));
     }, [dispatch, items, gender]);
+
+    useEffect(() => {
+        if (user) {
+            dispatch(getInventory({gender, page,size}));
+        }
+    }, [selectedSort, user, page, dispatch,size]);
+
     return (
         <section className="w-full flex lg:grid lg:grid-cols-5 lg:gap-32 pt-5 flex-row">
             <div className="lg:block hidden">
@@ -56,9 +64,8 @@ const Products = ({items, gender}: { items: Item[], gender: string }) => {
                             </select>
                         </div>
                     </div>
-
                 </div>
-                <div>
+                <div className="w-full flex flex-col justify-between items-center">
                     <ul className="flex flex-row gap-5 mb-10 md:gap-10 flex-wrap mt-5 w-full justify-center items-center md:justify-start">
                         {products.map((item) => (
                             <li key={item.itemId}>
@@ -66,6 +73,9 @@ const Products = ({items, gender}: { items: Item[], gender: string }) => {
                             </li>
                         ))}
                     </ul>
+                    <Pagination count={10} variant="outlined" shape="rounded"
+                                onChange={(event, value) => dispatch(setPage(value))}
+                    />
                 </div>
                 {(products.length === 0 && !isLoading) && <EmptyState heading={"Products Not Available!"}/>}
                 {isLoading && <ComponentLoader/>}
