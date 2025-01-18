@@ -10,6 +10,8 @@ import {useSelector} from "react-redux";
 import {RootState} from "@/redux/store";
 import {Review} from "@/interfaces";
 import ReviewCard from "./ReviewCard";
+import DropShadow from "@/components/DropShadow";
+import {AnimatePresence, motion} from "framer-motion";
 
 
 const Reviews = ({itemId}: { itemId: string }) => {
@@ -149,96 +151,104 @@ const Reviews = ({itemId}: { itemId: string }) => {
                 )}
                 {isLoading && (<div className="lg:h-48 md:h-32 h-28 w-full"><Skeleton/></div>)}
             </div>
-            {showReviewForm && (
-                <div className="flex justify-center mx-10">
-                    <article className="relative p-6 bg-white rounded-lg w-[95vw] shadow-custom md:w-[20rem]">
-                        <h3 className="text-xl font-semibold text-gray-800 mb-4">Submit A Review</h3>
-                        <form className="space-y-6" onSubmit={submitReview}>
-                            <div>
-                                <label
-                                    htmlFor="name"
-                                    className="block text-sm font-medium text-gray-700"
+            <AnimatePresence>
+                {showReviewForm && (
+                    <DropShadow containerStyle="flex justify-center items-center">
+                        <motion.div
+                            initial={{opacity: 0}}
+                            animate={{opacity: 1}}
+                            exit={{opacity: 0}}
+                            className="flex justify-center mx-10">
+                            <article className="relative p-6 bg-white rounded-lg w-[95vw] shadow-custom md:w-[20rem]">
+                                <h3 className="text-xl font-semibold text-gray-800 mb-4">Submit A Review</h3>
+                                <form className="space-y-6" onSubmit={submitReview}>
+                                    <div>
+                                        <label
+                                            htmlFor="name"
+                                            className="block text-sm font-medium text-gray-700"
+                                        >
+                                            Name(Optional)
+                                        </label>
+                                        <input
+                                            disabled={isProcessing}
+                                            type="text"
+                                            id="name"
+                                            name="name"
+                                            defaultValue={"anonymous"}
+                                            placeholder={"Anonymous"}
+                                            autoComplete="name"
+                                            className="w-full p-3 border rounded-md shadow-sm"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label
+                                            htmlFor="review"
+                                            className="block text-sm font-medium text-gray-700"
+                                        >
+                                            Review
+                                        </label>
+                                        <textarea
+                                            disabled={isProcessing}
+                                            id="review"
+                                            name="review"
+                                            rows={4}
+                                            className="w-full p-3 border rounded-md shadow-sm"
+                                            placeholder="Write your review..."
+                                            required
+                                        />
+                                    </div>
+                                    <div>
+                                        <label
+                                            htmlFor="rating"
+                                            className="block text-sm font-medium text-gray-700"
+                                        >
+                                            Rating
+                                        </label>
+                                        <ReactStars edit={!isProcessing} onChange={(new_rating) => setRating(new_rating)}
+                                                    value={rating} count={5}
+                                                    size={50} color2={'#ffd700'}/>
+                                    </div>
+                                    <div>
+                                        <ReCAPTCHA
+                                            sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ""}
+                                            ref={recaptchaRef}
+                                            onChange={(value) => {
+                                                setCaptchaValue(value);
+                                                setCaptchaError(false); // Clear error on valid input
+                                            }}
+                                            onExpired={() => {
+                                                setCaptchaValue(null);
+                                                setCaptchaError(true); // Show error on expiration
+                                            }}
+                                            className={`${
+                                                captchaError ? "border-red-500" : ""
+                                            }`}
+                                        />
+                                        {captchaError && (
+                                            <p className="text-red-500 text-sm mt-1">
+                                                Please complete the CAPTCHA.
+                                            </p>
+                                        )}
+                                    </div>
+                                    <button
+                                        disabled={isProcessing}
+                                        type="submit"
+                                        className="w-full disabled:cursor-not-allowed disabled:bg-opacity-60 bg-primary-100 text-white py-2 px-4 rounded-md shadow-md hover:bg-primary-200"
+                                    >
+                                        Submit
+                                    </button>
+                                </form>
+                                <button
+                                    onClick={handleAddReviewClick}
+                                    className="absolute top-2 right-2 text-gray-600 hover:text-gray-800"
                                 >
-                                    Name(Optional)
-                                </label>
-                                <input
-                                    disabled={isProcessing}
-                                    type="text"
-                                    id="name"
-                                    name="name"
-                                    defaultValue={"anonymous"}
-                                    placeholder={"Anonymous"}
-                                    autoComplete="name"
-                                    className="w-full p-3 border rounded-md shadow-sm"
-                                />
-                            </div>
-                            <div>
-                                <label
-                                    htmlFor="review"
-                                    className="block text-sm font-medium text-gray-700"
-                                >
-                                    Review
-                                </label>
-                                <textarea
-                                    disabled={isProcessing}
-                                    id="review"
-                                    name="review"
-                                    rows={4}
-                                    className="w-full p-3 border rounded-md shadow-sm"
-                                    placeholder="Write your review..."
-                                    required
-                                />
-                            </div>
-                            <div>
-                                <label
-                                    htmlFor="rating"
-                                    className="block text-sm font-medium text-gray-700"
-                                >
-                                    Rating
-                                </label>
-                                <ReactStars edit={!isProcessing} onChange={(new_rating) => setRating(new_rating)}
-                                            value={rating} count={5}
-                                            size={50} color2={'#ffd700'}/>
-                            </div>
-                            <div>
-                                <ReCAPTCHA
-                                    sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ""}
-                                    ref={recaptchaRef}
-                                    onChange={(value) => {
-                                        setCaptchaValue(value);
-                                        setCaptchaError(false); // Clear error on valid input
-                                    }}
-                                    onExpired={() => {
-                                        setCaptchaValue(null);
-                                        setCaptchaError(true); // Show error on expiration
-                                    }}
-                                    className={`${
-                                        captchaError ? "border-red-500" : ""
-                                    }`}
-                                />
-                                {captchaError && (
-                                    <p className="text-red-500 text-sm mt-1">
-                                        Please complete the CAPTCHA.
-                                    </p>
-                                )}
-                            </div>
-                            <button
-                                disabled={isProcessing}
-                                type="submit"
-                                className="w-full disabled:cursor-not-allowed disabled:bg-opacity-60 bg-primary-100 text-white py-2 px-4 rounded-md shadow-md hover:bg-primary-200"
-                            >
-                                Submit
-                            </button>
-                        </form>
-                        <button
-                            onClick={handleAddReviewClick}
-                            className="absolute top-2 right-2 text-gray-600 hover:text-gray-800"
-                        >
-                            <IoClose size={20}/>
-                        </button>
-                    </article>
-                </div>
-            )}
+                                    <IoClose size={20}/>
+                                </button>
+                            </article>
+                        </motion.div>
+                    </DropShadow>
+                )}
+            </AnimatePresence>
         </section>
     );
 };

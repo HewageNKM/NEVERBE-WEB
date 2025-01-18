@@ -14,26 +14,28 @@ const SkeletonLoading = () => {
                     <div
                         className="animate-pulse w-full md:h-[20rem] lg:h-[60vh] h-[50vh] bg-gray-200 rounded-lg"></div>
                     <div>
-                        <h2 className="md:text-4xl text-2xl font-semibold text-gray-800 text-center mt-3">
-                            <strong>Welcome to NEVERBE</strong>
-                        </h2>
-                        <p className="md:text-xl text-lg text-gray-600 text-center mt-5">
-                            The best place to shop for your favorite products
-                        </p>
-                        <div className={"flex flex-col gap-5 mt-5"}>
-                            <h3 className="text-gray-800 md:text-4xl font-bold text-2xl text-left mt-5">
-                                Explore our collection
-                            </h3>
-                            <ul className="flex mt-5 flex-wrap md:gap-24 gap-10 lg:mt-10 flex-row justify-evenly lg:gap-36">
-                                {
-                                    genderList.map((gen, index) => (
-                                        <li key={index}>
-                                            <div
-                                                className="animate-pulse w-[10rem] h-[14rem] md:w-[18rem] md:h-[24rem] bg-gray-200 rounded-md"></div>
-                                        </li>
-                                    ))
-                                }
-                            </ul>
+                        <div className="md:mt5 mt-3 px-3 lg:px-8">
+                            <h2 className="md:text-4xl text-2xl font-semibold text-gray-800 text-center mt-3">
+                                <strong>Welcome to NEVERBE</strong>
+                            </h2>
+                            <p className="md:text-xl text-lg text-gray-600 text-center mt-5">
+                                The best place to shop for your favorite products
+                            </p>
+                            <div className={"flex flex-col gap-5 mt-5"}>
+                                <h3 className="text-gray-800 md:text-4xl font-bold text-2xl text-left mt-5">
+                                    Explore our collection
+                                </h3>
+                                <ul className="flex mt-5 flex-wrap md:gap-24 gap-10 lg:mt-10 flex-row justify-evenly lg:gap-36">
+                                    {
+                                        genderList.map((gen, index) => (
+                                            <li key={index}>
+                                                <div
+                                                    className="animate-pulse w-[10rem] h-[14rem] md:w-[18rem] md:h-[24rem] bg-gray-200 rounded-md"></div>
+                                            </li>
+                                        ))
+                                    }
+                                </ul>
+                            </div>
                         </div>
                         <div className="flex justify-center mt-5 lg:mt-10">
                             <Link href="/collections/products"
