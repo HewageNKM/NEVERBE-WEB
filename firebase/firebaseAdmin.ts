@@ -132,10 +132,11 @@ export const getOrderById = async (orderId: string) => {
 };
 
 // Function to get all items in inventory
-export const getAllInventoryItems = async () => {
+export const getAllInventoryItems = async (page:number,limit:number) => {
     try {
         console.log("Fetching all inventory items.");
-        const docs = await adminFirestore.collection('inventory').where("status", "==", "Active").where("listing", "==", "Active").get();
+        const offSet = (page - 1) * limit;
+        const docs = await adminFirestore.collection('inventory').where("status", "==", "Active").where("listing", "==", "Active").offset(offSet).limit(limit).get();
         const items: Item[] = [];
         docs.forEach(doc => {
             items.push({...doc.data(), createdAt: null, updatedAt: null} as Item);
@@ -149,10 +150,11 @@ export const getAllInventoryItems = async () => {
 };
 
 // Function to get all items in inventory
-export const getAllInventoryItemsByGender = async (gender: string) => {
+export const getAllInventoryItemsByGender = async (gender: string,page:number,limit:number) => {
     try {
+        const offSet = (page - 1) * limit;
         console.log(`Fetching all inventory items by ${gender}`);
-        const docs = await adminFirestore.collection('inventory').where("status", "==", "Active").where("listing", "==", "Active").where("genders", "array-contains", gender).get();
+        const docs = await adminFirestore.collection('inventory').where("status", "==", "Active").where("listing", "==", "Active").where("genders", "array-contains", gender).offset(offSet).limit(limit).get();
         const items: Item[] = [];
         docs.forEach(doc => {
             items.push({...doc.data(), createdAt: null, updatedAt: null} as Item);
@@ -168,7 +170,7 @@ export const getAllInventoryItemsByGender = async (gender: string) => {
 // Function to fetch recent inventory items based on creation date
 export const getRecentItems = async () => {
     console.log("Fetching recent inventory items.");
-    const docs = await adminFirestore.collection('inventory').where("status", '==', "Active").orderBy('createdAt', 'desc').limit(30).get();
+    const docs = await adminFirestore.collection('inventory').where("status", '==', "Active").orderBy('createdAt', 'desc').limit(10).get();
     const items: Item[] = [];
     docs.forEach(doc => {
         if (doc.data()?.listing == "Active") {
@@ -221,7 +223,7 @@ export const getHotProducts = async () => {
                     }
                 }
             }
-            if (hotProducts.length === 14) {
+            if (hotProducts.length === 10) {
                 break; // Exit the loop once we have 14 hot products
             }
         }
@@ -263,10 +265,11 @@ export const getItemById = async (itemId: string) => {
 };
 
 // Functions for querying items by custom fields
-export const getItemsByField = async (name: string, fieldName: string) => {
+export const getItemsByField = async (name: string, fieldName: string,page:number,limit:number) => {
     try {
         console.log(`Fetching items where ${fieldName} == ${name}`);
-        const docs = await adminFirestore.collection('inventory').where(fieldName, '==', name).get();
+        const offSet = (page - 1) * limit;
+        const docs = await adminFirestore.collection('inventory').where(fieldName, '==', name).offset(offSet).limit(limit).get();
         const items: Item[] = [];
         docs.forEach(doc => {
             if (doc.data()?.status == "Active") {
@@ -284,14 +287,15 @@ export const getItemsByField = async (name: string, fieldName: string) => {
     }
 };
 
-export const getItemsByTwoField = async (firstValue: string, secondValue: string, firstFieldName: string, secondFieldName: string) => {
+export const getItemsByTwoField = async (firstValue: string, secondValue: string, firstFieldName: string, secondFieldName: string,page:number,limit:number) => {
     try {
+        const offSet = (page - 1) * limit;
         console.log(`Fetching items where ${firstFieldName} == ${firstValue} and ${secondFieldName} == ${secondValue}`);
         if (secondValue == "all") {
             console.log(`Fetching items where ${firstFieldName} == ${firstValue}`);
-            return getItemsByField(firstValue, firstFieldName);
+            return getItemsByField(firstValue, firstFieldName,page,limit);
         }
-        const docs = await adminFirestore.collection('inventory').where(firstFieldName, '==', firstValue).where(secondFieldName, '==', secondValue).where("listing", "==", "Active").where("status", "==", "Active").get();
+        const docs = await adminFirestore.collection('inventory').where(firstFieldName, '==', firstValue).where(secondFieldName, '==', secondValue).where("listing", "==", "Active").where("status", "==", "Active").offset(offSet).limit(limit).get();
         const items: Item[] = [];
         docs.forEach(doc => {
             console.log(`Item found with ID ${doc.data().itemId}`);

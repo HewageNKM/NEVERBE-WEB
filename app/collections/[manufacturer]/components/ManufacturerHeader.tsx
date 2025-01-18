@@ -44,9 +44,8 @@ const ManufacturerHeader = ({name}: { name: string }) => {
                     />
                 </figure>
                 <div className="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-                    <h1 className="text-white text-lg md:text-3xl font-bold">
-                        All Products <span className="capitalize">
-                        by {name}
+                    <h1 className="text-white text-lg md:text-3xl font-bold"><span
+                        className="capitalize">{name.toWellFormed()}
                     </span> ({products.length || 0})
                     </h1>
                 </div>

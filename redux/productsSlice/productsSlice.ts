@@ -5,6 +5,8 @@ import {getProducts} from "@/actions/inventoryAction";
 
 interface ProductsSlice {
     products: Item[],
+    page: number,
+    size: number,
     showFilter: boolean,
     isLoading: boolean,
     selectedType: string,
@@ -16,6 +18,8 @@ interface ProductsSlice {
 
 const initialState: ProductsSlice = {
     selectedManufacturers: [],
+    page: 1,
+    size: 20,
     isLoading: false,
     error: null,
     selectedSizes: [],
@@ -52,8 +56,13 @@ const productsSlice = createSlice({
         },
         setProducts: (state, action) => {
             state.products = action.payload;
+        },
+        setPage: (state, action) => {
+            state.size = action.payload;
+        },
+        setSize: (state, action) => {
+            state.size = action.payload;
         }
-
     },
     extraReducers: (builder) => {
         builder.addCase(getInventory.fulfilled, (state, action) => {
@@ -102,9 +111,9 @@ const sort = (state: WritableDraft<ProductsSlice>, action: any) => {
     }
 }
 
-export const getInventory = createAsyncThunk('products/getFilterProducts', async ({gender}:{gender:string}, thunkAPI) => {
+export const getInventory = createAsyncThunk('products/getFilterProducts', async ({gender,page}:{gender:string,page:number}, thunkAPI) => {
     try {
-        return await getProducts(gender);
+        return await getProducts(gender,page);
     } catch (e) {
         console.log(e);
         return thunkAPI.rejectWithValue(e);
@@ -119,5 +128,7 @@ export const {
     resetFilter,
     setProducts,
     setSelectedManufacturers,
+    setPage,
+    setSize
 } = productsSlice.actions;
 export default productsSlice.reducer;

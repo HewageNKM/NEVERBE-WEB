@@ -55,7 +55,7 @@ export async function generateMetadata({ params }: { params: { manufacturer: str
 const Page = async ({params}: { params: { manufacturer: string } }) => {
     let items: Item[] = []
     try {
-        items.push(...await getItemsByField(params.manufacturer.replace("%20", " "), 'manufacturer'));
+        items.push(...await getItemsByField(params.manufacturer.replace("%20", " "), 'manufacturer',1,20));
     } catch (e) {
         console.error("Error fetching items:", e);
     }

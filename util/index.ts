@@ -9,8 +9,8 @@ export const calculateShipping = (cartItems: CartItem[]) => {
     }
 
     // Constants for shipping cost
-    const firstKgCost = 350;
-    const additionalKgCost = 150;
+    const firstKgCost = 450;
+    const additionalKgCost = 100;
 
     // Calculate total weight of all items in the cart in grams based on item type
     let totalWeight = cartItems.reduce((total, item) => {

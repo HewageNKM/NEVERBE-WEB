@@ -19,7 +19,8 @@ const ProductsFilter = ({gender}:{gender:string}) => {
         selectedSizes,
         selectedType,
         selectedManufacturers,
-        selectedSort
+        selectedSort,
+        page,
     } = useSelector((state: RootState) => state.productsSlice);
     const {user} = useSelector((state: RootState) => state.authSlice);
     const [brands, setBrands] = useState([])
@@ -55,9 +56,9 @@ const ProductsFilter = ({gender}:{gender:string}) => {
 
     useEffect(() => {
         if(user){
-            dispatch(getInventory({gender}));
+            dispatch(getInventory({gender, page}));
         }
-    }, [selectedManufacturers, selectedType, selectedSizes, dispatch, user, selectedSort]);
+    }, [selectedManufacturers, selectedType, selectedSizes, dispatch, user, selectedSort,page]);
 
     useEffect(() => {
         if (user) {

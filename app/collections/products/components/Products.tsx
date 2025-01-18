@@ -12,17 +12,16 @@ import {sortingOptions} from "@/constants";
 import {FiFilter} from "react-icons/fi";
 import ComponentLoader from "@/components/ComponentLoader";
 
-const Products = ({items,gender}: { items: Item[],gender:string }) => {
+const Products = ({items, gender}: { items: Item[], gender: string }) => {
     const dispatch: AppDispatch = useDispatch();
-    const {products, isLoading, error} = useSelector((state: RootState) => state.productsSlice);
+    const {products, isLoading, error, page} = useSelector((state: RootState) => state.productsSlice);
     const selectedSort = useSelector((state: RootState) => state.productsSlice.selectedSort);
 
 
     useEffect(() => {
-        window.localStorage.setItem("gender",gender);
+        window.localStorage.setItem("gender", gender);
         dispatch(setProducts(items));
-    }, [dispatch, items,gender]);
-
+    }, [dispatch, items, gender]);
     return (
         <section className="w-full flex lg:grid lg:grid-cols-5 lg:gap-32 pt-5 flex-row">
             <div className="lg:block hidden">
@@ -59,13 +58,15 @@ const Products = ({items,gender}: { items: Item[],gender:string }) => {
                     </div>
 
                 </div>
-                <ul className="flex flex-row gap-5 mb-10 md:gap-10 flex-wrap mt-5 w-full justify-center items-center md:justify-start">
-                    {products.map((item) => (
-                        <li key={item.itemId}>
-                            <ItemCard item={item}/>
-                        </li>
-                    ))}
-                </ul>
+                <div>
+                    <ul className="flex flex-row gap-5 mb-10 md:gap-10 flex-wrap mt-5 w-full justify-center items-center md:justify-start">
+                        {products.map((item) => (
+                            <li key={item.itemId}>
+                                <ItemCard item={item}/>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
                 {(products.length === 0 && !isLoading) && <EmptyState heading={"Products Not Available!"}/>}
                 {isLoading && <ComponentLoader/>}
                 {error && <EmptyState heading={"An error occurred!"} subHeading={error}/>}

@@ -44,7 +44,7 @@ const Page = async ({params}: { params: { manufacturer: string; brand: string } 
     const brand = params.brand.replace("%20", " ");
     const manufacturer = params.manufacturer.replace("%20", " ");
     try {
-        items = await getItemsByTwoField(manufacturer, brand, "manufacturer", "brand");
+        items = await getItemsByTwoField(manufacturer, brand, "manufacturer", "brand",1,20);
     } catch (e) {
         console.error("Error fetching items:", e);
     }

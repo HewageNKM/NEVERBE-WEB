@@ -40,9 +40,9 @@ const Page = async ({searchParams}: { searchParams: { [key: string]: string } })
 
     try {
         if (gender === "all"){
-            items.push(...await getAllInventoryItems());
+            items.push(...await getAllInventoryItems(1,20));
         } else {
-            items.push(...await getAllInventoryItemsByGender(gender));
+            items.push(...await getAllInventoryItemsByGender(gender,1,20));
         }
     } catch (e) {
         console.error("Error fetching items:", e);

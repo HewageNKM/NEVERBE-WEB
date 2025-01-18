@@ -19,12 +19,12 @@ export const getBrands = async () => {
     }
 }
 
-export const getProducts = async (gender:string) => {
+export const getProducts = async (gender:string,page:number=1,limit:number=20) => {
   try {
       const token = await getIdToken();
       const response = await axios({
           method: 'GET',
-          url: getInventoryURL+"?gender="+gender,
+          url: getInventoryURL+`?gender=${gender}&page=${page}&limit=${limit}`,
           headers: {
               Authorization: `Bearer ${token}`
           }
@@ -35,12 +35,12 @@ export const getProducts = async (gender:string) => {
   }
 }
 
-export const getInventoryByManufacturer = async (name:string) => {
+export const getInventoryByManufacturer = async (name:string,page:number=1,limit:number=20) => {
     try {
         const token = await getIdToken();
         const response = await axios({
             method: 'GET',
-            url: getInventoryURL+`?manufacturer=${name}`,
+            url: getInventoryURL+`?manufacturer=${name}&page=${page}&limit=${limit}`,
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -51,12 +51,12 @@ export const getInventoryByManufacturer = async (name:string) => {
     }
 }
 
-export const getInventoryByTwoFields = async (value1:string,value2:string,field1:string,field2:string) => {
+export const getInventoryByTwoFields = async (value1:string,value2:string,field1:string,field2:string,page:number=1,limit:number=20) => {
     try {
         const token = await getIdToken();
         const response = await axios({
             method: 'GET',
-            url: getInventoryURL+`?${field1}=${value1}&${field2}=${value2}`,
+            url: getInventoryURL+`?${field1}=${value1}&${field2}=${value2}&page=${page}&limit=${limit}`,
             headers: {
                 Authorization: `Bearer ${token}`
             }
