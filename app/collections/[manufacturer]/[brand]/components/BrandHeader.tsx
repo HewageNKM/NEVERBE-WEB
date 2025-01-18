@@ -5,7 +5,7 @@ import {DefaultBG} from "@/assets/images";
 import {useSelector} from "react-redux";
 import {RootState} from "@/redux/store";
 
-const ManufacturerHeader = ({manufacturer, brand}: { manufacturer: string, brand: string }) => {
+const ManufacturerHeader = ({brand}: { brand: string }) => {
     const {products} = useSelector((state: RootState) => state.brandSlice);
     return (
         <section className="flex relative flex-col gap-4 md:text-lg text-sm justify-between w-full">
@@ -21,7 +21,7 @@ const ManufacturerHeader = ({manufacturer, brand}: { manufacturer: string, brand
                 </figure>
                 <div className="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center">
                     <h1 className="text-white text-lg md:text-3xl font-bold"><span
-                        className="capitalize">{manufacturer.toWellFormed()} {brand.toWellFormed()}</span> ({products.length || 0})
+                        className="capitalize">{brand.toWellFormed()}</span> ({products.length || 0})
                     </h1>
                 </div>
             </div>
