@@ -21,7 +21,7 @@ export const adminAuth = admin.auth();
 // Function to add a new order, update inventory, and handle stock checks
 export const addNewOrder = async (order: Order, token: string) => {
     try {
-        console.log("Adding new order:", order.orderId);
+        console.log("Adding new order:", order);
         const res = await verifyCaptchaToken(token);
         if (!res) {
             throw new Error("reCAPTCHA verification failed.");
