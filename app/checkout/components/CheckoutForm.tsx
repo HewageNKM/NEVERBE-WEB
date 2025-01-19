@@ -6,10 +6,9 @@ import PaymentDetails from "@/app/checkout/components/PaymentDetails";
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "@/redux/store";
 import {CartItem, Customer, Order, OrderItem} from "@/interfaces";
-import {paymentMethods} from "@/constants";
 import {clearCart} from "@/redux/cartSlice/cartSlice";
 import {useRouter} from "next/navigation";
-import {calculateFeesAndCharges, calculateSubTotal, generateOrderId} from "@/util";
+import {calculateSubTotal, generateOrderId} from "@/util";
 import {addNewOrder} from "@/actions/orderAction";
 import ComponentLoader from "@/components/ComponentLoader";
 import ReCAPTCHA from "react-google-recaptcha";
@@ -18,7 +17,7 @@ import {auth} from "@/firebase/firebaseClient";
 
 const CheckoutForm = () => {
     const dispatch: AppDispatch = useDispatch();
-    const [paymentType, setPaymentType] = useState("PAYHERE")
+    const [paymentType, setPaymentType] = useState(null)
     const [saveAddress, setSaveAddress] = useState(true)
     const [loading, setLoading] = useState(false)
     const router = useRouter();
@@ -60,7 +59,7 @@ const CheckoutForm = () => {
             orderId = generateOrderId("Website");
 
             const currency = 'LKR';
-            const amount = calculateSubTotal(cartItems);
+            const amount = calculateSubTotal(cartItems)
             const amountFormated = parseFloat(amount).toLocaleString('en-us', {minimumFractionDigits: 2}).replaceAll(',', '');
             const hash = md5(merchantId + orderId + amountFormated + currency + hashedSecret).toString().toUpperCase();
 
@@ -101,14 +100,13 @@ const CheckoutForm = () => {
             }
 
             document.body.appendChild(submitForm);
-            const feesAndCharges = calculateFeesAndCharges(cartItems);
             const newOrder: Order = {
                 userId: userId,
-                feesAndCharges: feesAndCharges,
+                feesAndCharges: 0,
                 from: "Website",
                 items: cartItems as OrderItem[],
                 orderId: orderId,
-                paymentId: "",
+                paymentId: null,
                 paymentStatus: "Pending",
                 paymentMethod: "",
                 customer: customer,
@@ -131,17 +129,21 @@ const CheckoutForm = () => {
             setCustomer(newCustomer)
             if (cartItems.length !== 0) {
                 if (paymentType == "PAYHERE") {
-                    newOrder.paymentMethod = paymentMethods.PAYHERE;
+                    newOrder.paymentMethod = paymentType;
+                    console.log(newOrder)
                     await addNewOrder(newOrder, captchaValue);
                     dispatch(clearCart())
                     setLoading(false)
-                    saveAddressToLocalStorage()
                     submitForm.submit();
                 } else if (paymentType == "COD") {
-                    // Upcoming feature
-                } else if("KOKO"){
-                    // Upcoming feature
-                }else {
+                    newOrder.paymentMethod = paymentType;
+                    console.log(newOrder)
+                    await addNewOrder(newOrder, captchaValue);
+                    dispatch(clearCart())
+                    router.replace("/checkout/success?order_id=" + orderId)
+                } else if ("KOKO") {
+                    // Implement KOKO payment method
+                } else {
                     new Error("Payment type not found")
                 }
             } else {
@@ -163,14 +165,6 @@ const CheckoutForm = () => {
         }
     }, []);
 
-    const getTotal = async () => {
-        let total = 0;
-        cartItems.forEach((item: CartItem) => {
-            total += item.price * item.quantity;
-        })
-        return total
-    }
-
     const saveAddressToLocalStorage = () => {
         if (saveAddress) {
             window.localStorage.setItem("neverbeCustomer", JSON.stringify(customer))
@@ -185,7 +179,8 @@ const CheckoutForm = () => {
                 <AddressDetails saveAddress={saveAddress} setSaveAddress={setSaveAddress} customer={customer}/>
                 <PaymentDetails setPaymentType={setPaymentType} paymentType={paymentType} captchaError={captchaError}
                                 setCaptchaError={setCaptchaError} setCaptchaValue={setCaptchaValue}
-                                recaptchaRef={recaptchaRef}/>
+                                recaptchaRef={recaptchaRef}
+                />
             </form>
             {loading && <ComponentLoader/>}
         </div>

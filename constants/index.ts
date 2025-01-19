@@ -311,14 +311,6 @@ export const payHere = {
     payHereLink: "https://www.payhere.lk/"
 
 }
-export const PayHereFee = 3.3;
-export const paymentOptions = [
-    {
-        name: "PAYHERE",
-        value: "PAYHERE",
-        image: payHere.squareBannerBlue,
-        description: null
-    }]
 export const contactInfo = [
     {
         icon: MdEmail,

@@ -1,7 +1,6 @@
 import admin, {credential} from 'firebase-admin';
-import {Item, Message, Order, Review, Slide} from "@/interfaces";
+import {Item, Message, Order, PaymentMethod, Review, Slide} from "@/interfaces";
 import axios from "axios";
-import Redis from "ioredis";
 
 // Initialize Firebase Admin SDK if it hasn't been initialized already
 if (!admin.apps.length) {
@@ -132,7 +131,7 @@ export const getOrderById = async (orderId: string) => {
 };
 
 // Function to get all items in inventory
-export const getAllInventoryItems = async (page:number,limit:number) => {
+export const getAllInventoryItems = async (page: number, limit: number) => {
     try {
         console.log("Fetching all inventory items.");
         const offSet = (page - 1) * limit;
@@ -150,7 +149,7 @@ export const getAllInventoryItems = async (page:number,limit:number) => {
 };
 
 // Function to get all items in inventory
-export const getAllInventoryItemsByGender = async (gender: string,page:number,limit:number) => {
+export const getAllInventoryItemsByGender = async (gender: string, page: number, limit: number) => {
     try {
         const offSet = (page - 1) * limit;
         console.log(`Fetching all inventory items by ${gender}`);
@@ -265,7 +264,7 @@ export const getItemById = async (itemId: string) => {
 };
 
 // Functions for querying items by custom fields
-export const getItemsByField = async (name: string, fieldName: string,page:number,limit:number) => {
+export const getItemsByField = async (name: string, fieldName: string, page: number, limit: number) => {
     try {
         console.log(`Fetching items where ${fieldName} == ${name}`);
         const offSet = (page - 1) * limit;
@@ -287,13 +286,13 @@ export const getItemsByField = async (name: string, fieldName: string,page:numbe
     }
 };
 
-export const getItemsByTwoField = async (firstValue: string, secondValue: string, firstFieldName: string, secondFieldName: string,page:number,limit:number) => {
+export const getItemsByTwoField = async (firstValue: string, secondValue: string, firstFieldName: string, secondFieldName: string, page: number, limit: number) => {
     try {
         const offSet = (page - 1) * limit;
         console.log(`Fetching items where ${firstFieldName} == ${firstValue} and ${secondFieldName} == ${secondValue}`);
         if (secondValue == "all") {
             console.log(`Fetching items where ${firstFieldName} == ${firstValue}`);
-            return getItemsByField(firstValue, firstFieldName,page,limit);
+            return getItemsByField(firstValue, firstFieldName, page, limit);
         }
         const docs = await adminFirestore.collection('inventory').where(firstFieldName, '==', firstValue).where(secondFieldName, '==', secondValue).where("listing", "==", "Active").where("status", "==", "Active").offset(offSet).limit(limit).get();
         const items: Item[] = [];
@@ -569,4 +568,23 @@ export const getBrandsFromInventory = async () => {
         throw error;
     }
 };
+
+export const getPaymentMethods = async () => {
+    try {
+        console.log("Fetching payment methods.");
+        const snapshot = await adminFirestore.collection('paymentMethods').where("status","==","Active").where("available","array-contains","Website").get();
+        const methods = snapshot.docs.map(doc => {
+            return {
+                ...doc.data(),
+                createdAt: doc.data().createdAt.toDate().toLocaleString(),
+                updatedAt: doc.data().updatedAt.toDate().toLocaleString(),
+            } as PaymentMethod
+        });
+        console.log("Payment methods fetched successfully.");
+        return methods;
+    } catch (e) {
+        console.error("Error fetching payment methods:", e);
+        throw e;
+    }
+}
 

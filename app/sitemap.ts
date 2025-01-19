@@ -3,7 +3,7 @@ import { getAllInventoryItems, getBrandsFromInventory } from "@/firebase/firebas
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
-    const items = await getAllInventoryItems();
+    const items = await getAllInventoryItems(1,9999);
 
     const allProducts = items.map((item) => ({
         url: `${process.env.NEXT_PUBLIC_BASE_URL}/collections/products/${item.itemId}`,
@@ -79,7 +79,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         {
             url: 'https://neverbe.lk/contact',
             lastModified: new Date(),
-            priority: 0.1,
+            priority: 0.3,
         },
     ];
 }

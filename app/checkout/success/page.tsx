@@ -28,7 +28,7 @@ const Page = async ({ searchParams }: { searchParams: { order_id: string } }) =>
                         <input
                             value={order?.orderId}
                             readOnly
-                            className="mt-2 w-fit p-2 text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:border-blue-500"
+                            className="mt-2 w-fit p-2 text-center uppercase text-gray-900 bg-gray-100 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:border-blue-500"
                         />
                     </label>
                     <h3 className="text-2xl font-bold text-green-600 mt-4">
@@ -40,7 +40,7 @@ const Page = async ({ searchParams }: { searchParams: { order_id: string } }) =>
                 </div>
 
                 {/* Back to Home Link */}
-                <Link href="/public" className="mt-6 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all text-lg">
+                <Link href="/" className="mt-6 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all text-lg">
                     Go Back Home
                 </Link>
             </div>

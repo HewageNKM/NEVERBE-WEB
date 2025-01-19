@@ -2,13 +2,11 @@
 import React from 'react';
 import {useSelector} from "react-redux";
 import {RootState} from "@/redux/store";
-import Image from "next/image";
 import {IoLockClosed} from "react-icons/io5";
-import {paymentOptions} from "@/constants";
 import CartItemCard from "@/components/CartItemCard";
 import ReCAPTCHA from "react-google-recaptcha";
-import {calculateFeesAndCharges, calculateShipping, calculateSubTotal} from "@/util";
-import {CartItem} from "@/interfaces";
+import {calculateSubTotal} from "@/util";
+import PaymentOptions from "@/app/checkout/components/PaymentOptions";
 
 const PaymentDetails = ({
                             setPaymentType,
@@ -16,7 +14,7 @@ const PaymentDetails = ({
                             captchaError,
                             setCaptchaError,
                             setCaptchaValue,
-                            recaptchaRef
+                            recaptchaRef,
                         }: {
     setPaymentType: React.Dispatch<React.SetStateAction<string>>;
     paymentType: string;
@@ -24,7 +22,6 @@ const PaymentDetails = ({
     setCaptchaValue: React.Dispatch<React.SetStateAction<string | null>>;
     setCaptchaError: React.Dispatch<React.SetStateAction<boolean>>;
     captchaError: boolean;
-
 }) => {
     const cartItems = useSelector((state: RootState) => state.cartSlice.cart);
 
@@ -46,9 +43,6 @@ const PaymentDetails = ({
             <div className="mt-8 w-full flex flex-col items-end text-lg">
                 <h3>Total Items: {cartItems.length}</h3>
                 <div className="mt-4 flex flex-col font-medium items-end space-y-2 text-lg">
-                    <h3 className="lg:text-xl text-lg">
-                        shipping and charges: Rs. {calculateFeesAndCharges(cartItems).toFixed(2)}
-                    </h3>
                     <h3 className="md:text-xl text-lg ">
                         Total:
                         Rs. {calculateTotal().toFixed(2)}
@@ -61,44 +55,16 @@ const PaymentDetails = ({
                         "w-full border-b-2 border-gray-300"
                     }/>
                     <div className={"w-full border-b-2 border-gray-300"}/>
+                    <h4
+                        className={"text-sm text-red-500 font-medium capitalize text-center w-full"}>
+                        ** Pay For Shipping Charges at the time of delivery **
+                    </h4>
                 </div>
             </div>
 
             <div className="mt-10 w-full">
                 <h2 className="text-xl md:text-2xl font-bold tracking-wide">Payment Method</h2>
-                <ul className="mt-5 flex flex-col gap-6">
-                    {paymentOptions.map((option, index) => (
-                        <li
-                            key={index}
-                            className="flex items-center gap-4 p-4 border rounded-lg shadow-sm transition-all hover:shadow-md hover:bg-gray-50 cursor-pointer"
-                        >
-                            <input
-                                defaultChecked={option.value === paymentType}
-                                type="radio"
-                                name="payment"
-                                value={option.value}
-                                onChange={() => setPaymentType(option.value)}
-                                className="form-radio h-5 w-5 text-primary focus:ring-primary"
-                            />
-                            <div className="flex flex-col">
-                                {option.image ? (
-                                    <Image
-                                        src={option.image}
-                                        alt={option.name}
-                                        width={150}
-                                        height={50}
-                                        className="object-contain"
-                                    />
-                                ) : (
-                                    <span className="text-lg font-semibold text-gray-700">{option.name}</span>
-                                )}
-                                {option.description && (
-                                    <p className="text-gray-600 text-sm mt-1">{option.description}</p>
-                                )}
-                            </div>
-                        </li>
-                    ))}
-                </ul>
+                <PaymentOptions paymentType={paymentType} setPaymentType={setPaymentType}/>
             </div>
 
             <div className="mt-8 text-sm text-center text-gray-600 w-full">
@@ -129,7 +95,7 @@ const PaymentDetails = ({
             </div>
             <div className="w-full mt-5">
                 <button
-                    disabled={cartItems.length === 0}
+                    disabled={cartItems.length === 0 || !paymentType}
                     type="submit"
                     className={`w-full flex items-center justify-center gap-2 bg-primary text-white text-xl py-3 rounded-lg transition-all duration-300 ${
                         cartItems.length === 0 ? "bg-opacity-50 cursor-not-allowed" : "hover:bg-primary-dark"

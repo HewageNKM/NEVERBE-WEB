@@ -6,7 +6,16 @@ export interface Message {
     name: string;
     message: string;
 }
+export interface PaymentMethod{
+    paymentId: string;
+    name: string;
+    fee:number,
+    status: "Active" | "Inactive";
+    available: string[];
 
+    createdAt: Timestamp | string;
+    updatedAt: Timestamp | string;
+}
 export interface Review {
     reviewId: string;
     itemId: string;
@@ -16,13 +25,6 @@ export interface Review {
     userName: string;
     createdAt: Timestamp | string;
     updatedAt: Timestamp | string;
-}
-
-export interface Brand {
-    name: string; // Manufacturer name, e.g., "Nike"
-    value: string; // Manufacturer key, e.g., "nike"
-    url: string; // URL to the manufacturer's main page
-    types: Type[]; // Array of types (e.g., Shoes, Sandals, Accessories) grouped under this manufacturer
 }
 
 export interface Type {
@@ -35,7 +37,6 @@ export interface Title {
     name: string; // Brand title name, e.g., "Running Shoes"
     url: string; // URL to this specific title's page
 }
-
 
 export interface Item {
     itemId: string,
@@ -120,10 +121,10 @@ export interface Order {
     paymentId: string,
     items: OrderItem[],
     paymentStatus: string,
-    feesAndCharges: number,
     paymentMethod: string,
     customer: Customer,
     from: string,
+
     createdAt: Timestamp | string,
     updatedAt: Timestamp | string,
 }
