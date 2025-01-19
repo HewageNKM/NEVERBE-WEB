@@ -112,8 +112,8 @@ const CheckoutForm = () => {
                 paymentStatus: "Pending",
                 paymentMethod: "",
                 customer: customer,
-                updatedAt: new Date().toLocaleString(),
-                createdAt: new Date().toLocaleString(),
+                updatedAt: new Date().toISOString(),
+                createdAt: new Date().toISOString(),
             }
 
             const newCustomer: Customer = {
@@ -124,8 +124,8 @@ const CheckoutForm = () => {
                 id: window.crypto.randomUUID().toLowerCase(),
                 name: evt.target.first_name.value + " " + evt.target.last_name.value,
                 phone: evt.target.phone.value,
-                createdAt: new Date().toLocaleString(),
-                updatedAt: new Date().toLocaleString()
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
             }
             newOrder.customer = newCustomer;
             setCustomer(newCustomer)

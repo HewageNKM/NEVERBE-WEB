@@ -67,8 +67,8 @@ const Reviews = ({itemId}: { itemId: string }) => {
                 rating: rating,
                 itemId: itemId,
                 review: review,
-                updatedAt: new Date().toLocaleString(),
-                createdAt: new Date().toLocaleString(),
+                updatedAt: new Date().toISOString(),
+                createdAt: new Date().toISOString(),
                 userId: userId,
                 userName: name
             }
