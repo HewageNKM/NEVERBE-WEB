@@ -1,6 +1,7 @@
 import admin, {credential} from 'firebase-admin';
 import {Item, Message, Order, Review, Slide} from "@/interfaces";
 import axios from "axios";
+import Redis from "ioredis";
 
 // Initialize Firebase Admin SDK if it hasn't been initialized already
 if (!admin.apps.length) {
@@ -76,20 +77,15 @@ export const addNewOrder = async (order: Order, token: string) => {
 
             // Add the order to the `orders` collection
             const orderRef = adminFirestore.collection('orders').doc(order.orderId);
-            const formatDate = (date) => {
-                const parsedDate = new Date(date);
-                return isNaN(parsedDate.getTime()) ? null : parsedDate;
-            };
-
             transaction.set(orderRef, {
                 ...order,
                 customer: {
                     ...order.customer,
-                    createdAt: admin.firestore.Timestamp.fromDate(formatDate(order.customer.createdAt)),
-                    updatedAt: admin.firestore.Timestamp.fromDate(formatDate(order.customer.updatedAt)),
+                    createdAt: admin.firestore.Timestamp.fromDate(new Date(order.customer.createdAt)),
+                    updatedAt: admin.firestore.Timestamp.fromDate(new Date(order.customer.updatedAt)),
                 },
-                createdAt: admin.firestore.Timestamp.fromDate(formatDate(order.createdAt)),
-                updatedAt: admin.firestore.Timestamp.fromDate(formatDate(order.updatedAt)),
+                createdAt: admin.firestore.Timestamp.fromDate(new Date(order.createdAt)),
+                updatedAt: admin.firestore.Timestamp.fromDate(new Date(order.updatedAt)),
             });
 
             console.log("Order queued for creation.");
@@ -136,7 +132,7 @@ export const getOrderById = async (orderId: string) => {
 };
 
 // Function to get all items in inventory
-export const getAllInventoryItems = async (page: number, limit: number) => {
+export const getAllInventoryItems = async (page:number,limit:number) => {
     try {
         console.log("Fetching all inventory items.");
         const offSet = (page - 1) * limit;
@@ -154,7 +150,7 @@ export const getAllInventoryItems = async (page: number, limit: number) => {
 };
 
 // Function to get all items in inventory
-export const getAllInventoryItemsByGender = async (gender: string, page: number, limit: number) => {
+export const getAllInventoryItemsByGender = async (gender: string,page:number,limit:number) => {
     try {
         const offSet = (page - 1) * limit;
         console.log(`Fetching all inventory items by ${gender}`);
@@ -269,7 +265,7 @@ export const getItemById = async (itemId: string) => {
 };
 
 // Functions for querying items by custom fields
-export const getItemsByField = async (name: string, fieldName: string, page: number, limit: number) => {
+export const getItemsByField = async (name: string, fieldName: string,page:number,limit:number) => {
     try {
         console.log(`Fetching items where ${fieldName} == ${name}`);
         const offSet = (page - 1) * limit;
@@ -291,13 +287,13 @@ export const getItemsByField = async (name: string, fieldName: string, page: num
     }
 };
 
-export const getItemsByTwoField = async (firstValue: string, secondValue: string, firstFieldName: string, secondFieldName: string, page: number, limit: number) => {
+export const getItemsByTwoField = async (firstValue: string, secondValue: string, firstFieldName: string, secondFieldName: string,page:number,limit:number) => {
     try {
         const offSet = (page - 1) * limit;
         console.log(`Fetching items where ${firstFieldName} == ${firstValue} and ${secondFieldName} == ${secondValue}`);
         if (secondValue == "all") {
             console.log(`Fetching items where ${firstFieldName} == ${firstValue}`);
-            return getItemsByField(firstValue, firstFieldName, page, limit);
+            return getItemsByField(firstValue, firstFieldName,page,limit);
         }
         const docs = await adminFirestore.collection('inventory').where(firstFieldName, '==', firstValue).where(secondFieldName, '==', secondValue).where("listing", "==", "Active").where("status", "==", "Active").offset(offSet).limit(limit).get();
         const items: Item[] = [];
@@ -395,14 +391,10 @@ export const addNewReview = async (review: Review, token: string) => {
             throw new Error("reCAPTCHA verification failed.");
         }
         console.log("Adding new review:", review.reviewId);
-        const formatDate = (date) => {
-            const parsedDate = new Date(date);
-            return isNaN(parsedDate.getTime()) ? null : parsedDate;
-        };
         return await adminFirestore.collection('reviews').doc(review.reviewId).set({
             ...review,
-            createdAt: admin.firestore.Timestamp.fromDate(formatDate(review.createdAt)),
-            updatedAt: admin.firestore.Timestamp.fromDate(formatDate(review.updatedAt)),
+            createdAt: admin.firestore.Timestamp.fromDate(new Date(review.createdAt)),
+            updatedAt: admin.firestore.Timestamp.fromDate(new Date(review.updatedAt)),
         });
     } catch (e) {
         console.log(e)
