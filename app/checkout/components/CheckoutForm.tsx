@@ -12,7 +12,7 @@ import {calculateSubTotal, generateOrderId} from "@/util";
 import {addNewOrder} from "@/actions/orderAction";
 import ComponentLoader from "@/components/ComponentLoader";
 import ReCAPTCHA from "react-google-recaptcha";
-import {auth} from "@/firebase/firebaseClient";
+import {signUser} from "@/firebase/firebaseClient";
 
 
 const CheckoutForm = () => {
@@ -21,6 +21,7 @@ const CheckoutForm = () => {
     const [saveAddress, setSaveAddress] = useState(true)
     const [loading, setLoading] = useState(false)
     const router = useRouter();
+    const user = useSelector((state: RootState) => state.authSlice.user);
 
     const [captchaValue, setCaptchaValue] = useState<string | null>(null);
     const [captchaError, setCaptchaError] = useState(false);
@@ -40,6 +41,7 @@ const CheckoutForm = () => {
     const cartItems: CartItem[] = useSelector((state: RootState) => state.cartSlice.cart);
     const onPaymentFormSubmit = async (evt: any) => {
         let orderId = "";
+
         try {
             setLoading(true)
             evt.preventDefault()
@@ -49,7 +51,14 @@ const CheckoutForm = () => {
                 setLoading(false)
                 return;
             }
-            const userId = auth.currentUser?.uid || null;
+
+            let userId = user?.uid || null;
+
+            if (!user) {
+                const usr = await signUser();
+                userId = usr?.uid;
+            }
+
             const form = evt.target;
             const formData = new FormData(form);
             const merchantSecret = process.env.NEXT_PUBLIC_IPG_MERCHANT_SECRET;

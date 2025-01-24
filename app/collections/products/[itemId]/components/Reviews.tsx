@@ -106,7 +106,6 @@ const Reviews = ({itemId}: { itemId: string }) => {
                 isUserReviewed: res.isUserReviewed,
                 userReview: res.userReview
             })
-            console.log("Reviews: ", res);
             setReviewReport(res);
         } catch (e) {
             console.error("Failed to fetch reviews: ", e);
