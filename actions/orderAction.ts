@@ -13,7 +13,6 @@ export const addNewOrder = async (newOrder: Order, captchaToken: string) => {
             headers: {
                 "Authorization": `Bearer ${token}`,
                 'Content-Type': 'application/json',
-                "Origin": "https://www.neverbe.lk"
             }
         });
     } catch (e) {

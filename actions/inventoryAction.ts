@@ -18,9 +18,6 @@ export const getProducts = async (gender: string, page: number = 1, limit: numbe
         const response = await axios({
             method: 'GET',
             url: getInventoryURL + `?gender=${gender}&page=${page}&limit=${limit}`,
-            headers:{
-                "Origin": "https://www.neverbe.lk"
-            }
         });
         return response.data;
     } catch (e) {
@@ -33,9 +30,6 @@ export const getInventoryByManufacturer = async (name: string, page: number = 1,
         const response = await axios({
             method: 'GET',
             url: getInventoryURL + `?manufacturer=${name}&page=${page}&limit=${limit}`,
-            headers:{
-                "Origin": "https://www.neverbe.lk"
-            }
         });
         return response.data;
     } catch (e) {
@@ -48,9 +42,6 @@ export const getInventoryByTwoFields = async (value1: string, value2: string, fi
         const response = await axios({
             method: 'GET',
             url: getInventoryURL + `?${field1}=${value1}&${field2}=${value2}&page=${page}&limit=${limit}`,
-            headers:{
-                "Origin": "https://www.neverbe.lk"
-            }
         });
         return response.data;
     } catch (e) {

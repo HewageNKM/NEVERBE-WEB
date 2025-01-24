@@ -6,9 +6,6 @@ export const getWebsitePaymentMethods = async () => {
         const response = await axios({
             method: 'GET',
             url: getPaymentMethodsURL,
-            headers: {
-                "Origin": "https://www.neverbe.lk"
-            }
         });
         return response.data;
     } catch (e) {

@@ -9,9 +9,6 @@ export const getAllReviewsById = async (itemId: string) => {
         const res = await axios({
             method: 'GET',
             url: reviewsURL+'?itemId=' + itemId+"&userId="+uid,
-            headers:{
-                "Origin": "https://www.neverbe.lk"
-            }
         });
         return res.data;
     } catch (e) {
@@ -23,9 +20,6 @@ export const addNewReview = async (review: Review, recaptchaToken: string) => {
         const res = await axios({
             method: 'POST',
             url: reviewsURL+'?recaptchaToken=' + recaptchaToken,
-            headers:{
-                "Origin": "https://www.neverbe.lk"
-            },
             data: review,
         });
         return res.data;
@@ -39,9 +33,6 @@ export const deleteReview = async (reviewId: string) => {
         const res = await axios({
             method: 'DELETE',
             url: reviewsURL+`/${reviewId}`,
-            headers:{
-                "Origin": "https://www.neverbe.lk"
-            }
         });
         return res.data;
     } catch (e) {
