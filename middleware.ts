@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 
-export function middleware(req:Request,res:Response) {
+export function middleware(req:Request) {
     const origin = req.headers.get('origin');
 
     if (!origin) {
