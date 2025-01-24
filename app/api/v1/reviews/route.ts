@@ -3,8 +3,6 @@ import {addNewReview, getReviewByItemId, verifyToken} from "@/firebase/firebaseA
 
 export async function GET(req: Request) {
     try {
-        const idToken = await verifyToken(req);
-        console.log("Token Verified: " + idToken.uid)
         const url = new URL(req.url);
         const itemId = url.searchParams.get('itemId');
         const userId = url.searchParams.get('userId');

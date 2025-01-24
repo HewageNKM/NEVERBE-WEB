@@ -16,7 +16,7 @@ const ReviewCard = ({ review, userReviewId, onDelete }: {
         setShowFullReview(!showFullReview);
     };
 
-    const isLongReview = review.review.split(' ').length > 20;
+    const isLongReview = review?.review?.split(' ').length > 20;
 
     return (
         <div
@@ -49,7 +49,7 @@ const ReviewCard = ({ review, userReviewId, onDelete }: {
             {/* Review Content */}
             <div className="mt-4">
                 <p className="text-center text-sm text-gray-700 font-medium leading-relaxed">
-                    {showFullReview || !isLongReview ? review.review : review.review.split(' ').slice(0, 10).join(' ') + '...'}
+                    {showFullReview || !isLongReview ? review?.review : review?.review?.split(' ').slice(0, 10).join(' ') + '...'}
                 </p>
                 {isLongReview && (
                     <div className="flex justify-center items-center">

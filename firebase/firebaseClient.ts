@@ -28,15 +28,9 @@ isSupported().then((supported) => {
 });
 
 export const signUser = async () => {
-    onAuthStateChanged(auth, async (user) => {
-        if (user) {
-            const uid = user.uid;
-            console.log("User Exists: " + uid);
-        } else {
-            const user = await signInAnonymously(auth);
-            console.log("New User Logged: " + user.user.uid);
-        }
-    });
+    let user = await signInAnonymously(auth);
+    console.log("User Signed In: ", user.user.uid);
+    return user.user
 };
 
 export const getIdToken = async () => {

@@ -10,34 +10,38 @@ import {sortingOptions} from "@/constants";
 import {FiFilter} from "react-icons/fi";
 import ComponentLoader from "@/components/ComponentLoader";
 import BrandFilter from "@/app/collections/[manufacturer]/[brand]/components/BrandFilter";
-import {getItemsByTwoField, setProducts, setSelectedSort, toggleFilter} from "@/redux/brandSlice/brandSlice";
+import {getItemsByTwoField, setPage, setProducts, setSelectedSort, toggleFilter} from "@/redux/brandSlice/brandSlice";
 import Pagination from "@mui/material/Pagination";
-import {setPage} from "@/redux/brandSlice/brandSlice";
 
-const BrandProducts = ({items,manufacturer,brand}: { items: Item[],manufacturer:string, brand:string}) => {
+const BrandProducts = ({items, manufacturer, brand}: { items: Item[], manufacturer: string, brand: string }) => {
     const dispatch: AppDispatch = useDispatch();
-    const {user} = useSelector((state: RootState) => state.authSlice);
-    const {products, selectedSort, isLoading, error,page,size} = useSelector((state: RootState) => state.brandSlice);
+    const {products, selectedSort, isLoading, error, page, size} = useSelector((state: RootState) => state.brandSlice);
 
     useEffect(() => {
-        if(manufacturer && brand){
-            window.localStorage.setItem('manufacturer',manufacturer);
-            window.localStorage.setItem('brand',brand);
+        if (manufacturer && brand) {
+            window.localStorage.setItem('manufacturer', manufacturer);
+            window.localStorage.setItem('brand', brand);
 
             dispatch(setProducts(items));
         }
-    }, [manufacturer,brand]);
+    }, [manufacturer, brand]);
 
     useEffect(() => {
-        if(user){
-            dispatch(getItemsByTwoField({value1:manufacturer,value2:brand,field1:"manufacturer",field2:"brand",page,size}));
-        }
-    }, [user,page,size,selectedSort,dispatch]);
+
+        dispatch(getItemsByTwoField({
+            value1: manufacturer,
+            value2: brand,
+            field1: "manufacturer",
+            field2: "brand",
+            page,
+            size
+        }));
+    }, [page, size, selectedSort, dispatch]);
 
     return (
         <section className="w-full flex lg:grid lg:grid-cols-5 lg:gap-32 pt-5 flex-row">
             <div className="lg:block hidden p-2 md:p-4">
-                <BrandFilter />
+                <BrandFilter/>
             </div>
             <div className="col-span-4 w-full relative p-4">
                 <div className="flex-row flex gap-2 lg:justify-end justify-between items-center">

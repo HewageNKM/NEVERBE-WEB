@@ -17,7 +17,6 @@ const ManufacturerFilter = ({manufacturer}: { manufacturer: string }) => {
         selectedType,
         page,size
     } = useSelector((state: RootState) => state.manufacturerSlice);
-    const {user} = useSelector((state: RootState) => state.authSlice);
     const dispatch: AppDispatch = useDispatch();
 
 
@@ -30,10 +29,10 @@ const ManufacturerFilter = ({manufacturer}: { manufacturer: string }) => {
     }
 
     useEffect(() => {
-        if (user && manufacturer) {
+        if (manufacturer) {
             dispatch(getItemsByManufacturer({name:manufacturer,page,size}));
         }
-    }, [selectedType, selectedSizes, dispatch, user, manufacturer]);
+    }, [selectedType, selectedSizes, dispatch, manufacturer]);
 
 
     return (

@@ -8,7 +8,7 @@ import {AnimatePresence} from "framer-motion";
 import Cart from "@/components/Cart";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import {onAuthStateChanged, signInAnonymously} from "firebase/auth";
+import {onAuthStateChanged} from "firebase/auth";
 import {setUser} from "@/redux/authSlice/authSlice";
 import Menu from "@/components/Menu";
 
@@ -24,9 +24,7 @@ const GlobalProvider = ({children}: { children: ReactNode }) => {
                 dispatch(setUser(user));
                 console.log("User Logged In");
             } else {
-                const user = await signInAnonymously(auth);
-                dispatch(setUser(user));
-                console.log("New User Logged In");
+                console.log("No User Logged In");
             }
         });
         dispatch(initializeCart())

@@ -9,9 +9,6 @@ import {
 
 export async function GET(req: Request) {
     try {
-        const idToken = await verifyToken(req);
-        console.log("Token Verified: " + idToken.uid)
-
         const url = new URL(req.url);
         const manufacturer = url.searchParams.get('manufacturer');
         const brand = url.searchParams.get('brand');

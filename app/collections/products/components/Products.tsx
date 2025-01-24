@@ -15,8 +15,14 @@ import ComponentLoader from "@/components/ComponentLoader";
 
 const Products = ({items, gender}: { items: Item[], gender: string }) => {
     const dispatch: AppDispatch = useDispatch();
-    const {user} = useSelector((state: RootState) => state.authSlice);
-    const {products, isLoading, error, selectedSort, page,size} = useSelector((state: RootState) => state.productsSlice);
+    const {
+        products,
+        isLoading,
+        error,
+        selectedSort,
+        page,
+        size
+    } = useSelector((state: RootState) => state.productsSlice);
 
 
     useEffect(() => {
@@ -25,10 +31,8 @@ const Products = ({items, gender}: { items: Item[], gender: string }) => {
     }, [dispatch, items, gender]);
 
     useEffect(() => {
-        if (user) {
-            dispatch(getInventory({gender, page,size}));
-        }
-    }, [selectedSort, user, page, dispatch,size]);
+        dispatch(getInventory({gender, page, size}));
+    }, [selectedSort, page, dispatch, size]);
 
     return (
         <section className="w-full flex lg:grid lg:grid-cols-5 lg:gap-32 pt-5 flex-row">

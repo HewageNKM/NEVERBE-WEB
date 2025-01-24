@@ -19,9 +19,9 @@ const ProductsFilter = ({gender}: { gender: string }) => {
         selectedSizes,
         selectedType,
         selectedManufacturers,
-        page
+        page,
+        size
     } = useSelector((state: RootState) => state.productsSlice);
-    const {user} = useSelector((state: RootState) => state.authSlice);
     const [brands, setBrands] = useState([])
     const [isBrandsLoading, setIsBrandsLoading] = useState(true);
     const dispatch: AppDispatch = useDispatch();
@@ -54,16 +54,12 @@ const ProductsFilter = ({gender}: { gender: string }) => {
     }
 
     useEffect(() => {
-        if (user) {
-            dispatch(getInventory({gender, page}));
-        }
-    }, [selectedManufacturers, selectedType, selectedSizes, dispatch, user]);
+        dispatch(getInventory({gender, page,size}));
+    }, [selectedManufacturers, selectedType, selectedSizes, dispatch]);
 
     useEffect(() => {
-        if (user) {
-            fetchBrand();
-        }
-    }, [user]);
+        fetchBrand();
+    }, []);
 
     return (
         <section className="flex justify-start items-start border-r-2 w-fit h-full overflow-auto hide-scrollbar">

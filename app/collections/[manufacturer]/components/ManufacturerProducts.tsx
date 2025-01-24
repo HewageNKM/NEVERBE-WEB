@@ -5,31 +5,40 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "@/redux/store";
 import EmptyState from "@/components/EmptyState";
 import {Item} from '@/interfaces';
-import {setProducts, setSelectedSort, toggleFilter,getItemsByManufacturer} from "@/redux/manufacturerSlice/manufacturerSlice";
+import {
+    getItemsByManufacturer,
+    setPage,
+    setProducts,
+    setSelectedSort,
+    toggleFilter
+} from "@/redux/manufacturerSlice/manufacturerSlice";
 import {IoFilter} from "react-icons/io5";
 import {sortingOptions} from "@/constants";
 import {FiFilter} from "react-icons/fi";
 import ManufacturerFilter from "@/app/collections/[manufacturer]/components/ManufacturerFilter";
 import ComponentLoader from "@/components/ComponentLoader";
 import Pagination from "@mui/material/Pagination";
-import {setPage} from "@/redux/manufacturerSlice/manufacturerSlice";
 
 const Products = ({items, manufacturer}: { items: Item[], manufacturer: string }) => {
     const dispatch: AppDispatch = useDispatch();
-    const {user} = useSelector((state: RootState) => state.authSlice);
-    const {products, selectedSort, isLoading, error,page,size} = useSelector((state: RootState) => state.manufacturerSlice);
+    const {
+        products,
+        selectedSort,
+        isLoading,
+        error,
+        page,
+        size
+    } = useSelector((state: RootState) => state.manufacturerSlice);
 
 
     useEffect(() => {
         window.localStorage.setItem("manufacturer", manufacturer);
         dispatch(setProducts(items));
-    }, [dispatch, items,manufacturer]);
+    }, [dispatch, items, manufacturer]);
 
     useEffect(() => {
-        if(user){
-            dispatch(getItemsByManufacturer({name:manufacturer,page,size}));
-        }
-    }, [user,page,selectedSort,dispatch,size]);
+        dispatch(getItemsByManufacturer({name: manufacturer, page, size}));
+    }, [page, selectedSort, dispatch, size]);
 
     return (
         <section className="w-full flex lg:grid lg:grid-cols-5 lg:gap-32 pt-5 flex-row">
@@ -88,7 +97,3 @@ const Products = ({items, manufacturer}: { items: Item[], manufacturer: string }
 };
 
 export default Products;
-function getInventoryByManufacturer(arg0: { manufacturer: string; page: number; 20: any; }): any {
-    throw new Error('Function not implemented.');
-}
-

@@ -12,6 +12,7 @@ import {Review} from "@/interfaces";
 import ReviewCard from "./ReviewCard";
 import DropShadow from "@/components/DropShadow";
 import {AnimatePresence, motion} from "framer-motion";
+import {signUser} from "@/firebase/firebaseClient";
 
 
 const Reviews = ({itemId}: { itemId: string }) => {
@@ -60,7 +61,12 @@ const Reviews = ({itemId}: { itemId: string }) => {
             const formData = new FormData(evt.target);
             const name = formData.get("name") as string || "Anonymous";
             const review = formData.get("review") as string;
-            const userId = user?.uid;
+            let userId = user?.uid;
+
+            if(!user){
+                const usr = await signUser();
+                userId = usr.uid;
+            }
 
             const newReview: Review = {
                 reviewId: "rev-" + Math.random().toString(36).substring(2, 9),
@@ -110,9 +116,7 @@ const Reviews = ({itemId}: { itemId: string }) => {
     }
 
     useEffect(() => {
-        if (user) {
-            fetchReviews();
-        }
+        fetchReviews();
     }, [user]);
 
     return (
@@ -122,12 +126,11 @@ const Reviews = ({itemId}: { itemId: string }) => {
                     Reviews ({reviewReport.totalReviews})
                 </h2>
                 <button
-                    disabled={reviewReport.isUserReviewed || isProcessing || !user}
+                    disabled={reviewReport.isUserReviewed || isProcessing}
                     onClick={handleAddReviewClick}
                     className="text-white md:text-sm text-xs md:px-4 px-2 py-1  disabled:cursor-not-allowed disabled:bg-opacity-60 md:py-2 rounded-md shadow-md bg-primary-100 hover:bg-primary-200"
                 >
                     {reviewReport.isUserReviewed ? "Already Reviewed" : "Add Review"}
-                    {!user && " (User Loading)"}
                 </button>
             </div>
             <div className="w-full pt-10">
@@ -204,7 +207,8 @@ const Reviews = ({itemId}: { itemId: string }) => {
                                         >
                                             Rating
                                         </label>
-                                        <ReactStars edit={!isProcessing} onChange={(new_rating) => setRating(new_rating)}
+                                        <ReactStars edit={!isProcessing}
+                                                    onChange={(new_rating) => setRating(new_rating)}
                                                     value={rating} count={5}
                                                     size={50} color2={'#ffd700'}/>
                                     </div>

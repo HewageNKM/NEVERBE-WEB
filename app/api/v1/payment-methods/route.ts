@@ -9,8 +9,6 @@ import {
 
 export async function GET(req: Request) {
     try {
-        const idToken = await verifyToken(req);
-        console.log("Token Verified: " + idToken.uid)
         const methods = await getPaymentMethods();
         return NextResponse.json(methods, {status: 200})
     } catch (e: any) {

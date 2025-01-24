@@ -25,7 +25,6 @@ const PopUpFilter = () => {
         selectedManufacturers,
         page
     } = useSelector((state: RootState) => state.productsSlice);
-    const {user} = useSelector((state: RootState) => state.authSlice);
     const [brands, setBrands] = useState([])
     const [isBrandsLoading, setIsBrandsLoading] = useState(true);
     const dispatch: AppDispatch = useDispatch();
@@ -58,17 +57,13 @@ const PopUpFilter = () => {
     }
 
     useEffect(() => {
-        if (user) {
-            const gender = window.localStorage.getItem("gender") || "all";
-            dispatch(getInventory({gender, page}));
-        }
-    }, [selectedManufacturers, selectedType, selectedSizes, dispatch, user]);
+        const gender = window.localStorage.getItem("gender") || "all";
+        dispatch(getInventory({gender, page}));
+    }, [selectedManufacturers, selectedType, selectedSizes, dispatch]);
 
     useEffect(() => {
-        if (user) {
-            fetchBrand();
-        }
-    }, [user]);
+        fetchBrand();
+    }, []);
 
     return (
         <DropShadow containerStyle="flex justify-start items-start">

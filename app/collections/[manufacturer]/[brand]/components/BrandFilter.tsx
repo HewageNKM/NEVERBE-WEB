@@ -12,7 +12,6 @@ const BrandFilter = () => {
         page,
         size
     } = useSelector((state: RootState) => state.brandSlice);
-    const {user} = useSelector((state: RootState) => state.authSlice);
     const dispatch: AppDispatch = useDispatch();
 
 
@@ -25,19 +24,17 @@ const BrandFilter = () => {
     }
 
     useEffect(() => {
-        if (user) {
-            const manufacturer = window.localStorage.getItem('manufacturer');
-            const brand = window.localStorage.getItem('brand');
-            dispatch(getItemsByTwoField({
-                value1: manufacturer,
-                value2: brand,
-                field1: "manufacturer",
-                field2: "brand",
-                page,
-                size
-            }));
-        }
-    }, [selectedSizes, dispatch, user]);
+        const manufacturer = window.localStorage.getItem('manufacturer');
+        const brand = window.localStorage.getItem('brand');
+        dispatch(getItemsByTwoField({
+            value1: manufacturer,
+            value2: brand,
+            field1: "manufacturer",
+            field2: "brand",
+            page,
+            size
+        }));
+    }, [selectedSizes, dispatch]);
 
 
     return (

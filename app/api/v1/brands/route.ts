@@ -3,9 +3,6 @@ import {getBrandsFromInventory, verifyToken} from "@/firebase/firebaseAdmin";
 
 export async function GET(req: Request) {
     try {
-        const idToken = await verifyToken(req);
-        console.log("Token Verified: " + idToken.uid)
-
         const brands = await getBrandsFromInventory();
         console.log("Brands Fetched: " + brands.length)
 
