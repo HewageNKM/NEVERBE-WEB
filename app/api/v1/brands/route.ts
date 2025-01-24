@@ -1,5 +1,5 @@
 import {NextResponse} from "next/server";
-import {getBrandsFromInventory, verifyToken} from "@/firebase/firebaseAdmin";
+import {getBrandsFromInventory} from "@/firebase/firebaseAdmin";
 
 export async function GET(req: Request) {
     try {

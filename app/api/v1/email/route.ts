@@ -5,9 +5,6 @@ import {Message} from "@/interfaces";
 
 export async function POST(req: Request) {
     try {
-        const idToken = await verifyToken(req);
-        console.log("Token Verified: " + idToken.uid);
-
         const captchaToken = new URL(req.url).searchParams.get('captchaToken');
         const json: Message = await req.json();
         await sendEmail(json, captchaToken);
