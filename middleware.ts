@@ -3,10 +3,6 @@ import { NextResponse } from 'next/server';
 export function middleware(req:Request,res:Response) {
     const origin = req.headers.get('origin');
 
-    res.headers.set('Access-Control-Allow-Origin', 'https://www.neverbe.lk');
-    res.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-    res.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-
     if (!origin) {
         // No Origin header indicates a same-origin request
         console.log('Allowed: Same-origin request');
