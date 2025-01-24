@@ -11,12 +11,6 @@ const Hero = async ({slides}: { slides: Slide[] }) => {
         <section className="w-full mt-16 lg:mt-[7rem] flex flex-col gap-5">
             <ImagesSlider images={slides}/>
             <div className="md:mt5 mt-3 px-3 lg:px-8">
-                <h2 className="text-3xl lg:text-4xl font-semibold text-gray-800 text-center">
-                    Welcome to <strong>NEVERBE</strong>
-                </h2>
-                <p className="text-lg lg:text-xl text-gray-600 text-center mt-5">
-                    The best place to shop for your favorite products
-                </p>
                 <div className={"flex flex-col gap-5 mt-5"}>
                     <h3 className="text-gray-800 md:text-4xl font-bold text-2xl text-left mt-5">
                         Explore our collection

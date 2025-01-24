@@ -483,7 +483,9 @@ export const getReviewByItemId = async (itemId: string, userId: string) => {
 export const calculateTotalRating = (reviews: Review[]) => {
     try {
         console.log("Calculating total rating from reviews.");
-        return reviews.reduce((acc, review) => acc + review.rating, 0);
+        const number = reviews.reduce((acc, review) => acc + review.rating, 0);
+        const total = reviews.length;
+        return total > 0 ? number / total : 0;
     } catch (e) {
 
     }
