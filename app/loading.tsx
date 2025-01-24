@@ -15,12 +15,6 @@ const SkeletonLoading = () => {
                         className="animate-pulse w-full md:h-[20rem] lg:h-[60vh] h-[50vh] bg-gray-200 rounded-lg"></div>
                     <div>
                         <div className="md:mt5 mt-3 px-3 lg:px-8">
-                            <h2 className="md:text-4xl text-2xl font-semibold text-gray-800 text-center mt-3">
-                                <strong>Welcome to NEVERBE</strong>
-                            </h2>
-                            <p className="md:text-xl text-lg text-gray-600 text-center mt-5">
-                                The best place to shop for your favorite products
-                            </p>
                             <div className={"flex flex-col gap-5 mt-5"}>
                                 <h3 className="text-gray-800 md:text-4xl font-bold text-2xl text-left mt-5">
                                     Explore our collection

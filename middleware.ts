@@ -5,11 +5,10 @@ export function middleware(req: Request) {
     const origin = req.headers.get('host');
     if (!origin || origin !== 'www.neverbe.lk') {
         console.log('Request from unknown origin is not allowed. Origin: ' + origin)
-        return new NextResponse('Forbidden', {status: 403}); // Reject other origins
+        return new NextResponse('Forbidden', {status: 403});
     }
     console.log('Request from an allowed origin. Origin: ' + origin)
     const res = NextResponse.next();
-
     // Set CORS headers
     res.headers.set('Access-Control-Allow-Origin', 'https://neverbe.lk');
     res.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
