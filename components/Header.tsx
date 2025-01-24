@@ -58,7 +58,7 @@ const Header = () => {
                         <Image src={Banner} alt={"Banner"} width={180} height={180}/>
                     </Link>
                 </figure>
-                <nav className="hidden lg:block">
+                <nav className="hidden lg:absolute lg:flex w-full justify-center items-center">
                     <ul className="flex text-white gap-4 text-xl">
                         <li>
                             <Link href={"/"} className="hover:text-primary-100">Home</Link>
@@ -84,7 +84,7 @@ const Header = () => {
                         )}
                         <input value={search} type="text" placeholder="search for products"
                                onChange={(e) => searchItems(e)}
-                               className="py-2 pr-8 text-black px-4 w-[18rem] h-[2.5rem] rounded-md text-sm"/>
+                               className="py-2 pr-8 text-black px-4 w-[15rem] h-[2.5rem] rounded-md text-sm"/>
                         <AnimatePresence>
                             {(showSearchResult && items.length > 0) && <SearchDialog results={items} onClick={()=>{
                                 setShowSearchResult(false)

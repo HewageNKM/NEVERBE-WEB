@@ -41,7 +41,7 @@ const ReviewCard = ({ review, userReviewId, onDelete }: {
                     edit={false}
                     value={review.rating}
                     count={5}
-                    size={28}
+                    size={25}
                     color2={'#ffd700'}
                 />
                 <span>({review.rating})</span>
