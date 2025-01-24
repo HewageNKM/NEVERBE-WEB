@@ -1,9 +1,8 @@
 import {NextResponse} from 'next/server';
 
 export function middleware(req: Request) {
-    console.log(req);
-    const origin = req.headers.get('host');
-    if (!origin || origin !== 'www.neverbe.lk') {
+    const origin = req.headers.get('origin');
+    if (!origin || origin !== 'https://www.neverbe.lk') {
         console.log('Request from unknown origin is not allowed. Origin: ' + origin)
         return new NextResponse('Forbidden', {status: 403});
     }
