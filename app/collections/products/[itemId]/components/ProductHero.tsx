@@ -2,7 +2,7 @@
 import React, {useEffect, useRef, useState} from "react";
 import Image from "next/image";
 import {CartItem, Item, Size, Variant} from "@/interfaces";
-import {IoAdd, IoRemove} from "react-icons/io5";
+import {IoAdd, IoCartOutline, IoRemove} from "react-icons/io5";
 import {AppDispatch, RootState} from "@/redux/store";
 import {useDispatch, useSelector} from "react-redux";
 import {pushToCart} from "@/redux/cartSlice/cartSlice";
@@ -306,7 +306,7 @@ const ProductHero = ({item}: { item: Item }) => {
                         </div>
                         <div className="mt-4">
                             <h3 className="text-lg font-medium text-gray-700">Quantity</h3>
-                            <div className="flex flex-row flex-wrap items-center gap-5 md:justify-start justify-center lg:gap-10">
+                            <div className="flex flex-row flex-wrap items-center md:justify-start justify-center gap-10">
                                 {/* Quantity Adjustment Section */}
                                 <div className="flex items-center gap-4 mt-2">
                                     {/* Decrease Button */}
@@ -334,24 +334,26 @@ const ProductHero = ({item}: { item: Item }) => {
                                 </div>
 
                                 {/* Add to Cart Button */}
-                                <button
-                                    onClick={addToCart}
-                                    disabled={qty === 0}
-                                    className={`w-fit p-2 px-3 rounded-lg text-lg font-semibold text-white transition disabled:opacity-60 bg-primary-100 disabled:cursor-not-allowed`}
-                                    aria-label="Add to cart"
-                                >
-                                    Add to Cart
-                                </button>
+                                <div className="flex flex-row items-center flex-wrap gap-10">
+                                    <button
+                                        onClick={addToCart}
+                                        disabled={qty === 0}
+                                        className={`w-fit rounded-lg text-xl font-bold text-gray-700 hover:text-gray-900 transition disabled:opacity-60 disabled:cursor-not-allowed`}
+                                        aria-label="Add to cart"
+                                    >
+                                        <IoCartOutline size={30} />
+                                    </button>
 
-                                {/* Buy Now Button */}
-                                <button
-                                    onClick={buyNow}
-                                    disabled={qty === 0}
-                                    className="p-2 px-3 rounded-lg text-lg font-semibold disabled:cursor-not-allowed disabled:opacity-60 bg-yellow-500 text-white transition"
-                                    aria-label="Buy now"
-                                >
-                                    Buy Now
-                                </button>
+                                    {/* Buy Now Button */}
+                                    <button
+                                        onClick={buyNow}
+                                        disabled={qty === 0}
+                                        className="rounded-lg text-xl font-semibold disabled:cursor-not-allowed disabled:opacity-60 text-primary-100 hover:text-primary-200 transition"
+                                        aria-label="Buy now"
+                                    >
+                                        Buy Now
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -24,10 +24,10 @@ const Cart = () => {
                     type: "tween",
                     duration: 0.6, // Added damping for smoother stopping
                 }}
-                className="px-6 py-4 overflow-x-auto w-full lg:w-[20vw] flex flex-col justify-between lg:rounded-l-lg bg-white h-screen relative shadow-lg overflow-y-auto"
+                className="px-6 py-4 overflow-x-auto w-full lg:w-[25vw] flex flex-col justify-between lg:rounded-l-lg bg-white h-screen relative shadow-lg overflow-y-auto"
             >
                 <div className="flex flex-col">
-                    <h2 className="text-3xl font-bold tracking-wider border-b pb-4">Cart</h2>
+                    <h2 className="md:text-2xl text-lg font-bold tracking-wider border-b pb-4">Cart</h2>
                     <ul className="mt-5 flex overflow-x-auto max-h-screen flex-col justify-start gap-4">
                         {cartItems.map((item, index) => (
                             <li key={index}>
@@ -48,7 +48,7 @@ const Cart = () => {
                         <h1 className="md:text-xl text-lg">Rs. {cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0).toFixed(2)}</h1>
                     </div>
                     <button
-                        className="bg-primary disabled:cursor-not-allowed disabled:bg-opacity-60 text-white p-2 mt-5 tracking-wide md:text-xl lg:text-xl rounded-lg w-full"
+                        className="bg-primary disabled:cursor-not-allowed disabled:bg-opacity-60 text-white p-2 mt-5 tracking-wide md:text-lg lg:text-xl rounded-lg w-full"
                         onClick={() => {
                             dispatch(hideCart());
                             router.push("/checkout");

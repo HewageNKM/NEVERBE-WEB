@@ -17,9 +17,9 @@ const CartItemCard = ({item}:{item:CartItem}) => {
                 height={80}
             />
             <div className="flex-grow ml-4 capitalize">
-                <h3 className="text-lg font-semibold">{item.name}</h3>
+                <h3 className="text-lg">{item.name}</h3>
                 <p className="text-sm text-gray-600">{item.variantName} | Size: {item.size}</p>
-                <p className="text-md font-bold">Rs. {(item.price * item.quantity).toFixed(2)}</p>
+                <p className="text-md">Rs. {(item.price * item.quantity).toFixed(2)}</p>
                 <div className="flex justify-between mt-2">
                     <span className="text-sm text-gray-500">QTY: {item.quantity}</span>
                 </div>
