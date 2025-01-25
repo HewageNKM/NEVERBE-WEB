@@ -47,8 +47,8 @@ const ReviewCard = ({ review, userReviewId, onDelete }: {
                 <span>({review.rating})</span>
             </div>
             {/* Review Content */}
-            <div className="mt-4">
-                <p className="text-center text-sm text-gray-700 font-medium leading-relaxed">
+            <div className="mt-1 border-t-2">
+                <p className="text-center font-bold p-1 text-sm bg-white border-2 mt-1 rounded-lg font-medium leading-relaxed">
                     {showFullReview || !isLongReview ? review?.review : review?.review?.split(' ').slice(0, 10).join(' ') + '...'}
                 </p>
                 {isLongReview && (

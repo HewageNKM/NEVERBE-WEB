@@ -119,7 +119,7 @@ const Reviews = ({itemId}: { itemId: string }) => {
     }, [user]);
 
     return (
-        <section className="py-10" id={"rating"}>
+        <section className="py-10 w-full" id={"rating"}>
             <div className="flex w-full justify-between items-center">
                 <h2 className="text-2xl tracking-wide font-bold text-gray-900">
                     Reviews ({reviewReport.totalReviews})
@@ -138,13 +138,13 @@ const Reviews = ({itemId}: { itemId: string }) => {
                 ) : (
                     <ul className="flex-row flex flex-wrap lg:gap-10 md:gap-6 gap-2 w-full hide-scrollbar overflow-x-auto">
                         {reviewReport.userReview && (
-                            <li className="p-4 shadow-sm rounded-lg" key={0}>
+                            <li key={0}>
                                 <ReviewCard onDelete={onReviewDelete} review={reviewReport.userReview}
                                             userReviewId={reviewReport.userReview.reviewId}/>
                             </li>
                         )}
                         {reviewReport.reviews.map((review, index) => (
-                            <li key={index} className="p-4 shadow-sm rounded-lg">
+                            <li key={index}>
                                 <ReviewCard onDelete={onReviewDelete} review={review}
                                             userReviewId={reviewReport.userReview?.reviewId || ""}/>
                             </li>
