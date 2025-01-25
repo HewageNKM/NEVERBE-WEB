@@ -41,7 +41,6 @@ const CheckoutForm = () => {
     const cartItems: CartItem[] = useSelector((state: RootState) => state.cartSlice.cart);
     const onPaymentFormSubmit = async (evt: any) => {
         let orderId = "";
-
         try {
             setLoading(true)
             evt.preventDefault()
@@ -156,7 +155,7 @@ const CheckoutForm = () => {
                     new Error("Payment type not found")
                 }
             } else {
-                console.log("Cart is empty")
+                alert("Cart is empty")
             }
         } catch (e) {
             console.log(e)

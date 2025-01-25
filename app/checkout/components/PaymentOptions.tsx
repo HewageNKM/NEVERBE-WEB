@@ -1,21 +1,16 @@
 import React, {useEffect, useState} from 'react';
 import {PaymentMethod} from "@/interfaces";
-import {useSelector} from "react-redux";
-import {RootState} from "@/redux/store";
 import {getWebsitePaymentMethods} from "@/actions/paymentMethodsAction";
 
 const PaymentOptions = ({setPaymentType, paymentType}: {
     setPaymentType: React.Dispatch<React.SetStateAction<string>>,
     paymentType: string,
 }) => {
-    const {user} = useSelector((state: RootState) => state.authSlice);
     const [paymentOptions, setPaymentOptions] = useState<PaymentMethod[]>([])
 
     useEffect(() => {
-        if (user) {
-            fetchPaymentMethods()
-        }
-    }, [user]);
+        fetchPaymentMethods()
+    }, []);
 
     const fetchPaymentMethods = async () => {
         try {
@@ -41,12 +36,13 @@ const PaymentOptions = ({setPaymentType, paymentType}: {
                         value={option.name}
                         className="form-radio h-5 w-5 text-primary focus:ring-primary"
                     />
-                 <div>
-                     <label htmlFor="payment" className="text-gray-800 text-lg font-semibold">
-                         {option.name}
-                     </label>
-                     {option?.description && <p className="text-gray-500 text-sm font-medium">{option?.description}</p>}
-                 </div>
+                    <div>
+                        <label htmlFor="payment" className="text-gray-800 text-lg font-semibold">
+                            {option.name}
+                        </label>
+                        {option?.description &&
+                            <p className="text-gray-500 text-sm font-medium">{option?.description}</p>}
+                    </div>
                 </li>
             ))}
         </ul>
