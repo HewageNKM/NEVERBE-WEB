@@ -123,7 +123,7 @@ const CheckoutForm = () => {
             }
 
             const newCustomer: Customer = {
-                zip: evt.target.zip.value,
+                zip: evt.target.zip.value || "",
                 address: evt.target.address.value,
                 city: evt.target.city.value,
                 email: evt.target.email.value,

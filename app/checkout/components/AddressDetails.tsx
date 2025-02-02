@@ -16,7 +16,7 @@ const AddressDetails = ({
             <div className="flex flex-col gap-4 mt-10 w-full">
                 <div className="flex flex-row flex-wrap gap-4 w-full">
                     <label className="flex flex-col gap-2 w-full md:w-[48%]">
-                        <span className="font-medium md:text-xl text-lg">First Name</span>
+                        <span className="font-medium md:text-xl text-lg">*First Name</span>
                         <input
                             placeholder="Sandun"
                             type="text"
@@ -28,7 +28,7 @@ const AddressDetails = ({
                     </label>
 
                     <label className="flex flex-col gap-2 w-full md:w-[48%]">
-                        <span className="font-medium md:text-xl text-lg">Last Name</span>
+                        <span className="font-medium md:text-xl text-lg">*Last Name</span>
                         <input
                             placeholder="Dilhan"
                             type="text"
@@ -41,7 +41,7 @@ const AddressDetails = ({
                 </div>
 
                 <label className="flex flex-col gap-2 w-full">
-                    <span className="font-medium md:text-xl text-lg">Email</span>
+                    <span className="font-medium md:text-xl text-lg">*Email</span>
                     <input
                         type="email"
                         placeholder="example@gmail.com"
@@ -53,7 +53,7 @@ const AddressDetails = ({
                 </label>
 
                 <label className="flex flex-col gap-2 w-full">
-                    <span className="font-medium md:text-xl text-lg">Mobile</span>
+                    <span className="font-medium md:text-xl text-lg">*Mobile</span>
                     <input
                         placeholder="0777668765"
                         type="text"
@@ -65,7 +65,7 @@ const AddressDetails = ({
                 </label>
 
                 <label className="flex flex-col gap-2 w-full">
-                    <span className="font-medium md:text-xl text-lg">Address</span>
+                    <span className="font-medium md:text-xl text-lg">*Address</span>
                     <input
                         type="text"
                         placeholder="98/1A, Ingiriya"
@@ -77,7 +77,7 @@ const AddressDetails = ({
                 </label>
 
                 <label className="flex flex-col gap-2 w-full md:w-[48%]">
-                    <span className="font-medium md:text-xl text-lg">City</span>
+                    <span className="font-medium md:text-xl text-lg">*City</span>
                     <input
                         type="text"
                         placeholder="Dompe"
@@ -89,19 +89,18 @@ const AddressDetails = ({
                 </label>
 
                 <label className="flex flex-col gap-2 w-full md:w-[48%]">
-                    <span className="font-medium md:text-xl text-lg">Zip Code(Postal)</span>
+                    <span className="font-medium md:text-xl text-lg">Postal Code</span>
                     <input
                         type="text"
                         placeholder="11700"
                         defaultValue={customer.zip}
                         className="px-4 py-2 border-slate-300 focus:outline-none rounded-lg border-2"
-                        required
                         name="zip"
                     />
                 </label>
 
                 <label className="flex flex-col gap-2 w-full md:w-[48%]">
-                    <span className="font-medium md:text-xl text-lg">Country</span>
+                    <span className="font-medium md:text-xl text-lg">*Country</span>
                     <input
                         disabled
                         className="px-4 py-2 rounded-lg border-slate-300 focus:outline-none border-2"
