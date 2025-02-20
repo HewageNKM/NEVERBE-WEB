@@ -64,7 +64,7 @@ const CheckoutForm = () => {
 
             const hashedSecret = md5(merchantSecret).toString().toUpperCase();
             const merchantId = process.env.NEXT_PUBLIC_IPG_MERCHANT_ID;
-            orderId = generateOrderId("Website");
+            orderId = generateOrderId();
 
             const currency = 'LKR';
             const amount = calculateSubTotal(cartItems)

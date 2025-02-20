@@ -2,15 +2,10 @@
 import {CartItem} from "@/interfaces";
 import {algoliasearch} from "algoliasearch";
 
-export const generateOrderId = (location: "Store" | "Website"): string => {
-    // Short timestamp based on seconds
-    const timestamp = Math.floor(Date.now() / 1000).toString().slice(-6);
-
-    // Add location identifier (e.g., "st" for Store, "wb" for Website)
-    const locationPart = location === "Store" ? "st" : "wb";
-
-    // Combine parts into a final 12-character order ID
-    return `ORD-${locationPart}-${timestamp}`.toLowerCase();
+export const generateOrderId = (): string => {
+    const timestamp = Math.floor(Date.now() / 1000).toString().slice(-4); // Last 4 digits of timestamp
+    const randomPart = Math.floor(1000 + Math.random() * 9000).toString().slice(-2); // 2 random digits
+    return `${timestamp}${randomPart}`.toLowerCase();
 };
 
 export const calculateSubTotal = (items: CartItem[]) => {
