@@ -1,4 +1,13 @@
-import {DeliveryImage, GoodsImage, KidsBG, MenBG, MoneyImage, SupportImage, WomenBG} from "@/assets/images";
+import {
+    DeliveryImage,
+    GoodsImage,
+    KidsBG,
+    MenBG,
+    MoneyImage,
+    PayHereWhiteLongBanner,
+    SupportImage,
+    WomenBG
+} from "@/assets/images";
 import {FooterLink, SocialMedia} from "@/interfaces";
 import {IoLogoTiktok} from "react-icons/io5";
 import {IoLogoFacebook, IoLogoInstagram} from "react-icons/io";
@@ -302,14 +311,8 @@ export const faqs = [
     }
 ];
 export const payHere = {
-    shortBannerWhite: "https://www.payhere.lk/downloads/images/payhere_short_banner.png",
-    shortBannerBlue: "https://www.payhere.lk/downloads/images/payhere_short_banner_dark.png",
-    longWhiteBanner: "https://www.payhere.lk/downloads/images/payhere_long_banner.png",
-    longBlueBanner: "https://www.payhere.lk/downloads/images/payhere_long_banner_dark.png",
-    squareBannerWhite: "https://www.payhere.lk/downloads/images/payhere_square_banner.png",
-    squareBannerBlue: "https://www.payhere.lk/downloads/images/payhere_square_banner_dark.png",
+    longWhiteBanner: PayHereWhiteLongBanner,
     payHereLink: "https://www.payhere.lk/"
-
 }
 export const contactInfo = [
     {

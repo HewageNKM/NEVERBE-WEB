@@ -14,8 +14,10 @@ import MenuCard from './menuCardBG.jpg'
 import KidsBG from './kidsBG.png';
 import MenBG from './menBG.jpg';
 import WomenBG from './womenBG.jpg';
+import PayHereWhiteLongBanner  from './payhere_long_banner.png';
 export
 {
+    PayHereWhiteLongBanner,
     DeliveryImage,
     MoneyImage,
     GoodsImage,
