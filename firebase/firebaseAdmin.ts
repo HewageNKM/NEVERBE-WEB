@@ -186,7 +186,10 @@ export const getSliders = async () => {
     const docs = await adminFirestore.collection('sliders').get();
     const sliders: Slide[] = [];
     docs.forEach(doc => {
-        sliders.push(doc.data() as Slide);
+        sliders.push({
+            ...doc.data(),
+            createdAt: doc.data().createdAt.toDate().toLocaleString(),
+        } as Slide);
     });
     console.log("Total sliders fetched:", sliders.length);
     return sliders;

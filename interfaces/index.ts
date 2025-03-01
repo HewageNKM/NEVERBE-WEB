@@ -110,10 +110,8 @@ export interface SocialMedia {
 
 export interface Slide {
     fileName: string;
-    urls: {
-        default: string;
-        mobile: string;
-    };
+    url: string;
+    id: string;
 }
 
 export interface Order {
