@@ -48,39 +48,41 @@ const Header = () => {
     return (
         <header className="z-50 bg-black w-full fixed">
             <div className="flex justify-between items-center p-4">
-                <figure className="hidden lg:block p-1">
-                    <Link href={"/"}>
-                        <Image src={Logo} alt={"Logo"} width={100} height={100}/>
-                    </Link>
-                </figure>
-                <figure className="lg:hidden block">
-                    <Link href={"/"}>
-                        <Image src={Banner} alt={"Banner"} width={180} height={180}/>
-                    </Link>
-                </figure>
-                <nav className="hidden lg:absolute lg:flex w-full justify-center items-center">
-                    <ul className="flex text-white gap-4 text-xl">
-                        <li>
-                            <Link href={"/"} className="hover:text-primary-100">Home</Link>
-                        </li>
-                        <li>
-                            <Link href={"/collections/products"} className="hover:text-primary-100">Shop</Link>
-                        </li>
-                        <li>
-                            <Link href={"/aboutUs"} className="hover:text-primary-100">About Us</Link>
-                        </li>
-                        <li>
-                            <Link href={"/contact"} className="hover:text-primary-100">Contact Us</Link>
-                        </li>
-                    </ul>
-                </nav>
+                <div className="flex items-center gap-4 flex-row">
+                    <figure className="hidden lg:block p-1">
+                        <Link href={"/"}>
+                            <Image src={Logo} alt={"Logo"} width={100} height={100}/>
+                        </Link>
+                    </figure>
+                    <figure className="lg:hidden block">
+                        <Link href={"/"}>
+                            <Image src={Banner} alt={"Banner"} width={180} height={180}/>
+                        </Link>
+                    </figure>
+                    <nav className="hidden lg:relative lg:flex">
+                        <ul className="flex text-white gap-4 text-2xl font-medium">
+                            <li>
+                                <Link href={"/"} className="hover:text-primary-100  hover:border-b-2 hover:border-b-primary-100">Home</Link>
+                            </li>
+                            <li>
+                                <Link href={"/collections/products"} className="hover:text-primary-100 hover:border-b-2 hover:border-b-primary-100">Shop</Link>
+                            </li>
+                            <li>
+                                <Link href={"/aboutUs"} className="hover:text-primary-100 hover:border-b-2 hover:border-b-primary-100">About Us</Link>
+                            </li>
+                            <li>
+                                <Link href={"/contact"} className="hover:text-primary-100 hover:border-b-2 hover:border-b-primary-100">Contact Us</Link>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
                 <div className="flex text-white  flex-row gap-3 items-center">
                     <div className="relative hidden lg:block w-fit">
                         {isSearching ? (
                             <div
                                 className="w-5 h-5 border-2 border-gray-300 border-t-2 border-t-primary-200 rounded-full animate-spin absolute top-2 right-2 transition-all duration-300"></div>
                         ) : (
-                            <IoSearch size={20} className="text-gray-600 absolute top-2 right-2"/>
+                            <IoSearch size={20} className="text-gray-600 absolute top-2.5 right-2"/>
                         )}
                         <input value={search} type="text" placeholder="search for products"
                                onChange={(e) => searchItems(e)}
