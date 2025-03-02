@@ -52,7 +52,9 @@ const ProductHero = ({item}: { item: Item }) => {
 
     const addToCart = async () => {
         const price = Math.round((item.sellingPrice - (item.discount * item.sellingPrice / 100)) / 10) * 10;
+        const discount = item.sellingPrice-(item.sellingPrice * item.discount / 100) * qty;
         const cartItem: CartItem = {
+            discount: discount,
             itemId: item.itemId,
             variantId: selectedVariant.variantId,
             name: item.name,
@@ -228,12 +230,10 @@ const ProductHero = ({item}: { item: Item }) => {
                             </span>
                         </Link>
                         <div className="text-gray-900 flex items-center space-x-3">
-                            <span className="text-lg font-semibold text-red-500">{"Rs. " + (Math.round((item.sellingPrice - (item.discount * item.sellingPrice / 100)) / 10) * 10).toFixed(2)}</span>
-                            {item.discount > 0 && (
+                            <span className="text-lg font-semibold text-red-500">{"Rs. " + item.sellingPrice.toFixed(2)}</span>
                                 <span className="line-through text-lg text-gray-500">
-                                {"Rs. " + (item.sellingPrice).toFixed(2)}
+                                {"Rs. " + (item.marketPrice).toFixed(2)}
                             </span>
-                            )}
                         </div>
                         <div className="mt-4">
                             <h3 className="text-lg font-medium text-gray-700">Available Colors</h3>
@@ -247,7 +247,7 @@ const ProductHero = ({item}: { item: Item }) => {
                                                 setSelectedSize({size: "", stock: 0});
                                                 setQty(0);
                                             }}
-                                            className={`rounded-md p-2 text-sm capitalize ${
+                         Make footer image static                   className={`rounded-md p-2 text-sm capitalize ${
                                                 selectedVariant.variantId === variant.variantId
                                                     ? "bg-primary text-white"
                                                     : "bg-gray-200"
