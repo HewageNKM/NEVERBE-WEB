@@ -8,6 +8,7 @@ import { motion } from "framer-motion";
 import { hideCart } from "@/redux/cartSlice/cartSlice";
 import { useRouter } from "next/navigation";
 import CartItemCard from "@/components/CartItemCard";
+import {calculateSubTotal} from "@/util";
 
 const Cart = () => {
     const cartItems = useSelector((state: RootState) => state.cartSlice.cart);
@@ -22,7 +23,7 @@ const Cart = () => {
                 exit={{ opacity: 0, x: "100vw" }}
                 transition={{
                     type: "tween",
-                    duration: 0.6, // Added damping for smoother stopping
+                    duration: 0.6,
                 }}
                 className="px-6 py-4 overflow-x-auto w-full lg:w-[25vw] flex flex-col justify-between lg:rounded-l-lg bg-white h-screen relative shadow-lg overflow-y-auto"
             >
@@ -46,6 +47,18 @@ const Cart = () => {
                     <div className="flex justify-between border-t-2 font-medium border-b-2 py-2">
                         <h1 className="md:text-xl text-lg">Total:</h1>
                         <h1 className="md:text-xl text-lg">Rs. {cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0).toFixed(2)}</h1>
+                    </div>
+                    <div>
+                        <h1 className="md:text-xl text-lg">Discount:</h1>
+                        <h1 className="md:text-xl text-lg">Rs. {cartItems.reduce((acc, item) => acc + item.discount, 0).toFixed(2)}</h1>
+                    </div>
+                    <div>
+                        <h1 className="md:text-xl text-lg">Shipping:</h1>
+                        <h1 className="md:text-xl text-lg">Rs. {(0).toFixed(2)}</h1>
+                    </div>
+                    <div>
+                        <h1 className="md:text-xl text-lg">Sub Total:</h1>
+                        <h1 className="md:text-xl text-lg">Rs. {calculateSubTotal(cartItems).toFixed(2)}</h1>
                     </div>
                     <button
                         className="bg-primary disabled:cursor-not-allowed disabled:bg-opacity-60 text-white p-2 mt-5 tracking-wide md:text-lg lg:text-xl rounded-lg w-full"

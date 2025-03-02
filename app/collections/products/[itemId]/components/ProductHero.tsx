@@ -52,7 +52,9 @@ const ProductHero = ({item}: { item: Item }) => {
 
     const addToCart = async () => {
         const price = Math.round((item.sellingPrice - (item.discount * item.sellingPrice / 100)) / 10) * 10;
+        const discount = item.sellingPrice - (item.sellingPrice * item.discount / 100) * qty;
         const cartItem: CartItem = {
+            discount: discount,
             itemId: item.itemId,
             variantId: selectedVariant.variantId,
             name: item.name,
@@ -228,12 +230,11 @@ const ProductHero = ({item}: { item: Item }) => {
                             </span>
                         </Link>
                         <div className="text-gray-900 flex items-center space-x-3">
-                            <span className="text-lg font-semibold text-red-500">{"Rs. " + (Math.round((item.sellingPrice - (item.discount * item.sellingPrice / 100)) / 10) * 10).toFixed(2)}</span>
-                            {item.discount > 0 && (
-                                <span className="line-through text-lg text-gray-500">
-                                {"Rs. " + (item.sellingPrice).toFixed(2)}
+                            <span
+                                className="text-lg font-semibold text-red-500">{"Rs. " + item.sellingPrice.toFixed(2)}</span>
+                            <span className="line-through text-lg text-gray-500">
+                                {"Rs. " + (item.marketPrice).toFixed(2)}
                             </span>
-                            )}
                         </div>
                         <div className="mt-4">
                             <h3 className="text-lg font-medium text-gray-700">Available Colors</h3>
@@ -306,7 +307,8 @@ const ProductHero = ({item}: { item: Item }) => {
                         </div>
                         <div className="mt-4">
                             <h3 className="text-lg font-medium text-gray-700">Quantity</h3>
-                            <div className="flex flex-row flex-wrap items-center md:justify-start justify-center gap-10">
+                            <div
+                                className="flex flex-row flex-wrap items-center md:justify-start justify-center gap-10">
                                 {/* Quantity Adjustment Section */}
                                 <div className="flex items-center gap-4 mt-2">
                                     {/* Decrease Button */}
@@ -341,7 +343,7 @@ const ProductHero = ({item}: { item: Item }) => {
                                         className={`w-fit rounded-lg text-xl font-bold text-gray-700 hover:text-gray-900 transition disabled:opacity-60 disabled:cursor-not-allowed`}
                                         aria-label="Add to cart"
                                     >
-                                        <IoCartOutline size={30} />
+                                        <IoCartOutline size={30}/>
                                     </button>
 
                                     {/* Buy Now Button */}

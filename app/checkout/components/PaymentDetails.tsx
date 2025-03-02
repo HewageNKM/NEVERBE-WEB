@@ -28,6 +28,9 @@ const PaymentDetails = ({
     const calculateTotal = () => {
         return cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
     }
+    const calculateDiscount = () => {
+        return cartItems.reduce((acc, item) => acc + item.discount, 0);
+    }
     return (
         <div className="flex flex-col justify-start items-start max-w-3xl mx-auto px-4 py-8">
             <h1 className="lg:text-4xl text-3xl font-bold tracking-wide mb-8">Payment Details</h1>
@@ -48,6 +51,9 @@ const PaymentDetails = ({
                         Rs. {calculateTotal().toFixed(2)}
                     </h3>
                     <div className={"w-full border-b-2 border-gray-300"}/>
+                    <h3 className="md:text-xl text-lg font-semibold">
+                        Discount: Rs. {calculateDiscount().toFixed(2)}
+                    </h3>
                     <h3 className="md:text-xl text-lg font-semibold">
                         Subtotal: Rs. {calculateSubTotal(cartItems).toFixed(2)}
                     </h3>

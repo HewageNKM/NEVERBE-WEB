@@ -42,7 +42,7 @@ const ItemCard = ({item}: { item: Item }) => {
     const findRangeOfSizes = () => {
         // Find min and max sizes from the sizes array of every variant
         const sizes = item.variants.map(variant => variant.sizes.map(size => size.size));
-        if(sizes.length === 0) return "N/A";
+        if (sizes.length === 0) return "N/A";
         const allSizes = sizes.flat();
         const min = Math.min(...allSizes);
         const max = Math.max(...allSizes);
@@ -50,7 +50,7 @@ const ItemCard = ({item}: { item: Item }) => {
     }
     return (
         <article
-            className="relative w-[8rem] md:w-[13rem]  h-auto max-w-xs transition-transform duration-300 transform lg:hover:scale-105 shadow-lg rounded-lg overflow-hidden bg-white">
+            className="relative w-[8rem] md:w-[13rem]  h-auto max-w-xs transition-transform duration-300 transform lg:hover:scale-105 hover:shadow-lg hover:rounded-lg overflow-hidden">
             <Link href={`/collections/products/${item.itemId.toLowerCase()}`}
                   aria-label={`View details for ${item.name}`}>
                 <figure className="relative overflow-hidden rounded-lg">
@@ -79,12 +79,11 @@ const ItemCard = ({item}: { item: Item }) => {
                         <span>({totalRating})</span>
                     </div>
                     <div className="flex flex-row items-center flex-wrap gap-1">
-                        <p className="text-red-500 text-sm font-bold">Rs. {(Math.round((item.sellingPrice - (item.discount * item.sellingPrice / 100)) / 10) * 10).toFixed(2)}</p>
-                        {item.discount > 0 && (
-                            <p className="line-through font-bold text-gray-500 text-sm">
-                                Rs. {(item.sellingPrice).toFixed(2)}
-                            </p>
-                        )}
+                        <p className="text-red-500 text-sm font-bold">Rs. {(Math.round(item.sellingPrice).toFixed(2))}</p>
+                        <p className="line-through font-bold text-gray-500 text-sm">
+                            Rs. {(item.marketPrice).toFixed(2)}
+                        </p>
+
                     </div>
                     <div className="flex justify-between items-center">
                         <p className="text-sm sm:text-lg font-bold">
@@ -108,7 +107,8 @@ const ItemCard = ({item}: { item: Item }) => {
             </Link>
             <div className="absolute top-0 right-0 flex flex-col gap-1 p-1">
                 {item.discount > 0 && (
-                    <span className="bg-red-500 text-white p-1 rounded-md font-medium text-sm">{item.discount.toFixed(0)}%</span>
+                    <span
+                        className="bg-red-500 text-white p-1 rounded-md font-medium text-sm">{item.discount.toFixed(0)}%</span>
                 )}
             </div>
             {outOfStocks && (

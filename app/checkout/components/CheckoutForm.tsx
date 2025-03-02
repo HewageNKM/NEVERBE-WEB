@@ -13,6 +13,7 @@ import {addNewOrder} from "@/actions/orderAction";
 import ComponentLoader from "@/components/ComponentLoader";
 import ReCAPTCHA from "react-google-recaptcha";
 import {signUser} from "@/firebase/firebaseClient";
+import cart from "@/components/Cart";
 
 
 const CheckoutForm = () => {
@@ -108,7 +109,9 @@ const CheckoutForm = () => {
             }
 
             document.body.appendChild(submitForm);
+            const discount =  cartItems.reduce((acc, item) => acc + item.discount, 0);
             const newOrder: Order = {
+                discount: discount,
                 userId: userId,
                 feesAndCharges: 0,
                 from: "Website",

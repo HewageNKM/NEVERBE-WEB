@@ -9,7 +9,9 @@ export const generateOrderId = (): string => {
 };
 
 export const calculateSubTotal = (items: CartItem[]) => {
-    return items.reduce((acc, item) => acc + item.price * item.quantity, 0)
+    const total = items.reduce((acc, item) => acc + item.price * item.quantity, 0)
+    const totalDiscount = items.reduce((acc, item) => acc + item.discount, 0)
+    return total - totalDiscount;
 }
 
 export const getAlgoliaClient = () => {
