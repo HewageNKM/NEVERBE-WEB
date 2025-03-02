@@ -125,7 +125,7 @@ export interface Order {
     customer: Customer,
     discount: number,
     fee?: number,
-    shipping?: number,
+    shippingFee?: number,
     from: string,
 
     createdAt: Timestamp | string,

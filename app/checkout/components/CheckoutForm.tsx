@@ -109,11 +109,12 @@ const CheckoutForm = () => {
             }
 
             document.body.appendChild(submitForm);
-            const discount =  cartItems.reduce((acc, item) => acc + item.discount, 0);
+            const discount =  cartItems.reduce((acc, item) => acc + (item.discount || 0), 0);
             const newOrder: Order = {
                 discount: discount,
                 userId: userId,
-                feesAndCharges: 0,
+                fee: 0,
+                shippingFee: 0,
                 from: "Website",
                 items: cartItems as OrderItem[],
                 orderId: orderId,

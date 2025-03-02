@@ -50,10 +50,10 @@ const ItemCard = ({item}: { item: Item }) => {
     }
     return (
         <article
-            className="relative w-[8rem] md:w-[13rem]  h-auto max-w-xs transition-transform duration-300 transform lg:hover:scale-105 hover:shadow-lg hover:rounded-lg overflow-hidden">
+            className="relative w-[8rem] md:w-[13rem]  h-auto max-w-xs transition-transform duration-300 transform lg:hover:scale-105 hover:shadow-lg hover:rounded-md overflow-hidden">
             <Link href={`/collections/products/${item.itemId.toLowerCase()}`}
                   aria-label={`View details for ${item.name}`}>
-                <figure className="relative overflow-hidden rounded-lg">
+                <figure className="relative overflow-hidden">
                     <Image
                         width={300}
                         height={300}
@@ -108,7 +108,7 @@ const ItemCard = ({item}: { item: Item }) => {
             <div className="absolute top-0 right-0 flex flex-col gap-1 p-1">
                 {item.discount > 0 && (
                     <span
-                        className="bg-red-500 text-white p-1 rounded-md font-medium text-sm">{item.discount.toFixed(0)}%</span>
+                        className="bg-red-500 text-white p-1 rounded-md font-medium text-sm">Extra {item.discount.toFixed(0)}% Off</span>
                 )}
             </div>
             {outOfStocks && (

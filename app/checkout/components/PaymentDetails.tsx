@@ -29,7 +29,7 @@ const PaymentDetails = ({
         return cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
     }
     const calculateDiscount = () => {
-        return cartItems.reduce((acc, item) => acc + item.discount, 0);
+        return cartItems.reduce((acc, item) => acc + (item.discount || 0), 0);
     }
     return (
         <div className="flex flex-col justify-start items-start max-w-3xl mx-auto px-4 py-8">
@@ -46,14 +46,17 @@ const PaymentDetails = ({
             <div className="mt-8 w-full flex flex-col items-end text-lg">
                 <h3>Total Items: {cartItems.length}</h3>
                 <div className="mt-4 flex flex-col font-medium items-end space-y-2 text-lg">
-                    <h3 className="md:text-xl text-lg ">
+                    <h3 className="md:text-xl text-lg">
                         Total:
                         Rs. {calculateTotal().toFixed(2)}
                     </h3>
-                    <div className={"w-full border-b-2 border-gray-300"}/>
-                    <h3 className="md:text-xl text-lg font-semibold">
-                        Discount: Rs. {calculateDiscount().toFixed(2)}
+                    <h3 className="md:text-xl text-lg">
+                        Shipping: Rs. 0.00
                     </h3>
+                    <h3 className="md:text-xl text-lg">
+                        Discount: -Rs. {calculateDiscount().toFixed(2)}
+                    </h3>
+                    <div className={"w-full border-b-2 border-gray-300"}/>
                     <h3 className="md:text-xl text-lg font-semibold">
                         Subtotal: Rs. {calculateSubTotal(cartItems).toFixed(2)}
                     </h3>

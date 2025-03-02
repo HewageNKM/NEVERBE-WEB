@@ -51,8 +51,8 @@ const ProductHero = ({item}: { item: Item }) => {
     };
 
     const addToCart = async () => {
-        const price = Math.round((item.sellingPrice - (item.discount * item.sellingPrice / 100)) / 10) * 10;
-        const discount = item.sellingPrice - (item.sellingPrice * item.discount / 100) * qty;
+        const price = item.sellingPrice;
+        const discount = (item.sellingPrice * item.discount / 100) * qty;
         const cartItem: CartItem = {
             discount: discount,
             itemId: item.itemId,
@@ -229,10 +229,31 @@ const ProductHero = ({item}: { item: Item }) => {
                                 ({totalRating})
                             </span>
                         </Link>
-                        <div className="text-gray-900 flex items-center space-x-3">
-                            <span
-                                className="text-lg font-semibold text-red-500">{"Rs. " + item.sellingPrice.toFixed(2)}</span>
-                            <span className="line-through text-lg text-gray-500">
+                        <div className="text-gray-900 font-semibold flex items-center space-x-3 text-lg flex-row gap-2">
+                            {item.discount > 0 ? (
+                               <div
+                                   className="flex flex-col gap-2"
+                               >
+                                   <p className="flex flex-row gap-2 items-center">
+                                        <span className="text-red-500">
+                                             Extra {item.discount.toFixed(0)}% Off
+                                        </span>
+                                       <span
+                                           className="text-red-500 line-through">{"Rs. " + item.sellingPrice.toFixed(2)}</span>
+                                   </p>
+                                   <p
+                                        className="flex flex-row gap-2 items-center"
+                                   >
+                                        <span className="text-yellow-500">
+                                             {"Rs. " + (item.sellingPrice - (item.sellingPrice * item.discount / 100)).toFixed(2)}
+                                        </span>
+                                       <span className="text-sm  text-yellow-500">Limited Time Only</span>
+                                   </p>
+                               </div>
+                            ):(
+                                <p className="text-red-500">{"Rs. " + item.sellingPrice.toFixed(2)}</p>
+                            )}
+                            <span className="line-through text-gray-500">
                                 {"Rs. " + (item.marketPrice).toFixed(2)}
                             </span>
                         </div>
