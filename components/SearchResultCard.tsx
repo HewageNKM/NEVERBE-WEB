@@ -19,9 +19,14 @@ const SearchResultCard = ({item, onClick}: { item: Item, onClick: () => void }) 
             <div>
                 <h1 className="font-semibold text-lg">{item.name}</h1>
                 <div className="flex-row flex gap-1 items-center">
-                    <p className="text-sm text-red-500 font-medium">Rs {(Math.round((item.sellingPrice - (item.discount * item.sellingPrice / 100)) / 10) * 10).toFixed(2)}</p>
-                    <p className="text-gray-500 text-sm font-medium line-through">Rs {item.sellingPrice}</p>
+                    <p className={`text-sm  font-semibold ${item.discount > 0 ? "text-yellow-500":"text-red-500"}`}>Rs {(Math.round((item.sellingPrice - (item.discount * item.sellingPrice / 100)) / 10) * 10).toFixed(2)}</p>
+                    <p className="text-gray-500 text-sm font-medium line-through">Rs {item.marketPrice}</p>
                 </div>
+                {item.discount > 0 && (
+                    <div>
+                        <p className="text-yellow-500 text-sm font-semibold">Limited Time Only</p>
+                    </div>
+                )}
             </div>
         </div>
     );

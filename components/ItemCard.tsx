@@ -79,12 +79,16 @@ const ItemCard = ({item}: { item: Item }) => {
                         <span>({totalRating})</span>
                     </div>
                     <div className="flex flex-row items-center flex-wrap gap-1">
-                        <p className="text-red-500 text-sm font-bold">Rs. {(Math.round(item.sellingPrice).toFixed(2))}</p>
+                        <p className={`text-red-500 text-sm font-bold ${item.discount > 0 && "line-through"}`}>Rs. {(Math.round(item.sellingPrice).toFixed(2))}</p>
                         <p className="line-through font-bold text-gray-500 text-sm">
                             Rs. {(item.marketPrice).toFixed(2)}
                         </p>
-
                     </div>
+                    {item.discount > 0 && (
+                        <p className="text-sm font-bold text-yellow-500">
+                            Rs. {(item.sellingPrice - (item.sellingPrice * item.discount / 100)).toFixed(2)}
+                        </p>
+                    )}
                     <div className="flex justify-between items-center">
                         <p className="text-sm sm:text-lg font-bold">
                             {item.variants.length} Colors
@@ -108,7 +112,7 @@ const ItemCard = ({item}: { item: Item }) => {
             <div className="absolute top-0 right-0 flex flex-col gap-1 p-1">
                 {item.discount > 0 && (
                     <span
-                        className="bg-red-500 text-white p-1 rounded-md font-medium text-sm">Extra {item.discount.toFixed(0)}% Off</span>
+                        className="bg-yellow-500 text-white p-1 rounded-md font-medium text-sm">Extra {item.discount.toFixed(0)}% Off</span>
                 )}
             </div>
             {outOfStocks && (
