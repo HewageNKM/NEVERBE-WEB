@@ -52,7 +52,8 @@ const ProductHero = ({item}: { item: Item }) => {
 
     const addToCart = async () => {
         const price = item.sellingPrice;
-        const discount = (item.sellingPrice * item.discount / 100) * qty;
+        const roundedDiscountPrice = Math.round((item.sellingPrice - (item.sellingPrice * item.discount / 100)) / 10) * 10;
+        const discount = (item.sellingPrice * qty) - (roundedDiscountPrice * qty);
         const cartItem: CartItem = {
             discount: discount,
             itemId: item.itemId,
@@ -245,7 +246,7 @@ const ProductHero = ({item}: { item: Item }) => {
                                         className="flex flex-row gap-2 items-center"
                                    >
                                         <span className="text-yellow-500">
-                                             {"Rs. " + (item.sellingPrice - (item.sellingPrice * item.discount / 100)).toFixed(2)}
+                                             Rs. {(Math.round((item.sellingPrice - (item.sellingPrice * item.discount / 100)) / 10) * 10).toFixed(2)}
                                         </span>
                                        <span className="text-sm  text-yellow-500">Limited Time Only</span>
                                    </p>

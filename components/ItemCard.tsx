@@ -86,7 +86,7 @@ const ItemCard = ({item}: { item: Item }) => {
                     </div>
                     {item.discount > 0 && (
                         <p className="text-sm font-bold text-yellow-500">
-                            Rs. {(item.sellingPrice - (item.sellingPrice * item.discount / 100)).toFixed(2)}
+                            Rs. {(Math.round((item.sellingPrice - (item.sellingPrice * item.discount / 100)) / 10) * 10).toFixed(2)}
                         </p>
                     )}
                     <div className="flex justify-between items-center">
