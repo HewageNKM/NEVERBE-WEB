@@ -577,7 +577,7 @@ export const getBrandsFromInventory = async () => {
 export const getPaymentMethods = async () => {
     try {
         console.log("Fetching payment methods.");
-        const snapshot = await adminFirestore.collection('paymentMethods').where("status","==","Active").where("available","array-contains","Website").get();
+        const snapshot = await adminFirestore.collection('paymentMethods').where("status", "==", "Active").where("available", "array-contains", "Website").get();
         const methods = snapshot.docs.map(doc => {
             return {
                 ...doc.data(),
@@ -590,6 +590,29 @@ export const getPaymentMethods = async () => {
     } catch (e) {
         console.error("Error fetching payment methods:", e);
         throw e;
+    }
+}
+
+export const getOrderByUserId = async (userId: string) => {
+    try {
+        console.log(`Fetching orders by user ID: ${userId}`);
+        const querySnapshot = await adminFirestore.collection('orders').where("userId", "==", userId).get();
+        const orders: Order[] = [];
+        querySnapshot.forEach(doc => {
+            orders.push({
+                ...doc.data(),
+                createdAt: doc.data().createdAt.toDate().toLocaleString(),
+                updatedAt: doc.data().updatedAt.toDate().toLocaleString(),
+                tracking: doc.data().tracking ? {
+                    ...doc.data().tracking,
+                    updatedAt: doc.data().tracking.updatedAt.toDate().toLocaleString(),
+                } : null,
+            } as Order);
+        });
+        console.log(`Total orders fetched by user ID ${userId}:`, orders.length);
+        return orders;
+    } catch (e) {
+
     }
 }
 

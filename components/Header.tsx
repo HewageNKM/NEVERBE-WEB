@@ -12,9 +12,11 @@ import {getAlgoliaClient} from "@/util";
 import {Item} from "@/interfaces";
 import {AnimatePresence} from "framer-motion";
 import {toggleMenu} from "@/redux/headerSlice/headerSlice";
+import {RxAvatar} from "react-icons/rx";
 
 const Header = () => {
     const cartItems = useSelector((state: RootState) => state.cartSlice.cart);
+    const user = useSelector((state: RootState) => state.authSlice.user);
     const dispatch: AppDispatch = useDispatch();
     const [showSearchResult, setShowSearchResult] = useState(false)
     const [items, setItems] = useState([]);
@@ -62,16 +64,22 @@ const Header = () => {
                     <nav className="hidden lg:relative lg:flex">
                         <ul className="flex text-white gap-4 text-2xl font-medium">
                             <li>
-                                <Link href={"/"} className="hover:text-primary-100  hover:border-b-2 hover:border-b-primary-100">Home</Link>
+                                <Link href={"/"}
+                                      className="hover:text-primary-100  hover:border-b-2 hover:border-b-primary-100">Home</Link>
                             </li>
                             <li>
-                                <Link href={"/collections/products"} className="hover:text-primary-100 hover:border-b-2 hover:border-b-primary-100">Shop</Link>
+                                <Link href={"/collections/products"}
+                                      className="hover:text-primary-100 hover:border-b-2 hover:border-b-primary-100">Shop</Link>
                             </li>
                             <li>
-                                <Link href={"/aboutUs"} className="hover:text-primary-100 hover:border-b-2 hover:border-b-primary-100">About Us</Link>
+                                <Link href={"/aboutUs"}
+                                      className="hover:text-primary-100 hover:border-b-2 hover:border-b-primary-100">About
+                                    Us</Link>
                             </li>
                             <li>
-                                <Link href={"/contact"} className="hover:text-primary-100 hover:border-b-2 hover:border-b-primary-100">Contact Us</Link>
+                                <Link href={"/contact"}
+                                      className="hover:text-primary-100 hover:border-b-2 hover:border-b-primary-100">Contact
+                                    Us</Link>
                             </li>
                         </ul>
                     </nav>
@@ -88,7 +96,7 @@ const Header = () => {
                                onChange={(e) => searchItems(e)}
                                className="py-2 pr-8 text-black px-4 w-[15rem] h-[2.5rem] rounded-md text-sm"/>
                         <AnimatePresence>
-                            {(showSearchResult && items.length > 0) && <SearchDialog results={items} onClick={()=>{
+                            {(showSearchResult && items.length > 0) && <SearchDialog results={items} onClick={() => {
                                 setShowSearchResult(false)
                                 setSearch("")
                             }}/>}
@@ -101,8 +109,15 @@ const Header = () => {
                         <span className="absolute -top-2 p-1 right-0 bg-primary text-white text-xs rounded-full ">
                         {cartItems.length}</span>
                     </div>
-                    <div className="lg:hidden block ">
-                        <button onClick={()=> dispatch(toggleMenu(true))}>
+                    {user && (
+                        <div className="relative p-1 hidden lg:block">
+                            <Link href={"/account"} className="text-white">
+                                <RxAvatar size={30}/>
+                            </Link>
+                        </div>
+                    )}
+                    <div className="lg:hidden block">
+                        <button onClick={() => dispatch(toggleMenu(true))}>
                             <IoMenu size={30}/>
                         </button>
                     </div>

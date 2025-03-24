@@ -2,8 +2,8 @@ import DropShadow from "@/components/DropShadow";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { IoSearch } from "react-icons/io5";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/redux/store";
+import {useDispatch, useSelector} from "react-redux";
+import {AppDispatch, RootState} from "@/redux/store";
 import { toggleMenu } from "@/redux/headerSlice/headerSlice";
 import { getAlgoliaClient } from "@/util";
 import SearchDialog from "@/components/SearchDialog";
@@ -16,6 +16,7 @@ const Menu = () => {
     const [items, setItems] = useState([]);
     const [isSearching, setIsSearching] = useState(false);
     const [showSearchResult, setShowSearchResult] = useState(false);
+    const user = useSelector((state:RootState) => state.authSlice.user);
 
     const onSearch = async (evt: React.ChangeEvent<HTMLInputElement>) => {
         setSearch(evt.target.value);
@@ -102,6 +103,15 @@ const Menu = () => {
                     >
                         Shop
                     </Link>
+                    {user && (
+                        <Link
+                            href="/account"
+                            className="text-gray-700 p-3 border-b-2 hover:text-primary-100 transition-colors duration-200"
+                            onClick={() => dispatch(toggleMenu(false))}
+                        >
+                            Account
+                        </Link>
+                    )}
                     <Link
                         href="/aboutUs"
                         className="text-gray-700 p-3 border-b-2 hover:text-primary-100 transition-colors duration-200"

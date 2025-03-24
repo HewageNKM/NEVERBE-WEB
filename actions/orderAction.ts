@@ -1,7 +1,7 @@
 import {Order} from "@/interfaces";
 import {getIdToken} from "@/firebase/firebaseClient";
 import axios from "axios";
-import {postOrderURL} from "@/app/urls";
+import {getOrdersURL, postOrderURL} from "@/app/urls";
 
 export const addNewOrder = async (newOrder: Order, captchaToken: string) => {
     try {
@@ -15,6 +15,22 @@ export const addNewOrder = async (newOrder: Order, captchaToken: string) => {
                 'Content-Type': 'application/json',
             }
         });
+    } catch (e) {
+        throw e;
+    }
+}
+
+export const getOrdersByUserId = async (userId:string) => {
+    try {
+        const token = await getIdToken();
+        const response = await axios({
+            method: 'get',
+            url: getOrdersURL + "?userId=" + userId,
+            headers: {
+                "Authorization": `Bearer ${token}`,
+            }
+        });
+        return response.data;
     } catch (e) {
         throw e;
     }
