@@ -157,29 +157,20 @@ export const termsAndConditions = [
 ]
 export const shippingReturnPolicy = [
     {
-        title: "Exchange Eligibility",
-        description:
-            "We offer exchanges on unworn, unused items with their original packaging intact. Accessories, such as socks and insoles, are final sale and cannot be exchanged. To be eligible for an exchange, please initiate the process within 7 days of purchasing your order."
+        "title": "Return Eligibility",
+        "description": "We accept returns for unworn, unused items with their original packaging intact. Accessories, such as socks and insoles, are final sale and cannot be returned or exchanged. To be eligible for a return, please initiate the process within 3 days of receiving your order."
     },
     {
-        title: "Initiating an Exchange",
-        description:
-            "If you would like to exchange an item, please contact our customer service team to request an exchange authorization. Once approved, you can send the item back to us using a trackable shipping method."
+        "title": "Initiating a Return",
+        "description": "To request a return or exchange, please contact our customer service team for authorization. Once approved, you can send the item back to us using a trackable shipping method."
     },
     {
-        title: "Exchange Process",
-        description:
-            "Once we receive your returned item and inspect it for any damage or signs of wear, we will process your exchange request. Exchanges are subject to availability of the requested size or color."
+        "title": "Return Process",
+        "description": "Once we receive your returned item and inspect it for any damage or signs of wear, we will process your request. Exchanges are subject to the availability of the requested size or color. If you opt for a refund, it will be issued to your original payment method. Please note that it may take up to 10 working days for the refund to reflect on your bank statement."
     },
     {
-        title: "Return Shipping",
-        description:
-            "Customers are responsible for the cost of return shipping unless the exchange is due to a mistake on our part (e.g., wrong item sent, defective product). In such cases, we will provide a prepaid shipping label for the return."
-    },
-    {
-        title: "More Information",
-        description:
-            "For more information on our exchange policy, please refer to our Terms and Conditions or contact our customer service team for assistance."
+        "title": "Return Shipping",
+        "description": "Customers are responsible for return shipping costs unless the return is due to an error on our part (e.g., wrong item sent, defective product). In such cases, we will provide a prepaid shipping label for the return."
     },
     {
         title: "Shipping Methods",
