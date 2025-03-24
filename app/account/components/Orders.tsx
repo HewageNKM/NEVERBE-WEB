@@ -33,7 +33,7 @@ const Orders = () => {
 
     const calculateOrderTotal = (order: Order) => {
         const itemsTotal = order.items.reduce((total, item) => total + item.price * item.quantity, 0);
-        return itemsTotal + (order?.shippingFee || 0) + (order?.fee || 0) - order.discount;
+        return itemsTotal + (order?.shippingFee || 0) + (order?.fee || 0) - (order.discount || 0);
     };
 
     return (

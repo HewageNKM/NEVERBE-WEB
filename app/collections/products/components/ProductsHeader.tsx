@@ -14,7 +14,7 @@ const ProductsHeader = ({gender}: { gender: string }) => {
                 <figure className="transition-transform duration-300 ease-in-out group-hover:scale-105">
                     <Image
                         src={DefaultBG}
-                        alt="Shoes Background"
+                        alt="Products Header"
                         width={100}
                         height={100}
                         className="w-full object-cover h-[10rem] md:h-[20rem]"
