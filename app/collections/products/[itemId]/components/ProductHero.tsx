@@ -55,6 +55,7 @@ const ProductHero = ({item}: { item: Item }) => {
         const roundedDiscountPrice = Math.round((item.sellingPrice - (item.sellingPrice * item.discount / 100)) / 10) * 10;
         const discount = (item.sellingPrice * qty) - (roundedDiscountPrice * qty);
         const cartItem: CartItem = {
+            bPrice: item.buyingPrice,
             discount: discount,
             itemId: item.itemId,
             variantId: selectedVariant.variantId,

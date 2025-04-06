@@ -53,6 +53,7 @@ export interface Item {
     name: string,
     sellingPrice: number,
     marketPrice: number,
+    buyingPrice: number,
     discount: number,
     listing: "Active" | "Inactive",
     status: "Active" | "Inactive",
@@ -87,6 +88,7 @@ export interface CartItem {
     type: string,
     quantity: number,
     price: number,
+    bPrice: number,
 }
 
 export interface OrderItem {
@@ -97,6 +99,7 @@ export interface OrderItem {
     size: string,
     quantity: number,
     price: number,
+    bPrice: number,
 }
 
 export interface FooterLink {
