@@ -12,7 +12,6 @@ const ItemCard = ({item}: { item: Item }) => {
     const [outOfStocks, setOutOfStocks] = useState(false);
     const [outOfStocksLabel, setOutOfStocksLabel] = useState("Out of Stock");
     const {user} = useSelector((state: RootState) => state.authSlice);
-    const [totalRating, setTotalRating] = useState(0)
 
     const checkOutOfStocks = () => {
         if (item.variants.length === 0) {
@@ -25,18 +24,9 @@ const ItemCard = ({item}: { item: Item }) => {
         );
         setOutOfStocks(allOutOfStock);
     };
-    const getRating = async () => {
-        try {
-            const {totalRating} = await getAllReviewsById(item.itemId);
-            setTotalRating(totalRating);
-        } catch (error) {
-            console.error(error)
-        }
-    }
     useEffect(() => {
         if (user) {
             checkOutOfStocks();
-            getRating();
         }
     }, [item, user]);
     const findRangeOfSizes = () => {
@@ -65,19 +55,6 @@ const ItemCard = ({item}: { item: Item }) => {
                 </figure>
                 <header className="p-4 flex flex-col gap-1">
                     <h2 className="font-bold text-sm md:text-lg">{item.name}</h2>
-                    <div className="flex flex-row gap-1 items-center font-bold">
-                        <div className="md:block hidden">
-                            <ReactStars edit={false}
-                                        value={totalRating} count={5}
-                                        size={25} color2={'#ffd700'}/>
-                        </div>
-                        <div className="md:hidden block">
-                            <ReactStars edit={false}
-                                        value={totalRating} count={1}
-                                        size={18} color2={'#ffd700'}/>
-                        </div>
-                        <span>({totalRating})</span>
-                    </div>
                     <div className="flex flex-row items-center flex-wrap gap-1">
                         <p className={`text-red-500 text-sm font-bold ${item.discount > 0 && "line-through"}`}>Rs. {(Math.round(item.sellingPrice).toFixed(2))}</p>
                         <p className="line-through font-bold text-gray-500 text-sm">
