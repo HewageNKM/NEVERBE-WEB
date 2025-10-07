@@ -292,7 +292,7 @@ const ProductHero = ({item}: { item: Item }) => {
                                 {selectedVariant.sizes.map((size, index) => (
                                     <li key={index}>
                                         <button
-                                            disabled={size.stock == 0}
+                                            disabled={size.stock <= 0}
                                             onClick={() => {
                                                 calculateSizes(size.size);
                                                 setSelectedSize(size);
