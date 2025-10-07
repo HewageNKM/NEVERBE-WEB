@@ -111,7 +111,7 @@ const ProductHero = ({item}: { item: Item }) => {
     useEffect(() => {
         if (user) {
             checkOutOfStocks();
-            getRating()
+            // getRating()
         }
     }, [item, user]);
 
@@ -223,14 +223,14 @@ const ProductHero = ({item}: { item: Item }) => {
                     <div className="flex flex-col gap-4">
                         <p className="text-lg font-medium capitalize text-gray-600">{item.manufacturer}</p>
                         <h2 className="text-xl font-extrabold text-gray-900">{item.name}</h2>
-                        <Link href={"#rating"} className="flex flex-row gap-1 items-center font-bold">
+                        {/* <Link href={"#rating"} className="flex flex-row gap-1 items-center font-bold">
                             <ReactStars edit={false}
                                         value={totalRating} count={5}
                                         size={25} color2={'#ffd700'}/>
                             <span>
                                 ({totalRating})
                             </span>
-                        </Link>
+                        </Link> */}
                         <div className="text-gray-900 font-semibold flex items-center space-x-3 text-lg flex-row gap-2">
                             {item.discount > 0 ? (
                                <div

@@ -15,6 +15,9 @@ import KidsBG from './kidsBG.png';
 import MenBG from './menBG.jpg';
 import WomenBG from './womenBG.jpg';
 import PayHereWhiteLongBanner  from './payhere_long_banner.png';
+import RunningShoeBG from "./runningShoeBg.webp"
+import SlidesBG  from "./slidesBg.jpg"
+
 export
 {
     PayHereWhiteLongBanner,
@@ -33,5 +36,7 @@ export
     MenuCard,
     KidsBG,
     WomenBG,
-    MenBG
+    MenBG,
+    RunningShoeBG,
+    SlidesBG
 };

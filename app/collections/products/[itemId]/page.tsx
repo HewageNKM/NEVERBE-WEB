@@ -5,7 +5,6 @@ import {Item} from "@/interfaces";
 import {getItemById, getSimilarItems} from "@/firebase/firebaseAdmin";
 import {Metadata} from "next";
 import SimilarProducts from "@/app/collections/products/[itemId]/components/SimilarProducts";
-import Reviews from "@/app/collections/products/[itemId]/components/Reviews";
 
 // Dynamically generate metadata
 export async function generateMetadata({params}: { params: { itemId: string } }): Promise<Metadata> {
@@ -75,7 +74,6 @@ const Page = async ({params}: { params: { itemId: string } }) => {
         <main className="w-full lg:mt-32 mt-20 md:mt-28 overflow-clip">
             <div className="md:px-8 px-4 py-4">
                 <ProductHero item={item}/>
-                <Reviews itemId={item.itemId}/>
                 <SimilarProducts items={similarItems}/>
             </div>
         </main>

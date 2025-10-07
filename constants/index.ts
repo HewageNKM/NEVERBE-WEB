@@ -5,6 +5,8 @@ import {
   MenBG,
   MoneyImage,
   PayHereWhiteLongBanner,
+  RunningShoeBG,
+  SlidesBG,
   SupportImage,
   WomenBG,
 } from "@/assets/images";
@@ -466,7 +468,7 @@ export const sizeData = [
   { "US - Kids": "4", UK: "3", CM: "23", EU: "34" },
   { "US - Kids": "5", UK: "4", CM: "24", EU: "35" },
 ];
-export const genderList = [
+export const collectionList = [
   {
     gender: "Men",
     url: "/collections/products",
@@ -482,4 +484,14 @@ export const genderList = [
     url: "/collections/products",
     image: KidsBG,
   },
+  {
+    gender:"Slides",
+    url:"/collections/products",
+    image: SlidesBG 
+  },
+  {
+    gender:"Running",
+    url:"/collections/products",
+    image:RunningShoeBG
+  }
 ];

@@ -2,15 +2,15 @@ import React from 'react';
 import Link from 'next/link';
 import Image from "next/image";
 
-interface GenderCardProps {
+interface CollectionProps {
     url: string;
     gender: string;
     image: string;
 }
 
-const GenderCard: React.FC<GenderCardProps> = ({ url, gender, image }) => {
+const CollectionCard: React.FC<CollectionProps> = ({ url, gender, image }) => {
     return (
-        <article className="relative group w-[15rem] h-[20rem] lg:w-[22rem] lg:h-[30rem] lg:hover:shadow-lg transition-shadow duration-300 rounded-lg overflow-hidden">
+        <article className="relative group md:w-[15rem] md:h-[20rem] w-[10rem] h-[15rem] lg:hover:shadow-lg transition-shadow duration-300 rounded-lg overflow-hidden">
             <Link href={`${url}?gender=${gender.toLowerCase()}`} passHref>
                 <div className="relative w-full h-full">
                     <Image
@@ -32,4 +32,4 @@ const GenderCard: React.FC<GenderCardProps> = ({ url, gender, image }) => {
     );
 };
 
-export default GenderCard;
+export default CollectionCard;

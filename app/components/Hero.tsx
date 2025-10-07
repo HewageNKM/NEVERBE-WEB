@@ -3,8 +3,8 @@ import ImagesSlider from "@/app/components/ImagesSlider";
 import Link from "next/link";
 import {BiCart} from "react-icons/bi";
 import {Slide} from "@/interfaces";
-import {genderList} from "@/constants";
-import GenderCard from "@/app/components/GenderCard";
+import {collectionList} from "@/constants";
+import CollectionCard from "@/app/components/CollectionCard";
 
 const Hero = async ({slides}: { slides: Slide[] }) => {
     return (
@@ -17,9 +17,9 @@ const Hero = async ({slides}: { slides: Slide[] }) => {
                     </h3>
                     <ul className="flex mt-5 flex-wrap md:gap-24 gap-10 lg:mt-10 flex-row justify-evenly lg:gap-36">
                         {
-                            genderList.map((gen, index) => (
+                            collectionList.map((gen, index) => (
                                 <li key={index}>
-                                    <GenderCard url={gen.url} gender={gen.gender} image={gen.image}/>
+                                    <CollectionCard url={gen.url} gender={gen.gender} image={gen.image}/>
                                 </li>
                             ))
                         }

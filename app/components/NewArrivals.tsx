@@ -8,14 +8,14 @@ const NewArrivals = async ({arrivals: arrivals}:{arrivals:Item[]}) => {
 
     return (
         <section className="w-full my-12">
-            <div className="lg:px-24 px-4 w-full">
+            <div className="lg:px-24 px-2 w-full">
                 <div>
                     <h2 className="md:text-4xl text-2xl"><strong>New Arrivals</strong></h2>
                     <h3 className="md:text-xl text-lg text-primary mt-2">Check out our latest products</h3>
                 </div>
                 <div className="mt-10">
                     {arrivals.length > 0 ? ( // Render items
-                        <ul className="flex flex-row justify-center items-center md:justify-start gap-5 mb-10 md:gap-10 flex-wrap mt-5 w-full">
+                        <ul className="flex flex-row justify-center items-center md:justify-start gap-5 mb-10 md:gap-6 flex-wrap mt-5 w-full">
                             {arrivals.map((item: Item) => (
                                 <li key={item.itemId}>
                                     <ItemCard item={item} />
