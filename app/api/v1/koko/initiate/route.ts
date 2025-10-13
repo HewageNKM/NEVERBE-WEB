@@ -20,8 +20,8 @@ export async function POST(req: Request) {
     }
 
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
-    const returnUrl = `${baseUrl}/checkout/success?order_id=${orderId}`;
-    const cancelUrl = `${baseUrl}/checkout/fail?order_id=${orderId}`;
+    const returnUrl = `${baseUrl}/checkout/success?orderId=${orderId}`;
+    const cancelUrl = `${baseUrl}/checkout/fail?orderId=${orderId}`;
     const responseUrl = `${baseUrl}/api/v1/koko/notify`;
 
     // --- Step 2: Construct the dataString in the exact specified order [cite: 75] ---
