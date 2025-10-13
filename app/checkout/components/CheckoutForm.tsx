@@ -30,7 +30,10 @@ const createCustomerFromForm = (form: any): Customer => {
 };
 
 // Helper to dynamically submit a form to an external URL
-const submitRedirectForm = (actionUrl: string, payload: Record<string, any>) => {
+const submitRedirectForm = (
+  actionUrl: string,
+  payload: Record<string, any>
+) => {
   const form = document.createElement("form");
   form.method = "POST";
   form.action = actionUrl;
@@ -71,92 +74,129 @@ const CheckoutForm = () => {
   const handlePaymentSubmit = async (evt: React.FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
     if (cartItems.length === 0) {
-        alert("Your cart is empty.");
-        return;
+      alert("Your cart is empty.");
+      return;
     }
     if (!captchaValue) {
-        setCaptchaError(true);
-        return;
+      setCaptchaError(true);
+      return;
     }
     setLoading(true);
 
     const form = evt.currentTarget;
     const orderId = generateOrderId();
     const newCustomer = createCustomerFromForm(form);
-    
+
     if (saveAddress) {
-        window.localStorage.setItem("neverbeCustomer", JSON.stringify(newCustomer));
+      window.localStorage.setItem(
+        "neverbeCustomer",
+        JSON.stringify(newCustomer)
+      );
     } else {
-        window.localStorage.removeItem("neverbeCustomer");
+      window.localStorage.removeItem("neverbeCustomer");
     }
 
     try {
-        const userId = user?.uid || (await signUser())?.uid;
-        const amount = calculateSubTotal(cartItems);
+      const userId = user?.uid || (await signUser())?.uid;
+      const amount = calculateSubTotal(cartItems);
 
-        const newOrder: Order = {
-            orderId,
-            userId,
-            customer: newCustomer,
-            items: cartItems,
-            amount: parseFloat(amount),
-            paymentMethod: paymentType || "Unknown",
-            paymentStatus: "Pending",
-            from: "Website",
-            discount: cartItems.reduce((acc, item) => acc + (item.discount || 0), 0),
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-        };
+      const newOrder: Order = {
+        orderId,
+        userId,
+        customer: newCustomer,
+        items: cartItems,
+        amount: parseFloat(amount),
+        paymentMethod: paymentType || "Unknown",
+        paymentStatus: "Pending",
+        from: "Website",
+        discount: cartItems.reduce(
+          (acc, item) => acc + (item.discount || 0),
+          0
+        ),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
 
-        await addNewOrder(newOrder, captchaValue);
-        dispatch(clearCart());
+      await addNewOrder(newOrder, captchaValue);
+      dispatch(clearCart());
 
-        switch (paymentType) {
-            case "KOKO":
-                await processKokoPayment(orderId, newCustomer, amount);
-                break;
-            case "COD":
-                router.replace(`/checkout/success?order_id=${orderId}`);
-                break;
-            default:
-                setLoading(false);
-                throw new Error("Please select a valid payment method.");
-        }
+      switch (paymentType) {
+        case "KOKO":
+          await processKokoPayment(orderId, newCustomer, amount);
+          break;
+        case "COD":
+          router.replace(`/checkout/success?order_id=${orderId}`);
+          break;
+        default:
+          setLoading(false);
+          throw new Error("Please select a valid payment method.");
+      }
     } catch (error) {
-        console.error("Payment processing failed:", error);
-        router.replace(`/checkout/fail?order_id=${orderId}`);
+      console.error("Payment processing failed:", error);
+      router.replace(`/checkout/fail?order_id=${orderId}`);
     } finally {
-        if (paymentType === "COD") {
-            setLoading(false);
-        }
+      if (paymentType === "COD") {
+        setLoading(false);
+      }
     }
   };
 
-  const processKokoPayment = async (orderId: string, customer: Customer, amount: string) => {
-    const amountFormatted = parseFloat(amount).toLocaleString("en-us", { minimumFractionDigits: 2 }).replaceAll(",", "");
-    const [firstName, ...lastNameParts] = customer.name.split(' ');
-    
+  const processKokoPayment = async (
+    orderId: string,
+    customer: Customer,
+    amount: string
+  ) => {
+    const amountFormatted = parseFloat(amount)
+      .toLocaleString("en-us", { minimumFractionDigits: 2 })
+      .replaceAll(",", "");
+    const [firstName, ...lastNameParts] = customer.name.split(" ");
+
+    // Call your Next.js API route that signs and prepares Koko payload
     const response = await fetch("/api/v1/koko/initiate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            orderId,
-            amount: amountFormatted,
-            firstName: firstName,
-            lastName: lastNameParts.join(' ') || firstName,
-            email: customer.email,
-            description: `${cartItems.length} products`,
-        }),
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        orderId,
+        amount: amountFormatted,
+        firstName,
+        lastName: lastNameParts.join(" ") || firstName,
+        email: customer.email,
+        description: `${cartItems.length} products`,
+      }),
     });
 
     if (!response.ok) {
-        throw new Error("Failed to initialize Koko payment.");
+      throw new Error("Failed to initialize Koko payment.");
     }
-    
+
     const kokoPayload = await response.json();
-    submitRedirectForm("https://qaapi.paykoko.com/api/merchants/orderCreate", kokoPayload);
+
+    // Convert JSON payload into application/x-www-form-urlencoded
+    const formBody = new URLSearchParams();
+    for (const key in kokoPayload) {
+      if (Object.prototype.hasOwnProperty.call(kokoPayload, key)) {
+        formBody.append(key, kokoPayload[key]);
+      }
+    }
+
+    // Create and submit an HTML form for redirection
+    const form = document.createElement("form");
+    form.method = "POST";
+    form.action = process.env.NEXT_PUBLIC_KOKO_REDIRECT_URL || "";
+    form.style.display = "none";
+
+    for (const [key, value] of formBody.entries()) {
+      const input = document.createElement("input");
+      input.type = "hidden";
+      input.name = key;
+      input.value = value;
+      form.appendChild(input);
+    }
+
+    document.body.appendChild(form);
+    form.submit();
   };
-  
+
   return (
     <div className="flex justify-center items-center">
       <form
