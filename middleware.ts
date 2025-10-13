@@ -11,13 +11,13 @@ export function middleware(req: Request) {
   if (!origin) {
     // No Origin header indicates a same-origin request
     console.log("Allowed: Same-origin request");
-    return NextResponse.next(); // Allow the request
+    return NextResponse.next();
   }
 
   if (allowedOrigins.includes(origin)) {
     // Cross-origin request from allowed origin
     console.log(`Allowed: Cross-origin request from ${origin}`);
-    return NextResponse.next(); // Allow the request
+    return NextResponse.next();
   }
 
   // Block requests from other origins
@@ -25,7 +25,8 @@ export function middleware(req: Request) {
   return new NextResponse("Forbidden", { status: 403 });
 }
 
-// Apply the middleware to all API routes
 export const config = {
-  matcher: "/api/:path*",
+  matcher: [
+    '/api/((?!v1/(koko|ipg)).*)',
+  ],
 };
