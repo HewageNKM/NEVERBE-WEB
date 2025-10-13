@@ -4,8 +4,8 @@ import SuccessAnimationComponents from './components/SuccessAnimationComponents'
 import { getOrderById } from "@/firebase/firebaseAdmin";
 import { notFound } from "next/navigation";
 
-const Page = async ({ searchParams }: { searchParams: { order_id: string } }) => {
-    const orderId = searchParams.order_id;
+const Page = async ({ searchParams }: { searchParams: { orderId: string } }) => {
+    const orderId = searchParams.orderId;
     let order;
 
     try {

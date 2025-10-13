@@ -20,7 +20,7 @@ const AddressDetails = ({
                         <input
                             placeholder="Sandun"
                             type="text"
-                            defaultValue={customer.name.split(" ")[0]}
+                            defaultValue={customer?.name.split(" ")[0]}
                             className="px-4 py-2 focus:outline-none rounded-lg border-slate-300 border-2"
                             required
                             name="first_name"
@@ -32,7 +32,7 @@ const AddressDetails = ({
                         <input
                             placeholder="Dilhan"
                             type="text"
-                            defaultValue={customer.name.split(" ")[1]}
+                            defaultValue={customer?.name.split(" ")[1]}
                             className="px-4 py-2 focus:outline-none rounded-lg border-slate-300 border-2"
                             required
                             name="last_name"
@@ -45,7 +45,7 @@ const AddressDetails = ({
                     <input
                         type="email"
                         placeholder="example@gmail.com"
-                        defaultValue={customer.email}
+                        defaultValue={customer?.email}
                         className="px-4 py-2 focus:outline-none rounded-lg border-slate-300 border-2"
                         required
                         name="email"
@@ -57,7 +57,7 @@ const AddressDetails = ({
                     <input
                         placeholder="0777668765"
                         type="text"
-                        defaultValue={customer.phone}
+                        defaultValue={customer?.phone}
                         className="px-4 py-2 focus:outline-none border-slate-300 rounded-lg border-2"
                         required
                         name="phone"
@@ -69,7 +69,7 @@ const AddressDetails = ({
                     <input
                         type="text"
                         placeholder="98/1A, Ingiriya"
-                        defaultValue={customer.address}
+                        defaultValue={customer?.address}
                         className="px-4 py-2 focus:outline-none border-slate-300 rounded-lg border-2"
                         required
                         name="address"
@@ -81,7 +81,7 @@ const AddressDetails = ({
                     <input
                         type="text"
                         placeholder="Dompe"
-                        defaultValue={customer.city}
+                        defaultValue={customer?.city}
                         className="px-4 py-2 border-slate-300 focus:outline-none rounded-lg border-2"
                         required
                         name="city"
@@ -93,7 +93,7 @@ const AddressDetails = ({
                     <input
                         type="text"
                         placeholder="11700"
-                        defaultValue={customer.zip}
+                        defaultValue={customer?.zip}
                         className="px-4 py-2 border-slate-300 focus:outline-none rounded-lg border-2"
                         name="zip"
                     />
