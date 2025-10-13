@@ -27,6 +27,8 @@ export function middleware(req: Request) {
 
 export const config = {
   matcher: [
-    '/api/((?!v1/(koko|ipg)).*)',
+    "/api/:path*",
+    "!/api/v1/koko/:path*",
+    "!/api/v1/ipg/:path*",
   ],
 };
