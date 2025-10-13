@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import { AppDispatch, RootState } from "@/redux/store";
-import { CartItem, Customer, Order } from "@/interfaces";
+import { Customer, Order } from "@/interfaces";
 import { clearCart } from "@/redux/cartSlice/cartSlice";
 import { calculateSubTotal, generateOrderId } from "@/util";
 import { addNewOrder } from "@/actions/orderAction";
@@ -27,28 +27,6 @@ const createCustomerFromForm = (form: any): Customer => {
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   };
-};
-
-// Helper to dynamically submit a form to an external URL
-const submitRedirectForm = (
-  actionUrl: string,
-  payload: Record<string, any>
-) => {
-  const form = document.createElement("form");
-  form.method = "POST";
-  form.action = actionUrl;
-
-  for (const key in payload) {
-    if (Object.prototype.hasOwnProperty.call(payload, key)) {
-      const input = document.createElement("input");
-      input.type = "hidden";
-      input.name = key;
-      input.value = payload[key];
-      form.appendChild(input);
-    }
-  }
-  document.body.appendChild(form);
-  form.submit();
 };
 
 const CheckoutForm = () => {
@@ -125,7 +103,7 @@ const CheckoutForm = () => {
           await processKokoPayment(orderId, newCustomer, amount);
           break;
         case "COD":
-          router.replace(`/checkout/success?order_id=${orderId}`);
+          router.replace(`/checkout/success?orderId=${orderId}`);
           break;
         default:
           setLoading(false);
