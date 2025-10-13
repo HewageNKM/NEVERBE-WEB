@@ -20,15 +20,17 @@ export function middleware(req: Request) {
     return NextResponse.next();
   }
 
+  // if path include api/v1/koko and api/v1/ipg allow
+  if (req.url.includes("/api/v1/koko") || req.url.includes("/api/v1/ipg")) {
+    console.log(`Allowed: Koko or IPG API request from ${origin}`);
+    return NextResponse.next();
+  }
+
   // Block requests from other origins
   console.log(`Blocked: Request from unknown origin: ${origin}`);
   return new NextResponse("Forbidden", { status: 403 });
 }
 
 export const config = {
-  matcher: [
-    "/api/:path*",
-    "!/api/v1/koko/:path*",
-    "!/api/v1/ipg/:path*",
-  ],
+  matcher: "/api/:path*",
 };
