@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 export function middleware(req: Request) {
   const origin = req.headers.get("origin");
 
-  const allowedOrigins = ["https://neverbe.lk", "https://dev.neverbe.lk"];
+  const allowedOrigins = ["https://neverbe.lk", "https://dev.neverbe.lk", " https://www.neverbe.lk"];
 
   if (process.env.NODE_ENV === "development")
     allowedOrigins.push("http://localhost:3000");
