@@ -111,7 +111,7 @@ const CheckoutForm = () => {
       }
     } catch (error) {
       console.error("Payment processing failed:", error);
-      router.replace(`/checkout/fail?order_id=${orderId}`);
+      router.replace(`/checkout/fail?orderId=${orderId}`);
     } finally {
       if (paymentType === "COD") {
         setLoading(false);
