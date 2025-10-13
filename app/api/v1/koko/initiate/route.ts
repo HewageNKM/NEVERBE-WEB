@@ -43,13 +43,11 @@ export async function POST(req: Request) {
       responseUrl; // _responseUrl [cite: 31]
 
     // --- Step 3: Sign the dataString with your RSA Private Key ---
-    const formattedPrivateKey = privateKey.replace(/\\n/g, "\n");
-
     const signer = crypto.createSign("RSA-SHA256");
     signer.update(dataString);
     signer.end();
 
-    const signature = signer.sign(formattedPrivateKey, "base64");
+    const signature = signer.sign(privateKey, "base64");
 
     // --- Step 4: Prepare the payload for the Koko form ---
     const payload = {
@@ -71,6 +69,8 @@ export async function POST(req: Request) {
       dataString: dataString,
       signature: signature,
     };
+
+    console.log("Koko initiation payload:", payload);
 
     return NextResponse.json(payload, { status: 200 });
   } catch (error: any) {
