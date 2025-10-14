@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { AppDispatch, RootState } from "@/redux/store";
 import { Customer, Order } from "@/interfaces";
 import { clearCart } from "@/redux/cartSlice/cartSlice";
-import { calculateSubTotal, generateOrderId } from "@/util";
+import { calculateShippingCost, calculateSubTotal, generateOrderId } from "@/util";
 import { addNewOrder } from "@/actions/orderAction";
 import { signUser } from "@/firebase/firebaseClient";
 import AddressDetails from "@/app/checkout/components/AddressDetails";
@@ -85,6 +85,7 @@ const CheckoutForm = () => {
         items: cartItems,
         amount: parseFloat(amount),
         paymentMethod: paymentType || "Unknown",
+        shippingFee: calculateShippingCost(cartItems),
         paymentStatus: "Pending",
         from: "Website",
         discount: cartItems.reduce(
