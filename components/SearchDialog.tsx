@@ -8,12 +8,14 @@ interface SearchDialogProps {
   results: Item[];
   onClick: () => void;
   containerStyle?: string;
+  maxHeight?: string; // optional custom max-height
 }
 
 const SearchDialog: React.FC<SearchDialogProps> = ({
   results,
   onClick,
   containerStyle,
+  maxHeight = "60vh", // default max height
 }) => {
   return (
     <motion.div
@@ -24,6 +26,7 @@ const SearchDialog: React.FC<SearchDialogProps> = ({
       className={`w-full max-w-md bg-white text-black rounded-lg shadow-lg p-3 overflow-y-auto hide-scrollbar ${
         containerStyle ? containerStyle : "absolute top-[3.5rem] right-0 z-50"
       }`}
+      style={{ maxHeight }} // apply max height for scroll
     >
       {results.length > 0 ? (
         <ul className="flex flex-col gap-2">
