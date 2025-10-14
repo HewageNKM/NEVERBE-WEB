@@ -5,8 +5,8 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
-import SuccessAnimationComponents from "./components/SuccessAnimationComponents";
 import { Order } from "@/interfaces";
+import SuccessAnimationComponents from "./SuccessAnimationComponents";
 
 export default function SuccessPageClient({ order }: { order: Order }) {
   const [loadingInvoice, setLoadingInvoice] = useState(false);
