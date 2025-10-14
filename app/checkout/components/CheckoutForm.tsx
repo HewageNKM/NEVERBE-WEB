@@ -80,7 +80,7 @@ const CheckoutForm = () => {
 
       const newOrder: Order = {
         orderId,
-        userId,
+        userId: userId || 'anonymous-user',
         customer: newCustomer,
         items: cartItems,
         amount: parseFloat(amount),
@@ -129,7 +129,6 @@ const CheckoutForm = () => {
       .replaceAll(",", "");
     const [firstName, ...lastNameParts] = customer.name.split(" ");
 
-    // Call your Next.js API route that signs and prepares Koko payload
     const response = await fetch("/api/v1/koko/initiate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -144,12 +143,12 @@ const CheckoutForm = () => {
     });
 
     if (!response.ok) {
-      throw new Error("Failed to initialize Koko payment.");
+      const errorText = await response.text();
+      throw new Error(`Failed to initialize Koko payment: ${errorText}`);
     }
 
     const kokoPayload = await response.json();
 
-    // Convert JSON payload into application/x-www-form-urlencoded
     const formBody = new URLSearchParams();
     for (const key in kokoPayload) {
       if (Object.prototype.hasOwnProperty.call(kokoPayload, key)) {
@@ -157,7 +156,6 @@ const CheckoutForm = () => {
       }
     }
 
-    // Create and submit an HTML form for redirection
     const form = document.createElement("form");
     form.method = "POST";
     form.action = process.env.NEXT_PUBLIC_KOKO_REDIRECT_URL || "";
@@ -167,7 +165,7 @@ const CheckoutForm = () => {
       const input = document.createElement("input");
       input.type = "hidden";
       input.name = key;
-      input.value = value;
+      input.value = value as string;
       form.appendChild(input);
     }
 
