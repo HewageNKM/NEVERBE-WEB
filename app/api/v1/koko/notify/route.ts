@@ -21,10 +21,13 @@ export async function POST(req: Request) {
       );
     }
 
-    const kokoPublicKey = process.env.NEXT_PUBLIC_KOKO_PUBLIC_KEY;
+    let kokoPublicKey = process.env.KOKO_PUBLIC_KEY;
     if (!kokoPublicKey) {
       throw new Error("Koko public key not found in environment.");
     }
+
+    // ✅ Convert escaped newlines to real ones
+    kokoPublicKey = kokoPublicKey.replace(/\\n/g, "\n").trim();
 
     // --- Step 1: Build verification string ---
     const dataToVerify = orderId + trnId + status;
