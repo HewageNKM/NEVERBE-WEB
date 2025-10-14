@@ -495,3 +495,6 @@ export const collectionList = [
     image:RunningShoeBG
   }
 ];
+
+export const SHIPPING_FLAT_RATE_1 = 380;
+export const SHIPPING_FLAT_RATE_2 = 500;

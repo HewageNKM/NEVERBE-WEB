@@ -12,7 +12,7 @@ interface EmptyStateProps {
 const EmptyState = ({ heading, subHeading, actionLabel, onAction }: EmptyStateProps) => {
   return (
     <div className="flex w-full justify-center items-center py-16 px-6" role="alert">
-      <div className="flex flex-col items-center bg-white dark:bg-gray-900 rounded-xl p-10 gap-6 shadow-lg max-w-sm text-center">
+      <div className="flex flex-col items-center bg-white dark:bg-gray-900 rounded-xl p-10 gap-6 max-w-sm text-center">
         {/* Icon with gradient background */}
         <div className="flex justify-center items-center w-20 h-20 bg-gradient-to-tr from-red-100 via-red-200 to-red-300 rounded-full">
           <BsEmojiFrown size={40} className="text-red-600" aria-hidden="true" />

@@ -5,7 +5,7 @@ import { RootState } from "@/redux/store";
 import { IoLockClosed } from "react-icons/io5";
 import CartItemCard from "@/components/CartItemCard";
 import ReCAPTCHA from "react-google-recaptcha";
-import { calculateSubTotal } from "@/util";
+import { calculateShipping, calculateShippingCost, calculateSubTotal } from "@/util";
 import PaymentOptions from "@/app/checkout/components/PaymentOptions";
 
 const PaymentDetails = ({
@@ -54,7 +54,7 @@ const PaymentDetails = ({
             Total: <span className="font-medium">Rs. {calculateTotal().toFixed(2)}</span>
           </p>
           <p className="text-gray-700">
-            Shipping: <span className="font-medium">Rs. 0.00</span>
+            Shipping: <span className="font-medium">{calculateShippingCost(cartItems).toFixed(2)}</span>
           </p>
           <p className="text-gray-700">
             Discount: <span className="font-medium text-red-500">-Rs. {calculateDiscount().toFixed(2)}</span>
@@ -64,9 +64,6 @@ const PaymentDetails = ({
             Subtotal: Rs. {calculateSubTotal(cartItems).toFixed(2)}
           </p>
           <div className="w-full border-t border-gray-300 my-1" />
-          <p className="text-sm text-red-500 font-medium text-center w-full">
-            ** Pay For Shipping Charges at the time of delivery **
-          </p>
         </div>
       </div>
 
