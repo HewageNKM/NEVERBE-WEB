@@ -50,7 +50,7 @@ const Page = async ({params}: { params: { manufacturer: string; brand: string } 
     }
 
     return (
-        <main className="w-full relative lg:mt-32 md:mt-20 mt-24 overflow-hidden">
+        <main className="w-full relative lg:mt-32 md:mt-20 mb-5 mt-24 overflow-hidden">
             <section className="w-full">
                 <BrandHeader brand={brand} />
                 <BrandProducts items={items} brand={brand} manufacturer={manufacturer}/>

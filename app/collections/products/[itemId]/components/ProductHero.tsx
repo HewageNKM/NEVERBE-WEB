@@ -1,410 +1,357 @@
 "use client";
-import React, {useEffect, useRef, useState} from "react";
+import React, { useRef, useState, useEffect} from "react";
 import Image from "next/image";
-import {CartItem, Item, Size, Variant} from "@/interfaces";
-import {IoAdd, IoCartOutline, IoRemove} from "react-icons/io5";
-import {AppDispatch, RootState} from "@/redux/store";
-import {useDispatch, useSelector} from "react-redux";
-import {pushToCart} from "@/redux/cartSlice/cartSlice";
+import { CartItem, Item, Size, Variant } from "@/interfaces";
+import { IoAdd, IoCartOutline, IoRemove } from "react-icons/io5";
+import { AppDispatch, RootState } from "@/redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import { pushToCart } from "@/redux/cartSlice/cartSlice";
 import Link from "next/link";
-import {getAllReviewsById} from "@/actions/itemDetailsAction";
-import ReactStars from "react-stars";
-import {useRouter} from "next/navigation";
-import {sizeData} from "@/constants";
+import { useRouter } from "next/navigation";
+import { sizeData } from "@/constants";
+import { KOKOLogo } from "@/assets/images";
 
-const ProductHero = ({item}: { item: Item }) => {
-    const router = useRouter();
-    const [selectedImage, setSelectedImage] = useState(item.thumbnail);
-    const [selectedVariant, setSelectedVariant] = useState<Variant>({
-        variantId: "",
-        variantName: "",
-        images: [],
-        sizes: [],
+const ProductHero = ({ item }: { item: Item }) => {
+  const router = useRouter();
+  const dispatch: AppDispatch = useDispatch();
+  const { user } = useSelector((state: RootState) => state.authSlice);
+
+  // Add this inside your component, after all useState declarations
+  useEffect(() => {
+    if (!item.variants?.length) return;
+
+    // Default Variant
+    const defaultVariant = item.variants[0];
+    setSelectedVariant(defaultVariant);
+
+    // Default Image
+    setSelectedImage(defaultVariant.images[0] || item.thumbnail);
+
+    // Default Size (first size with stock > 0)
+    const defaultSize = defaultVariant.sizes.find((s) => s.stock > 0) || {
+      size: "",
+      stock: 0,
+    };
+    setSelectedSize(defaultSize);
+
+    // Update size conversion display
+    if (defaultSize.size) calculateSizes(defaultSize.size);
+  }, [item]);
+
+  const [selectedImage, setSelectedImage] = useState(item.thumbnail);
+  const [selectedVariant, setSelectedVariant] = useState<Variant>({
+    variantId: "",
+    variantName: "",
+    images: [],
+    sizes: [],
+  });
+  const [selectedSize, setSelectedSize] = useState<Size>({
+    size: "",
+    stock: 0,
+  });
+  const [qty, setQty] = useState(0);
+  const [otherSizes, setOtherSizes] = useState({ uk: "", us: "", cm: "" });
+  const [outOfStocks, setOutOfStocks] = useState(false);
+  const [outOfStocksLabel, setOutOfStocksLabel] = useState("Out of Stock");
+
+  const imageRef = useRef<HTMLDivElement>(null);
+  const zoomRef = useRef<HTMLDivElement>(null);
+
+  // Quantity handler
+  const setQuantity = (dir: "inc" | "dec") => {
+    if (dir === "inc") setQty(Math.min(qty + 1, selectedSize.stock));
+    else setQty(Math.max(qty - 1, 0));
+  };
+
+  const addToCart = () => {
+    if (qty === 0 || !selectedSize.size) return;
+    const cartItem: CartItem = {
+      bPrice: item.buyingPrice,
+      discount: 0,
+      itemId: item.itemId,
+      variantId: selectedVariant.variantId,
+      name: item.name,
+      variantName: selectedVariant.variantName,
+      thumbnail: selectedVariant.images[0]?.url || item.thumbnail.url,
+      size: selectedSize.size,
+      quantity: qty,
+      type: item.type,
+      price: item.sellingPrice,
+    };
+    dispatch(pushToCart(cartItem));
+    resetSelection();
+  };
+
+  const buyNow = async () => {
+    await addToCart();
+    router.push("/checkout");
+  };
+
+  const resetSelection = () => {
+    setSelectedVariant({
+      variantId: "",
+      variantName: "",
+      images: [],
+      sizes: [],
     });
-    const [selectedSize, setSelectedSize] = useState<Size>({size: "", stock: 0});
-    const [qty, setQty] = useState(0);
-    const [outOfStocks, setOutOfStocks] = useState(false);
-    const [outOfStocksLabel, setOutOfStocksLabel] = useState("Out of Stock");
-    const [totalRating, setTotalRating] = useState(0)
-    const {user} = useSelector((state: RootState) => state.authSlice);
-    const [otherSizes, setOtherSizes] = useState({ukSize: "", usSize: "", cmSize: ""});
+    setSelectedSize({ size: "", stock: 0 });
+    setQty(0);
+    setSelectedImage(item.thumbnail);
+  };
 
-    const dispatch: AppDispatch = useDispatch();
+  const handleZoom = (e: React.MouseEvent) => {
+    if (!zoomRef.current || !imageRef.current) return;
+    const rect = imageRef.current.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    zoomRef.current.style.backgroundPosition = `${x}% ${y}%`;
+    zoomRef.current.style.display = "block";
+  };
 
-    const imageRef = useRef<HTMLDivElement>(null);
-    const zoomRef = useRef<HTMLDivElement>(null);
+  const removeZoom = () => {
+    if (zoomRef.current) zoomRef.current.style.display = "none";
+  };
 
-    const setQuantity = (direction: string) => {
-        if (direction === "in") {
-            if (selectedSize.stock > qty) {
-                setQty(qty + 1);
-            } else {
-                setQty(selectedSize.stock);
-            }
-        } else if (direction === "dec") {
-            if (qty == 0) {
-                setQty(0);
-            } else {
-                setQty(qty - 1);
-            }
-        }
-    };
+  const calculateSizes = (euSize: string) => {
+    const size = sizeData.find((s) => s["EU"] === euSize);
+    if (size)
+      setOtherSizes({
+        uk: size["UK"],
+        us: size["US - Women's"] || size["US - Men's"] || size["US - Kids"],
+        cm: size["CM"],
+      });
+  };
 
-    const addToCart = async () => {
-        const price = item.sellingPrice;
-        const roundedDiscountPrice = Math.round((item.sellingPrice - (item.sellingPrice * item.discount / 100)) / 10) * 10;
-        const discount = (item.sellingPrice * qty) - (roundedDiscountPrice * qty);
-        const cartItem: CartItem = {
-            bPrice: item.buyingPrice,
-            discount: discount,
-            itemId: item.itemId,
-            variantId: selectedVariant.variantId,
-            name: item.name,
-            variantName: selectedVariant.variantName,
-            thumbnail: selectedVariant.images[0].url,
-            size: selectedSize.size,
-            quantity: qty,
-            type: item.type,
-            price: price,
-        };
+  return (
+    <section className="w-full flex flex-col gap-10 mt-10">
+      {/* Breadcrumb */}
+      <div className="flex gap-2 text-gray-600 text-sm">
+        <Link href="/collections/products" className="hover:underline">
+          Products
+        </Link>
+        <span>/</span>
+        <span className="font-medium">{item.name}</span>
+      </div>
 
-        dispatch(pushToCart(cartItem));
-        reset();
-    };
+      {/* Product Main Section */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+        {/* Left: Images */}
+        <div className="flex flex-col gap-4">
+          <div
+            ref={imageRef}
+            onMouseMove={handleZoom}
+            onMouseLeave={removeZoom}
+            className="relative w-full rounded-xl overflow-hidden shadow-md cursor-zoom-in"
+          >
+            <Image
+              src={selectedImage.url}
+              alt={item.name}
+              width={600}
+              height={600}
+              className="w-full h-full object-contain"
+            />
+            <div
+              ref={zoomRef}
+              className="absolute inset-0 bg-no-repeat bg-cover pointer-events-none hidden"
+              style={{
+                backgroundImage: `url(${selectedImage.url})`,
+                backgroundSize: "200%",
+              }}
+            />
+          </div>
+          {/* Variant Thumbnails */}
+          <ul className="flex gap-3 p-2 overflow-x-auto hide-scrollbar">
+            {selectedVariant.images.map((img, idx) => (
+              <li key={idx}>
+                <button
+                  onClick={() => setSelectedImage(img)}
+                  className={`p-1 rounded-lg transition ring-2 ${
+                    selectedImage === img ? "ring-primary" : "ring-transparent"
+                  }`}
+                >
+                  <Image
+                    src={img.url}
+                    alt={item.name}
+                    width={60}
+                    height={60}
+                    className="rounded-lg"
+                  />
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
 
-    const buyNow = async () => {
-        await addToCart()
-        router.push("/checkout")
-    }
+        {/* Right: Details */}
+        <div className="flex flex-col gap-4">
+          <p className="text-gray-500 font-medium capitalize">{item.manufacturer}</p>
+          <h1 className="text-2xl md:text-3xl font-extrabold text-gray-900">
+            {item.name}
+          </h1>
 
-    const reset = () => {
-        setSelectedVariant({variantId: "", variantName: "", images: [], sizes: []});
-        setSelectedSize({size: "", stock: 0});
-        setQty(0);
-        setSelectedImage(item.thumbnail);
-    };
-
-    const checkOutOfStocks = () => {
-        if (item.variants.length === 0) {
-            setOutOfStocks(true);
-            setOutOfStocksLabel("Coming Soon");
-            return;
-        }
-        let iCount = 0;
-        for (let i = 0; i < item.variants.length; i++) {
-            let vCount = 0;
-            for (let j = 0; j < item.variants[i].sizes.length; j++) {
-                if (item.variants[i].sizes[j].stock == 0) {
-                    vCount++;
-                }
-            }
-            if (vCount === item.variants[i].sizes.length) {
-                iCount++;
-            }
-        }
-
-        if (iCount === item.variants.length) {
-            setOutOfStocks(true);
-        }
-    };
-
-    useEffect(() => {
-        if (user) {
-            checkOutOfStocks();
-            // getRating()
-        }
-    }, [item, user]);
-
-    const getRating = async () => {
-        try {
-            const {totalRating} = await getAllReviewsById(item.itemId);
-            setTotalRating(totalRating)
-        } catch (e) {
-            console.log(e)
-        }
-    }
-
-    const handleZoom = (e: React.MouseEvent) => {
-        if (!zoomRef.current || !imageRef.current) return;
-
-        const rect = imageRef.current.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        const xPercent = ((x / rect.width) * 100).toFixed(2);
-        const yPercent = ((y / rect.height) * 100).toFixed(2);
-
-        zoomRef.current.style.backgroundPosition = `${xPercent}% ${yPercent}%`;
-        zoomRef.current.style.display = "block";
-    };
-
-    const removeZoom = () => {
-        if (zoomRef.current) zoomRef.current.style.display = "none";
-    };
-
-    if (!item) return <div>Loading product...</div>;
-
-    // Function to calculate sizes based on EU size
-    const calculateSizes = (euSize) => {
-        const size = sizeData.find(row => row["EU"] === euSize);
-        if (size) {
-            setOtherSizes({
-                uk: size["UK"],
-                us: size["US - Women's"] || size["US - Men's"] || size["US - Kids"],
-                cm: size["CM"],
-            })
-        }
-        return {};
-    };
-
-    return (
-        <section className="w-full relative flex-content flex-col">
-            <div>
-                <div
-                    className="md:text-2xl flex flex-row gap-1 text-xl tracking-wider mt-10 text-gray-800 font-extrabold">
-                <span className="hover:border-b-2 border-gray-800 h-7">
-                    <Link href={"/collections/products"}>
-                          Products
-                    </Link>
-                </span>
-                    <span>/</span>
-                    <span>
-                    {item.name}
-                </span>
-                </div>
-
-                <article className="grid md:grid-cols-2 grid-cols-1 lg:gap-20 gap-6 mt-10">
-                    <div className="flex flex-col gap-6 items-center">
-                        {/* Main Image Container with Zoom Effect */}
-                        <div
-                            ref={imageRef}
-                            onMouseMove={handleZoom}
-                            onMouseLeave={removeZoom}
-                            className="relative lg:h-[60vh] lg:w-[40vw] w-full bg-cover rounded-xl overflow-hidden"
-                        >
-                            <Image
-                                src={selectedImage.url}
-                                alt={item.name}
-                                width={400}
-                                height={500}
-                                className="w-full h-full object-contain"
-                            />
-                            <div
-                                ref={zoomRef}
-                                className="absolute inset-0 bg-no-repeat bg-cover pointer-events-none"
-                                style={{
-                                    backgroundImage: `url(${selectedImage.url})`,
-                                    display: "none",
-                                    backgroundSize: "200%", // Adjust zoom level here
-                                }}
-                            ></div>
-                        </div>
-                        <ul className="flex gap-3 mt-4">
-                            {selectedVariant.images.map((image, index) => (
-                                <li key={index}>
-                                    <button
-                                        onClick={() => setSelectedImage(image)}
-                                        className={`p-1 rounded-lg transition ${
-                                            selectedImage === image ? "ring-2 ring-primary" : ""
-                                        }`}
-                                    >
-                                        <Image
-                                            src={image.url}
-                                            alt={item.name}
-                                            width={70}
-                                            height={70}
-                                            className="w-20 h-20 object-cover rounded-lg shadow-sm"
-                                        />
-                                    </button>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                    {/* Rest of the Product Details */}
-                    <div className="flex flex-col gap-4">
-                        <p className="text-lg font-medium capitalize text-gray-600">{item.manufacturer}</p>
-                        <h2 className="text-xl font-extrabold text-gray-900">{item.name}</h2>
-                        {/* <Link href={"#rating"} className="flex flex-row gap-1 items-center font-bold">
-                            <ReactStars edit={false}
-                                        value={totalRating} count={5}
-                                        size={25} color2={'#ffd700'}/>
-                            <span>
-                                ({totalRating})
-                            </span>
-                        </Link> */}
-                        <div className="text-gray-900 font-semibold flex items-center space-x-3 text-lg flex-row gap-2">
-                            {item.discount > 0 ? (
-                               <div
-                                   className="flex flex-col gap-2"
-                               >
-                                   <p className="flex flex-row gap-2 items-center">
-                                        <span className="text-red-500">
-                                             Extra {item.discount.toFixed(0)}% Off
-                                        </span>
-                                       <span
-                                           className="text-red-500 line-through">{"Rs. " + item.sellingPrice.toFixed(2)}</span>
-                                   </p>
-                                   <p
-                                        className="flex flex-row gap-2 items-center"
-                                   >
-                                        <span className="text-yellow-500">
-                                             Rs. {(Math.round((item.sellingPrice - (item.sellingPrice * item.discount / 100)) / 10) * 10).toFixed(2)}
-                                        </span>
-                                       <span className="text-sm  text-yellow-500">Limited Time Only</span>
-                                   </p>
-                               </div>
-                            ):(
-                                <p className="text-red-500">{"Rs. " + item.sellingPrice.toFixed(2)}</p>
-                            )}
-                            <span className="line-through text-gray-500">
-                                {"Rs. " + (item.marketPrice).toFixed(2)}
-                            </span>
-                        </div>
-                        <div className="mt-4">
-                            <h3 className="text-lg font-medium text-gray-700">Available Colors</h3>
-                            <ul className="flex gap-4 mt-2 flex-wrap">
-                                {item.variants.map((variant, index) => (
-                                    <li key={index}>
-                                        <button
-                                            onClick={() => {
-                                                setSelectedVariant(variant);
-                                                setSelectedImage(variant.images[0]);
-                                                setSelectedSize({size: "", stock: 0});
-                                                setQty(0);
-                                            }}
-                                            className={`rounded-md p-2 text-sm capitalize ${
-                                                selectedVariant.variantId === variant.variantId
-                                                    ? "bg-primary text-white"
-                                                    : "bg-gray-200"
-                                            }`}
-                                        >
-                                            {variant.variantName}
-                                        </button>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                        <div className="mt-4">
-                            <h3 className="text-lg font-medium text-gray-700">Available Sizes</h3>
-                            {selectedSize && (
-                                <p className="text-gray-600 text-sm">{`${selectedSize.stock} available`}</p>
-                            )}
-                            <ul className="flex gap-4 mt-2">
-                                {selectedVariant.sizes.map((size, index) => (
-                                    <li key={index}>
-                                        <button
-                                            disabled={size.stock <= 0}
-                                            onClick={() => {
-                                                calculateSizes(size.size);
-                                                setSelectedSize(size);
-                                                setQty(0);
-                                            }}
-                                            className={`p-2 rounded-md ${
-                                                size.size === selectedSize.size
-                                                    ? "bg-primary text-white"
-                                                    : "bg-gray-200"
-                                            } ${size.stock <= 0 && "opacity-50"}`}
-                                        >
-                                            {size.size}
-                                        </button>
-                                    </li>
-                                ))}
-                            </ul>
-                            {
-                                // show UK, US and cm sizes converting EU sizes
-                                selectedSize.size && (
-                                    <div className="mt-2">
-                                        <ul className="flex gap-4 mt-2">
-                                            {
-                                                Object.keys(otherSizes).map((key, index) => (
-                                                    <li key={index}>
-                                                        <span className="text-gray-600 text-sm font-medium">
-                                                            {key.toUpperCase()}: {otherSizes[key]}
-                                                        </span>
-                                                    </li>
-                                                ))
-                                            }
-                                        </ul>
-                                    </div>
-                                )
-                            }
-                        </div>
-                        <div className="mt-4">
-                            <h3 className="text-lg font-medium text-gray-700">Quantity</h3>
-                            <div
-                                className="flex flex-row flex-wrap items-center md:justify-start justify-center gap-10">
-                                {/* Quantity Adjustment Section */}
-                                <div className="flex items-center gap-4 mt-2">
-                                    {/* Decrease Button */}
-                                    <button
-                                        onClick={() => setQuantity("dec")}
-                                        disabled={qty === 0}
-                                        className="bg-gray-200 p-2 rounded-full text-gray-700 hover:bg-gray-300 focus:ring-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
-                                        aria-label="Decrease quantity"
-                                    >
-                                        <IoRemove size={20}/>
-                                    </button>
-
-                                    {/* Quantity Display */}
-                                    <span className="text-lg font-medium text-gray-800">{qty}</span>
-
-                                    {/* Increase Button */}
-                                    <button
-                                        onClick={() => setQuantity("in")}
-                                        disabled={selectedSize.stock === 0}
-                                        className="bg-gray-200 p-2 rounded-full text-gray-700 hover:bg-gray-300 focus:ring-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
-                                        aria-label="Increase quantity"
-                                    >
-                                        <IoAdd size={20}/>
-                                    </button>
-                                </div>
-
-                                {/* Add to Cart Button */}
-                                <div className="flex flex-row items-center flex-wrap gap-10">
-                                    <button
-                                        onClick={addToCart}
-                                        disabled={qty === 0}
-                                        className={`w-fit rounded-lg text-xl font-bold text-gray-700 hover:text-gray-900 transition disabled:opacity-60 disabled:cursor-not-allowed`}
-                                        aria-label="Add to cart"
-                                    >
-                                        <IoCartOutline size={30}/>
-                                    </button>
-
-                                    {/* Buy Now Button */}
-                                    <button
-                                        onClick={buyNow}
-                                        disabled={qty === 0}
-                                        className="rounded-lg text-xl font-semibold disabled:cursor-not-allowed disabled:opacity-60 text-primary-100 hover:text-primary-200 transition"
-                                        aria-label="Buy now"
-                                    >
-                                        Buy Now
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </article>
-                {outOfStocks && (
-                    <div className="bg-white absolute inset-0 bg-opacity-75 flex justify-center items-center">
-                        <h2
-                            className={`text-white p-4 rounded-lg text-xl font-semibold ${
-                                outOfStocksLabel === "Coming Soon" ? "bg-yellow-500" : "bg-red-500"
-                            }`}
-                        >
-                            {outOfStocksLabel}
-                        </h2>
-                    </div>
-                )}
+          {/* Pricing like ItemCard */}
+          <div className="flex flex-col gap-1">
+            <div className="flex items-baseline gap-2">
+              <p className="text-gray-400 line-through text-sm">
+                Rs. {item.marketPrice.toFixed(2)}
+              </p>
+              <p className="text-gray-900 font-bold text-lg">
+                Rs.{" "}
+                {(item.discount > 0
+                  ? Math.round(
+                      (item.sellingPrice -
+                        (item.sellingPrice * item.discount) / 100) /
+                        10
+                    ) * 10
+                  : item.sellingPrice
+                ).toFixed(2)}
+              </p>
             </div>
-            <div className="pt-10">
-                <h2 className="text-xl md:text-2xl font-bold tracking-wide text-gray-800">
-                    Description
-                </h2>
-                <p className="pt-5 text-lg text-slate-600 text-left">
-                    {item.description || "No description available!"}
-                </p>
+
+            {/* KOKO payment info */}
+            <div className="flex items-center gap-1 text-xs text-gray-500 mt-1">
+              <p>
+                or 3x Rs.
+                {(item.discount > 0
+                  ? Math.round(
+                      (item.sellingPrice -
+                        (item.sellingPrice * item.discount) / 100) /
+                        10
+                    ) * 10
+                  : item.sellingPrice / 3
+                ).toFixed(2)}{" "}
+                with
+              </p>
+              <Image
+                src={KOKOLogo}
+                alt="KOKO logo"
+                width={25}
+                height={25}
+                className="inline-block"
+              />
             </div>
-        </section>
-    );
+          </div>
+
+          {/* Variants */}
+          <div>
+            <h3 className="font-medium text-gray-700 mb-1">Colors</h3>
+            <div className="flex gap-2 flex-wrap">
+              {item.variants.map((v, i) => (
+                <button
+                  key={i}
+                  onClick={() => {
+                    setSelectedVariant(v);
+                    setSelectedImage(v.images[0]);
+                    setSelectedSize({ size: "", stock: 0 });
+                    setQty(0);
+                  }}
+                  className={`px-3 py-1 rounded-md text-sm capitalize ${
+                    selectedVariant.variantId === v.variantId
+                      ? "bg-primary text-white"
+                      : "bg-gray-200"
+                  }`}
+                >
+                  {v.variantName}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Sizes */}
+          <div>
+            <h3 className="font-medium text-gray-700 mb-1">Sizes</h3>
+            <div className="flex gap-2 flex-wrap">
+              {selectedVariant.sizes.map((s, idx) => (
+                <button
+                  key={idx}
+                  disabled={s.stock <= 0}
+                  onClick={() => {
+                    setSelectedSize(s);
+                    setQty(0);
+                    calculateSizes(s.size);
+                  }}
+                  className={`px-3 py-1 rounded-md text-sm ${
+                    selectedSize.size === s.size
+                      ? "bg-primary text-white"
+                      : "bg-gray-200"
+                  } ${s.stock <= 0 ? "opacity-50 cursor-not-allowed" : ""}`}
+                >
+                  {s.size}
+                </button>
+              ))}
+            </div>
+            {selectedSize.size && (
+              <div className="text-gray-500 text-sm mt-2 flex gap-3">
+                <span>UK: {otherSizes.uk}</span>
+                <span>US: {otherSizes.us}</span>
+                <span>CM: {otherSizes.cm}</span>
+              </div>
+            )}
+          </div>
+
+          {/* Quantity & Actions */}
+          <div className="flex flex-col md:flex-row gap-4 md:items-center mt-4">
+            <div className="flex items-center gap-2 w-fit border rounded-md p-1">
+              <button
+                onClick={() => setQuantity("dec")}
+                className="p-2 text-gray-700"
+              >
+                <IoRemove />
+              </button>
+              <span className="px-4">{qty}</span>
+              <button
+                onClick={() => setQuantity("inc")}
+                className="p-2 text-gray-700"
+              >
+                <IoAdd />
+              </button>
+            </div>
+            <div className="flex gap-2">
+              <button
+                onClick={addToCart}
+                disabled={qty === 0}
+                className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-md disabled:opacity-50"
+              >
+                <IoCartOutline /> Add to Cart
+              </button>
+              <button
+                onClick={buyNow}
+                disabled={qty === 0}
+                className="px-4 py-2 border border-primary rounded-md text-primary disabled:opacity-50"
+              >
+                Buy Now
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Description */}
+      <div>
+        <h2 className="text-xl md:text-2xl font-bold text-gray-800">
+          Description
+        </h2>
+        <p className="text-gray-600 mt-2">
+          {item.description || "No description available."}
+        </p>
+      </div>
+
+      {/* Out of Stock Overlay */}
+      {outOfStocks && (
+        <div className="absolute inset-0 flex justify-center items-center bg-white/80">
+          <span
+            className={`px-4 py-2 rounded-md font-semibold ${
+              outOfStocksLabel === "Coming Soon"
+                ? "bg-yellow-500"
+                : "bg-red-500"
+            }`}
+          >
+            {outOfStocksLabel}
+          </span>
+        </div>
+      )}
+    </section>
+  );
 };
 
 export default ProductHero;

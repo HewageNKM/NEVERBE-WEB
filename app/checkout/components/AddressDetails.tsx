@@ -1,127 +1,139 @@
+"use client";
 import React from "react";
 import { Customer } from "@/interfaces";
 
 const AddressDetails = ({
-                            saveAddress,
-                            setSaveAddress,
-                            customer
-                        }: {
-    saveAddress: boolean,
-    setSaveAddress: React.Dispatch<React.SetStateAction<boolean>>,
-    customer: Customer
+  saveAddress,
+  setSaveAddress,
+  customer,
+}: {
+  saveAddress: boolean;
+  setSaveAddress: React.Dispatch<React.SetStateAction<boolean>>;
+  customer: Customer;
 }) => {
-    return (
-        <div className="flex flex-col items-start px-4 py-8">
-            <h1 className="lg:text-4xl text-3xl font-bold tracking-wide">Address Details</h1>
-            <div className="flex flex-col gap-4 mt-10 w-full">
-                <div className="flex flex-row flex-wrap gap-4 w-full">
-                    <label className="flex flex-col gap-2 w-full md:w-[48%]">
-                        <span className="font-medium md:text-xl text-lg">*First Name</span>
-                        <input
-                            placeholder="Sandun"
-                            type="text"
-                            defaultValue={customer?.name.split(" ")[0]}
-                            className="px-4 py-2 focus:outline-none rounded-lg border-slate-300 border-2"
-                            required
-                            name="first_name"
-                        />
-                    </label>
+  return (
+    <section className="flex flex-col items-start px-6 py-10 bg-white">
+      <h1 className="text-3xl lg:text-4xl font-bold tracking-wide text-gray-900">
+        Address Details
+      </h1>
 
-                    <label className="flex flex-col gap-2 w-full md:w-[48%]">
-                        <span className="font-medium md:text-xl text-lg">*Last Name</span>
-                        <input
-                            placeholder="Dilhan"
-                            type="text"
-                            defaultValue={customer?.name.split(" ")[1]}
-                            className="px-4 py-2 focus:outline-none rounded-lg border-slate-300 border-2"
-                            required
-                            name="last_name"
-                        />
-                    </label>
-                </div>
+      <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+        {/* First & Last Name */}
+        <label className="flex flex-col gap-1">
+          <span className="text-lg md:text-xl font-medium">*First Name</span>
+          <input
+            type="text"
+            name="first_name"
+            defaultValue={customer?.name.split(" ")[0]}
+            placeholder="Sandun"
+            required
+            className="px-4 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-300 focus:outline-none transition"
+          />
+        </label>
 
-                <label className="flex flex-col gap-2 w-full">
-                    <span className="font-medium md:text-xl text-lg">*Email</span>
-                    <input
-                        type="email"
-                        placeholder="example@gmail.com"
-                        defaultValue={customer?.email}
-                        className="px-4 py-2 focus:outline-none rounded-lg border-slate-300 border-2"
-                        required
-                        name="email"
-                    />
-                </label>
+        <label className="flex flex-col gap-1">
+          <span className="text-lg md:text-xl font-medium">*Last Name</span>
+          <input
+            type="text"
+            name="last_name"
+            defaultValue={customer?.name.split(" ")[1]}
+            placeholder="Dilhan"
+            required
+            className="px-4 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-300 focus:outline-none transition"
+          />
+        </label>
 
-                <label className="flex flex-col gap-2 w-full">
-                    <span className="font-medium md:text-xl text-lg">*Mobile</span>
-                    <input
-                        placeholder="0777668765"
-                        type="text"
-                        defaultValue={customer?.phone}
-                        className="px-4 py-2 focus:outline-none border-slate-300 rounded-lg border-2"
-                        required
-                        name="phone"
-                    />
-                </label>
+        {/* Email */}
+        <label className="flex flex-col gap-1 md:col-span-2">
+          <span className="text-lg md:text-xl font-medium">*Email</span>
+          <input
+            type="email"
+            name="email"
+            defaultValue={customer?.email}
+            placeholder="example@gmail.com"
+            required
+            className="px-4 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-300 focus:outline-none transition"
+          />
+        </label>
 
-                <label className="flex flex-col gap-2 w-full">
-                    <span className="font-medium md:text-xl text-lg">*Address</span>
-                    <input
-                        type="text"
-                        placeholder="98/1A, Ingiriya"
-                        defaultValue={customer?.address}
-                        className="px-4 py-2 focus:outline-none border-slate-300 rounded-lg border-2"
-                        required
-                        name="address"
-                    />
-                </label>
+        {/* Mobile */}
+        <label className="flex flex-col gap-1 md:col-span-2">
+          <span className="text-lg md:text-xl font-medium">*Mobile</span>
+          <input
+            type="text"
+            name="phone"
+            defaultValue={customer?.phone}
+            placeholder="0777668765"
+            required
+            className="px-4 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-300 focus:outline-none transition"
+          />
+        </label>
 
-                <label className="flex flex-col gap-2 w-full md:w-[48%]">
-                    <span className="font-medium md:text-xl text-lg">*City</span>
-                    <input
-                        type="text"
-                        placeholder="Dompe"
-                        defaultValue={customer?.city}
-                        className="px-4 py-2 border-slate-300 focus:outline-none rounded-lg border-2"
-                        required
-                        name="city"
-                    />
-                </label>
+        {/* Address */}
+        <label className="flex flex-col gap-1 md:col-span-2">
+          <span className="text-lg md:text-xl font-medium">*Address</span>
+          <input
+            type="text"
+            name="address"
+            defaultValue={customer?.address}
+            placeholder="98/1A, Ingiriya"
+            required
+            className="px-4 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-300 focus:outline-none transition"
+          />
+        </label>
 
-                <label className="flex flex-col gap-2 w-full md:w-[48%]">
-                    <span className="font-medium md:text-xl text-lg">Postal Code</span>
-                    <input
-                        type="text"
-                        placeholder="11700"
-                        defaultValue={customer?.zip}
-                        className="px-4 py-2 border-slate-300 focus:outline-none rounded-lg border-2"
-                        name="zip"
-                    />
-                </label>
+        {/* City & Postal Code */}
+        <label className="flex flex-col gap-1">
+          <span className="text-lg md:text-xl font-medium">*City</span>
+          <input
+            type="text"
+            name="city"
+            defaultValue={customer?.city}
+            placeholder="Dompe"
+            required
+            className="px-4 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-300 focus:outline-none transition"
+          />
+        </label>
 
-                <label className="flex flex-col gap-2 w-full md:w-[48%]">
-                    <span className="font-medium md:text-xl text-lg">*Country</span>
-                    <input
-                        disabled
-                        className="px-4 py-2 rounded-lg border-slate-300 focus:outline-none border-2"
-                        name="country"
-                        value="Sri Lanka"
-                    />
-                </label>
-            </div>
+        <label className="flex flex-col gap-1">
+          <span className="text-lg md:text-xl font-medium">Postal Code</span>
+          <input
+            type="text"
+            name="zip"
+            defaultValue={customer?.zip}
+            placeholder="11700"
+            className="px-4 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-300 focus:outline-none transition"
+          />
+        </label>
 
-            <div className="flex flex-row items-center gap-3 justify-start mt-5">
-                <input
-                    name="saveAddress"
-                    defaultChecked={saveAddress}
-                    onChange={() => setSaveAddress(prevState => !prevState)}
-                    type="checkbox"
-                    className="form-checkbox h-5 w-5 text-primary focus:ring focus:ring-primary/50"
-                />
-                <p className="text-lg">Save this address for future purchases</p>
-            </div>
-        </div>
-    );
+        {/* Country */}
+        <label className="flex flex-col gap-1 md:col-span-2">
+          <span className="text-lg md:text-xl font-medium">*Country</span>
+          <input
+            type="text"
+            name="country"
+            value="Sri Lanka"
+            disabled
+            className="px-4 py-2 border-2 border-gray-300 rounded-lg bg-gray-100 focus:outline-none"
+          />
+        </label>
+      </div>
+
+      {/* Save Address */}
+      <div className="flex items-center gap-3 mt-6">
+        <input
+          type="checkbox"
+          name="saveAddress"
+          defaultChecked={saveAddress}
+          onChange={() => setSaveAddress((prev) => !prev)}
+          className="h-5 w-5 text-primary focus:ring-2 focus:ring-primary/50 rounded transition"
+        />
+        <span className="text-lg text-gray-700">
+          Save this address for future purchases
+        </span>
+      </div>
+    </section>
+  );
 };
 
 export default AddressDetails;

@@ -1,85 +1,83 @@
 "use client";
-import React from 'react';
+import React from "react";
 import DropShadow from "@/components/DropShadow";
-import {useDispatch, useSelector} from "react-redux";
-import {AppDispatch, RootState} from "@/redux/store";
-import {IoClose} from "react-icons/io5";
-import {motion} from "framer-motion";
-import {hideCart} from "@/redux/cartSlice/cartSlice";
-import {useRouter} from "next/navigation";
+import { motion } from "framer-motion";
+import { IoClose } from "react-icons/io5";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/redux/store";
+import { hideCart } from "@/redux/cartSlice/cartSlice";
 import CartItemCard from "@/components/CartItemCard";
-import {calculateSubTotal} from "@/util";
+import { useRouter } from "next/navigation";
+import { calculateSubTotal } from "@/util";
 
 const Cart = () => {
-    const cartItems = useSelector((state: RootState) => state.cartSlice.cart);
-    const dispatch: AppDispatch = useDispatch();
-    const router = useRouter();
+  const dispatch: AppDispatch = useDispatch();
+  const router = useRouter();
+  const cartItems = useSelector((state: RootState) => state.cartSlice.cart);
 
-    return (
-        <DropShadow containerStyle="flex justify-end items-end">
-            <motion.div
-                initial={{opacity: 0, x: "100vw"}}
-                animate={{opacity: 1, x: 0}}
-                exit={{opacity: 0, x: "100vw"}}
-                transition={{
-                    type: "tween",
-                    duration: 0.6,
-                }}
-                className="px-6 py-4 overflow-x-auto w-full lg:w-[25vw] flex flex-col justify-between lg:rounded-l-lg bg-white h-screen relative shadow-lg overflow-y-auto"
-            >
-                <div className="flex flex-col">
-                    <h2 className="md:text-2xl text-lg font-bold tracking-wider border-b pb-4">Cart</h2>
-                    <ul className="mt-5 flex overflow-x-auto max-h-screen flex-col justify-start gap-4">
-                        {cartItems.map((item, index) => (
-                            <li key={index}>
-                                <CartItemCard item={item}/>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-                <button
-                    onClick={() => dispatch(hideCart())}
-                    className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors"
-                >
-                    <IoClose size={40}/>
-                </button>
-                <div className="mt-5 px-2 w-full">
-                    <div className="justify-between border-t-2 font-medium border-b-2 py-2 flex flex-col gap-2">
-                        <div className="w-full justify-between flex flex-row">
-                            <h1 className="md:text-xl text-lg">Total:</h1>
-                            <h1 className="md:text-xl text-lg">Rs. {cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0).toFixed(2)}</h1>
-                        </div>
-                        <div
-                            className="w-full justify-between flex flex-row"
-                        >
-                            <h1 className="md:text-xl text-lg">Shipping:</h1>
-                            <h1 className="md:text-xl text-lg">Rs. 0.00</h1>
-                        </div>
-                        <div className="w-full justify-between flex flex-row">
-                            <h1 className="md:text-xl text-lg">Discount:</h1>
-                            <h1 className="md:text-xl text-lg">-Rs. {cartItems.reduce((acc, item) => acc + (item.discount || 0), 0).toFixed(2)}</h1>
-                        </div>
-                        <div
-                            className="w-full justify-between flex flex-row"
-                        >
-                            <h1 className="md:text-xl text-lg">Subtotal:</h1>
-                            <h1 className="md:text-xl text-lg">Rs. {calculateSubTotal(cartItems).toFixed(2)}</h1>
-                        </div>
-                    </div>
-                    <button
-                        className="bg-primary disabled:cursor-not-allowed disabled:bg-opacity-60 text-white p-2 mt-5 tracking-wide md:text-lg lg:text-xl rounded-lg w-full"
-                        onClick={() => {
-                            dispatch(hideCart());
-                            router.push("/checkout");
-                        }}
-                        disabled={cartItems.length === 0}
-                    >
-                        <strong>Checkout</strong>
-                    </button>
-                </div>
-            </motion.div>
-        </DropShadow>
-    );
+  const total = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  const discount = cartItems.reduce((acc, item) => acc + (item.discount || 0), 0);
+  const subtotal = calculateSubTotal(cartItems);
+
+  return (
+    <DropShadow containerStyle="flex justify-end">
+      <motion.div
+        initial={{ x: "100%" }}
+        animate={{ x: 0 }}
+        exit={{ x: "100%" }}
+        transition={{ type: "spring", stiffness: 120, damping: 20 }}
+        className="w-full sm:w-[80vw] md:w-[60vw] lg:w-[28vw] bg-white h-screen flex flex-col shadow-2xl relative"
+      >
+        {/* Header */}
+        <div className="flex justify-between items-center px-6 py-4 border-b">
+          <h2 className="text-2xl font-semibold tracking-wide">Your Cart</h2>
+          <button
+            onClick={() => dispatch(hideCart())}
+            className="text-gray-600 hover:text-black transition-colors"
+            aria-label="Close Cart"
+          >
+            <IoClose size={30} />
+          </button>
+        </div>
+
+        {/* Items */}
+        <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4">
+          {cartItems.length > 0 ? (
+            cartItems.map((item, index) => <CartItemCard key={index} item={item} />)
+          ) : (
+            <p className="text-center text-gray-500 mt-10">Your cart is empty.</p>
+          )}
+        </div>
+
+        {/* Summary */}
+        <div className="border-t p-6 space-y-3 bg-gray-50">
+          <div className="flex justify-between text-gray-700">
+            <span>Total:</span>
+            <span>Rs. {total.toFixed(2)}</span>
+          </div>
+          <div className="flex justify-between text-gray-700">
+            <span>Discount:</span>
+            <span>-Rs. {discount.toFixed(2)}</span>
+          </div>
+          <div className="flex justify-between text-lg font-semibold border-t pt-2">
+            <span>Subtotal:</span>
+            <span>Rs. {subtotal.toFixed(2)}</span>
+          </div>
+
+          <button
+            onClick={() => {
+              dispatch(hideCart());
+              router.push("/checkout");
+            }}
+            disabled={cartItems.length === 0}
+            className="w-full mt-5 py-3 bg-primary text-white rounded-lg text-lg font-medium hover:opacity-90 disabled:bg-gray-400 disabled:cursor-not-allowed transition"
+          >
+            Checkout
+          </button>
+        </div>
+      </motion.div>
+    </DropShadow>
+  );
 };
 
 export default Cart;

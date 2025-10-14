@@ -2,25 +2,38 @@
 import React, { useState } from 'react';
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 
-const FaqCard = ({ faq, index }: { faq: { question: string, answer: string }, index: number }) => {
-    const [showAnswer, setShowAnswer] = useState(false);
+interface FaqCardProps {
+  faq: { question: string; answer: string };
+  index: number;
+}
 
-    return (
-        <div className={`rounded-lg transition-all duration-300 border p-2 w-fit ${showAnswer ? "lg:h-[6rem] h-[7.5rem]" : "h-[3.7rem] lg:h-[3rem]"}`}>
-            <button
-                onClick={() => setShowAnswer(!showAnswer)}
-                aria-expanded={showAnswer}
-                aria-controls={`faq-answer-${index}`} // Link the button to the answer
-                className="flex flex-row text-lg md:text-xl text-primary w-fit text-center font-semibold"
-            >
-                <p>{index + 1}. {faq.question}</p>
-                <figure>{showAnswer ? (<MdKeyboardArrowUp size={40} />) : (<MdKeyboardArrowDown size={40} />)}</figure>
-            </button>
-            {showAnswer && (
-                <p id={`faq-answer-${index}`} className="text-xs md:text-lg font-medium">{faq.answer}</p> // Associate the answer with the button
-            )}
-        </div>
-    );
+const FaqCard: React.FC<FaqCardProps> = ({ faq, index }) => {
+  const [showAnswer, setShowAnswer] = useState(false);
+
+  return (
+    <div 
+      className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200 transition-all duration-300 hover:shadow-lg"
+    >
+      <button
+        onClick={() => setShowAnswer(!showAnswer)}
+        aria-expanded={showAnswer}
+        aria-controls={`faq-answer-${index}`}
+        className="w-full flex justify-between items-center px-6 py-4 text-left font-semibold text-gray-800 md:text-lg hover:bg-gray-50 transition-colors"
+      >
+        <span>{index + 1}. {faq.question}</span>
+        <span className="ml-2">
+          {showAnswer ? <MdKeyboardArrowUp size={28} /> : <MdKeyboardArrowDown size={28} />}
+        </span>
+      </button>
+
+      <div 
+        id={`faq-answer-${index}`} 
+        className={`px-6 overflow-hidden transition-all duration-500 ${showAnswer ? "max-h-96 py-4" : "max-h-0"}`}
+      >
+        <p className="text-gray-600 text-sm md:text-base">{faq.answer}</p>
+      </div>
+    </div>
+  );
 };
 
 export default FaqCard;

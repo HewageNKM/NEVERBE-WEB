@@ -1,5 +1,5 @@
 import {NextResponse} from 'next/server';
-import {rateLimiter, sendEmail, verifyToken} from "@/firebase/firebaseAdmin";
+import { sendEmail, verifyToken} from "@/firebase/firebaseAdmin";
 import {Message} from "@/interfaces";
 
 

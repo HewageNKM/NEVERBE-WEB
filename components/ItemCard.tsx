@@ -1,106 +1,144 @@
 "use client";
-import React, {useEffect, useState} from 'react';
-import {Item} from "@/interfaces";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import {useSelector} from "react-redux";
-import {RootState} from "@/redux/store";
-import {getAllReviewsById} from "@/actions/itemDetailsAction";
-import ReactStars from "react-stars";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import { Item } from "@/interfaces";
+import { KOKOLogo } from "@/assets/images";
 
-const ItemCard = ({item}: { item: Item }) => {
-    const [outOfStocks, setOutOfStocks] = useState(false);
-    const [outOfStocksLabel, setOutOfStocksLabel] = useState("Out of Stock");
-    const {user} = useSelector((state: RootState) => state.authSlice);
+const ItemCard = ({ item }: { item: Item }) => {
+  const [outOfStocks, setOutOfStocks] = useState(false);
+  const [outOfStocksLabel, setOutOfStocksLabel] = useState("Out of Stock");
+  const { user } = useSelector((state: RootState) => state.authSlice);
 
-    const checkOutOfStocks = () => {
-        if (item.variants.length === 0) {
-            setOutOfStocks(true);
-            setOutOfStocksLabel("Coming Soon");
-            return;
-        }
-        const allOutOfStock = item.variants.every(variant =>
-            variant.sizes.every(size => size.stock === 0)
-        );
-        setOutOfStocks(allOutOfStock);
-    };
-    useEffect(() => {
-        if (user) {
-            checkOutOfStocks();
-        }
-    }, [item, user]);
-    const findRangeOfSizes = () => {
-        // Find min and max sizes from the sizes array of every variant
-        const sizes = item.variants.map(variant => variant.sizes.map(size => size.size));
-        if (sizes.length === 0) return "N/A";
-        const allSizes = sizes.flat();
-        const min = Math.min(...allSizes);
-        const max = Math.max(...allSizes);
-        return `${min} - ${max}`;
+  useEffect(() => {
+    if (!item.variants?.length) {
+      setOutOfStocks(true);
+      setOutOfStocksLabel("Coming Soon");
+      return;
     }
-    return (
-        <article
-            className="relative w-[8rem] md:w-[13rem]  h-auto max-w-xs transition-transform duration-300 transform lg:hover:scale-105 hover:shadow-lg hover:rounded-md overflow-hidden">
-            <Link href={`/collections/products/${item.itemId.toLowerCase()}`}
-                  aria-label={`View details for ${item.name}`}>
-                <figure className="relative overflow-hidden">
-                    <Image
-                        width={300}
-                        height={300}
-                        src={item.thumbnail.url}
-                        alt={item.name}
-                        className="w-full h-[150px] sm:h-[200px] object-cover transition-transform duration-300 hover:scale-110"
-                        priority // Load this image with high priority for better performance
-                    />
-                </figure>
-                <header className="p-4 flex flex-col gap-1">
-                    <h2 className="font-bold text-sm md:text-lg">{item.name}</h2>
-                    <div className="flex flex-row items-center flex-wrap gap-1">
-                        <p className={`text-red-500 text-sm font-bold ${item.discount > 0 && "line-through"}`}>Rs. {(Math.round(item.sellingPrice).toFixed(2))}</p>
-                        <p className="line-through font-bold text-gray-500 text-sm">
-                            Rs. {(item.marketPrice).toFixed(2)}
-                        </p>
-                    </div>
-                    {item.discount > 0 && (
-                        <p className="text-sm font-bold text-yellow-500">
-                            Rs. {(Math.round((item.sellingPrice - (item.sellingPrice * item.discount / 100)) / 10) * 10).toFixed(2)}
-                        </p>
-                    )}
-                    <div className="flex justify-between items-center">
-                        <p className="text-sm sm:text-lg font-bold">
-                            {item.variants.length} Colors
-                        </p>
-                    </div>
-                    <div className="text-sm font-medium text-slate-500">
-                        {item.type === "shoes" || item.type === "sandals" ? (
-                            `Size (EU): ${findRangeOfSizes()}`
-                        ) : item.type === "accessories" ? (
-                            `Sizes: ${
-                                item.variants.length > 0 && item.variants[0].sizes.length > 0
-                                    ? item.variants[0].sizes.map(s => s.size).join(", ")
-                                    : "N/A"
-                            }`
-                        ) : null}
-                    </div>
-
-                </header>
-                <h2 className="absolute top-0 left-0 capitalize bg-black text-white p-1 text-sm">{item.manufacturer.replace("-", " ").toUpperCase()}</h2>
-            </Link>
-            <div className="absolute top-0 right-0 flex flex-col gap-1 p-1">
-                {item.discount > 0 && (
-                    <span
-                        className="bg-yellow-500 text-white p-1 rounded-md font-medium text-sm">Extra {item.discount.toFixed(0)}% Off</span>
-                )}
-            </div>
-            {outOfStocks && (
-                <div className="absolute inset-0 bg-opacity-60 bg-gray-900 flex justify-center items-center">
-                    <h2 className={`text-white p-2 rounded-lg text-sm md:text-lg font-bold tracking-wide ${outOfStocksLabel === "Coming Soon" ? "bg-yellow-500" : "bg-red-500"}`}>
-                        {outOfStocksLabel}
-                    </h2>
-                </div>
-            )}
-        </article>
+    const allOutOfStock = item.variants.every((v) =>
+      v.sizes.every((s) => s.stock === 0)
     );
+    setOutOfStocks(allOutOfStock);
+  }, [item, user]);
+
+  const findRangeOfSizes = () => {
+    const sizes = item.variants.flatMap((v) => v.sizes.map((s) => s.size));
+    if (!sizes.length) return "N/A";
+    return `${Math.min(...sizes)} - ${Math.max(...sizes)}`;
+  };
+
+  const discountedPrice =
+    item.discount > 0
+      ? Math.round(
+          (item.sellingPrice - (item.sellingPrice * item.discount) / 100) / 10
+        ) * 10
+      : Math.round(item.sellingPrice);
+
+  return (
+    <article className="relative group w-[9rem] sm:w-[12rem] md:w-[15rem] rounded-2xl bg-white border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden">
+      <Link
+        href={`/collections/products/${item.itemId.toLowerCase()}`}
+        aria-label={`View details for ${item.name}`}
+      >
+        {/* ---------- IMAGE ---------- */}
+        <div className="relative h-[160px] sm:h-[220px] overflow-hidden">
+          <Image
+            width={300}
+            height={300}
+            src={item.thumbnail.url}
+            alt={item.name}
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+            priority
+          />
+          {/* Gradient overlay on hover */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+          {/* Manufacturer badge */}
+          <span className="absolute top-2 left-2 bg-black/80 text-white text-[0.65rem] sm:text-xs px-2 py-1 rounded-full uppercase tracking-wide">
+            {item.manufacturer.replace("-", " ")}
+          </span>
+
+          {/* Discount badge */}
+          {item.discount > 0 && (
+            <span className="absolute top-2 right-2 bg-red-500 text-white text-[0.65rem] sm:text-xs px-2 py-1 rounded-full">
+              -{item.discount}%
+            </span>
+          )}
+        </div>
+
+        {/* ---------- CONTENT ---------- */}
+        <div className="p-3 sm:p-4 flex flex-col gap-1">
+          <h2 className="text-sm sm:text-base md:text-lg font-semibold line-clamp-1">
+            {item.name}
+          </h2>
+
+          {/* Pricing */}
+          <div className="flex items-baseline gap-2">
+            <p className="text-gray-400 line-through text-xs sm:text-sm">
+              Rs. {item.marketPrice.toFixed(2)}
+            </p>
+            <p className="text-gray-900 font-bold text-sm sm:text-base">
+              Rs. {discountedPrice.toFixed(2)}
+            </p>
+          </div>
+
+          {/* KOKO Payment */}
+          <div className="flex items-center gap-1 text-xs sm:text-sm text-gray-500 mt-1">
+            <p>
+              or 3x Rs.{(discountedPrice / 3).toFixed(2)} with
+            </p>
+            <Image
+              alt="KOKO logo"
+              src={KOKOLogo}
+              width={30}
+              height={30}
+              className="inline-block"
+            />
+          </div>
+
+          {/* Colors + Sizes */}
+          <div className="flex justify-between items-center text-[0.75rem] sm:text-sm text-gray-600 mt-2">
+            <p>{item.variants.length} Colors</p>
+            {item.type === "shoes" || item.type === "sandals" ? (
+              <p>Size (EU): {findRangeOfSizes()}</p>
+            ) : item.type === "accessories" ? (
+              <p>
+                Sizes:{" "}
+                {item.variants?.[0]?.sizes?.length
+                  ? item.variants[0].sizes.map((s) => s.size).join(", ")
+                  : "N/A"}
+              </p>
+            ) : null}
+          </div>
+
+          {/* Action Link */}
+          <div className="mt-3">
+            <p className="text-blue-600 font-medium text-sm hover:underline">
+              Pick a Color →
+            </p>
+          </div>
+        </div>
+      </Link>
+
+      {/* ---------- OUT OF STOCK OVERLAY ---------- */}
+      {outOfStocks && (
+        <div className="absolute inset-0 bg-black/70 backdrop-blur-sm flex justify-center items-center">
+          <h2
+            className={`text-white px-4 py-2 rounded-full text-sm sm:text-lg font-semibold tracking-wide ${
+              outOfStocksLabel === "Coming Soon"
+                ? "bg-yellow-500"
+                : "bg-red-600"
+            }`}
+          >
+            {outOfStocksLabel}
+          </h2>
+        </div>
+      )}
+    </article>
+  );
 };
 
 export default ItemCard;

@@ -177,7 +177,7 @@ const CheckoutForm = () => {
     <div className="flex justify-center items-center">
       <form
         onSubmit={handlePaymentSubmit}
-        className="flex flex-row flex-wrap justify-evenly lg:gap-32 gap-10 md:gap-20 mt-10"
+        className="flex flex-row flex-wrap justify-evenly gap-5 mt-10"
       >
         <AddressDetails
           saveAddress={saveAddress}

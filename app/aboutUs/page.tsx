@@ -73,23 +73,6 @@ const AboutUs = () => {
                             </div>
                         </div>
                     </section>
-
-                    {/* Contact Section */}
-                    <section className="bg-indigo-600 text-white rounded-lg shadow-xl p-8">
-                        <h2 className="text-3xl font-semibold mb-4">Get in Touch</h2>
-                        <p className="text-lg mb-4">
-                            We&apos;re here to assist you. Reach out to us anytime:
-                        </p>
-                        <p className="text-lg">
-                            <span className="font-medium">Phone:</span> <Link href="tel:+94771234567" className="underline">+94 70 520 8999</Link>
-                        </p>
-                        <p className="text-lg">
-                            <span className="font-medium">Email:</span> <Link href="mailto:support@neverbe.lk" className="underline">support@neverbe.lk</Link>
-                        </p>
-                        <p className="text-lg">
-                            <span className="font-medium">Contact:</span> <Link href="/contact" className="underline">Message</Link>
-                        </p>
-                    </section>
                 </div>
             </div>
         </section>
