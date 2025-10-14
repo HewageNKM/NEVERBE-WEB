@@ -27,7 +27,7 @@ export default function SuccessPageClient({ order }: { order: Order }) {
       doc.text(`Order ID: ${order.orderId}`, 20, 35);
       doc.text(`Payment Status: ${order.paymentStatus}`, 20, 43);
       doc.text(`Payment Method: ${order.paymentMethod}`, 20, 51);
-      doc.text(`Date: ${new Date(order.createdAt).toLocaleString()}`, 20, 59);
+      doc.text(`Date: ${order.createdAt}`, 20, 59);
 
       // --- Customer Info ---
       doc.setFont("helvetica", "bold");
