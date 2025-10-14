@@ -27,7 +27,10 @@ export function middleware(req: Request) {
   }
 
   // Always allow Koko/IPG routes regardless of origin
-  if (url.pathname.startsWith("/api/v1/koko") || url.pathname.startsWith("/api/v1/ipg")) {
+  if (
+    url.pathname.startsWith("/api/v1/koko") ||
+    url.pathname.startsWith("/api/v1/ipg")
+  ) {
     console.log(`Allowed: Koko/IPG route from ${origin}`);
     return NextResponse.next();
   }
@@ -37,8 +40,14 @@ export function middleware(req: Request) {
     console.log(`Allowed: Cross-origin request from ${origin}`);
     const res = NextResponse.next();
     res.headers.set("Access-Control-Allow-Origin", origin);
-    res.headers.set("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
-    res.headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
+    res.headers.set(
+      "Access-Control-Allow-Methods",
+      "GET,POST,PUT,DELETE,OPTIONS"
+    );
+    res.headers.set(
+      "Access-Control-Allow-Headers",
+      "Content-Type, Authorization"
+    );
     return res;
   }
 
