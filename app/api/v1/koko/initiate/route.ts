@@ -12,9 +12,6 @@ export async function POST(req: Request) {
     const apiKey = process.env.KOKO_API_KEY;
     const privateKey = process.env.KOKO_PRIVATE_KEY;
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
-    const redirectUrl =
-      process.env.NEXT_PUBLIC_KOKO_REDIRECT_URL ||
-      "https://devapi.paykoko.com/api/merchants/orderCreate";
 
     if (!merchantId || !apiKey || !privateKey || !baseUrl) {
       throw new Error("Koko credentials or base URL missing in environment.");
