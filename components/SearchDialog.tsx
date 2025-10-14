@@ -1,28 +1,51 @@
-import React from 'react';
-import {Item} from "@/interfaces";
+"use client";
+import React from "react";
+import { Item } from "@/interfaces";
 import SearchResultCard from "@/components/SearchResultCard";
-import {motion} from "framer-motion";
+import { motion } from "framer-motion";
 
-const SearchDialog = ({results, onClick, containerStyle}: {
-    results: Item[],
-    onClick: () => void,
-    containerStyle?: string
+interface SearchDialogProps {
+  results: Item[];
+  onClick: () => void;
+  containerStyle?: string;
+  maxHeight?: string; // optional custom max-height
+}
+
+const SearchDialog: React.FC<SearchDialogProps> = ({
+  results,
+  onClick,
+  containerStyle,
+  maxHeight = "60vh", // default max height
 }) => {
-    return (
-        <motion.div
-            initial={{opacity: 0}}
-            animate={{opacity: 1}}
-            exit={{opacity: 0}}
-            className={`lg:max-w-md w-full min-w-[18rem] max-h-[25rem] bg-white text-black rounded-md shadow-custom rounded-b p-3 overflow-y-auto hide-scrollbar ${containerStyle ? containerStyle : "z-30 absolute top-[3rem] -right-5"}`}>
-            {results.map((result, index) => (
-                <ul key={index} className="flex flex-col gap-3">
-                    <li>
-                        <SearchResultCard item={result} onClick={onClick}/>
-                    </li>
-                </ul>
-            ))}
-        </motion.div>
-    );
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      transition={{ duration: 0.2 }}
+      className={`w-full max-w-md bg-white text-black rounded-lg shadow-lg p-3 overflow-y-auto hide-scrollbar ${
+        containerStyle ? containerStyle : "absolute top-[3.5rem] right-0 z-50"
+      }`}
+      style={{ maxHeight }} // apply max height for scroll
+    >
+      {results.length > 0 ? (
+        <ul className="flex flex-col gap-2">
+          {results.map((result, index) => (
+            <li
+              key={index}
+              className="hover:bg-gray-100 rounded-md transition-colors cursor-pointer"
+            >
+              <SearchResultCard item={result} onClick={onClick} />
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <div className="text-center text-gray-500 py-4">
+          No results found
+        </div>
+      )}
+    </motion.div>
+  );
 };
 
 export default SearchDialog;

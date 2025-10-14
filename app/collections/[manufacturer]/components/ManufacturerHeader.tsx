@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import Image from "next/image";
+import { motion } from "framer-motion";
 import {
   AdidasBG,
   DefaultBG,
@@ -8,16 +9,15 @@ import {
   NewBalance,
   NikeBG,
 } from "@/assets/images";
-import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
 
 const ManufacturerHeader = ({ name }: { name: string }) => {
-  const { products } = useSelector(
-    (state: RootState) => state.manufacturerSlice
-  );
+  const title =
+    name && name !== "all"
+      ? name.charAt(0).toUpperCase() + name.slice(1)
+      : "All Products";
 
   const image = () => {
-    switch (name) {
+    switch (name.toLowerCase()) {
       case "nike":
         return NikeBG;
       case "adidas":
@@ -32,23 +32,48 @@ const ManufacturerHeader = ({ name }: { name: string }) => {
   };
 
   return (
-    <section className="flex relative flex-col gap-4 md:text-lg text-sm justify-between w-full">
-      <div className="relative group overflow-hidden">
-        <figure className="transition-transform duration-300 ease-in-out group-hover:scale-105">
-          <Image
-            src={image()}
-            alt="Shoes Background"
-            width={100}
-            height={100}
-            className="w-full object-cover h-[10rem] md:h-[20rem]"
-          />
-        </figure>
-        <div className="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-          <h1 className="text-white text-lg md:text-3xl font-bold">
-            <span className="capitalize">{name.toWellFormed()}</span>
-          </h1>
-        </div>
-      </div>
+    <section className="relative w-full overflow-hidden">
+      {/* Background Image with Smooth Zoom */}
+      <motion.figure
+        initial={{ scale: 1 }}
+        animate={{ scale: [1, 1.05, 1] }}
+        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+        className="w-full h-[12rem] md:h-[22rem] relative"
+      >
+        <Image
+          src={image()}
+          alt={`${title} Banner`}
+          fill
+          priority
+          className="object-cover"
+        />
+        {/* Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent" />
+      </motion.figure>
+
+      {/* Title Overlay */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.2 }}
+        className="absolute inset-0 flex flex-col items-center justify-center text-center px-4"
+      >
+        <h1 className="text-3xl font-display md:text-5xl font-bold tracking-wide text-white drop-shadow-md">
+          {title}
+        </h1>
+        <p className="mt-2 text-gray-200 text-sm md:text-lg tracking-wide">
+          Explore the curated collection of {title.toLowerCase()} products.
+        </p>
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6 }}
+          className="mt-5 h-1.5 w-16 rounded-full bg-primary/80"
+        />
+      </motion.div>
+
+      {/* Decorative bottom glow */}
+      <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-white/80 to-transparent backdrop-blur-[2px]" />
     </section>
   );
 };

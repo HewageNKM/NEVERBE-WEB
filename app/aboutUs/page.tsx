@@ -7,7 +7,7 @@ const AboutUs = () => {
             {/* Hero Section */}
             <div className="relative w-full bg-gradient-to-r from-primary-100 to-indigo-600 text-white py-20 px-6 md:px-20">
                 <div className="max-w-6xl mx-auto text-center">
-                    <h1 className="md:text-5xl text-4xl font-bold mb-4">About NEVERBE</h1>
+                    <h1 className="md:text-5xl text-4xl font-display font-bold mb-4">About NEVERBE</h1>
                     <p className="text-lg md:text-xl">
                         Your trusted destination for premium copy shoes in Sri Lanka, redefining style and affordability.
                     </p>
@@ -19,7 +19,7 @@ const AboutUs = () => {
                 <div className="max-w-6xl mx-auto space-y-12">
                     {/* Who We Are */}
                     <section className="bg-white rounded-lg shadow-xl p-8">
-                        <h2 className="text-3xl font-semibold text-gray-800 mb-4">Who We Are</h2>
+                        <h2 className="text-3xl font-display font-semibold text-gray-800 mb-4">Who We Are</h2>
                         <p className="text-gray-600 text-lg leading-relaxed">
                             At NEVERBE, we take pride in offering high-quality replicas of globally renowned shoe brands.
                             Our commitment is to bring unparalleled style and comfort to every customer while maintaining
@@ -30,7 +30,7 @@ const AboutUs = () => {
 
                     {/* Mission and Vision */}
                     <section className="bg-white rounded-lg shadow-xl p-8">
-                        <h2 className="text-3xl font-semibold text-gray-800 mb-4">Our Mission & Vision</h2>
+                        <h2 className="text-3xl font-semibold font-display text-gray-800 mb-4">Our Mission & Vision</h2>
                         <div className="space-y-6">
                             <p className="text-gray-600 text-lg leading-relaxed">
                                 Our mission is simple: to provide top-notch replica shoes that blend durability, design, and value.
@@ -45,7 +45,7 @@ const AboutUs = () => {
 
                     {/* Why Choose Us */}
                     <section className="bg-white rounded-lg shadow-xl p-8">
-                        <h2 className="text-3xl font-semibold text-gray-800 mb-4">Why Choose NEVERBE?</h2>
+                        <h2 className="text-3xl font-display font-semibold text-gray-800 mb-4">Why Choose NEVERBE?</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="bg-gray-50 p-6 rounded-lg shadow-md">
                                 <h3 className="text-xl font-semibold text-gray-700 mb-2">Affordable Luxury</h3>
@@ -72,23 +72,6 @@ const AboutUs = () => {
                                 </p>
                             </div>
                         </div>
-                    </section>
-
-                    {/* Contact Section */}
-                    <section className="bg-indigo-600 text-white rounded-lg shadow-xl p-8">
-                        <h2 className="text-3xl font-semibold mb-4">Get in Touch</h2>
-                        <p className="text-lg mb-4">
-                            We&apos;re here to assist you. Reach out to us anytime:
-                        </p>
-                        <p className="text-lg">
-                            <span className="font-medium">Phone:</span> <Link href="tel:+94771234567" className="underline">+94 70 520 8999</Link>
-                        </p>
-                        <p className="text-lg">
-                            <span className="font-medium">Email:</span> <Link href="mailto:support@neverbe.lk" className="underline">support@neverbe.lk</Link>
-                        </p>
-                        <p className="text-lg">
-                            <span className="font-medium">Contact:</span> <Link href="/contact" className="underline">Message</Link>
-                        </p>
                     </section>
                 </div>
             </div>

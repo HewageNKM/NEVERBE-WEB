@@ -63,7 +63,7 @@ const MessageForm = () => {
 
     return (
         <div className="w-full max-w-4xl p-6 bg-white rounded-lg shadow-custom mt-10">
-            <h2 className="text-3xl font-semibold text-gray-800 text-center mb-6">
+            <h2 className="text-3xl font-display font-semibold text-gray-800 text-center mb-6">
                 Send Us a Message
             </h2>
             <form onSubmit={onMessageSubmit} className="flex flex-col gap-4">
