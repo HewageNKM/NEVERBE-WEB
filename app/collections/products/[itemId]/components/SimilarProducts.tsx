@@ -7,7 +7,7 @@ import EmptyState from "@/components/EmptyState";
 const SimilarProducts = ({ items }: { items: Item[] }) => {
   return (
     <section className="w-full my-10">
-      <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-6">Similar Products</h2>
+      <h2 className="text-xl md:text-2xl font-display font-bold text-gray-800 mb-6">Similar Products</h2>
 
       {items.length > 0 ? (
         <div className="flex gap-4 overflow-x-auto hide-scrollbar">

@@ -7,7 +7,7 @@ const EmailMapSection = () => {
         <div className="flex flex-col lg:flex-row justify-between items-start gap-8">
             {/* Email Section */}
             <div className="flex flex-col gap-4">
-                <h2 className="text-2xl font-semibold text-gray-700">Reach Us At</h2>
+                <h2 className="text-2xl font-display font-semibold text-gray-700">Reach Us At</h2>
                 <div className="flex items-start flex-col gap-2 text-gray-600">
                     <div className="flex flex-row gap-1">
                         <IoMail size={24}/>

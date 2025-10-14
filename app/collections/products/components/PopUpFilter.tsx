@@ -67,7 +67,7 @@ const PopUpFilter = () => {
         className="bg-white/90 backdrop-blur-xl shadow-lg rounded-r-2xl p-6 w-[85vw] md:w-[50vw] h-screen overflow-y-auto relative"
       >
         <div className="flex justify-between items-center border-b pb-3 mb-5">
-          <h2 className="text-2xl font-bold text-gray-800">Filters</h2>
+          <h2 className="text-2xl font-display font-bold text-gray-800">Filters</h2>
           <div className="flex gap-3">
             <button
               onClick={() => dispatch(resetFilter())}

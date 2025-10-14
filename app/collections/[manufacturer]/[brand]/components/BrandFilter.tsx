@@ -43,7 +43,7 @@ const BrandFilter = () => {
     <aside className="hidden lg:flex flex-col w-72 p-6 bg-white/80 backdrop-blur-sm rounded-xl border border-gray-200 shadow-[0_0_20px_rgba(0,0,0,0.05)] sticky top-20 gap-6">
       {/* Header */}
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-gray-800">Filter</h2>
+        <h2 className="text-2xl font-display font-bold text-gray-800">Filter</h2>
         <button
           onClick={() => dispatch(resetFilter())}
           className="p-2 rounded-full bg-yellow-400 hover:bg-yellow-500 transition"

@@ -37,7 +37,7 @@ const BrandHeader = ({ brand }: { brand: string }) => {
         transition={{ duration: 0.6, delay: 0.2 }}
         className="absolute inset-0 flex flex-col items-center justify-center text-center px-4"
       >
-        <h1 className="text-3xl md:text-5xl font-bold tracking-wide text-white drop-shadow-md">
+        <h1 className="text-3xl font-display md:text-5xl font-bold tracking-wide text-white drop-shadow-md">
           {title}
         </h1>
         <p className="mt-2 text-gray-200 text-sm md:text-lg tracking-wide">

@@ -8,7 +8,7 @@ const WhyUs = () => {
     <section className="w-full bg-gray-50 py-16">
       <div className="max-w-6xl mx-auto px-4 lg:px-24 space-y-8">
         <header className="text-center space-y-2">
-          <h2 className="text-3xl md:text-4xl font-bold">Why Choose Us?</h2>
+          <h2 className="text-3xl md:text-4xl font-display font-bold">Why Choose Us?</h2>
           <p className="text-primary text-lg md:text-xl">
             We are the best in the business
           </p>

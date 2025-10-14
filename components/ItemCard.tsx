@@ -71,7 +71,7 @@ const ItemCard = ({ item }: { item: Item }) => {
 
         {/* ---------- CONTENT ---------- */}
         <div className="p-3 sm:p-4 flex flex-col gap-1">
-          <h2 className="text-sm sm:text-base md:text-lg font-semibold line-clamp-1">
+          <h2 className="text-sm font-display sm:text-base md:text-lg font-semibold line-clamp-1">
             {item.name}
           </h2>
 

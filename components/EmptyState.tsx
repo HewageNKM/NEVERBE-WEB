@@ -19,7 +19,7 @@ const EmptyState = ({ heading, subHeading, actionLabel, onAction }: EmptyStatePr
         </div>
 
         {/* Heading */}
-        <h2 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-gray-100 leading-snug">
+        <h2 className="text-2xl font-display md:text-3xl font-bold text-gray-800 dark:text-gray-100 leading-snug">
           {heading}
         </h2>
 

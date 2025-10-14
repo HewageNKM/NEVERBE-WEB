@@ -10,7 +10,7 @@ const PopularProducts = ({ hotItems }: { hotItems: Item[] }) => {
       <div className="lg:px-24 px-4 py-8">
         {/* Header */}
         <div className="text-center md:text-left">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-800">
+          <h2 className="text-3xl font-display md:text-4xl font-bold text-gray-800">
             Popular Products
           </h2>
           <h3 className="text-primary text-lg md:text-xl mt-2 font-medium">

@@ -17,7 +17,7 @@ const Page = () => {
 
                 {/* Message Section */}
                 <div className="flex flex-col items-center text-center">
-                    <h3 className="text-2xl lg:text-3xl font-semibold text-red-600">
+                    <h3 className="text-2xl font-display lg:text-3xl font-semibold text-red-600">
                         Order Placement Failed
                     </h3>
                     <p className="text-gray-600 mt-2 lg:text-lg text-base">

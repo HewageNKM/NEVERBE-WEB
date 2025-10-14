@@ -62,7 +62,7 @@ const BrandTopUpFilter = () => {
       >
         {/* Header */}
         <div className="flex justify-between items-center border-b pb-3 mb-5">
-          <h2 className="text-2xl font-bold text-gray-800">Filters</h2>
+          <h2 className="text-2xl font-display font-bold text-gray-800">Filters</h2>
           <div className="flex gap-3">
             <button
               onClick={() => dispatch(resetFilter())}

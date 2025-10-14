@@ -65,7 +65,7 @@ const Menu = () => {
       >
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200">
-          <h2 className="font-bold text-lg text-gray-800">Menu</h2>
+          <h2 className="font-bold font-display text-lg text-gray-800">Menu</h2>
           <button
             onClick={() => dispatch(toggleMenu(false))}
             className="p-2 text-gray-600 hover:text-gray-900 transition-colors"

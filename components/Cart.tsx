@@ -30,7 +30,7 @@ const Cart = () => {
       >
         {/* Header */}
         <div className="flex justify-between items-center px-6 py-4 border-b">
-          <h2 className="text-2xl font-semibold tracking-wide">Your Cart</h2>
+          <h2 className="text-2xl font-display font-semibold tracking-wide">Your Cart</h2>
           <button
             onClick={() => dispatch(hideCart())}
             className="text-gray-600 hover:text-black transition-colors"

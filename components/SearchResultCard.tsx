@@ -45,7 +45,7 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({ item, onClick }) =>
 
       {/* Details */}
       <div className="flex flex-col justify-center flex-1 overflow-hidden">
-        <h2 className="font-semibold text-sm sm:text-base line-clamp-1">{item.name}</h2>
+        <h2 className="font-semibold font-display text-sm sm:text-base line-clamp-1">{item.name}</h2>
         <div className="flex items-center gap-2 mt-1">
           <span className="text-gray-900 font-bold text-sm sm:text-base">
             Rs {discountedPrice.toFixed(2)}

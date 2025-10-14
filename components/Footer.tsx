@@ -18,7 +18,7 @@ const Footer = () => {
               <Image src={Logo} alt="NEVERBE Logo" width={100} height={100} />
             </figure>
           </Link>
-          <h2 className="text-2xl font-bold">Address</h2>
+          <h2 className="text-2xl font-bold font-display">Address</h2>
           <div className="flex items-start gap-3">
             <GoLocation size={28} className="mt-1" />
             <Link href={address.map} target="_blank" rel="noopener noreferrer">
@@ -29,7 +29,7 @@ const Footer = () => {
 
         {/* Follow Us */}
         <div className="flex flex-col gap-4">
-          <h2 className="text-2xl font-bold">Follow Us</h2>
+          <h2 className="text-2xl font-bold font-display">Follow Us</h2>
           <ul className="flex flex-col gap-3">
             {socialMedia.map((media, idx) => (
               <li key={idx} className="flex items-center gap-2 text-lg">
@@ -50,7 +50,7 @@ const Footer = () => {
 
         {/* Information Links */}
         <div className="flex flex-col gap-4">
-          <h2 className="text-2xl font-bold">Information</h2>
+          <h2 className="text-2xl font-bold font-display">Information</h2>
           <ul className="flex flex-col gap-2">
             {informationLinks.map((link, idx) => (
               <li key={idx} className="text-lg hover:text-gray-300 transition duration-200">
@@ -64,7 +64,7 @@ const Footer = () => {
 
         {/* Contact Info */}
         <div className="flex flex-col gap-4">
-          <h2 className="text-2xl font-bold">Contact Us</h2>
+          <h2 className="text-2xl font-bold font-display">Contact Us</h2>
           <ul className="flex flex-col gap-2">
             {contactInfo.map((info, idx) => (
               <li key={idx}>
@@ -88,8 +88,8 @@ const Footer = () => {
 
       {/* Bottom Bar */}
       <div className="flex flex-col lg:flex-row justify-between items-center gap-4 text-center lg:text-left">
-        <p className="text-lg font-medium">© {new Date().getFullYear()} NEVERBE. All Rights Reserved.</p>
-        <p className="font-medium">
+        <p className="text-lg font-medium font-display">© {new Date().getFullYear()} NEVERBE. All Rights Reserved.</p>
+        <p className="font-medium font-display">
           Developed By{" "}
           <Link href="https://github.com/HewageNKM" className="underline hover:text-gray-300">
             Nadun Malwenna

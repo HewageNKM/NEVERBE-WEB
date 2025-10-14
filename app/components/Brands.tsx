@@ -11,7 +11,7 @@ const Brands = () => {
     >
       <h2 
         id="brands-section"
-        className="text-center text-2xl md:text-3xl lg:text-4xl font-bold mb-8"
+        className="text-center font-display text-2xl md:text-3xl lg:text-4xl font-bold mb-8"
       >
         Popular Brands
       </h2>

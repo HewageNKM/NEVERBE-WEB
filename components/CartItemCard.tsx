@@ -22,7 +22,7 @@ const CartItemCard = ({ item }: { item: CartItem }) => {
       </div>
 
       <div className="flex flex-col flex-grow capitalize">
-        <h3 className="font-semibold text-lg line-clamp-1">{item.name}</h3>
+        <h3 className="font-semibold font-display text-lg line-clamp-1">{item.name}</h3>
         <p className="text-sm text-gray-500">
           {item.variantName} | Size: {item.size}
         </p>

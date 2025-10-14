@@ -15,7 +15,7 @@ const Hero = async ({ slides }: { slides: Slide[] }) => {
       {/* Collections */}
       <div className="px-4 lg:px-8">
         <div className="flex flex-col gap-6">
-          <h3 className="text-gray-800 text-2xl md:text-4xl font-bold tracking-tight">
+          <h3 className="text-gray-800 font-display text-2xl md:text-4xl font-bold tracking-tight">
             Explore Our Collection
           </h3>
 

@@ -62,7 +62,7 @@ const ProductsFilter = ({ gender }: { gender: string }) => {
   return (
     <aside className="hidden lg:block w-[22vw] bg-white/80 backdrop-blur-sm border-r border-gray-200 p-6 rounded-xl shadow-[0_0_20px_rgba(0,0,0,0.05)] h-fit">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold tracking-wide text-gray-800">
+        <h2 className="text-2xl font-display font-bold tracking-wide text-gray-800">
           Filters
         </h2>
         <button

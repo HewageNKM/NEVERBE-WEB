@@ -10,7 +10,7 @@ const NewArrivals = ({ arrivals }: { arrivals: Item[] }) => {
       <div className="lg:px-24 px-4 w-full">
         {/* Header */}
         <div className="text-center md:text-left">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-800">
+          <h2 className="text-3xl md:text-4xl font-display font-bold text-gray-800">
             New Arrivals
           </h2>
           <h3 className="text-primary text-lg md:text-xl mt-2 font-medium">

@@ -185,7 +185,7 @@ const ProductHero = ({ item }: { item: Item }) => {
         {/* Right: Details */}
         <div className="flex flex-col gap-4">
           <p className="text-gray-500 font-medium capitalize">{item.manufacturer}</p>
-          <h1 className="text-2xl md:text-3xl font-extrabold text-gray-900">
+          <h1 className="text-2xl font-display md:text-3xl font-extrabold text-gray-900">
             {item.name}
           </h1>
 
@@ -234,7 +234,7 @@ const ProductHero = ({ item }: { item: Item }) => {
 
           {/* Variants */}
           <div>
-            <h3 className="font-medium text-gray-700 mb-1">Colors</h3>
+            <h3 className="font-medium font-display text-gray-700 mb-1">Colors</h3>
             <div className="flex gap-2 flex-wrap">
               {item.variants.map((v, i) => (
                 <button
@@ -328,7 +328,7 @@ const ProductHero = ({ item }: { item: Item }) => {
 
       {/* Description */}
       <div>
-        <h2 className="text-xl md:text-2xl font-bold text-gray-800">
+        <h2 className="text-xl font-display md:text-2xl font-bold text-gray-800">
           Description
         </h2>
         <p className="text-gray-600 mt-2">
