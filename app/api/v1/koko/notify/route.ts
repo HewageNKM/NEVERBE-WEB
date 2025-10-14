@@ -1,52 +1,64 @@
 // app/api/v1/koko/notify/route.ts
-
 import { NextResponse } from "next/server";
 import crypto from "crypto";
 import { updatePayment } from "@/firebase/firebaseAdmin";
 
 export async function POST(req: Request) {
-    try {
-        const formData = await req.formData();
-        const orderId = formData.get('orderId') as string;
-        const trnId = formData.get('trnId') as string;
-        const status = formData.get('status') as string;
-        const signature = formData.get('signature') as string;
+  try {
+    const formData = await req.formData();
+    const orderId = formData.get("orderId") as string;
+    const trnId = formData.get("trnId") as string;
+    const status = formData.get("status") as string;
+    const signature = formData.get("signature") as string;
+    const desc = formData.get("desc") as string | null;
 
-        console.log("Received Koko notification:", { orderId, trnId, status });
+    console.log("📩 Koko notify received:", { orderId, trnId, status, desc });
 
-        const kokoPublicKey = process.env.NEXT_PUBLIC_KOKO_PUBLIC_KEY;
-        if (!kokoPublicKey) {
-            throw new Error("Koko public key is not configured.");
-        }
-
-        // --- Step 1: Create the string to verify [cite: 99] ---
-        const dataToVerify = orderId + trnId + status;
-
-        // --- Step 2: Verify the signature with Koko's Public Key [cite: 99] ---
-        const verifier = crypto.createVerify('RSA-SHA256');
-        verifier.update(dataToVerify);
-        verifier.end();
-
-        const isVerified = verifier.verify(kokoPublicKey, signature, 'base64');
-
-        if (!isVerified) {
-            console.error("Koko signature verification failed for orderId:", orderId);
-            return NextResponse.json({ message: "Unauthorized: Invalid Signature" }, { status: 401 });
-        }
-
-        // --- Step 3: Update your database based on the verified status ---
-        if (status === 'SUCCESS') {
-            console.log(`Payment Successful for order: ${orderId}`);
-            await updatePayment(orderId, trnId, "Paid");
-        } else {
-            console.log(`Payment Failed or was not successful for order: ${orderId}, Status: ${status}`);
-            await updatePayment(orderId, trnId, "Failed");
-        }
-        
-        return NextResponse.json({ message: "Notification received successfully" }, { status: 200 });
-
-    } catch (error: any) {
-        console.error("Koko notification processing error:", error);
-        return NextResponse.json({ message: "Error processing Koko notification" }, { status: 500 });
+    if (!orderId || !trnId || !status || !signature) {
+      return NextResponse.json(
+        { message: "Missing required fields" },
+        { status: 400 }
+      );
     }
+
+    const kokoPublicKey = process.env.NEXT_PUBLIC_KOKO_PUBLIC_KEY;
+    if (!kokoPublicKey) {
+      throw new Error("Koko public key not found in environment.");
+    }
+
+    // --- Step 1: Build verification string ---
+    const dataToVerify = orderId + trnId + status;
+
+    // --- Step 2: Verify signature ---
+    const verifier = crypto.createVerify("RSA-SHA256");
+    verifier.update(dataToVerify, "utf8");
+    verifier.end();
+
+    const isVerified = verifier.verify(kokoPublicKey, signature, "base64");
+
+    if (!isVerified) {
+      console.error("❌ Invalid Koko signature for order:", orderId);
+      return NextResponse.json(
+        { message: "Unauthorized: Invalid signature" },
+        { status: 401 }
+      );
+    }
+
+    // --- Step 3: Update order payment status ---
+    if (status === "SUCCESS") {
+      await updatePayment(orderId, trnId, "Paid");
+      console.log(`✅ Payment success recorded for order ${orderId}`);
+    } else {
+      await updatePayment(orderId, trnId, "Failed");
+      console.log(`⚠️ Payment failed for order ${orderId} (${status})`);
+    }
+
+    return NextResponse.json({ message: "Notification processed" }, { status: 200 });
+  } catch (error: any) {
+    console.error("❌ Koko notify error:", error);
+    return NextResponse.json(
+      { message: "Error processing Koko notification", error: error.message },
+      { status: 500 }
+    );
+  }
 }

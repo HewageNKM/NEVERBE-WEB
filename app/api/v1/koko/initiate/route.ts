@@ -1,5 +1,4 @@
 // app/api/v1/koko/initiate/route.ts
-
 import { NextResponse } from "next/server";
 import crypto from "crypto";
 
@@ -8,50 +7,51 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { orderId, amount, firstName, lastName, email, description } = body;
 
-    // --- Step 1: Retrieve credentials from environment variables ---
+    // --- Step 1: Retrieve credentials ---
     const merchantId = process.env.KOKO_MERCHANT_ID;
     const apiKey = process.env.KOKO_API_KEY;
     const privateKey = process.env.KOKO_PRIVATE_KEY;
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+    const redirectUrl =
+      process.env.NEXT_PUBLIC_KOKO_REDIRECT_URL ||
+      "https://devapi.paykoko.com/api/merchants/orderCreate";
 
-    if (!merchantId || !apiKey || !privateKey) {
-      throw new Error(
-        "Koko credentials are not configured in environment variables."
-      );
+    if (!merchantId || !apiKey || !privateKey || !baseUrl) {
+      throw new Error("Koko credentials or base URL missing in environment.");
     }
 
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+    // --- Step 2: Construct callback URLs ---
     const returnUrl = `${baseUrl}/checkout/success?orderId=${orderId}`;
     const cancelUrl = `${baseUrl}/checkout/fail?orderId=${orderId}`;
     const responseUrl = `${baseUrl}/api/v1/koko/notify`;
 
-    // --- Step 2: Construct the dataString in the exact specified order [cite: 75] ---
+    // --- Step 3: Build data string in correct order (per Koko v1.05) ---
     const dataString =
       merchantId +
       amount +
-      "LKR" + // Currency [cite: 31]
-      "customapi" + // _pluginName [cite: 32]
-      "1.0.1" + // _pluginVersion [cite: 32]
-      returnUrl + // _returnUrl [cite: 31]
-      cancelUrl + // _cancelUrl [cite: 31]
-      orderId + // _orderId [cite: 31]
-      orderId + // _reference [cite: 31]
-      firstName + // _firstName [cite: 32]
-      lastName + // _lastName [cite: 32]
-      email + // _email [cite: 32]
-      description + // _description [cite: 32]
-      apiKey + // api_key [cite: 31]
-      responseUrl; // _responseUrl [cite: 31]
+      "LKR" +
+      "customapi" +
+      "1.0.1" +
+      returnUrl +
+      cancelUrl +
+      orderId + // _orderId
+      orderId + // _reference (same as orderId)
+      firstName +
+      lastName +
+      email +
+      description +
+      apiKey +
+      responseUrl;
 
-    // --- Step 3: Sign the dataString with your RSA Private Key ---
-    const formattedPrivateKey = privateKey.replace(/\\n/g, "\n");
+    // --- Step 4: Sign the data string ---
+    const formattedPrivateKey = privateKey.replace(/\\n/g, "\n").trim();
 
     const signer = crypto.createSign("RSA-SHA256");
-    signer.update(dataString);
+    signer.update(dataString, "utf8");
     signer.end();
-
     const signature = signer.sign(formattedPrivateKey, "base64");
 
-    // --- Step 4: Prepare the payload for the Koko form ---
+    // --- Step 5: Return payload to frontend ---
     const payload = {
       _mId: merchantId,
       api_key: apiKey,
@@ -68,15 +68,14 @@ export async function POST(req: Request) {
       _firstName: firstName,
       _lastName: lastName,
       _email: email,
-      dataString: dataString,
-      signature: signature,
+      dataString,
+      signature,
     };
 
-    console.log("Koko initiation payload:", payload);
-
+    console.log("✅ Koko initiate payload:", payload);
     return NextResponse.json(payload, { status: 200 });
   } catch (error: any) {
-    console.error("Koko initiation error:", error);
+    console.error("❌ Koko initiate error:", error);
     return NextResponse.json(
       { message: "Error initiating Koko payment", error: error.message },
       { status: 500 }
