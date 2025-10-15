@@ -4,7 +4,6 @@ import { NextResponse } from "next/server";
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-
     const {
       orderId,
       amount,
@@ -24,21 +23,22 @@ export async function POST(req: Request) {
     const merchantSecret = process.env.PAYHERE_MERCHANT_SECRET!;
     const currency = "LKR";
 
-    console.log("✅ PayHere initiate payload:", body);
+    // ✅ Ensure amount format
+    const amountFormatted = parseFloat(amount)
+      .toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+      .replace(/,/g, "");
 
-    console.log(
-      "✅ Secret Loaded ",
-      "******" + merchantId.split("").slice(-3).join(""),
-      "******" + merchantSecret.split("").slice(-3).join("")
-    );
-    // Hash merchant secret as required by PayHere
+    // ✅ Hash secret
     const hashedSecret = md5(merchantSecret).toString().toUpperCase();
 
-    // Create full signature
-    const md5sig = md5(merchantId + orderId + amount + currency + hashedSecret)
+    // ✅ Generate PayHere signature
+    const hash = md5(
+      merchantId + orderId + amountFormatted + currency + hashedSecret
+    )
       .toString()
       .toUpperCase();
 
+    // ✅ Return correct response field name
     return NextResponse.json({
       merchant_id: merchantId,
       return_url: returnUrl,
@@ -46,7 +46,7 @@ export async function POST(req: Request) {
       notify_url: notifyUrl,
       order_id: orderId,
       items,
-      amount,
+      amount: amountFormatted,
       currency,
       first_name: firstName,
       last_name: lastName,
@@ -55,7 +55,7 @@ export async function POST(req: Request) {
       address,
       city,
       country: "Sri Lanka",
-      md5sig,
+      hash, // ✅ must be "hash"
     });
   } catch (err) {
     console.error("PayHere initiate error:", err);

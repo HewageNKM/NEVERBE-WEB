@@ -138,6 +138,7 @@ const CheckoutForm = () => {
     const [firstName, ...lastNameParts] = customer.name.split(" ");
     const lastName = lastNameParts.join(" ") || firstName;
 
+    // 🔹 Call your backend to generate PayHere payload
     const response = await fetch("/api/v1/ipg/payhere/initiate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -150,13 +151,12 @@ const CheckoutForm = () => {
         phone: customer.phone,
         address: customer.address,
         city: customer.city,
-        items: `${cartItems.length} products`,
+        items: `${cartItems.length} Products`,
         returnUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/checkout/success?orderId=${orderId}`,
         cancelUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/checkout/fail?orderId=${orderId}`,
         notifyUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/ipg/payhere/notify`,
       }),
     });
-
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -165,18 +165,38 @@ const CheckoutForm = () => {
 
     const payherePayload = await response.json();
 
+    // 🔹 Create a hidden form (not visible to user)
     const form = document.createElement("form");
     form.method = "POST";
     form.action = process.env.NEXT_PUBLIC_PAYHERE_URL || "";
     form.style.display = "none";
 
-    for (const [key, value] of Object.entries(payherePayload)) {
+    const fields: Record<string, string> = {
+      merchant_id: payherePayload.merchant_id,
+      return_url: payherePayload.return_url,
+      cancel_url: payherePayload.cancel_url,
+      notify_url: payherePayload.notify_url,
+      order_id: payherePayload.order_id,
+      items: payherePayload.items,
+      currency: payherePayload.currency,
+      amount: payherePayload.amount,
+      first_name: payherePayload.first_name,
+      last_name: payherePayload.last_name,
+      email: payherePayload.email,
+      phone: payherePayload.phone,
+      address: payherePayload.address,
+      city: payherePayload.city,
+      country: payherePayload.country,
+      hash: payherePayload.hash,
+    };
+
+    Object.entries(fields).forEach(([key, value]) => {
       const input = document.createElement("input");
       input.type = "hidden";
       input.name = key;
-      input.value = value as string;
+      input.value = value;
       form.appendChild(input);
-    }
+    });
 
     document.body.appendChild(form);
     form.submit();
