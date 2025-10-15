@@ -8,16 +8,12 @@ import { AppDispatch, RootState } from "@/redux/store";
 import { hideCart } from "@/redux/cartSlice/cartSlice";
 import CartItemCard from "@/components/CartItemCard";
 import { useRouter } from "next/navigation";
-import { calculateShippingCost, calculateSubTotal } from "@/util";
+import { calculateShippingCost, calculateSubTotal, calculateTotal, calculateTotalDiscount } from "@/util";
 
 const Cart = () => {
   const dispatch: AppDispatch = useDispatch();
   const router = useRouter();
   const cartItems = useSelector((state: RootState) => state.cartSlice.cart);
-
-  const total = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
-  const discount = cartItems.reduce((acc, item) => acc + (item.discount || 0), 0);
-  const subtotal = calculateSubTotal(cartItems);
 
   return (
     <DropShadow containerStyle="flex justify-end">
@@ -53,11 +49,11 @@ const Cart = () => {
         <div className="border-t p-6 space-y-3 bg-gray-50">
           <div className="flex justify-between text-gray-700">
             <span>Total:</span>
-            <span>Rs. {total.toFixed(2)}</span>
+            <span>Rs. {calculateTotal(cartItems).toFixed(2)}</span>
           </div>
           <div className="flex justify-between text-gray-700">
             <span>Discount:</span>
-            <span>-Rs. {discount.toFixed(2)}</span>
+            <span className="text-red-500">-Rs. {calculateTotalDiscount(cartItems).toFixed(2)}</span>
           </div>
           <div className="flex justify-between text-gray-700">
             <span>Shipping:</span>
@@ -65,7 +61,7 @@ const Cart = () => {
           </div>
           <div className="flex justify-between text-lg font-semibold border-t pt-2">
             <span>Subtotal:</span>
-            <span>Rs. {subtotal.toFixed(2)}</span>
+            <span>Rs. {calculateSubTotal(cartItems).toFixed(2)}</span>
           </div>
 
           <button

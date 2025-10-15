@@ -32,7 +32,6 @@ const cartSlice = createSlice({
                 state.cart = itemCart.map((item: CartItem) => {
                     if (item.itemId === action.payload.itemId && item.variantId === action.payload.variantId && item.size === action.payload.size) {
                         item.quantity += action.payload.quantity;
-                        item.discount += action.payload.discount;
                         doesExist = true;
                         return item;
                     }

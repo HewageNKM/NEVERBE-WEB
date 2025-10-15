@@ -5,7 +5,7 @@ import { RootState } from "@/redux/store";
 import { IoLockClosed } from "react-icons/io5";
 import CartItemCard from "@/components/CartItemCard";
 import ReCAPTCHA from "react-google-recaptcha";
-import { calculateShipping, calculateShippingCost, calculateSubTotal } from "@/util";
+import { calculateShippingCost, calculateSubTotal, calculateTotal, calculateTotalDiscount } from "@/util";
 import PaymentOptions from "@/app/checkout/components/PaymentOptions";
 
 const PaymentDetails = ({
@@ -24,12 +24,6 @@ const PaymentDetails = ({
   captchaError: boolean;
 }) => {
   const cartItems = useSelector((state: RootState) => state.cartSlice.cart);
-
-  const calculateTotal = () =>
-    cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
-
-  const calculateDiscount = () =>
-    cartItems.reduce((acc, item) => acc + (item.discount || 0), 0);
 
   return (
     <div className="flex flex-col max-w-3xl mx-auto px-6 py-8 bg-white">
@@ -51,13 +45,13 @@ const PaymentDetails = ({
         <h3>Total Items: {cartItems.length}</h3>
         <div className="flex flex-col items-end space-y-1 w-full md:w-auto">
           <p className="text-gray-700">
-            Total: <span className="font-medium">Rs. {calculateTotal().toFixed(2)}</span>
+            Total: <span className="font-medium">Rs. {calculateTotal(cartItems).toFixed(2)}</span>
           </p>
           <p className="text-gray-700">
-            Shipping: <span className="font-medium">{calculateShippingCost(cartItems).toFixed(2)}</span>
+            Shipping: <span className="font-medium">Rs. {calculateShippingCost(cartItems).toFixed(2)}</span>
           </p>
           <p className="text-gray-700">
-            Discount: <span className="font-medium text-red-500">-Rs. {calculateDiscount().toFixed(2)}</span>
+            Discount: <span className="font-medium text-red-500">-Rs. {calculateTotalDiscount(cartItems).toFixed(2)}</span>
           </p>
           <div className="w-full border-t border-gray-300 my-1" />
           <p className="text-lg font-semibold">

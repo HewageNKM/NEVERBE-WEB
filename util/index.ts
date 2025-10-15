@@ -25,11 +25,16 @@ export const calculateShippingCost = (items: CartItem[]) => {
     return SHIPPING_FLAT_RATE_1;
 }
 
+export const calculateTotalDiscount = (items: CartItem[])=>{
+    return items.reduce((acc, item) => acc + ((Math.round((item.price * (item.discount / 100)) / 10) * 10) * item.quantity), 0);
+}
+
+export const calculateTotal = (items: CartItem[]) => {
+    return items.reduce((acc, item) => acc + item.price * item.quantity, 0)
+}
 
 export const calculateSubTotal = (items: CartItem[]) => {
-    const total = items.reduce((acc, item) => acc + item.price * item.quantity, 0);
-    const totalDiscount = items.reduce((acc, item) => acc + (item.discount || 0), 0);
-    return total - totalDiscount + calculateShippingCost(items);
+    return calculateTotal(items) - calculateTotalDiscount(items) + calculateShippingCost(items);
 }
 
 export const getAlgoliaClient = () => {
