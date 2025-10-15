@@ -8,7 +8,7 @@ import { AppDispatch, RootState } from "@/redux/store";
 import { hideCart } from "@/redux/cartSlice/cartSlice";
 import CartItemCard from "@/components/CartItemCard";
 import { useRouter } from "next/navigation";
-import { calculateSubTotal } from "@/util";
+import { calculateShippingCost, calculateSubTotal } from "@/util";
 
 const Cart = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -58,6 +58,10 @@ const Cart = () => {
           <div className="flex justify-between text-gray-700">
             <span>Discount:</span>
             <span>-Rs. {discount.toFixed(2)}</span>
+          </div>
+          <div className="flex justify-between text-gray-700">
+            <span>Shipping:</span>
+            <span>Rs. {calculateShippingCost(cartItems).toFixed(2)}</span>
           </div>
           <div className="flex justify-between text-lg font-semibold border-t pt-2">
             <span>Subtotal:</span>

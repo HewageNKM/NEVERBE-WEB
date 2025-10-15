@@ -49,8 +49,7 @@ const Page = async ({searchParams}: { searchParams: { [key: string]: string } })
     }
     console.log(gender)
     return (
-        <main className="w-full relative lg:mt-32 md:mt-20 mb-10 lg:mb-10 mt-16 overflow-clip">
-            <div className="w-full">
+        <main className="w-full relative lg:mt-28 mt-16 mb-5 overflow-clip">
                 <ProductsHeader gender={gender}/>
                 <div className="px-4">
                     {items.length > 0 ? (
@@ -59,10 +58,9 @@ const Page = async ({searchParams}: { searchParams: { [key: string]: string } })
                         <EmptyState heading="No products available at this time."/>
                     )}
                 </div>
-            </div>
         </main>
     );
 };
 
-export const dynamic = 'force-dynamic'; // Ensure the page is server-rendered dynamically
+export const dynamic = 'force-dynamic';
 export default Page;

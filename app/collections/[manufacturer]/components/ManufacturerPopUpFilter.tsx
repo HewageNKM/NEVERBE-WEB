@@ -5,13 +5,12 @@ import { IoClose } from "react-icons/io5";
 import { BiReset } from "react-icons/bi";
 import DropShadow from "@/components/DropShadow";
 import {
-  getInventory,
+  getItemsByManufacturer,
   resetFilter,
-  setSelectedManufacturers,
   setSelectedSizes,
   setSelectedType,
   toggleFilter,
-} from "@/redux/productsSlice/productsSlice";
+} from "@/redux/manufacturerSlice/manufacturerSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
 import { productTypes, wearableSizes, accessoriesSizes } from "@/constants";
@@ -21,20 +20,11 @@ import Skeleton from "@/components/Skeleton";
 const PopUpFilter = () => {
   const dispatch: AppDispatch = useDispatch();
   const { selectedSizes, selectedType, selectedManufacturers, page } =
-    useSelector((state: RootState) => state.productsSlice);
+    useSelector((state: RootState) => state.manufacturerSlice);
 
   const [brands, setBrands] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const toggleBrand = (value: string) => {
-    if (selectedManufacturers.includes(value)) {
-      dispatch(
-        setSelectedManufacturers(selectedManufacturers.filter((b) => b !== value))
-      );
-    } else {
-      dispatch(setSelectedManufacturers([...selectedManufacturers, value]));
-    }
-  };
 
   const toggleSize = (value: string) => {
     if (selectedSizes.includes(value)) {
@@ -46,7 +36,7 @@ const PopUpFilter = () => {
 
   useEffect(() => {
     const gender = window.localStorage.getItem("gender") || "all";
-    dispatch(getInventory({ gender, page }));
+    dispatch(getItemsByManufacturer({selectedManufacturers,page,selectedSizes}));
   }, [selectedManufacturers, selectedType, selectedSizes, dispatch]);
 
   useEffect(() => {
@@ -101,30 +91,6 @@ const PopUpFilter = () => {
                 {type.name}
               </button>
             ))}
-          </div>
-        </div>
-
-        {/* Brands */}
-        <div className="mb-6">
-          <h3 className="text-lg font-semibold mb-3 text-gray-700">Brands</h3>
-          <div className="flex flex-wrap gap-3">
-            {loading ? (
-              <Skeleton />
-            ) : (
-              brands.map((brand, i) => (
-                <button
-                  key={i}
-                  onClick={() => toggleBrand(brand.value)}
-                  className={`px-3 py-1 rounded-lg border font-medium ${
-                    selectedManufacturers.includes(brand.value)
-                      ? "bg-gray-900 text-white border-gray-900"
-                      : "bg-gray-50 hover:bg-gray-100 border-gray-300"
-                  }`}
-                >
-                  {brand.name}
-                </button>
-              ))
-            )}
           </div>
         </div>
 

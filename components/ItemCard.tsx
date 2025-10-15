@@ -116,7 +116,7 @@ const ItemCard = ({ item }: { item: Item }) => {
 
           {/* Action Link */}
           <div className="mt-3">
-            <p className="text-blue-600 font-medium text-sm hover:underline">
+            <p className="text-primary font-medium text-sm hover:underline">
               Pick a Color →
             </p>
           </div>
