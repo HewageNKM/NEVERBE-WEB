@@ -133,8 +133,8 @@ const CheckoutForm = () => {
     amount: string
   ) => {
     const amountFormatted = parseFloat(amount)
-      .toLocaleString("en-us", { minimumFractionDigits: 2 })
-      .replaceAll(",", "");
+      .toLocaleString("en-US", { minimumFractionDigits: 2 })
+      .replace(/,/g, "");
 
     const [firstName, ...lastNameParts] = customer.name.split(" ");
     const lastName = lastNameParts.join(" ") || firstName;
@@ -153,7 +153,7 @@ const CheckoutForm = () => {
         city: customer.city,
         items: `${cartItems.length} products`,
         returnUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/checkout/success?orderId=${orderId}`,
-        cancelUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/checkout/cancel?orderId=${orderId}`,
+        cancelUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/checkout/fail?orderId=${orderId}`,
         notifyUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/ipg/payhere/notify`,
       }),
     });
