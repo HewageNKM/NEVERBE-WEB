@@ -2,11 +2,11 @@ import React from 'react';
 import Hero from "@/app/components/Hero";
 import NewArrivals from "@/app/components/NewArrivals";
 import WhyUs from "@/app/components/WhyUs";
-import Brands from "@/app/components/Brands";
 import PopularProducts from "@/app/components/PopularProducts";
 import FAQ from "@/app/components/FAQ";
 import {Item, Slide} from "@/interfaces";
 import {getBrandsFromInventory, getHotProducts, getRecentItems, getSliders} from "@/firebase/firebaseAdmin";
+import BrandsSlider from './components/BrandsSlider';
 
 const Page = async () => {
     const arrivals: Item[] = [];
@@ -28,7 +28,7 @@ const Page = async () => {
             <Hero slides={sliders}/>
             <PopularProducts hotItems={hotItems}/>
             <NewArrivals arrivals={arrivals}/>
-            <Brands brands={brands}/>
+            <BrandsSlider items={brands}/>
             <WhyUs/>
             <FAQ/>
         </>

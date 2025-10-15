@@ -22,6 +22,8 @@ import NewBalanceLogo from "@/assets/images/new-logo.png";
 import PoloLogo from "@/assets/images/polo-logo.png";
 import CROCS from "@/assets/images/crocs-logo.png";
 import LuvionVuittonLogo from "@/assets/images/louis-vuitton-logo.png";
+import VANSLogo from "@/assets/images/vans-logo.png"
+import LACOSTELogo from "@/assets/images/lacoste-logo.jpg"
 
 export const brands = [
   {
@@ -59,6 +61,18 @@ export const brands = [
     name: "Luvion",
     image: LuvionVuittonLogo,
     url: "/collections/luvion%20vuitton",
+  },
+  {
+    id: 7,
+    name: "VANS",
+    image: VANSLogo,
+    url: "/collections/vans",
+  },
+  {
+    id: 8,
+    name: "Lacoste",
+    image: LACOSTELogo,
+    url: "/collections/lacoste",
   },
 ];
 export const seoKeywords: string[] = [
