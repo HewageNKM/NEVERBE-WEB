@@ -20,7 +20,7 @@ export async function POST(req: Request) {
     // --- Step 2: Construct callback URLs ---
     const returnUrl = `${baseUrl}/checkout/success?orderId=${orderId}`;
     const cancelUrl = `${baseUrl}/checkout/fail?orderId=${orderId}`;
-    const responseUrl = `${baseUrl}/api/v1/koko/notify`;
+    const responseUrl = `${baseUrl}/api/v1/ipg/koko/notify`;
 
     // --- Step 3: Build data string in correct order (per Koko v1.05) ---
     const dataString =

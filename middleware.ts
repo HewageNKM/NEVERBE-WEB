@@ -28,10 +28,9 @@ export function middleware(req: Request) {
 
   // Always allow Koko/IPG routes regardless of origin
   if (
-    url.pathname.startsWith("/api/v1/koko") ||
     url.pathname.startsWith("/api/v1/ipg")
   ) {
-    console.log(`Allowed: Koko/IPG route from ${origin}`);
+    console.log(`Allowed: IPG route from ${origin}`);
     return NextResponse.next();
   }
 
