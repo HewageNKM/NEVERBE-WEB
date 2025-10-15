@@ -55,7 +55,7 @@ const ManufacturerProducts = ({
   }, []);
 
   return (
-    <section className="w-full flex flex-col lg:flex-row gap-10 pt-5 lg:justify-between">
+    <section className="w-full flex flex-col mb-5 lg:flex-row gap-6 pt-5 lg:justify-between">
       {/* Desktop Filters */}
       <aside className="hidden lg:block w-[22%]">
         <ManufacturerFilter manufacturer={manufacturer} />
@@ -122,7 +122,7 @@ const ManufacturerProducts = ({
         ) : error ? (
           <EmptyState heading="An error occurred!" subHeading={error} />
         ) : (
-          <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-3 gap-6">
+          <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-4">
             {products.map((item) => (
               <li key={item.itemId} className="group">
                 <ItemCard item={item} />

@@ -60,9 +60,9 @@ const Page = async ({params}: { params: { manufacturer: string } }) => {
         console.error("Error fetching items:", e);
     }
     return (
-        <main className="w-full lg:mt-32 mt-20 overflow-clip">
+        <main className="w-full lg:mt-28 mt-16 mb-5 overflow-clip">
             <div className="w-full">
-                <ManufacturerHeader count={items.length} name={params.manufacturer.replace("%20", " ")}/>
+                <ManufacturerHeader name={params.manufacturer.replace("%20", " ")}/>
                 <div className="px-4">
                     {items.length > 0 ? (
                         <ManufacturerProducts items={items} manufacturer={params.manufacturer.replace("%20", " ")}/>
