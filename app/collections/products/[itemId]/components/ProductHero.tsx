@@ -284,7 +284,7 @@ const ProductHero = ({ item }: { item: Item }) => {
               <div className="text-gray-500 text-sm mt-2 flex gap-3">
                 <span>UK: {otherSizes.uk || "N/A"}</span>
                 <span>US: {otherSizes.us || "N/A"}</span>
-                <span>CM: {otherSizes.cm +"cm" || "N/A"}</span>
+                <span>CM: {otherSizes.cm || "N/A"}</span>
               </div>
             )}
           </div>
