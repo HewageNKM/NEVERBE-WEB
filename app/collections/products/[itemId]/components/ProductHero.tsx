@@ -67,7 +67,7 @@ const ProductHero = ({ item }: { item: Item }) => {
     if (qty === 0 || !selectedSize.size) return;
     const cartItem: CartItem = {
       bPrice: item.buyingPrice,
-      discount: item.discount || 0,
+      discount: ((Math.round((item.sellingPrice * (item.discount / 100)) / 10) * 10) * qty),
       itemId: item.itemId,
       variantId: selectedVariant.variantId,
       name: item.name,
