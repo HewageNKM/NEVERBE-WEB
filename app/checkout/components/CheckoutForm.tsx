@@ -5,7 +5,11 @@ import { useRouter } from "next/navigation";
 import { AppDispatch, RootState } from "@/redux/store";
 import { Customer, Order } from "@/interfaces";
 import { clearCart } from "@/redux/cartSlice/cartSlice";
-import { calculateShippingCost, calculateSubTotal, generateOrderId } from "@/util";
+import {
+  calculateShippingCost,
+  calculateSubTotal,
+  generateOrderId,
+} from "@/util";
 import { addNewOrder } from "@/actions/orderAction";
 import { signUser } from "@/firebase/firebaseClient";
 import AddressDetails from "@/app/checkout/components/AddressDetails";
@@ -80,7 +84,7 @@ const CheckoutForm = () => {
 
       const newOrder: Order = {
         orderId,
-        userId: userId || 'anonymous-user',
+        userId: userId || "anonymous-user",
         customer: newCustomer,
         items: cartItems,
         amount: parseFloat(amount),
@@ -106,6 +110,9 @@ const CheckoutForm = () => {
         case "COD":
           router.replace(`/checkout/success?orderId=${orderId}`);
           break;
+        case "PAYHERE":
+          await processPayherePayment(orderId, newCustomer, amount);
+          break;
         default:
           setLoading(false);
           throw new Error("Please select a valid payment method.");
@@ -120,6 +127,61 @@ const CheckoutForm = () => {
     }
   };
 
+  const processPayherePayment = async (
+    orderId: string,
+    customer: Customer,
+    amount: string
+  ) => {
+    const amountFormatted = parseFloat(amount)
+      .toLocaleString("en-us", { minimumFractionDigits: 2 })
+      .replaceAll(",", "");
+
+    const [firstName, ...lastNameParts] = customer.name.split(" ");
+    const lastName = lastNameParts.join(" ") || firstName;
+
+    const response = await fetch("/api/v1/ipg/payhere/initiate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        orderId,
+        amount: amountFormatted,
+        firstName,
+        lastName,
+        email: customer.email,
+        phone: customer.phone,
+        address: customer.address,
+        city: customer.city,
+        items: `${cartItems.length} products`,
+        returnUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/checkout/success?orderId=${orderId}`,
+        cancelUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/checkout/cancel?orderId=${orderId}`,
+        notifyUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/ipg/payhere/notify`,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Failed to initialize PayHere payment: ${errorText}`);
+    }
+
+    const payherePayload = await response.json();
+
+    const form = document.createElement("form");
+    form.method = "POST";
+    form.action = process.env.NEXT_PUBLIC_IPG_URL || "";
+    form.style.display = "none";
+
+    for (const [key, value] of Object.entries(payherePayload)) {
+      const input = document.createElement("input");
+      input.type = "hidden";
+      input.name = key;
+      input.value = value as string;
+      form.appendChild(input);
+    }
+
+    document.body.appendChild(form);
+    form.submit();
+  };
+
   const processKokoPayment = async (
     orderId: string,
     customer: Customer,
@@ -130,7 +192,7 @@ const CheckoutForm = () => {
       .replaceAll(",", "");
     const [firstName, ...lastNameParts] = customer.name.split(" ");
 
-    const response = await fetch("/api/v1/koko/initiate", {
+    const response = await fetch("/api/v1/ipg/koko/initiate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
