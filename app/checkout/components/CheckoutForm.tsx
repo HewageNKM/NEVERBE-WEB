@@ -8,6 +8,7 @@ import { clearCart } from "@/redux/cartSlice/cartSlice";
 import {
   calculateShippingCost,
   calculateSubTotal,
+  calculateTotalDiscount,
   generateOrderId,
 } from "@/util";
 import { addNewOrder } from "@/actions/orderAction";
@@ -81,6 +82,7 @@ const CheckoutForm = () => {
     try {
       const userId = user?.uid || (await signUser())?.uid;
       const amount = calculateSubTotal(cartItems);
+      const discount = calculateTotalDiscount(cartItems);
 
       const newOrder: Order = {
         orderId,
@@ -92,10 +94,7 @@ const CheckoutForm = () => {
         shippingFee: calculateShippingCost(cartItems),
         paymentStatus: "Pending",
         from: "Website",
-        discount: cartItems.reduce(
-          (acc, item) => acc + (item.discount || 0),
-          0
-        ),
+        discount: discount,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       };

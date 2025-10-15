@@ -26,7 +26,7 @@ export const calculateShippingCost = (items: CartItem[]) => {
 }
 
 export const calculateTotalDiscount = (items: CartItem[])=>{
-    return items.reduce((acc, item) => acc + ((Math.round((item.price * (item.discount / 100)) / 10) * 10) * item.quantity), 0);
+    return items.reduce((acc, item) => acc + item.discount, 0);
 }
 
 export const calculateTotal = (items: CartItem[]) => {
