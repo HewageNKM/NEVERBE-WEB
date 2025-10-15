@@ -59,6 +59,49 @@ const ProductHero = ({ item }: { item: Item }) => {
   const imageRef = useRef<HTMLDivElement>(null);
   const zoomRef = useRef<HTMLDivElement>(null);
 
+  useEffect(() => {
+    if (item) {
+      checkOutOfStock();
+    }
+  }, [item]);
+
+  const checkOutOfStock = () => {
+    if (!item?.variants?.length) {
+      setOutOfStocks(true);
+      setOutOfStocksLabel("Out of Stock");
+      return;
+    }
+
+    // Flatten all sizes across variants
+    const allSizes = item.variants.flatMap((v) => v.sizes || []);
+
+    if (!allSizes.length) {
+      setOutOfStocks(true);
+      setOutOfStocksLabel("Out of Stock");
+      return;
+    }
+
+    const totalStock = allSizes.reduce((acc, s) => acc + (s.stock || 0), 0);
+
+    if (totalStock <= 0) {
+      // Out of stock everywhere
+      setOutOfStocks(true);
+      setOutOfStocksLabel("Out of Stock");
+      return;
+    }
+
+    // Optional: detect "coming soon" variants (sizes defined but zero stock)
+    const allZero = allSizes.every((s) => s.stock === 0);
+    const someZero = allSizes.some((s) => s.stock === 0);
+
+    if (allZero) {
+      setOutOfStocks(true);
+      setOutOfStocksLabel("Coming Soon");
+    } else {
+      setOutOfStocks(false);
+    }
+  };
+
   // Quantity handler
   const setQuantity = (dir: "inc" | "dec") => {
     if (dir === "inc") setQty(Math.min(qty + 1, selectedSize.stock));
@@ -161,6 +204,12 @@ const ProductHero = ({ item }: { item: Item }) => {
                 backgroundSize: "200%",
               }}
             />
+            {/* Inside the image container */}
+            {outOfStocks && (
+              <div className="absolute top-3 left-3 bg-red-500 text-white text-xs font-semibold px-3 py-1 rounded-md shadow">
+                {outOfStocksLabel}
+              </div>
+            )}
           </div>
           {/* Variant Thumbnails */}
           <ul className="flex gap-3 p-2 overflow-x-auto hide-scrollbar">
@@ -212,6 +261,18 @@ const ProductHero = ({ item }: { item: Item }) => {
                 ).toFixed(2)}
               </p>
             </div>
+            {/* Inside Right Details Section, just below the pricing */}
+            {outOfStocks && (
+              <div
+                className={`flex items-center gap-2 px-3 py-2 rounded-md text-white text-sm font-medium w-fit mt-2 ${
+                  outOfStocksLabel === "Coming Soon"
+                    ? "bg-yellow-500"
+                    : "bg-red-500"
+                }`}
+              >
+                <span>{outOfStocksLabel}</span>
+              </div>
+            )}
 
             {/* KOKO payment info */}
             <div className="flex items-center gap-1 text-xs text-gray-500 mt-1">
@@ -358,21 +419,6 @@ const ProductHero = ({ item }: { item: Item }) => {
           {item.description || "No description available."}
         </p>
       </div>
-
-      {/* Out of Stock Overlay */}
-      {outOfStocks && (
-        <div className="absolute inset-0 flex justify-center items-center bg-white/80">
-          <span
-            className={`px-4 py-2 rounded-md font-semibold ${
-              outOfStocksLabel === "Coming Soon"
-                ? "bg-yellow-500"
-                : "bg-red-500"
-            }`}
-          >
-            {outOfStocksLabel}
-          </span>
-        </div>
-      )}
     </section>
   );
 };
