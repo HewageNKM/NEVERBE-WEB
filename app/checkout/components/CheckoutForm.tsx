@@ -158,6 +158,7 @@ const CheckoutForm = () => {
       }),
     });
 
+
     if (!response.ok) {
       const errorText = await response.text();
       throw new Error(`Failed to initialize PayHere payment: ${errorText}`);
@@ -167,7 +168,7 @@ const CheckoutForm = () => {
 
     const form = document.createElement("form");
     form.method = "POST";
-    form.action = process.env.NEXT_PUBLIC_IPG_URL || "";
+    form.action = process.env.NEXT_PUBLIC_PAYHERE_URL || "";
     form.style.display = "none";
 
     for (const [key, value] of Object.entries(payherePayload)) {
