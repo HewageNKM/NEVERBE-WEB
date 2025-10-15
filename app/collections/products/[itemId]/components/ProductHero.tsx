@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, useState, useEffect} from "react";
+import React, { useRef, useState, useEffect } from "react";
 import Image from "next/image";
 import { CartItem, Item, Size, Variant } from "@/interfaces";
 import { IoAdd, IoCartOutline, IoRemove } from "react-icons/io5";
@@ -10,6 +10,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { sizeData } from "@/constants";
 import { KOKOLogo } from "@/assets/images";
+import { FaWhatsapp } from "react-icons/fa6";
 
 const ProductHero = ({ item }: { item: Item }) => {
   const router = useRouter();
@@ -53,6 +54,7 @@ const ProductHero = ({ item }: { item: Item }) => {
   const [otherSizes, setOtherSizes] = useState({ uk: "", us: "", cm: "" });
   const [outOfStocks, setOutOfStocks] = useState(false);
   const [outOfStocksLabel, setOutOfStocksLabel] = useState("Out of Stock");
+  const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER;
 
   const imageRef = useRef<HTMLDivElement>(null);
   const zoomRef = useRef<HTMLDivElement>(null);
@@ -67,7 +69,8 @@ const ProductHero = ({ item }: { item: Item }) => {
     if (qty === 0 || !selectedSize.size) return;
     const cartItem: CartItem = {
       bPrice: item.buyingPrice,
-      discount: ((Math.round((item.sellingPrice * (item.discount / 100)) / 10) * 10) * qty),
+      discount:
+        Math.round((item.sellingPrice * (item.discount / 100)) / 10) * 10 * qty,
       itemId: item.itemId,
       variantId: selectedVariant.variantId,
       name: item.name,
@@ -184,7 +187,9 @@ const ProductHero = ({ item }: { item: Item }) => {
 
         {/* Right: Details */}
         <div className="flex flex-col gap-4">
-          <p className="text-gray-500 font-medium capitalize">{item.manufacturer}</p>
+          <p className="text-gray-500 font-medium capitalize">
+            {item.manufacturer}
+          </p>
           <h1 className="text-2xl font-display md:text-3xl font-extrabold text-gray-900">
             {item.name}
           </h1>
@@ -234,7 +239,9 @@ const ProductHero = ({ item }: { item: Item }) => {
 
           {/* Variants */}
           <div>
-            <h3 className="font-medium font-display text-gray-700 mb-1">Colors</h3>
+            <h3 className="font-medium font-display text-gray-700 mb-1">
+              Colors
+            </h3>
             <div className="flex gap-2 flex-wrap">
               {item.variants.map((v, i) => (
                 <button
@@ -321,6 +328,22 @@ const ProductHero = ({ item }: { item: Item }) => {
               >
                 Buy Now
               </button>
+            </div>
+            <div>
+              <a
+                href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
+                  `Hello, I would like to inquire about the product:\n` +
+                    `Product: ${item.name}\n` +
+                    `Variant: ${selectedVariant.variantName || "N/A"}\n` +
+                    `Size: ${selectedSize.size || "N/A"}`
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex w-fit items-center gap-2 px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition"
+              >
+                <FaWhatsapp size={20} />
+                Inquire
+              </a>
             </div>
           </div>
         </div>
