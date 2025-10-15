@@ -20,11 +20,6 @@ const Faq = () => {
                         </li>
                     ))}
                 </ul>
-                <div className="mt-5">
-                    <Link href={"#footer"} className="md:text-lg text-xs tracking-wide" aria-label="Read our terms and conditions">
-                        *Terms and conditions apply.
-                    </Link>
-                </div>
             </div>
         </section>
     );
