@@ -329,7 +329,7 @@ const ProductHero = ({ item }: { item: Item }) => {
               disabled={qty === 0}
               whileHover={{ scale: qty === 0 ? 1 : 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-md disabled:opacity-50"
+              className="flex items-center w-fit gap-2 px-4 py-2 bg-primary text-white rounded-md disabled:opacity-50"
             >
               <IoCartOutline /> Add to Cart
             </motion.button>
@@ -339,7 +339,7 @@ const ProductHero = ({ item }: { item: Item }) => {
               disabled={qty === 0}
               whileHover={{ scale: qty === 0 ? 1 : 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="px-4 py-2 border border-primary rounded-md text-primary disabled:opacity-50"
+              className="px-4 py-2 border w-fit border-primary rounded-md text-primary disabled:opacity-50"
             >
               Buy Now
             </motion.button>
