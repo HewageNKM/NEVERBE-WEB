@@ -67,7 +67,7 @@ const ProductHero = ({ item }: { item: Item }) => {
     if (qty === 0 || !selectedSize.size) return;
     const cartItem: CartItem = {
       bPrice: item.buyingPrice,
-      discount: 0,
+      discount: item.discount || 0,
       itemId: item.itemId,
       variantId: selectedVariant.variantId,
       name: item.name,
@@ -123,7 +123,7 @@ const ProductHero = ({ item }: { item: Item }) => {
   };
 
   return (
-    <section className="w-full flex flex-col gap-10 mt-10">
+    <section className="w-full flex flex-col md:mt-5 gap-4 md:gap-6 lg:gap-5">
       {/* Breadcrumb */}
       <div className="flex gap-2 text-gray-600 text-sm">
         <Link href="/collections/products" className="hover:underline">
@@ -282,9 +282,9 @@ const ProductHero = ({ item }: { item: Item }) => {
             </div>
             {selectedSize.size && (
               <div className="text-gray-500 text-sm mt-2 flex gap-3">
-                <span>UK: {otherSizes.uk}</span>
-                <span>US: {otherSizes.us}</span>
-                <span>CM: {otherSizes.cm}</span>
+                <span>UK: {otherSizes.uk || "N/A"}</span>
+                <span>US: {otherSizes.us || "N/A"}</span>
+                <span>CM: {otherSizes.cm +"cm" || "N/A"}</span>
               </div>
             )}
           </div>

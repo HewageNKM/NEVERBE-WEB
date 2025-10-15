@@ -8,7 +8,6 @@ import Image from "next/image";
 import {Slide} from "@/interfaces";
 
 const ImagesSlider = ({images}: { images: Slide[] }) => {
-    console.log(images);
     return (
         <Swiper
             autoplay={{
