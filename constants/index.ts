@@ -257,7 +257,7 @@ export const socialMedia: SocialMedia[] = [
   {
     icon: IoLogoFacebook,
     name: "Facebook",
-    url: "https://www.facebook.com/profile.php?id=61565999153582",
+    url: "https://www.facebook.com/share/1GaP5gJB2p/",
   },
   {
     icon: IoLogoInstagram,
