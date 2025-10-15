@@ -1,4 +1,4 @@
-import crypto from "crypto";
+import md5 from "crypto-js/md5";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
@@ -24,18 +24,19 @@ export async function POST(req: Request) {
     const merchantSecret = process.env.PAYHERE_MERCHANT_SECRET!;
     const currency = "LKR";
 
+    console.log("✅ PayHere initiate payload:", body);
+
+    console.log(
+      "✅ Secret Loaded ",
+      "******" + merchantId.split("").slice(-3).join(""),
+      "******" + merchantSecret.split("").slice(-3).join("")
+    );
     // Hash merchant secret as required by PayHere
-    const hashedSecret = crypto
-      .createHash("md5")
-      .update(merchantSecret)
-      .digest("hex")
-      .toUpperCase();
+    const hashedSecret = md5(merchantSecret).toString().toUpperCase();
 
     // Create full signature
-    const md5sig = crypto
-      .createHash("md5")
-      .update(merchantId + orderId + amount + currency + hashedSecret)
-      .digest("hex")
+    const md5sig = md5(merchantId + orderId + amount + currency + hashedSecret)
+      .toString()
       .toUpperCase();
 
     return NextResponse.json({
