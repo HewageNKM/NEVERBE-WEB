@@ -13,6 +13,7 @@ import {
   generateOrderId,
 } from "@/util";
 import {
+  addNewOrder,
   initiateKOKOPayment,
   initiatePayHerePayment,
   requestOTP,
@@ -59,7 +60,6 @@ const CheckoutForm = () => {
   const [resendCooldown, setResendCooldown] = useState(0);
 
   const { executeRecaptcha } = useGoogleReCaptcha();
-  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
 
   useEffect(() => {
     const savedCustomer = window.localStorage.getItem("neverbeCustomer");
@@ -90,10 +90,17 @@ const CheckoutForm = () => {
 
     try {
       const token = await executeRecaptcha("otp_request");
-      setCaptchaToken(token);
-      await requestOTP(formatSriLankanPhoneNumber(phoneNumber), token);
+      const res = await requestOTP(
+        formatSriLankanPhoneNumber(phoneNumber),
+        token
+      );
       setResendCooldown(60);
-      toast.info(`OTP sent to ${phoneNumber}`);
+      if (res.success) {
+        toast.success(`OTP sent to ${phoneNumber}`);
+        return;
+      } else {
+        toast.error(res.message || "Failed to send OTP. Try again.");
+      }
     } catch (err: any) {
       console.error(err);
       toast.error(err.message || "Failed to send OTP. Try again.");
@@ -111,9 +118,18 @@ const CheckoutForm = () => {
         formatSriLankanPhoneNumber(pendingOrder.customer.phone),
         otp
       );
+
+      if (!executeRecaptcha) {
+        toast.error("reCAPTCHA not ready. Please try again.");
+        return;
+      }
+
+      const token = await executeRecaptcha("new_order");
+
       if (res.success) {
         dispatch(clearCart());
         toast.success("Order verified successfully!");
+        await addNewOrder(pendingOrder, token);
         router.replace(`/checkout/success?orderId=${pendingOrder.orderId}`);
         setShowOtpModal(false);
         setOtp("");
@@ -147,7 +163,10 @@ const CheckoutForm = () => {
     const newCustomer = createCustomerFromForm(form);
 
     if (saveAddress) {
-      window.localStorage.setItem("neverbeCustomer", JSON.stringify(newCustomer));
+      window.localStorage.setItem(
+        "neverbeCustomer",
+        JSON.stringify(newCustomer)
+      );
     } else {
       window.localStorage.removeItem("neverbeCustomer");
     }
@@ -172,8 +191,12 @@ const CheckoutForm = () => {
         updatedAt: new Date().toISOString(),
       };
 
+      const token = await executeRecaptcha("new_order");
+
       switch (paymentType) {
         case "KOKO":
+          await addNewOrder(newOrder, token);
+          dispatch(clearCart());
           await processKokoPayment(orderId, newCustomer, amount);
           break;
         case "COD":
@@ -183,6 +206,8 @@ const CheckoutForm = () => {
           setLoading(false);
           break;
         case "PAYHERE":
+          await addNewOrder(newOrder, token);
+          dispatch(clearCart());
           await processPayherePayment(orderId, newCustomer, amount);
           break;
         default:
@@ -195,7 +220,11 @@ const CheckoutForm = () => {
     }
   };
 
-  const processPayherePayment = async (orderId: string, customer: Customer, amount: string) => {
+  const processPayherePayment = async (
+    orderId: string,
+    customer: Customer,
+    amount: string
+  ) => {
     const amountFormatted = parseFloat(amount)
       .toLocaleString("en-US", { minimumFractionDigits: 2 })
       .replace(/,/g, "");
@@ -233,7 +262,11 @@ const CheckoutForm = () => {
     form.submit();
   };
 
-  const processKokoPayment = async (orderId: string, customer: Customer, amount: string) => {
+  const processKokoPayment = async (
+    orderId: string,
+    customer: Customer,
+    amount: string
+  ) => {
     const amountFormatted = parseFloat(amount)
       .toLocaleString("en-us", { minimumFractionDigits: 2 })
       .replaceAll(",", "");
@@ -267,12 +300,20 @@ const CheckoutForm = () => {
 
   return (
     <div className="flex justify-center items-center">
-      <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} />
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+      />
       <form
         onSubmit={handlePaymentSubmit}
         className="flex flex-row flex-wrap justify-evenly gap-5 mt-10"
       >
-        <AddressDetails saveAddress={saveAddress} setSaveAddress={setSaveAddress} customer={customer} />
+        <AddressDetails
+          saveAddress={saveAddress}
+          setSaveAddress={setSaveAddress}
+          customer={customer}
+        />
         <PaymentDetails
           setPaymentType={setPaymentType}
           paymentType={paymentType || ""}
@@ -288,7 +329,10 @@ const CheckoutForm = () => {
             </h2>
             <p className="text-center text-gray-600 mb-6">
               An OTP has been sent to{" "}
-              <span className="font-semibold">{pendingOrder.customer.phone}</span>.
+              <span className="font-semibold">
+                {pendingOrder.customer.phone}
+              </span>
+              .
             </p>
             <div className="flex flex-col gap-4">
               <input

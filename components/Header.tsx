@@ -4,7 +4,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
 import { showCart } from "@/redux/cartSlice/cartSlice";
 import { toggleMenu } from "@/redux/headerSlice/headerSlice";
-import { IoCartOutline, IoMenu, IoSearch } from "react-icons/io5";
+import {
+  IoCartOutline,
+  IoMenu,
+  IoSearch,
+  IoSearchOutline,
+} from "react-icons/io5";
 import Link from "next/link";
 import Image from "next/image";
 import { Banner, Logo } from "@/assets/images";
@@ -12,10 +17,10 @@ import SearchDialog from "@/components/SearchDialog";
 import { getAlgoliaClient } from "@/util";
 import { Item } from "@/interfaces";
 import { AnimatePresence } from "framer-motion";
+import { FaSearch } from "react-icons/fa";
 
 const Header = () => {
   const cartItems = useSelector((state: RootState) => state.cartSlice.cart);
-  const user = useSelector((state: RootState) => state.authSlice.user);
   const dispatch: AppDispatch = useDispatch();
 
   const [search, setSearch] = useState("");
@@ -38,7 +43,9 @@ const Header = () => {
     try {
       setIsSearching(true);
       const searchResults = await searchClient.search({
-        requests: [{ indexName: "inventory_index", query: value, hitsPerPage: 30 }],
+        requests: [
+          { indexName: "inventory_index", query: value, hitsPerPage: 30 },
+        ],
       });
       const filtered = searchResults.results[0].hits.filter(
         (item: Item) => item.status === "Active" && item.listing === "Active"
@@ -54,8 +61,7 @@ const Header = () => {
 
   return (
     <header className="fixed top-0 left-0 w-full z-50 backdrop-blur-md bg-black/70 border-b border-gray-800 shadow-sm">
-      <div className="max-w-7xl mx-auto flex justify-between items-center px-4 md:px-8 py-3 transition-all duration-300">
-
+      <div className="max-w-7xl mx-auto gap-5 md:gap-0 flex justify-between items-center px-4 md:px-8 py-3 transition-all duration-300">
         {/* ---------- LEFT: LOGO ---------- */}
         <Link href="/" className="flex items-center gap-2">
           <Image
@@ -96,7 +102,7 @@ const Header = () => {
         </nav>
 
         {/* ---------- RIGHT: ICONS & SEARCH ---------- */}
-        <div className="flex items-center gap-4 text-white">
+        <div className="flex items-center md:gap-4 gap-1 text-white">
           {/* Desktop Search Bar */}
           <div className="relative hidden lg:block">
             <input
@@ -125,10 +131,17 @@ const Header = () => {
             </AnimatePresence>
           </div>
 
+          <button
+            onClick={() => dispatch(toggleMenu(true))}
+            className="relative block lg:hidden p-1 md:p-2 hover:bg-white/10 rounded-full transition-colors"
+          >
+            <IoSearchOutline size={28} />
+          </button>
+
           {/* Cart Icon */}
           <button
             onClick={() => dispatch(showCart())}
-            className="relative p-2 hover:bg-white/10 rounded-full transition-colors"
+            className="relative p-1 md:p-2 hover:bg-white/10 rounded-full transition-colors"
           >
             <IoCartOutline size={28} />
             {cartItems.length > 0 && (
@@ -137,16 +150,6 @@ const Header = () => {
               </span>
             )}
           </button>
-
-          {/* User Account */}
-          {/* {user && (
-            <Link
-              href="/account"
-              className="hidden lg:flex p-2 hover:bg-white/10 rounded-full transition"
-            >
-              <RxAvatar size={28} />
-            </Link>
-          )} */}
 
           {/* Mobile Menu */}
           <button

@@ -1,9 +1,9 @@
 // app/checkout/success/page.tsx
 import React from "react";
-import { getOrderById } from "@/firebase/firebaseAdmin";
 import { notFound } from "next/navigation";
 import SuccessPageClient from "./components/SuccessPageClient";
 import { Metadata } from "next";
+import { getOrderById } from "@/services/OrderService";
 
 export const metadata:Metadata = {
   title: "Order Success",

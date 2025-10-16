@@ -1,7 +1,7 @@
 import {NextResponse} from "next/server";
 import {Order} from "@/interfaces";
-import { addNewOrder } from "@/actions/orderAction";
 import { verifyToken } from "@/services/AuthService";
+import { addNewOrder } from "@/services/OrderService";
 
 export async function POST(req: Request) {
     try {
@@ -20,6 +20,6 @@ export async function POST(req: Request) {
         return NextResponse.json({message: 'Order Added'}, {status: 200})
     } catch (e: any) {
         console.log("Failed to save order: " + e.message)
-        NextResponse.json({message: 'Internal Server Error'}, {status: 500})
+        return NextResponse.json({message: 'Internal Server Error'}, {status: 500})
     }
 }
