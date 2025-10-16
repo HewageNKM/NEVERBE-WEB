@@ -1,9 +1,13 @@
 // app/api/v1/koko/initiate/route.ts
 import { NextResponse } from "next/server";
 import crypto from "crypto";
+import { verifyToken } from "@/services/AuthService";
 
 export async function POST(req: Request) {
   try {
+    const idToken = await verifyToken(req);
+    console.log("Token Verified: " + idToken.uid);
+    
     const body = await req.json();
     const { orderId, amount, firstName, lastName, email, description } = body;
 

@@ -1,8 +1,12 @@
+import { verifyToken } from "@/services/AuthService";
 import md5 from "crypto-js/md5";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
+     const idToken = await verifyToken(req);
+            console.log("Token Verified: " + idToken.uid)
+            
     const body = await req.json();
     const {
       orderId,
