@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, useEffect } from "react";
+import React, { useRef } from "react";
 import ImagesSlider from "@/app/components/ImagesSlider";
 import Link from "next/link";
 import { Slide } from "@/interfaces";
@@ -16,8 +16,6 @@ import "swiper/css/pagination";
 import "swiper/css/autoplay";
 
 const Hero = ({ slides }: { slides: Slide[] }) => {
-  const paginationRef = useRef<HTMLDivElement>(null);
-
   return (
     <section className="w-full mt-16 lg:mt-[7rem] flex flex-col gap-8">
       {/* Main Slider */}
@@ -29,24 +27,29 @@ const Hero = ({ slides }: { slides: Slide[] }) => {
           <h3 className="text-gray-800 font-display text-2xl md:text-4xl font-bold tracking-tight">
             Explore Our Collection
           </h3>
-          <div className="flex justify-center w-full mx-auto content-center">
+
+          <div className="md:max-w-6xl max-w-full mx-auto px-4">
             <Swiper
               modules={[Autoplay, Pagination]}
               spaceBetween={24}
-              slidesPerView={1} // default mobile
+              slidesPerView={1} 
+              centeredSlides={true}
               breakpoints={{
-                640: { slidesPerView: 2 },
-                1024: { slidesPerView: 3 },
+                640: { slidesPerView: 2, centeredSlides: true }, // tablet
+                1024: { slidesPerView: 3, centeredSlides: true }, // desktop
               }}
               autoplay={{ delay: 4000, disableOnInteraction: false }}
               loop={true}
               pagination={{
                 clickable: true,
-                el: ".custom-pagination",
+                el: ".custom-pagination"
               }}
             >
               {collectionList.map((collection, idx) => (
-                <SwiperSlide key={idx} className="flex justify-center content-center">
+                <SwiperSlide
+                  key={idx}
+                  className="flex justify-center content-center"
+                >
                   <CollectionCard
                     url={collection.url}
                     gender={collection.gender}
@@ -56,7 +59,6 @@ const Hero = ({ slides }: { slides: Slide[] }) => {
               ))}
               {/* Custom Pagination Container */}
               <div
-                ref={paginationRef}
                 className="custom-pagination flex justify-center gap-3 mb-2 mt-4"
               ></div>
             </Swiper>
