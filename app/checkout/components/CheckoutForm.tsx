@@ -99,7 +99,7 @@ const CheckoutForm = () => {
     setOtpError(null);
     try {
       await verifyOTP(formatSriLankanPhoneNumber(pendingOrder.customer.phone), otp);
-      // await addNewOrder(pendingOrder, captchaValue as string);
+      await addNewOrder(pendingOrder, captchaValue as string);
       dispatch(clearCart());
       router.replace(`/checkout/success?orderId=${pendingOrder.orderId}`);
       setShowOtpModal(false);
@@ -117,7 +117,7 @@ const CheckoutForm = () => {
     evt.preventDefault();
     if (cartItems.length === 0) return alert("Your cart is empty.");
     if (!paymentType) return alert("Please select a payment method.");
-    // if (!captchaValue) return setCaptchaError(true);
+    if (!captchaValue) return setCaptchaError(true);
 
     setLoading(true);
     setCaptchaError(false);
@@ -154,8 +154,8 @@ const CheckoutForm = () => {
 
       switch (paymentType) {
         case "KOKO":
-          // await addNewOrder(newOrder, captchaValue);
-          // dispatch(clearCart());
+          await addNewOrder(newOrder, captchaValue);
+          dispatch(clearCart());
           await processKokoPayment(orderId, newCustomer, amount);
           break;
         case "COD":
@@ -165,8 +165,8 @@ const CheckoutForm = () => {
           setLoading(false);
           break;
         case "PAYHERE":
-          // await addNewOrder(newOrder, captchaValue);
-          // dispatch(clearCart());
+          await addNewOrder(newOrder, captchaValue);
+          dispatch(clearCart());
           await processPayherePayment(orderId, newCustomer, amount);
           break;
         default:
