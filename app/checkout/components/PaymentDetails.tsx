@@ -1,27 +1,19 @@
 "use client";
+
 import React from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { IoLockClosed } from "react-icons/io5";
 import CartItemCard from "@/components/CartItemCard";
-import ReCAPTCHA from "react-google-recaptcha";
 import { calculateShippingCost, calculateSubTotal, calculateTotal, calculateTotalDiscount } from "@/util";
 import PaymentOptions from "@/app/checkout/components/PaymentOptions";
 
 const PaymentDetails = ({
   setPaymentType,
   paymentType,
-  captchaError,
-  setCaptchaError,
-  setCaptchaValue,
-  recaptchaRef,
 }: {
   setPaymentType: React.Dispatch<React.SetStateAction<string>>;
   paymentType: string;
-  recaptchaRef: React.RefObject<ReCAPTCHA>;
-  setCaptchaValue: React.Dispatch<React.SetStateAction<string | null>>;
-  setCaptchaError: React.Dispatch<React.SetStateAction<boolean>>;
-  captchaError: boolean;
 }) => {
   const cartItems = useSelector((state: RootState) => state.cartSlice.cart);
 
@@ -71,28 +63,6 @@ const PaymentDetails = ({
       <p className="mt-6 text-center text-gray-600 text-sm">
         By clicking <strong>&quot;Proceed to Payment&quot;</strong>, you agree to our Terms of Service and Privacy Policy.
       </p>
-
-      {/* CAPTCHA */}
-      <div className="mt-4 flex justify-center">
-        <ReCAPTCHA
-          sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ""}
-          ref={recaptchaRef}
-          onChange={(value) => {
-            setCaptchaValue(value);
-            setCaptchaError(false);
-          }}
-          onExpired={() => {
-            setCaptchaValue(null);
-            setCaptchaError(true);
-          }}
-          className={captchaError ? "border-red-500 rounded-md" : ""}
-        />
-      </div>
-      {captchaError && (
-        <p className="text-red-500 text-sm mt-2 text-center">
-          Please verify that you are not a robot
-        </p>
-      )}
 
       {/* Proceed Button */}
       <button

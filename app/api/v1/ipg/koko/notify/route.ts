@@ -1,7 +1,7 @@
 // app/api/v1/koko/notify/route.ts
 import { NextResponse } from "next/server";
 import crypto from "crypto";
-import { updatePayment } from "@/firebase/firebaseAdmin";
+import { updatePayment } from "@/services/OrderService";
 
 export async function POST(req: Request) {
   try {

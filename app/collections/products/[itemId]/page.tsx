@@ -2,9 +2,9 @@ import React from 'react';
 import ProductHero from "@/app/collections/products/[itemId]/components/ProductHero";
 import {notFound} from "next/navigation";
 import {Item} from "@/interfaces";
-import {getItemById, getSimilarItems} from "@/firebase/firebaseAdmin";
 import {Metadata} from "next";
 import SimilarProducts from "@/app/collections/products/[itemId]/components/SimilarProducts";
+import { getItemById, getSimilarItems } from '@/services/ProductService';
 
 // Dynamically generate metadata
 export async function generateMetadata({params}: { params: { itemId: string } }): Promise<Metadata> {
