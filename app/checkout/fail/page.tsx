@@ -3,8 +3,9 @@ import Link from "next/link";
 import { IoHeadset } from "react-icons/io5";
 import { FaArrowLeft } from "react-icons/fa";
 import FailAnimationComponent from "@/app/checkout/fail/components/FailAnimationComponent";
+import { Metadata } from "next";
 
-export const metadata = {
+export const metadata:Metadata = {
   title: "Order Failed",
 };
 

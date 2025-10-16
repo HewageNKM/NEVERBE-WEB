@@ -14,6 +14,20 @@ import { AppDispatch, RootState } from "@/redux/store";
 import { accessoriesSizes, productTypes, wearableSizes } from "@/constants";
 import { getBrands } from "@/actions/inventoryAction";
 
+const containerVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { staggerChildren: 0.1, delayChildren: 0.1 },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 10 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.25 } },
+};
+
 const ProductsFilter = ({ gender }: { gender: string }) => {
   const dispatch: AppDispatch = useDispatch();
   const { selectedSizes, selectedType, selectedManufacturers, page, size } =
@@ -60,35 +74,50 @@ const ProductsFilter = ({ gender }: { gender: string }) => {
   }, []);
 
   return (
-    <aside className="hidden lg:block w-[22vw] bg-white/80 backdrop-blur-sm border-r border-gray-200 p-6 rounded-xl shadow-[0_0_20px_rgba(0,0,0,0.05)] h-fit">
+    <motion.aside
+      className="hidden lg:flex flex-col w-72 p-6 bg-white/80 backdrop-blur-sm rounded-xl border border-gray-200 shadow-[0_0_20px_rgba(0,0,0,0.05)] sticky top-20 gap-6"
+      initial="hidden"
+      animate="visible"
+      variants={containerVariants}
+    >
+      {/* Header */}
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-display font-bold tracking-wide text-gray-800">
+        <motion.h2
+          initial={{ opacity: 0, x: -10 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.3 }}
+          className="text-2xl font-display font-bold tracking-wide text-gray-800"
+        >
           Filters
-        </h2>
-        <button
+        </motion.h2>
+        <motion.button
+          whileHover={{ scale: 1.1, rotate: 10 }}
+          whileTap={{ scale: 0.95, rotate: -10 }}
           onClick={() => dispatch(resetFilter())}
           className="p-2 rounded-full bg-yellow-400 hover:bg-yellow-500 transition"
           title="Reset Filters"
         >
           <BiReset size={20} className="text-white" />
-        </button>
+        </motion.button>
       </div>
 
+      {/* Animated Content Container */}
       <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
         className="flex flex-col gap-8"
       >
         {/* TYPE */}
-        <div>
+        <motion.div variants={itemVariants}>
           <h3 className="text-lg font-semibold mb-3 text-gray-700 border-b border-gray-200 pb-2">
             Type
           </h3>
           <div className="flex flex-wrap gap-3">
             {productTypes.map((type, index) => (
-              <label
+              <motion.label
                 key={index}
+                whileHover={{ scale: 1.05 }}
                 className={`flex items-center gap-2 cursor-pointer rounded-lg px-3 py-1 border ${
                   selectedType === type.value
                     ? "bg-primary text-white border-primary"
@@ -107,45 +136,55 @@ const ProductsFilter = ({ gender }: { gender: string }) => {
                 <span className="capitalize text-sm font-medium">
                   {type.name}
                 </span>
-              </label>
+              </motion.label>
             ))}
           </div>
-        </div>
+        </motion.div>
 
         {/* BRANDS */}
-        <div>
+        <motion.div variants={itemVariants}>
           <h3 className="text-lg font-semibold mb-3 text-gray-700 border-b border-gray-200 pb-2">
             Brands
           </h3>
           <div className="flex flex-wrap gap-3">
-              {brands.map((brand, index) => (
-                <label
+            {isBrandsLoading ? (
+              <p className="text-gray-400 text-sm">Loading brands...</p>
+            ) : (
+              brands.map((brand, index) => (
+                <motion.button
                   key={index}
-                  className={`px-3 py-1.5 rounded-lg border cursor-pointer ${
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => toggleBrand(brand.value)}
+                  className={`px-3 py-1.5 rounded-lg border font-medium cursor-pointer transition ${
                     selectedManufacturers.includes(brand.value)
                       ? "bg-gray-900 text-white border-gray-900"
                       : "bg-gray-50 hover:bg-gray-100 border-gray-300"
-                  } transition`}
-                  onClick={() => toggleBrand(brand.value)}
+                  }`}
                 >
                   {brand.name}
-                </label>
-              ))}
+                </motion.button>
+              ))
+            )}
           </div>
-        </div>
+        </motion.div>
 
         {/* SIZES */}
-        <div>
+        <motion.div variants={itemVariants}>
           <h3 className="text-lg font-semibold mb-3 text-gray-700 border-b border-gray-200 pb-2">
             Sizes
           </h3>
           <div className="flex flex-wrap gap-3">
-            {(selectedType === "all" || selectedType === "shoes" || selectedType === "sandals"
+            {(selectedType === "all" ||
+            selectedType === "shoes" ||
+            selectedType === "sandals"
               ? wearableSizes
               : accessoriesSizes
             ).map((size, index) => (
-              <button
+              <motion.button
                 key={index}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
                 onClick={() => toggleSize(size)}
                 className={`px-3 py-1 rounded-lg border font-medium ${
                   selectedSizes.includes(size)
@@ -154,12 +193,12 @@ const ProductsFilter = ({ gender }: { gender: string }) => {
                 } transition`}
               >
                 {size}
-              </button>
+              </motion.button>
             ))}
           </div>
-        </div>
+        </motion.div>
       </motion.div>
-    </aside>
+    </motion.aside>
   );
 };
 

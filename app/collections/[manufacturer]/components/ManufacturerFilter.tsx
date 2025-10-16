@@ -2,6 +2,7 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { BiReset } from "react-icons/bi";
+import { motion } from "framer-motion";
 import { AppDispatch, RootState } from "@/redux/store";
 import {
   getItemsByManufacturer,
@@ -31,32 +32,56 @@ const ManufacturerFilter = ({ manufacturer }: { manufacturer: string }) => {
     }
   };
 
+  // Motion variants
+  const sectionVariants = {
+    hidden: { opacity: 0, y: 10 },
+    visible: { opacity: 1, y: 0, transition: { staggerChildren: 0.05 } },
+  };
+
+  const buttonVariants = {
+    hidden: { opacity: 0, y: 10 },
+    visible: { opacity: 1, y: 0 },
+    hover: { scale: 1.05 },
+    tap: { scale: 0.95 },
+  };
+
   return (
-    <aside className="hidden lg:flex flex-col w-72 p-6 bg-white/80 backdrop-blur-sm rounded-xl border border-gray-200 shadow-[0_0_20px_rgba(0,0,0,0.05)] sticky top-20 gap-6">
+    <motion.aside
+      className="hidden lg:flex flex-col w-72 p-6 bg-white/80 backdrop-blur-sm rounded-xl border border-gray-200 shadow-[0_0_20px_rgba(0,0,0,0.05)] sticky top-20 gap-6"
+      initial="hidden"
+      animate="visible"
+      variants={sectionVariants}
+    >
       {/* Header */}
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-display font-bold text-gray-800">Filter</h2>
-        <button
+        <motion.button
+          whileHover="hover"
+          whileTap="tap"
+          variants={buttonVariants}
           onClick={() => dispatch(resetFilter())}
           className="p-2 rounded-full bg-yellow-400 hover:bg-yellow-500 transition"
           title="Reset Filters"
         >
           <BiReset size={22} className="text-white" />
-        </button>
+        </motion.button>
       </div>
 
       {/* Type Section */}
-      <div className="flex flex-col gap-3">
+      <motion.div className="flex flex-col gap-3" variants={sectionVariants}>
         <h3 className="text-lg font-semibold text-gray-700">Type</h3>
         <div className="flex flex-wrap gap-3">
           {productTypes.map((type) => (
-            <label
+            <motion.label
               key={type.value}
               className={`flex items-center gap-2 cursor-pointer px-3 py-1.5 rounded-lg border transition ${
                 selectedType === type.value
                   ? "bg-primary text-white border-primary font-medium"
                   : "bg-gray-50 hover:bg-gray-100 border-gray-300"
               }`}
+              variants={buttonVariants}
+              whileHover="hover"
+              whileTap="tap"
             >
               <input
                 type="radio"
@@ -68,20 +93,20 @@ const ManufacturerFilter = ({ manufacturer }: { manufacturer: string }) => {
                 className="hidden"
               />
               <span className="capitalize text-sm">{type.name}</span>
-            </label>
+            </motion.label>
           ))}
         </div>
-      </div>
+      </motion.div>
 
       {/* Sizes Section */}
-      <div className="flex flex-col gap-3">
+      <motion.div className="flex flex-col gap-3" variants={sectionVariants}>
         <h3 className="text-lg font-semibold text-gray-700">Sizes</h3>
         <div className="flex flex-wrap gap-3">
           {(selectedType === "all" || selectedType === "shoes" || selectedType === "sandals"
             ? wearableSizes
             : accessoriesSizes
           ).map((size) => (
-            <button
+            <motion.button
               key={size}
               onClick={() => toggleSize(size)}
               className={`px-3 py-1.5 rounded-lg border text-sm font-medium transition ${
@@ -89,13 +114,16 @@ const ManufacturerFilter = ({ manufacturer }: { manufacturer: string }) => {
                   ? "bg-primary text-white border-primary"
                   : "bg-gray-50 hover:bg-gray-100 border-gray-300"
               }`}
+              variants={buttonVariants}
+              whileHover="hover"
+              whileTap="tap"
             >
               {size}
-            </button>
+            </motion.button>
           ))}
         </div>
-      </div>
-    </aside>
+      </motion.div>
+    </motion.aside>
   );
 };
 

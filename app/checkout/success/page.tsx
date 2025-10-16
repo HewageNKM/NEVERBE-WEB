@@ -3,6 +3,11 @@ import React from "react";
 import { getOrderById } from "@/firebase/firebaseAdmin";
 import { notFound } from "next/navigation";
 import SuccessPageClient from "./components/SuccessPageClient";
+import { Metadata } from "next";
+
+export const metadata:Metadata = {
+  title: "Order Success",
+};
 
 export default async function Page({
   searchParams,

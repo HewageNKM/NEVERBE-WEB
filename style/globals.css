@@ -15,3 +15,13 @@
 .swiper-button-next, .swiper-button-prev {
     color: black;
 }
+
+.custom-pagination .swiper-pagination-bullet {
+background-color: #c9e7b0;
+opacity: 1;
+}
+
+.custom-pagination .swiper-pagination-bullet-active {
+transform: scale(1.3);
+background-color: #97E13E; 
+}

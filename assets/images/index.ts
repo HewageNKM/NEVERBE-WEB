@@ -19,6 +19,7 @@ import RunningShoeBG from "./runningShoeBg.webp"
 import SlidesBG  from "./slidesBg.jpg"
 import KOKOLogo from "./koko.png"
 
+
 export
 {
     PayHereWhiteLongBanner,
@@ -40,5 +41,5 @@ export
     MenBG,
     RunningShoeBG,
     SlidesBG,
-    KOKOLogo
+    KOKOLogo,
 };
