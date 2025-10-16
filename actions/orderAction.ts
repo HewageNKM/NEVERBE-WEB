@@ -1,7 +1,14 @@
 import { Order } from "@/interfaces";
 import { getIdToken } from "@/firebase/firebaseClient";
 import axios from "axios";
-import { getOrdersURL, KOKOInitiateURL, PAYHEREInitiateURL, postOrderURL, requestOTPURL, verifyOTPURL } from "@/app/urls";
+import {
+  getOrdersURL,
+  KOKOInitiateURL,
+  PAYHEREInitiateURL,
+  postOrderURL,
+  OTPRequestURL,
+  OTPVerifyURL,
+} from "@/app/urls";
 
 /**
  * Add new order
@@ -79,12 +86,12 @@ export const initiatePayHerePayment = async (payload: any) => {
 /**
  * Request OTP for COD verification
  */
-export const requestOTP = async (phoneNumber: string) => {
+export const requestOTP = async (phoneNumber: string, captchaToken: string) => {
   try {
     const token = await getIdToken();
     const response = await axios.post(
-      requestOTPURL,
-      { phoneNumber },
+      OTPRequestURL,
+      { phoneNumber, captchaToken },
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -105,7 +112,7 @@ export const verifyOTP = async (phoneNumber: string, otp: string) => {
   try {
     const token = await getIdToken();
     const response = await axios.post(
-      verifyOTPURL,
+      OTPVerifyURL,
       { phoneNumber, otp },
       {
         headers: {

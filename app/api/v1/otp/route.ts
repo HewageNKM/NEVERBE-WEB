@@ -6,9 +6,9 @@ export const POST = async (req: NextRequest) => {
   try {
     const idToken = await verifyToken(req);
     console.log("Token Verified: " + idToken.uid);
-    const { phoneNumber } = await req.json();
+    const { phoneNumber, captchaToken } = await req.json();
 
-    const res = await sendCODVerificationOTP(phoneNumber || "");
+    const res = await sendCODVerificationOTP(phoneNumber || "", captchaToken || "");
     return NextResponse.json({ ...res }, { status: 200 });
   } catch (error) {
     console.log(error);

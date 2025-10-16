@@ -6,6 +6,8 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/react";
 import GlobalProvider from "@/app/components/GlobalProvider";
 import { seoKeywords } from "@/constants";
+import ReCaptchaProviderWrapper from "@/app/components/ReCaptchaProvider";
+
 
 const roboto = Roboto({ weight: "400", subsets: ["latin"] });
 
@@ -84,11 +86,13 @@ export default function RootLayout({
         <title></title>
       </head>
       <body className={roboto.className}>
-        <StoreProvider>
-          <GlobalProvider>{children}</GlobalProvider>
-          <SpeedInsights />
-          <Analytics />
-        </StoreProvider>
+        <ReCaptchaProviderWrapper>
+          <StoreProvider>
+            <GlobalProvider>{children}</GlobalProvider>
+            <SpeedInsights />
+            <Analytics />
+          </StoreProvider>
+        </ReCaptchaProviderWrapper>
       </body>
     </html>
   );

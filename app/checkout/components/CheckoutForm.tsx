@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
@@ -12,7 +13,6 @@ import {
   generateOrderId,
 } from "@/util";
 import {
-  addNewOrder,
   initiateKOKOPayment,
   initiatePayHerePayment,
   requestOTP,
@@ -22,7 +22,9 @@ import { signUser } from "@/firebase/firebaseClient";
 import AddressDetails from "@/app/checkout/components/AddressDetails";
 import PaymentDetails from "@/app/checkout/components/PaymentDetails";
 import ComponentLoader from "@/components/ComponentLoader";
-import ReCAPTCHA from "react-google-recaptcha";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 
 const createCustomerFromForm = (form: any): Customer => {
   const name = `${form.first_name.value} ${form.last_name.value}`;
@@ -44,20 +46,20 @@ const CheckoutForm = () => {
   const router = useRouter();
   const cartItems = useSelector((state: RootState) => state.cartSlice.cart);
   const user = useSelector((state: RootState) => state.authSlice.user);
+
   const [customer, setCustomer] = useState<Customer | null>(null);
   const [paymentType, setPaymentType] = useState<string | null>(null);
   const [saveAddress, setSaveAddress] = useState(true);
   const [loading, setLoading] = useState(false);
-  const [captchaValue, setCaptchaValue] = useState<string | null>(null);
-  const [captchaError, setCaptchaError] = useState(false);
-  const recaptchaRef = React.createRef<ReCAPTCHA>();
 
   // OTP state
   const [showOtpModal, setShowOtpModal] = useState(false);
   const [otp, setOtp] = useState("");
-  const [otpError, setOtpError] = useState<string | null>(null);
   const [pendingOrder, setPendingOrder] = useState<Order | null>(null);
   const [resendCooldown, setResendCooldown] = useState(0);
+
+  const { executeRecaptcha } = useGoogleReCaptcha();
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
 
   useEffect(() => {
     const savedCustomer = window.localStorage.getItem("neverbeCustomer");
@@ -74,40 +76,54 @@ const CheckoutForm = () => {
 
   const formatSriLankanPhoneNumber = (phone: string): string => {
     let digits = phone.replace(/\D/g, "");
-    if (digits.startsWith("07") && digits.length === 10) return `94${digits.substring(1)}`;
+    if (digits.startsWith("07") && digits.length === 10)
+      return `94${digits.substring(1)}`;
     if (digits.startsWith("7") && digits.length === 9) return `94${digits}`;
     return digits;
   };
 
   const handleRequestOtp = async (phoneNumber: string) => {
-    setOtpError(null);
+    if (!executeRecaptcha) {
+      toast.error("reCAPTCHA not ready. Please try again.");
+      return;
+    }
+
     try {
-      await requestOTP(formatSriLankanPhoneNumber(phoneNumber));
+      const token = await executeRecaptcha("otp_request");
+      setCaptchaToken(token);
+      await requestOTP(formatSriLankanPhoneNumber(phoneNumber), token);
       setResendCooldown(60);
+      toast.info(`OTP sent to ${phoneNumber}`);
     } catch (err: any) {
       console.error(err);
-      setOtpError(err.message || "Failed to send OTP. Try again.");
+      toast.error(err.message || "Failed to send OTP. Try again.");
     }
   };
 
   const handleOtpVerification = async () => {
     if (!pendingOrder || !otp) {
-      setOtpError("Please enter the OTP.");
+      toast.error("Invalid OTP. Please try again.");
       return;
     }
     setLoading(true);
-    setOtpError(null);
     try {
-      await verifyOTP(formatSriLankanPhoneNumber(pendingOrder.customer.phone), otp);
-      await addNewOrder(pendingOrder, captchaValue as string);
-      dispatch(clearCart());
-      router.replace(`/checkout/success?orderId=${pendingOrder.orderId}`);
-      setShowOtpModal(false);
-      setOtp("");
-      setPendingOrder(null);
+      const res = await verifyOTP(
+        formatSriLankanPhoneNumber(pendingOrder.customer.phone),
+        otp
+      );
+      if (res.success) {
+        dispatch(clearCart());
+        toast.success("Order verified successfully!");
+        router.replace(`/checkout/success?orderId=${pendingOrder.orderId}`);
+        setShowOtpModal(false);
+        setOtp("");
+        setPendingOrder(null);
+      } else {
+        toast.error(res.message || "Invalid OTP. Please try again.");
+      }
     } catch (err: any) {
       console.error(err);
-      setOtpError(err.message || "Invalid OTP. Please try again.");
+      toast.error(err.message || "Invalid OTP. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -115,12 +131,16 @@ const CheckoutForm = () => {
 
   const handlePaymentSubmit = async (evt: React.FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
-    if (cartItems.length === 0) return alert("Your cart is empty.");
-    if (!paymentType) return alert("Please select a payment method.");
-    if (!captchaValue) return setCaptchaError(true);
+
+    if (!executeRecaptcha) {
+      toast.error("reCAPTCHA not ready. Try again later.");
+      return;
+    }
+
+    if (cartItems.length === 0) return toast.error("Your cart is empty.");
+    if (!paymentType) return toast.error("Please select a payment method.");
 
     setLoading(true);
-    setCaptchaError(false);
 
     const form = evt.currentTarget;
     const orderId = generateOrderId();
@@ -154,8 +174,6 @@ const CheckoutForm = () => {
 
       switch (paymentType) {
         case "KOKO":
-          await addNewOrder(newOrder, captchaValue);
-          dispatch(clearCart());
           await processKokoPayment(orderId, newCustomer, amount);
           break;
         case "COD":
@@ -165,29 +183,28 @@ const CheckoutForm = () => {
           setLoading(false);
           break;
         case "PAYHERE":
-          await addNewOrder(newOrder, captchaValue);
-          dispatch(clearCart());
           await processPayherePayment(orderId, newCustomer, amount);
           break;
         default:
           throw new Error("Please select a valid payment method.");
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
+      toast.error("Payment failed. Redirecting to failure page.");
       router.replace(`/checkout/fail?orderId=${orderId}`);
     }
   };
 
   const processPayherePayment = async (orderId: string, customer: Customer, amount: string) => {
-    const amountFormatted = parseFloat(amount).toLocaleString("en-US", { minimumFractionDigits: 2 }).replace(/,/g, "");
+    const amountFormatted = parseFloat(amount)
+      .toLocaleString("en-US", { minimumFractionDigits: 2 })
+      .replace(/,/g, "");
     const [firstName, ...lastNameParts] = customer.name.split(" ");
-    const lastName = lastNameParts.join(" ") || firstName;
-
     const payload = {
       orderId,
       amount: amountFormatted,
       firstName,
-      lastName,
+      lastName: lastNameParts.join(" ") || firstName,
       email: customer.email,
       phone: customer.phone,
       address: customer.address,
@@ -217,7 +234,9 @@ const CheckoutForm = () => {
   };
 
   const processKokoPayment = async (orderId: string, customer: Customer, amount: string) => {
-    const amountFormatted = parseFloat(amount).toLocaleString("en-us", { minimumFractionDigits: 2 }).replaceAll(",", "");
+    const amountFormatted = parseFloat(amount)
+      .toLocaleString("en-us", { minimumFractionDigits: 2 })
+      .replaceAll(",", "");
     const [firstName, ...lastNameParts] = customer.name.split(" ");
     const payload = {
       orderId,
@@ -248,42 +267,70 @@ const CheckoutForm = () => {
 
   return (
     <div className="flex justify-center items-center">
-      <form onSubmit={handlePaymentSubmit} className="flex flex-row flex-wrap justify-evenly gap-5 mt-10">
+      <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} />
+      <form
+        onSubmit={handlePaymentSubmit}
+        className="flex flex-row flex-wrap justify-evenly gap-5 mt-10"
+      >
         <AddressDetails saveAddress={saveAddress} setSaveAddress={setSaveAddress} customer={customer} />
-        <PaymentDetails setPaymentType={setPaymentType} paymentType={paymentType} captchaError={captchaError} setCaptchaError={setCaptchaError} setCaptchaValue={setCaptchaValue} recaptchaRef={recaptchaRef} />
+        <PaymentDetails
+          setPaymentType={setPaymentType}
+          paymentType={paymentType || ""}
+        />
       </form>
 
       {/* OTP Modal */}
       {showOtpModal && pendingOrder && (
         <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 p-4">
           <div className="bg-white p-8 rounded-lg shadow-xl w-full max-w-sm">
-            <h2 className="text-2xl font-bold mb-4 text-center text-gray-800">Verify Your Order</h2>
+            <h2 className="text-2xl font-bold mb-4 text-center text-gray-800">
+              Verify Your Order
+            </h2>
             <p className="text-center text-gray-600 mb-6">
-              An OTP has been sent to <span className="font-semibold">{pendingOrder.customer.phone}</span>.
+              An OTP has been sent to{" "}
+              <span className="font-semibold">{pendingOrder.customer.phone}</span>.
             </p>
             <div className="flex flex-col gap-4">
               <input
                 type="tel"
                 value={otp}
+                disabled={loading}
                 onChange={(e) => setOtp(e.target.value)}
                 placeholder="Enter 6-digit OTP"
-                className="p-3 border-2 border-gray-300 rounded-lg text-center tracking-widest text-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition"
+                className="p-3 border-2 border-gray-300 rounded-lg text-center tracking-widest text-lg focus:border-primary-300 focus:ring-1 focus:ring-primary-300 transition"
                 maxLength={6}
                 autoComplete="one-time-code"
               />
-              {otpError && <p className="text-red-500 text-sm text-center -mt-2">{otpError}</p>}
-              <button onClick={handleOtpVerification} className="bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition-colors font-semibold disabled:bg-gray-400" disabled={loading}>
+              <button
+                onClick={handleOtpVerification}
+                className="bg-primary text-white p-3 rounded-lg hover:bg-primary-200 transition-colors font-semibold disabled:bg-gray-400"
+                disabled={loading}
+              >
                 {loading ? "Verifying..." : "Verify & Place Order"}
               </button>
-              <button onClick={() => { setShowOtpModal(false); setPendingOrder(null); setOtpError(null); setOtp(""); }} className="text-sm text-gray-500 hover:text-gray-800 transition-colors" disabled={loading}>
+              <button
+                onClick={() => {
+                  setShowOtpModal(false);
+                  setPendingOrder(null);
+                  setOtp("");
+                }}
+                className="text-sm text-gray-500 hover:text-gray-800 transition-colors"
+                disabled={loading}
+              >
                 Cancel
               </button>
               {resendCooldown === 0 ? (
-                <button onClick={() => handleRequestOtp(pendingOrder.customer.phone)} className="text-sm text-blue-600 hover:text-blue-800 transition-colors mt-2" disabled={loading}>
+                <button
+                  onClick={() => handleRequestOtp(pendingOrder.customer.phone)}
+                  className="text-sm text-primary hover:text-primary-100 transition-colors mt-2"
+                  disabled={loading}
+                >
                   Resend OTP
                 </button>
               ) : (
-                <p className="text-sm text-gray-500 text-center mt-2">Resend in {resendCooldown}s</p>
+                <p className="text-sm text-gray-500 text-center mt-2">
+                  Resend in {resendCooldown}s
+                </p>
               )}
             </div>
           </div>

@@ -3,15 +3,17 @@ import { Order, OrderItem } from "@/interfaces";
 import axios from "axios";
 import crypto from "crypto";
 import { getOrderById } from "./OrderService";
+import { verifyCaptchaToken } from "./CapchaService";
 
 const TEXT_API_KEY = process.env.TEXT_API_KEY;
+
 const OTP_COLLECTION = "otp_verifications";
-const MAX_SMS_PER_DAY = 3;
 const OTP_EXPIRY_MINUTES = 5;
 const NOTIFICATION_TRACKER = "notifications_sent";
 const OTP_TTL_DAYS = 1;
 const MAIL_COLLECTION = "mail_queue";
 const ORDER_CONFIRMED_TEMPLATE = "orderConfirmed";
+const COOLDOWN_SECONDS = 60;
 
 /**
  * Generate a 6-digit OTP
@@ -41,55 +43,70 @@ export const calculateTotal = (items: OrderItem[]): number =>
   items.reduce((total, item) => total + item.price * item.quantity, 0);
 
 /**
- * Send COD verification OTP (max 3/day, single active OTP)
+ * Send COD verification OTP with CAPTCHA and time-based rate limiting.
+ * The function now requires a captchaToken from the frontend.
  */
-export const sendCODVerificationOTP = async (phone: string) => {
+export const sendCODVerificationOTP = async (
+  phone: string,
+  captchaToken: string
+) => {
   try {
     if (!TEXT_API_KEY) throw new Error("Missing TEXT_API_KEY");
-    if (!phone) throw new Error("Missing phone number");
+    if (!phone || !captchaToken)
+      throw new Error("Missing phone number or CAPTCHA token");
 
-    const now = new Date();
-    const startOfDay = new Date(now);
-    startOfDay.setHours(0, 0, 0, 0);
-
-    // Count OTPs sent today
-    const otpQuery = await adminFirestore
-      .collection(OTP_COLLECTION)
-      .where("phone", "==", phone)
-      .where("createdAt", ">=", startOfDay)
-      .get();
-
-    if (otpQuery.size >= MAX_SMS_PER_DAY) {
-      console.log(`[OTP Service] Daily limit reached for ${phone}`);
-      return { success: false, message: "Daily OTP limit reached." };
+    const captchaResponse = verifyCaptchaToken(captchaToken);
+    if (!captchaResponse) {
+      console.log(`[OTP Service] CAPTCHA verification failed for ${phone}`);
+      return {
+        success: false,
+        message: "CAPTCHA verification failed. Please try again.",
+      };
     }
 
-    // Check for existing active OTP
-    const activeOtpQuery = await adminFirestore
+    const now = new Date();
+
+    // Get the most recent OTP request for this number to check the cooldown
+    const latestOtpQuery = await adminFirestore
       .collection(OTP_COLLECTION)
       .where("phone", "==", phone)
-      .where("verified", "==", false)
       .orderBy("createdAt", "desc")
       .limit(1)
       .get();
 
-    if (!activeOtpQuery.empty) {
-      const activeOtp = activeOtpQuery.docs[0].data();
-      if (activeOtp.expiresAt.toDate() > now) {
+    if (!latestOtpQuery.empty) {
+      const lastOtpData = latestOtpQuery.docs[0].data();
+      const lastRequestTime = lastOtpData.createdAt.toDate();
+      const secondsSinceLastRequest =
+        (now.getTime() - lastRequestTime.getTime()) / 1000;
+
+      // 2. Enforce a cooldown period to prevent rapid requests
+      if (secondsSinceLastRequest < COOLDOWN_SECONDS) {
+        console.log(`[OTP Service] Cooldown active for ${phone}`);
+        return {
+          success: false,
+          message: `Please wait ${Math.ceil(
+            COOLDOWN_SECONDS - secondsSinceLastRequest
+          )} seconds before requesting a new code.`,
+        };
+      }
+
+      // 3. Check for an existing *active* OTP (same logic as before)
+      if (!lastOtpData.verified && lastOtpData.expiresAt.toDate() > now) {
         console.log(`[OTP Service] Active OTP already exists for ${phone}`);
         return {
           success: false,
-          message: "An active OTP is already sent. Please check your SMS.",
+          message:
+            "An active OTP has already been sent. Please check your SMS.",
         };
       }
     }
 
-    // Generate new OTP
+    // All checks passed, generate and send a new OTP
     const otp = generateOTP();
     const otpHash = hashOTP(otp);
     const expiresAt = new Date(now.getTime() + OTP_EXPIRY_MINUTES * 60000);
 
-    // Store OTP with TTL
     await adminFirestore.collection(OTP_COLLECTION).add({
       phone,
       otpHash,
@@ -97,11 +114,10 @@ export const sendCODVerificationOTP = async (phone: string) => {
       expiresAt,
       verified: false,
       attempts: 0,
-      ttl: new Date(now.getTime() + OTP_TTL_DAYS * 24 * 60 * 60 * 1000), // TTL field for automatic deletion
+      ttl: new Date(now.getTime() + OTP_TTL_DAYS * 24 * 60 * 60 * 1000),
     });
 
-    // Send SMS
-    const text = `Your NEVERBE verification code is ${otp}. Valid for 5 minutes.`;
+    const text = `Your order verification code is ${otp}. Valid for 5 minutes.`;
     await axios.post(
       "https://api.textit.biz/",
       { to: phone, text },
