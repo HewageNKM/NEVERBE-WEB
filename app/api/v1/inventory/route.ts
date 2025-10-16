@@ -1,11 +1,5 @@
+import { getAllInventoryItems, getAllInventoryItemsByGender, getItemsByField, getItemsByTwoField } from "@/services/ProductService";
 import {NextResponse} from "next/server";
-import {
-    getAllInventoryItems,
-    getAllInventoryItemsByGender,
-    getItemsByField,
-    getItemsByTwoField,
-    verifyToken
-} from "@/firebase/firebaseAdmin";
 
 export async function GET(req: Request) {
     try {

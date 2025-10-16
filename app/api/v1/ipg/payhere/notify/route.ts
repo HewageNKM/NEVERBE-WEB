@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import md5 from "crypto-js/md5";
-import { updatePayment } from "@/firebase/firebaseAdmin";
+import { updatePayment } from "@/services/OrderService";
 
 export async function POST(req: Request) {
   try {

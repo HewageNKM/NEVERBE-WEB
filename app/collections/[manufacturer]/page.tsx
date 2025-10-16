@@ -3,8 +3,8 @@ import {Metadata} from "next";
 import EmptyState from "@/components/EmptyState";
 import ManufacturerHeader from "@/app/collections/[manufacturer]/components/ManufacturerHeader";
 import {Item} from "@/interfaces";
-import {getItemsByField} from "@/firebase/firebaseAdmin";
 import ManufacturerProducts from "@/app/collections/[manufacturer]/components/ManufacturerProducts";
+import { getItemsByField } from '@/services/ProductService';
 
 // Dynamically generate metadata
 export async function generateMetadata({ params }: { params: { manufacturer: string } }): Promise<Metadata> {

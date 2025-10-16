@@ -5,8 +5,9 @@ import WhyUs from "@/app/components/WhyUs";
 import PopularProducts from "@/app/components/PopularProducts";
 import FAQ from "@/app/components/FAQ";
 import {Item, Slide} from "@/interfaces";
-import {getBrandsFromInventory, getHotProducts, getRecentItems, getSliders} from "@/firebase/firebaseAdmin";
 import BrandsSlider from './components/BrandsSlider';
+import { getBrandsFromInventory, getHotProducts, getRecentItems } from '@/services/ProductService';
+import { getSliders } from '@/services/SlideService';
 
 const Page = async () => {
     const arrivals: Item[] = [];

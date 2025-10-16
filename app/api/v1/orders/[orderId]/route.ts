@@ -1,4 +1,5 @@
-import {getOrderById, verifyToken} from "@/firebase/firebaseAdmin";
+import { verifyToken } from "@/services/AuthService";
+import { getOrderById } from "@/services/OrderService";
 
 export async function GET(req: Request, {params}: { params: { orderId: string } }) {
     try {

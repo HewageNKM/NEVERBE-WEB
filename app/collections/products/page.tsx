@@ -4,8 +4,8 @@ import ProductsHeader from "@/app/collections/products/components/ProductsHeader
 import {Metadata} from "next";
 import {Item} from "@/interfaces";
 import EmptyState from "@/components/EmptyState";
-import {getAllInventoryItems, getAllInventoryItemsByGender} from "@/firebase/firebaseAdmin";
 import {seoKeywords} from "@/constants";
+import { getAllInventoryItems, getAllInventoryItemsByGender } from '@/services/ProductService';
 
 export const metadata: Metadata = {
     title: "Products",
