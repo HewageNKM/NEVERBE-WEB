@@ -1,5 +1,5 @@
 "use client";
-import React from 'react';
+import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -17,11 +17,11 @@ const BrandCard: React.FC<BrandCardProps> = ({ brand, url, image }) => {
     >
       <div className="relative flex items-center justify-center rounded-lg overflow-hidden p-4 bg-white shadow-lg hover:shadow-2xl transition-transform duration-500 group lg:hover:scale-110">
         <Image
-          width={300}
-          height={150} 
+          width={500} // increased from 400
+          height={250} // maintain aspect ratio
           src={image}
           alt={`${brand} Logo`}
-          className="object-contain md:w-[15rem] w-[10rem] md:h-[6rem] h-[3rem] transition-all duration-500 lg:group-hover:opacity-90"
+          className="object-contain md:w-[22rem] w-[14rem] md:h-[10rem] h-[5rem] transition-all duration-500 lg:group-hover:opacity-90"
         />
       </div>
     </Link>
