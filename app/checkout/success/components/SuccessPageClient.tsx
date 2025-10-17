@@ -10,7 +10,13 @@ import { BiDownload } from "react-icons/bi";
 import { FaArrowLeft } from "react-icons/fa6";
 import { Logo } from "@/assets/images";
 
-export default function SuccessPageClient({ order, expired }: { order: Order, expired?: boolean}) {
+export default function SuccessPageClient({
+  order,
+  expired,
+}: {
+  order: Order;
+  expired?: boolean;
+}) {
   const [loadingInvoice, setLoadingInvoice] = useState(false);
 
   const handleDownloadInvoice = async () => {
@@ -18,119 +24,200 @@ export default function SuccessPageClient({ order, expired }: { order: Order, ex
     try {
       const doc = new jsPDF();
 
-      // --- Logo (centered, circular background) ---
+      // --- Logo ---
       const imgWidth = 25;
       const imgHeight = 25;
       const centerX = 105;
       const circleRadius = 18;
-
       doc.setFillColor(0, 0, 0);
       doc.circle(centerX, 30, circleRadius, "F");
+      doc.addImage(
+        Logo.src,
+        "PNG",
+        centerX - imgWidth / 2,
+        30 - imgHeight / 2,
+        imgWidth,
+        imgHeight
+      );
 
-      doc.addImage(Logo.src, "PNG", centerX - imgWidth / 2, 30 - imgHeight / 2, imgWidth, imgHeight);
-
-      // --- Header Title ---
+      // --- Header ---
       doc.setFont("helvetica", "bold");
       doc.setFontSize(18);
       doc.text("INVOICE", 105, 60, { align: "center" });
 
-      // --- Company Info ---
-      doc.setFont("helvetica", "normal");
-      doc.setFontSize(11);
-      doc.setTextColor(100);
-      doc.text("NEVERBE", 20, 75);
-      doc.text("330/4/10 New Kandy Road, Delgoda", 20, 81);
-      doc.text("support@neverbe.lk", 20, 87);
-      doc.text("+94 70 520 8999", 20, 93);
-
-      // --- Invoice Info (right column) ---
+      // --- Store / Company Info (Left) ---
+      let storeY = 75;
       doc.setFont("helvetica", "bold");
+      doc.setFontSize(12); // titles same size
       doc.setTextColor(0);
-      doc.text("Invoice Details", 140, 75);
+      doc.text("Store Details", 20, storeY);
 
       doc.setFont("helvetica", "normal");
       doc.setFontSize(11);
       doc.setTextColor(100);
-      doc.text(`Order ID: ${order.orderId}`, 140, 81);
-      doc.text(`Date: ${order.createdAt}`, 140, 87);
-      doc.text(`Payment: ${order.paymentMethod}`, 140, 93);
-      doc.text(`Status: ${order.paymentStatus}`, 140, 99);
+      storeY += 6;
+      doc.text("NEVERBE", 20, storeY);
+      storeY += 6;
+      doc.text("330/4/10 New Kandy Road, Delgoda", 20, storeY);
+      storeY += 6;
+      doc.text("support@neverbe.lk", 20, storeY);
+      storeY += 6;
+      doc.text("+94 70 520 8999", 20, storeY);
+      storeY += 6;
+      doc.text("+94 72 924 9999", 20, storeY);
 
-      // --- Divider Line ---
+      // --- Invoice Details (Right) ---
+      let invoiceY = 75;
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(12); // same as store title
+      doc.setTextColor(0);
+      doc.text("Invoice Details", 140, invoiceY);
+
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(11);
+      doc.setTextColor(100);
+      invoiceY += 6;
+      doc.text(`Order ID: ${order.orderId}`, 140, invoiceY);
+      invoiceY += 6;
+      doc.text(`Date: ${order.createdAt}`, 140, invoiceY);
+      invoiceY += 6;
+      doc.text(`Payment: ${order.paymentMethod}`, 140, invoiceY);
+      invoiceY += 6;
+      doc.text(`Status: ${order.paymentStatus}`, 140, invoiceY);
+
+      // --- Divider ---
+      const lineY = Math.max(storeY, invoiceY) + 6; // spacing below tallest section
       doc.setDrawColor(200);
-      doc.line(20, 105, 190, 105);
+      doc.line(20, lineY, 190, lineY);
 
-      // --- Customer Info ---
+      // --- Billing & Shipping Info ---
+      const billing = order.customer;
+      const shipping = {
+        name: order.customer.shippingName,
+        address: order.customer.shippingAddress,
+        city: order.customer.shippingCity,
+        zip: order.customer.shippingZip,
+        phone: order.customer.shippingPhone,
+      };
+      const sameAsBilling =
+        !shipping.name &&
+        !shipping.address &&
+        !shipping.city &&
+        !shipping.phone;
+
+      // Billing
+      let billingY = lineY + 6; // start just below line
       doc.setFont("helvetica", "bold");
       doc.setTextColor(0);
-      doc.text("Bill To:", 20, 115);
+      doc.text("Billing Details:", 20, billingY);
+
       doc.setFont("helvetica", "normal");
       doc.setTextColor(60);
-      doc.text(order.customer.name, 20, 121);
-      if (order.customer.address) doc.text(order.customer.address, 20, 127);
-      if (order.customer.city) doc.text(order.customer.city, 20, 133);
-      doc.text(`Phone: ${order.customer.phone}`, 20, 139);
-      doc.text(`Email: ${order.customer.email}`, 20, 145);
+      let yPos = billingY + 6;
+      doc.text(billing.name, 20, yPos);
+      if (billing.address) doc.text(billing.address, 20, (yPos += 6));
+      if (billing.city) doc.text(billing.city, 20, (yPos += 6));
+      if (billing.zip) doc.text(`Postal Code: ${billing.zip}`, 20, (yPos += 6));
+      doc.text(`Phone: ${billing.phone}`, 20, (yPos += 6));
+      doc.text(`Email: ${billing.email}`, 20, (yPos += 6));
+
+      // Shipping
+      let shipY = billingY;
+      if (!sameAsBilling) {
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(0);
+        doc.text("Shipping Details:", 120, shipY);
+        doc.setFont("helvetica", "normal");
+        doc.setTextColor(60);
+        shipY += 6;
+        if (shipping.name) doc.text(shipping.name, 120, shipY);
+        if (shipping.address) doc.text(shipping.address, 120, (shipY += 6));
+        if (shipping.city) doc.text(shipping.city, 120, (shipY += 6));
+        if (shipping.zip) doc.text(`Postal Code: ${shipping.zip}`, 120, (shipY += 6));
+        if (shipping.phone)
+          doc.text(`Phone: ${shipping.phone}`, 120, (shipY += 6));
+      } else {
+        doc.setFont("helvetica", "italic");
+        doc.setTextColor(100);
+        doc.text("Shipping: Same as billing", 120, shipY + 6);
+      }
 
       // --- Items Table ---
-      const itemData = order.items.map((item) => [
-        item.name,
-        item.variantName || "-",
-        item.size || "-",
-        item.quantity,
-        `Rs. ${item.price.toFixed(2)}`,
-        `Rs. ${(item.price * item.quantity).toFixed(2)}`,
-      ]);
+      const itemData = order.items.map((item) => {
+        const totalPrice = item.price * item.quantity;
+        const discount = item.discount || 0;
+        const finalTotal = totalPrice - discount;
 
-      autoTable(doc, {
-        startY: 155,
-        head: [["Item", "Variant", "Size", "Qty", "Price", "Total"]],
-        body: itemData,
-        theme: "striped",
-        headStyles: {
-          fillColor: [0, 0, 0],
-          textColor: 255,
-          fontStyle: "bold",
-        },
-        styles: {
-          fontSize: 10,
-          halign: "center",
-          cellPadding: 4,
-        },
+        return [
+          item.name,
+          item.variantName || "-",
+          item.size || "-",
+          item.quantity,
+          `Rs. ${item.price.toFixed(2)}`,
+          `Rs. ${discount.toFixed(2)}`,
+          `Rs. ${finalTotal.toFixed(2)}`,
+        ];
       });
 
-      // --- Totals Box ---
-      let total = order.items.reduce((sum, i) => sum + i.price * i.quantity, 0);
-      let y = (doc as any).lastAutoTable.finalY + 12;
+      autoTable(doc, {
+        startY: Math.max(yPos, shipY) + 12, // extra spacing
+        head: [
+          ["Item", "Variant", "Size", "Qty", "Price", "Discount", "Total"],
+        ],
+        body: itemData,
+        theme: "striped",
+        headStyles: { fillColor: [0, 0, 0], textColor: 255 },
+        styles: { fontSize: 10, halign: "center", cellPadding: 4 },
+      });
 
-      const boxTop = y - 6;
-      const boxHeight = 28;
+      // --- Totals ---
+      const subtotal = order.items.reduce(
+        (sum, i) => sum + i.price * i.quantity,
+        0
+      );
+      const totalDiscount = order.items.reduce(
+        (sum, i) => sum + (i.discount || 0),
+        0
+      );
+      const shippingFee = order.shippingFee || 0;
+      const fee = order.fee || 0;
+      const grandTotal = subtotal - totalDiscount + shippingFee + fee;
+
+      let totalsY = (doc as any).lastAutoTable.finalY + 12;
       doc.setFillColor(245, 245, 245);
-      doc.roundedRect(120, boxTop, 70, boxHeight, 3, 3, "F");
+      doc.roundedRect(120, totalsY - 6, 70, 50, 3, 3, "F");
 
+      doc.setFont("helvetica", "normal");
       doc.setFontSize(11);
       doc.setTextColor(60);
-      doc.setFont("helvetica", "normal");
-      doc.text("Discount:", 130, y);
-      doc.text("Shipping Fee:", 130, y + 8);
+      doc.text("Subtotal:", 130, totalsY);
+      doc.text("Total Discount:", 130, totalsY + 8);
+      doc.text("Shipping Fee:", 130, totalsY + 16);
+      doc.text("Fee:", 130, totalsY + 24);
+
       doc.setFont("helvetica", "bold");
-      doc.text("Grand Total:", 130, y + 18);
+      doc.text("Grand Total:", 130, totalsY + 36);
 
       doc.setFont("helvetica", "normal");
-      doc.text(`Rs. ${(order.discount || 0).toFixed(2)}`, 185, y, { align: "right" });
-      doc.text(`Rs. ${(order.shippingFee || 0).toFixed(2)}`, 185, y + 8, { align: "right" });
+      doc.text(`Rs. ${subtotal.toFixed(2)}`, 185, totalsY, { align: "right" });
+      doc.text(`Rs. ${totalDiscount.toFixed(2)}`, 185, totalsY + 8, {
+        align: "right",
+      });
+      doc.text(`Rs. ${shippingFee.toFixed(2)}`, 185, totalsY + 16, {
+        align: "right",
+      });
+      doc.text(`Rs. ${fee.toFixed(2)}`, 185, totalsY + 24, { align: "right" });
       doc.setFont("helvetica", "bold");
-      doc.text(
-        `Rs. ${(total - (order.discount || 0) + (order.shippingFee || 0)).toFixed(2)}`,
-        185,
-        y + 18,
-        { align: "right" }
-      );
+      doc.text(`Rs. ${grandTotal.toFixed(2)}`, 185, totalsY + 36, {
+        align: "right",
+      });
 
       // --- Footer ---
       doc.setFontSize(10);
       doc.setTextColor(100);
-      doc.text("Thank you for shopping with NEVERBE!", 105, 285, { align: "center" });
+      doc.text("Thank you for shopping with NEVERBE!", 105, 285, {
+        align: "center",
+      });
       doc.text("www.neverbe.lk", 105, 291, { align: "center" });
 
       doc.save(`Invoice_${order.orderId}.pdf`);
@@ -141,13 +228,14 @@ export default function SuccessPageClient({ order, expired }: { order: Order, ex
     }
   };
 
-  // --- EXPIRATION UI ONLY ---
+  // --- Expired Page ---
   if (expired) {
     return (
       <main className="w-full min-h-screen flex justify-center items-center">
         <div className="text-center flex flex-col items-center gap-6 p-6">
           <div className="bg-red-50 border border-red-200 rounded-lg px-6 py-4 text-red-700 font-medium text-base md:text-lg max-w-md">
-            ⚠️ This order link has expired. Invoice download is no longer available.
+            ⚠️ This order link has expired. Invoice download is no longer
+            available.
           </div>
 
           <Link
@@ -162,7 +250,7 @@ export default function SuccessPageClient({ order, expired }: { order: Order, ex
     );
   }
 
-  // --- NORMAL SUCCESS PAGE ---
+  // --- Normal Success Page ---
   return (
     <main className="w-full min-h-screen flex">
       <div className="w-full flex mx-auto justify-center items-center">
@@ -172,10 +260,11 @@ export default function SuccessPageClient({ order, expired }: { order: Order, ex
           <div className="w-full flex flex-col gap-2">
             <div>
               <h2 className="font-display md:text-3xl text-xl font-bold text-primary-100 mb-2">
-                Order ID #{order.orderId}
+                Your Order ID Is #{order.orderId}
               </h2>
               <p className="text-gray-600 mb-4 text-base md:text-lg">
-                Thank you for your purchase, {order.customer.name.split(" ")[0]}!
+                Thank you for your purchase, {order.customer.name.split(" ")[0]}
+                !
               </p>
             </div>
 

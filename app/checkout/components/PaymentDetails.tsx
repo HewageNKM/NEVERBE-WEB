@@ -1,21 +1,56 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { IoLockClosed } from "react-icons/io5";
 import CartItemCard from "@/components/CartItemCard";
-import { calculateShippingCost, calculateSubTotal, calculateTotal, calculateTotalDiscount } from "@/util";
-import PaymentOptions from "@/app/checkout/components/PaymentOptions";
+import {
+  calculateShippingCost,
+  calculateSubTotal,
+  calculateTotal,
+  calculateTotalDiscount,
+} from "@/util";
+import { PaymentMethod } from "@/interfaces";
+import { getWebsitePaymentMethods } from "@/actions/paymentMethodsAction";
+import PaymentOptions from "./PaymentOptions";
 
-const PaymentDetails = ({
-  setPaymentType,
-  paymentType,
-}: {
-  setPaymentType: React.Dispatch<React.SetStateAction<string>>;
+interface PaymentDetailsProps {
   paymentType: string;
+  setPaymentType: React.Dispatch<React.SetStateAction<string>>;
+  setPaymentTypeId: React.Dispatch<React.SetStateAction<string>>;
+}
+
+const PaymentDetails: React.FC<PaymentDetailsProps> = ({
+  paymentType,
+  setPaymentType,
+  setPaymentTypeId,
 }) => {
   const cartItems = useSelector((state: RootState) => state.cartSlice.cart);
+  const [paymentOptions, setPaymentOptions] = useState<PaymentMethod[]>([]);
+  const [isPaymentLoading, setIsPaymentLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchPaymentMethods = async () => {
+      try {
+        setIsPaymentLoading(true);
+        const methods = await getWebsitePaymentMethods();
+        setPaymentOptions(methods);
+
+        // If no paymentType selected yet, default to first
+        if (methods.length > 0 && !paymentType) {
+          setPaymentType(methods[0].name || "");
+          setPaymentTypeId(methods[0].paymentId || "");
+        }
+      } catch (e) {
+        console.error("Failed to fetch payment methods:", e);
+      } finally {
+        setIsPaymentLoading(false);
+      }
+    };
+
+    fetchPaymentMethods();
+  }, []);
 
   return (
     <div className="flex flex-col max-w-3xl mx-auto px-6 py-8 bg-white">
@@ -37,13 +72,22 @@ const PaymentDetails = ({
         <h3>Total Items: {cartItems.length}</h3>
         <div className="flex flex-col items-end space-y-1 w-full md:w-auto">
           <p className="text-gray-700">
-            Total: <span className="font-medium">Rs. {calculateTotal(cartItems).toFixed(2)}</span>
+            Total:{" "}
+            <span className="font-medium">
+              Rs. {calculateTotal(cartItems).toFixed(2)}
+            </span>
           </p>
           <p className="text-gray-700">
-            Shipping: <span className="font-medium">Rs. {calculateShippingCost(cartItems).toFixed(2)}</span>
+            Shipping:{" "}
+            <span className="font-medium">
+              Rs. {calculateShippingCost(cartItems).toFixed(2)}
+            </span>
           </p>
           <p className="text-gray-700">
-            Discount: <span className="font-medium text-red-500">-Rs. {calculateTotalDiscount(cartItems).toFixed(2)}</span>
+            Discount:{" "}
+            <span className="font-medium text-red-500">
+              -Rs. {calculateTotalDiscount(cartItems).toFixed(2)}
+            </span>
           </p>
           <div className="w-full border-t border-gray-300 my-1" />
           <p className="text-lg font-semibold">
@@ -56,12 +100,22 @@ const PaymentDetails = ({
       {/* Payment Options */}
       <div className="mt-8 w-full">
         <h2 className="text-xl md:text-2xl font-bold mb-4">Payment Method</h2>
-        <PaymentOptions paymentType={paymentType} setPaymentType={setPaymentType} />
+        {isPaymentLoading ? (
+          <p className="text-gray-500 italic">Loading payment methods...</p>
+        ) : (
+          <PaymentOptions
+            paymentOptions={paymentOptions}
+            paymentType={paymentType}
+            setPaymentType={setPaymentType}
+            setPaymentTypeId={setPaymentTypeId}
+          />
+        )}
       </div>
 
       {/* Terms */}
       <p className="mt-6 text-center text-gray-600 text-sm">
-        By clicking <strong>&quot;Proceed to Payment&quot;</strong>, you agree to our Terms of Service and Privacy Policy.
+        By clicking <strong>&quot;Proceed to Payment&quot;</strong>, you agree
+        to our Terms of Service and Privacy Policy.
       </p>
 
       {/* Proceed Button */}
@@ -69,7 +123,9 @@ const PaymentDetails = ({
         disabled={cartItems.length === 0 || !paymentType}
         type="submit"
         className={`mt-6 w-full flex items-center justify-center gap-3 bg-primary text-white text-xl py-3 rounded-lg transition-all duration-300 ${
-          cartItems.length === 0 ? "bg-opacity-50 cursor-not-allowed" : "hover:bg-primary-dark"
+          cartItems.length === 0 || !paymentType
+            ? "bg-opacity-50 cursor-not-allowed"
+            : "hover:bg-primary-dark"
         }`}
       >
         <span>Proceed to Payment</span>
