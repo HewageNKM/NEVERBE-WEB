@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { AppDispatch, RootState } from "@/redux/store";
 import { Customer, Order } from "@/interfaces";
 import { clearCart } from "@/redux/cartSlice/cartSlice";
+import { FiX } from "react-icons/fi";
 import {
   calculateShippingCost,
   calculateSubTotal,
@@ -17,6 +18,7 @@ import {
   initiateKOKOPayment,
   initiatePayHerePayment,
   requestOTP,
+  sendCODOrderNotifications,
   verifyOTP,
 } from "@/actions/orderAction";
 import { signUser } from "@/firebase/firebaseClient";
@@ -51,7 +53,11 @@ const CheckoutForm = () => {
   const [customer, setCustomer] = useState<Customer | null>(null);
   const [paymentType, setPaymentType] = useState<string | null>(null);
   const [saveAddress, setSaveAddress] = useState(true);
-  const [loading, setLoading] = useState(false);
+
+  // Loading states
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isVerifyingOtp, setIsVerifyingOtp] = useState(false);
+  const [isResendingOtp, setIsResendingOtp] = useState(false);
 
   // OTP state
   const [showOtpModal, setShowOtpModal] = useState(false);
@@ -61,21 +67,21 @@ const CheckoutForm = () => {
 
   const { executeRecaptcha } = useGoogleReCaptcha();
 
+  // Load saved address
   useEffect(() => {
     const savedCustomer = window.localStorage.getItem("neverbeCustomer");
     if (savedCustomer) setCustomer(JSON.parse(savedCustomer));
   }, []);
 
+  // Handle resend cooldown timer
   useEffect(() => {
-    let timer: NodeJS.Timeout;
-    if (resendCooldown > 0) {
-      timer = setTimeout(() => setResendCooldown(resendCooldown - 1), 1000);
-    }
+    if (resendCooldown <= 0) return;
+    const timer = setTimeout(() => setResendCooldown(resendCooldown - 1), 1000);
     return () => clearTimeout(timer);
   }, [resendCooldown]);
 
   const formatSriLankanPhoneNumber = (phone: string): string => {
-    let digits = phone.replace(/\D/g, "");
+    const digits = phone.replace(/\D/g, "");
     if (digits.startsWith("07") && digits.length === 10)
       return `94${digits.substring(1)}`;
     if (digits.startsWith("7") && digits.length === 9) return `94${digits}`;
@@ -88,22 +94,19 @@ const CheckoutForm = () => {
       return;
     }
 
+    setIsResendingOtp(true);
     try {
       const token = await executeRecaptcha("otp_request");
-      const res = await requestOTP(
-        formatSriLankanPhoneNumber(phoneNumber),
-        token
-      );
+      const res = await requestOTP(formatSriLankanPhoneNumber(phoneNumber), token);
       setResendCooldown(60);
-      if (res.success) {
-        toast.success(`OTP sent to ${phoneNumber}`);
-        return;
-      } else {
-        toast.error(res.message || "Failed to send OTP. Try again.");
-      }
+
+      if (res.success) toast.success(`OTP sent to ${phoneNumber}`);
+      else toast.error(res.message || "Failed to send OTP. Try again.");
     } catch (err: any) {
       console.error(err);
       toast.error(err.message || "Failed to send OTP. Try again.");
+    } finally {
+      setIsResendingOtp(false);
     }
   };
 
@@ -112,7 +115,8 @@ const CheckoutForm = () => {
       toast.error("Invalid OTP. Please try again.");
       return;
     }
-    setLoading(true);
+    setIsVerifyingOtp(true);
+
     try {
       const res = await verifyOTP(
         formatSriLankanPhoneNumber(pendingOrder.customer.phone),
@@ -124,13 +128,16 @@ const CheckoutForm = () => {
         return;
       }
 
-      const token = await executeRecaptcha("new_order");
-
       if (res.success) {
+        const token = await executeRecaptcha("new_order");
+        await addNewOrder(pendingOrder, token);
+        const notifToken = await executeRecaptcha("cod_notification");
+        await sendCODOrderNotifications(pendingOrder.orderId, notifToken);
+
         dispatch(clearCart());
         toast.success("Order verified successfully!");
-        await addNewOrder(pendingOrder, token);
         router.replace(`/checkout/success?orderId=${pendingOrder.orderId}`);
+
         setShowOtpModal(false);
         setOtp("");
         setPendingOrder(null);
@@ -141,7 +148,7 @@ const CheckoutForm = () => {
       console.error(err);
       toast.error(err.message || "Invalid OTP. Please try again.");
     } finally {
-      setLoading(false);
+      setIsVerifyingOtp(false);
     }
   };
 
@@ -156,20 +163,14 @@ const CheckoutForm = () => {
     if (cartItems.length === 0) return toast.error("Your cart is empty.");
     if (!paymentType) return toast.error("Please select a payment method.");
 
-    setLoading(true);
-
+    setIsSubmitting(true);
     const form = evt.currentTarget;
     const orderId = generateOrderId();
     const newCustomer = createCustomerFromForm(form);
 
-    if (saveAddress) {
-      window.localStorage.setItem(
-        "neverbeCustomer",
-        JSON.stringify(newCustomer)
-      );
-    } else {
-      window.localStorage.removeItem("neverbeCustomer");
-    }
+    if (saveAddress)
+      localStorage.setItem("neverbeCustomer", JSON.stringify(newCustomer));
+    else localStorage.removeItem("neverbeCustomer");
 
     try {
       const userId = user?.uid || (await signUser())?.uid;
@@ -203,7 +204,6 @@ const CheckoutForm = () => {
           setPendingOrder(newOrder);
           await handleRequestOtp(newCustomer.phone);
           setShowOtpModal(true);
-          setLoading(false);
           break;
         case "PAYHERE":
           await addNewOrder(newOrder, token);
@@ -217,6 +217,8 @@ const CheckoutForm = () => {
       console.error(err);
       toast.error("Payment failed. Redirecting to failure page.");
       router.replace(`/checkout/fail?orderId=${orderId}`);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -268,8 +270,8 @@ const CheckoutForm = () => {
     amount: string
   ) => {
     const amountFormatted = parseFloat(amount)
-      .toLocaleString("en-us", { minimumFractionDigits: 2 })
-      .replaceAll(",", "");
+      .toLocaleString("en-US", { minimumFractionDigits: 2 })
+      .replace(/,/g, "");
     const [firstName, ...lastNameParts] = customer.name.split(" ");
     const payload = {
       orderId,
@@ -300,11 +302,7 @@ const CheckoutForm = () => {
 
   return (
     <div className="flex justify-center items-center">
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-      />
+      <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} />
       <form
         onSubmit={handlePaymentSubmit}
         className="flex flex-row flex-wrap justify-evenly gap-5 mt-10"
@@ -323,22 +321,32 @@ const CheckoutForm = () => {
       {/* OTP Modal */}
       {showOtpModal && pendingOrder && (
         <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 p-4">
-          <div className="bg-white p-8 rounded-lg shadow-xl w-full max-w-sm">
+          <div className="relative bg-white p-8 rounded-lg shadow-xl w-full max-w-sm">
+            {/* Close Icon */}
+            <button
+              onClick={() => {
+                setShowOtpModal(false);
+                setPendingOrder(null);
+                setOtp("");
+              }}
+              className="absolute top-3 right-3 text-gray-400 hover:text-gray-700 transition-colors"
+              aria-label="Close OTP Modal"
+            >
+              <FiX size={24} />
+            </button>
+
             <h2 className="text-2xl font-bold mb-4 text-center text-gray-800">
               Verify Your Order
             </h2>
             <p className="text-center text-gray-600 mb-6">
               An OTP has been sent to{" "}
-              <span className="font-semibold">
-                {pendingOrder.customer.phone}
-              </span>
-              .
+              <span className="font-semibold">{pendingOrder.customer.phone}</span>.
             </p>
             <div className="flex flex-col gap-4">
               <input
                 type="tel"
                 value={otp}
-                disabled={loading}
+                disabled={isVerifyingOtp}
                 onChange={(e) => setOtp(e.target.value)}
                 placeholder="Enter 6-digit OTP"
                 className="p-3 border-2 border-gray-300 rounded-lg text-center tracking-widest text-lg focus:border-primary-300 focus:ring-1 focus:ring-primary-300 transition"
@@ -348,28 +356,18 @@ const CheckoutForm = () => {
               <button
                 onClick={handleOtpVerification}
                 className="bg-primary text-white p-3 rounded-lg hover:bg-primary-200 transition-colors font-semibold disabled:bg-gray-400"
-                disabled={loading}
+                disabled={isVerifyingOtp}
               >
-                {loading ? "Verifying..." : "Verify & Place Order"}
+                {isVerifyingOtp ? "Verifying..." : "Verify & Place Order"}
               </button>
-              <button
-                onClick={() => {
-                  setShowOtpModal(false);
-                  setPendingOrder(null);
-                  setOtp("");
-                }}
-                className="text-sm text-gray-500 hover:text-gray-800 transition-colors"
-                disabled={loading}
-              >
-                Cancel
-              </button>
+
               {resendCooldown === 0 ? (
                 <button
                   onClick={() => handleRequestOtp(pendingOrder.customer.phone)}
                   className="text-sm text-primary hover:text-primary-100 transition-colors mt-2"
-                  disabled={loading}
+                  disabled={isResendingOtp}
                 >
-                  Resend OTP
+                  {isResendingOtp ? "Sending OTP..." : "Resend OTP"}
                 </button>
               ) : (
                 <p className="text-sm text-gray-500 text-center mt-2">
@@ -381,7 +379,7 @@ const CheckoutForm = () => {
         </div>
       )}
 
-      {loading && <ComponentLoader />}
+      {isSubmitting && <ComponentLoader />}
     </div>
   );
 };

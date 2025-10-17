@@ -3,7 +3,6 @@ import { Item, Order } from "@/interfaces";
 import { adminFirestore } from "@/firebase/firebaseAdmin";
 import { verifyCaptchaToken } from "./CapchaService";
 import {
-  sendOrderConfirmationEmail,
   sendOrderConfirmedSMS,
 } from "./NotificationService";
 
@@ -110,9 +109,8 @@ export const addNewOrder = async (order: Order, token: string) => {
     throw e;
   }
 };
-
-// Function to get order details by ID
-export const getOrderById = async (orderId: string) => {
+// services/OrderService.ts
+export const getOrderByIdForInvoice = async (orderId: string) => {
   try {
     console.log(`Fetching order by ID: ${orderId}`);
     const doc = await adminFirestore
@@ -120,15 +118,26 @@ export const getOrderById = async (orderId: string) => {
       .where("orderId", "==", orderId)
       .where("from", "==", "Website")
       .get();
+
     if (doc.empty) {
       throw new Error(`Order with ID ${orderId} not found.`);
     }
+
     const order = doc.docs[0].data();
+    const createdAtDate = order.createdAt.toDate();
+    const updatedAtDate = order.updatedAt.toDate();
+
+    // --- Check expiration (older than 7 days)
+    const now = new Date();
+    const diffDays = (now.getTime() - createdAtDate.getTime()) / (1000 * 60 * 60 * 24);
+    const expired = diffDays > 7;
+
     return {
       ...order,
-      createdAt: order.createdAt.toDate().toLocaleString(),
-      updatedAt: order.updatedAt.toDate().toLocaleString(),
+      createdAt: createdAtDate.toLocaleString(),
+      updatedAt: updatedAtDate.toLocaleString(),
       tracking: null,
+      expired,
       customer: {
         ...order.customer,
         createdAt: order.customer.createdAt.toDate().toLocaleString(),
@@ -140,6 +149,7 @@ export const getOrderById = async (orderId: string) => {
     throw e;
   }
 };
+
 
 // Function to update the payment status of an order
 export const updatePayment = async (
@@ -154,10 +164,6 @@ export const updatePayment = async (
       paymentStatus: status,
     });
     if (status.toLocaleLowerCase() === "paid") {
-      console.log(
-        `[OrderService] Attempting to send order confirmation email for order: ${orderId}`
-      );
-      await sendOrderConfirmationEmail(order.orderId);
       console.log(
         `[OrderService] Attempting to send order confirmation SMS for order: ${orderId}`
       );

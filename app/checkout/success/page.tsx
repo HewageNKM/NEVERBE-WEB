@@ -1,11 +1,11 @@
 // app/checkout/success/page.tsx
 import React from "react";
-import { notFound } from "next/navigation";
+import { redirect, notFound } from "next/navigation";
 import SuccessPageClient from "./components/SuccessPageClient";
 import { Metadata } from "next";
-import { getOrderById } from "@/services/OrderService";
+import { getOrderByIdForInvoice } from "@/services/OrderService";
 
-export const metadata:Metadata = {
+export const metadata: Metadata = {
   title: "Order Success",
 };
 
@@ -18,12 +18,14 @@ export default async function Page({
   if (!orderId) return notFound();
 
   try {
-    const order = await getOrderById(orderId);
-    if (!order) return notFound();
+    const order = await getOrderByIdForInvoice(orderId);
+    if (!order) return redirect("/checkout/fail");
 
-    return <SuccessPageClient order={order} />;
+    console.log(order);
+
+    return <SuccessPageClient order={order} expired={order.expired} />;
   } catch (error) {
     console.error("Error fetching order:", error);
-    return notFound();
+    return redirect("/checkout/fail");
   }
 }
