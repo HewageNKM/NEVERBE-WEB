@@ -22,8 +22,9 @@ import {
   verifyOTP,
 } from "@/actions/orderAction";
 import { signUser } from "@/firebase/firebaseClient";
-import AddressDetails from "@/app/checkout/components/AddressDetails";
-import PaymentDetails from "@/app/checkout/components/PaymentDetails";
+import BillingDetails from "./BillingDetails"; // Billing (main)
+import ShippingDetails from "./ShippingDetails"; // Shipping (optional)
+import PaymentDetails from "@/app/checkout/components/PaymentDetails"; // <--- restored
 import ComponentLoader from "@/components/ComponentLoader";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -50,33 +51,35 @@ const CheckoutForm = () => {
   const cartItems = useSelector((state: RootState) => state.cartSlice.cart);
   const user = useSelector((state: RootState) => state.authSlice.user);
 
-  const [customer, setCustomer] = useState<Customer | null>(null);
+  const [billingCustomer, setBillingCustomer] = useState<Customer | null>(null);
+  const [shippingSameAsBilling, setShippingSameAsBilling] = useState(true);
+  const [shippingCustomer, setShippingCustomer] =
+    useState<Partial<Customer> | null>(null);
   const [paymentType, setPaymentType] = useState<string | null>(null);
+  const [paymentTypeId, setPaymentTypeId] = useState<string | null>(null);
   const [saveAddress, setSaveAddress] = useState(true);
 
-  // Loading states
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isVerifyingOtp, setIsVerifyingOtp] = useState(false);
   const [isResendingOtp, setIsResendingOtp] = useState(false);
 
-  // OTP state
   const [showOtpModal, setShowOtpModal] = useState(false);
   const [otp, setOtp] = useState("");
   const [pendingOrder, setPendingOrder] = useState<Order | null>(null);
   const [resendCooldown, setResendCooldown] = useState(0);
 
+  const PHONE_NUMBER_REGEX = /^07\d{8}$/;
+
   const { executeRecaptcha } = useGoogleReCaptcha();
 
-  // Load saved address
   useEffect(() => {
-    const savedCustomer = window.localStorage.getItem("neverbeCustomer");
-    if (savedCustomer) setCustomer(JSON.parse(savedCustomer));
+    const savedCustomer = window.localStorage.getItem("neverbeBillingCustomer");
+    if (savedCustomer) setBillingCustomer(JSON.parse(savedCustomer));
   }, []);
 
-  // Handle resend cooldown timer
   useEffect(() => {
     if (resendCooldown <= 0) return;
-    const timer = setTimeout(() => setResendCooldown(resendCooldown - 1), 1000);
+    const timer = setTimeout(() => setResendCooldown((c) => c - 1), 1000);
     return () => clearTimeout(timer);
   }, [resendCooldown]);
 
@@ -89,44 +92,37 @@ const CheckoutForm = () => {
   };
 
   const handleRequestOtp = async (phoneNumber: string) => {
-    if (!executeRecaptcha) {
-      toast.error("reCAPTCHA not ready. Please try again.");
-      return;
-    }
-
+    if (!executeRecaptcha) return toast.error("reCAPTCHA not ready");
     setIsResendingOtp(true);
     try {
       const token = await executeRecaptcha("otp_request");
-      const res = await requestOTP(formatSriLankanPhoneNumber(phoneNumber), token);
+      const res = await requestOTP(
+        formatSriLankanPhoneNumber(phoneNumber),
+        token
+      );
       setResendCooldown(60);
-
-      if (res.success) toast.success(`OTP sent to ${phoneNumber}`);
-      else toast.error(res.message || "Failed to send OTP. Try again.");
+      res.success
+        ? toast.success(`OTP sent to ${phoneNumber}`)
+        : toast.error(res.message || "Failed to send OTP");
     } catch (err: any) {
       console.error(err);
-      toast.error(err.message || "Failed to send OTP. Try again.");
+      toast.error(err.message || "Failed to send OTP");
     } finally {
       setIsResendingOtp(false);
     }
   };
 
   const handleOtpVerification = async () => {
-    if (!pendingOrder || !otp) {
-      toast.error("Invalid OTP. Please try again.");
-      return;
-    }
-    setIsVerifyingOtp(true);
+    if (!pendingOrder || !otp) return toast.error("Invalid OTP");
 
+    setIsVerifyingOtp(true);
     try {
       const res = await verifyOTP(
         formatSriLankanPhoneNumber(pendingOrder.customer.phone),
         otp
       );
 
-      if (!executeRecaptcha) {
-        toast.error("reCAPTCHA not ready. Please try again.");
-        return;
-      }
+      if (!executeRecaptcha) return toast.error("reCAPTCHA not ready");
 
       if (res.success) {
         const token = await executeRecaptcha("new_order");
@@ -141,12 +137,10 @@ const CheckoutForm = () => {
         setShowOtpModal(false);
         setOtp("");
         setPendingOrder(null);
-      } else {
-        toast.error(res.message || "Invalid OTP. Please try again.");
-      }
+      } else toast.error(res.message || "Invalid OTP");
     } catch (err: any) {
       console.error(err);
-      toast.error(err.message || "Invalid OTP. Please try again.");
+      toast.error(err.message || "Invalid OTP");
     } finally {
       setIsVerifyingOtp(false);
     }
@@ -155,35 +149,55 @@ const CheckoutForm = () => {
   const handlePaymentSubmit = async (evt: React.FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
 
-    if (!executeRecaptcha) {
-      toast.error("reCAPTCHA not ready. Try again later.");
-      return;
-    }
-
-    if (cartItems.length === 0) return toast.error("Your cart is empty.");
-    if (!paymentType) return toast.error("Please select a payment method.");
+    if (!executeRecaptcha) return toast.error("reCAPTCHA not ready");
+    if (cartItems.length === 0) return toast.error("Cart is empty");
+    if (!paymentType) return toast.error("Select payment method");
 
     setIsSubmitting(true);
     const form = evt.currentTarget;
     const orderId = generateOrderId();
-    const newCustomer = createCustomerFromForm(form);
+    const newBilling = createCustomerFromForm(form);
 
     if (saveAddress)
-      localStorage.setItem("neverbeCustomer", JSON.stringify(newCustomer));
-    else localStorage.removeItem("neverbeCustomer");
+      localStorage.setItem(
+        "neverbeBillingCustomer",
+        JSON.stringify(newBilling)
+      );
+    else localStorage.removeItem("neverbeBillingCustomer");
 
     try {
       const userId = user?.uid || (await signUser())?.uid;
       const amount = calculateSubTotal(cartItems);
       const discount = calculateTotalDiscount(cartItems);
 
+      const orderCustomer: Customer = {
+        ...newBilling,
+        ...(shippingSameAsBilling
+          ? {
+              shippingName: newBilling.name,
+              shippingAddress: newBilling.address,
+              shippingCity: newBilling.city,
+              shippingZip: newBilling.zip,
+              shippingPhone: newBilling.phone,
+            }
+          : {
+              shippingName: shippingCustomer?.shippingName,
+              shippingAddress: shippingCustomer?.shippingAddress,
+              shippingCity: shippingCustomer?.shippingCity,
+              shippingZip: shippingCustomer?.shippingZip,
+              shippingPhone: shippingCustomer?.shippingPhone,
+            }),
+      };
+
       const newOrder: Order = {
         orderId,
         userId: userId || "anonymous-user",
-        customer: newCustomer,
+        customer: orderCustomer,
         items: cartItems,
         amount: parseFloat(amount),
         paymentMethod: paymentType,
+        paymentMethodId: paymentTypeId,
+        fee: 0,
         shippingFee: calculateShippingCost(cartItems),
         paymentStatus: "Pending",
         from: "Website",
@@ -193,35 +207,40 @@ const CheckoutForm = () => {
       };
 
       const token = await executeRecaptcha("new_order");
+      console.log(paymentTypeId);
 
-      switch (paymentType) {
-        case "KOKO":
+      switch (paymentTypeId?.toUpperCase()) {
+        case "PM-006":
+          //KOKO
           await addNewOrder(newOrder, token);
           dispatch(clearCart());
-          await processKokoPayment(orderId, newCustomer, amount);
+          await processKokoPayment(orderId, orderCustomer, amount);
           break;
-        case "COD":
+        case "PM-001":
+          //COD
           setPendingOrder(newOrder);
-          await handleRequestOtp(newCustomer.phone);
+          await handleRequestOtp(newBilling.phone);
           setShowOtpModal(true);
           break;
-        case "PAYHERE":
+        case "PM-003":
+          //Payhere
           await addNewOrder(newOrder, token);
           dispatch(clearCart());
-          await processPayherePayment(orderId, newCustomer, amount);
+          await processPayherePayment(orderId, orderCustomer, amount);
           break;
         default:
-          throw new Error("Please select a valid payment method.");
+          throw new Error("Invalid payment method");
       }
     } catch (err: any) {
       console.error(err);
-      toast.error("Payment failed. Redirecting to failure page.");
+      toast.error("Payment failed. Redirecting...");
       router.replace(`/checkout/fail?orderId=${orderId}`);
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  // --- Payment Process Helpers ---
   const processPayherePayment = async (
     orderId: string,
     customer: Customer,
@@ -302,19 +321,35 @@ const CheckoutForm = () => {
 
   return (
     <div className="flex justify-center items-center">
-      <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} />
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+      />
       <form
         onSubmit={handlePaymentSubmit}
-        className="flex flex-row flex-wrap justify-evenly gap-5 mt-10"
+        className="flex flex-row flex-wrap gap-6 mt-10 w-full"
       >
-        <AddressDetails
-          saveAddress={saveAddress}
-          setSaveAddress={setSaveAddress}
-          customer={customer}
-        />
+        <div>
+          <BillingDetails
+            saveAddress={saveAddress}
+            setSaveAddress={setSaveAddress}
+            customer={billingCustomer}
+          />
+
+          <ShippingDetails
+            shippingSameAsBilling={shippingSameAsBilling}
+            setShippingSameAsBilling={setShippingSameAsBilling}
+            shippingCustomer={shippingCustomer}
+            setShippingCustomer={setShippingCustomer}
+          />
+        </div>
+
+        {/* Payment option UI */}
         <PaymentDetails
           setPaymentType={setPaymentType}
           paymentType={paymentType || ""}
+          setPaymentTypeId={setPaymentTypeId}
         />
       </form>
 
@@ -322,7 +357,6 @@ const CheckoutForm = () => {
       {showOtpModal && pendingOrder && (
         <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 p-4">
           <div className="relative bg-white p-8 rounded-lg shadow-xl w-full max-w-sm">
-            {/* Close Icon */}
             <button
               onClick={() => {
                 setShowOtpModal(false);
@@ -340,8 +374,12 @@ const CheckoutForm = () => {
             </h2>
             <p className="text-center text-gray-600 mb-6">
               An OTP has been sent to{" "}
-              <span className="font-semibold">{pendingOrder.customer.phone}</span>.
+              <span className="font-semibold">
+                {pendingOrder.customer.phone}
+              </span>
+              .
             </p>
+
             <div className="flex flex-col gap-4">
               <input
                 type="tel"

@@ -142,7 +142,14 @@ export interface Customer {
     phone: string;
     address: string;
     city: string;
-    zip: string;
+    zip?: string;
+
+    shippingName?: string;
+    shippingAddress?: string;
+    shippingCity?: string;
+    shippingZip?: string;
+    shippingPhone?: string;
+
     createdAt: Timestamp | string;
     updatedAt: Timestamp | string;
 }
