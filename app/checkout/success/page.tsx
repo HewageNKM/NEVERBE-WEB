@@ -21,8 +21,6 @@ export default async function Page({
     const order = await getOrderByIdForInvoice(orderId);
     if (!order) return redirect("/checkout/fail");
 
-    console.log(order);
-
     return <SuccessPageClient order={order} expired={order.expired} />;
   } catch (error) {
     console.error("Error fetching order:", error);

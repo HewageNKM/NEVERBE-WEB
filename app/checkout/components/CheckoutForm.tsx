@@ -207,7 +207,6 @@ const CheckoutForm = () => {
       };
 
       const token = await executeRecaptcha("new_order");
-      console.log(paymentTypeId);
 
       switch (paymentTypeId?.toUpperCase()) {
         case "PM-006":
