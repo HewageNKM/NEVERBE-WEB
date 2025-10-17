@@ -2,7 +2,7 @@ import { adminFirestore } from "@/firebase/firebaseAdmin";
 import { Order, OrderItem } from "@/interfaces";
 import axios from "axios";
 import crypto from "crypto";
-import { getOrderById } from "./OrderService";
+import { getOrderByIdForInvoice } from "./OrderService";
 import { verifyCaptchaToken } from "./CapchaService";
 
 const TEXT_API_KEY = process.env.TEXT_API_KEY;
@@ -11,9 +11,8 @@ const OTP_COLLECTION = "otp_verifications";
 const OTP_EXPIRY_MINUTES = 5;
 const NOTIFICATION_TRACKER = "notifications_sent";
 const OTP_TTL_DAYS = 1;
-const MAIL_COLLECTION = "mail_queue";
-const ORDER_CONFIRMED_TEMPLATE = "orderConfirmed";
 const COOLDOWN_SECONDS = 60;
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 /**
  * Generate a 6-digit OTP
@@ -189,97 +188,6 @@ export const verifyCODOTP = async (phone: string, otp: string) => {
 };
 
 /**
- * Send Order Confirmation Email (Prevents duplicates using hash)
- */
-export const sendOrderConfirmationEmail = async (orderId: string) => {
-  try {
-    console.log(`[Notification Service] Checking email for order: ${orderId}`);
-
-    //@ts-ignore
-    const order: Order = await getOrderById(orderId);
-    if (!order?.customer?.email) {
-      console.log(
-        `[Notification Service] Missing customer email for order: ${orderId}`
-      );
-      return false;
-    }
-
-    const customer = order.customer;
-    const subTotal = calculateTotal(order.items);
-    const total =
-      subTotal +
-      (order.fee || 0) +
-      (order.shippingFee || 0) -
-      (order.discount || 0);
-
-    const address = `${customer.address || ""}, ${customer.city || ""}, ${
-      customer.zip || ""
-    }, ${customer.phone || ""}`.trim();
-
-    const templateData = {
-      name: customer.name,
-      address,
-      orderId: orderId.toUpperCase(),
-      items: order.items || [],
-      total,
-      fee: order.fee || 0,
-      shippingFee: order.shippingFee || 0,
-      paymentMethod: order.paymentMethod || "",
-      subTotal,
-      discount: order.discount || 0,
-    };
-
-    const to = customer.email.toLowerCase().trim();
-    const hashValue = generateHash(to + JSON.stringify(templateData));
-
-    // Check duplicate
-    const existing = await adminFirestore
-      .collection(NOTIFICATION_TRACKER)
-      .where("orderId", "==", orderId)
-      .where("hashValue", "==", hashValue)
-      .where("type", "==", "email")
-      .get();
-
-    if (!existing.empty) {
-      console.log(
-        `[Notification Service] Duplicate email detected for order: ${orderId}`
-      );
-      return false;
-    }
-
-    // Add to mail queue
-    await adminFirestore.collection(MAIL_COLLECTION).add({
-      to,
-      template: {
-        name: ORDER_CONFIRMED_TEMPLATE,
-        data: templateData,
-      },
-    });
-
-    // Log to tracking
-    await adminFirestore.collection(NOTIFICATION_TRACKER).add({
-      orderId,
-      type: "email",
-      to,
-      hashValue,
-      createdAt: new Date(),
-    });
-
-    console.log(
-      `[Notification Service] Order confirmation email queued for ${orderId}`
-    );
-    return true;
-  } catch (error) {
-    console.error(
-      `[Notification Service] Failed to send order confirmation email for ${orderId}:`,
-      error
-    );
-    // Fail silently for frontend
-    return false;
-  }
-};
-
-/**
  * Send Predefined Order Confirmation SMS (Prevents duplicates using hash)
  */
 export const sendOrderConfirmedSMS = async (orderId: string) => {
@@ -292,7 +200,7 @@ export const sendOrderConfirmedSMS = async (orderId: string) => {
     console.log(`[Notification Service] Preparing SMS for order: ${orderId}`);
 
     //@ts-ignore
-    const order: Order = await getOrderById(orderId);
+    const order: Order = await getOrderByIdForInvoice(orderId);
     if (!order?.customer?.phone) {
       console.log(
         `[Notification Service] Missing customer phone for order: ${orderId}`
@@ -301,15 +209,19 @@ export const sendOrderConfirmedSMS = async (orderId: string) => {
     }
 
     const phone = order.customer.phone.trim();
+
     const total =
       calculateTotal(order.items) +
       (order.fee || 0) +
       (order.shippingFee || 0) -
       (order.discount || 0);
 
-    const text = `Order confirmed! 🛍️ Your order #${orderId.toUpperCase()} totaling Rs.${total.toFixed(
+    const customerName = order.customer.name.split(" ")[0];
+
+    const invoiceDownloadUrl = `${BASE_URL}/checkout/success?orderId=${orderId}`;
+    const text = `✅ Hi ${customerName}, your order #${orderId.toUpperCase()} totaling Rs.${total.toFixed(
       2
-    )} has been received by NEVERBE. Thank you for shopping with us!`;
+    )} has been received by NEVERBE to be processed. Download your invoice (valid 7 days): ${invoiceDownloadUrl}`;
 
     const hashValue = generateHash(phone + text);
 

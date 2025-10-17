@@ -1,4 +1,3 @@
-// app/checkout/success/SuccessPageClient.tsx
 "use client";
 
 import React, { useState } from "react";
@@ -11,7 +10,7 @@ import { BiDownload } from "react-icons/bi";
 import { FaArrowLeft } from "react-icons/fa6";
 import { Logo } from "@/assets/images";
 
-export default function SuccessPageClient({ order }: { order: Order }) {
+export default function SuccessPageClient({ order, expired }: { order: Order, expired?: boolean}) {
   const [loadingInvoice, setLoadingInvoice] = useState(false);
 
   const handleDownloadInvoice = async () => {
@@ -23,21 +22,12 @@ export default function SuccessPageClient({ order }: { order: Order }) {
       const imgWidth = 25;
       const imgHeight = 25;
       const centerX = 105;
-      const circleRadius = 18; // reduced from 25 → smaller background
+      const circleRadius = 18;
 
-      // Draw circular black background
       doc.setFillColor(0, 0, 0);
       doc.circle(centerX, 30, circleRadius, "F");
 
-      // Add logo image in center of the circle
-      doc.addImage(
-        Logo.src,
-        "PNG",
-        centerX - imgWidth / 2,
-        30 - imgHeight / 2,
-        imgWidth,
-        imgHeight
-      );
+      doc.addImage(Logo.src, "PNG", centerX - imgWidth / 2, 30 - imgHeight / 2, imgWidth, imgHeight);
 
       // --- Header Title ---
       doc.setFont("helvetica", "bold");
@@ -111,15 +101,13 @@ export default function SuccessPageClient({ order }: { order: Order }) {
 
       // --- Totals Box ---
       let total = order.items.reduce((sum, i) => sum + i.price * i.quantity, 0);
-      let y = (doc as any).lastAutoTable.finalY + 12; // add some breathing space
+      let y = (doc as any).lastAutoTable.finalY + 12;
 
-      // Create a light gray box behind totals for better structure
       const boxTop = y - 6;
       const boxHeight = 28;
       doc.setFillColor(245, 245, 245);
       doc.roundedRect(120, boxTop, 70, boxHeight, 3, 3, "F");
 
-      // Totals text
       doc.setFontSize(11);
       doc.setTextColor(60);
       doc.setFont("helvetica", "normal");
@@ -128,21 +116,12 @@ export default function SuccessPageClient({ order }: { order: Order }) {
       doc.setFont("helvetica", "bold");
       doc.text("Grand Total:", 130, y + 18);
 
-      // Totals values
       doc.setFont("helvetica", "normal");
-      doc.text(`Rs. ${(order.discount || 0).toFixed(2)}`, 185, y, {
-        align: "right",
-      });
-      doc.text(`Rs. ${(order.shippingFee || 0).toFixed(2)}`, 185, y + 8, {
-        align: "right",
-      });
+      doc.text(`Rs. ${(order.discount || 0).toFixed(2)}`, 185, y, { align: "right" });
+      doc.text(`Rs. ${(order.shippingFee || 0).toFixed(2)}`, 185, y + 8, { align: "right" });
       doc.setFont("helvetica", "bold");
       doc.text(
-        `Rs. ${(
-          total -
-          (order.discount || 0) +
-          (order.shippingFee || 0)
-        ).toFixed(2)}`,
+        `Rs. ${(total - (order.discount || 0) + (order.shippingFee || 0)).toFixed(2)}`,
         185,
         y + 18,
         { align: "right" }
@@ -151,9 +130,7 @@ export default function SuccessPageClient({ order }: { order: Order }) {
       // --- Footer ---
       doc.setFontSize(10);
       doc.setTextColor(100);
-      doc.text("Thank you for shopping with NEVERBE!", 105, 285, {
-        align: "center",
-      });
+      doc.text("Thank you for shopping with NEVERBE!", 105, 285, { align: "center" });
       doc.text("www.neverbe.lk", 105, 291, { align: "center" });
 
       doc.save(`Invoice_${order.orderId}.pdf`);
@@ -164,22 +141,44 @@ export default function SuccessPageClient({ order }: { order: Order }) {
     }
   };
 
+  // --- EXPIRATION UI ONLY ---
+  if (expired) {
+    return (
+      <main className="w-full min-h-screen flex justify-center items-center">
+        <div className="text-center flex flex-col items-center gap-6 p-6">
+          <div className="bg-red-50 border border-red-200 rounded-lg px-6 py-4 text-red-700 font-medium text-base md:text-lg max-w-md">
+            ⚠️ This order link has expired. Invoice download is no longer available.
+          </div>
+
+          <Link
+            href="/"
+            className="px-6 py-3 flex flex-row justify-center items-center gap-2 rounded-lg text-white bg-primary-100 hover:bg-primary-200 font-button transition-all md:text-lg text-sm"
+          >
+            <FaArrowLeft size={18} />
+            Continue Shopping
+          </Link>
+        </div>
+      </main>
+    );
+  }
+
+  // --- NORMAL SUCCESS PAGE ---
   return (
     <main className="w-full min-h-screen flex">
-      <div className="w-fit">
+      <div className="w-full flex mx-auto justify-center items-center">
         <div className="md:mt-32 mt-24 w-fit rounded-2xl md:p-10 p-2 flex flex-row gap-6">
           <SuccessAnimationComponents />
 
           <div className="w-full flex flex-col gap-2">
             <div>
               <h2 className="font-display md:text-3xl text-xl font-bold text-primary-100 mb-2">
-                #{order.orderId} order is {order.paymentStatus}!
+                Order ID #{order.orderId}
               </h2>
               <p className="text-gray-600 mb-4 text-base md:text-lg">
-                Thank you for your purchase, {order.customer.name.split(" ")[0]}
-                !
+                Thank you for your purchase, {order.customer.name.split(" ")[0]}!
               </p>
             </div>
+
             <div className="flex flex-row flex-wrap gap-2 md:mt-2 mt-1 justify-start items-start">
               <button
                 onClick={handleDownloadInvoice}
@@ -193,15 +192,15 @@ export default function SuccessPageClient({ order }: { order: Order }) {
                 <BiDownload size={20} className="mr-2" />
                 {loadingInvoice ? "Generating..." : "Download Invoice"}
               </button>
-
-              <Link
-                href="/"
-                className="px-6 flex flex-row justify-center items-center gap-2 py-3 md:text-lg text-xs  font-button text-primary-100 hover:text-primary-200 transition-all"
-              >
-                <FaArrowLeft size={20} />
-                Continue Shopping
-              </Link>
             </div>
+
+            <Link
+              href="/"
+              className="px-6 flex flex-row gap-2 py-3 md:text-lg text-xs font-button text-primary-100 hover:text-primary-200 transition-all"
+            >
+              <FaArrowLeft size={20} />
+              Continue Shopping
+            </Link>
           </div>
         </div>
       </div>

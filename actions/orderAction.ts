@@ -8,6 +8,7 @@ import {
   postOrderURL,
   OTPRequestURL,
   OTPVerifyURL,
+  CODORDERNotificationsURL,
 } from "@/app/urls";
 
 /**
@@ -114,6 +115,31 @@ export const verifyOTP = async (phoneNumber: string, otp: string) => {
     const response = await axios.post(
       OTPVerifyURL,
       { phoneNumber, otp },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response.data;
+  } catch (e) {
+    throw e;
+  }
+};
+
+/**
+ * Send Notifications for COD
+ */
+
+export const sendCODOrderNotifications = async (
+  orderId: string,
+  capchaToken: string
+) => {
+  try {
+    const token = await getIdToken();
+    const response = await axios.get(
+      `${CODORDERNotificationsURL}/${orderId}/cod/notifications?capchaToken=${capchaToken}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
