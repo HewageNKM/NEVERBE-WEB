@@ -91,6 +91,10 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
             <span>Shipping:</span>
             <span className="font-medium">Rs. {shipping.toFixed(2)}</span>
           </div>
+          <div className="flex justify-between text-sm sm:text-base">
+            <span>Fee:</span>
+            <span className="font-medium">Rs. 0.00</span>
+          </div>
           <div className="flex justify-between text-sm sm:text-base text-red-500">
             <span>Discount:</span>
             <span>-Rs. {discount.toFixed(2)}</span>
@@ -123,8 +127,8 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
       {/* Warning Notice */}
       <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-md mb-6 text-sm text-yellow-800 space-y-1">
         <p className="font-semibold">
-          ⚠️ කරුණාකර ගනුදෙනුව සම්පූර්ණ වන තුරු (Invoice පිටුව පෙන්වෙන තුරු)
-          මෙම කවුළුව හෝ බ්‍රව්සරය වසන්න එපා.
+          ⚠️ කරුණාකර ගනුදෙනුව සම්පූර්ණ වන තුරු (Invoice පිටුව පෙන්වෙන තුරු) මෙම
+          කවුළුව හෝ බ්‍රව්සරය වසන්න එපා.
         </p>
         <p className="font-semibold">
           ⚠️ Please don’t close or refresh this window until you reach the
@@ -139,13 +143,21 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
       {/* Terms */}
       <p className="text-sm text-gray-600 text-left mb-4">
         By clicking{" "}
-        <strong className="text-gray-800">&quot;Proceed to Payment&quot;</strong>
+        <strong className="text-gray-800">
+          &quot;Proceed to Payment&quot;
+        </strong>
         , you agree to our{" "}
-        <a href="/policies/terms-conditions" className="text-primary hover:underline">
+        <a
+          href="/policies/terms-conditions"
+          className="text-primary hover:underline"
+        >
           Terms of Service
         </a>{" "}
         and{" "}
-        <a href="/policies/privacy-policy" className="text-primary hover:underline">
+        <a
+          href="/policies/privacy-policy"
+          className="text-primary hover:underline"
+        >
           Privacy Policy
         </a>
         .
