@@ -68,6 +68,8 @@ const CheckoutForm = () => {
   const [pendingOrder, setPendingOrder] = useState<Order | null>(null);
   const [resendCooldown, setResendCooldown] = useState(0);
 
+  const [showPaymentWarning, setShowPaymentWarning] = useState(false);
+
   const PHONE_NUMBER_REGEX = /^07\d{8}$/;
 
   const { executeRecaptcha } = useGoogleReCaptcha();
@@ -143,6 +145,7 @@ const CheckoutForm = () => {
       toast.error(err.message || "Invalid OTP");
     } finally {
       setIsVerifyingOtp(false);
+      setShowPaymentWarning(false);
     }
   };
 
@@ -154,6 +157,8 @@ const CheckoutForm = () => {
     if (!paymentType) return toast.error("Select payment method");
 
     setIsSubmitting(true);
+    setShowPaymentWarning(true);
+
     const form = evt.currentTarget;
     const orderId = generateOrderId();
     const newBilling = createCustomerFromForm(form);
@@ -236,6 +241,7 @@ const CheckoutForm = () => {
       router.replace(`/checkout/fail?orderId=${orderId}`);
     } finally {
       setIsSubmitting(false);
+      setShowPaymentWarning(false);
     }
   };
 
@@ -327,9 +333,9 @@ const CheckoutForm = () => {
       />
       <form
         onSubmit={handlePaymentSubmit}
-        className="flex flex-row flex-wrap gap-6 mt-10 w-full"
+        className="flex flex-row flex-wrap justify-center lg:flex-nowrap gap-6 mt-10 w-full"
       >
-        <div>
+        <div className="flex flex-col">
           <BillingDetails
             saveAddress={saveAddress}
             setSaveAddress={setSaveAddress}

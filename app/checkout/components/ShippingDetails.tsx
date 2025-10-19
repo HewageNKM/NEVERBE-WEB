@@ -15,112 +15,116 @@ const ShippingDetails = ({
 }) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setShippingCustomer((prev) => ({
-      ...(prev as Customer), // Cast prev to avoid type errors
+      ...(prev as Customer),
       [e.target.name]: e.target.value,
     }));
   };
 
   return (
-    <section className="flex flex-col items-start px-6 py-10 bg-white mt-6">
-      <h1 className="text-3xl lg:text-4xl font-bold tracking-wide text-gray-900">
+    <section className="bg-white rounded-2xl shadow-sm px-6 py-8 mt-6 w-full">
+      <h2 className="text-2xl font-bold text-gray-900 mb-2">
         Shipping Details
-      </h1>
+      </h2>
+      <p className="text-gray-500 mb-4 text-sm">
+        Enter your delivery address details.
+      </p>
 
-      <div className="flex items-center gap-3 mt-4">
+      <div className="flex items-center gap-3 mb-6">
         <input
           type="checkbox"
           checked={shippingSameAsBilling}
           onChange={() => setShippingSameAsBilling((prev) => !prev)}
           className="h-5 w-5 text-primary focus:ring-2 focus:ring-primary/50 rounded transition"
         />
-        <span className="text-lg text-gray-700">Same as billing address</span>
+        <span className="text-gray-700 text-base">
+          Same as billing address
+        </span>
       </div>
 
       {!shippingSameAsBilling && (
-        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
-          <label className="flex flex-col gap-1">
-            <span className="text-lg font-medium">
-              <span className="text-red-500">*</span>Shipping Name
-            </span>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label className="text-sm font-semibold text-gray-700">
+              * Shipping Name
+            </label>
             <input
               type="text"
               name="shippingName"
+              required
               value={shippingCustomer?.shippingName || ""}
               onChange={handleChange}
               placeholder="John Doe"
-              required
-              className="px-4 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-300 focus:outline-none"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/40 focus:outline-none"
             />
-          </label>
+          </div>
 
-          <label className="flex flex-col gap-1">
-            <span className="text-lg font-medium">
-              <span className="text-red-500">*</span>Shipping Phone
-            </span>
+          <div>
+            <label className="text-sm font-semibold text-gray-700">
+              * Shipping Phone
+            </label>
             <input
               type="tel"
-              pattern="^07\d{8}$"
               name="shippingPhone"
+              pattern="^07\d{8}$"
+              title="Enter a valid phone number starting with 07XXXXXXXX"
+              required
               value={shippingCustomer?.shippingPhone || ""}
               onChange={handleChange}
               placeholder="0712345678"
-              required
-              title="Enter a valid phone number starting with 07XXXXXXXX"
-              className="px-4 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-300 focus:outline-none"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/40 focus:outline-none"
             />
-          </label>
+          </div>
 
-          <label className="flex flex-col gap-1 md:col-span-2">
-            <span className="text-lg font-medium">
-              <span className="text-red-500">*</span>Shipping Address
-            </span>
+          <div className="md:col-span-2">
+            <label className="text-sm font-semibold text-gray-700">
+              * Shipping Address
+            </label>
             <input
               type="text"
-              name="shippingAddress" 
-              value={shippingCustomer?.shippingAddress || ""} 
+              name="shippingAddress"
+              required
+              value={shippingCustomer?.shippingAddress || ""}
               onChange={handleChange}
               placeholder="123 Main Street"
-              required
-              className="px-4 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-300 focus:outline-none"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/40 focus:outline-none"
             />
-          </label>
+          </div>
 
-          <label className="flex flex-col gap-1">
-            <span className="text-lg font-medium">
-              <span className="text-red-500">*</span>Shipping City
-            </span>
+          <div>
+            <label className="text-sm font-semibold text-gray-700">* City</label>
             <input
               type="text"
               name="shippingCity"
+              required
               value={shippingCustomer?.shippingCity || ""}
               onChange={handleChange}
               placeholder="Kandy"
-              required
-              className="px-4 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-300 focus:outline-none"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/40 focus:outline-none"
             />
-          </label>
+          </div>
 
-          <label className="flex flex-col gap-1">
-            <span className="text-lg font-medium">Postal Code</span>
+          <div>
+            <label className="text-sm font-semibold text-gray-700">Postal Code</label>
             <input
               type="text"
               name="shippingZip"
               value={shippingCustomer?.shippingZip || ""}
               onChange={handleChange}
               placeholder="20000"
-              className="px-4 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-300 focus:outline-none"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/40 focus:outline-none"
             />
-          </label>
+          </div>
 
-          <label className="flex flex-col gap-1 md:col-span-2">
-            <span className="text-lg font-medium">Country</span>
+          <div className="md:col-span-2">
+            <label className="text-sm font-semibold text-gray-700">Country</label>
             <input
               type="text"
+              name="shippingCountry"
               value="Sri Lanka"
               disabled
-              className="px-4 py-2 border-2 border-gray-300 rounded-lg bg-gray-100"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-800"
             />
-          </label>
+          </div>
         </div>
       )}
     </section>
