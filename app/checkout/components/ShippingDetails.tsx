@@ -21,7 +21,7 @@ const ShippingDetails = ({
   };
 
   return (
-    <section className="bg-white rounded-2xl shadow-sm px-6 py-8 mt-6 w-full">
+    <section className="bg-white px-3 md:px-6 py-8 mt-6 w-full">
       <h2 className="text-2xl font-bold text-gray-900 mb-2">
         Shipping Details
       </h2>
