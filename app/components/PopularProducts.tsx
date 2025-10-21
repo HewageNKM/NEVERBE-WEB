@@ -26,7 +26,8 @@ const PopularProducts = ({ hotItems }: { hotItems: Item[] }) => {
         <motion.div
           className="text-center md:text-left"
           initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
           <h2 className="text-3xl font-display md:text-4xl font-bold text-gray-800">
@@ -42,7 +43,7 @@ const PopularProducts = ({ hotItems }: { hotItems: Item[] }) => {
           <Swiper
             modules={[Autoplay, Pagination]}
             spaceBetween={24}
-            slidesPerView={2} // mobile default
+            slidesPerView={2}
             breakpoints={{
               640: { slidesPerView: 2 },
               768: { slidesPerView: 3 },
@@ -63,6 +64,7 @@ const PopularProducts = ({ hotItems }: { hotItems: Item[] }) => {
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
                   transition={{ duration: 0.5, ease: "easeOut" }}
                 >
                   <ItemCard item={item} />

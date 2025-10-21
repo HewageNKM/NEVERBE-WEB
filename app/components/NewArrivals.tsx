@@ -26,6 +26,7 @@ const NewArrivals = ({ arrivals }: { arrivals: Item[] }) => {
         <motion.div
           className="text-center md:text-left"
           initial={{ opacity: 0, y: 20 }}
+          viewport={{ once: true }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
@@ -61,6 +62,7 @@ const NewArrivals = ({ arrivals }: { arrivals: Item[] }) => {
                 className="flex justify-center transition-transform duration-300 hover:scale-105"
               >
                 <motion.div
+                  viewport={{ once: true }}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, ease: "easeOut" }}
