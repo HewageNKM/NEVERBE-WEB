@@ -3,7 +3,7 @@ import { SHIPPING_FLAT_RATE_1, SHIPPING_FLAT_RATE_2 } from "@/constants";
 import { CartItem } from "@/interfaces";
 import { algoliasearch } from "algoliasearch";
 
-export const generateOrderId = (nodeId: string = "A") => {
+export const generateOrderId = (nodeId: string = "W") => {
   const timePart = Date.now().toString(36).toUpperCase().padStart(7, "0");
   const randomPart = Math.random().toString(36).substring(2, 6).toUpperCase();
   return `ORD-${timePart}${nodeId}${randomPart}`;
