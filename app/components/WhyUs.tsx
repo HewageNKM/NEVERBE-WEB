@@ -24,7 +24,7 @@ const itemVariants = {
 const WhyUs = () => {
   return (
     <motion.section 
-      className="w-full bg-gray-50 py-16"
+      className="w-full bg-gray-50 py-8"
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true }}

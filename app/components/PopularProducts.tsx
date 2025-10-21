@@ -20,7 +20,7 @@ const PopularProducts = ({ hotItems }: { hotItems: Item[] }) => {
   }
 
   return (
-    <section className="w-full my-16">
+    <section className="w-full my-8">
       <div className="lg:px-16 px-2 py-4">
         {/* Header */}
         <motion.div

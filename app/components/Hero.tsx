@@ -22,7 +22,7 @@ const Hero = ({ slides }: { slides: Slide[] }) => {
       <ImagesSlider images={slides} />
 
       {/* Collections Slider */}
-      <div className="lg:px-16 px-2 py-4">
+      <div className="lg:px-8 px-2 py-4">
         <div className="flex flex-col gap-6">
           <h3 className="text-gray-800 font-display text-2xl md:text-4xl font-bold tracking-tight text-center md:text-left">
             Explore Our Collection
