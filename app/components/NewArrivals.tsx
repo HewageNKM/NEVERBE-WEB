@@ -1,33 +1,29 @@
 "use client";
+
 import React from "react";
 import { Item } from "@/interfaces";
 import ItemCard from "@/components/ItemCard";
 import EmptyState from "@/components/EmptyState";
 import { motion } from "framer-motion";
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: { 
-    opacity: 1, 
-    transition: { staggerChildren: 0.15, delayChildren: 0.1 } 
-  },
-};
+// Swiper imports
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, Pagination } from "swiper/modules";
 
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { 
-    opacity: 1, 
-    y: 0, 
-    transition: { duration: 0.5, ease: "easeOut" } 
-  },
-};
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/autoplay";
 
 const NewArrivals = ({ arrivals }: { arrivals: Item[] }) => {
+  if (arrivals.length === 0) {
+    return <EmptyState heading="No new arrivals" />;
+  }
+
   return (
     <section className="w-full my-16">
-      <div className="lg:px-24 px-4 w-full">
+      <div className="lg:px-16 px-2 py-4 w-full">
         {/* Header */}
-        <motion.div 
+        <motion.div
           className="text-center md:text-left"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -41,30 +37,42 @@ const NewArrivals = ({ arrivals }: { arrivals: Item[] }) => {
           </h3>
         </motion.div>
 
-        {/* Products */}
+        {/* Swiper Slider */}
         <div className="mt-10">
-          {arrivals.length > 0 ? (
-            <motion.ul 
-              className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
-              variants={containerVariants}
-              initial="hidden"
-              animate="visible"
-            >
-              {arrivals.map((item: Item) => (
-                <motion.li
-                  key={item.itemId}
-                  className="transition-transform duration-300 hover:scale-105"
-                  variants={itemVariants}
+          <Swiper
+            modules={[Autoplay, Pagination]}
+            spaceBetween={24}
+            slidesPerView={2}
+            breakpoints={{
+              640: { slidesPerView: 2 },
+              768: { slidesPerView: 3 },
+              1024: { slidesPerView: 4 },
+            }}
+            autoplay={{ delay: 4000, disableOnInteraction: false }}
+            loop={arrivals.length > 1}
+            pagination={{
+              clickable: true,
+              el: ".custom-pagination",
+            }}
+          >
+            {arrivals.map((item) => (
+              <SwiperSlide
+                key={item.itemId}
+                className="flex justify-center transition-transform duration-300 hover:scale-105"
+              >
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, ease: "easeOut" }}
                 >
                   <ItemCard item={item} />
-                </motion.li>
-              ))}
-            </motion.ul>
-          ) : (
-            <div className="mt-8">
-              <EmptyState heading="No new arrivals" />
-            </div>
-          )}
+                </motion.div>
+              </SwiperSlide>
+            ))}
+
+            {/* Custom Pagination */}
+            <div className="custom-pagination mt-3 mb-2 flex justify-center gap-3"></div>
+          </Swiper>
         </div>
       </div>
     </section>

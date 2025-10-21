@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef } from "react";
+import React from "react";
 import ImagesSlider from "@/app/components/ImagesSlider";
 import Link from "next/link";
 import { Slide } from "@/interfaces";
@@ -22,33 +22,34 @@ const Hero = ({ slides }: { slides: Slide[] }) => {
       <ImagesSlider images={slides} />
 
       {/* Collections Slider */}
-      <div className="px-4 lg:px-8">
+      <div className="lg:px-16 px-2 py-4">
         <div className="flex flex-col gap-6">
-          <h3 className="text-gray-800 font-display text-2xl md:text-4xl font-bold tracking-tight">
+          <h3 className="text-gray-800 font-display text-2xl md:text-4xl font-bold tracking-tight text-center md:text-left">
             Explore Our Collection
           </h3>
 
-          <div className="md:max-w-6xl max-w-full mx-auto px-4">
+          <div className="md:max-w-6xl max-w-full mx-auto px-2 sm:px-4">
             <Swiper
               modules={[Autoplay, Pagination]}
-              spaceBetween={24}
-              slidesPerView={1} 
+              spaceBetween={20}
               centeredSlides={true}
+              slidesPerView={1.4}
               breakpoints={{
-                640: { slidesPerView: 2, centeredSlides: true }, // tablet
-                1024: { slidesPerView: 3, centeredSlides: true }, // desktop
+                640: { slidesPerView: 2, centeredSlides: true },
+                1024: { slidesPerView: 3, centeredSlides: true },
               }}
               autoplay={{ delay: 4000, disableOnInteraction: false }}
               loop={true}
               pagination={{
                 clickable: true,
-                el: ".custom-pagination"
+                el: ".custom-pagination",
               }}
+              className="pb-6"
             >
               {collectionList.map((collection, idx) => (
                 <SwiperSlide
                   key={idx}
-                  className="flex justify-center content-center"
+                  className="flex justify-center items-center"
                 >
                   <CollectionCard
                     url={collection.url}
@@ -57,10 +58,9 @@ const Hero = ({ slides }: { slides: Slide[] }) => {
                   />
                 </SwiperSlide>
               ))}
+
               {/* Custom Pagination Container */}
-              <div
-                className="custom-pagination flex justify-center gap-3 mb-2 mt-4"
-              ></div>
+              <div className="custom-pagination mb-1 flex justify-center gap-3 mt-4"></div>
             </Swiper>
           </div>
 

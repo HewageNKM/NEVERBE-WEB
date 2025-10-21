@@ -23,7 +23,7 @@ const itemVariants = {
 
 const Faq = () => {
   return (
-    <section className="w-full mt-10 lg:px-24 px-2" aria-labelledby="faq-section">
+    <section className="w-full mt-10 lg:px-16 px-2 py-4" aria-labelledby="faq-section">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
