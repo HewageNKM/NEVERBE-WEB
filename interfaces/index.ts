@@ -126,6 +126,7 @@ export interface Order {
     paymentStatus: string,
     paymentMethod: string,
     customer: Customer,
+    status:string,
     discount: number,
     fee?: number,
     shippingFee?: number,

@@ -30,7 +30,7 @@ const WhyUs = () => {
       viewport={{ once: true }}
       variants={containerVariants}
     >
-      <div className="max-w-6xl mx-auto px-4 lg:px-24 space-y-8">
+      <div className="max-w-6xl mx-auto lg:px-16 px-2 py-4 space-y-8">
         {/* Header */}
         <motion.header 
           className="text-center space-y-2"

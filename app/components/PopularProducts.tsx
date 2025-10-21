@@ -1,36 +1,33 @@
 "use client";
+
 import React from "react";
+import { Item } from "@/interfaces";
 import ItemCard from "@/components/ItemCard";
 import EmptyState from "@/components/EmptyState";
-import { Item } from "@/interfaces";
 import { motion } from "framer-motion";
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: { 
-    opacity: 1, 
-    transition: { staggerChildren: 0.15, delayChildren: 0.1 } 
-  },
-};
+// Swiper imports
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, Pagination } from "swiper/modules";
 
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { 
-    opacity: 1, 
-    y: 0, 
-    transition: { duration: 0.5, ease: "easeOut" } 
-  },
-};
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/autoplay";
 
 const PopularProducts = ({ hotItems }: { hotItems: Item[] }) => {
+  if (hotItems.length === 0) {
+    return <EmptyState heading="No hot products available!" />;
+  }
+
   return (
     <section className="w-full my-16">
-      <div className="lg:px-24 px-4 py-8">
+      <div className="lg:px-16 px-2 py-4">
         {/* Header */}
-        <motion.div 
+        <motion.div
           className="text-center md:text-left"
           initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
           <h2 className="text-3xl font-display md:text-4xl font-bold text-gray-800">
@@ -41,28 +38,43 @@ const PopularProducts = ({ hotItems }: { hotItems: Item[] }) => {
           </h3>
         </motion.div>
 
-        {/* Products List */}
-        <div className="mt-10 flex justify-center">
-          {hotItems.length > 0 ? (
-            <motion.ul 
-              className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 w-full"
-              variants={containerVariants}
-              initial="hidden"
-              animate="visible"
-            >
-              {hotItems.map((item: Item) => (
-                <motion.li
-                  key={item.itemId}
-                  className="transition-transform duration-300 hover:scale-105"
-                  variants={itemVariants}
+        {/* Swiper Slider */}
+        <div className="mt-10">
+          <Swiper
+            modules={[Autoplay, Pagination]}
+            spaceBetween={24}
+            slidesPerView={2}
+            breakpoints={{
+              640: { slidesPerView: 2 },
+              768: { slidesPerView: 3 },
+              1024: { slidesPerView: 4 },
+            }}
+            autoplay={{ delay: 4000, disableOnInteraction: false }}
+            loop={hotItems.length > 1}
+            pagination={{
+              clickable: true,
+              el: ".custom-pagination",
+            }}
+          >
+            {hotItems.map((item) => (
+              <SwiperSlide
+                key={item.itemId}
+                className="flex justify-center transition-transform duration-300 hover:scale-105"
+              >
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, ease: "easeOut" }}
                 >
                   <ItemCard item={item} />
-                </motion.li>
-              ))}
-            </motion.ul>
-          ) : (
-            <EmptyState heading="No hot products available!" />
-          )}
+                </motion.div>
+              </SwiperSlide>
+            ))}
+
+            {/* Custom Pagination */}
+            <div className="custom-pagination mt-3 mb-2 flex justify-center gap-3"></div>
+          </Swiper>
         </div>
       </div>
     </section>

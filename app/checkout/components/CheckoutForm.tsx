@@ -205,6 +205,7 @@ const CheckoutForm = () => {
         fee: 0,
         shippingFee: calculateShippingCost(cartItems),
         paymentStatus: "Pending",
+        status:"Processing",
         from: "Website",
         discount,
         createdAt: new Date().toISOString(),
