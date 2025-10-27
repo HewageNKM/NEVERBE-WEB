@@ -7,6 +7,7 @@ interface PaymentOptionsProps {
   paymentType: string;
   setPaymentType: React.Dispatch<React.SetStateAction<string>>;
   setPaymentTypeId: React.Dispatch<React.SetStateAction<string>>;
+  setPaymentFee: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const PaymentOptions: React.FC<PaymentOptionsProps> = ({
@@ -14,10 +15,12 @@ const PaymentOptions: React.FC<PaymentOptionsProps> = ({
   paymentType,
   setPaymentType,
   setPaymentTypeId,
+  setPaymentFee
 }) => {
   const handleSelect = (option: PaymentMethod) => {
     setPaymentType(option.name);
     setPaymentTypeId(option.paymentId);
+    setPaymentFee(option.fee);
   };
 
   return (
