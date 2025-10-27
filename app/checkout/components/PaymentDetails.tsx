@@ -19,12 +19,14 @@ interface PaymentDetailsProps {
   paymentType: string;
   setPaymentType: React.Dispatch<React.SetStateAction<string>>;
   setPaymentTypeId: React.Dispatch<React.SetStateAction<string>>;
+  setPaymentFee: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const PaymentDetails: React.FC<PaymentDetailsProps> = ({
   paymentType,
   setPaymentType,
   setPaymentTypeId,
+  setPaymentFee,
 }) => {
   const cartItems = useSelector((state: RootState) => state.cartSlice.cart);
   const [paymentOptions, setPaymentOptions] = useState<PaymentMethod[]>([]);
@@ -39,6 +41,7 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
         if (methods.length > 0 && !paymentType) {
           setPaymentType(methods[0].name || "");
           setPaymentTypeId(methods[0].paymentId || "");
+          setPaymentFee(methods[0].fee || 0);
         }
       } catch (e) {
         console.error("Failed to fetch payment methods:", e);
@@ -120,6 +123,7 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
             paymentType={paymentType}
             setPaymentType={setPaymentType}
             setPaymentTypeId={setPaymentTypeId}
+            setPaymentFee={setPaymentFee}
           />
         )}
       </div>

@@ -11,6 +11,7 @@ import {
   calculateShippingCost,
   calculateSubTotal,
   calculateTotalDiscount,
+  calculateTransactionFeeCharge,
   generateOrderId,
 } from "@/util";
 import {
@@ -57,6 +58,7 @@ const CheckoutForm = () => {
     useState<Partial<Customer> | null>(null);
   const [paymentType, setPaymentType] = useState<string | null>(null);
   const [paymentTypeId, setPaymentTypeId] = useState<string | null>(null);
+  const [paymentFee, setPaymentFee] = useState(0);
   const [saveAddress, setSaveAddress] = useState(true);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -68,9 +70,6 @@ const CheckoutForm = () => {
   const [pendingOrder, setPendingOrder] = useState<Order | null>(null);
   const [resendCooldown, setResendCooldown] = useState(0);
 
-  const [showPaymentWarning, setShowPaymentWarning] = useState(false);
-
-  const PHONE_NUMBER_REGEX = /^07\d{8}$/;
 
   const { executeRecaptcha } = useGoogleReCaptcha();
 
@@ -145,7 +144,6 @@ const CheckoutForm = () => {
       toast.error(err.message || "Invalid OTP");
     } finally {
       setIsVerifyingOtp(false);
-      setShowPaymentWarning(false);
     }
   };
 
@@ -157,7 +155,6 @@ const CheckoutForm = () => {
     if (!paymentType) return toast.error("Select payment method");
 
     setIsSubmitting(true);
-    setShowPaymentWarning(true);
 
     const form = evt.currentTarget;
     const orderId = generateOrderId();
@@ -174,6 +171,7 @@ const CheckoutForm = () => {
       const userId = user?.uid || (await signUser())?.uid;
       const amount = calculateSubTotal(cartItems);
       const discount = calculateTotalDiscount(cartItems);
+      const transactionFeeCharge = calculateTransactionFeeCharge(cartItems,paymentFee)
 
       const orderCustomer: Customer = {
         ...newBilling,
@@ -204,6 +202,7 @@ const CheckoutForm = () => {
         paymentMethodId: paymentTypeId,
         fee: 0,
         shippingFee: calculateShippingCost(cartItems),
+        transactionFeeCharge,
         paymentStatus: "Pending",
         status:"Processing",
         from: "Website",
@@ -242,7 +241,6 @@ const CheckoutForm = () => {
       router.replace(`/checkout/fail?orderId=${orderId}`);
     } finally {
       setIsSubmitting(false);
-      setShowPaymentWarning(false);
     }
   };
 
@@ -356,6 +354,7 @@ const CheckoutForm = () => {
           setPaymentType={setPaymentType}
           paymentType={paymentType || ""}
           setPaymentTypeId={setPaymentTypeId}
+          setPaymentFee={setPaymentFee}
         />
       </form>
 
