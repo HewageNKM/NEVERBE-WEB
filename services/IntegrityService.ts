@@ -3,17 +3,15 @@ import crypto from "crypto";
 import { FieldValue } from "firebase-admin/firestore";
 import stringify from "json-stable-stringify";
 
+const HASH_SECRET = process.env.HASH_SECRET;
+
 const generateDocumentHash = (docData:any) => {
-  // 1. Create a copy of the data
   const dataToHash = { ...docData };
-
-  // 3. Create the canonical string (keys are sorted alphabetically)
   const canonicalString = stringify(dataToHash);
-
-  // 4. Generate the hash
+  const hashString = `${canonicalString}${HASH_SECRET}`
   const hash = crypto
     .createHash("sha256")
-    .update(canonicalString)
+    .update(hashString)
     .digest("hex");
 
   return hash;
@@ -21,12 +19,9 @@ const generateDocumentHash = (docData:any) => {
 
 export const updateOrAddOrderHash = async (data:any) => {
   try {
-    // 1. Generate the hash using the global helper
     const hashValue = generateDocumentHash(data);
-    // 2. Use the standard naming convention: {collection}_{docId}
-    const ledgerId = `hash_${data.orderId}`; // Assuming data has an orderId
+    const ledgerId = `hash_${data.orderId}`;
     
-    // 3. Save to the ledger
     await adminFirestore.collection('hash_ledger').doc(ledgerId).set({
       id: ledgerId,
       hashValue: hashValue,
