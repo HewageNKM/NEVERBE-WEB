@@ -89,14 +89,20 @@ export const getRecentItems = async () => {
 export const getHotProducts = async () => {
   try {
     console.log("Calculating hot products based on order counts.");
-    const ordersSnapshot = await adminFirestore.collection("orders").get();
+    const ordersSnapshot = await adminFirestore.collection("orders").limit(100).get();
     const itemCount: Record<string, number> = {};
 
     ordersSnapshot.forEach((doc) => {
       const order = doc.data();
-      order.items.forEach((item) => {
-        itemCount[item.itemId] = (itemCount[item.itemId] || 0) + 1;
-      });
+      if (Array.isArray(order.items)) {
+        order.items.forEach((item) => {
+          if (item?.itemId) {
+            itemCount[item.itemId] = (itemCount[item.itemId] || 0) + 1;
+          }
+        });
+      } else {
+        console.warn(`Order ${doc.id} has no valid items array`);
+      }
     });
 
     const sortedItems = Object.entries(itemCount)
@@ -298,7 +304,6 @@ export const getSimilarItems = async (itemId: string) => {
     throw e;
   }
 };
-
 
 export const getBrandsFromInventory = async () => {
   try {
