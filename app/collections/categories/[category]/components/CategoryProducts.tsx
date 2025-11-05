@@ -40,7 +40,7 @@ const CategoryProducts = ({
 
   useEffect(() => {
     fetchProducts();
-  }, [page, size, selectedSort, selectedBrands, inStock]);
+  }, [page, size, selectedBrands, inStock]);
 
   const fetchProducts = async () => {
     try {

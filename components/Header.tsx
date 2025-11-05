@@ -100,7 +100,7 @@ const Header = ({
 
         {/* ---------- CENTER: NAVIGATION ---------- */}
         <nav className="hidden lg:block relative">
-          <ul className="flex gap-6 text-white text-sm font-medium uppercase tracking-wide">
+          <ul className="flex gap-5 text-white text-sm font-medium uppercase tracking-wide">
             <li key={1}>
               <Link
                 href="/"
@@ -181,6 +181,14 @@ const Header = ({
                   </motion.ul>
                 )}
               </AnimatePresence>
+            </li>
+            <li key={4}>
+              <Link
+                className="hover:text-primary-100 transition-colors"
+                href="/collections/deals"
+              >
+                Deals
+              </Link>
             </li>
           </ul>
         </nav>

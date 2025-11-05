@@ -18,7 +18,7 @@ const initialState: BrandSlice = {
   inStock: false,
   showFilter: false,
   selectedCategories: [],
-  selectedSort: "",
+  selectedSort: "NO SELCT",
 };
 
 const brandSlice = createSlice({

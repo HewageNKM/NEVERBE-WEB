@@ -20,7 +20,7 @@ const initialState: ProductsSlice = {
   products: [],
   showFilter: false,
   inStock: false,
-  selectedSort: "",
+  selectedSort: "NO SELCT",
 };
 
 const productsSlice = createSlice({
@@ -46,23 +46,6 @@ const productsSlice = createSlice({
     },
     setSelectedSort: (state, action) => {
       state.selectedSort = action.payload;
-      if (state.selectedSort != "") {
-        if (state.selectedSort === "lh") {
-          state.products = state.products.sort(
-            (a, b) => a.sellingPrice - b.sellingPrice
-          );
-        } else if (state.selectedSort === "hl") {
-          state.products = state.products.sort(
-            (a, b) => b.sellingPrice - a.sellingPrice
-          );
-        } else if (state.selectedSort == "") {
-          state.products = action.payload;
-        } else {
-          state.products = action.payload;
-        }
-      } else {
-        state.products = action.payload;
-      }
     },
     setProducts: (state, action) => {
       state.products = action.payload;
@@ -74,23 +57,7 @@ const productsSlice = createSlice({
       state.size = action.payload;
     },
     sort: (state, action) => {
-      if (state.selectedSort != "") {
-        if (state.selectedSort === "lh") {
-          state.products = state.products.sort(
-            (a, b) => a.sellingPrice - b.sellingPrice
-          );
-        } else if (state.selectedSort === "hl") {
-          state.products = state.products.sort(
-            (a, b) => b.sellingPrice - a.sellingPrice
-          );
-        } else if (state.selectedSort == "") {
-          state.products = action.payload;
-        } else {
-          state.products = action.payload;
-        }
-      } else {
-        state.products = action.payload;
-      }
+      state.products = action.payload;
     },
   },
 });

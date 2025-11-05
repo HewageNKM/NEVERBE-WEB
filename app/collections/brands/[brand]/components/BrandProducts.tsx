@@ -56,7 +56,7 @@ const BrandProducts = ({
 
   useEffect(() => {
     fetchProducts();
-  }, [dispatch, page, size, selectedSort, selectedCategories, inStock]);
+  }, [dispatch, page, size, selectedCategories, inStock]);
 
   const fetchProducts = async () => {
     try {

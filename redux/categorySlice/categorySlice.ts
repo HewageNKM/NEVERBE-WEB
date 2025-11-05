@@ -19,7 +19,7 @@ const initialState: CategoryFilterState = {
   products: [],
   page: 1,
   size: 10,
-  selectedSort: "",
+  selectedSort: "NO SELCT",
 };
 
 export const categorySlice = createSlice({

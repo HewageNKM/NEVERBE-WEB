@@ -60,7 +60,6 @@ export const getProducts = async (
   }
 };
 
-
 export const getRecentItems = async () => {
   console.log("Fetching recent inventory items.");
   const docs = await adminFirestore
@@ -205,7 +204,6 @@ export const getProductsByCategory = async (
 
     console.log("Total products fetched:", products.length);
 
-
     return {
       total,
       dataList: products,
@@ -277,7 +275,57 @@ export const getProductsByBrand = async (
     throw error;
   }
 };
+export const getDealsProducts = async (
+  page: number = 1,
+  size: number = 10,
+  tags?: string[],
+  inStock?: boolean
+) => {
+  try {
+    console.log(`Fetching deals products`);
+    const offset = (page - 1) * size;
 
+    let query = adminFirestore
+      .collection("products")
+      .where("isDeleted", "==", false)
+      .where("status", "==", true)
+      .where("listing", "==", true)
+      .where("discount", ">", 0);
+
+    if (tags && tags.length > 0) {
+      query = query.where("tags", "array-contains-any", tags);
+    }
+
+    if (typeof inStock === "boolean") {
+      query = query.where("inStock", "==", inStock);
+    }
+
+    const total = (await query.get()).size;
+
+    const snapshot = await query.offset(offset).limit(size).get();
+
+    const products: Product[] = snapshot.docs
+      .map((doc) => {
+        const product = doc.data() as Product;
+        return {
+          ...product,
+          createdAt: null,
+          updatedAt: null,
+        };
+      })
+      .filter((p) => (p.variants?.length ?? 0) > 0);
+
+    console.log("Total deals products fetched:", products.length);
+
+    return {
+      total,
+      dataList: products,
+    };
+  } catch (error) {
+    console.error("Error fetching products by tag:", error);
+    throw error;
+  }
+};
 export const getProductStock = async (
   productId: string,
   variantId: string,

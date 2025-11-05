@@ -7,117 +7,99 @@ import { AppDispatch, RootState } from "@/redux/store";
 import ItemCard from "@/components/ItemCard";
 import EmptyState from "@/components/EmptyState";
 import ComponentLoader from "@/components/ComponentLoader";
-import ProductsFilter from "@/app/collections/products/components/ProductsFilter";
-import { IoFilter, IoCheckmark } from "react-icons/io5";
+import DealsFilter from "./DealsFilter";
 import { FiFilter } from "react-icons/fi";
+import { IoFilter, IoCheckmark } from "react-icons/io5";
 import {
+  setDeals,
   setPage,
-  setProducts,
   setSelectedSort,
   toggleFilter,
-} from "@/redux/productsSlice/productsSlice";
-import { sortingOptions } from "@/constants";
+} from "@/redux/dealsSlice/dealsSlice";
 import axios from "axios";
+import { sortingOptions } from "@/constants";
 import { Product } from "@/interfaces/Product";
 
-const Products = ({ items }: { items: Product[]}) => {
+const DealsProducts = ({ items }: { items: Product[] }) => {
   const dispatch: AppDispatch = useDispatch();
   const {
-    products,
+    deals,
     page,
     size,
     selectedBrands,
     selectedCategories,
     inStock,
     selectedSort,
-  } = useSelector((state: RootState) => state.productsSlice);
+  } = useSelector((state: RootState) => state.dealsSlice);
 
+  const [isLoading, setIsLoading] = useState(false);
+  const [totalDeals, setTotalDeals] = useState(0);
   const [openSort, setOpenSort] = useState(false);
   const sortRef = useRef<HTMLDivElement>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [totalProduct, setTotalProduct] = useState(0);
 
   useEffect(() => {
-    dispatch(setProducts(items));
-  }, [dispatch, items]);
+    dispatch(setDeals(items));
+  }, [items, dispatch]);
 
   useEffect(() => {
-    fetchProducts();
-  }, [dispatch, page, size, selectedBrands, selectedCategories, inStock]);
+    fetchDeals();
+  }, [page, size, selectedBrands, selectedCategories, inStock]);
 
-  const fetchProducts = async () => {
+  const fetchDeals = async () => {
     try {
       setIsLoading(true);
       const params: Record<string, any> = {
         page,
         size,
+        sort: selectedSort,
       };
+
       const queryParts: string[] = [];
 
       Object.entries(params).forEach(([key, value]) => {
-        if (value !== undefined && value !== null) {
-          queryParts.push(
-            `${encodeURIComponent(key)}=${encodeURIComponent(value)}`
-          );
-        }
+        if (value) queryParts.push(`${key}=${value}`);
       });
 
-      if (inStock) {
-        queryParts.push("inStock=true");
-      }
+      if (inStock) queryParts.push("inStock=true");
 
-      if (selectedBrands?.length) {
-        selectedBrands.forEach((brand: string) => {
-          queryParts.push(`tag=${encodeURIComponent(brand)}`);
-        });
-      }
-
-      if (selectedCategories?.length) {
-        selectedCategories.forEach((cat: string) => {
-          queryParts.push(`tag=${encodeURIComponent(cat)}`);
-        });
-      }
+      selectedBrands.forEach((b) => queryParts.push(`tag=${b}`));
+      selectedCategories.forEach((c) => queryParts.push(`tag=${c}`));
 
       const queryString = queryParts.join("&");
+      const response = await axios.get(`/api/v1/products/deals?${queryString}`);
 
-      const response = await axios.get(`/api/v1/products?${queryString}`);
-      dispatch(setProducts(response.data.dataList));
-      setTotalProduct(response.data.total);
+      dispatch(setDeals(response.data.dataList));
+      setTotalDeals(response.data.total);
     } catch (error) {
-      console.error("Error fetching products:", error);
+      console.error("Error fetching deals:", error);
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Close dropdown on outside click
+  // Close dropdown when clicking outside
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (sortRef.current && !sortRef.current.contains(event.target as Node)) {
+    const handler = (e: MouseEvent) => {
+      if (sortRef.current && !sortRef.current.contains(e.target as Node)) {
         setOpenSort(false);
       }
     };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
   }, []);
 
   return (
-    <section className="w-full flex flex-col lg:flex-row gap-6 pt-5 lg:justify-between">
-      {/* --- Desktop Filters --- */}
+    <section className="w-full flex flex-col lg:flex-row gap-6 pt-5">
       <aside className="hidden lg:block w-[22%]">
-        <ProductsFilter />
+        <DealsFilter />
       </aside>
 
-      {/* --- Products Section --- */}
       <div className="flex-1 relative">
-        {/* Toolbar */}
         <motion.div
-          initial={{ opacity: 0, y: -15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
           className="sticky top-0 z-20 flex justify-between items-center mb-6 bg-white/80 backdrop-blur-sm p-4 rounded-lg shadow-sm"
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
         >
-          {/* Mobile Filter Button */}
           <div className="lg:hidden">
             <button
               onClick={() => dispatch(toggleFilter())}
@@ -166,58 +148,37 @@ const Products = ({ items }: { items: Product[]}) => {
           </div>
         </motion.div>
 
-        {/* --- Products Grid --- */}
         {isLoading ? (
           <ComponentLoader />
-        ) : products.length === 0 ? (
-          <EmptyState heading="Products Not Available!" />
+        ) : deals.length === 0 ? (
+          <EmptyState heading="No deals available!" />
         ) : (
           <motion.ul
-            key={page} // triggers animation on page change
-            initial="hidden"
-            animate="visible"
-            variants={{
-              hidden: { opacity: 0, y: 15 },
-              visible: {
-                opacity: 1,
-                y: 0,
-                transition: { staggerChildren: 0.05, duration: 0.4 },
-              },
-            }}
-            className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-4 items-center justify-center content-center"
+            key={page}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6"
           >
-            {products?.map((item) => (
-              <motion.li
-                key={item.id}
-                variants={{
-                  hidden: { opacity: 0, y: 20 },
-                  visible: { opacity: 1, y: 0 },
-                }}
-                className="group"
-              >
+            {deals.map((item) => (
+              <motion.li key={item.id}>
                 <ItemCard item={item} />
               </motion.li>
             ))}
           </motion.ul>
         )}
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          className="flex justify-center mt-10"
-        >
+        <div className="flex justify-center mt-10">
           <Pagination
-            count={totalProduct / size}
+            count={Math.ceil(totalDeals / size)}
             page={page}
             variant="outlined"
             shape="rounded"
-            onChange={(event, value) => dispatch(setPage(value))}
+            onChange={(e, v) => dispatch(setPage(v))}
           />
-        </motion.div>
+        </div>
       </div>
     </section>
   );
 };
 
-export default Products;
+export default DealsProducts;
