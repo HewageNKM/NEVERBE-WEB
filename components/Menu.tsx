@@ -154,6 +154,7 @@ const Menu = () => {
           {[
             { name: "Home", href: "/" },
             { name: "Shop", href: "/collections/products" },
+            { name: "Deals", href: "/collections/deals" },
           ].map((link) => (
             <Link
               key={link.href}
