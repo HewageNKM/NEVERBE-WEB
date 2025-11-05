@@ -1,24 +1,10 @@
 import { NextResponse } from "next/server";
 
-const PRODUCTION_ALLOWED_ORIGINS = [
-  "https://neverbe.lk",
-  "https://www.neverbe.lk",
-];
-
-const DEVELOPMENT_ALLOWED_ORIGINS = [
-  "http://localhost:3000",
-  "https://dev.neverbe.lk",
-  "https://www.dev.neverbe.lk",
-];
+const ALLOWED_ORIGINS = ["https://neverbe.lk", "https://www.neverbe.lk"];
 
 export function middleware(req: Request) {
   const origin = req.headers.get("origin");
   const url = new URL(req.url);
-
-  const allowedOrigins =
-    process.env.NODE_ENV === "production"
-      ? PRODUCTION_ALLOWED_ORIGINS
-      : [...PRODUCTION_ALLOWED_ORIGINS, ...DEVELOPMENT_ALLOWED_ORIGINS];
 
   // Allow same-origin (no Origin header)
   if (!origin) {
@@ -36,7 +22,7 @@ export function middleware(req: Request) {
   }
 
   // Check against allowed origins
-  if (allowedOrigins.includes(origin)) {
+  if (ALLOWED_ORIGINS.includes(origin)) {
     console.log(`Allowed: Cross-origin request from ${origin}`);
     const res = NextResponse.next();
     res.headers.set("Access-Control-Allow-Origin", origin);

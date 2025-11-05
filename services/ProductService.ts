@@ -12,7 +12,7 @@ export const getProducts = async (
   inStock?: boolean,
   page: number = 1,
   size: number = 20
-): Promise<Product[]> => {
+): Promise<{ total: number; dataList: Product[] }> => {
   try {
     let query: FirebaseFirestore.Query = adminFirestore
       .collection("products")
@@ -20,26 +20,22 @@ export const getProducts = async (
       .where("status", "==", true)
       .where("listing", "==", true);
 
-    // 🔹 Calculate offset
     const offset = (page - 1) * size;
 
-    // 🔹 Filter by tags
     if (tags && tags.length > 0) {
       query = query.where("tags", "array-contains-any", tags);
     }
 
-    // 🔹 Filter by stock availability
     if (typeof inStock === "boolean") {
       query = query.where("inStock", "==", inStock);
     }
 
-    // 🔹 Apply offset and limit
+    const total = (await query.get()).size;
+
     query = query.offset(offset).limit(size);
 
-    // 🔹 Fetch documents
     const snapshot = await query.get();
 
-    // 🔹 Transform & filter variants
     const products: Product[] = snapshot.docs
       .map((doc) => {
         const product = {
@@ -53,14 +49,11 @@ export const getProducts = async (
             variant.status === true && variant.isDeleted === false
         );
 
-        return {
-          ...(product as Product),
-          variants: filteredVariants,
-        };
+        return { ...product, variants: filteredVariants };
       })
       .filter((p) => (p.variants?.length ?? 0) > 0);
 
-    return products;
+    return { total, dataList: products };
   } catch (error) {
     console.error("Error fetching products:", error);
     throw error;
@@ -175,24 +168,26 @@ export const getProductsByCategory = async (
   try {
     console.log(`Fetching products by category: ${category}`);
     const offset = (page - 1) * size;
-    const query = adminFirestore
+
+    let query = adminFirestore
       .collection("products")
       .where("category", "==", capitalizeWords(category))
       .where("isDeleted", "==", false)
       .where("status", "==", true)
       .where("listing", "==", true);
 
+    // ✅ Apply filters by reassigning query
     if (tags && tags.length > 0) {
-      query.where("tags", "array-contains-any", tags);
+      query = query.where("tags", "array-contains-any", tags);
     }
 
     if (typeof inStock === "boolean") {
-      query.where("inStock", "==", inStock);
+      query = query.where("inStock", "==", inStock);
     }
 
-    query.offset(offset).limit(size);
-
     const total = (await query.get()).size;
+
+    query = query.offset(offset).limit(size);
 
     const snapshot = await query.get();
 
@@ -200,7 +195,7 @@ export const getProductsByCategory = async (
       .map((doc) => {
         const product = doc.data() as Product;
         return {
-          ...(product as Product),
+          ...product,
           createdAt: null,
           updatedAt: null,
         };
@@ -208,12 +203,13 @@ export const getProductsByCategory = async (
       .filter((p) => (p.variants?.length ?? 0) > 0);
 
     console.log("Total products fetched:", products.length);
+
     return {
-      total: total,
+      total,
       dataList: products,
     };
   } catch (error) {
-    console.log(error);
+    console.error("Error fetching products:", error);
     throw error;
   }
 };
@@ -279,7 +275,57 @@ export const getProductsByBrand = async (
     throw error;
   }
 };
+export const getDealsProducts = async (
+  page: number = 1,
+  size: number = 10,
+  tags?: string[],
+  inStock?: boolean
+) => {
+  try {
+    console.log(`Fetching deals products`);
+    const offset = (page - 1) * size;
 
+    let query = adminFirestore
+      .collection("products")
+      .where("isDeleted", "==", false)
+      .where("status", "==", true)
+      .where("listing", "==", true)
+      .where("discount", ">", 0);
+
+    if (tags && tags.length > 0) {
+      query = query.where("tags", "array-contains-any", tags);
+    }
+
+    if (typeof inStock === "boolean") {
+      query = query.where("inStock", "==", inStock);
+    }
+
+    const total = (await query.get()).size;
+
+    const snapshot = await query.offset(offset).limit(size).get();
+
+    const products: Product[] = snapshot.docs
+      .map((doc) => {
+        const product = doc.data() as Product;
+        return {
+          ...product,
+          createdAt: null,
+          updatedAt: null,
+        };
+      })
+      .filter((p) => (p.variants?.length ?? 0) > 0);
+
+    console.log("Total deals products fetched:", products.length);
+
+    return {
+      total,
+      dataList: products,
+    };
+  } catch (error) {
+    console.error("Error fetching products by tag:", error);
+    throw error;
+  }
+};
 export const getProductStock = async (
   productId: string,
   variantId: string,

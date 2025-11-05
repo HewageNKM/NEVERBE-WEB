@@ -1,7 +1,6 @@
-import { getProducts } from "@/services/ProductService";
+import { getDealsProducts } from "@/services/ProductService";
 import { NextRequest, NextResponse } from "next/server";
 
-// ✅ GET handler
 export const GET = async (req: NextRequest) => {
   try {
     const url = new URL(req.url);
@@ -14,7 +13,7 @@ export const GET = async (req: NextRequest) => {
     const inStock =
       inStockParam === "true" ? true : inStockParam === "false" ? false : undefined;
 
-    const products = await getProducts(tags, inStock, page, size);
+    const products = await getDealsProducts(page, size, tags, inStock);
 
     return NextResponse.json(products, { status: 200 });
   } catch (error: any) {

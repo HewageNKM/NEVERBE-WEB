@@ -32,6 +32,7 @@ const CategoryProducts = ({
   const [openSort, setOpenSort] = useState(false);
   const sortRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [totalProducts, setTotalProducts] = useState(0);
 
   useEffect(() => {
     dispatch(setProducts(items));
@@ -39,7 +40,7 @@ const CategoryProducts = ({
 
   useEffect(() => {
     fetchProducts();
-  }, [page, size, selectedSort, selectedBrands, inStock]);
+  }, [page, size, selectedBrands, inStock]);
 
   const fetchProducts = async () => {
     try {
@@ -56,11 +57,41 @@ const CategoryProducts = ({
       );
       const data = await res.json();
       dispatch(setProducts(data.dataList));
+      setTotalProducts(data.total);
     } catch (err) {
       console.error("Error fetching category products:", err);
     } finally {
       setIsLoading(false);
     }
+  };
+
+  useEffect(() => {
+    sortProducts();
+  }, [selectedSort]);
+
+  const sortProducts = () => {
+    if (!products || products.length === 0) return [];
+    let sortedProducts = [...products];
+    setIsLoading(true);
+    switch (selectedSort) {
+      case "LOW TO HIGH":
+        sortedProducts.sort(
+          (a, b) => (a.sellingPrice || 0) - (b.sellingPrice || 0)
+        );
+        break;
+
+      case "HIGH TO LOW":
+        sortedProducts.sort(
+          (a, b) => (b.sellingPrice || 0) - (a.sellingPrice || 0)
+        );
+        break;
+
+      default:
+        sortedProducts = [...products];
+        break;
+    }
+    setProducts(sortedProducts);
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -98,7 +129,7 @@ const CategoryProducts = ({
               className="flex items-center gap-2 text-gray-700 px-4 py-2 border rounded-lg hover:bg-gray-100 transition"
             >
               <IoFilter />
-              <span>Sort by: {selectedSort}</span>
+              <span>Sort by: {selectedSort.toUpperCase()}</span>
             </button>
 
             <AnimatePresence>
@@ -152,9 +183,10 @@ const CategoryProducts = ({
           className="flex justify-center mt-10"
         >
           <Pagination
-            count={5}
             variant="outlined"
             shape="rounded"
+            page={page}
+            count={Math.ceil(totalProducts / size)}
             onChange={(event, value) => dispatch(setPage(value))}
           />
         </motion.div>

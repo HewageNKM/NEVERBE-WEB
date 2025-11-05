@@ -117,15 +117,15 @@ export const seoKeywords: string[] = [
 export const sortingOptions = [
   {
     name: "Not Selected",
-    value: "",
+    value: "NO SELCT",
   },
   {
     name: "Price: Low to High",
-    value: "lh",
+    value: "LOW TO HIGH",
   },
   {
     name: "Price: High to Low",
-    value: "hl",
+    value: "HIGH TO LOW",
   },
 ];
 export const productTypes = [
