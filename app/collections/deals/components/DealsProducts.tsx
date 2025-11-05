@@ -11,7 +11,6 @@ import DealsFilter from "./DealsFilter";
 import { FiFilter } from "react-icons/fi";
 import { IoFilter, IoCheckmark } from "react-icons/io5";
 import {
-  setDeals,
   setPage,
   setSelectedSort,
   toggleFilter,
@@ -23,7 +22,6 @@ import { Product } from "@/interfaces/Product";
 const DealsProducts = ({ items }: { items: Product[] }) => {
   const dispatch: AppDispatch = useDispatch();
   const {
-    deals,
     page,
     size,
     selectedBrands,
@@ -33,12 +31,13 @@ const DealsProducts = ({ items }: { items: Product[] }) => {
   } = useSelector((state: RootState) => state.dealsSlice);
 
   const [isLoading, setIsLoading] = useState(false);
-  const [totalDeals, setTotalDeals] = useState(0);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [totalProducts, setTotalProducts] = useState(0);
   const [openSort, setOpenSort] = useState(false);
   const sortRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    dispatch(setDeals(items));
+    setProducts(items);
   }, [items, dispatch]);
 
   useEffect(() => {
@@ -68,15 +67,42 @@ const DealsProducts = ({ items }: { items: Product[] }) => {
       const queryString = queryParts.join("&");
       const response = await axios.get(`/api/v1/products/deals?${queryString}`);
 
-      dispatch(setDeals(response.data.dataList));
-      setTotalDeals(response.data.total);
+      setProducts(response.data.dataList);
+      setTotalProducts(response.data.total);
     } catch (error) {
       console.error("Error fetching deals:", error);
     } finally {
       setIsLoading(false);
     }
   };
+  useEffect(() => {
+    sortProducts();
+  }, [selectedSort]);
 
+  const sortProducts = () => {
+    if (!products || products.length === 0) return [];
+    let sortedProducts = [...products];
+    setIsLoading(true);
+    switch (selectedSort) {
+      case "LOW TO HIGH":
+        sortedProducts.sort(
+          (a, b) => (a.sellingPrice || 0) - (b.sellingPrice || 0)
+        );
+        break;
+
+      case "HIGH TO LOW":
+        sortedProducts.sort(
+          (a, b) => (b.sellingPrice || 0) - (a.sellingPrice || 0)
+        );
+        break;
+
+      default:
+        sortedProducts = [...products];
+        break;
+    }
+    setProducts(sortedProducts);
+    setIsLoading(false);
+  };
   // Close dropdown when clicking outside
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -150,7 +176,7 @@ const DealsProducts = ({ items }: { items: Product[] }) => {
 
         {isLoading ? (
           <ComponentLoader />
-        ) : deals.length === 0 ? (
+        ) : products.length === 0 ? (
           <EmptyState heading="No deals available!" />
         ) : (
           <motion.ul
@@ -159,7 +185,7 @@ const DealsProducts = ({ items }: { items: Product[] }) => {
             animate={{ opacity: 1, y: 0 }}
             className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6"
           >
-            {deals.map((item) => (
+            {products.map((item) => (
               <motion.li key={item.id}>
                 <ItemCard item={item} />
               </motion.li>
@@ -169,7 +195,7 @@ const DealsProducts = ({ items }: { items: Product[] }) => {
 
         <div className="flex justify-center mt-10">
           <Pagination
-            count={Math.ceil(totalDeals / size)}
+            count={Math.ceil(totalProducts / size)}
             page={page}
             variant="outlined"
             shape="rounded"

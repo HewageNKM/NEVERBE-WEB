@@ -48,7 +48,7 @@ const BrandProducts = ({
   const [openSort, setOpenSort] = useState(false);
   const sortRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [totalProducts, setTotalProducts] = useState(0)
+  const [totalProducts, setTotalProducts] = useState(0);
 
   useEffect(() => {
     dispatch(setProducts(items));
@@ -90,7 +90,7 @@ const BrandProducts = ({
       );
       const data = await response.json();
       dispatch(setProducts(data.dataList));
-      setTotalProducts(data.total)
+      setTotalProducts(data.total);
     } catch (error) {
       console.error("Error fetching products:", error);
     } finally {
@@ -107,6 +107,35 @@ const BrandProducts = ({
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  useEffect(() => {
+    sortProducts();
+  }, [selectedSort]);
+
+  const sortProducts = () => {
+    if (!products || products.length === 0) return [];
+    let sortedProducts = [...products];
+    setIsLoading(true);
+    switch (selectedSort) {
+      case "LOW TO HIGH":
+        sortedProducts.sort(
+          (a, b) => (a.sellingPrice || 0) - (b.sellingPrice || 0)
+        );
+        break;
+
+      case "HIGH TO LOW":
+        sortedProducts.sort(
+          (a, b) => (b.sellingPrice || 0) - (a.sellingPrice || 0)
+        );
+        break;
+
+      default:
+        sortedProducts = [...products];
+        break;
+    }
+    setProducts(sortedProducts);
+    setIsLoading(false);
+  };
 
   return (
     <section className="w-full flex flex-col lg:flex-row gap-6 pt-5 p-2 lg:justify-between">

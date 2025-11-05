@@ -5,7 +5,6 @@ import { Metadata } from "next";
 import EmptyState from "@/components/EmptyState";
 import { seoKeywords } from "@/constants";
 import { getProducts } from "@/services/ProductService";
-import { Product } from "@/interfaces/Product";
 
 export const metadata: Metadata = {
   title: "Products",

@@ -66,6 +66,35 @@ const CategoryProducts = ({
   };
 
   useEffect(() => {
+    sortProducts();
+  }, [selectedSort]);
+
+  const sortProducts = () => {
+    if (!products || products.length === 0) return [];
+    let sortedProducts = [...products];
+    setIsLoading(true);
+    switch (selectedSort) {
+      case "LOW TO HIGH":
+        sortedProducts.sort(
+          (a, b) => (a.sellingPrice || 0) - (b.sellingPrice || 0)
+        );
+        break;
+
+      case "HIGH TO LOW":
+        sortedProducts.sort(
+          (a, b) => (b.sellingPrice || 0) - (a.sellingPrice || 0)
+        );
+        break;
+
+      default:
+        sortedProducts = [...products];
+        break;
+    }
+    setProducts(sortedProducts);
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (sortRef.current && !sortRef.current.contains(e.target as Node))
         setOpenSort(false);

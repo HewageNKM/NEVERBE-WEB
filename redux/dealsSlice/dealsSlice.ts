@@ -1,8 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Product } from "@/interfaces/Product";
 
 interface DealsState {
-  deals: Product[];
   page: number;
   size: number;
   total: number;
@@ -14,7 +12,6 @@ interface DealsState {
 }
 
 const initialState: DealsState = {
-  deals: [],
   page: 1,
   size: 20,
   total: 0,
@@ -29,9 +26,6 @@ const dealsSlice = createSlice({
   name: "dealsSlice",
   initialState,
   reducers: {
-    setDeals(state, action: PayloadAction<Product[]>) {
-      state.deals = action.payload;
-    },
     setPage(state, action: PayloadAction<number>) {
       state.page = action.payload;
     },
@@ -65,7 +59,6 @@ const dealsSlice = createSlice({
 });
 
 export const {
-  setDeals,
   setPage,
   setSize,
   setTotal,

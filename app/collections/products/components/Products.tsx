@@ -20,7 +20,7 @@ import { sortingOptions } from "@/constants";
 import axios from "axios";
 import { Product } from "@/interfaces/Product";
 
-const Products = ({ items }: { items: Product[]}) => {
+const Products = ({ items }: { items: Product[] }) => {
   const dispatch: AppDispatch = useDispatch();
   const {
     products,
@@ -44,6 +44,35 @@ const Products = ({ items }: { items: Product[]}) => {
   useEffect(() => {
     fetchProducts();
   }, [dispatch, page, size, selectedBrands, selectedCategories, inStock]);
+
+  useEffect(() => {
+    sortProducts();
+  }, [selectedSort]);
+
+  const sortProducts = () => {
+    if (!products || products.length === 0) return [];
+    let sortedProducts = [...products];
+    setIsLoading(true);
+    switch (selectedSort) {
+      case "LOW TO HIGH":
+        sortedProducts.sort(
+          (a, b) => (a.sellingPrice || 0) - (b.sellingPrice || 0)
+        );
+        break;
+
+      case "HIGH TO LOW":
+        sortedProducts.sort(
+          (a, b) => (b.sellingPrice || 0) - (a.sellingPrice || 0)
+        );
+        break;
+
+      default:
+        sortedProducts = [...products];
+        break;
+    }
+    setProducts(sortedProducts);
+    setIsLoading(false);
+  };
 
   const fetchProducts = async () => {
     try {
