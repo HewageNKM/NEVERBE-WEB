@@ -95,7 +95,7 @@ const Header = ({ categories, brands }: { categories: any[]; brands: any[] }) =>
         {/* ---------- CENTER: NAVIGATION ---------- */}
         <nav className="hidden lg:block relative">
           <ul className="flex gap-6 text-white text-sm font-medium uppercase tracking-wide">
-            <li>
+            <li key={1}>
               <Link
                 href="/"
                 className="hover:text-primary-100 transition-colors"
@@ -103,7 +103,14 @@ const Header = ({ categories, brands }: { categories: any[]; brands: any[] }) =>
                 Home
               </Link>
             </li>
-
+            <li key={2}>
+              <Link
+                href="/collections/products"
+                className="hover:text-primary-100 transition-colors"
+              >
+                Shop
+              </Link>
+            </li>
             <li
               className="relative group"
               onMouseEnter={() => setOpenDropdown("categories")}
