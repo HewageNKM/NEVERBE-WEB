@@ -165,6 +165,59 @@ export const getProductById = async (itemId: string) => {
   }
 };
 
+export const getProductsByCategory = async (
+  category: string,
+  page: number = 1,
+  size: number = 10,
+  tags?: string[],
+  inStock?: boolean
+) => {
+  try {
+    console.log(`Fetching products by category: ${category}`);
+    const offset = (page - 1) * size;
+    const query = adminFirestore
+      .collection("products")
+      .where("category", "==", capitalizeWords(category))
+      .where("isDeleted", "==", false)
+      .where("status", "==", true)
+      .where("listing", "==", true);
+
+    if (tags && tags.length > 0) {
+      query.where("tags", "array-contains-any", tags);
+    }
+
+    if (typeof inStock === "boolean") {
+      query.where("inStock", "==", inStock);
+    }
+
+    query.offset(offset).limit(size);
+
+    const total = (await query.get()).size;
+
+    const snapshot = await query.get();
+
+    const products: Product[] = snapshot.docs
+      .map((doc) => {
+        const product = doc.data() as Product;
+        return {
+          ...(product as Product),
+          createdAt: null,
+          updatedAt: null,
+        };
+      })
+      .filter((p) => (p.variants?.length ?? 0) > 0);
+
+    console.log("Total products fetched:", products.length);
+    return {
+      total: total,
+      dataList: products,
+    };
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
 export const getProductsByBrand = async (
   brand: string,
   page: number = 1,
@@ -287,7 +340,7 @@ export const getSimilarItems = async (itemId: string) => {
       .limit(10)
       .get();
     const items: Product[] = [];
-    
+
     const similarItems = similarItemsQuery.docs
       .filter((doc) => doc.id !== itemId)
       .map((doc) => {
