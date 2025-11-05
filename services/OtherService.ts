@@ -1,5 +1,4 @@
 import { adminFirestore } from "@/firebase/firebaseAdmin";
-import { create } from "domain";
 
 export const getBrandsForDropdown = async () => {
   try {

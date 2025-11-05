@@ -3,7 +3,6 @@ import { Item, PaymentMethod } from "@/interfaces";
 import { Product } from "@/interfaces/Product";
 import { ProductVariant } from "@/interfaces/ProductVariant";
 
-// Utility: capitalize each word
 function capitalizeWords(str: string) {
   return str.replace(/\b\w/g, (char) => char.toUpperCase());
 }
@@ -65,51 +64,25 @@ export const getProducts = async (
   }
 };
 
-// Function to get all items in inventory
-export const getAllInventoryItems = async (page: number, limit: number) => {
-  try {
-    console.log("Fetching all inventory items.");
-    const offSet = (page - 1) * limit;
-    const docs = await adminFirestore
-      .collection("inventory")
-      .where("status", "==", "Active")
-      .where("listing", "==", "Active")
-      .offset(offSet)
-      .limit(limit)
-      .get();
-    const items: Item[] = [];
-    docs.forEach((doc) => {
-      items.push({ ...doc.data(), createdAt: null, updatedAt: null } as Item);
-    });
-    console.log("Total inventory items fetched:", items.length);
-    return items;
-  } catch (e) {
-    console.log(e);
-    throw e;
-  }
-};
-
-
-// Function to fetch recent inventory items based on creation date
 export const getRecentItems = async () => {
   console.log("Fetching recent inventory items.");
   const docs = await adminFirestore
-    .collection("inventory")
-    .where("status", "==", "Active")
-    .orderBy("createdAt", "desc")
+    .collection("products")
+    .where("status", "==", true)
+    .where("isDeleted", "==", false)
+    .where("listing", "==", true)
     .limit(10)
     .get();
-  const items: Item[] = [];
+    console.log("Total recent items fetched:", docs.size);
+
+  const items: Product[] = [];
   docs.forEach((doc) => {
-    if (doc.data()?.listing == "Active") {
-      items.push({ ...doc.data(), createdAt: null, updatedAt: null } as Item);
-    }
+    items.push({ ...doc.data(), createdAt: null, updatedAt: null });
   });
   console.log("Total recent items fetched:", items.length);
   return items;
 };
 
-// Function to get hot products based on order count
 export const getHotProducts = async () => {
   try {
     console.log("Calculating hot products based on order counts.");
@@ -140,20 +113,15 @@ export const getHotProducts = async () => {
     const hotProducts: Item[] = [];
     for (const itemId of sortedItems) {
       const itemDoc = await adminFirestore
-        .collection("inventory")
-        .doc(itemId)
+        .collection("products")
+        .where("status", "==", true)
+        .where("isDeleted", "==", false)
+        .where("listing", "==", true)
+        .where("id", "==", itemId)
         .get();
-      if (itemDoc.exists) {
-        if (itemDoc.data()?.status === "Active") {
-          if (itemDoc.data()?.listing === "Active") {
-            console.log(`Item found with ID ${itemDoc.data()?.itemId}`);
-            hotProducts.push({
-              ...itemDoc.data(),
-              createdAt: null,
-              updatedAt: null,
-            } as Item);
-          }
-        }
+      if (!itemDoc.empty) {
+        const item = itemDoc.docs[0].data() as Item;
+        hotProducts.push({ ...item, createdAt: null, updatedAt: null });
       }
       if (hotProducts.length === 10) {
         break; // Exit the loop once we have 14 hot products
@@ -262,7 +230,6 @@ export const getProductStock = async (
   size: string
 ) => {
   try {
-    // 1️⃣ Get online stock ID from ERP settings
     const settingsSnap = await adminFirestore
       .collection("app_settings")
       .doc("erp_settings")
@@ -271,7 +238,6 @@ export const getProductStock = async (
     const stockId = settingsSnap.data()?.onlineStockId;
     if (!stockId) throw new Error("onlineStockId not found in ERP settings");
 
-    // 2️⃣ Query the stock inventory
     const stockSnap = await adminFirestore
       .collection("stock_inventory")
       .where("productId", "==", productId)
@@ -281,9 +247,8 @@ export const getProductStock = async (
       .limit(1)
       .get();
 
-    // 3️⃣ Return result
     if (stockSnap.empty) {
-      return 0; // or return { stock: 0 }
+      return 0;
     }
 
     const stockDoc = stockSnap.docs[0];
@@ -300,28 +265,28 @@ export const getSimilarItems = async (itemId: string) => {
   try {
     console.log(`Fetching similar items for item ID: ${itemId}`);
 
-    // Fetch the item document by ID
     const itemDoc = await adminFirestore
-      .collection("inventory")
+      .collection("products")
       .doc(itemId)
       .get();
     if (!itemDoc.exists) {
       throw new Error(`Item with ID ${itemId} not found.`);
     }
 
-    const item = itemDoc.data() as Item;
+    const item = itemDoc.data() as Product;
 
-    // Fetch items with matching type and brand
     const similarItemsQuery = await adminFirestore
-      .collection("inventory")
-      .where("type", "==", item.type)
-      .where("brand", "==", item.brand)
+      .collection("products")
+      .where("tags", "array-contains-any", [item.category.toLocaleLowerCase()])
+      .where("brand", "==", capitalizeWords(item.brand))
+      .where("isDeleted", "==", false)
+      .where("status", "==", true)
+      .where("listing", "==", true)
       .limit(10)
       .get();
     const items: Item[] = [];
-    // Process and filter the results
     const similarItems = similarItemsQuery.docs
-      .filter((doc) => doc.id !== itemId) // Exclude the original item
+      .filter((doc) => doc.id !== itemId)
       .map((doc) => {
         return {
           ...doc.data(),
@@ -330,15 +295,6 @@ export const getSimilarItems = async (itemId: string) => {
           updatedAt: null,
         } as Item;
       });
-
-    similarItems.forEach((doc) => {
-      if (doc.status == "Active") {
-        if (doc.listing == "Active") {
-          console.log(`Item found with ID ${doc.itemId}`);
-          items.push({ ...doc, createdAt: null, updatedAt: null } as Item);
-        }
-      }
-    });
 
     console.log("Total similar items fetched:", similarItems.length);
     return items;
@@ -381,6 +337,7 @@ export const getBrandForSitemap = async () => {
       .collection("brands")
       .where("status", "==", true)
       .where("isDeleted", "==", false)
+      .where("listing", "==", true)
       .get();
     const brands = snapshot.docs.map((doc) => {
       return {
