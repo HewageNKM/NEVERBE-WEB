@@ -192,7 +192,7 @@ const Menu = () => {
                   {categories.map((cat) => (
                     <Link
                       key={cat.id}
-                      href={`/collections/${cat.label}`}
+                      href={`/collections/categories/${cat.label}`}
                       className="py-2 text-gray-600 hover:text-primary-100 text-sm border-b border-gray-100"
                       onClick={() => dispatch(toggleMenu(false))}
                     >

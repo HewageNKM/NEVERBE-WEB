@@ -52,7 +52,7 @@ const Page = async ({params}: { params: {brand: string } }) => {
         <main className="w-full relative lg:mt-28 mt-16 mb-5 overflow-hidden">
             <section className="w-full">
                 <BrandHeader brand={brand} />
-                <BrandProducts items={items} brand={brand}/>
+                <BrandProducts items={items } brand={brand}/>
             </section>
         </main>
     );

@@ -124,7 +124,7 @@ const Header = ({ categories, brands }: { categories: any[]; brands: any[] }) =>
                     {categories.map((cat) => (
                       <li key={cat.id || cat.label}>
                         <Link
-                          href={`/collections/collections/${cat.label}`}
+                          href={`/collections/categories/${cat.label}`}
                           className="block px-4 py-2 hover:bg-primary-200/20 text-sm text-gray-200"
                         >
                           {cat.label}

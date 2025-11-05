@@ -12,8 +12,6 @@ import "swiper/css/autoplay";
 
 const BrandsSlider = ({items}) => {
 
-  console.log(items);
-
   return (
     <section className="w-full py-12 bg-slate-100">
       <h2 className="text-center font-display text-2xl md:text-3xl lg:text-4xl font-bold mb-8">
