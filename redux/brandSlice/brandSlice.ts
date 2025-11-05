@@ -13,7 +13,7 @@ interface BrandSlice {
 
 const initialState: BrandSlice = {
   page: 1,
-  size: 20,
+  size: 10,
   products: [],
   inStock: false,
   showFilter: false,

@@ -12,7 +12,7 @@ export const getProducts = async (
   inStock?: boolean,
   page: number = 1,
   size: number = 20
-): Promise<Product[]> => {
+): Promise<{ total: number; dataList: Product[] }> => {
   try {
     let query: FirebaseFirestore.Query = adminFirestore
       .collection("products")
@@ -20,26 +20,22 @@ export const getProducts = async (
       .where("status", "==", true)
       .where("listing", "==", true);
 
-    // 🔹 Calculate offset
     const offset = (page - 1) * size;
 
-    // 🔹 Filter by tags
     if (tags && tags.length > 0) {
       query = query.where("tags", "array-contains-any", tags);
     }
 
-    // 🔹 Filter by stock availability
     if (typeof inStock === "boolean") {
       query = query.where("inStock", "==", inStock);
     }
 
-    // 🔹 Apply offset and limit
+    const total = (await query.get()).size;
+
     query = query.offset(offset).limit(size);
 
-    // 🔹 Fetch documents
     const snapshot = await query.get();
 
-    // 🔹 Transform & filter variants
     const products: Product[] = snapshot.docs
       .map((doc) => {
         const product = {
@@ -53,19 +49,17 @@ export const getProducts = async (
             variant.status === true && variant.isDeleted === false
         );
 
-        return {
-          ...(product as Product),
-          variants: filteredVariants,
-        };
+        return { ...product, variants: filteredVariants };
       })
       .filter((p) => (p.variants?.length ?? 0) > 0);
 
-    return products;
+    return { total, dataList: products };
   } catch (error) {
     console.error("Error fetching products:", error);
     throw error;
   }
 };
+
 
 export const getRecentItems = async () => {
   console.log("Fetching recent inventory items.");
@@ -172,8 +166,6 @@ export const getProductsByCategory = async (
   tags?: string[],
   inStock?: boolean
 ) => {
-  console.log(category, page, size, tags, inStock);
-
   try {
     console.log(`Fetching products by category: ${category}`);
     const offset = (page - 1) * size;
@@ -194,7 +186,8 @@ export const getProductsByCategory = async (
       query = query.where("inStock", "==", inStock);
     }
 
-    // Firestore requires offset & limit applied after filtering
+    const total = (await query.get()).size;
+
     query = query.offset(offset).limit(size);
 
     const snapshot = await query.get();
@@ -212,8 +205,6 @@ export const getProductsByCategory = async (
 
     console.log("Total products fetched:", products.length);
 
-    // ⚠️ To get total count accurately, use a count query (if available)
-    const total = products.length;
 
     return {
       total,

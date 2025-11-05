@@ -48,6 +48,7 @@ const BrandProducts = ({
   const [openSort, setOpenSort] = useState(false);
   const sortRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [totalProducts, setTotalProducts] = useState(0)
 
   useEffect(() => {
     dispatch(setProducts(items));
@@ -89,6 +90,7 @@ const BrandProducts = ({
       );
       const data = await response.json();
       dispatch(setProducts(data.dataList));
+      setTotalProducts(data.total)
     } catch (error) {
       console.error("Error fetching products:", error);
     } finally {
@@ -128,16 +130,13 @@ const BrandProducts = ({
             </button>
           </motion.div>
 
-          {/* Sorting Dropdown */}
           <div className="relative" ref={sortRef}>
             <button
               onClick={() => setOpenSort(!openSort)}
-              className="flex items-center gap-2 bg-white border border-gray-300 rounded-md px-3 py-2 shadow-sm hover:bg-gray-50 transition"
+              className="flex items-center gap-2 text-gray-700 px-4 py-2 border rounded-lg hover:bg-gray-100 transition"
             >
-              <IoFilter size={20} className="text-gray-500" />
-              <span className="text-gray-700 font-medium capitalize">
-                {selectedSort}
-              </span>
+              <IoFilter />
+              <span>Sort by: {selectedSort.toUpperCase()}</span>
             </button>
 
             <AnimatePresence>
@@ -146,34 +145,23 @@ const BrandProducts = ({
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.2 }}
-                  className="absolute right-0 mt-2 w-44 bg-white border border-gray-200 rounded-md shadow-lg overflow-hidden z-50"
+                  className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-30 overflow-hidden"
                 >
-                  {sortingOptions.map((opt) => {
-                    const isSelected = selectedSort === opt.value;
-                    return (
-                      <motion.li
-                        key={opt.value}
-                        onClick={() => {
-                          dispatch(setSelectedSort(opt.value));
-                          setOpenSort(false);
-                        }}
-                        whileHover={{ scale: 1.03 }}
-                        whileTap={{ scale: 0.97 }}
-                        className={`flex items-center justify-between px-4 py-2 cursor-pointer hover:bg-gray-100 transition ${
-                          isSelected ? "bg-blue-100 font-semibold" : ""
-                        }`}
-                      >
-                        <span>{opt.name}</span>
-                        <IoCheckmark
-                          className={
-                            isSelected ? "text-blue-600" : "text-gray-300"
-                          }
-                          size={18}
-                        />
-                      </motion.li>
-                    );
-                  })}
+                  {sortingOptions.map((opt, i) => (
+                    <motion.li
+                      key={i}
+                      onClick={() => {
+                        dispatch(setSelectedSort(opt.value));
+                        setOpenSort(false);
+                      }}
+                      className={`px-4 py-2 text-sm flex items-center justify-between cursor-pointer hover:bg-gray-100 ${
+                        selectedSort === opt.value ? "text-primary" : ""
+                      }`}
+                    >
+                      {opt.name}
+                      {selectedSort === opt.value && <IoCheckmark />}
+                    </motion.li>
+                  ))}
                 </motion.ul>
               )}
             </AnimatePresence>
@@ -212,9 +200,9 @@ const BrandProducts = ({
           whileTap={{ scale: 0.97 }}
         >
           <Pagination
-            count={5}
             variant="outlined"
             shape="rounded"
+            count={Math.ceil(totalProducts / size)}
             onChange={(event, value) => dispatch(setPage(value))}
           />
         </motion.div>

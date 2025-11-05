@@ -20,7 +20,7 @@ import { sortingOptions } from "@/constants";
 import axios from "axios";
 import { Product } from "@/interfaces/Product";
 
-const Products = ({ items }: { items: Product[] }) => {
+const Products = ({ items }: { items: Product[]}) => {
   const dispatch: AppDispatch = useDispatch();
   const {
     products,
@@ -35,6 +35,7 @@ const Products = ({ items }: { items: Product[] }) => {
   const [openSort, setOpenSort] = useState(false);
   const sortRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [totalProduct, setTotalProduct] = useState(0);
 
   useEffect(() => {
     dispatch(setProducts(items));
@@ -80,7 +81,8 @@ const Products = ({ items }: { items: Product[] }) => {
       const queryString = queryParts.join("&");
 
       const response = await axios.get(`/api/v1/products?${queryString}`);
-      dispatch(setProducts(response.data.data));
+      dispatch(setProducts(response.data.dataList));
+      setTotalProduct(response.data.total);
     } catch (error) {
       console.error("Error fetching products:", error);
     } finally {
@@ -126,48 +128,38 @@ const Products = ({ items }: { items: Product[] }) => {
             </button>
           </div>
 
-          {/* Custom Sorting Dropdown */}
           <div className="relative" ref={sortRef}>
             <button
               onClick={() => setOpenSort(!openSort)}
-              className="flex items-center gap-2 bg-white border border-gray-300 rounded-md px-3 py-2 shadow-sm hover:bg-gray-50 transition"
+              className="flex items-center gap-2 text-gray-700 px-4 py-2 border rounded-lg hover:bg-gray-100 transition"
             >
-              <IoFilter size={20} className="text-gray-500" />
-              <span className="text-gray-700 font-medium capitalize"></span>
+              <IoFilter />
+              <span>Sort by: {selectedSort.toUpperCase()}</span>
             </button>
 
             <AnimatePresence>
               {openSort && (
                 <motion.ul
-                  initial={{ opacity: 0, scale: 0.95, y: -8 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.95, y: -8 }}
-                  transition={{ duration: 0.2 }}
-                  className="absolute right-0 mt-2 w-44 bg-white border border-gray-200 rounded-md shadow-lg overflow-hidden z-50"
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-30 overflow-hidden"
                 >
-                  {sortingOptions.map((opt) => {
-                    const isSelected = selectedSort === opt.value;
-                    return (
-                      <li
-                        key={opt.value}
-                        onClick={() => {
-                          dispatch(setSelectedSort(opt.value));
-                          setOpenSort(false);
-                        }}
-                        className={`flex items-center justify-between px-4 py-2 cursor-pointer hover:bg-gray-100 transition ${
-                          isSelected ? "bg-blue-100 font-semibold" : ""
-                        }`}
-                      >
-                        <span>{opt.name}</span>
-                        <IoCheckmark
-                          className={
-                            isSelected ? "text-blue-600" : "text-gray-300"
-                          }
-                          size={18}
-                        />
-                      </li>
-                    );
-                  })}
+                  {sortingOptions.map((opt, i) => (
+                    <motion.li
+                      key={i}
+                      onClick={() => {
+                        dispatch(setSelectedSort(opt.value));
+                        setOpenSort(false);
+                      }}
+                      className={`px-4 py-2 text-sm flex items-center justify-between cursor-pointer hover:bg-gray-100 ${
+                        selectedSort === opt.value ? "text-primary" : ""
+                      }`}
+                    >
+                      {opt.name}
+                      {selectedSort === opt.value && <IoCheckmark />}
+                    </motion.li>
+                  ))}
                 </motion.ul>
               )}
             </AnimatePresence>
@@ -216,7 +208,8 @@ const Products = ({ items }: { items: Product[] }) => {
           className="flex justify-center mt-10"
         >
           <Pagination
-            count={5}
+            count={totalProduct / size}
+            page={page}
             variant="outlined"
             shape="rounded"
             onChange={(event, value) => dispatch(setPage(value))}

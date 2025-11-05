@@ -32,6 +32,7 @@ const CategoryProducts = ({
   const [openSort, setOpenSort] = useState(false);
   const sortRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [totalProducts, setTotalProducts] = useState(0);
 
   useEffect(() => {
     dispatch(setProducts(items));
@@ -56,6 +57,7 @@ const CategoryProducts = ({
       );
       const data = await res.json();
       dispatch(setProducts(data.dataList));
+      setTotalProducts(data.total);
     } catch (err) {
       console.error("Error fetching category products:", err);
     } finally {
@@ -98,7 +100,7 @@ const CategoryProducts = ({
               className="flex items-center gap-2 text-gray-700 px-4 py-2 border rounded-lg hover:bg-gray-100 transition"
             >
               <IoFilter />
-              <span>Sort by: {selectedSort}</span>
+              <span>Sort by: {selectedSort.toUpperCase()}</span>
             </button>
 
             <AnimatePresence>
@@ -152,9 +154,10 @@ const CategoryProducts = ({
           className="flex justify-center mt-10"
         >
           <Pagination
-            count={5}
             variant="outlined"
             shape="rounded"
+            page={page}
+            count={Math.ceil(totalProducts / size)}
             onChange={(event, value) => dispatch(setPage(value))}
           />
         </motion.div>

@@ -17,7 +17,7 @@ export const GET = async (req: NextRequest) => {
 
     const products = await getProducts(tags, inStock, page, size);
 
-    return NextResponse.json({ success: true, data: products }, { status: 200 });
+    return NextResponse.json(products, { status: 200 });
   } catch (error: any) {
     console.error("Error in GET /api/products:", error);
     return NextResponse.json(

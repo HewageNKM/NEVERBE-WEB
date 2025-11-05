@@ -15,7 +15,7 @@ interface ProductsSlice {
 const initialState: ProductsSlice = {
   selectedBrands: [],
   page: 1,
-  size: 20,
+  size: 10,
   selectedCategories: [],
   products: [],
   showFilter: false,

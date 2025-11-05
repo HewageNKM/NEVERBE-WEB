@@ -2,7 +2,6 @@ import React from "react";
 import Products from "@/app/collections/products/components/Products";
 import ProductsHeader from "@/app/collections/products/components/ProductsHeader";
 import { Metadata } from "next";
-import { Item } from "@/interfaces";
 import EmptyState from "@/components/EmptyState";
 import { seoKeywords } from "@/constants";
 import { getProducts } from "@/services/ProductService";
@@ -39,7 +38,7 @@ export const metadata: Metadata = {
 };
 
 const Page = async () => {
-  let items: Product[] = [];
+  let items = {}
 
   try {
     items = await getProducts(undefined, undefined, 1, 20);
@@ -50,8 +49,8 @@ const Page = async () => {
     <main className="w-full relative lg:mt-28 mt-16 mb-5 overflow-clip">
       <ProductsHeader />
       <div className="px-4">
-        {items.length > 0 ? (
-          <Products items={items} />
+        {items.dataList.length > 0 ? (
+          <Products items={items.dataList || []} />
         ) : (
           <EmptyState heading="No products available at this time." />
         )}
