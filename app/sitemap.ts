@@ -1,28 +1,11 @@
+import { getBrandForSitemap, getProductsForSitemap } from '@/services/ProductService';
 import type { MetadataRoute } from 'next'
-import { getAllInventoryItems, getBrandsFromInventory } from "@/firebase/firebaseAdmin";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
-    const items = await getAllInventoryItems(1,9999);
+    const allProducts = await getProductsForSitemap();
+    const getBrands = await getBrandForSitemap();
 
-    const allProducts = items.map((item) => ({
-        url: `${process.env.NEXT_PUBLIC_BASE_URL}/collections/products/${item.itemId}`,
-        lastModified: new Date(),
-        priority: 0.6,
-    }));
-
-    const brands = await getBrandsFromInventory();
-    const getBrands = brands.map((brand) => ({
-        url: `${process.env.NEXT_PUBLIC_BASE_URL}${brand.url}`,
-        lastModified: new Date(),
-        priority: 0.7,
-    }));
-
-    const getTitles = brands.flatMap((brand) => ({
-        url: `${process.env.NEXT_PUBLIC_BASE_URL}${brand.url}`,
-        lastModified: new Date(),
-        priority: 0.8,
-    }));
     return [
         {
             url: `${process.env.NEXT_PUBLIC_BASE_URL}`,
@@ -36,27 +19,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             priority: 0.9,
             changeFrequency:"weekly"
         },
-        {
-            url: `https://neverbe.lk/collections/products?gender=men`,
-            lastModified: new Date(),
-            priority: 0.9,
-            changeFrequency:"weekly"
-        },
-        {
-            url: `https://neverbe.lk/collections/products?gender=women`,
-            lastModified: new Date(),
-            priority: 0.9,
-            changeFrequency:"weekly"
-        },
-        {
-            url: `https://neverbe.lk/collections/products?gender=kids`,
-            lastModified: new Date(),
-            priority: 0.9,
-            changeFrequency:"weekly"
-        },
         ...allProducts,
         ...getBrands,
-        ...getTitles,
         {
             url: 'https://neverbe.lk/aboutUs',
             lastModified: new Date(),

@@ -4,14 +4,15 @@ import {notFound} from "next/navigation";
 import {Item} from "@/interfaces";
 import {Metadata} from "next";
 import SimilarProducts from "@/app/collections/products/[itemId]/components/SimilarProducts";
-import { getItemById, getSimilarItems } from '@/services/ProductService';
+import { getProductById, getSimilarItems } from '@/services/ProductService';
+import { Product } from '@/interfaces/Product';
 
 // Dynamically generate metadata
 export async function generateMetadata({params}: { params: { itemId: string } }): Promise<Metadata> {
     let item: Item | null = null;
 
     try {
-        item = await getItemById(params.itemId);
+        item = await getProductById(params.itemId);
     } catch (e) {
         console.log(e);
     }
@@ -52,10 +53,10 @@ export async function generateMetadata({params}: { params: { itemId: string } })
 }
 
 const Page = async ({params}: { params: { itemId: string } }) => {
-    let item: Item | null = null;
+    let item: Product | null = null;
 
     try {
-        item = await getItemById(params.itemId);
+        item = await getProductById(params.itemId);
     } catch (e) {
         console.log(e);
     }

@@ -5,8 +5,3 @@ export const reviewsURL = "/api/v1/reviews"
 export const getPaymentMethodsURL = "/api/v1/payment-methods"
 export const getOrdersURL = "/api/v1/orders"
 
-export const OTPRequestURL = "/api/v1/otp"
-export const OTPVerifyURL = "/api/v1/otp/verify"
-export const KOKOInitiateURL = "/api/v1/ipg/koko/initiate"
-export const PAYHEREInitiateURL = "/api/v1/ipg/payhere/initiate"
-export const CODORDERNotificationsURL = "/api/v1/orders"

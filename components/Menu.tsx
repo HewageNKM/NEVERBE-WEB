@@ -9,6 +9,7 @@ import { toggleMenu } from "@/redux/headerSlice/headerSlice";
 import { getAlgoliaClient } from "@/util";
 import DropShadow from "@/components/DropShadow";
 import SearchDialog from "@/components/SearchDialog";
+import { ProductVariant } from "@/interfaces/ProductVariant";
 
 const Menu = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -17,7 +18,6 @@ const Menu = () => {
   const [items, setItems] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const [showSearchResult, setShowSearchResult] = useState(false);
-  const user = useSelector((state: RootState) => state.authSlice.user);
 
   const onSearch = async (evt: React.ChangeEvent<HTMLInputElement>) => {
     const query = evt.target.value;
@@ -33,11 +33,21 @@ const Menu = () => {
     try {
       const searchResults = await searchClient.search({
         requests: [
-          { indexName: "inventory_index", query: query.trim(), hitsPerPage: 30 },
+          { indexName: "products_index", query: query.trim(), hitsPerPage: 30 },
         ],
       });
-      const filteredResults = searchResults.results[0].hits.filter(
-        (item) => item.status === "Active" && item.listing === "Active"
+      let filteredResults = searchResults.results[0].hits.filter(
+        (item) =>
+          item.status === true &&
+          item.listing === true &&
+          item.isDeleted == false
+      );
+      filteredResults = filteredResults.filter(
+        (item: any) =>
+          !item.variants.some(
+            (variant: ProductVariant) =>
+              variant.isDeleted === true && variant.status === false
+          )
       );
       setItems(filteredResults);
       setShowSearchResult(true);
@@ -86,7 +96,10 @@ const Menu = () => {
           {isSearching ? (
             <div className="absolute top-7 right-6 w-5 h-5 border-2 border-gray-300 border-t-primary-500 rounded-full animate-spin"></div>
           ) : (
-            <IoSearch className="absolute top-7 right-6 text-gray-500" size={20} />
+            <IoSearch
+              className="absolute top-7 right-6 text-gray-500"
+              size={20}
+            />
           )}
 
           {showSearchResult && items.length > 0 && (

@@ -17,7 +17,8 @@ import SearchDialog from "@/components/SearchDialog";
 import { getAlgoliaClient } from "@/util";
 import { Item } from "@/interfaces";
 import { AnimatePresence } from "framer-motion";
-import { FaSearch } from "react-icons/fa";
+import { Product } from "@/interfaces/Product";
+import { ProductVariant } from "@/interfaces/ProductVariant";
 
 const Header = () => {
   const cartItems = useSelector((state: RootState) => state.cartSlice.cart);
@@ -44,13 +45,23 @@ const Header = () => {
       setIsSearching(true);
       const searchResults = await searchClient.search({
         requests: [
-          { indexName: "inventory_index", query: value, hitsPerPage: 30 },
+          { indexName: "products_index", query: value, hitsPerPage: 30 },
         ],
       });
-      const filtered = searchResults.results[0].hits.filter(
-        (item: Item) => item.status === "Active" && item.listing === "Active"
+      let filteredResults = searchResults.results[0].hits.filter(
+        (item: Product) =>
+          item.status === true &&
+          item.listing === true &&
+          item.isDeleted == false
       );
-      setItems(filtered);
+      filteredResults = filteredResults.filter(
+        (item: any) =>
+          !item.variants.some(
+            (variant: ProductVariant) =>
+              variant.isDeleted === true && variant.status === false
+          )
+      );
+      setItems(filteredResults);
       setShowSearchResult(true);
     } catch (e) {
       console.error(e);

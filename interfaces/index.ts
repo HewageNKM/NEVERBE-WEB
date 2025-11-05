@@ -85,7 +85,7 @@ export interface CartItem {
     thumbnail: string,
     discount: number,
     size: string,
-    type: string,
+    category: string,
     quantity: number,
     price: number,
     bPrice: number,

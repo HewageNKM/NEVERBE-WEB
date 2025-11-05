@@ -2,38 +2,16 @@
 import React from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import {
-  AdidasBG,
-  DefaultBG,
-  LuvionVuittonBG,
-  NewBalance,
-  NikeBG,
-} from "@/assets/images";
+import { DefaultBG } from "@/assets/images";
 
-const ManufacturerHeader = ({ name }: { name: string }) => {
+const BrandHeader = ({ brand }: { brand: string }) => {
   const title =
-    name && name !== "all"
-      ? name.charAt(0).toUpperCase() + name.slice(1)
+    brand && brand !== "all"
+      ? brand.charAt(0).toUpperCase() + brand.slice(1)
       : "All Products";
-
-  const image = () => {
-    switch (name.toLowerCase()) {
-      case "nike":
-        return NikeBG;
-      case "adidas":
-        return AdidasBG;
-      case "new balance":
-        return NewBalance;
-      case "luvion vuitton":
-        return LuvionVuittonBG;
-      default:
-        return DefaultBG;
-    }
-  };
 
   return (
     <section className="relative w-full overflow-hidden">
-      {/* Background Image with Smooth Zoom */}
       <motion.figure
         initial={{ scale: 1 }}
         animate={{ scale: [1, 1.05, 1] }}
@@ -41,7 +19,7 @@ const ManufacturerHeader = ({ name }: { name: string }) => {
         className="w-full h-[12rem] md:h-[22rem] relative"
       >
         <Image
-          src={image()}
+          src={DefaultBG}
           alt={`${title} Banner`}
           fill
           priority
@@ -78,4 +56,4 @@ const ManufacturerHeader = ({ name }: { name: string }) => {
   );
 };
 
-export default ManufacturerHeader;
+export default BrandHeader;

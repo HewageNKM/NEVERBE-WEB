@@ -6,8 +6,9 @@ import PopularProducts from "@/app/components/PopularProducts";
 import FAQ from "@/app/components/FAQ";
 import {Item, Slide} from "@/interfaces";
 import BrandsSlider from './components/BrandsSlider';
-import { getBrandsFromInventory, getHotProducts, getRecentItems } from '@/services/ProductService';
+import { getHotProducts, getRecentItems } from '@/services/ProductService';
 import { getSliders } from '@/services/SlideService';
+import { getBrands, getBrandsForDropdown } from '@/services/OtherService';
 
 const Page = async () => {
     const arrivals: Item[] = [];
@@ -19,7 +20,7 @@ const Page = async () => {
         arrivals.push(...await getRecentItems());
         sliders.push(...await getSliders());
         hotItems.push(...await getHotProducts());
-        brands.push(...await getBrandsFromInventory());
+        brands.push(...await getBrands());
     } catch (e) {
         console.error(e);
     }

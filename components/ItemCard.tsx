@@ -4,10 +4,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import { Item } from "@/interfaces";
 import { KOKOLogo } from "@/assets/images";
+import { Product } from "@/interfaces/Product";
 
-const ItemCard = ({ item }: { item: Item }) => {
+const ItemCard = ({ item }: { item: Product }) => {
   const [outOfStocks, setOutOfStocks] = useState(false);
   const [outOfStocksLabel, setOutOfStocksLabel] = useState("Out of Stock");
   const { user } = useSelector((state: RootState) => state.authSlice);
@@ -18,17 +18,7 @@ const ItemCard = ({ item }: { item: Item }) => {
       setOutOfStocksLabel("Coming Soon");
       return;
     }
-    const allOutOfStock = item.variants.every((v) =>
-      v.sizes.every((s) => s.stock === 0)
-    );
-    setOutOfStocks(allOutOfStock);
   }, [item, user]);
-
-  const findRangeOfSizes = () => {
-    const sizes = item.variants.flatMap((v) => v.sizes.map((s) => s.size));
-    if (!sizes.length) return "N/A";
-    return `${Math.min(...sizes)} - ${Math.max(...sizes)}`;
-  };
 
   const discountedPrice =
     item.discount > 0
@@ -40,7 +30,7 @@ const ItemCard = ({ item }: { item: Item }) => {
   return (
     <article className="relative group w-[9rem] sm:w-[12rem] md:w-[15rem] rounded-2xl bg-white border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden">
       <Link
-        href={`/collections/products/${item.itemId.toLowerCase()}`}
+        href={`/collections/products/${item?.id?.toLowerCase()}`}
         aria-label={`View details for ${item.name}`}
       >
         {/* ---------- IMAGE ---------- */}
@@ -58,7 +48,7 @@ const ItemCard = ({ item }: { item: Item }) => {
 
           {/* Manufacturer badge */}
           <span className="absolute top-2 left-2 bg-black/80 text-white text-[0.65rem] sm:text-xs px-2 py-1 rounded-full uppercase tracking-wide">
-            {item.manufacturer.replace("-", " ")}
+            {item.brand.replace("-", " ")}
           </span>
 
           {/* Discount badge */}
@@ -87,9 +77,7 @@ const ItemCard = ({ item }: { item: Item }) => {
 
           {/* KOKO Payment */}
           <div className="flex items-center gap-1 text-xs sm:text-sm text-gray-500 mt-1">
-            <p>
-              or 3x Rs.{(discountedPrice / 3).toFixed(2)} with
-            </p>
+            <p>or 3x Rs.{(discountedPrice / 3).toFixed(2)} with</p>
             <Image
               alt="KOKO logo"
               src={KOKOLogo}
@@ -102,16 +90,6 @@ const ItemCard = ({ item }: { item: Item }) => {
           {/* Colors + Sizes */}
           <div className="flex justify-between items-center text-[0.75rem] sm:text-sm text-gray-600 mt-2">
             <p>{item.variants.length} Colors</p>
-            {item.type === "shoes" || item.type === "sandals" ? (
-              <p>Size (EU): {findRangeOfSizes()}</p>
-            ) : item.type === "accessories" ? (
-              <p>
-                Sizes:{" "}
-                {item.variants?.[0]?.sizes?.length
-                  ? item.variants[0].sizes.map((s) => s.size).join(", ")
-                  : "N/A"}
-              </p>
-            ) : null}
           </div>
 
           {/* Action Link */}
