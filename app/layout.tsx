@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Roboto } from "next/font/google";
 import "../style/globals.css";
 import StoreProvider from "@/app/components/StoreProvider";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -9,7 +8,6 @@ import { seoKeywords } from "@/constants";
 import ReCaptchaProviderWrapper from "@/app/components/ReCaptchaProvider";
 
 
-const roboto = Roboto({ weight: "400", subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "NEVERBE",
@@ -85,7 +83,7 @@ export default function RootLayout({
         />
         <title></title>
       </head>
-      <body className={roboto.className}>
+      <body>
         <ReCaptchaProviderWrapper>
           <StoreProvider>
             <GlobalProvider>{children}</GlobalProvider>

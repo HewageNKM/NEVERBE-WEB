@@ -4,15 +4,16 @@ import NewArrivals from "@/app/components/NewArrivals";
 import WhyUs from "@/app/components/WhyUs";
 import PopularProducts from "@/app/components/PopularProducts";
 import FAQ from "@/app/components/FAQ";
-import {Item, Slide} from "@/interfaces";
+import {Slide} from "@/interfaces";
 import BrandsSlider from './components/BrandsSlider';
 import { getHotProducts, getRecentItems } from '@/services/ProductService';
 import { getSliders } from '@/services/SlideService';
-import { getBrands, getBrandsForDropdown } from '@/services/OtherService';
+import { getBrands } from '@/services/OtherService';
+import { Product } from '@/interfaces/Product';
 
 const Page = async () => {
-    const arrivals: Item[] = [];
-    const hotItems: Item[] = [];
+    const arrivals: Product[] = [];
+    const hotItems: Product[] = [];
     const sliders: Slide[] = [];
     const brands = [];
 
