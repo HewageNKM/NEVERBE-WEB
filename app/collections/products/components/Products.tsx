@@ -20,7 +20,7 @@ import { sortingOptions } from "@/constants";
 import axios from "axios";
 import { Product } from "@/interfaces/Product";
 
-const Products = ({ items }: { items: Product[]; gender: string }) => {
+const Products = ({ items }: { items: Product[] }) => {
   const dispatch: AppDispatch = useDispatch();
   const {
     products,

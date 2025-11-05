@@ -1,5 +1,4 @@
 import { Item } from "@/interfaces";
-import { WritableDraft } from "immer";
 import { createSlice } from "@reduxjs/toolkit";
 
 interface BrandSlice {
@@ -19,7 +18,7 @@ const initialState: BrandSlice = {
   inStock: false,
   showFilter: false,
   selectedCategories: [],
-  selectedSort: "az",
+  selectedSort: "",
 };
 
 const brandSlice = createSlice({
@@ -31,6 +30,23 @@ const brandSlice = createSlice({
     },
     setSelectedSort: (state, action) => {
       state.selectedSort = action.payload;
+      if (state.selectedSort != "") {
+        if (state.selectedSort === "lh") {
+          state.products = state.products.sort(
+            (a, b) => a.sellingPrice - b.sellingPrice
+          );
+        } else if (state.selectedSort === "hl") {
+          state.products = state.products.sort(
+            (a, b) => b.sellingPrice - a.sellingPrice
+          );
+        } else if (state.selectedSort == "") {
+          state.products = action.payload;
+        } else {
+          state.products = action.payload;
+        }
+      } else {
+        state.products = action.payload;
+      }
     },
     setSelectedCategories: (state, action) => {
       state.selectedCategories = action.payload;
@@ -52,27 +68,6 @@ const brandSlice = createSlice({
     },
   },
 });
-
-export const sort = (state: WritableDraft<BrandSlice>, action: any) => {
-  if (state.selectedSort != "") {
-    if (state.selectedSort === "lh") {
-      state.products = state.products.sort(
-        (a, b) => a.sellingPrice - b.sellingPrice
-      );
-    } else if (state.selectedSort === "hl") {
-      state.products = state.products.sort(
-        (a, b) => b.sellingPrice - a.sellingPrice
-      );
-    } else if (state.selectedSort == "") {
-      state.products = action.payload;
-    } else {
-      state.products = action.payload;
-    }
-  } else {
-    state.products = action.payload;
-  }
-};
-
 export const {
   toggleFilter,
   resetFilter,

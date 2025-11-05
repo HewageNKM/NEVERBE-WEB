@@ -11,8 +11,9 @@ import { Autoplay, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/autoplay";
+import { Product } from "@/interfaces/Product";
 
-const SimilarProducts = ({ items }: { items: Item[] }) => {
+const SimilarProducts = ({ items }: { items: Product[] }) => {
   if (items.length === 0) {
     return <EmptyState heading="No similar products available!" />;
   }

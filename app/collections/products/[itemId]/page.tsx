@@ -63,10 +63,10 @@ const Page = async ({params}: { params: { itemId: string } }) => {
 
     if (!item) return notFound();
 
-    let similarItems: Item[] = [];
+    let similarItems: Product[] = [];
 
     try {
-        similarItems = await getSimilarItems(item.itemId);
+        similarItems = await getSimilarItems(item.id);
     } catch (e) {
         console.error("Error fetching similar items:", e.message);
     }
@@ -75,7 +75,7 @@ const Page = async ({params}: { params: { itemId: string } }) => {
         <main className="w-full lg:mt-32 mt-20 md:mt-28 overflow-clip">
             <div className="md:px-8 px-4 py-4">
                 <ProductHero item={item}/>
-                <SimilarProducts items={similarItems}/>
+                <SimilarProducts items={similarItems || []}/>
             </div>
         </main>
     );

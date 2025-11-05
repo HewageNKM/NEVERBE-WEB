@@ -42,9 +42,12 @@ export const getProducts = async (
     // 🔹 Transform & filter variants
     const products: Product[] = snapshot.docs
       .map((doc) => {
-        const product = doc.data() as Product;
+        const product = {
+          ...(doc.data() as Product),
+          createdAt: null,
+          updatedAt: null,
+        };
 
-        // Keep only variants where status == true and isDeleted == false
         const filteredVariants = (product.variants || []).filter(
           (variant: ProductVariant) =>
             variant.status === true && variant.isDeleted === false
@@ -73,7 +76,7 @@ export const getRecentItems = async () => {
     .where("listing", "==", true)
     .limit(10)
     .get();
-    console.log("Total recent items fetched:", docs.size);
+  console.log("Total recent items fetched:", docs.size);
 
   const items: Product[] = [];
   docs.forEach((doc) => {
@@ -124,7 +127,7 @@ export const getHotProducts = async () => {
         hotProducts.push({ ...item, createdAt: null, updatedAt: null });
       }
       if (hotProducts.length === 10) {
-        break; // Exit the loop once we have 14 hot products
+        break;
       }
     }
     console.log("Total hot products fetched:", hotProducts.length);
@@ -278,13 +281,13 @@ export const getSimilarItems = async (itemId: string) => {
     const similarItemsQuery = await adminFirestore
       .collection("products")
       .where("tags", "array-contains-any", [item.category.toLocaleLowerCase()])
-      .where("brand", "==", capitalizeWords(item.brand))
       .where("isDeleted", "==", false)
       .where("status", "==", true)
       .where("listing", "==", true)
       .limit(10)
       .get();
-    const items: Item[] = [];
+    const items: Product[] = [];
+    
     const similarItems = similarItemsQuery.docs
       .filter((doc) => doc.id !== itemId)
       .map((doc) => {
@@ -293,11 +296,11 @@ export const getSimilarItems = async (itemId: string) => {
           itemId: doc.id,
           createdAt: null,
           updatedAt: null,
-        } as Item;
+        };
       });
 
-    console.log("Total similar items fetched:", similarItems.length);
-    return items;
+    console.log("Total similar items fetched:", items.length);
+    return similarItems;
   } catch (e) {
     console.error("Error fetching similar items:", e);
     throw e;
