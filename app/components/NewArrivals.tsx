@@ -58,7 +58,7 @@ const NewArrivals = ({ arrivals }: { arrivals: Item[] }) => {
           >
             {arrivals.map((item) => (
               <SwiperSlide
-                key={item.itemId}
+                key={item.id}
                 className="flex justify-center transition-transform duration-300 hover:scale-105"
               >
                 <motion.div
