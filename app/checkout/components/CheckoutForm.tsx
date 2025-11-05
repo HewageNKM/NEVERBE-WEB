@@ -27,7 +27,7 @@ import BillingDetails from "./BillingDetails"; // Billing (main)
 import ShippingDetails from "./ShippingDetails"; // Shipping (optional)
 import PaymentDetails from "@/app/checkout/components/PaymentDetails"; // <--- restored
 import ComponentLoader from "@/components/ComponentLoader";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 
@@ -325,11 +325,6 @@ const CheckoutForm = () => {
 
   return (
     <div className="flex justify-center items-center">
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-      />
       <form
         onSubmit={handlePaymentSubmit}
         className="flex flex-row flex-wrap justify-center lg:flex-nowrap gap-6 mt-10 w-full"

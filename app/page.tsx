@@ -4,14 +4,16 @@ import NewArrivals from "@/app/components/NewArrivals";
 import WhyUs from "@/app/components/WhyUs";
 import PopularProducts from "@/app/components/PopularProducts";
 import FAQ from "@/app/components/FAQ";
-import {Item, Slide} from "@/interfaces";
+import {Slide} from "@/interfaces";
 import BrandsSlider from './components/BrandsSlider';
-import { getBrandsFromInventory, getHotProducts, getRecentItems } from '@/services/ProductService';
+import { getHotProducts, getRecentItems } from '@/services/ProductService';
 import { getSliders } from '@/services/SlideService';
+import { getBrands } from '@/services/OtherService';
+import { Product } from '@/interfaces/Product';
 
 const Page = async () => {
-    const arrivals: Item[] = [];
-    const hotItems: Item[] = [];
+    const arrivals: Product[] = [];
+    const hotItems: Product[] = [];
     const sliders: Slide[] = [];
     const brands = [];
 
@@ -19,7 +21,7 @@ const Page = async () => {
         arrivals.push(...await getRecentItems());
         sliders.push(...await getSliders());
         hotItems.push(...await getHotProducts());
-        brands.push(...await getBrandsFromInventory());
+        brands.push(...await getBrands());
     } catch (e) {
         console.error(e);
     }

@@ -11,33 +11,82 @@ import ProductsFilter from "@/app/collections/products/components/ProductsFilter
 import { IoFilter, IoCheckmark } from "react-icons/io5";
 import { FiFilter } from "react-icons/fi";
 import {
-  getInventory,
   setPage,
   setProducts,
   setSelectedSort,
   toggleFilter,
 } from "@/redux/productsSlice/productsSlice";
 import { sortingOptions } from "@/constants";
+import axios from "axios";
+import { Product } from "@/interfaces/Product";
 
-const Products = ({ items, gender }: { items: any[]; gender: string }) => {
+const Products = ({ items }: { items: Product[] }) => {
   const dispatch: AppDispatch = useDispatch();
-  const { products, isLoading, error, selectedSort, page, size } = useSelector(
-    (state: RootState) => state.productsSlice
-  );
+  const {
+    products,
+    page,
+    size,
+    selectedBrands,
+    selectedCategories,
+    inStock,
+    selectedSort,
+  } = useSelector((state: RootState) => state.productsSlice);
 
   const [openSort, setOpenSort] = useState(false);
   const sortRef = useRef<HTMLDivElement>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Initialize localStorage & set initial products
   useEffect(() => {
-    window.localStorage.setItem("gender", gender);
     dispatch(setProducts(items));
-  }, [dispatch, items, gender]);
+  }, [dispatch, items]);
 
-  // Fetch inventory on sort/page change
   useEffect(() => {
-    dispatch(getInventory({ gender, page, size }));
-  }, [dispatch, gender, page, size, selectedSort]);
+    fetchProducts();
+  }, [dispatch, page, size, selectedBrands, selectedCategories, inStock]);
+
+  const fetchProducts = async () => {
+    try {
+      setIsLoading(true);
+      const params: Record<string, any> = {
+        page,
+        size,
+      };
+      const queryParts: string[] = [];
+
+      Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          queryParts.push(
+            `${encodeURIComponent(key)}=${encodeURIComponent(value)}`
+          );
+        }
+      });
+
+      if (inStock) {
+        queryParts.push("inStock=true");
+      }
+
+      if (selectedBrands?.length) {
+        selectedBrands.forEach((brand: string) => {
+          queryParts.push(`tag=${encodeURIComponent(brand)}`);
+        });
+      }
+
+      if (selectedCategories?.length) {
+        selectedCategories.forEach((cat: string) => {
+          queryParts.push(`tag=${encodeURIComponent(cat)}`);
+        });
+      }
+
+      const queryString = queryParts.join("&");
+
+      const response = await axios.get(`/api/v1/products?${queryString}`);
+      dispatch(setProducts(response.data.data));
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -54,7 +103,7 @@ const Products = ({ items, gender }: { items: any[]; gender: string }) => {
     <section className="w-full flex flex-col lg:flex-row gap-6 pt-5 lg:justify-between">
       {/* --- Desktop Filters --- */}
       <aside className="hidden lg:block w-[22%]">
-        <ProductsFilter gender={gender} />
+        <ProductsFilter />
       </aside>
 
       {/* --- Products Section --- */}
@@ -84,9 +133,7 @@ const Products = ({ items, gender }: { items: any[]; gender: string }) => {
               className="flex items-center gap-2 bg-white border border-gray-300 rounded-md px-3 py-2 shadow-sm hover:bg-gray-50 transition"
             >
               <IoFilter size={20} className="text-gray-500" />
-              <span className="text-gray-700 font-medium capitalize">
-                {selectedSort}
-              </span>
+              <span className="text-gray-700 font-medium capitalize"></span>
             </button>
 
             <AnimatePresence>
@@ -132,8 +179,6 @@ const Products = ({ items, gender }: { items: any[]; gender: string }) => {
           <ComponentLoader />
         ) : products.length === 0 ? (
           <EmptyState heading="Products Not Available!" />
-        ) : error ? (
-          <EmptyState heading="An error occurred!" subHeading={error} />
         ) : (
           <motion.ul
             key={page} // triggers animation on page change
@@ -147,7 +192,7 @@ const Products = ({ items, gender }: { items: any[]; gender: string }) => {
                 transition: { staggerChildren: 0.05, duration: 0.4 },
               },
             }}
-            className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-4"
+            className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-4 items-center justify-center content-center"
           >
             {products.map((item) => (
               <motion.li

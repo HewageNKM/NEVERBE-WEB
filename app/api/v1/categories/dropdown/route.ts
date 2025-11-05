@@ -1,9 +1,9 @@
-import { getBrandsFromInventory } from "@/services/ProductService";
+import { getCategoriesForDropdown } from "@/services/OtherService";
 import {NextResponse} from "next/server";
 
 export async function GET(req: Request) {
     try {
-        const brands = await getBrandsFromInventory();
+        const brands = await getCategoriesForDropdown();
         console.log("Brands Fetched: " + brands.length)
 
         return NextResponse.json(brands, {status: 200})
@@ -12,6 +12,4 @@ export async function GET(req: Request) {
         return NextResponse.json({message: 'Internal Server Error'}, {status: 500})
     }
 }
-
-export const dynamic = 'force-dynamic';
 

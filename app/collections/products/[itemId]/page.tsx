@@ -4,14 +4,15 @@ import {notFound} from "next/navigation";
 import {Item} from "@/interfaces";
 import {Metadata} from "next";
 import SimilarProducts from "@/app/collections/products/[itemId]/components/SimilarProducts";
-import { getItemById, getSimilarItems } from '@/services/ProductService';
+import { getProductById, getSimilarItems } from '@/services/ProductService';
+import { Product } from '@/interfaces/Product';
 
 // Dynamically generate metadata
 export async function generateMetadata({params}: { params: { itemId: string } }): Promise<Metadata> {
     let item: Item | null = null;
 
     try {
-        item = await getItemById(params.itemId);
+        item = await getProductById(params.itemId);
     } catch (e) {
         console.log(e);
     }
@@ -52,20 +53,20 @@ export async function generateMetadata({params}: { params: { itemId: string } })
 }
 
 const Page = async ({params}: { params: { itemId: string } }) => {
-    let item: Item | null = null;
+    let item: Product | null = null;
 
     try {
-        item = await getItemById(params.itemId);
+        item = await getProductById(params.itemId);
     } catch (e) {
         console.log(e);
     }
 
     if (!item) return notFound();
 
-    let similarItems: Item[] = [];
+    let similarItems: Product[] = [];
 
     try {
-        similarItems = await getSimilarItems(item.itemId);
+        similarItems = await getSimilarItems(item.id);
     } catch (e) {
         console.error("Error fetching similar items:", e.message);
     }
@@ -74,7 +75,7 @@ const Page = async ({params}: { params: { itemId: string } }) => {
         <main className="w-full lg:mt-32 mt-20 md:mt-28 overflow-clip">
             <div className="md:px-8 px-4 py-4">
                 <ProductHero item={item}/>
-                <SimilarProducts items={similarItems}/>
+                <SimilarProducts items={similarItems || []}/>
             </div>
         </main>
     );

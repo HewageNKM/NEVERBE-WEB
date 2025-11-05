@@ -2,7 +2,6 @@ import {configureStore} from '@reduxjs/toolkit'
 import cartSlice from "@/redux/cartSlice/cartSlice";
 import productsSlice from "@/redux/productsSlice/productsSlice";
 import authSlice from "@/redux/authSlice/authSlice";
-import manufacturerSlice from './manufacturerSlice/manufacturerSlice';
 import brandSlice from "@/redux/brandSlice/brandSlice";
 import headerSlice from "@/redux/headerSlice/headerSlice";
 
@@ -12,7 +11,6 @@ export const makeStore = () => {
             cartSlice,
             productsSlice,
             authSlice,
-            manufacturerSlice,
             brandSlice,
             headerSlice
         },

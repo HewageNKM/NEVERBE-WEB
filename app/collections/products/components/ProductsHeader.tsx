@@ -4,11 +4,8 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { DefaultBG } from "@/assets/images";
 
-const ProductsHeader = ({ gender }: { gender: string }) => {
-  const title =
-    gender && gender !== "all"
-      ? gender.charAt(0).toUpperCase() + gender.slice(1)
-      : "All Products";
+const ProductsHeader = () => {
+  const title = "All Products";
 
   return (
     <section className="relative w-full overflow-hidden">

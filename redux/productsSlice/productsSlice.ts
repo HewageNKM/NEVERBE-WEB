@@ -1,134 +1,110 @@
-import {Item} from "@/interfaces";
-import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import {WritableDraft} from "immer";
-import {getProducts} from "@/actions/inventoryAction";
+import { Item } from "@/interfaces";
+import { createSlice } from "@reduxjs/toolkit";
 
 interface ProductsSlice {
-    products: Item[],
-    page: number,
-    size: number,
-    showFilter: boolean,
-    isLoading: boolean,
-    selectedType: string,
-    error: string | null,
-    selectedManufacturers: string[],
-    selectedSizes: string[],
-    selectedSort: string
+  products: Item[];
+  page: number;
+  size: number;
+  showFilter: boolean;
+  selectedCategories: string[];
+  selectedBrands: string[];
+  selectedSort: string;
+  inStock: boolean;
 }
 
 const initialState: ProductsSlice = {
-    selectedManufacturers: [],
-    page: 1,
-    size: 20,
-    isLoading: false,
-    error: null,
-    selectedSizes: [],
-    selectedType: "all",
-    products: [],
-    showFilter: false,
-    selectedSort: ""
-}
+  selectedBrands: [],
+  page: 1,
+  size: 20,
+  selectedCategories: [],
+  products: [],
+  showFilter: false,
+  inStock: false,
+  selectedSort: "",
+};
 
 const productsSlice = createSlice({
-    name: 'products',
-    initialState,
-    reducers: {
-        toggleFilter: (state) => {
-            state.showFilter = !state.showFilter;
-        },
-        setSelectedType: (state, action) => {
-            state.selectedType = action.payload;
-        },
-        setSelectedSizes: (state, action) => {
-            state.selectedSizes = action.payload;
-        },
-        setSelectedSort: (state, action) => {
-            state.selectedSort = action.payload;
-        },
-        setSelectedManufacturers: (state, action) => {
-            state.selectedManufacturers = action.payload;
-        },
-        resetFilter: (state) => {
-            state.selectedManufacturers = [];
-            state.selectedSizes = [];
-            state.selectedType = "all";
-            state.selectedSort = "";
-        },
-        setProducts: (state, action) => {
-            state.products = action.payload;
-        },
-        setPage: (state, action) => {
-            state.page = action.payload;
-        },
-        setSize: (state, action) => {
-            state.size = action.payload;
-        }
+  name: "products",
+  initialState,
+  reducers: {
+    toggleFilter: (state) => {
+      state.showFilter = !state.showFilter;
     },
-    extraReducers: (builder) => {
-        builder.addCase(getInventory.fulfilled, (state, action) => {
+    setSelectedCategories: (state, action) => {
+      state.selectedCategories = action.payload;
+    },
 
-            //ManufacturersFilter by brand
-            if (state.selectedType == "all") {
-                state.products = action.payload;
-            } else if (state.selectedType == "shoes") {
-                state.products = action.payload.filter((item) => item.type == "shoes");
-            } else if (state.selectedType == "accessories") {
-                state.products = action.payload.filter((item) => item.type == "accessories");
-            } else if (state.selectedType == "sandals") {
-                state.products = action.payload.filter((item) => item.type == "sandals");
-            }
-
-            //ManufacturersFilter by brand
-            if (state.selectedManufacturers.length > 0) {
-                state.products = state.products.filter((item) => state.selectedManufacturers.includes(item.manufacturer));
-            }
-
-            //ManufacturersFilter by size
-            if (state.selectedSizes.length > 0) {
-                state.products = state.products.filter((item) => item.variants.some((variant) => variant.sizes.some((size) => state.selectedSizes.includes(size.size))));
-            }
-            sort(state, action);
-            state.isLoading = false;
-            state.error = null;
-        }).addCase(getInventory.pending, (state) => {
-            state.isLoading = true
-        }).addCase(getInventory.rejected, (state, action) => {
-            state.error = action.error.message || null;
-            state.isLoading = false;
-        })
-    }
-});
-
-const sort = (state: WritableDraft<ProductsSlice>, action: any) => {
-    if (state.selectedSort != "") {
+    setSelectedBrand: (state, action) => {
+      state.selectedBrands = action.payload;
+    },
+    resetFilter: (state) => {
+      state.selectedBrands = [];
+      state.selectedCategories = [];
+    },
+    setInStock: (state, action) => {
+      state.inStock = action.payload;
+    },
+    setSelectedSort: (state, action) => {
+      state.selectedSort = action.payload;
+      if (state.selectedSort != "") {
         if (state.selectedSort === "lh") {
-            state.products = state.products.sort((a, b) => a.sellingPrice - b.sellingPrice);
+          state.products = state.products.sort(
+            (a, b) => a.sellingPrice - b.sellingPrice
+          );
         } else if (state.selectedSort === "hl") {
-            state.products = state.products.sort((a, b) => b.sellingPrice - a.sellingPrice);
+          state.products = state.products.sort(
+            (a, b) => b.sellingPrice - a.sellingPrice
+          );
         } else if (state.selectedSort == "") {
-            state.products = action.payload
+          state.products = action.payload;
+        } else {
+          state.products = action.payload;
         }
-    }
-}
-
-export const getInventory = createAsyncThunk('products/getFilterProducts', async ({gender,page,size}:{gender:string,page:number,size:number}, thunkAPI) => {
-    try {
-        return await getProducts(gender,page,size);
-    } catch (e) {
-        console.log(e);
-        return thunkAPI.rejectWithValue(e);
-    }
+      } else {
+        state.products = action.payload;
+      }
+    },
+    setProducts: (state, action) => {
+      state.products = action.payload;
+    },
+    setPage: (state, action) => {
+      state.page = action.payload;
+    },
+    setSize: (state, action) => {
+      state.size = action.payload;
+    },
+    sort: (state, action) => {
+      if (state.selectedSort != "") {
+        if (state.selectedSort === "lh") {
+          state.products = state.products.sort(
+            (a, b) => a.sellingPrice - b.sellingPrice
+          );
+        } else if (state.selectedSort === "hl") {
+          state.products = state.products.sort(
+            (a, b) => b.sellingPrice - a.sellingPrice
+          );
+        } else if (state.selectedSort == "") {
+          state.products = action.payload;
+        } else {
+          state.products = action.payload;
+        }
+      } else {
+        state.products = action.payload;
+      }
+    },
+  },
 });
 
 export const {
-    toggleFilter,
-    setSelectedType,
-    setSelectedSizes,
-    setSelectedSort,
-    resetFilter,
-    setProducts,
-    setSelectedManufacturers,
-    setPage,
-    setSize
+  toggleFilter,
+  setSelectedCategories,
+  resetFilter,
+  setProducts,
+  setSelectedBrand,
+  setPage,
+  setSize,
+  setInStock,
+  setSelectedSort,
+  sort,
 } = productsSlice.actions;
 export default productsSlice.reducer;

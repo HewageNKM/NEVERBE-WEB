@@ -1,14 +1,15 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
-import { IoSearch, IoClose } from "react-icons/io5";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "@/redux/store";
+import { motion, AnimatePresence } from "framer-motion";
+import { IoSearch, IoClose, IoChevronDown, IoChevronUp } from "react-icons/io5";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/redux/store";
 import { toggleMenu } from "@/redux/headerSlice/headerSlice";
 import { getAlgoliaClient } from "@/util";
 import DropShadow from "@/components/DropShadow";
 import SearchDialog from "@/components/SearchDialog";
+import { ProductVariant } from "@/interfaces/ProductVariant";
 
 const Menu = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -17,8 +18,11 @@ const Menu = () => {
   const [items, setItems] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const [showSearchResult, setShowSearchResult] = useState(false);
-  const user = useSelector((state: RootState) => state.authSlice.user);
+  const [brands, setBrands] = useState<any[]>([]);
+  const [categories, setCategories] = useState<any[]>([]);
+  const [openSection, setOpenSection] = useState<string | null>(null);
 
+  // --- SEARCH ---
   const onSearch = async (evt: React.ChangeEvent<HTMLInputElement>) => {
     const query = evt.target.value;
     setSearch(query);
@@ -33,11 +37,21 @@ const Menu = () => {
     try {
       const searchResults = await searchClient.search({
         requests: [
-          { indexName: "inventory_index", query: query.trim(), hitsPerPage: 30 },
+          { indexName: "products_index", query: query.trim(), hitsPerPage: 30 },
         ],
       });
-      const filteredResults = searchResults.results[0].hits.filter(
-        (item) => item.status === "Active" && item.listing === "Active"
+      let filteredResults = searchResults.results[0].hits.filter(
+        (item: any) =>
+          item.status === true &&
+          item.listing === true &&
+          item.isDeleted == false
+      );
+      filteredResults = filteredResults.filter(
+        (item: any) =>
+          !item.variants.some(
+            (variant: ProductVariant) =>
+              variant.isDeleted === true && variant.status === false
+          )
       );
       setItems(filteredResults);
       setShowSearchResult(true);
@@ -48,7 +62,37 @@ const Menu = () => {
     }
   };
 
+  // --- FETCH BRANDS & CATEGORIES ---
+  const fetchBrands = async () => {
+    try {
+      const result = await fetch(`/api/v1/brands/dropdown`);
+      const data = await result.json();
+      setBrands(data);
+    } catch (error) {
+      console.error("Error fetching brands:", error);
+    }
+  };
+
+  const fetchCategories = async () => {
+    try {
+      const result = await fetch(`/api/v1/categories/dropdown`);
+      const data = await result.json();
+      setCategories(data);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchBrands();
+    fetchCategories();
+  }, []);
+
   const handleOverlayClick = () => dispatch(toggleMenu(false));
+
+  const toggleSection = (section: string) => {
+    setOpenSection((prev) => (prev === section ? null : section));
+  };
 
   return (
     <DropShadow
@@ -86,7 +130,10 @@ const Menu = () => {
           {isSearching ? (
             <div className="absolute top-7 right-6 w-5 h-5 border-2 border-gray-300 border-t-primary-500 rounded-full animate-spin"></div>
           ) : (
-            <IoSearch className="absolute top-7 right-6 text-gray-500" size={20} />
+            <IoSearch
+              className="absolute top-7 right-6 text-gray-500"
+              size={20}
+            />
           )}
 
           {showSearchResult && items.length > 0 && (
@@ -103,7 +150,7 @@ const Menu = () => {
         </div>
 
         {/* Navigation */}
-        <nav className="flex flex-col mt-4">
+        <nav className="flex flex-col mt-2 overflow-y-auto">
           {[
             { name: "Home", href: "/" },
             { name: "Shop", href: "/collections/products" },
@@ -119,9 +166,83 @@ const Menu = () => {
               {link.name}
             </Link>
           ))}
+
+          {/* CATEGORIES DROPDOWN */}
+          <div className="border-b border-gray-200">
+            <button
+              onClick={() => toggleSection("categories")}
+              className="w-full flex justify-between items-center p-4 text-gray-700 hover:text-primary-100 font-medium"
+            >
+              Categories
+              {openSection === "categories" ? (
+                <IoChevronUp size={20} />
+              ) : (
+                <IoChevronDown size={20} />
+              )}
+            </button>
+            <AnimatePresence>
+              {openSection === "categories" && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.25 }}
+                  className="flex flex-col pl-6 bg-gray-50"
+                >
+                  {categories.map((cat) => (
+                    <Link
+                      key={cat.id}
+                      href={`/collections/${cat.label}`}
+                      className="py-2 text-gray-600 hover:text-primary-100 text-sm border-b border-gray-100"
+                      onClick={() => dispatch(toggleMenu(false))}
+                    >
+                      {cat.label}
+                    </Link>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          {/* BRANDS DROPDOWN */}
+          <div className="border-b border-gray-200">
+            <button
+              onClick={() => toggleSection("brands")}
+              className="w-full flex justify-between items-center p-4 text-gray-700 hover:text-primary-100 font-medium"
+            >
+              Brands
+              {openSection === "brands" ? (
+                <IoChevronUp size={20} />
+              ) : (
+                <IoChevronDown size={20} />
+              )}
+            </button>
+            <AnimatePresence>
+              {openSection === "brands" && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.25 }}
+                  className="flex flex-col pl-6 bg-gray-50 max-h-60 overflow-y-auto"
+                >
+                  {brands.map((brand) => (
+                    <Link
+                      key={brand.id}
+                      href={`/collections/brands/${brand.label}`}
+                      className="py-2 text-gray-600 hover:text-primary-100 text-sm border-b border-gray-100"
+                      onClick={() => dispatch(toggleMenu(false))}
+                    >
+                      {brand.label}
+                    </Link>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </nav>
 
-        {/* Optional footer */}
+        {/* Footer */}
         <div className="mt-auto p-4 text-gray-400 text-sm text-center">
           &copy; {new Date().getFullYear()} NEVERBE
         </div>

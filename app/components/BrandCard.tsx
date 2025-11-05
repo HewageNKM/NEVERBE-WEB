@@ -21,7 +21,7 @@ const BrandCard: React.FC<BrandCardProps> = ({ brand, url, image }) => {
           height={250} // maintain aspect ratio
           src={image}
           alt={`${brand} Logo`}
-          className="object-contain md:w-[22rem] w-[14rem] md:h-[10rem] h-[5rem] transition-all duration-500 lg:group-hover:opacity-90"
+          className="object-contain w-[12rem] h-[8rem] transition-all duration-500 lg:group-hover:opacity-90"
         />
       </div>
     </Link>

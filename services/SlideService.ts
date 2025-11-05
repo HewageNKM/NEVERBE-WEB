@@ -10,7 +10,7 @@ export const getSliders = async () => {
     sliders.push({
       ...doc.data(),
       createdAt: doc.data().createdAt.toDate().toLocaleString(),
-    } as Slide);
+    });
   });
   console.log("Total sliders fetched:", sliders.length);
   return sliders;

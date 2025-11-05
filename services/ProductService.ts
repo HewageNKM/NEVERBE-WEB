@@ -1,95 +1,98 @@
 import { adminFirestore } from "@/firebase/firebaseAdmin";
 import { Item, PaymentMethod } from "@/interfaces";
+import { Product } from "@/interfaces/Product";
+import { ProductVariant } from "@/interfaces/ProductVariant";
 
-// Helper function to capitalize words
-const capitalizeWords = (str: string) => {
-  return str
-    .split(" ")
-    .map((word) =>
-      word.length === 2
-        ? word.toUpperCase()
-        : word.charAt(0).toUpperCase() + word.slice(1)
-    )
-    .join(" ");
-};
+function capitalizeWords(str: string) {
+  return str.replace(/\b\w/g, (char) => char.toUpperCase());
+}
 
-// Function to get all items in inventory
-export const getAllInventoryItems = async (page: number, limit: number) => {
+export const getProducts = async (
+  tags?: string[],
+  inStock?: boolean,
+  page: number = 1,
+  size: number = 20
+): Promise<Product[]> => {
   try {
-    console.log("Fetching all inventory items.");
-    const offSet = (page - 1) * limit;
-    const docs = await adminFirestore
-      .collection("inventory")
-      .where("status", "==", "Active")
-      .where("listing", "==", "Active")
-      .offset(offSet)
-      .limit(limit)
-      .get();
-    const items: Item[] = [];
-    docs.forEach((doc) => {
-      items.push({ ...doc.data(), createdAt: null, updatedAt: null } as Item);
-    });
-    console.log("Total inventory items fetched:", items.length);
-    return items;
-  } catch (e) {
-    console.log(e);
-    throw e;
+    let query: FirebaseFirestore.Query = adminFirestore
+      .collection("products")
+      .where("isDeleted", "==", false)
+      .where("status", "==", true)
+      .where("listing", "==", true);
+
+    // 🔹 Calculate offset
+    const offset = (page - 1) * size;
+
+    // 🔹 Filter by tags
+    if (tags && tags.length > 0) {
+      query = query.where("tags", "array-contains-any", tags);
+    }
+
+    // 🔹 Filter by stock availability
+    if (typeof inStock === "boolean") {
+      query = query.where("inStock", "==", inStock);
+    }
+
+    // 🔹 Apply offset and limit
+    query = query.offset(offset).limit(size);
+
+    // 🔹 Fetch documents
+    const snapshot = await query.get();
+
+    // 🔹 Transform & filter variants
+    const products: Product[] = snapshot.docs
+      .map((doc) => {
+        const product = {
+          ...(doc.data() as Product),
+          createdAt: null,
+          updatedAt: null,
+        };
+
+        const filteredVariants = (product.variants || []).filter(
+          (variant: ProductVariant) =>
+            variant.status === true && variant.isDeleted === false
+        );
+
+        return {
+          ...(product as Product),
+          variants: filteredVariants,
+        };
+      })
+      .filter((p) => (p.variants?.length ?? 0) > 0);
+
+    return products;
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    throw error;
   }
 };
 
-// Function to get all items in inventory
-export const getAllInventoryItemsByGender = async (
-  gender: string,
-  page: number,
-  limit: number
-) => {
-  try {
-    const offSet = (page - 1) * limit;
-    console.log(`Fetching all inventory items by ${gender}`);
-    const docs = await adminFirestore
-      .collection("inventory")
-      .where("status", "==", "Active")
-      .where("listing", "==", "Active")
-      .where("genders", "array-contains", gender)
-      .offset(offSet)
-      .limit(limit)
-      .get();
-    const items: Item[] = [];
-    docs.forEach((doc) => {
-      items.push({ ...doc.data(), createdAt: null, updatedAt: null } as Item);
-    });
-    console.log("Total inventory items fetched:", items.length);
-    return items;
-  } catch (e) {
-    console.log(e);
-    throw e;
-  }
-};
-
-// Function to fetch recent inventory items based on creation date
 export const getRecentItems = async () => {
   console.log("Fetching recent inventory items.");
   const docs = await adminFirestore
-    .collection("inventory")
-    .where("status", "==", "Active")
-    .orderBy("createdAt", "desc")
+    .collection("products")
+    .where("status", "==", true)
+    .where("isDeleted", "==", false)
+    .where("listing", "==", true)
     .limit(10)
     .get();
-  const items: Item[] = [];
+  console.log("Total recent items fetched:", docs.size);
+
+  const items: Product[] = [];
   docs.forEach((doc) => {
-    if (doc.data()?.listing == "Active") {
-      items.push({ ...doc.data(), createdAt: null, updatedAt: null } as Item);
-    }
+    items.push({ ...doc.data(), createdAt: null, updatedAt: null });
   });
   console.log("Total recent items fetched:", items.length);
   return items;
 };
 
-// Function to get hot products based on order count
 export const getHotProducts = async () => {
   try {
     console.log("Calculating hot products based on order counts.");
-    const ordersSnapshot = await adminFirestore.collection("orders").limit(100).get();
+    const ordersSnapshot = await adminFirestore
+      .collection("orders")
+      .limit(100)
+      .get();
     const itemCount: Record<string, number> = {};
 
     ordersSnapshot.forEach((doc) => {
@@ -113,23 +116,18 @@ export const getHotProducts = async () => {
     const hotProducts: Item[] = [];
     for (const itemId of sortedItems) {
       const itemDoc = await adminFirestore
-        .collection("inventory")
-        .doc(itemId)
+        .collection("products")
+        .where("status", "==", true)
+        .where("isDeleted", "==", false)
+        .where("listing", "==", true)
+        .where("id", "==", itemId)
         .get();
-      if (itemDoc.exists) {
-        if (itemDoc.data()?.status === "Active") {
-          if (itemDoc.data()?.listing === "Active") {
-            console.log(`Item found with ID ${itemDoc.data()?.itemId}`);
-            hotProducts.push({
-              ...itemDoc.data(),
-              createdAt: null,
-              updatedAt: null,
-            } as Item);
-          }
-        }
+      if (!itemDoc.empty) {
+        const item = itemDoc.docs[0].data() as Item;
+        hotProducts.push({ ...item, createdAt: null, updatedAt: null });
       }
       if (hotProducts.length === 10) {
-        break; // Exit the loop once we have 14 hot products
+        break;
       }
     }
     console.log("Total hot products fetched:", hotProducts.length);
@@ -141,216 +139,223 @@ export const getHotProducts = async () => {
 };
 
 // Function to get a single item by ID
-export const getItemById = async (itemId: string) => {
+export const getProductById = async (itemId: string) => {
   try {
     console.log(`Fetching item by ID: ${itemId}`);
     const itemDoc = await adminFirestore
-      .collection("inventory")
-      .doc(itemId)
+      .collection("products")
+      .where("status", "==", true)
+      .where("isDeleted", "==", false)
+      .where("listing", "==", true)
+      .where("id", "==", itemId)
       .get();
-    if (itemDoc.exists) {
-      if (itemDoc.data()?.status == "Active") {
-        if (itemDoc.data()?.listing == "Active") {
-          console.log(`Item found with ID ${itemId}`);
-          return {
-            ...itemDoc.data(),
-            createdAt: null,
-            updatedAt: null,
-          };
-        } else {
-          throw new Error(`Item with ID ${itemId} is not listed.`);
-        }
-      } else {
-        throw new Error(`Item with ID ${itemId} is not active.`);
-      }
-    } else {
-      throw new Error(`Item with ID ${itemId} not found.`);
-    }
+    const docData = itemDoc.docs[0].data();
+    return {
+      ...docData,
+      variants: docData.variants.filter(
+        (variant: ProductVariant) =>
+          variant.status === true && variant.isDeleted === false
+      ),
+      createdAt: null,
+      updatedAt: null,
+    };
   } catch (e) {
     console.log(e);
     throw e;
   }
 };
 
-// Functions for querying items by custom fields
-export const getItemsByField = async (
-  name: string,
-  fieldName: string,
-  page: number,
-  limit: number
+export const getProductsByBrand = async (
+  brand: string,
+  page: number = 1,
+  size: number = 10,
+  categories?: string[],
+  inStock?: boolean
 ) => {
   try {
-    console.log(`Fetching items where ${fieldName} == ${name}`);
-    const offSet = (page - 1) * limit;
-    const docs = await adminFirestore
-      .collection("inventory")
-      .where(fieldName, "==", name)
-      .offset(offSet)
-      .limit(limit)
+    console.log(`Fetching products by brand: ${brand}`);
+    const offset = (page - 1) * size;
+    const capitalizeBrand = capitalizeWords(brand.trim());
+
+    let query: FirebaseFirestore.Query = adminFirestore
+      .collection("products")
+      .where("brand", "==", capitalizeBrand)
+      .where("isDeleted", "==", false)
+      .where("status", "==", true)
+      .where("listing", "==", true);
+
+    // Optional: filter by categories
+    if (categories && categories.length > 0) {
+      query = query.where("tags", "array-contains-any", categories);
+    }
+
+    // Optional: filter by stock
+    if (inStock === true && typeof inStock === "boolean") {
+      query = query.where("inStock", "==", inStock);
+    }
+
+    const total = (await query.get()).size;
+
+    const snapshot = await query.offset(offset).limit(size).get();
+
+    const products: Product[] = snapshot.docs
+      .map((doc) => {
+        const product = doc.data() as Product;
+
+        // Keep only variants where status == true and isDeleted == false
+        const filteredVariants = (product.variants || []).filter(
+          (variant: ProductVariant) =>
+            variant.status === true && variant.isDeleted === false
+        );
+
+        return {
+          ...(product as Product),
+          createdAt: null,
+          updatedAt: null,
+          variants: filteredVariants,
+        };
+      })
+      .filter((p) => (p.variants?.length ?? 0) > 0);
+
+    return {
+      total: total,
+      dataList: products,
+    };
+  } catch (error) {
+    console.error("Error fetching products by brand:", error);
+    throw error;
+  }
+};
+
+export const getProductStock = async (
+  productId: string,
+  variantId: string,
+  size: string
+) => {
+  try {
+    const settingsSnap = await adminFirestore
+      .collection("app_settings")
+      .doc("erp_settings")
       .get();
-    const items: Item[] = [];
-    docs.forEach((doc) => {
-      if (doc.data()?.status == "Active") {
-        if (doc.data()?.listing == "Active") {
-          console.log(`Item found with ID ${doc.data().itemId}`);
-          items.push({
-            ...doc.data(),
-            createdAt: null,
-            updatedAt: null,
-          } as Item);
-        }
-      }
-    });
-    console.log(
-      `Total items fetched where ${fieldName} == ${name}:`,
-      items.length
-    );
-    return items;
+
+    const stockId = settingsSnap.data()?.onlineStockId;
+    if (!stockId) throw new Error("onlineStockId not found in ERP settings");
+
+    const stockSnap = await adminFirestore
+      .collection("stock_inventory")
+      .where("productId", "==", productId)
+      .where("variantId", "==", variantId)
+      .where("stockId", "==", stockId)
+      .where("size", "==", size)
+      .limit(1)
+      .get();
+
+    if (stockSnap.empty) {
+      return 0;
+    }
+
+    const stockDoc = stockSnap.docs[0];
+    const stockData = stockDoc.data();
+
+    return stockData.quantity;
   } catch (e) {
-    console.log(e);
+    console.error("Error getting product stock:", e);
     throw e;
   }
 };
 
-export const getItemsByTwoField = async (
-  firstValue: string,
-  secondValue: string,
-  firstFieldName: string,
-  secondFieldName: string,
-  page: number,
-  limit: number
-) => {
-  try {
-    const offSet = (page - 1) * limit;
-    console.log(
-      `Fetching items where ${firstFieldName} == ${firstValue} and ${secondFieldName} == ${secondValue}`
-    );
-    if (secondValue == "all") {
-      console.log(`Fetching items where ${firstFieldName} == ${firstValue}`);
-      return getItemsByField(firstValue, firstFieldName, page, limit);
-    }
-    const docs = await adminFirestore
-      .collection("inventory")
-      .where(firstFieldName, "==", firstValue)
-      .where(secondFieldName, "==", secondValue)
-      .where("listing", "==", "Active")
-      .where("status", "==", "Active")
-      .offset(offSet)
-      .limit(limit)
-      .get();
-    const items: Item[] = [];
-    docs.forEach((doc) => {
-      console.log(`Item found with ID ${doc.data().itemId}`);
-      items.push({ ...doc.data(), createdAt: null, updatedAt: null } as Item);
-    });
-    console.log(
-      `Total items fetched where ${firstFieldName} == ${firstValue} and ${secondFieldName} == ${secondValue}:`,
-      items.length
-    );
-    return items;
-  } catch (e) {
-    console.log(e);
-    throw e;
-  }
-};
 export const getSimilarItems = async (itemId: string) => {
   try {
     console.log(`Fetching similar items for item ID: ${itemId}`);
 
-    // Fetch the item document by ID
     const itemDoc = await adminFirestore
-      .collection("inventory")
+      .collection("products")
       .doc(itemId)
       .get();
     if (!itemDoc.exists) {
       throw new Error(`Item with ID ${itemId} not found.`);
     }
 
-    const item = itemDoc.data() as Item;
+    const item = itemDoc.data() as Product;
 
-    // Fetch items with matching type and brand
     const similarItemsQuery = await adminFirestore
-      .collection("inventory")
-      .where("type", "==", item.type)
-      .where("brand", "==", item.brand)
+      .collection("products")
+      .where("tags", "array-contains-any", [item.category.toLocaleLowerCase()])
+      .where("isDeleted", "==", false)
+      .where("status", "==", true)
+      .where("listing", "==", true)
       .limit(10)
       .get();
-    const items: Item[] = [];
-    // Process and filter the results
+    const items: Product[] = [];
+    
     const similarItems = similarItemsQuery.docs
-      .filter((doc) => doc.id !== itemId) // Exclude the original item
+      .filter((doc) => doc.id !== itemId)
       .map((doc) => {
         return {
           ...doc.data(),
           itemId: doc.id,
           createdAt: null,
           updatedAt: null,
-        } as Item;
+        };
       });
 
-    similarItems.forEach((doc) => {
-      if (doc.status == "Active") {
-        if (doc.listing == "Active") {
-          console.log(`Item found with ID ${doc.itemId}`);
-          items.push({ ...doc, createdAt: null, updatedAt: null } as Item);
-        }
-      }
-    });
-
-    console.log("Total similar items fetched:", similarItems.length);
-    return items;
+    console.log("Total similar items fetched:", items.length);
+    return similarItems;
   } catch (e) {
     console.error("Error fetching similar items:", e);
     throw e;
   }
 };
 
-export const getBrandsFromInventory = async () => {
+export const getProductsForSitemap = async () => {
   try {
-    console.log("Generating brands from inventory.");
-
-    const inventorySnapshot = await adminFirestore
-      .collection("inventory")
-      .where("status", "==", "Active")
-      .where("listing", "==", "Active")
+    console.log("Fetching products for sitemap.");
+    const snapshot = await adminFirestore
+      .collection("products")
+      .where("status", "==", true)
+      .where("isDeleted", "==", false)
+      .where("listing", "==", true)
       .get();
-
-    const manufacturers: Record<string, Set<string>> = {};
-
-    // Iterate through inventory items
-    inventorySnapshot.forEach((doc) => {
-      const data = doc.data();
-      const manufacturer = data.manufacturer?.toLowerCase();
-      const brandTitle = data.brand?.toLowerCase();
-
-      if (manufacturer && brandTitle) {
-        if (!manufacturers[manufacturer]) {
-          manufacturers[manufacturer] = new Set(); // Initialize manufacturer
-        }
-        manufacturers[manufacturer].add(brandTitle); // Add brand title to manufacturer
-      }
+    const products = snapshot.docs.map((doc) => {
+      return {
+        url: `${process.env.NEXT_PUBLIC_BASE_URL}/collections/products/${
+          doc.data().id
+        }`,
+        lastModified: new Date(),
+        priority: 0.7,
+      };
     });
+    console.log("Total products fetched for sitemap:", products.length);
+    return products;
+  } catch (e) {
+    console.error("Error fetching products for sitemap:", e);
+    throw e;
+  }
+};
 
-    // Map manufacturers and their brand titles to the brands array
-    const brandsArray = Object.entries(manufacturers).map(
-      ([manufacturer, titles]) => ({
-        name: capitalizeWords(manufacturer), // Capitalize manufacturer name
-        value: manufacturer,
-        url: `/collections/${manufacturer}`,
-        brands: Array.from(titles)
-          .sort()
-          .map((title) => ({
-            name: capitalizeWords(title), // Capitalize brand title
-            url: `/collections/${manufacturer}/${title}`,
-          })),
-      })
-    );
-
-    console.log("Brands successfully generated");
-    return brandsArray;
-  } catch (error) {
-    console.error("Error generating brands:", error);
-    throw error;
+export const getBrandForSitemap = async () => {
+  try {
+    console.log("Fetching brands for sitemap.");
+    const snapshot = await adminFirestore
+      .collection("brands")
+      .where("status", "==", true)
+      .where("isDeleted", "==", false)
+      .where("listing", "==", true)
+      .get();
+    const brands = snapshot.docs.map((doc) => {
+      return {
+        url: `${process.env.NEXT_PUBLIC_BASE_URL}/collections/brands/${
+          doc.data().name
+        }`,
+        lastModified: new Date(),
+        priority: 0.8,
+      };
+    });
+    console.log("Total brands fetched for sitemap:", brands.length);
+    return brands;
+  } catch (e) {
+    console.error("Error fetching brands for sitemap:", e);
+    throw e;
   }
 };
 

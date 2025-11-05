@@ -14,6 +14,7 @@ import {
 import { PaymentMethod } from "@/interfaces";
 import { getWebsitePaymentMethods } from "@/actions/paymentMethodsAction";
 import PaymentOptions from "./PaymentOptions";
+import axios from "axios";
 
 interface PaymentDetailsProps {
   paymentType: string;
@@ -33,25 +34,26 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
   const [isPaymentLoading, setIsPaymentLoading] = useState(false);
 
   useEffect(() => {
-    const fetchPaymentMethods = async () => {
-      try {
-        setIsPaymentLoading(true);
-        const methods = await getWebsitePaymentMethods();
-        setPaymentOptions(methods);
-        if (methods.length > 0 && !paymentType) {
-          setPaymentType(methods[0].name || "");
-          setPaymentTypeId(methods[0].paymentId || "");
-          setPaymentFee(methods[0].fee || 0);
-        }
-      } catch (e) {
-        console.error("Failed to fetch payment methods:", e);
-      } finally {
-        setIsPaymentLoading(false);
-      }
-    };
-
     fetchPaymentMethods();
   }, []);
+
+  const fetchPaymentMethods = async () => {
+    try {
+      setIsPaymentLoading(true);
+      const results = await axios.get("/api/v1/payment-methods");
+      const methods = results.data || [];
+      setPaymentOptions(methods);
+      if (methods.length > 0 && !paymentType) {
+        setPaymentType(methods[0].name || "");
+        setPaymentTypeId(methods[0].paymentId || "");
+        setPaymentFee(methods[0].fee || 0);
+      }
+    } catch (e) {
+      console.error("Failed to fetch payment methods:", e);
+    } finally {
+      setIsPaymentLoading(false);
+    }
+  };
 
   const subtotal = calculateSubTotal(cartItems);
   const shipping = calculateShippingCost(cartItems);

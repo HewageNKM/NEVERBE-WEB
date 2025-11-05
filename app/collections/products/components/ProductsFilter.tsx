@@ -4,15 +4,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { motion } from "framer-motion";
 import { BiReset } from "react-icons/bi";
 import {
-  getInventory,
   resetFilter,
-  setSelectedManufacturers,
-  setSelectedSizes,
-  setSelectedType,
+  setSelectedBrand,
+  setSelectedCategories,
+  setInStock,
 } from "@/redux/productsSlice/productsSlice";
 import { AppDispatch, RootState } from "@/redux/store";
-import { accessoriesSizes, productTypes, wearableSizes } from "@/constants";
-import { getBrands } from "@/actions/inventoryAction";
+import axios from "axios";
+import { Switch } from "@mui/material";
 
 const containerVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -28,50 +27,81 @@ const itemVariants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.25 } },
 };
 
-const ProductsFilter = ({ gender }: { gender: string }) => {
+const ProductsFilter = () => {
   const dispatch: AppDispatch = useDispatch();
-  const { selectedSizes, selectedType, selectedManufacturers, page, size } =
-    useSelector((state: RootState) => state.productsSlice);
+  const { selectedBrands, selectedCategories, inStock } = useSelector(
+    (state: RootState) => state.productsSlice
+  );
 
-  const [brands, setBrands] = useState([]);
-  const [isBrandsLoading, setIsBrandsLoading] = useState(true);
+  const [brands, setBrands] = useState<any[]>([]);
+  const [categories, setCategories] = useState<any[]>([]);
+  const [loadingBrands, setLoadingBrands] = useState(true);
+  const [loadingCategories, setLoadingCategories] = useState(true);
 
   const toggleBrand = (value: string) => {
-    if (selectedManufacturers.includes(value)) {
+    const lowerValue = value.toLowerCase();
+    if (selectedBrands.includes(lowerValue)) {
+      dispatch(setSelectedBrand(selectedBrands.filter((b) => b !== lowerValue)));
+    } else {
+      if (selectedBrands.length >= 5) {
+        toast.warn("You can select up to 5 brands only.");
+        return;
+      }
+      dispatch(setSelectedBrand([...selectedBrands, lowerValue]));
+    }
+  };
+
+  const toggleCategory = (value: string) => {
+    const lowerValue = value.toLowerCase();
+    if (selectedCategories.includes(lowerValue)) {
       dispatch(
-        setSelectedManufacturers(
-          selectedManufacturers.filter((b) => b !== value)
-        )
+        setSelectedCategories(selectedCategories.filter((c) => c !== lowerValue))
       );
     } else {
-      dispatch(setSelectedManufacturers([...selectedManufacturers, value]));
+      if (selectedCategories.length >= 5) {
+        return;
+      }
+      dispatch(setSelectedCategories([...selectedCategories, lowerValue]));
     }
   };
-
-  const toggleSize = (value: string) => {
-    if (selectedSizes.includes(value)) {
-      dispatch(setSelectedSizes(selectedSizes.filter((s) => s !== value)));
-    } else {
-      dispatch(setSelectedSizes([...selectedSizes, value]));
-    }
-  };
-
-  const fetchBrands = async () => {
-    try {
-      const result = await getBrands();
-      setBrands(result);
-    } finally {
-      setIsBrandsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    dispatch(getInventory({ gender, page, size }));
-  }, [selectedManufacturers, selectedType, selectedSizes, dispatch]);
 
   useEffect(() => {
     fetchBrands();
+    fetchCategories();
   }, []);
+
+  const fetchBrands = async () => {
+    setLoadingBrands(true);
+    try {
+      const result = await axios.get(`/api/v1/brands/dropdown`);
+      setBrands(result.data);
+    } catch (error: any) {
+      console.error("Error fetching brands:", error);
+    } finally {
+      setLoadingBrands(false);
+    }
+  };
+
+  const fetchCategories = async () => {
+    setLoadingCategories(true);
+    try {
+      const result = await axios.get(`/api/v1/categories/dropdown`);
+      setCategories(result.data);
+    } catch (error: any) {
+      console.error("Error fetching categories:", error);
+    } finally {
+      setLoadingCategories(false);
+    }
+  };
+
+  // --- Helper: Skeleton loader for buttons ---
+  const renderSkeletons = (count: number) =>
+    Array.from({ length: count }).map((_, i) => (
+      <div
+        key={i}
+        className="w-20 h-8 bg-gray-200 animate-pulse rounded-lg"
+      />
+    ));
 
   return (
     <motion.aside
@@ -94,107 +124,97 @@ const ProductsFilter = ({ gender }: { gender: string }) => {
           whileHover={{ scale: 1.1, rotate: 10 }}
           whileTap={{ scale: 0.95, rotate: -10 }}
           onClick={() => dispatch(resetFilter())}
-          className="p-2 rounded-full bg-yellow-400 hover:bg-yellow-500 transition"
+          className="p-2 rounded-full bg-primary-100 hover:bg-primary-100 transition"
           title="Reset Filters"
         >
           <BiReset size={20} className="text-white" />
         </motion.button>
       </div>
 
-      {/* Animated Content Container */}
       <motion.div
         variants={containerVariants}
         initial="hidden"
         animate="visible"
         className="flex flex-col gap-8"
       >
-        {/* TYPE */}
+        {/* In Stock Switch */}
+        <motion.div
+          variants={itemVariants}
+          className="flex justify-between items-center"
+        >
+          <h3 className="text-lg font-semibold text-gray-700">In Stock</h3>
+          <Switch
+            checked={inStock}
+            onChange={(e) => dispatch(setInStock(e.target.checked))}
+            color="warning"
+          />
+        </motion.div>
+
+        {/* Categories */}
         <motion.div variants={itemVariants}>
-          <h3 className="text-lg font-semibold mb-3 text-gray-700 border-b border-gray-200 pb-2">
-            Type
+          <h3 className="text-lg font-semibold mb-3 text-gray-700 border-b border-gray-200 pb-2 flex justify-between items-center">
+            <span>Categories</span>
+            <span className="text-xs text-gray-400">
+              {selectedCategories.length}/5
+            </span>
           </h3>
           <div className="flex flex-wrap gap-3">
-            {productTypes.map((type, index) => (
-              <motion.label
-                key={index}
-                whileHover={{ scale: 1.05 }}
-                className={`flex items-center gap-2 cursor-pointer rounded-lg px-3 py-1 border ${
-                  selectedType === type.value
-                    ? "bg-primary text-white border-primary"
-                    : "bg-gray-50 hover:bg-gray-100 border-gray-300"
-                } transition`}
-              >
-                <input
-                  checked={selectedType === type.value}
-                  onChange={() => {
-                    dispatch(setSelectedType(type.value));
-                    dispatch(setSelectedSizes([]));
-                  }}
-                  type="radio"
-                  className="hidden"
-                />
-                <span className="capitalize text-sm font-medium">
-                  {type.name}
-                </span>
-              </motion.label>
-            ))}
+            {loadingCategories
+              ? renderSkeletons(6)
+              : categories.map((category, index) => {
+                  const isSelected = selectedCategories.includes(
+                    category.label?.toLowerCase()
+                  );
+                  return (
+                    <motion.button
+                      key={index}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => toggleCategory(category.label)}
+                      className={`px-3 py-1.5 rounded-lg border font-medium cursor-pointer transition ${
+                        isSelected
+                          ? "bg-primary text-white border-primary"
+                          : "bg-gray-50 hover:bg-gray-100 border-gray-300"
+                      }`}
+                    >
+                      {category.label}
+                    </motion.button>
+                  );
+                })}
           </div>
         </motion.div>
 
-        {/* BRANDS */}
+        {/* Brands */}
         <motion.div variants={itemVariants}>
-          <h3 className="text-lg font-semibold mb-3 text-gray-700 border-b border-gray-200 pb-2">
-            Brands
+          <h3 className="text-lg font-semibold mb-3 text-gray-700 border-b border-gray-200 pb-2 flex justify-between items-center">
+            <span>Brands</span>
+            <span className="text-xs text-gray-400">
+              {selectedBrands.length}/5
+            </span>
           </h3>
           <div className="flex flex-wrap gap-3">
-            {isBrandsLoading ? (
-              <p className="text-gray-400 text-sm">Loading brands...</p>
-            ) : (
-              brands.map((brand, index) => (
-                <motion.button
-                  key={index}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => toggleBrand(brand.value)}
-                  className={`px-3 py-1.5 rounded-lg border font-medium cursor-pointer transition ${
-                    selectedManufacturers.includes(brand.value)
-                      ? "bg-gray-900 text-white border-gray-900"
-                      : "bg-gray-50 hover:bg-gray-100 border-gray-300"
-                  }`}
-                >
-                  {brand.name}
-                </motion.button>
-              ))
-            )}
-          </div>
-        </motion.div>
-
-        {/* SIZES */}
-        <motion.div variants={itemVariants}>
-          <h3 className="text-lg font-semibold mb-3 text-gray-700 border-b border-gray-200 pb-2">
-            Sizes
-          </h3>
-          <div className="flex flex-wrap gap-3">
-            {(selectedType === "all" ||
-            selectedType === "shoes" ||
-            selectedType === "sandals"
-              ? wearableSizes
-              : accessoriesSizes
-            ).map((size, index) => (
-              <motion.button
-                key={index}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => toggleSize(size)}
-                className={`px-3 py-1 rounded-lg border font-medium ${
-                  selectedSizes.includes(size)
-                    ? "bg-primary text-white border-primary"
-                    : "bg-gray-50 hover:bg-gray-100 border-gray-300"
-                } transition`}
-              >
-                {size}
-              </motion.button>
-            ))}
+            {loadingBrands
+              ? renderSkeletons(6)
+              : brands.map((brand, index) => {
+                  const isSelected = selectedBrands.includes(
+                    brand.label?.toLowerCase()
+                  );
+                  return (
+                    <motion.button
+                      key={index}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => toggleBrand(brand.label)}
+                      className={`px-3 py-1.5 rounded-lg border font-medium cursor-pointer transition ${
+                        isSelected
+                          ? "bg-primary text-white border-primary"
+                          : "bg-gray-50 hover:bg-gray-100 border-gray-300"
+                      }`}
+                    >
+                      {brand.label}
+                    </motion.button>
+                  );
+                })}
           </div>
         </motion.div>
       </motion.div>
