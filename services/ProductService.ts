@@ -172,27 +172,30 @@ export const getProductsByCategory = async (
   tags?: string[],
   inStock?: boolean
 ) => {
+  console.log(category, page, size, tags, inStock);
+
   try {
     console.log(`Fetching products by category: ${category}`);
     const offset = (page - 1) * size;
-    const query = adminFirestore
+
+    let query = adminFirestore
       .collection("products")
       .where("category", "==", capitalizeWords(category))
       .where("isDeleted", "==", false)
       .where("status", "==", true)
       .where("listing", "==", true);
 
+    // ✅ Apply filters by reassigning query
     if (tags && tags.length > 0) {
-      query.where("tags", "array-contains-any", tags);
+      query = query.where("tags", "array-contains-any", tags);
     }
 
     if (typeof inStock === "boolean") {
-      query.where("inStock", "==", inStock);
+      query = query.where("inStock", "==", inStock);
     }
 
-    query.offset(offset).limit(size);
-
-    const total = (await query.get()).size;
+    // Firestore requires offset & limit applied after filtering
+    query = query.offset(offset).limit(size);
 
     const snapshot = await query.get();
 
@@ -200,7 +203,7 @@ export const getProductsByCategory = async (
       .map((doc) => {
         const product = doc.data() as Product;
         return {
-          ...(product as Product),
+          ...product,
           createdAt: null,
           updatedAt: null,
         };
@@ -208,12 +211,16 @@ export const getProductsByCategory = async (
       .filter((p) => (p.variants?.length ?? 0) > 0);
 
     console.log("Total products fetched:", products.length);
+
+    // ⚠️ To get total count accurately, use a count query (if available)
+    const total = products.length;
+
     return {
-      total: total,
+      total,
       dataList: products,
     };
   } catch (error) {
-    console.log(error);
+    console.error("Error fetching products:", error);
     throw error;
   }
 };

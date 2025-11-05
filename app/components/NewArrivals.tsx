@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { Item } from "@/interfaces";
 import ItemCard from "@/components/ItemCard";
 import EmptyState from "@/components/EmptyState";
 import { motion } from "framer-motion";
@@ -13,8 +12,9 @@ import { Autoplay, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/autoplay";
+import { Product } from "@/interfaces/Product";
 
-const NewArrivals = ({ arrivals }: { arrivals: Item[] }) => {
+const NewArrivals = ({ arrivals }: { arrivals: Product[] }) => {
   if (arrivals.length === 0) {
     return <EmptyState heading="No new arrivals" />;
   }
