@@ -10,16 +10,21 @@ interface SearchResultCardProps {
   onClick: () => void;
 }
 
-const SearchResultCard: React.FC<SearchResultCardProps> = ({ item, onClick }) => {
-  const router = useRouter();
-
+const SearchResultCard: React.FC<SearchResultCardProps> = ({
+  item,
+  onClick,
+}) => {
   const discountedPrice =
     item.discount > 0
-      ? Math.round((item.sellingPrice - (item.discount * item.sellingPrice) / 100) / 10) * 10
+      ? Math.round(
+          (item.sellingPrice - (item.discount * item.sellingPrice) / 100) / 10
+        ) * 10
       : item.sellingPrice;
 
   return (
-    <Link href={`/collections/products/${item.id.toLowerCase()}`}
+    <Link
+      href={`/collections/products/${item.id.toLowerCase()}`}
+      onClick={onClick}
       className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer"
     >
       {/* Image */}
@@ -40,7 +45,9 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({ item, onClick }) =>
 
       {/* Details */}
       <div className="flex flex-col justify-center flex-1 overflow-hidden">
-        <h2 className="font-semibold font-display text-sm sm:text-base">{item.name}</h2>
+        <h2 className="font-semibold font-display text-sm sm:text-base">
+          {item.name}
+        </h2>
         <div className="flex items-center gap-2 mt-1">
           <span className="text-gray-900 font-bold text-sm sm:text-base">
             Rs {discountedPrice.toFixed(2)}
