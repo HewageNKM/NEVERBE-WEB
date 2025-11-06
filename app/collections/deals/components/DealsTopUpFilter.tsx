@@ -15,6 +15,16 @@ import axios from "axios";
 import { BiReset } from "react-icons/bi";
 import { Switch } from "@mui/material";
 import { toast } from "react-toastify";
+import DropShadow from "@/components/DropShadow";
+
+const sectionVariants = {
+  hidden: { opacity: 0, y: 10 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { staggerChildren: 0.05 },
+  },
+};
 
 const DealsTopUpFilter = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -67,18 +77,13 @@ const DealsTopUpFilter = () => {
   return (
     <AnimatePresence>
       {showFilter && (
-        <motion.div
-          className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex justify-end"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-        >
-          <motion.div
-            initial={{ x: "100%" }}
-            animate={{ x: 0 }}
-            exit={{ x: "100%" }}
-            transition={{ type: "spring", stiffness: 80, damping: 20 }}
-            className="w-[90%] sm:w-[400px] bg-white h-full flex flex-col overflow-y-auto rounded-l-2xl shadow-lg"
+        <DropShadow containerStyle="flex justify-start items-start">
+          <motion.section
+            className="bg-white/90 backdrop-blur-xl shadow-lg rounded-r-2xl p-6 w-[85vw] md:w-[50vw] lg:w-[30vw] h-screen overflow-y-auto relative"
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            variants={sectionVariants}
           >
             {/* Header */}
             <div className="sticky top-0 z-10 flex justify-between items-center bg-white border-b p-4">
@@ -185,8 +190,8 @@ const DealsTopUpFilter = () => {
                 </div>
               </div>
             </div>
-          </motion.div>
-        </motion.div>
+          </motion.section>
+        </DropShadow>
       )}
     </AnimatePresence>
   );

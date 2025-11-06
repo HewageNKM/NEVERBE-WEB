@@ -18,7 +18,7 @@ const BrandsSlider = ({items}) => {
         Popular Brands
       </h2>
 
-      <div className="max-w-6xl mx-auto px-4">
+      <div className="max-w-6xl mx-auto md:px-4 px-2">
         <Swiper
           modules={[Autoplay, Pagination]}
           spaceBetween={24}

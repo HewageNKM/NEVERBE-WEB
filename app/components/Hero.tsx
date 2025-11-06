@@ -17,7 +17,7 @@ import "swiper/css/autoplay";
 
 const Hero = ({ slides }: { slides: Slide[] }) => {
   return (
-    <section className="w-full mt-32 flex flex-col gap-8">
+    <section className="w-full lg:mt-32 mt-14 md:mt-24 flex flex-col gap-8">
       {/* Main Slider */}
       <ImagesSlider images={slides} />
 
