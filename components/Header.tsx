@@ -205,7 +205,7 @@ const Header = ({
               className="bg-white/10 backdrop-blur-md text-white placeholder-gray-400 px-4 py-2 pr-10 rounded-full w-60 focus:outline-none focus:ring-2 focus:ring-primary-200 transition-all"
             />
             {isSearching ? (
-              <div className="absolute top-2 right-3 w-4 h-4 border-2 border-gray-400 border-t-primary-200 rounded-full animate-spin"></div>
+              <div className="absolute top-2.5 right-3 w-4 h-4 border-2 border-gray-400 border-t-primary-200 rounded-full animate-spin"></div>
             ) : (
               <IoSearch
                 size={20}
