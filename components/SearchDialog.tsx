@@ -36,7 +36,7 @@ const SearchDialog: React.FC<SearchDialogProps> = ({
           <div className="flex items-center gap-2 px-1 pb-2 border-b border-gray-100 mb-2">
             <IoSearch className="text-gray-400 text-lg" />
             <span className="text-sm text-gray-600">
-              Showing results for <span className="font-medium text-gray-900">"{query}"</span>
+              Showing results for <span className="font-medium text-gray-900">&ldquo;{query}&ldquo;</span>
             </span>
           </div>
         )}
