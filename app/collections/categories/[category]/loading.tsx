@@ -17,14 +17,6 @@ const Loading = () => {
           <div className="absolute inset-0 rounded-full border-t-4 border-t-primary border-transparent" />
         </motion.div>
 
-        {/* Pulsing dot */}
-        <motion.div
-          className="absolute w-3 h-3 rounded-full bg-primary"
-          initial={{ opacity: 0.3, scale: 1 }}
-          animate={{ opacity: [0.3, 1, 0.3], scale: [1, 1.3, 1] }}
-          transition={{ duration: 1.5, repeat: Infinity }}
-        />
-
         {/* Label */}
         <motion.p
           className="text-sm font-medium tracking-wider text-gray-700 dark:text-gray-300"
