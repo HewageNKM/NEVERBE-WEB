@@ -27,19 +27,11 @@ const SearchDialog: React.FC<SearchDialogProps> = ({
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -10 }}
         transition={{ duration: 0.25 }}
-        className={`w-full max-w-md bg-white text-black rounded-xl shadow-xl border border-gray-200 p-3 sm:p-4 overflow-y-auto hide-scrollbar ${
+        className={`w-full max-w-lg bg-white text-black rounded-xl shadow-xl border border-gray-200 p-3 sm:p-4 overflow-y-auto hide-scrollbar ${
           containerStyle ? containerStyle : "absolute top-[3.5rem] right-0 z-50"
         }`}
         style={{ maxHeight }}
       >
-        {query && (
-          <div className="flex items-center gap-2 px-1 pb-2 border-b border-gray-100 mb-2">
-            <IoSearch className="text-gray-400 text-lg" />
-            <span className="text-sm text-gray-600">
-              Showing results for <span className="font-medium text-gray-900">&ldquo;{query}&ldquo;</span>
-            </span>
-          </div>
-        )}
 
         {/* Results */}
         {results.length > 0 ? (
