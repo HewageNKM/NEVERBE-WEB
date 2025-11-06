@@ -131,7 +131,7 @@ const Menu = () => {
             <div className="absolute top-7 right-6 w-5 h-5 border-2 border-gray-300 border-t-primary-500 rounded-full animate-spin"></div>
           ) : (
             <IoSearch
-              className="absolute top-8 right-6 text-gray-500"
+              className="absolute top-6 right-6 text-gray-500"
               size={20}
             />
           )}
