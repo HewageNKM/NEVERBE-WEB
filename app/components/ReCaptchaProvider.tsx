@@ -9,13 +9,15 @@ interface Props {
 
 const ReCaptchaProviderWrapper = ({ children }: Props) => {
   return (
-    <GoogleReCaptchaProvider
-      reCaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
-      useRecaptchaNet
-      scriptProps={{ async: true, defer: true, appendTo: "body" }}
-    >
-      {children}
-    </GoogleReCaptchaProvider>
+    <main className="z-50">
+      <GoogleReCaptchaProvider
+        reCaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
+        useRecaptchaNet
+        scriptProps={{ async: true, defer: true, appendTo: "body" }}
+      >
+        {children}
+      </GoogleReCaptchaProvider>
+    </main>
   );
 };
 
