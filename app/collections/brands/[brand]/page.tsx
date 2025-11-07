@@ -1,62 +1,152 @@
-import React from 'react';
-import {Item} from "@/interfaces";
-import {Metadata} from "next";
-import BrandProducts from "@/app/collections/brands/[brand]/components/BrandProducts";
-import BrandHeader from './components/BrandHeader';
-import { getProductsByBrand } from '@/services/ProductService';
+import React from "react";
+import type { Metadata } from "next";
+import { Item } from "@/interfaces";
+import BrandProducts from "./components/BrandProducts";
+import BrandHeader from "./components/BrandHeader";
+import { getProductsByBrand } from "@/services/ProductService";
 
-export async function generateMetadata({params}: {
-    params: {brand: string }
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { brand: string };
 }): Promise<Metadata> {
-    const title = `${params.brand.replace("%20", " ")}`;
-    const description = `Discover the latest products by ${params.brand} at NEVERBE. Shop now for quality items and special offers.`;
+  const decodedBrand = decodeURIComponent(params.brand).replace(/-/g, " ");
+  const capitalizedBrand =
+    decodedBrand.charAt(0).toUpperCase() + decodedBrand.slice(1);
 
-    return {
-        title,
-        description,
-        keywords: `${params.brand.replace("%20", " ")}, NEVERBE, online shopping, products`,
-        twitter: {
-            card: "summary",
-            site: "@neverbe",
-            creator: "@neverbe",
-            title,
-            description,
+  const title = `${capitalizedBrand} Collection | NEVERBE Sri Lanka`;
+  const description = `Shop premium ${capitalizedBrand} shoes and apparel at NEVERBE Sri Lanka. Discover high-quality replicas of Nike, Adidas, Puma, and New Balance with exclusive deals and fast delivery.`;
+
+  return {
+    title,
+    description,
+    keywords: [
+      `${capitalizedBrand}`,
+      `${capitalizedBrand} Sri Lanka`,
+      `${capitalizedBrand} online store`,
+      `${capitalizedBrand} offers`,
+      `${capitalizedBrand} discounts`,
+      "neverbe",
+      "neverbe.lk",
+      "shoes sri lanka",
+      "online shoe store",
+    ],
+    alternates: {
+      canonical: `https://neverbe.lk/collections/brands/${params.brand}`,
+    },
+    openGraph: {
+      title,
+      description,
+      url: `https://neverbe.lk/collections/brands/${params.brand}`,
+      type: "website",
+      siteName: "NEVERBE",
+      locale: "en_LK",
+      images: [
+        {
+          url: "https://neverbe.lk/api/v1/og",
+          width: 1200,
+          height: 630,
+          alt: `${capitalizedBrand} - NEVERBE Sri Lanka`,
         },
-        openGraph: {
-            title,
-            description,
-            url: `https://neverbe.lk/collections/brands/${params.brand.replace("%20", " ")}`,
-            type: "website",
-            images: [
-                {
-                    url: "https://neverbe.lk/api/og",
-                    width: 260,
-                    height: 260,
-                    alt: "NEVERBE Logo",
-                },
-            ],
-        },
-    };
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      site: "@neverbe",
+      creator: "@neverbe",
+      title,
+      description,
+      images: ["https://neverbe.lk/api/v1/og"],
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-snippet": -1,
+        "max-image-preview": "large",
+        "max-video-preview": -1,
+      },
+    },
+    category: "Ecommerce",
+    metadataBase: new URL("https://neverbe.lk"),
+  };
 }
 
-const Page = async ({params}: { params: {brand: string } }) => {
-    let items: Item[] = [];
-    const brand = params.brand.replace("%20", " ");
-    try {
-        items = (await getProductsByBrand(brand,1,20)).dataList;
-    } catch (e) {
-        console.error("Error fetching items:", e);
-    }
+const Page = async ({ params }: { params: { brand: string } }) => {
+  const brand = decodeURIComponent(params.brand).replace(/-/g, " ");
+  let items: Item[] = [];
 
-    return (
-        <main className="w-full relative lg:mt-28 mt-16 mb-5 overflow-hidden">
-            <section className="w-full">
-                <BrandHeader brand={brand} />
-                <BrandProducts items={items } brand={brand}/>
-            </section>
-        </main>
-    );
+  try {
+    const res = await getProductsByBrand(brand, 1, 20);
+    items = res.dataList || [];
+  } catch (e) {
+    console.error("Error fetching brand products:", e);
+  }
+
+  const brandSchema = {
+    "@context": "https://schema.org",
+    "@type": "Brand",
+    name: brand,
+    url: `https://neverbe.lk/collections/brands/${encodeURIComponent(brand)}`,
+    logo: "https://neverbe.lk/api/v1/og",
+    description: `Explore ${brand} shoes and collections available at NEVERBE Sri Lanka.`,
+  };
+
+  const productListSchema = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: `${brand} Collection - NEVERBE Sri Lanka`,
+    description: `Shop authentic-looking ${brand} replica shoes available in Sri Lanka with exclusive deals.`,
+    url: `https://neverbe.lk/collections/brands/${encodeURIComponent(brand)}`,
+    mainEntity: {
+      "@type": "ItemList",
+      itemListElement: items.map((product, index) => ({
+        "@type": "Product",
+        position: index + 1,
+        name: product.name,
+        image: product.thumbnail?.url || "https://neverbe.lk/api/v1/og",
+        description:
+          product.description ||
+          `Shop ${product.name} available now at NEVERBE Sri Lanka.`,
+        url: `https://neverbe.lk/product/${product.id}`,
+        brand: {
+          "@type": "Brand",
+          name: brand,
+        },
+        offers: {
+          "@type": "Offer",
+          priceCurrency: "LKR",
+          price: product.sellingPrice || "0.00",
+          availability: "https://schema.org/InStock",
+          url: `https://neverbe.lk/product/${product.id}`,
+          priceValidUntil: new Date(
+            Date.now() + 1000 * 60 * 60 * 24 * 30
+          ).toISOString(),
+        },
+      })),
+    },
+  };
+
+  return (
+    <main className="w-full relative lg:mt-28 mt-16 mb-5 overflow-hidden">
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify([brandSchema, productListSchema]),
+        }}
+      />
+
+      <section className="w-full">
+        <BrandHeader brand={brand} />
+        <BrandProducts items={items} brand={brand} />
+      </section>
+    </main>
+  );
 };
 
-export const dynamic = 'force-dynamic';
 export default Page;
+export const dynamic = "force-dynamic";
