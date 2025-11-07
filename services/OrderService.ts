@@ -1,7 +1,8 @@
 import { adminFirestore } from "@/firebase/firebaseAdmin";
 import { sendOrderConfirmedSMS } from "./NotificationService";
 import { updateOrAddOrderHash } from "./IntegrityService";
-
+import { toSafeLocaleString } from "./UtilService";
+import { FieldValue } from "firebase-admin/firestore";
 
 export const getOrderByIdForInvoice = async (orderId: string) => {
   try {
@@ -15,7 +16,6 @@ export const getOrderByIdForInvoice = async (orderId: string) => {
 
     const order = doc.docs[0].data();
     const createdAtDate = order.createdAt.toDate();
-    const updatedAtDate = order.updatedAt.toDate();
 
     const diffDays =
       (Date.now() - createdAtDate.getTime()) / (1000 * 60 * 60 * 24);
@@ -23,14 +23,13 @@ export const getOrderByIdForInvoice = async (orderId: string) => {
 
     return {
       ...order,
-      createdAt: createdAtDate.toLocaleString(),
-      updatedAt: updatedAtDate.toLocaleString(),
+      createdAt: toSafeLocaleString(order.createdAt),
+      updatedAt: toSafeLocaleString(order.updatedAt),
       expired,
-      tracking: null,
       customer: {
         ...order.customer,
-        createdAt: null,
-        updatedAt: null,
+        createdAt: toSafeLocaleString(order.customer.createdAt),
+        updatedAt: toSafeLocaleString(order.customer.updatedAt),
       },
     };
   } catch (e) {
@@ -49,6 +48,7 @@ export const updatePayment = async (
     await adminFirestore.collection("orders").doc(orderId).update({
       paymentId,
       paymentStatus: status,
+      updatedAtL: FieldValue.serverTimestamp(),
     });
 
     const orderDoc = await adminFirestore

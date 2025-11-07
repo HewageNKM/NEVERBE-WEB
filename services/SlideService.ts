@@ -1,5 +1,6 @@
 import { adminFirestore } from "@/firebase/firebaseAdmin";
 import { Slide } from "@/interfaces";
+import { toSafeLocaleString } from "./UtilService";
 
 // Function to fetch all slider items
 export const getSliders = async () => {
@@ -9,7 +10,8 @@ export const getSliders = async () => {
   docs.forEach((doc) => {
     sliders.push({
       ...doc.data(),
-      createdAt: doc.data().createdAt.toDate().toLocaleString(),
+      createdAt: toSafeLocaleString(doc.data().createdAt),
+      updatedAt: toSafeLocaleString(doc.data().updatedAt)
     });
   });
   console.log("Total sliders fetched:", sliders.length);
