@@ -30,7 +30,7 @@ const ItemCard = ({ item }: { item: Product }) => {
   return (
     <article className="relative group w-[9rem] sm:w-[12rem] md:w-[15rem] rounded-2xl bg-white border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden">
       <Link
-        href={`/collections/products/${item?.id?.toLowerCase()}`}
+        href={`/collections/products/${item?.id}`}
         aria-label={`View details for ${item.name}`}
       >
         {/* ---------- IMAGE ---------- */}
@@ -61,7 +61,7 @@ const ItemCard = ({ item }: { item: Product }) => {
 
         {/* ---------- CONTENT ---------- */}
         <div className="p-3 sm:p-4 flex flex-col gap-1">
-          <h2 className="text-sm font-display sm:text-base md:text-lg font-semibold line-clamp-1">
+          <h2 className="text-sm font-display sm:text-base md:text-lg font-semibold">
             {item.name}
           </h2>
 

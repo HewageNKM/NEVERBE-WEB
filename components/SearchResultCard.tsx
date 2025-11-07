@@ -19,7 +19,7 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({ item, onClick }) =>
 
   return (
     <Link
-      href={`/collections/products/${item.id.toLowerCase()}`}
+      href={`/collections/products/${item.id}`}
       onClick={onClick}
       className="group flex items-center gap-4 rounded-xl p-3 sm:p-4 transition-all hover:bg-gray-50 hover:shadow-sm border border-transparent hover:border-gray-200 cursor-pointer"
     >
