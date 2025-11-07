@@ -18,7 +18,7 @@ const initialState: CategoryFilterState = {
   inStock: false,
   products: [],
   page: 1,
-  size: 10,
+  size: 12,
   selectedSort: "NO SELCT",
 };
 

@@ -13,7 +13,7 @@ interface DealsState {
 
 const initialState: DealsState = {
   page: 1,
-  size: 20,
+  size: 12,
   total: 0,
   inStock: false,
   selectedBrands: [],
