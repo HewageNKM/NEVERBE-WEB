@@ -237,7 +237,7 @@ const Products = ({ items }: { items: Product[] }) => {
           className="flex justify-center mt-10"
         >
           <Pagination
-            count={totalProduct / size}
+            count={Math.ceil(totalProduct / size)}
             page={page}
             variant="outlined"
             shape="rounded"
