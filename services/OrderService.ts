@@ -1,10 +1,8 @@
-import { Item, Order } from "@/interfaces";
 import { adminFirestore } from "@/firebase/firebaseAdmin";
 import { sendOrderConfirmedSMS } from "./NotificationService";
 import { updateOrAddOrderHash } from "./IntegrityService";
 
 
-// ✅ Get order for invoice
 export const getOrderByIdForInvoice = async (orderId: string) => {
   try {
     const doc = await adminFirestore
@@ -31,8 +29,8 @@ export const getOrderByIdForInvoice = async (orderId: string) => {
       tracking: null,
       customer: {
         ...order.customer,
-        createdAt: order.customer.createdAt.toDate().toLocaleString(),
-        updatedAt: order.customer.updatedAt.toDate().toLocaleString(),
+        createdAt: null,
+        updatedAt: null,
       },
     };
   } catch (e) {
