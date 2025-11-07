@@ -40,9 +40,7 @@ export const calculateTransactionFeeCharge = (
     calculateTotal(items) -
     calculateTotalDiscount(items) +
     calculateShippingCost(items);
-
   const transactionFee = total * (fee / 100);
-
   return parseFloat(transactionFee.toFixed(2));
 };
 
