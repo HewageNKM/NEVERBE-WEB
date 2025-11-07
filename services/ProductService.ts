@@ -457,6 +457,31 @@ export const getBrandForSitemap = async () => {
     throw e;
   }
 };
+export const getCategoriesForSitemap = async () => {
+  try {
+    console.log("Fetching categories for sitemap.");
+    const snapshot = await adminFirestore
+      .collection("categories")
+      .where("status", "==", true)
+      .where("isDeleted", "==", false)
+      .get();
+
+    const categories = snapshot.docs.map((doc) => {
+      return {
+        url: `${process.env.NEXT_PUBLIC_BASE_URL}/collections/categories/${
+          doc.data().name
+        }`,
+        lastModified: new Date(),
+        priority: 0.8,
+      };
+    });
+    console.log("Total categories fetched for sitemap:", categories.length);
+    return categories;
+  } catch (e) {
+    console.error("Error fetching categories for sitemap:", e);
+    throw e;
+  }
+};
 
 export const getPaymentMethods = async () => {
   try {

@@ -1,10 +1,11 @@
-import { getBrandForSitemap, getProductsForSitemap } from '@/services/ProductService';
+import { getBrandForSitemap, getProductsForSitemap,getCategoriesForSitemap } from '@/services/ProductService';
 import type { MetadataRoute } from 'next'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     const allProducts = await getProductsForSitemap();
     const getBrands = await getBrandForSitemap();
+    const getCategories = await getCategoriesForSitemap()
 
     return [
         {
@@ -21,6 +22,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         },
         ...allProducts,
         ...getBrands,
+        ...getCategories,
+        {
+            url:'https://neverbe.lk/collections/deals',
+            lastModified: new Date(),
+            priority: 0.8,
+            changeFrequency:"weekly"
+        },
         {
             url: 'https://neverbe.lk/aboutUs',
             lastModified: new Date(),
