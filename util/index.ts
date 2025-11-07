@@ -32,13 +32,19 @@ export const calculateTotal = (items: CartItem[]) => {
   return items.reduce((acc, item) => acc + item.price * item.quantity, 0);
 };
 
-export const calculateTransactionFeeCharge = (items: CartItem[],fee:number)=>{
-  return (
+export const calculateTransactionFeeCharge = (
+  items: CartItem[],
+  fee: number
+) => {
+  const total =
     calculateTotal(items) -
     calculateTotalDiscount(items) +
-    calculateShippingCost(items)
-  ) * (fee / 100)
-}
+    calculateShippingCost(items);
+
+  const transactionFee = total * (fee / 100);
+
+  return parseFloat(transactionFee.toFixed(2));
+};
 
 export const calculateSubTotal = (items: CartItem[]) => {
   return (
