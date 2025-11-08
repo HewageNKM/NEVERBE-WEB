@@ -1,5 +1,4 @@
 "use client";
-import React from "react";
 import ImagesSlider from "@/app/components/ImagesSlider";
 import Link from "next/link";
 import { Slide } from "@/interfaces";
@@ -41,6 +40,7 @@ const Hero = ({ slides }: { slides: Slide[] }) => {
               autoplay={{ delay: 4000, disableOnInteraction: false }}
               loop={true}
               pagination={{
+                dynamicBullets: true,
                 clickable: true,
                 el: ".custom-pagination",
               }}
@@ -53,7 +53,7 @@ const Hero = ({ slides }: { slides: Slide[] }) => {
                 >
                   <CollectionCard
                     url={collection.url}
-                    gender={collection.gender}
+                    label={collection.label}
                     image={collection.image}
                   />
                 </SwiperSlide>
@@ -62,17 +62,6 @@ const Hero = ({ slides }: { slides: Slide[] }) => {
               {/* Custom Pagination Container */}
               <div className="custom-pagination mb-1 flex justify-center gap-3 mt-4"></div>
             </Swiper>
-          </div>
-
-          {/* Shop All Button */}
-          <div className="flex justify-center mt-2">
-            <Link
-              href="/collections/products"
-              className="flex items-center px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary-400 transition-all shadow-md hover:shadow-lg font-medium text-lg"
-            >
-              <FaCartPlus size={24} className="mr-2" />
-              Shop All
-            </Link>
           </div>
         </div>
       </div>

@@ -1,33 +1,61 @@
-// Correct CollectionCard.tsx
-import React from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
+"use client";
+
+import React from "react";
+import Link from "next/link";
+import Image from "next/image";
 
 interface CollectionProps {
   url: string;
-  gender: string;
+  label: string;
   image: string;
 }
 
-const CollectionCard: React.FC<CollectionProps> = ({ url, gender, image }) => {
+const CollectionCard: React.FC<CollectionProps> = ({ url, label, image }) => {
+  console.log(image);
   return (
-    <article className="relative group md:w-[15rem] md:h-[20rem] w-[10rem] h-[15rem] lg:hover:shadow-lg transition-shadow duration-300 rounded-lg overflow-hidden">
-      <Link href={`${url}?gender=${gender.toLowerCase()}`} passHref>
-        <div className="relative w-full h-full">
+    <article
+      className="
+        relative group overflow-hidden rounded-2xl 
+        bg-surface/50 backdrop-blur-sm
+        transition-all duration-500
+        hover:shadow-xl hover:-translate-y-1
+      "
+    >
+      <Link href={url} className="block w-full h-full">
+        {/* Image */}
+        <div className="relative w-full aspect-3/4">
           <Image
-            width={100}
-            height={120}
+            fill
             src={image}
-            alt={`${gender} category`}
-            className="w-full h-full object-cover"
+            alt={`${label} collection`}
+            sizes="(max-width: 768px) 100vw, 300px"
+            className="
+              object-cover 
+              transition-transform duration-700 ease-out 
+              group-hover:scale-110
+            "
+            priority
           />
-        </div>
-        <div
-          className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center lg:opacity-0 lg:group-hover:opacity-100 opacity-100 transition-opacity duration-300"
-        >
-          <h2 className="text-white text-xl md:text-2xl lg:text-3xl font-semibold uppercase tracking-wide">
-            {gender}
-          </h2>
+          {/* Overlay */}
+          <div
+            className="
+              absolute inset-0 flex items-center justify-center
+              bg-linear-to-t from-black/60 via-black/20 to-transparent
+              transition-all duration-500
+              group-hover:from-black/70 group-hover:via-black/40
+            "
+          >
+            <h2
+              className="
+                text-white text-xl text-center md:text-2xl lg:text-3xl font-semibold uppercase 
+                tracking-widest drop-shadow-lg 
+                transition-all duration-300
+                group-hover:scale-105
+              "
+            >
+              {label}
+            </h2>
+          </div>
         </div>
       </Link>
     </article>

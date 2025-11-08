@@ -1,14 +1,12 @@
 import {
+  BOOTSBG,
   DeliveryImage,
   GoodsImage,
-  KidsBG,
-  MenBG,
   MoneyImage,
   PayHereWhiteLongBanner,
   RunningShoeBG,
   SlidesBG,
   SupportImage,
-  WomenBG,
 } from "@/assets/images";
 import { FooterLink, SocialMedia } from "@/interfaces";
 import { IoLogoTiktok } from "react-icons/io5";
@@ -16,65 +14,7 @@ import { IoLogoFacebook, IoLogoInstagram } from "react-icons/io";
 import { MdEmail } from "react-icons/md";
 import { FaMobile } from "react-icons/fa";
 import { FaMessage, FaPhone } from "react-icons/fa6";
-import NikeLogo from "@/assets/images/nike-logo.jpg";
-import AdidasLogo from "@/assets/images/adidas-logo.png";
-import NewBalanceLogo from "@/assets/images/new-logo.png";
-import PoloLogo from "@/assets/images/polo-logo.png";
-import CROCS from "@/assets/images/crocs-logo.png";
-import LuvionVuittonLogo from "@/assets/images/louis-vuitton-logo.png";
-import VANSLogo from "@/assets/images/vans-logo.png"
-import LACOSTELogo from "@/assets/images/lacoste-logo.jpg"
 
-export const brands = [
-  {
-    id: 1,
-    name: "Nike",
-    image: NikeLogo,
-    url: "/collections/nike",
-  },
-  {
-    id: 2,
-    name: "Adidas",
-    image: AdidasLogo,
-    url: "/collections/adidas",
-  },
-  {
-    id: 3,
-    name: "New Balance",
-    image: NewBalanceLogo,
-    url: "/collections/new%20balance",
-  },
-  {
-    id: 4,
-    name: "Polo",
-    image: PoloLogo,
-    url: "/collections/polo",
-  },
-  {
-    id: 5,
-    name: "Crocs",
-    image: CROCS,
-    url: "/collections/crocs",
-  },
-  {
-    id: 6,
-    name: "Luvion",
-    image: LuvionVuittonLogo,
-    url: "/collections/luvion%20vuitton",
-  },
-  {
-    id: 7,
-    name: "VANS",
-    image: VANSLogo,
-    url: "/collections/vans",
-  },
-  {
-    id: 8,
-    name: "Lacoste",
-    image: LACOSTELogo,
-    url: "/collections/lacoste",
-  },
-];
 export const seoKeywords: string[] = [
   "never be lk",
   "neverbe",
@@ -128,35 +68,7 @@ export const sortingOptions = [
     value: "HIGH TO LOW",
   },
 ];
-export const productTypes = [
-  { name: "All", value: "all" },
-  { name: "Shoes", value: "shoes" },
-  { name: "Sandals", value: "sandals" },
-  { name: "Accessories", value: "accessories" },
-];
-export const wearableSizes = [
-  "27",
-  "28",
-  "29",
-  "30",
-  "31",
-  "32",
-  "33",
-  "34",
-  "35",
-  "36",
-  "37",
-  "38",
-  "39",
-  "40",
-  "41",
-  "42",
-  "43",
-  "44",
-  "45",
-  "46",
-];
-export const accessoriesSizes = ["S", "M", "L", "XL", "Free Size", "200ml"];
+
 export const whyUs = [
   {
     title: "Low Prices",
@@ -415,99 +327,21 @@ export enum ContactUs {
   supportEmail = "support@neverbe.lk",
   embeddedMap = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d7920.379213809781!2d80.01265924429379!3d6.986933221248742!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae2fff7a1993cd9%3A0x19b93ace8a7b3b80!2sNEVERBE!5e0!3m2!1sen!2slk!4v1729443817724!5m2!1sen!2slk",
 }
-export const sizeData = [
-  { "US - Women's": "4", "US - Men's": "2.5", UK: "1.5", CM: "21", EU: "34.5" },
-  { "US - Women's": "4.5", "US - Men's": "3", UK: "2", CM: "21.5", EU: "35" },
-  { "US - Women's": "5", "US - Men's": "3.5", UK: "2.5", CM: "22", EU: "35.5" },
-  { "US - Women's": "5.5", "US - Men's": "4", UK: "3", CM: "22.5", EU: "36" },
-  { "US - Women's": "6", "US - Men's": "4.5", UK: "3.5", CM: "23", EU: "36.5" },
-  { "US - Women's": "6.5", "US - Men's": "5", UK: "4", CM: "23.5", EU: "37.5" },
-  { "US - Women's": "7", "US - Men's": "5.5", UK: "4.5", CM: "24", EU: "38" },
-  { "US - Women's": "7.5", "US - Men's": "6", UK: "5", CM: "24.5", EU: "38.5" },
-  { "US - Women's": "8", "US - Men's": "6.5", UK: "5.5", CM: "25", EU: "39" },
-  { "US - Women's": "8.5", "US - Men's": "7", UK: "6", CM: "25.5", EU: "40" },
-  { "US - Women's": "9", "US - Men's": "7.5", UK: "6.5", CM: "26", EU: "40.5" },
-  { "US - Women's": "9.5", "US - Men's": "8", UK: "7", CM: "26.5", EU: "41" },
-  { "US - Women's": "10", "US - Men's": "8.5", UK: "7.5", CM: "27", EU: "42" },
-  {
-    "US - Women's": "10.5",
-    "US - Men's": "9",
-    UK: "8",
-    CM: "27.5",
-    EU: "42.5",
-  },
-  { "US - Women's": "11", "US - Men's": "9.5", UK: "8.5", CM: "28", EU: "43" },
-  { "US - Women's": "11.5", "US - Men's": "10", UK: "9", CM: "28.5", EU: "44" },
-  {
-    "US - Women's": "12",
-    "US - Men's": "10.5",
-    UK: "9.5",
-    CM: "29",
-    EU: "44.5",
-  },
-  {
-    "US - Women's": "12.5",
-    "US - Men's": "11",
-    UK: "10",
-    CM: "29.5",
-    EU: "45",
-  },
-  {
-    "US - Women's": "13",
-    "US - Men's": "11.5",
-    UK: "10.5",
-    CM: "30",
-    EU: "46",
-  },
-  {
-    "US - Women's": "13.5",
-    "US - Men's": "12",
-    UK: "11",
-    CM: "30.5",
-    EU: "46.5",
-  },
-  {
-    "US - Women's": "14",
-    "US - Men's": "12.5",
-    UK: "11.5",
-    CM: "31",
-    EU: "47",
-  },
-  // Kids' sizes
-  { "US - Kids": "10", UK: "9", CM: "16", EU: "27" },
-  { "US - Kids": "11", UK: "10", CM: "17", EU: "28" },
-  { "US - Kids": "12", UK: "11", CM: "18", EU: "29" },
-  { "US - Kids": "13", UK: "12", CM: "19", EU: "30" },
-  { "US - Kids": "1", UK: "13", CM: "20", EU: "31" },
-  { "US - Kids": "2", UK: "1", CM: "21", EU: "32" },
-  { "US - Kids": "3", UK: "2", CM: "22", EU: "33" },
-  { "US - Kids": "4", UK: "3", CM: "23", EU: "34" },
-  { "US - Kids": "5", UK: "4", CM: "24", EU: "35" },
-];
+
 export const collectionList = [
   {
-    gender: "Men",
-    url: "/collections/products",
-    image: MenBG,
-  },
-  {
-    gender: "Women",
-    url: "/collections/products",
-    image: WomenBG,
-  },
-  {
-    gender: "Kids",
-    url: "/collections/products",
-    image: KidsBG,
-  },
-  {
-    gender:"Slides",
-    url:"/collections/products",
+    label:"Slides & Slippers & Sandals",
+    url:"/collections/categories/Sandals%20&%20Slippers%20&%20Slides",
     image: SlidesBG 
   },
   {
-    gender:"Running",
-    url:"/collections/products",
+    label:"Boots",
+    url:"/collections/categories/Boots",
+    image: BOOTSBG
+  },
+  {
+    label:"Running/Sport Shoes",
+    url:"/collections/categories/Running%20Shoes",
     image:RunningShoeBG
   }
 ];
