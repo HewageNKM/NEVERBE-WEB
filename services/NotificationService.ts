@@ -6,7 +6,6 @@ import { getOrderByIdForInvoice } from "./OrderService";
 import { verifyCaptchaToken } from "./CapchaService";
 
 const TEXT_API_KEY = process.env.TEXT_API_KEY;
-
 const OTP_COLLECTION = "otp_verifications";
 const OTP_EXPIRY_MINUTES = 5;
 const NOTIFICATION_TRACKER = "notifications_sent";
@@ -14,49 +13,47 @@ const OTP_TTL_DAYS = 1;
 const COOLDOWN_SECONDS = 60;
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
-/**
- * Generate a 6-digit OTP
- */
+/** Generate a 6-digit OTP */
 const generateOTP = (): string => {
-  return Math.floor(100000 + Math.random() * 900000).toString();
+  const otp = Math.floor(100000 + Math.random() * 900000).toString();
+  console.log("[OTP] Generated OTP:", otp);
+  return otp;
 };
 
-/**
- * Hash OTP using SHA256
- */
+/** Hash OTP using SHA256 */
 const hashOTP = (otp: string): string => {
-  return crypto.createHash("sha256").update(otp).digest("hex");
+  const hashed = crypto.createHash("sha256").update(otp).digest("hex");
+  console.log("[OTP] Hashed OTP:", hashed);
+  return hashed;
 };
 
-/**
- * Helper: Generate SHA256 hash for content (consistent duplicate prevention)
- */
+/** Generate SHA256 hash for content (duplicate prevention) */
 const generateHash = (input: string): string => {
-  return crypto.createHash("sha256").update(input).digest("hex");
+  const hashed = crypto.createHash("sha256").update(input).digest("hex");
+  console.log("[Hash] Generated hash for input:", input, "Hash:", hashed);
+  return hashed;
 };
 
-/**
- * Helper: Calculate subtotal
- */
+/** Calculate subtotal */
 export const calculateTotal = (items: OrderItem[]): number =>
   items.reduce((total, item) => total + item.price * item.quantity, 0);
 
-/**
- * Send COD verification OTP with CAPTCHA and time-based rate limiting.
- * The function now requires a captchaToken from the frontend.
- */
+/** Send COD verification OTP with CAPTCHA and rate limiting */
 export const sendCODVerificationOTP = async (
   phone: string,
   captchaToken: string
 ) => {
   try {
+    console.log(`[OTP Service] sendCODVerificationOTP called for ${phone}`);
+
     if (!TEXT_API_KEY) throw new Error("Missing TEXT_API_KEY");
     if (!phone || !captchaToken)
       throw new Error("Missing phone number or CAPTCHA token");
 
-    const captchaResponse = verifyCaptchaToken(captchaToken);
+    const captchaResponse = await verifyCaptchaToken(captchaToken);
+    console.log("[OTP Service] CAPTCHA verification result:", captchaResponse);
     if (!captchaResponse) {
-      console.log(`[OTP Service] CAPTCHA verification failed for ${phone}`);
+      console.warn(`[OTP Service] CAPTCHA verification failed for ${phone}`);
       return {
         success: false,
         message: "CAPTCHA verification failed. Please try again.",
@@ -65,7 +62,6 @@ export const sendCODVerificationOTP = async (
 
     const now = new Date();
 
-    // Get the most recent OTP request for this number to check the cooldown
     const latestOtpQuery = await adminFirestore
       .collection(OTP_COLLECTION)
       .where("phone", "==", phone)
@@ -79,9 +75,8 @@ export const sendCODVerificationOTP = async (
       const secondsSinceLastRequest =
         (now.getTime() - lastRequestTime.getTime()) / 1000;
 
-      // 2. Enforce a cooldown period to prevent rapid requests
       if (secondsSinceLastRequest < COOLDOWN_SECONDS) {
-        console.log(`[OTP Service] Cooldown active for ${phone}`);
+        console.warn(`[OTP Service] Cooldown active for ${phone}`);
         return {
           success: false,
           message: `Please wait ${Math.ceil(
@@ -90,9 +85,8 @@ export const sendCODVerificationOTP = async (
         };
       }
 
-      // 3. Check for an existing *active* OTP (same logic as before)
       if (!lastOtpData.verified && lastOtpData.expiresAt.toDate() > now) {
-        console.log(`[OTP Service] Active OTP already exists for ${phone}`);
+        console.warn(`[OTP Service] Active OTP already exists for ${phone}`);
         return {
           success: false,
           message:
@@ -101,11 +95,11 @@ export const sendCODVerificationOTP = async (
       }
     }
 
-    // All checks passed, generate and send a new OTP
     const otp = generateOTP();
     const otpHash = hashOTP(otp);
     const expiresAt = new Date(now.getTime() + OTP_EXPIRY_MINUTES * 60000);
 
+    console.log(`[OTP Service] Storing OTP in Firestore for ${phone}`);
     await adminFirestore.collection(OTP_COLLECTION).add({
       phone,
       otpHash,
@@ -117,6 +111,8 @@ export const sendCODVerificationOTP = async (
     });
 
     const text = `Your order verification code is ${otp}. Valid for 5 minutes.`;
+    console.log(`[OTP Service] Sending SMS via API to ${phone}: ${text}`);
+
     await axios.post(
       "https://api.textit.biz/",
       { to: phone, text },
@@ -131,22 +127,21 @@ export const sendCODVerificationOTP = async (
     console.log(`[OTP Service] OTP sent successfully to ${phone}`);
     return { success: true, message: "OTP sent successfully." };
   } catch (error) {
-    console.error(`[OTP Service] Failed to send OTP:`, error);
+    console.error(`[OTP Service] Failed to send OTP for ${phone}:`, error);
     return { success: false, message: "Failed to send OTP." };
   }
 };
 
-/**
- * Verify the latest OTP for a phone
- */
+/** Verify the latest OTP for a phone */
 export const verifyCODOTP = async (phone: string, otp: string) => {
   try {
+    console.log(`[OTP Service] verifyCODOTP called for ${phone}`);
+
     if (!phone || !otp) throw new Error("Missing phone or OTP");
 
     const otpHash = hashOTP(otp);
     const now = new Date();
 
-    // Get latest OTP for this phone
     const snapshot = await adminFirestore
       .collection(OTP_COLLECTION)
       .where("phone", "==", phone)
@@ -155,6 +150,7 @@ export const verifyCODOTP = async (phone: string, otp: string) => {
       .get();
 
     if (snapshot.empty) {
+      console.warn(`[OTP Service] No OTP found for ${phone}`);
       return { success: false, message: "No OTP found for this number." };
     }
 
@@ -162,54 +158,52 @@ export const verifyCODOTP = async (phone: string, otp: string) => {
     const data = doc.data();
 
     if (data.verified) {
+      console.warn(`[OTP Service] OTP already verified for ${phone}`);
       return { success: false, message: "OTP already verified." };
     }
     if (now > data.expiresAt.toDate()) {
+      console.warn(`[OTP Service] OTP expired for ${phone}`);
       return { success: false, message: "OTP expired." };
     }
     if (data.otpHash !== otpHash) {
       const newAttempts = (data.attempts || 0) + 1;
       await doc.ref.update({ attempts: newAttempts });
+      console.warn(
+        `[OTP Service] Invalid OTP entered for ${phone}, attempts: ${newAttempts}`
+      );
       return { success: false, message: "Invalid OTP." };
     }
 
-    // Mark as verified
-    await doc.ref.update({
-      verified: true,
-      verifiedAt: now,
-    });
-
-    console.log(`[OTP Service] OTP verified for ${phone}`);
+    await doc.ref.update({ verified: true, verifiedAt: now });
+    console.log(`[OTP Service] OTP verified successfully for ${phone}`);
     return { success: true, message: "OTP verified successfully." };
   } catch (error) {
-    console.error(`[OTP Service] OTP verification failed:`, error);
+    console.error(`[OTP Service] OTP verification failed for ${phone}:`, error);
     return { success: false, message: "OTP verification failed." };
   }
 };
 
-/**
- * Send Predefined Order Confirmation SMS (Prevents duplicates using hash)
- */
+/** Send Predefined Order Confirmation SMS (Prevents duplicates using hash) */
 export const sendOrderConfirmedSMS = async (orderId: string) => {
   try {
+    console.log(
+      `[Notification Service] sendOrderConfirmedSMS called for order: ${orderId}`
+    );
+
     if (!TEXT_API_KEY) {
-      console.log(`[Notification Service] Missing TEXT_API_KEY`);
+      console.warn(`[Notification Service] Missing TEXT_API_KEY`);
       return false;
     }
 
-    console.log(`[Notification Service] Preparing SMS for order: ${orderId}`);
-
-    //@ts-ignore
     const order: Order = await getOrderByIdForInvoice(orderId);
     if (!order?.customer?.phone) {
-      console.log(
+      console.warn(
         `[Notification Service] Missing customer phone for order: ${orderId}`
       );
       return false;
     }
 
     const phone = order.customer.phone.trim();
-
     const total =
       calculateTotal(order.items) +
       (order.fee || 0) +
@@ -217,7 +211,6 @@ export const sendOrderConfirmedSMS = async (orderId: string) => {
       (order.discount || 0);
 
     const customerName = order.customer.name.split(" ")[0];
-
     const invoiceDownloadUrl = `${BASE_URL}/checkout/success?orderId=${orderId}`;
     const text = `✅ Hi ${customerName}, your order #${orderId.toUpperCase()} totaling Rs.${total.toFixed(
       2
@@ -225,7 +218,6 @@ export const sendOrderConfirmedSMS = async (orderId: string) => {
 
     const hashValue = generateHash(phone + text);
 
-    // Check duplicate
     const existing = await adminFirestore
       .collection(NOTIFICATION_TRACKER)
       .where("orderId", "==", orderId)
@@ -234,36 +226,27 @@ export const sendOrderConfirmedSMS = async (orderId: string) => {
       .get();
 
     if (!existing.empty) {
-      console.log(
+      console.warn(
         `[Notification Service] Duplicate SMS detected for order: ${orderId}`
       );
       return false;
     }
 
-    // Send SMS
-    try {
-      await axios.post(
-        "https://api.textit.biz/",
-        { to: phone, text },
-        {
-          headers: {
-            Authorization: `Basic ${TEXT_API_KEY}`,
-            "Content-Type": "application/json",
-            Accept: "*/*",
-          },
-        }
-      );
-      console.log(`[Notification Service] SMS sent for ${orderId} to ${phone}`);
-    } catch (smsError) {
-      console.error(
-        `[Notification Service] Failed to send SMS for ${orderId}:`,
-        smsError
-      );
-      // Fail silently
-      return false;
-    }
+    await axios.post(
+      "https://api.textit.biz/",
+      { to: phone, text },
+      {
+        headers: {
+          Authorization: `Basic ${TEXT_API_KEY}`,
+          "Content-Type": "application/json",
+          Accept: "*/*",
+        },
+      }
+    );
+    console.log(
+      `[Notification Service] SMS sent for order ${orderId} to ${phone}`
+    );
 
-    // Log to Firestore
     await adminFirestore.collection(NOTIFICATION_TRACKER).add({
       orderId,
       type: "sms",

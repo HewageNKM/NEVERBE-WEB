@@ -162,7 +162,7 @@ const BrandProducts = ({
           <div className="relative" ref={sortRef}>
             <button
               onClick={() => setOpenSort(!openSort)}
-              className="flex items-center gap-2 text-gray-700 px-4 py-2 border rounded-lg hover:bg-gray-100 transition"
+              className="flex items-center gap-2 text-gray-700 px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-100 transition"
             >
               <IoFilter />
               <span>Sort by: {selectedSort.toUpperCase()}</span>
@@ -211,7 +211,7 @@ const BrandProducts = ({
           >
             {products.map((item) => (
               <motion.li
-                key={item.itemId}
+                key={item.id}
                 className="group"
                 variants={cardVariants}
                 whileHover="hover"

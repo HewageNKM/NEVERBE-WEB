@@ -132,13 +132,13 @@ const Header = ({
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -5 }}
                     transition={{ duration: 0.2 }}
-                    className="absolute top-full left-0 mt-2 bg-black/70 border backdrop-blur-md border-gray-700 rounded-md shadow-lg py-2 w-48"
+                    className="absolute top-full left-0 mt-2 bg-black/70 border backdrop-blur-md border-gray-700 max-h-80 overflow-y-auto rounded-md hide-scrollbar shadow-lg py-2"
                   >
                     {categories.map((cat) => (
                       <li key={cat.id || cat.label}>
                         <Link
                           href={`/collections/categories/${cat.label}`}
-                          className="block px-4 py-2 hover:bg-primary-200/20 text-sm text-gray-200"
+                          className="block px-4 py-2 hover:bg-primary-200/20 text-sm text-gray-200 whitespace-nowrap"
                         >
                           {cat.label}
                         </Link>
@@ -164,7 +164,7 @@ const Header = ({
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -5 }}
                     transition={{ duration: 0.2 }}
-                    className="absolute top-full left-0 mt-2 backdrop-blur-md bg-black/70 border border-gray-700 rounded-md shadow-lg py-2 w-48 max-h-80 overflow-y-auto"
+                    className="absolute top-full left-0 mt-2 backdrop-blur-md bg-black/70 border border-gray-700 rounded-md shadow-lg py-2 w-48 max-h-80 overflow-y-auto hide-scrollbar"
                   >
                     {brands.map((brand) => (
                       <li key={brand.id || brand.name}>
@@ -172,7 +172,7 @@ const Header = ({
                           href={`/collections/brands/${
                             brand.slug || brand.label
                           }`}
-                          className="block px-4 py-2 hover:bg-primary-200/20 text-sm text-gray-200"
+                          className="block px-4 py-2 hover:bg-primary-200/20 text-sm text-gray-200 whitespace-nowrap"
                         >
                           {brand.label}
                         </Link>

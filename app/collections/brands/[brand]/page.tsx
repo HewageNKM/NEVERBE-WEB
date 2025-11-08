@@ -6,11 +6,8 @@ import BrandHeader from "./components/BrandHeader";
 import { getProductsByBrand } from "@/services/ProductService";
 
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { brand: string };
-}): Promise<Metadata> {
+export async function generateMetadata( context: { params: Promise<{ brand: string }> }): Promise<Metadata> {
+  const params = await context.params;
   const decodedBrand = decodeURIComponent(params.brand).replace(/-/g, " ");
   const capitalizedBrand =
     decodedBrand.charAt(0).toUpperCase() + decodedBrand.slice(1);
@@ -75,7 +72,8 @@ export async function generateMetadata({
   };
 }
 
-const Page = async ({ params }: { params: { brand: string } }) => {
+const Page = async ( context: { params: Promise<{ brand: string }> }) => {
+  const params = await context.params;
   const brand = decodeURIComponent(params.brand).replace(/-/g, " ");
   let items: Item[] = [];
 
@@ -149,4 +147,3 @@ const Page = async ({ params }: { params: { brand: string } }) => {
 };
 
 export default Page;
-export const dynamic = "force-dynamic";

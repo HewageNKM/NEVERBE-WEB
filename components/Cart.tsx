@@ -25,7 +25,7 @@ const Cart = () => {
         className="w-full sm:w-[80vw] md:w-[60vw] lg:w-[28vw] bg-white h-screen flex flex-col shadow-2xl relative"
       >
         {/* Header */}
-        <div className="flex justify-between items-center px-6 py-4 border-b">
+        <div className="flex justify-between items-center px-6 py-4 border-b border-gray-200">
           <h2 className="text-2xl font-display font-semibold tracking-wide">Your Cart</h2>
           <button
             onClick={() => dispatch(hideCart())}
@@ -46,7 +46,7 @@ const Cart = () => {
         </div>
 
         {/* Summary */}
-        <div className="border-t p-6 space-y-3 bg-gray-50">
+        <div className="border-t border-gray-200  p-6 space-y-3 bg-gray-50">
           <div className="flex justify-between text-gray-700">
             <span>Total:</span>
             <span>Rs. {calculateTotal(cartItems).toFixed(2)}</span>
@@ -59,7 +59,7 @@ const Cart = () => {
             <span>Shipping:</span>
             <span>Rs. {calculateShippingCost(cartItems).toFixed(2)}</span>
           </div>
-          <div className="flex justify-between text-lg font-semibold border-t pt-2">
+          <div className="flex justify-between text-lg font-semibold border-t border-gray-200 pt-2">
             <span>Subtotal:</span>
             <span>Rs. {calculateSubTotal(cartItems).toFixed(2)}</span>
           </div>

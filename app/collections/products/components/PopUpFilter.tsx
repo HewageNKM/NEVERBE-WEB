@@ -141,7 +141,7 @@ const PopUpFilter = () => {
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
-          className="flex justify-between items-center border-b pb-3 mb-5"
+          className="flex justify-between items-center border-b border-gray-200 pb-3 mb-5"
         >
           <h2 className="text-2xl font-display font-bold text-gray-800">
             Filters

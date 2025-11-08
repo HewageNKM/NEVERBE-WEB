@@ -5,6 +5,7 @@ export const GET = async (req: NextRequest) => {
   try {
     const url = new URL(req.url);
 
+    // Parse query parameters
     const page = Number(url.searchParams.get("page") || 1);
     const size = Number(url.searchParams.get("size") || 20);
     const tags = url.searchParams.getAll("tag");
@@ -13,11 +14,16 @@ export const GET = async (req: NextRequest) => {
     const inStock =
       inStockParam === "true" ? true : inStockParam === "false" ? false : undefined;
 
+    // Logs for debugging
+    console.log("[Deals API] Query params:", { page, size, tags, inStock });
+
+    // Fetch deals products
     const products = await getDealsProducts(page, size, tags, inStock);
+    console.log(`[Deals API] Fetched products count: ${products?.length || 0}`);
 
     return NextResponse.json(products, { status: 200 });
   } catch (error: any) {
-    console.error("Error in GET /api/products:", error);
+    console.error("[Deals API] Error:", error.message, error.stack);
     return NextResponse.json(
       { success: false, message: error.message || "Internal Server Error" },
       { status: 500 }

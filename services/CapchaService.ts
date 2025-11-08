@@ -6,33 +6,46 @@ import axios from "axios";
  * @returns boolean - true if verification succeeds, false otherwise.
  */
 export const verifyCaptchaToken = async (token: string): Promise<boolean> => {
-  if (!process.env.RECAPTCHA_SECRET_KEY) {
-    throw new Error("RECAPTCHA_SECRET_KEY is not set in environment variables.");
-  }
-
   try {
+    console.log("[Captcha] Starting reCAPTCHA verification");
+
+    if (!process.env.RECAPTCHA_SECRET_KEY) {
+      console.error("[Captcha] RECAPTCHA_SECRET_KEY not set");
+      throw new Error("RECAPTCHA_SECRET_KEY is not set in environment variables.");
+    }
+
     const secret = process.env.RECAPTCHA_SECRET_KEY;
+    console.log("[Captcha] Using secret from environment");
 
     const params = new URLSearchParams();
     params.append("secret", secret);
     params.append("response", token);
+
+    console.log("[Captcha] Sending request to Google reCAPTCHA API with token:", token);
 
     const { data } = await axios.post(
       "https://www.google.com/recaptcha/api/siteverify",
       params
     );
 
-    console.log("reCAPTCHA verification response:", data);
+    console.log("[Captcha] reCAPTCHA API response:", data);
 
-    // For reCAPTCHA v3, you can also check score if needed
-    // Example: data.score > 0.5 is considered human
-    if (data.success && data.score && data.score >= 0.5) {
-      return true;
+    if (data.success) {
+      console.log("[Captcha] Verification success");
+      if (data.score !== undefined) {
+        console.log("[Captcha] reCAPTCHA v3 score:", data.score);
+      }
+    } else {
+      console.warn("[Captcha] Verification failed:", data["error-codes"] || "Unknown error");
     }
 
-    return false;
-  } catch (error) {
-    console.error("reCAPTCHA verification failed:", error);
+    // For reCAPTCHA v3, consider score >= 0.5 as human
+    const isHuman = data.success && data.score && data.score >= 0.5;
+    console.log("[Captcha] Is human:", isHuman);
+
+    return isHuman;
+  } catch (error: any) {
+    console.error("[Captcha] Error during verification:", error.message, error.stack);
     return false;
   }
 };

@@ -1,8 +1,8 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 const ALLOWED_ORIGINS = ["https://neverbe.lk", "https://www.neverbe.lk"];
 
-export function middleware(req: Request) {
+export function proxy(req: NextRequest) {
   const origin = req.headers.get("origin");
   const url = new URL(req.url);
 

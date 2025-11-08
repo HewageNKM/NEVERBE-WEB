@@ -133,7 +133,7 @@ const CheckoutForm = () => {
 
         dispatch(clearCart());
         toast.success("Order verified successfully!");
-        router.replace(`/checkout/success?orderId=${pendingOrder.orderId}`);
+        router.replace(`/checkout/success/${pendingOrder.orderId}`);
 
         setShowOtpModal(false);
         setOtp("");
@@ -264,7 +264,7 @@ const CheckoutForm = () => {
       address: customer.address,
       city: customer.city,
       items: `${cartItems.length} Products`,
-      returnUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/checkout/success?orderId=${orderId}`,
+      returnUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/checkout/success/${orderId}`,
       cancelUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/checkout/fail?orderId=${orderId}`,
       notifyUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/ipg/payhere/notify`,
     };

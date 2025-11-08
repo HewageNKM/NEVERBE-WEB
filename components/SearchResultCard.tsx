@@ -33,7 +33,7 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({ item, onClick }) =>
           className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
         />
         {item.discount > 0 && (
-          <span className="absolute top-1 left-1 bg-amber-400 text-black text-[10px] sm:text-xs font-semibold px-1.5 py-0.5 rounded">
+          <span className="absolute top-1 left-1 bg-red-500 text-black text-[10px] sm:text-xs font-semibold px-1.5 py-0.5 rounded">
             -{item.discount}%
           </span>
         )}
@@ -41,7 +41,7 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({ item, onClick }) =>
 
       {/* Product Info */}
       <div className="flex-1 overflow-hidden">
-        <h2 className="font-semibold text-gray-900 text-sm sm:text-base truncate group-hover:text-amber-600 transition-colors">
+        <h2 className="font-semibold text-gray-900 text-sm sm:text-base truncate group-hover:text-primary transition-colors">
           {item.name}
         </h2>
 

@@ -6,7 +6,10 @@ import SimilarProducts from "@/app/collections/products/[itemId]/components/Simi
 import { getProductById, getSimilarItems } from "@/services/ProductService";
 import type { Metadata } from "next";
 
-export async function generateMetadata({ params }: { params: { itemId: string } }): Promise<Metadata> {
+export async function generateMetadata(context: {
+  params: Promise<{ itemId: string }>;
+}): Promise<Metadata> {
+  const params = await context.params;
   let item: Product | null = null;
 
   try {
@@ -23,7 +26,9 @@ export async function generateMetadata({ params }: { params: { itemId: string } 
   }
 
   const title = `${item.name} | NEVERBE Sri Lanka`;
-  const description = item.description || `Discover ${item.name} at NEVERBE. Premium replica shoes in Sri Lanka.`;
+  const description =
+    item.description ||
+    `Discover ${item.name} at NEVERBE. Premium replica shoes in Sri Lanka.`;
 
   return {
     title,
@@ -66,7 +71,8 @@ export async function generateMetadata({ params }: { params: { itemId: string } 
   };
 }
 
-const Page = async ({ params }: { params: { itemId: string } }) => {
+const Page = async (context: { params: Promise<{ itemId: string }> }) => {
+  const params = await context.params;
   let item: Product | null = null;
 
   try {
@@ -102,7 +108,9 @@ const Page = async ({ params }: { params: { itemId: string } }) => {
       priceCurrency: "LKR",
       price: item.sellingPrice || "0.00",
       availability: "https://schema.org/InStock",
-      priceValidUntil: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30).toISOString(),
+      priceValidUntil: new Date(
+        Date.now() + 1000 * 60 * 60 * 24 * 30
+      ).toISOString(),
     },
   };
 
@@ -120,5 +128,4 @@ const Page = async ({ params }: { params: { itemId: string } }) => {
   );
 };
 
-export const dynamic = "force-dynamic";
 export default Page;

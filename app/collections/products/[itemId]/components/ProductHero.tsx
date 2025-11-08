@@ -72,7 +72,7 @@ const ProductHero = ({ item }: { item: Product }) => {
       const res = await axios.get(
         `/api/v1/inventory?productId=${item.id}&variantId=${selectedVariant.variantId}&size=${size}`
       );
-      setAvailableStock(res.data || 0);
+      setAvailableStock(res.data.quantity || 0);
     } catch (error) {
       console.error("Error fetching stock:", error);
       setAvailableStock(0);
@@ -180,16 +180,6 @@ const ProductHero = ({ item }: { item: Product }) => {
                 />
               </motion.div>
             </AnimatePresence>
-
-            {outOfStocks && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="absolute top-3 left-3 bg-red-500 text-white text-xs font-semibold px-3 py-1 rounded-md shadow"
-              >
-                {outOfStocksLabel}
-              </motion.div>
-            )}
           </div>
 
           {/* Variant thumbnails */}
@@ -237,11 +227,8 @@ const ProductHero = ({ item }: { item: Product }) => {
               <p className="text-gray-900 font-bold text-lg">
                 Rs.{" "}
                 {(item.discount > 0
-                  ? Math.round(
-                      (item.sellingPrice -
-                        (item.sellingPrice * item.discount) / 100) /
-                        10
-                    ) * 10
+                  ? (item.sellingPrice -
+                    (item.sellingPrice * item.discount) / 100)
                   : item.sellingPrice
                 ).toFixed(2)}
               </p>
@@ -329,7 +316,7 @@ const ProductHero = ({ item }: { item: Product }) => {
                 }`}
               >
                 {availableStock > 0
-                  ? `In stock: ${availableStock}`
+                  ? `In Stock: ${availableStock}`
                   : "Out of Stock"}
               </p>
             )}

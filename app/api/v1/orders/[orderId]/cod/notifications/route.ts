@@ -1,43 +1,59 @@
 import { verifyToken } from "@/services/AuthService";
 import { verifyCaptchaToken } from "@/services/CapchaService";
-import {
-  sendOrderConfirmedSMS,
-} from "@/services/NotificationService";
+import { sendOrderConfirmedSMS } from "@/services/NotificationService";
 
-export async function GET(
+export const GET = async (
   req: Request,
   { params }: { params: { orderId: string } }
-) {
+) => {
   try {
-    await verifyToken(req);
-    console.log("Order ID: " + params.orderId);
-    const capchaToken = new URL(req.url).searchParams.get("capchaToken");
-    const res = await verifyCaptchaToken(capchaToken);
-    if (res) {
-      await sendOrderConfirmedSMS(params.orderId);
+    console.log("[Order Notification API] Incoming request");
+
+    // Verify user token
+    const tokenData = await verifyToken(req);
+    console.log("[Order Notification API] Token verified:", tokenData?.uid);
+
+    const orderId = params.orderId;
+    console.log("[Order Notification API] Order ID:", orderId);
+
+    // Get captcha token from query
+    const captchaToken = new URL(req.url).searchParams.get("capchaToken");
+    console.log("[Order Notification API] Captcha token received:", captchaToken);
+
+    // Verify captcha
+    const captchaVerified = await verifyCaptchaToken(captchaToken);
+    console.log("[Order Notification API] Captcha verification result:", captchaVerified);
+
+    if (captchaVerified) {
+      console.log("[Order Notification API] Sending order confirmed SMS...");
+      await sendOrderConfirmedSMS(orderId);
+      console.log("[Order Notification API] SMS sent successfully");
+
       return new Response(
         JSON.stringify({
           status: true,
-          message: "Notifications Send Successfully",
+          message: "Notifications sent successfully",
         }),
         { status: 200 }
       );
     } else {
+      console.warn("[Order Notification API] Captcha verification failed");
       return new Response(
         JSON.stringify({
           status: false,
           message: "Captcha verification failed",
-        })
+        }),
+        { status: 400 }
       );
     }
-  } catch (error) {
-    console.log(error);
+  } catch (error: any) {
+    console.error("[Order Notification API] Error:", error.message, error.stack);
     return new Response(
       JSON.stringify({
-        messsage: error.message,
         status: false,
+        message: error.message || "Internal Server Error",
       }),
-      { status: 405 }
+      { status: 500 }
     );
   }
-}
+};

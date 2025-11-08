@@ -4,16 +4,28 @@ import { toSafeLocaleString } from "./UtilService";
 
 // Function to fetch all slider items
 export const getSliders = async () => {
-  console.log("Fetching sliders.");
-  const docs = await adminFirestore.collection("sliders").get();
-  const sliders: Slide[] = [];
-  docs.forEach((doc) => {
-    sliders.push({
-      ...doc.data(),
-      createdAt: toSafeLocaleString(doc.data().createdAt),
-      updatedAt: toSafeLocaleString(doc.data().updatedAt)
+  try {
+    console.log("[SliderService] getSliders → Fetching all slider items.");
+
+    const snapshot = await adminFirestore.collection("sliders").get();
+    console.log(`[SliderService] Total documents retrieved: ${snapshot.size}`);
+
+    const sliders: Slide[] = snapshot.docs.map((doc) => {
+      const data = doc.data();
+      const slider: Slide = {
+        ...data,
+        id: doc.id,
+        createdAt: null,
+        updatedAt: null,
+      };
+      console.log(`[SliderService] Processed slider: ${slider.id}`);
+      return slider;
     });
-  });
-  console.log("Total sliders fetched:", sliders.length);
-  return sliders;
+
+    console.log(`[SliderService] Total sliders processed: ${sliders.length}`);
+    return sliders;
+  } catch (error) {
+    console.error("[SliderService] Failed to fetch sliders:", error);
+    throw error;
+  }
 };

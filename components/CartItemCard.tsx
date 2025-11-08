@@ -10,8 +10,8 @@ const CartItemCard = ({ item }: { item: CartItem }) => {
   const dispatch: AppDispatch = useDispatch();
 
   return (
-    <div className="flex items-center gap-4 p-3 border rounded-xl bg-gray-50 relative hover:shadow-md transition-all">
-      <div className="flex-shrink-0">
+    <div className="flex items-center gap-4 p-3 border border-gray-200  rounded-xl bg-gray-50 relative hover:shadow-md transition-all">
+      <div className="shrink-0">
         <Image
           src={item.thumbnail}
           alt={item.variantName}
@@ -21,7 +21,7 @@ const CartItemCard = ({ item }: { item: CartItem }) => {
         />
       </div>
 
-      <div className="flex flex-col flex-grow capitalize">
+      <div className="flex flex-col grow capitalize">
         <h3 className="font-semibold font-display text-lg line-clamp-1">{item.name}</h3>
         <p className="text-sm text-gray-500">
           {item.variantName} | Size: {item.size}

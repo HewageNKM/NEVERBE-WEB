@@ -2,7 +2,12 @@
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { IoClose } from "react-icons/io5";
+import { BiReset } from "react-icons/bi";
+import { Switch } from "@mui/material";
+import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import DropShadow from "@/components/DropShadow";
 import { AppDispatch, RootState } from "@/redux/store";
 import {
   resetFilter,
@@ -11,20 +16,39 @@ import {
   setSelectedCategories,
   toggleFilter,
 } from "@/redux/dealsSlice/dealsSlice";
-import axios from "axios";
-import { BiReset } from "react-icons/bi";
-import { Switch } from "@mui/material";
-import { toast } from "react-toastify";
-import DropShadow from "@/components/DropShadow";
 
-const sectionVariants = {
-  hidden: { opacity: 0, y: 10 },
+const containerVariants = {
+  hidden: { opacity: 0, y: 20 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { staggerChildren: 0.05 },
+    transition: { staggerChildren: 0.1, delayChildren: 0.1 },
   },
 };
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 10 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.25 } },
+};
+
+const sectionVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: 0.1 + i * 0.1, duration: 0.3 },
+  }),
+};
+
+const buttonVariants = {
+  hidden: { opacity: 0, scale: 0.9 },
+  visible: { opacity: 1, scale: 1, transition: { duration: 0.2 } },
+};
+
+const renderSkeletons = (count: number) =>
+  Array.from({ length: count }).map((_, i) => (
+    <div key={i} className="w-20 h-8 bg-gray-200 animate-pulse rounded-lg" />
+  ));
 
 const DealsTopUpFilter = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -33,24 +57,37 @@ const DealsTopUpFilter = () => {
 
   const [brands, setBrands] = useState<{ label: string }[]>([]);
   const [categories, setCategories] = useState<{ label: string }[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loadingBrands, setLoadingBrands] = useState(true);
+  const [loadingCategories, setLoadingCategories] = useState(true);
 
   useEffect(() => {
-    if (showFilter) fetchDropdowns();
+    if (showFilter) {
+      fetchBrands();
+      fetchCategories();
+    }
   }, [showFilter]);
 
-  const fetchDropdowns = async () => {
+  const fetchBrands = async () => {
+    setLoadingBrands(true);
     try {
-      const [brandsRes, categoriesRes] = await Promise.all([
-        axios.get(`/api/v1/brands/dropdown`),
-        axios.get(`/api/v1/categories/dropdown`),
-      ]);
-      setBrands(brandsRes.data || []);
-      setCategories(categoriesRes.data || []);
+      const res = await axios.get(`/api/v1/brands/dropdown`);
+      setBrands(res.data || []);
     } catch {
-      toast.error("Failed to load filters");
+      toast.error("Failed to fetch brands");
     } finally {
-      setLoading(false);
+      setLoadingBrands(false);
+    }
+  };
+
+  const fetchCategories = async () => {
+    setLoadingCategories(true);
+    try {
+      const res = await axios.get(`/api/v1/categories/dropdown`);
+      setCategories(res.data || []);
+    } catch {
+      console.error("Failed to fetch categories");
+    } finally {
+      setLoadingCategories(false);
     }
   };
 
@@ -59,6 +96,9 @@ const DealsTopUpFilter = () => {
     if (selectedBrands.includes(lower)) {
       dispatch(setSelectedBrand(selectedBrands.filter((b) => b !== lower)));
     } else {
+      if (selectedBrands.length >= 5) {
+        return;
+      }
       dispatch(setSelectedBrand([...selectedBrands, lower]));
     }
   };
@@ -70,6 +110,9 @@ const DealsTopUpFilter = () => {
         setSelectedCategories(selectedCategories.filter((c) => c !== lower))
       );
     } else {
+      if (selectedCategories.length >= 5) {
+        return;
+      }
       dispatch(setSelectedCategories([...selectedCategories, lower]));
     }
   };
@@ -78,119 +121,151 @@ const DealsTopUpFilter = () => {
     <AnimatePresence>
       {showFilter && (
         <DropShadow containerStyle="flex justify-start items-start">
-          <motion.section
-            className="bg-white/90 backdrop-blur-xl shadow-lg rounded-r-2xl p-6 w-[85vw] md:w-[50vw] lg:w-[30vw] h-screen overflow-y-auto relative"
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            variants={sectionVariants}
+          <motion.aside
+            initial={{ x: "-100%", opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: "-100%", opacity: 0 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+            className="bg-white backdrop-blur-xl shadow-xl rounded-r-2xl p-6 w-[85vw] md:w-[50vw] lg:w-[30vw] h-screen overflow-y-auto relative"
           >
-            {/* Header */}
-            <div className="sticky top-0 z-10 flex justify-between items-center bg-white border-b p-4">
-              <h2 className="text-xl font-semibold text-gray-800">Filters</h2>
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={() => dispatch(resetFilter())}
-                  className="p-2 bg-primary text-white rounded-full"
-                >
-                  <BiReset size={18} />
-                </button>
-                <button
-                  onClick={() => dispatch(toggleFilter())}
-                  className="p-2 bg-gray-100 rounded-full hover:bg-gray-200"
-                >
-                  <IoClose size={22} />
-                </button>
-              </div>
-            </div>
+            {/* --- Header --- */}
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              className="flex justify-between items-center border-b border-gray-200 pb-3 mb-5"
+            >
+              <h2 className="text-2xl font-display font-bold text-gray-800">
+                Filters
+              </h2>
 
-            {/* Body */}
-            <div className="p-5 flex-1 flex flex-col gap-6 overflow-y-auto">
-              {/* In Stock Toggle */}
-              <div className="flex justify-between items-center">
-                <span className="text-lg font-semibold text-gray-700">
+              <div className="flex gap-3">
+                {/* Reset Button */}
+                <motion.button
+                  whileTap={{ scale: 0.9 }}
+                  onClick={() => dispatch(resetFilter())}
+                  className="bg-primary p-2 rounded-full hover:bg-primary/90 transition"
+                  title="Reset Filters"
+                >
+                  <BiReset size={20} className="text-white" />
+                </motion.button>
+
+                {/* Close Button */}
+                <motion.button
+                  whileTap={{ scale: 0.9 }}
+                  onClick={() => dispatch(toggleFilter())}
+                  className="p-2 text-gray-500 hover:text-red-500 transition"
+                  title="Close Filter"
+                >
+                  <IoClose size={28} />
+                </motion.button>
+              </div>
+            </motion.div>
+
+            {/* --- In Stock --- */}
+            <motion.div
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+              className="flex mb-6 flex-col gap-8"
+            >
+              <motion.div
+                variants={itemVariants}
+                className="flex justify-between items-center"
+              >
+                <h3 className="text-lg font-semibold text-gray-700">
                   In Stock
-                </span>
+                </h3>
                 <Switch
                   checked={inStock}
                   onChange={(e) => dispatch(setInStock(e.target.checked))}
                   color="warning"
                 />
-              </div>
+              </motion.div>
+            </motion.div>
 
-              {/* Categories */}
-              <div>
-                <h3 className="font-semibold mb-3 text-gray-700 border-b pb-2">
-                  Categories
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {loading
-                    ? Array(6)
-                        .fill(0)
-                        .map((_, i) => (
-                          <div
-                            key={i}
-                            className="w-20 h-8 bg-gray-200 animate-pulse rounded-lg"
-                          />
-                        ))
-                    : categories.map((cat, i) => {
-                        const isSelected = selectedCategories.includes(
-                          cat.label?.toLowerCase()
-                        );
-                        return (
-                          <button
-                            key={i}
-                            onClick={() => toggleCategory(cat.label)}
-                            className={`px-3 py-1 rounded-lg border font-medium transition-all ${
-                              isSelected
-                                ? "bg-primary text-white border-primary"
-                                : "bg-gray-50 hover:bg-gray-100 border-gray-300"
-                            }`}
-                          >
-                            {cat.label}
-                          </button>
-                        );
-                      })}
-                </div>
+            {/* --- Categories --- */}
+            <motion.div
+              variants={sectionVariants}
+              custom={0}
+              initial="hidden"
+              animate="visible"
+              className="mb-6"
+            >
+              <h3 className="text-lg font-semibold mb-3 text-gray-700 border-b border-gray-200 pb-2 flex justify-between items-center">
+                <span>Categories</span>
+                <span className="text-xs text-gray-400">
+                  {selectedCategories.length}/5
+                </span>
+              </h3>
+              <div className="flex flex-wrap gap-3">
+                {loadingCategories
+                  ? renderSkeletons(6)
+                  : categories.map((category, i) => {
+                      const isSelected = selectedCategories.includes(
+                        category.label?.toLowerCase()
+                      );
+                      return (
+                        <motion.button
+                          key={i}
+                          variants={buttonVariants}
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          onClick={() => toggleCategory(category.label)}
+                          className={`px-3 py-1.5 rounded-lg border font-medium cursor-pointer transition ${
+                            isSelected
+                              ? "bg-primary text-white border-primary"
+                              : "bg-gray-50 hover:bg-gray-100 border-gray-300"
+                          }`}
+                        >
+                          {category.label}
+                        </motion.button>
+                      );
+                    })}
               </div>
+            </motion.div>
 
-              {/* Brands */}
-              <div>
-                <h3 className="font-semibold mb-3 text-gray-700 border-b pb-2">
-                  Brands
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {loading
-                    ? Array(6)
-                        .fill(0)
-                        .map((_, i) => (
-                          <div
-                            key={i}
-                            className="w-20 h-8 bg-gray-200 animate-pulse rounded-lg"
-                          />
-                        ))
-                    : brands.map((brand, i) => {
-                        const isSelected = selectedBrands.includes(
-                          brand.label?.toLowerCase()
-                        );
-                        return (
-                          <button
-                            key={i}
-                            onClick={() => toggleBrand(brand.label)}
-                            className={`px-3 py-1 rounded-lg border font-medium transition-all ${
-                              isSelected
-                                ? "bg-primary text-white border-primary"
-                                : "bg-gray-50 hover:bg-gray-100 border-gray-300"
-                            }`}
-                          >
-                            {brand.label}
-                          </button>
-                        );
-                      })}
-                </div>
+            {/* --- Brands --- */}
+            <motion.div
+              variants={sectionVariants}
+              custom={1}
+              initial="hidden"
+              animate="visible"
+              className="mb-6"
+            >
+              <h3 className="text-lg font-semibold mb-3 text-gray-700 border-b border-gray-200 pb-2 flex justify-between items-center">
+                <span>Brands</span>
+                <span className="text-xs text-gray-400">
+                  {selectedBrands.length}/5
+                </span>
+              </h3>
+              <div className="flex flex-wrap gap-3">
+                {loadingBrands
+                  ? renderSkeletons(6)
+                  : brands.map((brand, i) => {
+                      const isSelected = selectedBrands.includes(
+                        brand.label?.toLowerCase()
+                      );
+                      return (
+                        <motion.button
+                          key={i}
+                          variants={buttonVariants}
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          onClick={() => toggleBrand(brand.label)}
+                          className={`px-3 py-1.5 rounded-lg border font-medium cursor-pointer transition ${
+                            isSelected
+                              ? "bg-primary text-white border-primary"
+                              : "bg-gray-50 hover:bg-gray-100 border-gray-300"
+                          }`}
+                        >
+                          {brand.label}
+                        </motion.button>
+                      );
+                    })}
               </div>
-            </div>
-          </motion.section>
+            </motion.div>
+          </motion.aside>
         </DropShadow>
       )}
     </AnimatePresence>

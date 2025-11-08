@@ -1,19 +1,22 @@
-import { verifyCaptchaToken } from "@/services/CapchaService";
 import { getBrandsForDropdown } from "@/services/OtherService";
-import { getBrandsFromInventory } from "@/services/ProductService";
 import { NextResponse } from "next/server";
 
-export async function GET(req: Request) {
+
+export const GET = async (req: Request) => {
   try {
+    console.log("[Brands API] Incoming request");
+
+    // --- Step 1: Fetch brands ---
     const brands = await getBrandsForDropdown();
-    console.log("Brands Fetched: " + brands.length);
+    console.log(`[Brands API] Brands fetched: ${brands.length}`);
+    console.log("[Brands API] Brands data:", brands);
 
     return NextResponse.json(brands, { status: 200 });
   } catch (e: any) {
-    console.log("Failed to fetch brands: " + e.message);
+    console.error("[Brands API] Failed to fetch brands:", e.message, e.stack);
     return NextResponse.json(
-      { message: "Internal Server Error" },
+      { message: "Internal Server Error", error: e.message },
       { status: 500 }
     );
   }
-}
+};

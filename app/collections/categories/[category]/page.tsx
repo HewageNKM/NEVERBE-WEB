@@ -1,16 +1,13 @@
-import React from "react";
-import type { Metadata, Viewport } from "next";
+import type { Metadata } from "next";
 import { Product } from "@/interfaces/Product";
 import CategoryProducts from "./components/CategoryProducts";
 import CategoryHeader from "./components/CategoryHeader";
 import { getProductsByCategory } from "@/services/ProductService";
 
-
-export async function generateMetadata({
-  params,
-}: {
-  params: { category: string };
+export async function generateMetadata(context: {
+  params: Promise<{ category: string }>;
 }): Promise<Metadata> {
+  const params = await context.params;
   const categoryName = decodeURIComponent(params.category).replace(/-/g, " ");
   const capitalizedCategory =
     categoryName.charAt(0).toUpperCase() + categoryName.slice(1);
@@ -77,7 +74,8 @@ export async function generateMetadata({
   };
 }
 
-const Page = async ({ params }: { params: { category: string } }) => {
+const Page = async ( context: { params: Promise<{ category: string }> }) => {
+  const params = await context.params;
   const category = decodeURIComponent(params.category).replace(/-/g, " ");
   let items: Product[] = [];
 
@@ -94,7 +92,9 @@ const Page = async ({ params }: { params: { category: string } }) => {
     "@type": "CollectionPage",
     name: `${category} Collection - NEVERBE Sri Lanka`,
     description: `Explore the ${category} collection featuring Nike, Adidas, Puma, and New Balance replica shoes available in Sri Lanka.`,
-    url: `https://neverbe.lk/collections/categories/${encodeURIComponent(category)}`,
+    url: `https://neverbe.lk/collections/categories/${encodeURIComponent(
+      category
+    )}`,
     inLanguage: "en-LK",
     mainEntity: {
       "@type": "ItemList",
@@ -141,4 +141,3 @@ const Page = async ({ params }: { params: { category: string } }) => {
 };
 
 export default Page;
-export const dynamic = "force-dynamic";

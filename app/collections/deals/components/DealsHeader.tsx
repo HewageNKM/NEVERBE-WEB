@@ -13,7 +13,7 @@ const DealsHeader = () => {
         initial={{ scale: 1 }}
         animate={{ scale: [1, 1.05, 1] }}
         transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-        className="w-full h-[12rem] md:h-[22rem] relative"
+        className="w-full h-48 md:h-88 relative"
       >
         <Image
           src={DefaultBG}
@@ -22,7 +22,7 @@ const DealsHeader = () => {
           priority
           className="object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/40 to-transparent" />
       </motion.figure>
 
       <motion.div
@@ -45,7 +45,7 @@ const DealsHeader = () => {
         />
       </motion.div>
 
-      <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-white/80 to-transparent backdrop-blur-[2px]" />
+      <div className="absolute bottom-0 left-0 right-0 h-16 bg-linear-to-t from-white/80 to-transparent backdrop-blur-[2px]" />
     </section>
   );
 };

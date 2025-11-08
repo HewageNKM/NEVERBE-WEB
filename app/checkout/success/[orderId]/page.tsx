@@ -9,12 +9,11 @@ export const metadata: Metadata = {
   title: "Order Success",
 };
 
-export default async function Page({
-  searchParams,
-}: {
-  searchParams: { orderId: string };
-}) {
-  const orderId = searchParams.orderId;
+export default async function Page(context: { params: Promise<{ orderId: string }> }) {
+  const params = await context.params;
+  const orderId = params.orderId;
+  console.log("orderId", orderId);
+
   if (!orderId) return notFound();
 
   try {

@@ -7,6 +7,7 @@ function capitalizeWords(str: string) {
   return str.replace(/\b\w/g, (char) => char.toUpperCase());
 }
 
+// ====================== Products ======================
 export const getProducts = async (
   tags?: string[],
   inStock?: boolean,
@@ -14,6 +15,7 @@ export const getProducts = async (
   size: number = 20
 ): Promise<{ total: number; dataList: Product[] }> => {
   try {
+    console.log(`[ProductService] getProducts → Page: ${page}, Size: ${size}, Tags: ${tags}, InStock: ${inStock}`);
     let query: FirebaseFirestore.Query = adminFirestore
       .collection("products")
       .where("isDeleted", "==", false)
@@ -24,87 +26,79 @@ export const getProducts = async (
 
     if (tags && tags.length > 0) {
       query = query.where("tags", "array-contains-any", tags);
+      console.log(`[ProductService] Filtering by tags: ${tags}`);
     }
 
     if (typeof inStock === "boolean") {
       query = query.where("inStock", "==", inStock);
+      console.log(`[ProductService] Filtering by stock: ${inStock}`);
     }
 
     const total = (await query.get()).size;
+    console.log(`[ProductService] Total matching products: ${total}`);
 
     query = query.offset(offset).limit(size);
-
     const snapshot = await query.get();
 
     const products: Product[] = snapshot.docs
       .map((doc) => {
-        const product = {
-          ...(doc.data() as Product),
-          createdAt: null,
-          updatedAt: null,
-        };
-
+        const product = { ...(doc.data() as Product), createdAt: null, updatedAt: null };
         const filteredVariants = (product.variants || []).filter(
-          (variant: ProductVariant) =>
-            variant.status === true && variant.isDeleted === false
+          (variant: ProductVariant) => variant.status === true && variant.isDeleted === false
         );
-
         return { ...product, variants: filteredVariants };
       })
       .filter((p) => (p.variants?.length ?? 0) > 0);
 
+    console.log(`[ProductService] Products fetched: ${products.length}`);
     return { total, dataList: products };
   } catch (error) {
-    console.error("Error fetching products:", error);
+    console.error("[ProductService] getProducts error:", error);
     throw error;
   }
 };
 
+// ====================== Recent Items ======================
 export const getRecentItems = async () => {
-  console.log("Fetching recent inventory items.");
-  const docs = await adminFirestore
-    .collection("products")
-    .where("status", "==", true)
-    .where("isDeleted", "==", false)
-    .where("listing", "==", true)
-    .limit(10)
-    .get();
-  console.log("Total recent items fetched:", docs.size);
+  try {
+    console.log("[ProductService] getRecentItems → Fetching latest products.");
+    const docs = await adminFirestore
+      .collection("products")
+      .where("status", "==", true)
+      .where("isDeleted", "==", false)
+      .where("listing", "==", true)
+      .limit(10)
+      .get();
+    console.log(`[ProductService] Recent items fetched: ${docs.size}`);
 
-  const items: Product[] = [];
-  docs.forEach((doc) => {
-    items.push({ ...doc.data(), createdAt: null, updatedAt: null });
-  });
-  console.log("Total recent items fetched:", items.length);
-  return items;
+    const items: Product[] = docs.docs.map((doc) => ({ ...doc.data(), createdAt: null, updatedAt: null }));
+    return items;
+  } catch (error) {
+    console.error("[ProductService] getRecentItems error:", error);
+    throw error;
+  }
 };
 
+// ====================== Hot Products ======================
 export const getHotProducts = async () => {
   try {
-    console.log("Calculating hot products based on order counts.");
-    const ordersSnapshot = await adminFirestore
-      .collection("orders")
-      .limit(100)
-      .get();
+    console.log("[ProductService] getHotProducts → Calculating hot products based on orders.");
+    const ordersSnapshot = await adminFirestore.collection("orders").limit(100).get();
     const itemCount: Record<string, number> = {};
 
     ordersSnapshot.forEach((doc) => {
       const order = doc.data();
       if (Array.isArray(order.items)) {
         order.items.forEach((item) => {
-          if (item?.itemId) {
-            itemCount[item.itemId] = (itemCount[item.itemId] || 0) + 1;
-          }
+          if (item?.itemId) itemCount[item.itemId] = (itemCount[item.itemId] || 0) + 1;
         });
-      } else {
-        console.warn(`Order ${doc.id} has no valid items array`);
       }
     });
 
     const sortedItems = Object.entries(itemCount)
       .sort((a, b) => b[1] - a[1])
       .slice(0, 20)
-      .map((entry) => entry[0]);
+      .map(([itemId]) => itemId);
 
     const hotProducts: Item[] = [];
     for (const itemId of sortedItems) {
@@ -115,26 +109,22 @@ export const getHotProducts = async () => {
         .where("listing", "==", true)
         .where("id", "==", itemId)
         .get();
-      if (!itemDoc.empty) {
-        const item = itemDoc.docs[0].data() as Item;
-        hotProducts.push({ ...item, createdAt: null, updatedAt: null });
-      }
-      if (hotProducts.length === 10) {
-        break;
-      }
+      if (!itemDoc.empty) hotProducts.push({ ...itemDoc.docs[0].data(), createdAt: null, updatedAt: null });
+      if (hotProducts.length === 10) break;
     }
-    console.log("Total hot products fetched:", hotProducts.length);
+
+    console.log(`[ProductService] Hot products fetched: ${hotProducts.length}`);
     return hotProducts;
-  } catch (e) {
-    console.log(e);
-    throw e;
+  } catch (error) {
+    console.error("[ProductService] getHotProducts error:", error);
+    throw error;
   }
 };
 
-// Function to get a single item by ID
+// ====================== Get Product By ID ======================
 export const getProductById = async (itemId: string) => {
   try {
-    console.log(`Fetching item by ID: ${itemId}`);
+    console.log(`[ProductService] getProductById → Item ID: ${itemId}`);
     const itemDoc = await adminFirestore
       .collection("products")
       .where("status", "==", true)
@@ -142,22 +132,20 @@ export const getProductById = async (itemId: string) => {
       .where("listing", "==", true)
       .where("id", "==", itemId)
       .get();
+
+    if (itemDoc.empty) throw new Error(`Product not found: ${itemId}`);
     const docData = itemDoc.docs[0].data();
-    return {
-      ...docData,
-      variants: docData.variants.filter(
-        (variant: ProductVariant) =>
-          variant.status === true && variant.isDeleted === false
-      ),
-      createdAt: null,
-      updatedAt: null,
-    };
-  } catch (e) {
-    console.log(e);
-    throw e;
+    const variants = docData.variants.filter((v: ProductVariant) => v.status && !v.isDeleted);
+
+    console.log(`[ProductService] Product ${itemId} fetched with ${variants.length} valid variants.`);
+    return { ...docData, variants, createdAt: null, updatedAt: null };
+  } catch (error) {
+    console.error(`[ProductService] getProductById error:`, error);
+    throw error;
   }
 };
 
+// ====================== Get Products By Category ======================
 export const getProductsByCategory = async (
   category: string,
   page: number = 1,
@@ -166,9 +154,8 @@ export const getProductsByCategory = async (
   inStock?: boolean
 ) => {
   try {
-    console.log(`Fetching products by category: ${category}`);
+    console.log(`[ProductService] getProductsByCategory → Category: ${category}, Page: ${page}, Size: ${size}`);
     const offset = (page - 1) * size;
-
     let query = adminFirestore
       .collection("products")
       .where("category", "==", capitalizeWords(category))
@@ -176,44 +163,31 @@ export const getProductsByCategory = async (
       .where("status", "==", true)
       .where("listing", "==", true);
 
-    // ✅ Apply filters by reassigning query
     if (tags && tags.length > 0) {
       query = query.where("tags", "array-contains-any", tags);
+      console.log(`[ProductService] Filtering by tags: ${tags}`);
     }
-
     if (typeof inStock === "boolean") {
       query = query.where("inStock", "==", inStock);
+      console.log(`[ProductService] Filtering by stock: ${inStock}`);
     }
 
     const total = (await query.get()).size;
-
     query = query.offset(offset).limit(size);
 
     const snapshot = await query.get();
-
-    const products: Product[] = snapshot.docs
-      .map((doc) => {
-        const product = doc.data() as Product;
-        return {
-          ...product,
-          createdAt: null,
-          updatedAt: null,
-        };
-      })
+    const products: Product[] = snapshot.docs.map((doc) => ({ ...doc.data(), createdAt: null, updatedAt: null }))
       .filter((p) => (p.variants?.length ?? 0) > 0);
 
-    console.log("Total products fetched:", products.length);
-
-    return {
-      total,
-      dataList: products,
-    };
+    console.log(`[ProductService] Products by category fetched: ${products.length}`);
+    return { total, dataList: products };
   } catch (error) {
-    console.error("Error fetching products:", error);
+    console.error("[ProductService] getProductsByCategory error:", error);
     throw error;
   }
 };
 
+// ====================== Get Products By Brand ======================
 export const getProductsByBrand = async (
   brand: string,
   page: number = 1,
@@ -222,59 +196,44 @@ export const getProductsByBrand = async (
   inStock?: boolean
 ) => {
   try {
-    console.log(`Fetching products by brand: ${brand}`);
+    console.log(`[ProductService] getProductsByBrand → Brand: ${brand}, Page: ${page}, Size: ${size}`);
     const offset = (page - 1) * size;
-    const capitalizeBrand = capitalizeWords(brand.trim());
-
     let query: FirebaseFirestore.Query = adminFirestore
       .collection("products")
-      .where("brand", "==", capitalizeBrand)
+      .where("brand", "==", capitalizeWords(brand))
       .where("isDeleted", "==", false)
       .where("status", "==", true)
       .where("listing", "==", true);
 
-    // Optional: filter by categories
     if (categories && categories.length > 0) {
       query = query.where("tags", "array-contains-any", categories);
+      console.log(`[ProductService] Filtering by categories: ${categories}`);
     }
-
-    // Optional: filter by stock
-    if (inStock === true && typeof inStock === "boolean") {
+    if (typeof inStock === "boolean") {
       query = query.where("inStock", "==", inStock);
+      console.log(`[ProductService] Filtering by stock: ${inStock}`);
     }
 
     const total = (await query.get()).size;
-
     const snapshot = await query.offset(offset).limit(size).get();
 
     const products: Product[] = snapshot.docs
       .map((doc) => {
         const product = doc.data() as Product;
-
-        // Keep only variants where status == true and isDeleted == false
-        const filteredVariants = (product.variants || []).filter(
-          (variant: ProductVariant) =>
-            variant.status === true && variant.isDeleted === false
-        );
-
-        return {
-          ...(product as Product),
-          createdAt: null,
-          updatedAt: null,
-          variants: filteredVariants,
-        };
+        const filteredVariants = (product.variants || []).filter(v => v.status && !v.isDeleted);
+        return { ...product, variants: filteredVariants, createdAt: null, updatedAt: null };
       })
       .filter((p) => (p.variants?.length ?? 0) > 0);
 
-    return {
-      total: total,
-      dataList: products,
-    };
+    console.log(`[ProductService] Products by brand fetched: ${products.length}`);
+    return { total, dataList: products };
   } catch (error) {
-    console.error("Error fetching products by brand:", error);
+    console.error("[ProductService] getProductsByBrand error:", error);
     throw error;
   }
 };
+
+// ====================== Get Deals Products ======================
 export const getDealsProducts = async (
   page: number = 1,
   size: number = 10,
@@ -282,9 +241,7 @@ export const getDealsProducts = async (
   inStock?: boolean
 ) => {
   try {
-    console.log(`Fetching deals products`);
-    const offset = (page - 1) * size;
-
+    console.log(`[ProductService] getDealsProducts → Page: ${page}, Size: ${size}`);
     let query = adminFirestore
       .collection("products")
       .where("isDeleted", "==", false)
@@ -292,51 +249,27 @@ export const getDealsProducts = async (
       .where("listing", "==", true)
       .where("discount", ">", 0);
 
-    if (tags && tags.length > 0) {
-      query = query.where("tags", "array-contains-any", tags);
-    }
-
-    if (typeof inStock === "boolean") {
-      query = query.where("inStock", "==", inStock);
-    }
+    if (tags && tags.length > 0) query = query.where("tags", "array-contains-any", tags);
+    if (typeof inStock === "boolean") query = query.where("inStock", "==", inStock);
 
     const total = (await query.get()).size;
-
-    const snapshot = await query.offset(offset).limit(size).get();
-
-    const products: Product[] = snapshot.docs
-      .map((doc) => {
-        const product = doc.data() as Product;
-        return {
-          ...product,
-          createdAt: null,
-          updatedAt: null,
-        };
-      })
+    const snapshot = await query.offset((page - 1) * size).limit(size).get();
+    const products: Product[] = snapshot.docs.map((doc) => ({ ...doc.data(), createdAt: null, updatedAt: null }))
       .filter((p) => (p.variants?.length ?? 0) > 0);
 
-    console.log("Total deals products fetched:", products.length);
-
-    return {
-      total,
-      dataList: products,
-    };
+    console.log(`[ProductService] Deals products fetched: ${products.length}`);
+    return { total, dataList: products };
   } catch (error) {
-    console.error("Error fetching products by tag:", error);
+    console.error("[ProductService] getDealsProducts error:", error);
     throw error;
   }
 };
-export const getProductStock = async (
-  productId: string,
-  variantId: string,
-  size: string
-) => {
-  try {
-    const settingsSnap = await adminFirestore
-      .collection("app_settings")
-      .doc("erp_settings")
-      .get();
 
+// ====================== Get Product Stock ======================
+export const getProductStock = async (productId: string, variantId: string, size: string) => {
+  try {
+    console.log(`[ProductService] getProductStock → Product: ${productId}, Variant: ${variantId}, Size: ${size}`);
+    const settingsSnap = await adminFirestore.collection("app_settings").doc("erp_settings").get();
     const stockId = settingsSnap.data()?.onlineStockId;
     if (!stockId) throw new Error("onlineStockId not found in ERP settings");
 
@@ -350,158 +283,140 @@ export const getProductStock = async (
       .get();
 
     if (stockSnap.empty) {
+      console.log("[ProductService] Stock not found, returning 0");
       return 0;
     }
 
-    const stockDoc = stockSnap.docs[0];
-    const stockData = stockDoc.data();
-
-    return stockData.quantity;
-  } catch (e) {
-    console.error("Error getting product stock:", e);
-    throw e;
+    const quantity = stockSnap.docs[0].data().quantity;
+    console.log(`[ProductService] Stock quantity: ${quantity}`);
+    return quantity;
+  } catch (error) {
+    console.error("[ProductService] getProductStock error:", error);
+    throw error;
   }
 };
 
+// ====================== Get Similar Items ======================
 export const getSimilarItems = async (itemId: string) => {
   try {
-    console.log(`Fetching similar items for item ID: ${itemId}`);
-
-    const itemDoc = await adminFirestore
-      .collection("products")
-      .doc(itemId)
-      .get();
-    if (!itemDoc.exists) {
-      throw new Error(`Item with ID ${itemId} not found.`);
-    }
-
+    console.log(`[ProductService] getSimilarItems → Item ID: ${itemId}`);
+    const itemDoc = await adminFirestore.collection("products").doc(itemId).get();
+    if (!itemDoc.exists) throw new Error(`Item with ID ${itemId} not found`);
     const item = itemDoc.data() as Product;
 
     const similarItemsQuery = await adminFirestore
       .collection("products")
-      .where("tags", "array-contains-any", [item.category.toLocaleLowerCase()])
+      .where("tags", "array-contains-any", [item.category.toLowerCase()])
       .where("isDeleted", "==", false)
       .where("status", "==", true)
       .where("listing", "==", true)
       .limit(10)
       .get();
-    const items: Product[] = [];
 
-    const similarItems = similarItemsQuery.docs
-      .filter((doc) => doc.id !== itemId)
-      .map((doc) => {
-        return {
-          ...doc.data(),
-          itemId: doc.id,
-          createdAt: null,
-          updatedAt: null,
-        };
-      });
+    const similarItems: Product[] = similarItemsQuery.docs
+      .filter(doc => doc.id !== itemId)
+      .map(doc => ({ ...doc.data(), itemId: doc.id, createdAt: null, updatedAt: null }));
 
-    console.log("Total similar items fetched:", items.length);
+    console.log(`[ProductService] Similar items fetched: ${similarItems.length}`);
     return similarItems;
-  } catch (e) {
-    console.error("Error fetching similar items:", e);
-    throw e;
+  } catch (error) {
+    console.error("[ProductService] getSimilarItems error:", error);
+    throw error;
   }
 };
 
+// ====================== Sitemap ======================
 export const getProductsForSitemap = async () => {
   try {
-    console.log("Fetching products for sitemap.");
+    console.log("[ProductService] getProductsForSitemap → Fetching all products");
     const snapshot = await adminFirestore
       .collection("products")
       .where("status", "==", true)
       .where("isDeleted", "==", false)
       .where("listing", "==", true)
       .get();
-    const products = snapshot.docs.map((doc) => {
-      return {
-        url: `${process.env.NEXT_PUBLIC_BASE_URL}/collections/products/${
-          doc.data().id
-        }`,
-        lastModified: new Date(),
-        priority: 0.7,
-      };
-    });
-    console.log("Total products fetched for sitemap:", products.length);
+
+    const products = snapshot.docs.map(doc => ({
+      url: `${process.env.NEXT_PUBLIC_BASE_URL}/collections/products/${doc.data().id}`,
+      lastModified: new Date(),
+      priority: 0.7,
+    }));
+
+    console.log(`[ProductService] Products for sitemap: ${products.length}`);
     return products;
-  } catch (e) {
-    console.error("Error fetching products for sitemap:", e);
-    throw e;
+  } catch (error) {
+    console.error("[ProductService] getProductsForSitemap error:", error);
+    throw error;
   }
 };
 
 export const getBrandForSitemap = async () => {
   try {
-    console.log("Fetching brands for sitemap.");
+    console.log("[ProductService] getBrandForSitemap → Fetching brands");
     const snapshot = await adminFirestore
       .collection("brands")
       .where("status", "==", true)
       .where("isDeleted", "==", false)
       .where("listing", "==", true)
       .get();
-    const brands = snapshot.docs.map((doc) => {
-      return {
-        url: `${process.env.NEXT_PUBLIC_BASE_URL}/collections/brands/${
-          doc.data().name
-        }`,
-        lastModified: new Date(),
-        priority: 0.8,
-      };
-    });
-    console.log("Total brands fetched for sitemap:", brands.length);
+
+    const brands = snapshot.docs.map(doc => ({
+      url: `${process.env.NEXT_PUBLIC_BASE_URL}/collections/brands/${encodeURIComponent(doc.data().name)}`,
+      lastModified: new Date(),
+      priority: 0.8,
+    }));
+
+    console.log(`[ProductService] Brands for sitemap: ${brands.length}`);
     return brands;
-  } catch (e) {
-    console.error("Error fetching brands for sitemap:", e);
-    throw e;
+  } catch (error) {
+    console.error("[ProductService] getBrandForSitemap error:", error);
+    throw error;
   }
 };
+
 export const getCategoriesForSitemap = async () => {
   try {
-    console.log("Fetching categories for sitemap.");
+    console.log("[ProductService] getCategoriesForSitemap → Fetching categories");
     const snapshot = await adminFirestore
       .collection("categories")
       .where("status", "==", true)
       .where("isDeleted", "==", false)
       .get();
 
-    const categories = snapshot.docs.map((doc) => {
-      return {
-        url: `${process.env.NEXT_PUBLIC_BASE_URL}/collections/categories/${
-          doc.data().name
-        }`,
-        lastModified: new Date(),
-        priority: 0.8,
-      };
-    });
-    console.log("Total categories fetched for sitemap:", categories.length);
+    const categories = snapshot.docs.map(doc => ({
+      url: `${process.env.NEXT_PUBLIC_BASE_URL}/collections/categories/${encodeURIComponent(doc.data().name)}`,
+      lastModified: new Date(),
+      priority: 0.8,
+    }));
+
+    console.log(`[ProductService] Categories for sitemap: ${categories.length}`);
     return categories;
-  } catch (e) {
-    console.error("Error fetching categories for sitemap:", e);
-    throw e;
+  } catch (error) {
+    console.error("[ProductService] getCategoriesForSitemap error:", error);
+    throw error;
   }
 };
 
+// ====================== Payment Methods ======================
 export const getPaymentMethods = async () => {
   try {
-    console.log("Fetching payment methods.");
+    console.log("[ProductService] getPaymentMethods → Fetching active payment methods");
     const snapshot = await adminFirestore
       .collection("paymentMethods")
       .where("status", "==", "Active")
       .where("available", "array-contains", "Website")
       .get();
-    const methods = snapshot.docs.map((doc) => {
-      return {
-        ...doc.data(),
-        createdAt: doc.data().createdAt.toDate().toLocaleString(),
-        updatedAt: doc.data().updatedAt.toDate().toLocaleString(),
-      } as PaymentMethod;
-    });
-    console.log("Payment methods fetched successfully.");
+
+    const methods: PaymentMethod[] = snapshot.docs.map(doc => ({
+      ...doc.data(),
+      createdAt: null,
+      updatedAt: null,
+    }));
+
+    console.log(`[ProductService] Payment methods fetched: ${methods.length}`);
     return methods;
-  } catch (e) {
-    console.error("Error fetching payment methods:", e);
-    throw e;
+  } catch (error) {
+    console.error("[ProductService] getPaymentMethods error:", error);
+    throw error;
   }
 };

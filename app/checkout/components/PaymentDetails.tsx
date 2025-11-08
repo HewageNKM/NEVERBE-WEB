@@ -12,7 +12,6 @@ import {
   calculateTotalDiscount,
 } from "@/util";
 import { PaymentMethod } from "@/interfaces";
-import { getWebsitePaymentMethods } from "@/actions/paymentMethodsAction";
 import PaymentOptions from "./PaymentOptions";
 import axios from "axios";
 
@@ -71,7 +70,6 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
           Review your order and select a payment method
         </p>
       </div>
-
       {/* Cart Section */}
       <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 sm:p-6 mb-8">
         <h2 className="text-xl font-semibold text-gray-800 mb-4">
@@ -111,7 +109,6 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
           </div>
         </div>
       </div>
-
       {/* Payment Options */}
       <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 sm:p-6 mb-6">
         <h2 className="text-xl font-semibold text-gray-800 mb-4">
@@ -129,7 +126,6 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
           />
         )}
       </div>
-
       {/* Warning Notice */}
       <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-md mb-6 text-sm text-yellow-800 space-y-1">
         <p className="font-semibold">
@@ -145,30 +141,30 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
           சாளரத்தை மூடவோ அல்லது புதுப்பிக்கவோ வேண்டாம்.
         </p>
       </div>
-
-      {/* Terms */}
-      <p className="text-sm text-gray-600 text-left mb-4">
-        By clicking{" "}
-        <strong className="text-gray-800">
-          &quot;Proceed to Payment&quot;
-        </strong>
-        , you agree to our{" "}
-        <a
-          href="/policies/terms-conditions"
-          className="text-primary hover:underline"
-        >
-          Terms of Service
-        </a>{" "}
-        and{" "}
-        <a
-          href="/policies/privacy-policy"
-          className="text-primary hover:underline"
-        >
-          Privacy Policy
-        </a>
-        .
-      </p>
-
+      {/* Terms & reCAPTCHA Notice */}
+      <div className="text-xs text-gray-500 mb-1 capitalize">
+        <p className="mb-1">
+          This site is protected by Google reCAPTCHA and the Google{" "}
+          <a
+            href="https://policies.google.com/privacy"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary underline hover:text-primary-dark"
+          >
+            Privacy Policy
+          </a>{" "}
+          and{" "}
+          <a
+            href="https://policies.google.com/terms"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary underline hover:text-primary-dark"
+          >
+            Terms of Service
+          </a>{" "}
+          apply.
+        </p>
+      </div>
       {/* Proceed Button */}
       <button
         disabled={cartItems.length === 0 || !paymentType}
