@@ -12,19 +12,19 @@ interface EmptyStateProps {
 const EmptyState = ({ heading, subHeading, actionLabel, onAction }: EmptyStateProps) => {
   return (
     <div className="flex w-full justify-center items-center py-16 px-6" role="alert">
-      <div className="flex flex-col items-center bg-white dark:bg-gray-900 rounded-xl p-10 gap-6 max-w-sm text-center">
+      <div className="flex flex-col items-center bg-white rounded-xl p-10 gap-6 max-w-sm text-center">
         {/* Icon with gradient background */}
-        <div className="flex justify-center items-center w-20 h-20 bg-gradient-to-tr from-red-100 via-red-200 to-red-300 rounded-full">
+        <div className="flex justify-center items-center w-20 h-20 bg-linear-to-tr from-red-100 via-red-200 to-red-300 rounded-full">
           <BsEmojiFrown size={40} className="text-red-600" aria-hidden="true" />
         </div>
 
         {/* Heading */}
-        <h2 className="text-2xl font-display md:text-3xl font-bold text-gray-800 dark:text-gray-100 leading-snug">
+        <h2 className="text-2xl font-display md:text-3xl font-bold text-gray-800 leading-snug">
           {heading}
         </h2>
 
         {/* Subheading */}
-        <p className="text-gray-500 dark:text-gray-400 text-sm md:text-base">
+        <p className="text-gray-500  text-sm md:text-base">
           {subHeading || "Please check back later."}
         </p>
 

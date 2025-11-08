@@ -42,7 +42,7 @@ const NewArrivals = ({ arrivals }: { arrivals: Product[] }) => {
         <div className="mt-10">
           <Swiper
             modules={[Autoplay, Pagination]}
-            spaceBetween={24}
+            spaceBetween={16}
             slidesPerView={2}
             breakpoints={{
               640: { slidesPerView: 2 },
@@ -59,7 +59,6 @@ const NewArrivals = ({ arrivals }: { arrivals: Product[] }) => {
             {arrivals.map((item) => (
               <SwiperSlide
                 key={item.id}
-                className="flex justify-center transition-transform duration-300 hover:scale-105"
               >
                 <motion.div
                   viewport={{ once: true }}

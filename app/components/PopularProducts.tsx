@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import { Item } from "@/interfaces";
 import ItemCard from "@/components/ItemCard";
 import EmptyState from "@/components/EmptyState";
@@ -42,7 +41,7 @@ const PopularProducts = ({ hotItems }: { hotItems: Item[] }) => {
         <div className="mt-10">
           <Swiper
             modules={[Autoplay, Pagination]}
-            spaceBetween={24}
+            spaceBetween={16}
             slidesPerView={2}
             breakpoints={{
               640: { slidesPerView: 2 },
@@ -59,7 +58,6 @@ const PopularProducts = ({ hotItems }: { hotItems: Item[] }) => {
             {hotItems.map((item) => (
               <SwiperSlide
                 key={item.id}
-                className="flex justify-center transition-transform duration-300 hover:scale-105"
               >
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
@@ -73,7 +71,7 @@ const PopularProducts = ({ hotItems }: { hotItems: Item[] }) => {
             ))}
 
             {/* Custom Pagination */}
-            <div className="custom-pagination mt-3 mb-2 flex justify-center gap-3"></div>
+            <div className="custom-pagination mt-5 mb-2 flex justify-center gap-3"></div>
           </Swiper>
         </div>
       </div>

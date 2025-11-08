@@ -4,7 +4,6 @@ import React, { ReactNode } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { AnimatePresence } from "framer-motion";
-import { Analytics } from "@vercel/analytics/react";
 import DealsTopUpFilter from "./components/DealsTopUpFilter";
 
 const DealsLayout = ({ children }: { children: ReactNode }) => {
@@ -19,7 +18,6 @@ const DealsLayout = ({ children }: { children: ReactNode }) => {
       <AnimatePresence>
         {showFilter && <DealsTopUpFilter />}
       </AnimatePresence>
-      <Analytics />
     </div>
   );
 };

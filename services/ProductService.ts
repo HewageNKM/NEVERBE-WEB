@@ -67,7 +67,7 @@ export const getRecentItems = async () => {
       .where("status", "==", true)
       .where("isDeleted", "==", false)
       .where("listing", "==", true)
-      .limit(10)
+      .limit(8)
       .get();
     console.log(`[ProductService] Recent items fetched: ${docs.size}`);
 
@@ -97,7 +97,7 @@ export const getHotProducts = async () => {
 
     const sortedItems = Object.entries(itemCount)
       .sort((a, b) => b[1] - a[1])
-      .slice(0, 20)
+      .slice(0, 8)
       .map(([itemId]) => itemId);
 
     const hotProducts: Item[] = [];
@@ -310,7 +310,7 @@ export const getSimilarItems = async (itemId: string) => {
       .where("isDeleted", "==", false)
       .where("status", "==", true)
       .where("listing", "==", true)
-      .limit(10)
+      .limit(8)
       .get();
 
     const similarItems: Product[] = similarItemsQuery.docs

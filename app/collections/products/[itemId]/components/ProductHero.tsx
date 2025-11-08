@@ -324,7 +324,7 @@ const ProductHero = ({ item }: { item: Product }) => {
 
           {/* Quantity & Buttons */}
           <div className="flex flex-col md:flex-row gap-4 md:items-center mt-1">
-            <div className="flex items-center gap-2 w-fit border rounded-md p-1">
+            <div className="flex items-center gap-2 w-fit border border-gray-200 rounded-md p-1">
               <button
                 onClick={() => setQuantity("dec")}
                 className="p-2 text-gray-700"

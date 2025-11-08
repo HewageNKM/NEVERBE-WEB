@@ -4,7 +4,6 @@ import {useSelector} from "react-redux";
 import {RootState} from "@/redux/store";
 import {AnimatePresence} from "framer-motion";
 import PopUpFilter from "@/app/collections/products/components/PopUpFilter";
-import { Analytics } from "@vercel/analytics/react";
 
 const Layout = ({children}:{children:ReactNode}) => {
     const showFilter = useSelector((state:RootState) => state.productsSlice.showFilter);
@@ -15,7 +14,6 @@ const Layout = ({children}:{children:ReactNode}) => {
             <AnimatePresence>
                 {showFilter && (<PopUpFilter />)}
             </AnimatePresence>
-            <Analytics />
         </div>
     );
 };

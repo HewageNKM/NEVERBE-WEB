@@ -27,7 +27,7 @@ const SimilarProducts = ({ items }: { items: Product[] }) => {
       <div className="max-w-6xl mx-auto md:px-2">
         <Swiper
           modules={[Autoplay, Pagination]}
-          spaceBetween={24}
+          spaceBetween={16}
           slidesPerView={2} // mobile default
           breakpoints={{
             640: { slidesPerView: 2 },
@@ -42,7 +42,7 @@ const SimilarProducts = ({ items }: { items: Product[] }) => {
           }}
         >
           {items.map((item) => (
-            <SwiperSlide key={item.itemId} className="flex justify-center">
+            <SwiperSlide key={item.id}>
               <ItemCard item={item} />
             </SwiperSlide>
           ))}

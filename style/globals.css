@@ -10,10 +10,21 @@
   --color-primary-50: #F0F9E8;
   --color-primary-100: #8DC63F;
   --color-primary-200: #7CAB3D;
+  /* Added --color-primary-300 and 400 from your old config */
+  --color-primary-300: #6B903B;
+  --color-primary-400: #5A7539;
 
   /* Your Custom Fonts */
   --font-sans: "Inter", ui-sans-serif, system-ui;
   --font-display: "Plus Jakarta Sans", ui-sans-serif, system-ui;
+
+  /* === ADDITIONS === */
+  /* Your custom boxShadow, now available as `shadow-custom` */
+  --shadow-custom: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+
+  /* Your custom backgroundImages, available as `bg-gradient-radial` and `bg-gradient-conic` */
+  --image-gradient-radial: radial-gradient(var(--tw-gradient-stops));
+  --image-gradient-conic: conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops));
 }
 
 /* Add your custom global styles and utility classes here.

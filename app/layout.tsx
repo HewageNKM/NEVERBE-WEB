@@ -1,6 +1,5 @@
 import "../style/globals.css";
 import StoreProvider from "@/app/components/StoreProvider";
-import { Analytics } from "@vercel/analytics/react";
 import GlobalProvider from "@/app/components/GlobalProvider";
 import ReCaptchaProviderWrapper from "@/app/components/ReCaptchaProvider";
 import { Viewport } from "next";
@@ -21,7 +20,6 @@ export default function RootLayout({
         <ReCaptchaProviderWrapper>
           <StoreProvider>
             <GlobalProvider>{children}</GlobalProvider>
-            <Analytics />
           </StoreProvider>
         </ReCaptchaProviderWrapper>
       </body>

@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSelector } from "react-redux";
@@ -28,13 +28,13 @@ const ItemCard = ({ item }: { item: Product }) => {
       : Math.round(item.sellingPrice);
 
   return (
-    <article className="relative group w-[9rem] sm:w-[12rem] md:w-[15rem] rounded-2xl bg-white border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden">
+    <article className="relative group w-36 sm:w-48 md:w-60 rounded-2xl bg-white border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden">
       <Link
         href={`/collections/products/${item?.id}`}
         aria-label={`View details for ${item.name}`}
       >
         {/* ---------- IMAGE ---------- */}
-        <div className="relative h-[160px] sm:h-[220px] overflow-hidden">
+        <div className="relative h-40 sm:h-[220px] overflow-hidden">
           <Image
             width={300}
             height={300}
@@ -44,7 +44,7 @@ const ItemCard = ({ item }: { item: Product }) => {
             priority
           />
           {/* Gradient overlay on hover */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          <div className="absolute inset-0 bg-linear-to-t from-black/50 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
           {/* Manufacturer badge */}
           <span className="absolute top-2 left-2 bg-black/80 text-white text-[0.65rem] sm:text-xs px-2 py-1 rounded-full uppercase tracking-wide">
