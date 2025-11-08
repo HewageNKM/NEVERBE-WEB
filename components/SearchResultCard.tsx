@@ -24,7 +24,7 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({ item, onClick }) =>
       className="group flex items-center gap-4 rounded-xl p-3 sm:p-4 transition-all hover:bg-gray-50 hover:shadow-sm border border-transparent hover:border-gray-200 cursor-pointer"
     >
       {/* Product Image */}
-      <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
+      <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-lg overflow-hidden bg-gray-100 shrink-0">
         <Image
           src={item.thumbnail.url}
           alt={item.name}
