@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
 import { showCart } from "@/redux/cartSlice/cartSlice";
@@ -15,7 +15,6 @@ import Image from "next/image";
 import { Banner, Logo } from "@/assets/images";
 import SearchDialog from "@/components/SearchDialog";
 import { getAlgoliaClient } from "@/util";
-import { Item } from "@/interfaces";
 import { AnimatePresence, motion } from "framer-motion";
 import { Product } from "@/interfaces/Product";
 import { ProductVariant } from "@/interfaces/ProductVariant";
@@ -31,51 +30,83 @@ const Header = ({
   const dispatch: AppDispatch = useDispatch();
 
   const [search, setSearch] = useState("");
-  const [items, setItems] = useState<Item[]>([]);
+  const [items, setItems] = useState<Product[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [showSearchResult, setShowSearchResult] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
+  const searchRef = useRef<HTMLDivElement>(null);
   const searchClient = getAlgoliaClient();
+  let searchTimeout: NodeJS.Timeout;
 
-  const searchItems = async (evt: React.ChangeEvent<HTMLInputElement>) => {
+  // ✅ Debounced Search Function
+  const searchItems = useCallback(
+    (value: string) => {
+      clearTimeout(searchTimeout);
+
+      if (value.trim().length < 3) {
+        setItems([]);
+        setShowSearchResult(false);
+        return;
+      }
+
+      searchTimeout = setTimeout(async () => {
+        try {
+          setIsSearching(true);
+          const searchResults = await searchClient.search({
+            requests: [
+              { indexName: "products_index", query: value, hitsPerPage: 30 },
+            ],
+          });
+
+          let filteredResults = searchResults.results[0].hits.filter(
+            (item: Product) =>
+              item.status === true &&
+              item.listing === true &&
+              item.isDeleted === false
+          );
+
+          filteredResults = filteredResults.filter(
+            (item: any) =>
+              !item.variants.some(
+                (variant: ProductVariant) =>
+                  variant.isDeleted === true && variant.status === false
+              )
+          );
+
+          setItems(filteredResults);
+          setShowSearchResult(true);
+        } catch (e) {
+          console.error("Search error:", e);
+        } finally {
+          setIsSearching(false);
+        }
+      }, 400); // debounce delay
+    },
+    [searchClient]
+  );
+
+  // ✅ Handle input change
+  const handleSearchChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
     const value = evt.target.value;
     setSearch(value);
-
-    if (value.trim().length < 3) {
-      setItems([]);
-      setShowSearchResult(false);
-      return;
-    }
-
-    try {
-      setIsSearching(true);
-      const searchResults = await searchClient.search({
-        requests: [
-          { indexName: "products_index", query: value, hitsPerPage: 30 },
-        ],
-      });
-      let filteredResults = searchResults.results[0].hits.filter(
-        (item: Product) =>
-          item.status === true &&
-          item.listing === true &&
-          item.isDeleted == false
-      );
-      filteredResults = filteredResults.filter(
-        (item: any) =>
-          !item.variants.some(
-            (variant: ProductVariant) =>
-              variant.isDeleted === true && variant.status === false
-          )
-      );
-      setItems(filteredResults);
-      setShowSearchResult(true);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setIsSearching(false);
-    }
+    searchItems(value);
   };
+
+  // ✅ Click outside to close search dialog
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        searchRef.current &&
+        !searchRef.current.contains(event.target as Node)
+      ) {
+        setShowSearchResult(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
     <header className="fixed top-0 left-0 w-full z-50 backdrop-blur-md bg-black/70 border-b border-gray-800 shadow-sm">
@@ -101,15 +132,12 @@ const Header = ({
         {/* ---------- CENTER: NAVIGATION ---------- */}
         <nav className="hidden lg:block relative">
           <ul className="flex gap-5 text-white text-sm font-medium uppercase tracking-wide">
-            <li key={1}>
-              <Link
-                href="/"
-                className="hover:text-primary-100 transition-colors"
-              >
+            <li>
+              <Link href="/" className="hover:text-primary-100 transition-colors">
                 Home
               </Link>
             </li>
-            <li key={2}>
+            <li>
               <Link
                 href="/collections/products"
                 className="hover:text-primary-100 transition-colors"
@@ -169,9 +197,7 @@ const Header = ({
                     {brands.map((brand) => (
                       <li key={brand.id || brand.name}>
                         <Link
-                          href={`/collections/brands/${
-                            brand.slug || brand.label
-                          }`}
+                          href={`/collections/brands/${brand.slug || brand.label}`}
                           className="block px-4 py-2 hover:bg-primary-200/20 text-sm text-gray-200 whitespace-nowrap"
                         >
                           {brand.label}
@@ -182,7 +208,7 @@ const Header = ({
                 )}
               </AnimatePresence>
             </li>
-            <li key={4}>
+            <li>
               <Link
                 className="hover:text-primary-100 transition-colors"
                 href="/collections/deals"
@@ -193,27 +219,23 @@ const Header = ({
           </ul>
         </nav>
 
-        {/* ---------- RIGHT: ICONS & SEARCH ---------- */}
-        {/* (same as before) */}
+        {/* ---------- RIGHT: SEARCH + CART + MENU ---------- */}
         <div className="flex items-center md:gap-4 gap-1 text-white">
           {/* Desktop Search */}
-          <div className="relative hidden lg:block">
+          <div ref={searchRef} className="relative hidden lg:block">
             <input
               value={search}
-              onChange={searchItems}
+              onChange={handleSearchChange}
               placeholder="Search for products..."
               className="bg-white/10 backdrop-blur-md text-white placeholder-gray-400 px-4 py-2 pr-10 rounded-full w-60 focus:outline-none focus:ring-2 focus:ring-primary-200 transition-all"
             />
             {isSearching ? (
               <div className="absolute top-2.5 right-3 w-4 h-4 border-2 border-gray-400 border-t-primary-200 rounded-full animate-spin"></div>
             ) : (
-              <IoSearch
-                size={20}
-                className="absolute top-2.5 right-3 text-gray-400"
-              />
+              <IoSearch size={20} className="absolute top-2.5 right-3 text-gray-400" />
             )}
             <AnimatePresence>
-              {showSearchResult && items.length > 0 && (
+              {showSearchResult && (
                 <SearchDialog
                   results={items}
                   onClick={() => {
