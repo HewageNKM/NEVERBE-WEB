@@ -27,7 +27,7 @@ const SearchDialog: React.FC<SearchDialogProps> = ({
         exit={{ opacity: 0, y: -10 }}
         transition={{ duration: 0.25 }}
         className={`w-full lg:max-w-2xl lg:min-w-88 max-w-md bg-white text-black rounded-xl shadow-xl border border-gray-200 p-3 sm:p-4 overflow-y-auto hide-scrollbar ${
-          containerStyle ? containerStyle : "absolute top-14 right-10 z-50"
+          containerStyle ? containerStyle : "absolute top-14 -right-20 z-50"
         }`}
         style={{ maxHeight }}
       >
