@@ -12,7 +12,9 @@ const DropShadow = ({
   return (
     <div
       onClick={onClick}
-      className={`fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex ${containerStyle || ""}`}
+      className={`fixed inset-0 z-50 bg-black/60% backdrop-blur-sm flex ${
+        containerStyle || ""
+      }`}
     >
       {children}
     </div>
