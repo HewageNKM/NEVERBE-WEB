@@ -4,8 +4,7 @@ import { sendOrderConfirmedSMS } from "@/services/NotificationService";
 
 export const GET = async (
   req: Request,
-  { params }: { params: { orderId: string } }
-) => {
+  context: { params: Promise<{ orderId: string }> }) => {
   try {
     console.log("[Order Notification API] Incoming request");
 
@@ -13,7 +12,7 @@ export const GET = async (
     const tokenData = await verifyToken(req);
     console.log("[Order Notification API] Token verified:", tokenData?.uid);
 
-    const orderId = params.orderId;
+    const orderId = (await context.params).orderId;
     console.log("[Order Notification API] Order ID:", orderId);
 
     // Get captcha token from query
