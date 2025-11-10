@@ -197,7 +197,7 @@ const CheckoutForm = () => {
         userId: userId || "anonymous-user",
         customer: orderCustomer,
         items: cartItems,
-        amount: parseFloat(amount),
+        total: parseFloat(amount),
         paymentMethod: paymentType,
         paymentMethodId: paymentTypeId,
         fee: 0,
