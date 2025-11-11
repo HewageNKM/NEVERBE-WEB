@@ -11,7 +11,6 @@ interface CollectionProps {
 }
 
 const CollectionCard: React.FC<CollectionProps> = ({ url, label, image }) => {
-  console.log(image);
   return (
     <article
       className="
