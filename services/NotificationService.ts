@@ -110,7 +110,7 @@ export const sendCODVerificationOTP = async (
       ttl: new Date(now.getTime() + OTP_TTL_DAYS * 24 * 60 * 60 * 1000),
     });
 
-    const text = `Your order verification code is ${otp}. Valid for 5 minutes.`;
+    const text = `Your verification code is ${otp}. Valid for 5 minutes.`;
     console.log(`[OTP Service] Sending SMS via API to ${phone}: ${text}`);
 
     await axios.post(
@@ -211,7 +211,7 @@ export const sendOrderConfirmedSMS = async (orderId: string) => {
       (order.discount || 0);
 
     const customerName = order.customer.name.split(" ")[0];
-    const invoiceDownloadUrl = `${BASE_URL}/checkout/success?orderId=${orderId}`;
+    const invoiceDownloadUrl = `${BASE_URL}/checkout/success/${orderId}`;
     const text = `✅ Hi ${customerName}, your order #${orderId.toUpperCase()} totaling Rs.${total.toFixed(
       2
     )} has been received by NEVERBE to be processed. Download your invoice (valid 7 days): ${invoiceDownloadUrl}`;
