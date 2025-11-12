@@ -13,6 +13,9 @@ import { setUser } from "@/redux/authSlice/authSlice";
 import Menu from "@/components/Menu";
 import { ToastContainer } from "react-toastify";
 import axios from "axios";
+import { Analytics } from "@vercel/analytics/next";
+
+
 
 const GlobalProvider = ({ children }: { children: ReactNode }) => {
   const dispatch: AppDispatch = useDispatch();
@@ -71,6 +74,7 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
       <Footer />
       <AnimatePresence>{showCart && <Cart />}</AnimatePresence>
       <AnimatePresence>{showMenu && <Menu />}</AnimatePresence>
+      <Analytics />
     </main>
   );
 };
