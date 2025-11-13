@@ -109,7 +109,7 @@ const Header = ({
   }, []);
 
   return (
-    <header className="fixed top-0 left-0 w-full z-50 backdrop-blur-md bg-black/70 border-b border-gray-800 shadow-sm">
+    <header className="fixed top-0 left-0 w-full z-40 backdrop-blur-md bg-black/70 border-b border-gray-800 shadow-sm">
       <div className="max-w-7xl mx-auto gap-5 md:gap-0 flex justify-between items-center px-4 md:px-8 py-3 transition-all duration-300">
         {/* ---------- LEFT: LOGO ---------- */}
         <Link href="/" className="flex items-center gap-2">
