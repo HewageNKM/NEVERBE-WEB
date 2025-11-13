@@ -22,7 +22,7 @@ const Cart = () => {
         animate={{ x: 0 }}
         exit={{ x: "100%" }}
         transition={{ type: "spring", stiffness: 120, damping: 20 }}
-        className="w-full sm:w-[80vw] md:w-[60vw] lg:w-[28vw] bg-white h-screen flex flex-col shadow-2xl relative"
+        className="w-full sm:w-[80vw] md:w-[70vw] lg:w-[28vw] bg-white h-screen flex flex-col shadow-2xl relative"
       >
         {/* Header */}
         <div className="flex justify-between items-center px-6 py-4 border-b border-gray-200">
@@ -70,7 +70,7 @@ const Cart = () => {
               router.push("/checkout");
             }}
             disabled={cartItems.length === 0}
-            className="w-full mt-5 py-3 bg-primary text-white rounded-lg text-lg font-medium hover:opacity-90 disabled:bg-gray-400 disabled:cursor-not-allowed transition"
+            className="w-full mt-5 py-2 bg-primary text-white rounded-lg text-lg font-medium hover:opacity-90 disabled:bg-gray-400 disabled:cursor-not-allowed transition"
           >
             Checkout
           </button>

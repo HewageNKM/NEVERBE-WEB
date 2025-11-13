@@ -226,24 +226,24 @@ const ProductHero = ({ item }: { item: Product }) => {
               </p>
               <p className="text-gray-900 font-bold text-lg">
                 Rs.{" "}
-                {(item.discount > 0
-                  ? (item.sellingPrice -
-                    (item.sellingPrice * item.discount) / 100)
-                  : item.sellingPrice
+                {(
+                  Math.round(
+                    (item.discount > 0
+                      ? item.sellingPrice -
+                        (item.sellingPrice * item.discount) / 100
+                      : item.sellingPrice) / 10
+                  ) * 10
                 ).toFixed(2)}
               </p>
             </div>
             <div className="flex items-center gap-1 text-xs text-gray-500 mt-1">
               <p>
-                or 3x Rs.
+                or 3 x Rs.
                 {(
-                  Math.round(
-                    (item.sellingPrice -
-                      (item.sellingPrice * item.discount) / 100) /
-                      3 /
-                      10
-                  ) * 10
-                ).toFixed(2)}
+                  (item.sellingPrice -
+                    (item.sellingPrice * item.discount) / 100) /
+                  3
+                ).toFixed(2)}{" "}
                 with
               </p>
               <Image src={KOKOLogo} alt="KOKO" width={25} height={25} />
