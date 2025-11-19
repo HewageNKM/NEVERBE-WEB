@@ -1,0 +1,126 @@
+import React from "react";
+import { Metadata } from "next";
+import ContactDetailsSection from "@/app/(site)/contact/components/ContactDetailsSection";
+import SocialMediaSection from "@/app/(site)/contact/components/SocialMediaSection";
+import MapSection from "@/app/(site)/contact/components/MapSection";
+
+export const metadata: Metadata = {
+  title: "Contact Us - NEVERBE Sri Lanka",
+  description:
+    "Get in touch with NEVERBE for inquiries, support, or feedback. Contact us via email, WhatsApp, social media, or visit our store in Sri Lanka.",
+  keywords:
+    "NEVERBE, contact, support, inquiries, feedback, social media, whatsapp, Sri Lanka",
+  alternates: {
+    canonical: "https://neverbe.lk/contact",
+  },
+  openGraph: {
+    title: "Contact Us - NEVERBE",
+    description:
+      "Reach out to NEVERBE via email, social media, WhatsApp, or visit our store in Sri Lanka.",
+    url: "https://neverbe.lk/contact",
+    type: "website",
+    siteName: "NEVERBE",
+    locale: "en_LK",
+    images: [
+      {
+        url: "https://neverbe.lk/api/v1/og",
+        width: 1200,
+        height: 630,
+        alt: "NEVERBE Logo",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    site: "@neverbe",
+    creator: "@neverbe",
+    title: "Contact Us - NEVERBE",
+    description:
+      "Reach out to NEVERBE via email, social media, WhatsApp, or visit our store in Sri Lanka.",
+    images: ["https://neverbe.lk/api/v1/og"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
+  },
+};
+
+const ContactPage = () => {
+  /* ✅ Structured Data for Contact Page + Breadcrumb + Organization */
+  const structuredData = [
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: "https://neverbe.lk",
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Contact",
+          item: "https://neverbe.lk/contact",
+        },
+      ],
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      name: "NEVERBE",
+      url: "https://neverbe.lk",
+      logo: "https://neverbe.lk/api/v1/og",
+      contactPoint: {
+        "@type": "ContactPoint",
+        telephone: "+94 70 520 8999",
+        contactType: "Customer Service",
+        areaServed: "LK",
+        availableLanguage: ["English", "Sinhala", "Tamil"],
+      },
+      sameAs: [
+        "https://www.facebook.com/neverbe196",
+        "https://www.instagram.com/neverbe196",
+        "https://tiktok.com/@neverbe196",
+      ],
+    },
+  ];
+
+  return (
+    <div className="min-h-screen mt-24 lg:mt-40 flex flex-col items-center px-4 sm:px-6 lg:px-12">
+      {/* Structured Data JSON-LD */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
+
+      {/* --- Header Section --- */}
+      <header className="text-center mb-12">
+        <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 font-display">
+          Contact Us
+        </h1>
+        <p className="text-gray-600 mt-3 text-lg max-w-2xl mx-auto">
+          We’d love to hear from you. Whether you have a question, feedback, or
+          just want to say hello — we’re here to help!
+        </p>
+      </header>
+
+      {/* --- Main Content Section --- */}
+      <div className="w-full max-w-6xl p-6 sm:p-10 space-y-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+          <ContactDetailsSection />
+          <SocialMediaSection />
+        </div>
+
+        <MapSection />
+      </div>
+    </div>
+  );
+};
+
+export default ContactPage;

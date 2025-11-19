@@ -1,52 +1,56 @@
-import React from "react";
+import "@/app/globals.css";
 import Link from "next/link";
 import { FaArrowLeft } from "react-icons/fa6";
 import { Metadata } from "next";
 
-export const metadata:Metadata = {
-    title: "Page Not Found",
-}
+export const metadata: Metadata = {
+  title: "Page Not Found | NEVERBE",
+};
+
 const NotFound = () => {
   return (
-    <div className="min-h-screen w-full md:mt-10 mt-5 flex flex-col justify-center items-center bg-white text-center px-6 relative overflow-hidden">
-      {/* Subtle Gradient Glow */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(151,225,62,0.05),transparent_70%)] pointer-events-none" />
+    <div className="min-h-screen flex flex-col items-center justify-center bg-neutral-50 px-6">
+      {/* Container */}
+      <div className="text-center max-w-xl w-full">
+        
+        {/* 404 */}
+        <h1 className="text-[110px] leading-none font-bold text-neutral-900 tracking-tight">
+          404
+        </h1>
 
-      {/* 404 Number */}
-      <h1 className="text-8xl md:text-9xl font-extrabold text-primary drop-shadow-lg">
-        404
-      </h1>
+        {/* Title */}
+        <h2 className="mt-4 text-2xl md:text-3xl font-semibold text-neutral-800">
+          This page can’t be found
+        </h2>
 
-      {/* Message */}
-      <h2 className="mt-6 text-2xl md:text-4xl font-semibold">
-        Oops! Page not found.
-      </h2>
-      <p className="mt-3 text-gray-400 max-w-md text-base md:text-lg">
-        The page you’re looking for doesn’t exist or might have been moved.
-      </p>
-
-      {/* Return Button */}
-      <Link
-        href="/"
-        className="mt-8 inline-flex items-center gap-2 bg-primary text-neutral-900 px-5 py-3 rounded-xl text-lg font-semibold hover:bg-primary-100 transition-all duration-300 shadow-custom"
-      >
-        <FaArrowLeft size={18} />
-        Return to Home
-      </Link>
-
-      {/* Help Text */}
-      <div className="absolute bottom-10 text-gray-500 text-sm">
-        <p>
-          Think this is a mistake?{" "}
-          <Link
-            href="/contact"
-            className="text-primary hover:text-primary-100 underline transition"
-          >
-            Contact us
-          </Link>
-          .
+        {/* Description */}
+        <p className="mt-3 text-neutral-500 text-base md:text-lg leading-relaxed">
+          The page you're looking for may have been moved, deleted, or never existed.
         </p>
+
+        {/* Action */}
+        <div className="mt-8">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-neutral-300 bg-white text-neutral-900 font-medium hover:border-neutral-400 hover:bg-neutral-100 transition-all duration-200"
+          >
+            <FaArrowLeft size={16} />
+            Back to Home
+          </Link>
+        </div>
       </div>
+
+      {/* Footer help text */}
+      <p className="absolute bottom-10 text-neutral-400 text-sm">
+        Need assistance?{" "}
+        <Link
+          href="/contact"
+          className="underline text-neutral-700 hover:text-neutral-900 transition"
+        >
+          Contact support
+        </Link>
+        .
+      </p>
     </div>
   );
 };

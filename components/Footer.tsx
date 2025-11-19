@@ -8,7 +8,7 @@ import { GoLocation } from "react-icons/go";
 
 const Footer = () => {
   return (
-    <footer className="w-full bg-primary text-white pt-12 pb-6 px-6 lg:px-24">
+    <footer id="footer" className="w-full bg-primary text-white pt-12 pb-6 px-6 lg:px-24">
       {/* Top Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-10">
         {/* Logo + Address */}
