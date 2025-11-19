@@ -1,145 +1,149 @@
-import React from "react";
 import Hero from "@/app/components/Hero";
 import NewArrivals from "@/app/components/NewArrivals";
 import WhyUs from "@/app/components/WhyUs";
 import PopularProducts from "@/app/components/PopularProducts";
 import FAQ from "@/app/components/FAQ";
 import BrandsSlider from "./components/BrandsSlider";
-
-import { Slide } from "@/interfaces";
-import { Product } from "@/interfaces/Product";
 import { getHotProducts, getRecentItems } from "@/services/ProductService";
 import { getSliders } from "@/services/SlideService";
 import { getBrands } from "@/services/OtherService";
-
 import type { Metadata } from "next";
 import { seoKeywords } from "@/constants";
 
-// --------------------------------------------------
-// ⚙️ DYNAMIC SERVER RENDERING
-// --------------------------------------------------
-export const dynamic = "force-dynamic";
-
-// --------------------------------------------------
-// 🔍 SEO & OPEN GRAPH
-// --------------------------------------------------
 export const metadata: Metadata = {
   title: {
-    default: "NEVERBE — Sri Lanka's Premier Online Shoe Store",
+    default: "NEVERBE — Premium First Copy & Replica Shoes in Sri Lanka",
     template: "%s | NEVERBE",
   },
   metadataBase: new URL("https://neverbe.lk"),
-  alternates: { canonical: "https://neverbe.lk" },
+  alternates: {
+    canonical: "https://neverbe.lk",
+  },
   description:
-    "Shop high-quality Nike, adidas, New Balance and more replica shoes at NEVERBE — Sri Lanka’s most trusted sneaker store with fast delivery islandwide.",
+    "Buy high-quality 7A and Master Copy shoes in Sri Lanka. Best prices for Nike, Adidas, and New Balance inspired sneakers. Islandwide delivery available.",
+  applicationName: "NEVERBE",
   keywords: [
-    "neverbe shoes",
-    "copy shoes sri lanka",
-    "nike replica sri lanka",
-    "sneakers sri lanka",
+    "first copy shoes sri lanka",
+    "master copy sneakers",
+    "branded copy shoes",
+    "budget shoes sri lanka",
+    "nike copy prices",
+    "7a quality shoes sri lanka",
     ...seoKeywords,
   ],
-  robots: { index: true, follow: true },
+  category: "Fashion E-commerce",
+  authors: [{ name: "NEVERBE", url: "https://neverbe.lk" }],
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-snippet": -1,
+      "max-image-preview": "large",
+      "max-video-preview": -1,
+    },
+  },
   openGraph: {
-    title: "NEVERBE — Premium Replica Sneakers in Sri Lanka",
+    title: "NEVERBE — Best Shoe Copies & Replicas in Sri Lanka",
     description:
-      "Sri Lanka’s best online store for Nike, adidas, and New Balance replica sneakers.",
+      "Get the best look for less. Premium replica sneakers including Nike and Adidas designs. Fast delivery in Colombo and Islandwide.",
     url: "https://neverbe.lk",
     siteName: "NEVERBE",
-    images: [{ url: "https://neverbe.lk/api/v1/og", width: 1200, height: 630 }],
+    type: "website",
+    locale: "en_LK",
+    images: [
+      {
+        url: "https://neverbe.lk/api/v1/og",
+        alt: "NEVERBE Sneaker Store",
+        width: 1200,
+        height: 630,
+      },
+    ],
   },
 };
 
-// --------------------------------------------------
-// ⏳ STABLE SAFE FETCH (6-second timeout)
-// --------------------------------------------------
-const safeFetch = async <T,>(promise: Promise<T>, fallback: T): Promise<T> => {
-  const timeout = new Promise<never>((_, reject) =>
-    setTimeout(() => reject(new Error("Request timed out")), 6000)
-  );
+// OPTIMIZATION: Switch to ISR (Incremental Static Regeneration)
+// This caches the page for 1 hour (3600s). This is much faster than force-dynamic.
+export const revalidate = 3600; 
 
-  try {
-    return (await Promise.race([promise, timeout])) as T;
-  } catch (err) {
-    console.error("⚠️ safeFetch fallback:", err);
-    return fallback;
-  }
-};
-
-// --------------------------------------------------
-// 📄 PAGE COMPONENT
-// --------------------------------------------------
 const Page = async () => {
-  const [arrivals, sliders, hotItems, brands] = await Promise.all([
-    safeFetch<Product[]>(getRecentItems(), []),
-    safeFetch<Slide[]>(getSliders(), []),
-    safeFetch<Product[]>(getHotProducts(), []),
-    safeFetch<any[]>(getBrands(), []),
+  // OPTIMIZATION: Fetch data in parallel to reduce load time
+  const dataPromise = Promise.all([
+    getRecentItems().catch((err) => { console.error("Recent items failed", err); return []; }),
+    getSliders().catch((err) => { console.error("Sliders failed", err); return []; }),
+    getHotProducts().catch((err) => { console.error("Hot items failed", err); return []; }),
+    getBrands().catch((err) => { console.error("Brands failed", err); return []; }),
   ]);
 
-  // --------------------------------------------------
-  // 📦 STRUCTURED DATA (JSON-LD)
-  // --------------------------------------------------
-  const structuredData = [
-    {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      name: "NEVERBE",
-      url: "https://neverbe.lk",
-    },
-    {
-      "@context": "https://schema.org",
-      "@type": "Organization",
-      name: "NEVERBE",
-      url: "https://neverbe.lk",
-      logo: "https://neverbe.lk/api/v1/og",
-      sameAs: [
-        "https://www.facebook.com/neverbe196",
-        "https://www.instagram.com/neverbe196",
-      ],
-      contactPoint: {
-        "@type": "ContactPoint",
-        telephone: "+94 70 520 8999",
-        contactType: "Customer Service",
-        areaServed: "LK",
-        availableLanguage: ["English", "Sinhala"],
-      },
-    },
-  ];
+  const [arrivals, sliders, hotItems, brands] = await dataPromise;
 
-  // --------------------------------------------------
-  // 🎨 PAGE RENDER
-  // --------------------------------------------------
+  /* ✅ Schema.org Structured Data */
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Store",
+        name: "NEVERBE",
+        url: "https://neverbe.lk",
+        logo: "https://neverbe.lk/api/v1/og",
+        image: "https://neverbe.lk/api/v1/og",
+        description: "Retailer of fashion footwear and inspired sneaker designs in Sri Lanka.",
+        priceRange: "$$",
+        address: {
+          "@type": "PostalAddress",
+          addressCountry: "LK",
+          addressRegion: "Western Province"
+        },
+        contactPoint: {
+          "@type": "ContactPoint",
+          telephone: "+94 70 520 8999",
+          contactType: "Customer Service",
+          areaServed: "LK",
+          availableLanguage: ["English", "Sinhala", "Tamil"],
+        },
+      },
+      {
+        "@type": "FAQPage",
+        mainEntity: [
+          {
+            "@type": "Question",
+            name: "Are these shoes original brands?",
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: "No, these are high-quality premium replicas (First Copy/Master Copy) inspired by popular designs, offering a similar look at a budget-friendly price.",
+            },
+          },
+          {
+            "@type": "Question",
+            name: "Do you deliver across Sri Lanka?",
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: "Yes, NEVERBE delivers islandwide within 2–5 business days via trusted courier partners.",
+            },
+          },
+        ],
+      }
+    ]
+  };
+
   return (
-    <>
-      {/* Structured Data */}
+    <main className="flex min-h-screen flex-col">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
 
-      {/* Hero / Slider Section */}
-      {sliders.length > 0 ? (
-        <Hero slides={sliders} />
-      ) : (
-        <div className="w-full h-[400px] bg-gray-100 flex flex-col gap-4 items-center justify-center text-center p-4">
-          <h1 className="text-4xl font-bold text-gray-800">NEVERBE</h1>
-          <p className="text-gray-500">Premium Sneakers. Sri Lanka.</p>
-        </div>
-      )}
-
-      {/* Popular Products */}
+      <Hero slides={sliders} />
+      
+      {/* OPTIMIZATION: Render sections only if data exists to prevent layout shift */}
       {hotItems.length > 0 && <PopularProducts hotItems={hotItems} />}
-
-      {/* New Arrivals */}
       {arrivals.length > 0 && <NewArrivals arrivals={arrivals} />}
-
-      {/* Brands */}
       {brands.length > 0 && <BrandsSlider items={brands} />}
-
+      
       <WhyUs />
       <FAQ />
-    </>
+    </main>
   );
 };
 

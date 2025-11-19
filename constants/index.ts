@@ -16,43 +16,45 @@ import { FaMobile } from "react-icons/fa";
 import { FaMessage, FaPhone } from "react-icons/fa6";
 
 export const seoKeywords: string[] = [
+  // Brand Identity
   "never be lk",
   "neverbe",
+  "neverbe shoes",
+
+  // Core Product Keywords (High Volume)
   "shoes sri lanka",
-  "shoes online sri lanka",
   "sneakers sri lanka",
-  "copy shoes sri lanka",
-  "brand copy shoes sri lanka",
-  "nike sri lanka",
-  "nike colombo",
-  "nike gampaha",
-  "adidas sri lanka",
-  "adidas colombo",
-  "adidas gampaha",
-  "new balance sri lanka",
-  "new balance colombo",
-  "new balance gampaha",
-  "puma sri lanka",
-  "puma colombo",
-  "puma gampaha",
   "mens shoes sri lanka",
   "womens shoes sri lanka",
-  "slippers sri lanka",
-  "sandals sri lanka",
-  "shoe store sri lanka",
-  "shoe shop sri lanka",
-  "shoe shopping sri lanka",
-  "shoe store online sri lanka",
-  "shoe shop online sri lanka",
-  "shoe shopping online sri lanka",
-  "copy shoes colombo",
-  "copy shoes gampaha",
-  "brand copy shoes colombo",
-  "brand copy shoes gampaha",
-  "mens shoes colombo",
-  "mens shoes gampaha",
-  "womens shoes colombo",
-  "womens shoes gampaha",
+  "running shoes sri lanka",
+  "sports shoes sri lanka",
+
+  // The "Copy" Market Keywords (Targeting the right intent)
+  "first copy shoes sri lanka",
+  "first copy sneakers colombo",
+  "master copy shoes sri lanka",
+  "7a quality shoes sri lanka",
+  "first copy branded shoes",
+  "replica shoes sri lanka",
+  "premium copy sneakers",
+  "branded copy shoes",
+  "factory reject shoes sri lanka", 
+  "vietnam copy shoes",
+
+  // Location Based (Safe)
+  "shoe delivery colombo",
+  "shoe delivery gampaha",
+  "online shoe store colombo",
+  "cash on delivery shoes sri lanka",
+
+  // Style/Category Keywords (No Brand Names)
+  "basketball shoes sri lanka",
+  "gym shoes sri lanka",
+  "casual sneakers sri lanka",
+  "high top sneakers",
+  "canvas shoes sri lanka",
+  "slippers and sandals sri lanka",
+  "budget shoe shop sri lanka",
 ];
 export const sortingOptions = [
   {
@@ -200,8 +202,8 @@ export const informationLinks: FooterLink[] = [
   { title: "Shipping & Returns", url: "/policies/shipping-return-policy" },
   { title: "Terms & Conditions", url: "/policies/terms-conditions" },
   { title: "Privacy Policy", url: "/policies/privacy-policy" },
-  {title:"About Us", url:"/aboutUs"},
-  {title:"Contact Us", url:"contact"}
+  { title: "About Us", url: "/aboutUs" },
+  { title: "Contact Us", url: "contact" },
 ];
 export const privacyPolicy = {
   company: "Watch Line",
@@ -330,20 +332,20 @@ export enum ContactUs {
 
 export const collectionList = [
   {
-    label:"Slides & Slippers & Sandals",
-    url:"/collections/categories/Sandals%20&%20Slippers%20&%20Slides",
-    image: SlidesBG 
+    label: "Slides & Slippers & Sandals",
+    url: "/collections/categories/Sandals%20&%20Slippers%20&%20Slides",
+    image: SlidesBG,
   },
   {
-    label:"Boots",
-    url:"/collections/categories/Boots",
-    image: BOOTSBG
+    label: "Boots",
+    url: "/collections/categories/Boots",
+    image: BOOTSBG,
   },
   {
-    label:"Running/Sport Shoes",
-    url:"/collections/categories/Running%20Shoes",
-    image:RunningShoeBG
-  }
+    label: "Running/Sport Shoes",
+    url: "/collections/categories/Running%20Shoes",
+    image: RunningShoeBG,
+  },
 ];
 
 export const SHIPPING_FLAT_RATE_1 = 380;

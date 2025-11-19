@@ -1,4 +1,3 @@
-import React from "react";
 import type { Metadata } from "next";
 import { Item } from "@/interfaces";
 import BrandProducts from "./components/BrandProducts";
@@ -6,28 +5,31 @@ import BrandHeader from "./components/BrandHeader";
 import { getProductsByBrand } from "@/services/ProductService";
 
 
-export async function generateMetadata( context: { params: Promise<{ brand: string }> }): Promise<Metadata> {
+export const revalidate = 3600;
+
+export async function generateMetadata(context: {
+  params: Promise<{ brand: string }>;
+}): Promise<Metadata> {
   const params = await context.params;
   const decodedBrand = decodeURIComponent(params.brand).replace(/-/g, " ");
-  const capitalizedBrand =
-    decodedBrand.charAt(0).toUpperCase() + decodedBrand.slice(1);
+  
+  const capitalizedBrand = decodedBrand.charAt(0).toUpperCase() + decodedBrand.slice(1);
 
-  const title = `${capitalizedBrand} Collection | NEVERBE Sri Lanka`;
-  const description = `Shop premium ${capitalizedBrand} shoes and apparel at NEVERBE Sri Lanka. Discover high-quality replicas of Nike, Adidas, Puma, and New Balance with exclusive deals and fast delivery.`;
+  const title = `${capitalizedBrand} Inspired Collection | NEVERBE Sri Lanka`;
+  
+  const description = `Shop premium ${capitalizedBrand} style sneakers at NEVERBE. High-quality First Copy and Master Copy shoes with islandwide delivery in Sri Lanka.`;
 
   return {
     title,
     description,
     keywords: [
-      `${capitalizedBrand}`,
-      `${capitalizedBrand} Sri Lanka`,
-      `${capitalizedBrand} online store`,
-      `${capitalizedBrand} offers`,
-      `${capitalizedBrand} discounts`,
+      `${capitalizedBrand} copy shoes`,
+      `${capitalizedBrand} first copy sri lanka`,
+      `${capitalizedBrand} master copy`,
+      `${capitalizedBrand} 7a quality`,
+      "branded copy shoes",
+      "sneakers sri lanka",
       "neverbe",
-      "neverbe.lk",
-      "shoes sri lanka",
-      "online shoe store",
     ],
     alternates: {
       canonical: `https://neverbe.lk/collections/brands/${params.brand}`,
@@ -44,7 +46,7 @@ export async function generateMetadata( context: { params: Promise<{ brand: stri
           url: "https://neverbe.lk/api/v1/og",
           width: 1200,
           height: 630,
-          alt: `${capitalizedBrand} - NEVERBE Sri Lanka`,
+          alt: `${capitalizedBrand} Style Sneakers - NEVERBE`,
         },
       ],
     },
@@ -67,12 +69,11 @@ export async function generateMetadata( context: { params: Promise<{ brand: stri
         "max-video-preview": -1,
       },
     },
-    category: "Ecommerce",
     metadataBase: new URL("https://neverbe.lk"),
   };
 }
 
-const Page = async ( context: { params: Promise<{ brand: string }> }) => {
+const Page = async (context: { params: Promise<{ brand: string }> }) => {
   const params = await context.params;
   const brand = decodeURIComponent(params.brand).replace(/-/g, " ");
   let items: Item[] = [];
@@ -84,45 +85,38 @@ const Page = async ( context: { params: Promise<{ brand: string }> }) => {
     console.error("Error fetching brand products:", e);
   }
 
-  const brandSchema = {
-    "@context": "https://schema.org",
-    "@type": "Brand",
-    name: brand,
-    url: `https://neverbe.lk/collections/brands/${encodeURIComponent(brand)}`,
-    logo: "https://neverbe.lk/api/v1/og",
-    description: `Explore ${brand} shoes and collections available at NEVERBE Sri Lanka.`,
-  };
-
+  /* ✅ Schema.org: CollectionPage (Removed "Brand" Entity) */
+  // Note: We removed the standalone "@type": "Brand" schema because 
+  // unless you are the official owner of Nike, you cannot claim the page represents the Brand entity.
   const productListSchema = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    name: `${brand} Collection - NEVERBE Sri Lanka`,
-    description: `Shop authentic-looking ${brand} replica shoes available in Sri Lanka with exclusive deals.`,
+    name: `${brand} Inspired Collection - NEVERBE`,
+    description: `Shop high-quality ${brand} style replica shoes in Sri Lanka.`,
     url: `https://neverbe.lk/collections/brands/${encodeURIComponent(brand)}`,
+    inLanguage: "en-LK",
     mainEntity: {
       "@type": "ItemList",
       itemListElement: items.map((product, index) => ({
-        "@type": "Product",
+        "@type": "ListItem", 
         position: index + 1,
-        name: product.name,
-        image: product.thumbnail?.url || "https://neverbe.lk/api/v1/og",
-        description:
-          product.description ||
-          `Shop ${product.name} available now at NEVERBE Sri Lanka.`,
-        url: `https://neverbe.lk/product/${product.id}`,
-        brand: {
-          "@type": "Brand",
-          name: brand,
-        },
-        offers: {
-          "@type": "Offer",
-          priceCurrency: "LKR",
-          price: product.sellingPrice || "0.00",
-          availability: "https://schema.org/InStock",
-          url: `https://neverbe.lk/product/${product.id}`,
-          priceValidUntil: new Date(
-            Date.now() + 1000 * 60 * 60 * 24 * 30
-          ).toISOString(),
+        item: {
+          "@type": "Product",
+          name: product.name,
+          image: product.thumbnail?.url || "https://neverbe.lk/api/v1/og",
+          description: product.description || `Shop ${product.name} at NEVERBE.`,
+          url: `https://neverbe.lk/collections/products/${product.id}`,
+          brand: {
+            "@type": "Brand",
+            name: "NEVERBE", 
+          },
+          offers: {
+            "@type": "Offer",
+            priceCurrency: "LKR",
+            price: product.sellingPrice || "0.00",
+            availability: "https://schema.org/InStock",
+            url: `https://neverbe.lk/collections/products/${product.id}`,
+          },
         },
       })),
     },
@@ -130,17 +124,23 @@ const Page = async ( context: { params: Promise<{ brand: string }> }) => {
 
   return (
     <main className="w-full relative lg:mt-28 mt-16 mb-5 overflow-hidden">
-
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify([brandSchema, productListSchema]),
+          __html: JSON.stringify(productListSchema),
         }}
       />
 
       <section className="w-full">
         <BrandHeader brand={brand} />
-        <BrandProducts items={items} brand={brand} />
+        
+        {items.length > 0 ? (
+             <BrandProducts items={items} brand={brand} />
+        ) : (
+            <div className="text-center py-20 text-gray-500">
+                <p>No products found for {brand}.</p>
+            </div>
+        )}
       </section>
     </main>
   );

@@ -378,6 +378,10 @@ const ProductHero = ({ item }: { item: Product }) => {
               Inquire
             </motion.a>
           </div>
+          <div className="mt-4 text-xs text-gray-500 text-left max-w-2xl mx-auto">
+            *This product is a premium inspired version (Master Copy/7A). NOT an
+            original branded item.
+          </div>
         </motion.div>
       </div>
 

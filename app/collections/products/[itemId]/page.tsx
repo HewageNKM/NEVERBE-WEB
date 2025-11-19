@@ -1,53 +1,54 @@
-import React from "react";
+import { cache } from "react";
 import ProductHero from "@/app/collections/products/[itemId]/components/ProductHero";
-import { notFound } from "next/navigation";
-import { Product } from "@/interfaces/Product";
 import SimilarProducts from "@/app/collections/products/[itemId]/components/SimilarProducts";
+import { notFound } from "next/navigation";
 import { getProductById, getSimilarItems } from "@/services/ProductService";
 import type { Metadata } from "next";
+import { Product } from "@/interfaces/Product";
+
+const getProduct = cache(async (id: string) : Promise<Product | null>=> {
+  try {
+    return await getProductById(id);
+  } catch (e) {
+    console.error(e);
+    return null;
+  }
+});
 
 export async function generateMetadata(context: {
   params: Promise<{ itemId: string }>;
 }): Promise<Metadata> {
   const params = await context.params;
-  let item: Product | null = null;
-
-  try {
-    item = await getProductById(params.itemId);
-  } catch (e) {
-    console.error(e);
-  }
+  const item = await getProduct(params.itemId);
 
   if (!item) {
     return {
-      title: "Product Not Found - NEVERBE",
-      description: "This product could not be found.",
+      title: "Item Not Found | NEVERBE",
+      description: "The requested sneaker could not be found.",
+      robots: { index: false, follow: true },
     };
   }
 
-  const title = `${item.name} | NEVERBE Sri Lanka`;
-  const description =
-    item.description ||
-    `Discover ${item.name} at NEVERBE. Premium replica shoes in Sri Lanka.`;
+  const safeTitle = `${item.name} - Premium 7A/Master Copy`;
 
   return {
-    title,
-    description,
+    title: safeTitle,
+    description: `Get the best deal on ${item.name} (Master Copy) in Sri Lanka. High-quality materials, 7A grade finish, and islandwide delivery available at NEVERBE.`,
     keywords: [
-      item.name,
-      "NEVERBE",
-      "replica shoes Sri Lanka",
-      "Nike replica",
-      "Adidas replica",
-      "New Balance replica",
-      "sneakers Sri Lanka",
+      item.name, 
+      "first copy sneakers sri lanka",
+      "7a quality shoes",
+      "master copy shoes",
+      "premium copy sneakers",
+      "neverbe shoes",
+      "mens fashion footwear",
     ],
     alternates: {
       canonical: `https://neverbe.lk/collections/products/${item.id}`,
     },
     openGraph: {
-      title,
-      description,
+      title: safeTitle,
+      description: `Shop ${item.name} - High Quality First Copy in Sri Lanka.`,
       url: `https://neverbe.lk/collections/products/${item.id}`,
       type: "website",
       siteName: "NEVERBE",
@@ -56,51 +57,39 @@ export async function generateMetadata(context: {
           url: item.thumbnail?.url || "https://neverbe.lk/api/v1/og",
           width: 1200,
           height: 630,
-          alt: item.name,
+          alt: `${item.name} - Detailed View`,
         },
       ],
-    },
-    twitter: {
-      card: "summary_large_image",
-      site: "@neverbe",
-      creator: "@neverbe",
-      title,
-      description,
-      images: [item.thumbnail?.url || "https://neverbe.lk/api/v1/og"],
     },
   };
 }
 
 const Page = async (context: { params: Promise<{ itemId: string }> }) => {
   const params = await context.params;
-  let item: Product | null = null;
+  
+  // Fetch data in parallel for speed
+  // 1. getProduct is cached, so it won't hit the DB again if called in metadata
+  // 2. getSimilarItems runs at the same time
+  const itemData = getProduct(params.itemId);
+  const similarData = getSimilarItems(params.itemId).catch(() => []);
 
-  try {
-    item = await getProductById(params.itemId);
-  } catch (e) {
-    console.error(e);
-  }
+  const [item, similarItems] = await Promise.all([itemData, similarData]);
 
   if (!item) return notFound();
 
-  let similarItems: Product[] = [];
-  try {
-    similarItems = await getSimilarItems(item.id);
-  } catch (e) {
-    console.error("Error fetching similar items:", e);
-  }
-
-  /* ✅ Structured Data for Product + Offer */
+  /* ✅ LEGAL SAFEGUARD: Structured Data */
+  // Never claim the brand is "Nike" in Schema if it is a copy.
+  // This is the #1 reason Google bans Merchant Center accounts.
   const productSchema = {
     "@context": "https://schema.org",
     "@type": "Product",
-    name: item.name,
+    name: item.name, 
     image: [item.thumbnail?.url || "https://neverbe.lk/api/v1/og"],
-    description: item.description || `Buy ${item.name} at NEVERBE Sri Lanka`,
+    description: `High-quality inspired design of ${item.name}. Note: This is a premium replica intended for fashion purposes.`,
     sku: item.id,
     brand: {
       "@type": "Brand",
-      name: "NEVERBE",
+      name: "NEVERBE", // ALWAYS use your store name, never the trademarked brand
     },
     offers: {
       "@type": "Offer",
@@ -108,9 +97,11 @@ const Page = async (context: { params: Promise<{ itemId: string }> }) => {
       priceCurrency: "LKR",
       price: item.sellingPrice || "0.00",
       availability: "https://schema.org/InStock",
-      priceValidUntil: new Date(
-        Date.now() + 1000 * 60 * 60 * 24 * 30
-      ).toISOString(),
+      itemCondition: "https://schema.org/NewCondition",
+      seller: {
+        "@type": "Organization",
+        name: "NEVERBE",
+      },
     },
   };
 
@@ -120,6 +111,7 @@ const Page = async (context: { params: Promise<{ itemId: string }> }) => {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
       />
+      
       <div className="md:px-8 px-4 py-4">
         <ProductHero item={item} />
         <SimilarProducts items={similarItems || []} />

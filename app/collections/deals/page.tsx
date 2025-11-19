@@ -1,4 +1,3 @@
-import React from "react";
 import DealsHeader from "./components/DealsHeader";
 import DealsProducts from "./components/DealsProducts";
 import EmptyState from "@/components/EmptyState";
@@ -7,35 +6,34 @@ import { seoKeywords } from "@/constants";
 import { Product } from "@/interfaces/Product";
 import type { Metadata } from "next";
 
+export const revalidate = 3600;
 
-/* ✅ SEO-optimized metadata for Sri Lanka deals page */
 export const metadata: Metadata = {
   title: {
-    default: "Best Shoe Deals & Discounts | NEVERBE Sri Lanka",
+    default: "Best Sneaker Deals & Discounts | NEVERBE Sri Lanka",
     template: "%s | NEVERBE",
   },
   description:
-    "Shop the best shoe deals and discounts in Sri Lanka. Save on Nike, Adidas, Puma, New Balance, and more high-quality replica sneakers, slides, and sandals at NEVERBE.",
+    "Get the best prices on high-quality First Copy and Master Copy shoes in Sri Lanka. Exclusive discounts on premium inspired sneakers, slides, and sandals.",
   keywords: [
-    "neverbe deals",
     "shoe deals sri lanka",
-    "discount shoes sri lanka",
-    "nike sale sri lanka",
-    "adidas discount sri lanka",
-    "puma shoes offers",
-    "new balance sale",
-    "sneaker offers sri lanka",
+    "discount sneakers colombo",
+    "first copy shoe prices",
+    "master copy sneaker sale",
+    "budget shoes sri lanka",
+    "shoe offers online",
     "clearance shoes sri lanka",
-    "online shoe discounts",
+    "best shoe rates sri lanka",
+    "cod shoes sri lanka",
     ...seoKeywords,
   ],
   alternates: {
     canonical: "https://neverbe.lk/collections/deals",
   },
   openGraph: {
-    title: "Shoe Deals & Discounts | NEVERBE Sri Lanka",
+    title: "Hot Sneaker Deals & Offers | NEVERBE",
     description:
-      "Find exclusive offers and discounts on Nike, Adidas, Puma, and New Balance replica shoes at NEVERBE — Sri Lanka’s trusted online sneaker store.",
+      "Save big on premium inspired footwear. The best place for affordable 7A and Master Copy sneakers in Sri Lanka.",
     url: "https://neverbe.lk/collections/deals",
     siteName: "NEVERBE",
     type: "website",
@@ -45,7 +43,7 @@ export const metadata: Metadata = {
         url: "https://neverbe.lk/api/v1/og",
         width: 1200,
         height: 630,
-        alt: "NEVERBE Logo",
+        alt: "NEVERBE Deals",
       },
     ],
   },
@@ -53,9 +51,9 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     site: "@neverbe",
     creator: "@neverbe",
-    title: "Best Shoe Deals & Offers | NEVERBE Sri Lanka",
+    title: "Hot Sneaker Deals & Offers | NEVERBE",
     description:
-      "Shop high-quality Nike, Adidas, and Puma replica shoes at discounted prices — only at NEVERBE Sri Lanka.",
+      "Don't miss out on the best sneaker prices in Sri Lanka. Shop now at NEVERBE.",
     images: ["https://neverbe.lk/api/v1/og"],
   },
   robots: {
@@ -87,31 +85,38 @@ const Page = async () => {
   const dealsSchema = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    name: "Shoe Deals and Discounts - NEVERBE Sri Lanka",
+    name: "Shoe Deals and Discounts - NEVERBE",
     description:
-      "Find the best deals and discount offers on Nike, Adidas, Puma, and New Balance replica sneakers at NEVERBE Sri Lanka.",
+      "Find the best discounts on premium inspired sneakers in Sri Lanka.",
     url: "https://neverbe.lk/collections/deals",
     inLanguage: "en-LK",
     mainEntity: {
       "@type": "ItemList",
       itemListElement: dealsList.map((product: Product, index: number) => ({
-        "@type": "Product",
+        "@type": "ListItem",
         position: index + 1,
-        name: product?.name,
-        image: product?.thumbnail?.url || "https://neverbe.lk/api/v1/og",
-        description:
-          product?.description ||
-          "Premium replica footwear available at discounted prices from NEVERBE Sri Lanka.",
-        url: `https://neverbe.lk/product/${product?.id}`,
-        offers: {
-          "@type": "Offer",
-          priceCurrency: "LKR",
-          price: product?.sellingPrice || "0.00",
-          availability: "https://schema.org/InStock",
-          url: `https://neverbe.lk/product/${product?.slug || product?.id}`,
-          priceValidUntil: new Date(
-            Date.now() + 1000 * 60 * 60 * 24 * 30
-          ).toISOString(),
+        item: {
+          "@type": "Product",
+          name: product?.name,
+          image: product?.thumbnail?.url || "https://neverbe.lk/api/v1/og",
+          description:
+            product?.description ||
+            "Discounted premium footwear at NEVERBE Sri Lanka.",
+          url: `https://neverbe.lk/collections/products/${product?.id}`,
+          brand: {
+            "@type": "Brand",
+            name: "NEVERBE",
+          },
+          offers: {
+            "@type": "Offer",
+            priceCurrency: "LKR",
+            price: product?.sellingPrice || "0.00",
+            availability: "https://schema.org/InStock",
+            url: `https://neverbe.lk/collections/products/${product?.id}`,
+            priceValidUntil: new Date(
+              Date.now() + 1000 * 60 * 60 * 24 * 30
+            ).toISOString(),
+          },
         },
       })),
     },
@@ -137,5 +142,4 @@ const Page = async () => {
   );
 };
 
-export const dynamic = "force-dynamic";
 export default Page;
