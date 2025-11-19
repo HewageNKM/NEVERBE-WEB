@@ -11,114 +11,132 @@ import { Product } from "@/interfaces/Product";
 import { getHotProducts, getRecentItems } from "@/services/ProductService";
 import { getSliders } from "@/services/SlideService";
 import { getBrands } from "@/services/OtherService";
+
 import type { Metadata } from "next";
 import { seoKeywords } from "@/constants";
 
 // --------------------------------------------------
-// ✅ Configuration
+// ⚙️ DYNAMIC SERVER RENDERING
 // --------------------------------------------------
-// "force-dynamic" is fine, but ensure your API is fast.
-export const dynamic = "force-dynamic"; 
+export const dynamic = "force-dynamic";
 
+// --------------------------------------------------
+// 🔍 SEO & OPEN GRAPH
+// --------------------------------------------------
 export const metadata: Metadata = {
   title: {
     default: "NEVERBE — Sri Lanka's Premier Online Shoe Store",
     template: "%s | NEVERBE",
   },
   metadataBase: new URL("https://neverbe.lk"),
-  alternates: {
-    canonical: "https://neverbe.lk",
-  },
+  alternates: { canonical: "https://neverbe.lk" },
   description:
-    "Shop top-quality Nike, adidas, New Balance and more replica shoes at NEVERBE — Sri Lanka’s most trusted sneaker store.",
+    "Shop high-quality Nike, adidas, New Balance and more replica shoes at NEVERBE — Sri Lanka’s most trusted sneaker store with fast delivery islandwide.",
   keywords: [
     "neverbe shoes",
+    "copy shoes sri lanka",
+    "nike replica sri lanka",
     "sneakers sri lanka",
     ...seoKeywords,
   ],
+  robots: { index: true, follow: true },
   openGraph: {
     title: "NEVERBE — Premium Replica Sneakers in Sri Lanka",
-    description: "Sri Lanka’s best online store for Nike, adidas, and New Balance replica sneakers.",
+    description:
+      "Sri Lanka’s best online store for Nike, adidas, and New Balance replica sneakers.",
     url: "https://neverbe.lk",
     siteName: "NEVERBE",
-    images: [
-      {
-        url: "https://neverbe.lk/api/v1/og", // Ensure this API route is optimized and doesn't timeout!
-        width: 1200,
-        height: 630,
-      },
-    ],
+    images: [{ url: "https://neverbe.lk/api/v1/og", width: 1200, height: 630 }],
   },
 };
 
-const Page = async () => {
-  // Initialize variables
-  let arrivals: Product[] = [];
-  let hotItems: Product[] = [];
-  let sliders: Slide[] = [];
-  let brands: any[] = [];
+// --------------------------------------------------
+// ⏳ STABLE SAFE FETCH (6-second timeout)
+// --------------------------------------------------
+const safeFetch = async <T,>(promise: Promise<T>, fallback: T): Promise<T> => {
+  const timeout = new Promise<never>((_, reject) =>
+    setTimeout(() => reject(new Error("Request timed out")), 6000)
+  );
 
   try {
-    // ✅ FIX 1: Parallel Execution
-    // Using Promise.allSettled prevents one API failure from crashing the entire block.
-    // If 'getSliders' fails, 'getRecentItems' can still succeed.
-    const results = await Promise.allSettled([
-      getRecentItems(),
-      getSliders(),
-      getHotProducts(),
-      getBrands(),
-    ]);
-
-    // ✅ FIX 2: Safe Assignment
-    if (results[0].status === "fulfilled") arrivals = results[0].value || [];
-    if (results[1].status === "fulfilled") sliders = results[1].value || [];
-    if (results[2].status === "fulfilled") hotItems = results[2].value || [];
-    if (results[3].status === "fulfilled") brands = results[3].value || [];
-    
-    // Log errors for debugging (check your server logs)
-    results.forEach((res, index) => {
-        if (res.status === 'rejected') {
-            console.error(`Fetch failed for index ${index}:`, res.reason);
-        }
-    });
-
-  } catch (e) {
-    console.error("Critical Error in Page Load:", e);
+    return (await Promise.race([promise, timeout])) as T;
+  } catch (err) {
+    console.error("⚠️ safeFetch fallback:", err);
+    return fallback;
   }
+};
 
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    name: "NEVERBE",
-    url: "https://neverbe.lk",
-    possibleActions: [], // Simplifies schema to avoid Google warnings if search isn't implemented
-  };
+// --------------------------------------------------
+// 📄 PAGE COMPONENT
+// --------------------------------------------------
+const Page = async () => {
+  const [arrivals, sliders, hotItems, brands] = await Promise.all([
+    safeFetch<Product[]>(getRecentItems(), []),
+    safeFetch<Slide[]>(getSliders(), []),
+    safeFetch<Product[]>(getHotProducts(), []),
+    safeFetch<any[]>(getBrands(), []),
+  ]);
 
+  // --------------------------------------------------
+  // 📦 STRUCTURED DATA (JSON-LD)
+  // --------------------------------------------------
+  const structuredData = [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      name: "NEVERBE",
+      url: "https://neverbe.lk",
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      name: "NEVERBE",
+      url: "https://neverbe.lk",
+      logo: "https://neverbe.lk/api/v1/og",
+      sameAs: [
+        "https://www.facebook.com/neverbe196",
+        "https://www.instagram.com/neverbe196",
+      ],
+      contactPoint: {
+        "@type": "ContactPoint",
+        telephone: "+94 70 520 8999",
+        contactType: "Customer Service",
+        areaServed: "LK",
+        availableLanguage: ["English", "Sinhala"],
+      },
+    },
+  ];
+
+  // --------------------------------------------------
+  // 🎨 PAGE RENDER
+  // --------------------------------------------------
   return (
     <>
+      {/* Structured Data */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
 
-      {/* ✅ FIX 3: Defensive Rendering */}
-      {/* Only render components if data exists. This prevents the white screen/500 error. */}
-      
+      {/* Hero / Slider Section */}
       {sliders.length > 0 ? (
         <Hero slides={sliders} />
       ) : (
-        // Optional: Add a skeleton loader or empty div here if fetch fails
-        <div className="h-96 w-full bg-gray-100 flex items-center justify-center text-gray-400">
-           Welcome to NeverBe
+        <div className="w-full h-[400px] bg-gray-100 flex flex-col gap-4 items-center justify-center text-center p-4">
+          <h1 className="text-4xl font-bold text-gray-800">NEVERBE</h1>
+          <p className="text-gray-500">Premium Sneakers. Sri Lanka.</p>
         </div>
       )}
 
+      {/* Popular Products */}
       {hotItems.length > 0 && <PopularProducts hotItems={hotItems} />}
-      
+
+      {/* New Arrivals */}
       {arrivals.length > 0 && <NewArrivals arrivals={arrivals} />}
-      
+
+      {/* Brands */}
       {brands.length > 0 && <BrandsSlider items={brands} />}
-      
+
       <WhyUs />
       <FAQ />
     </>
