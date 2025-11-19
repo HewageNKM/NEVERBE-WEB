@@ -6,6 +6,7 @@ import { RootState } from "@/redux/store";
 import { IoLockClosed } from "react-icons/io5";
 import CartItemCard from "@/components/CartItemCard";
 import {
+  calculateFee,
   calculateShippingCost,
   calculateSubTotal,
   calculateTotal,
@@ -20,6 +21,7 @@ interface PaymentDetailsProps {
   setPaymentType: React.Dispatch<React.SetStateAction<string>>;
   setPaymentTypeId: React.Dispatch<React.SetStateAction<string>>;
   setPaymentFee: React.Dispatch<React.SetStateAction<number>>;
+  selectedPaymentFee: number;
 }
 
 const PaymentDetails: React.FC<PaymentDetailsProps> = ({
@@ -27,6 +29,7 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
   setPaymentType,
   setPaymentTypeId,
   setPaymentFee,
+  selectedPaymentFee,
 }) => {
   const cartItems = useSelector((state: RootState) => state.cartSlice.cart);
   const [paymentOptions, setPaymentOptions] = useState<PaymentMethod[]>([]);
@@ -54,10 +57,11 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
     }
   };
 
-  const subtotal = calculateSubTotal(cartItems);
+  const subtotal = calculateSubTotal(cartItems, selectedPaymentFee);
   const shipping = calculateShippingCost(cartItems);
   const discount = calculateTotalDiscount(cartItems);
   const total = calculateTotal(cartItems);
+  const fee = calculateFee(selectedPaymentFee, cartItems);
 
   return (
     <div className="flex flex-col w-full md:max-w-2xl mx-auto px-3 md:px-6 py-10 bg-white">
@@ -96,7 +100,7 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
           </div>
           <div className="flex justify-between text-sm sm:text-base">
             <span>Fee:</span>
-            <span className="font-medium">Rs. 0.00</span>
+            <span className="font-medium">Rs. {fee.toFixed(2)}</span>
           </div>
           <div className="flex justify-between text-sm sm:text-base text-red-500">
             <span>Discount:</span>

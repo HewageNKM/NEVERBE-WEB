@@ -61,7 +61,7 @@ const Cart = () => {
           </div>
           <div className="flex justify-between text-lg font-semibold border-t border-gray-200 pt-2">
             <span>Subtotal:</span>
-            <span>Rs. {calculateSubTotal(cartItems).toFixed(2)}</span>
+            <span>Rs. {calculateSubTotal(cartItems, 0).toFixed(2)}</span>
           </div>
 
           <button

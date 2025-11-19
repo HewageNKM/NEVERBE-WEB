@@ -8,6 +8,7 @@ import { Customer, Order } from "@/interfaces";
 import { clearCart } from "@/redux/cartSlice/cartSlice";
 import { FiX } from "react-icons/fi";
 import {
+  calculateFee,
   calculateShippingCost,
   calculateSubTotal,
   calculateTotalDiscount,
@@ -168,10 +169,12 @@ const CheckoutForm = () => {
     else localStorage.removeItem("neverbeBillingCustomer");
 
     try {
+
       const userId = user?.uid || (await signUser())?.uid;
-      const amount = calculateSubTotal(cartItems);
+      const amount = calculateSubTotal(cartItems, paymentFee);
       const discount = calculateTotalDiscount(cartItems);
       const transactionFeeCharge = calculateTransactionFeeCharge(cartItems,paymentFee)
+      const fee = calculateFee(paymentFee, cartItems)
 
       const orderCustomer: Customer = {
         ...newBilling,
@@ -200,7 +203,7 @@ const CheckoutForm = () => {
         total: parseFloat(amount),
         paymentMethod: paymentType,
         paymentMethodId: paymentTypeId,
-        fee: 0,
+        fee: fee,
         shippingFee: calculateShippingCost(cartItems),
         transactionFeeCharge,
         paymentStatus: "Pending",
@@ -211,30 +214,30 @@ const CheckoutForm = () => {
         updatedAt: new Date().toISOString(),
       };
 
-      const token = await executeRecaptcha("new_order");
-
-      switch (paymentTypeId?.toUpperCase()) {
-        case "PM-006":
-          //KOKO
-          await addNewOrder(newOrder, token);
-          dispatch(clearCart());
-          await processKokoPayment(orderId, orderCustomer, amount);
-          break;
-        case "PM-001":
-          //COD
-          setPendingOrder(newOrder);
-          await handleRequestOtp(newBilling.phone);
-          setShowOtpModal(true);
-          break;
-        case "PM-003":
-          //Payhere
-          await addNewOrder(newOrder, token);
-          dispatch(clearCart());
-          await processPayherePayment(orderId, orderCustomer, amount);
-          break;
-        default:
-          throw new Error("Invalid payment method");
-      }
+      const token = await executeRecaptcha("new_order");  
+      console.log("New Order:", newOrder);
+      // switch (paymentTypeId?.toUpperCase()) {
+      //   case "PM-006":
+      //     //KOKO
+      //     await addNewOrder(newOrder, token);
+      //     dispatch(clearCart());
+      //     await processKokoPayment(orderId, orderCustomer, amount);
+      //     break;
+      //   case "PM-001":
+      //     //COD
+      //     setPendingOrder(newOrder);
+      //     await handleRequestOtp(newBilling.phone);
+      //     setShowOtpModal(true);
+      //     break;
+      //   case "PM-003":
+      //     //Payhere
+      //     await addNewOrder(newOrder, token);
+      //     dispatch(clearCart());
+      //     await processPayherePayment(orderId, orderCustomer, amount);
+      //     break;
+      //   default:
+      //     throw new Error("Invalid payment method");
+      // }
     } catch (err: any) {
       console.error(err);
       toast.error("Payment failed. Redirecting...");
@@ -350,6 +353,7 @@ const CheckoutForm = () => {
           paymentType={paymentType || ""}
           setPaymentTypeId={setPaymentTypeId}
           setPaymentFee={setPaymentFee}
+          selectedPaymentFee={paymentFee}
         />
       </form>
 
