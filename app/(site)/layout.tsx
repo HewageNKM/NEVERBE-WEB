@@ -37,3 +37,5 @@ export default async function RootLayout({
     </ReCaptchaProviderWrapper>
   );
 }
+
+export const dynamic = "force-dynamic";

@@ -1,4 +1,3 @@
-import React from "react";
 import Products from "@/app/(site)/collections/products/components/Products";
 import ProductsHeader from "@/app/(site)/collections/products/components/ProductsHeader";
 import EmptyState from "@/components/EmptyState";
