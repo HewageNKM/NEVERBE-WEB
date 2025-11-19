@@ -1,6 +1,5 @@
 "use client";
-import React, { ReactNode, useEffect, useState } from "react";
-import { useRouter } from "next/navigation"; // for redirect
+import { ReactNode, useEffect, useState } from "react";
 import { auth } from "@/firebase/firebaseClient";
 import { AppDispatch, RootState } from "@/redux/store";
 import { useDispatch, useSelector } from "react-redux";
@@ -14,6 +13,7 @@ import { setUser } from "@/redux/authSlice/authSlice";
 import Menu from "@/components/Menu";
 import { ToastContainer } from "react-toastify";
 import { Analytics } from "@vercel/analytics/next";
+import {SpeedInsights} from "@vercel/speed-insights/next";
 
 const GlobalProvider = ({ children }: { children: ReactNode }) => {
   const dispatch: AppDispatch = useDispatch();
@@ -48,6 +48,7 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
       <AnimatePresence>{showCart && <Cart />}</AnimatePresence>
       <AnimatePresence>{showMenu && <Menu />}</AnimatePresence>
       <Analytics />
+      <SpeedInsights />
     </main>
   );
 };
