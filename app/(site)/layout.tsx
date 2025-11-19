@@ -1,4 +1,3 @@
-// app/layout.tsx
 import "@/app/globals.css";
 import StoreProvider from "@/app/(site)/components/StoreProvider";
 import GlobalProvider from "@/app/(site)/components/GlobalProvider";
@@ -8,16 +7,25 @@ import axios from "axios";
 
 export default async function RootLayout({
   children,
-}: Readonly<{ children: React.ReactNode }>) {
+}: {
+  children: React.ReactNode;
+}) {
   try {
-    const res = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/settings`);
+    console.log("Fetching settings...");
+
+    const res = await axios.get(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/settings`
+    );
     const settings = res.data;
 
+    console.log("Settings fetched:", settings);
+
     if (settings && settings.enable === false) {
+      console.log("Maintenance mode ON, redirecting...");
       redirect("/maintenance");
     }
   } catch (error) {
-    // Redirect if fetching fails
+    console.error("Error fetching settings:", error);
     redirect("/maintenance");
   }
 
