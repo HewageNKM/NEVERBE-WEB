@@ -1,6 +1,5 @@
 "use client";
 
-import { Item } from "@/interfaces";
 import ItemCard from "@/components/ItemCard";
 import EmptyState from "@/components/EmptyState";
 import { motion } from "framer-motion";
@@ -12,8 +11,9 @@ import { Autoplay, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/autoplay";
+import { Product } from "@/interfaces/Product";
 
-const PopularProducts = ({ hotItems }: { hotItems: Item[] }) => {
+const PopularProducts = ({ hotItems }: { hotItems: Product[] }) => {
   if (hotItems.length === 0) {
     return <EmptyState heading="No hot products available!" />;
   }

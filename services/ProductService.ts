@@ -100,7 +100,7 @@ export const getHotProducts = async () => {
       .slice(0, 8)
       .map(([itemId]) => itemId);
 
-    const hotProducts: Item[] = [];
+    const hotProducts: Product[] = [];
     for (const itemId of sortedItems) {
       const itemDoc = await adminFirestore
         .collection("products")

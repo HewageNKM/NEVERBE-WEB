@@ -1,5 +1,4 @@
 "use client";
-import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
@@ -29,7 +28,7 @@ const ImagesSlider = ({ images }: { images: Slide[] }) => {
                 width={1200}
                 height={628}
                 src={image.url}
-                alt={image.fileName || "Image slideshow"}
+                alt={"NEVERBE"}
                 className="object-cover w-full"
                 loading="lazy"
               />
