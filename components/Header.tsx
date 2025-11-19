@@ -18,16 +18,13 @@ import { getAlgoliaClient } from "@/util";
 import { AnimatePresence, motion } from "framer-motion";
 import { Product } from "@/interfaces/Product";
 import { ProductVariant } from "@/interfaces/ProductVariant";
+import axios from "axios";
 
-const Header = ({
-  categories,
-  brands,
-}: {
-  categories: any[];
-  brands: any[];
-}) => {
+const Header = () => {
   const cartItems = useSelector((state: RootState) => state.cartSlice.cart);
   const dispatch: AppDispatch = useDispatch();
+    const [brands, setBrands] = useState([]);
+    const [categories, setCategories] = useState([]);
 
   const [search, setSearch] = useState("");
   const [items, setItems] = useState<Product[]>([]);
@@ -38,6 +35,29 @@ const Header = ({
   const searchRef = useRef<HTMLDivElement>(null);
   const searchClient = getAlgoliaClient();
   let searchTimeout: NodeJS.Timeout;
+
+    const fetchBrands = async () => {
+      try {
+        const result = await axios.get(`/api/v1/brands/dropdown`);
+        setBrands(result.data || []);
+      } catch (error: any) {
+        console.error("Error fetching brands:", error);
+      }
+    };
+  
+    const fetchCategories = async () => {
+      try {
+        const result = await axios.get(`/api/v1/categories/dropdown`);
+        setCategories(result.data || []);
+      } catch (error: any) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    useEffect(() => {
+      fetchBrands();
+      fetchCategories();
+    }, []);
 
   // ✅ Debounced Search Function
   const searchItems = useCallback(

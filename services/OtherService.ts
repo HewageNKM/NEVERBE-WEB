@@ -87,3 +87,28 @@ export const getCategoriesForDropdown = async () => {
     throw error;
   }
 };
+
+export const getSettings = async () => {
+  try {
+    console.log("[OtherService] Fetching settings...");
+    const settingsDoc = await adminFirestore
+      .collection("app_settings")
+      .doc("erp_settings")
+      .get();
+
+    if (!settingsDoc.exists) {
+      console.warn("[OtherService] Settings document does not exist.");
+      return null;
+    }
+
+    const ecommerce = settingsDoc.data()?.ecommerce || {};
+    console.log("[OtherService] Settings fetched successfully.");
+    return {
+      ...ecommerce,
+      stockId: settingsDoc.data()?.onlineStockId,
+    };
+  } catch (error) {
+    console.error("[OtherService] Failed to fetch settings:", error);
+    throw error;
+  }
+}

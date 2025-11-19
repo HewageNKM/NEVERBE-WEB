@@ -1,5 +1,6 @@
 "use client";
 import React, { ReactNode, useEffect, useState } from "react";
+import { useRouter } from "next/navigation"; // for redirect
 import { auth } from "@/firebase/firebaseClient";
 import { AppDispatch, RootState } from "@/redux/store";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,25 +13,15 @@ import { onAuthStateChanged } from "firebase/auth";
 import { setUser } from "@/redux/authSlice/authSlice";
 import Menu from "@/components/Menu";
 import { ToastContainer } from "react-toastify";
-import axios from "axios";
 import { Analytics } from "@vercel/analytics/next";
-
-
 
 const GlobalProvider = ({ children }: { children: ReactNode }) => {
   const dispatch: AppDispatch = useDispatch();
-  const [brands, setBrands] = useState([]);
-  const [categories, setCategories] = useState([]);
 
   const showCart = useSelector((state: RootState) => state.cartSlice.showCart);
   const showMenu = useSelector(
     (state: RootState) => state.headerSlice.showMenu
   );
-
-  useEffect(() => {
-    fetchBrands();
-    fetchCategories();
-  }, []);
 
   useEffect(() => {
     onAuthStateChanged(auth, async (user) => {
@@ -42,25 +33,7 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
       }
     });
     dispatch(initializeCart());
-  });
-
-  const fetchBrands = async () => {
-    try {
-      const result = await axios.get(`/api/v1/brands/dropdown`);
-      setBrands(result.data || []);
-    } catch (error: any) {
-      console.error("Error fetching brands:", error);
-    }
-  };
-
-  const fetchCategories = async () => {
-    try {
-      const result = await axios.get(`/api/v1/categories/dropdown`);
-      setCategories(result.data || []);
-    } catch (error: any) {
-      console.error("Error fetching categories:", error);
-    }
-  };
+  }, []);
 
   return (
     <main className="w-full relative flex flex-col justify-between min-h-screen overflow-clip">
@@ -69,7 +42,7 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
         autoClose={3000}
         hideProgressBar={false}
       />
-      <Header categories={categories} brands={brands} />
+      <Header />
       {children}
       <Footer />
       <AnimatePresence>{showCart && <Cart />}</AnimatePresence>
