@@ -216,28 +216,28 @@ const CheckoutForm = () => {
 
       const token = await executeRecaptcha("new_order");  
       console.log("New Order:", newOrder);
-      // switch (paymentTypeId?.toUpperCase()) {
-      //   case "PM-006":
-      //     //KOKO
-      //     await addNewOrder(newOrder, token);
-      //     dispatch(clearCart());
-      //     await processKokoPayment(orderId, orderCustomer, amount);
-      //     break;
-      //   case "PM-001":
-      //     //COD
-      //     setPendingOrder(newOrder);
-      //     await handleRequestOtp(newBilling.phone);
-      //     setShowOtpModal(true);
-      //     break;
-      //   case "PM-003":
-      //     //Payhere
-      //     await addNewOrder(newOrder, token);
-      //     dispatch(clearCart());
-      //     await processPayherePayment(orderId, orderCustomer, amount);
-      //     break;
-      //   default:
-      //     throw new Error("Invalid payment method");
-      // }
+      switch (paymentTypeId?.toUpperCase()) {
+        case "PM-006":
+          //KOKO
+          await addNewOrder(newOrder, token);
+          dispatch(clearCart());
+          await processKokoPayment(orderId, orderCustomer, amount);
+          break;
+        case "PM-001":
+          //COD
+          setPendingOrder(newOrder);
+          await handleRequestOtp(newBilling.phone);
+          setShowOtpModal(true);
+          break;
+        case "PM-003":
+          //Payhere
+          await addNewOrder(newOrder, token);
+          dispatch(clearCart());
+          await processPayherePayment(orderId, orderCustomer, amount);
+          break;
+        default:
+          throw new Error("Invalid payment method");
+      }
     } catch (err: any) {
       console.error(err);
       toast.error("Payment failed. Redirecting...");

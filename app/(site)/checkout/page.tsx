@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 const Page = () => {
   return (
-    <main className="w-full mt-2 md:mt-28 my-10 overflow-clip">
+    <main className="w-full mt-2 md:mt-28 my-5 overflow-clip">
       <div className="w-full flex justify-center items-center">
         <CheckoutForm />
       </div>

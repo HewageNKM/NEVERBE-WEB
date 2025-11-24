@@ -87,7 +87,26 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
             </li>
           ))}
         </ul>
+      </div>
+      {/* Payment Options */}
+      <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 sm:p-6 mb-6">
+        <h2 className="text-xl font-semibold text-gray-800 mb-4">
+          💳 Payment Method
+        </h2>
+        {isPaymentLoading ? (
+          <p className="text-gray-500 italic">Loading payment methods...</p>
+        ) : (
+          <PaymentOptions
+            paymentOptions={paymentOptions}
+            paymentType={paymentType}
+            setPaymentType={setPaymentType}
+            setPaymentTypeId={setPaymentTypeId}
+            setPaymentFee={setPaymentFee}
+          />
+        )}
+      </div>
 
+      <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 sm:p-6 mb-8">
         {/* Summary */}
         <div className="mt-6 border-t border-gray-200 pt-4 text-right text-gray-700">
           <div className="flex justify-between text-sm sm:text-base">
@@ -113,23 +132,6 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
           </div>
         </div>
       </div>
-      {/* Payment Options */}
-      <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 sm:p-6 mb-6">
-        <h2 className="text-xl font-semibold text-gray-800 mb-4">
-          💳 Payment Method
-        </h2>
-        {isPaymentLoading ? (
-          <p className="text-gray-500 italic">Loading payment methods...</p>
-        ) : (
-          <PaymentOptions
-            paymentOptions={paymentOptions}
-            paymentType={paymentType}
-            setPaymentType={setPaymentType}
-            setPaymentTypeId={setPaymentTypeId}
-            setPaymentFee={setPaymentFee}
-          />
-        )}
-      </div>
       {/* Warning Notice */}
       <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-md mb-6 text-sm text-yellow-800 space-y-1">
         <p className="font-semibold">
@@ -146,7 +148,7 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
         </p>
       </div>
       {/* Terms & reCAPTCHA Notice */}
-      <div className="text-xs text-gray-500 mb-1 capitalize">
+      <div className="text-xs text-gray-500 mb-1 text-center capitalize">
         <p className="mb-1">
           This site is protected by Google reCAPTCHA and the Google{" "}
           <a
