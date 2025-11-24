@@ -44,7 +44,7 @@ export async function generateMetadata(context: {
       locale: "en_LK",
       images: [
         {
-          url: "https://neverbe.lk/api/v1/og",
+          url: "https://neverbe.lk/shoes-og.jpg",
           width: 1200,
           height: 630,
           alt: `${capitalizedCategory} Collection - NEVERBE`,
@@ -57,7 +57,7 @@ export async function generateMetadata(context: {
       creator: "@neverbe",
       title,
       description,
-      images: ["https://neverbe.lk/api/v1/og"],
+      images: ["https://neverbe.lk/shoes-og.jpg"],
     },
     robots: {
       index: true,

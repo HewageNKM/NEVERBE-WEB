@@ -4,7 +4,6 @@ import BrandProducts from "./components/BrandProducts";
 import BrandHeader from "./components/BrandHeader";
 import { getProductsByBrand } from "@/services/ProductService";
 
-
 export const revalidate = 3600;
 
 export async function generateMetadata(context: {
@@ -12,11 +11,12 @@ export async function generateMetadata(context: {
 }): Promise<Metadata> {
   const params = await context.params;
   const decodedBrand = decodeURIComponent(params.brand).replace(/-/g, " ");
-  
-  const capitalizedBrand = decodedBrand.charAt(0).toUpperCase() + decodedBrand.slice(1);
+
+  const capitalizedBrand =
+    decodedBrand.charAt(0).toUpperCase() + decodedBrand.slice(1);
 
   const title = `${capitalizedBrand} Inspired Collection | NEVERBE Sri Lanka`;
-  
+
   const description = `Shop premium ${capitalizedBrand} style sneakers at NEVERBE. High-quality First Copy and Master Copy shoes with islandwide delivery in Sri Lanka.`;
 
   return {
@@ -43,7 +43,7 @@ export async function generateMetadata(context: {
       locale: "en_LK",
       images: [
         {
-          url: "https://neverbe.lk/api/v1/og",
+          url: "https://neverbe.lk/shoes-og.jpg",
           width: 1200,
           height: 630,
           alt: `${capitalizedBrand} Style Sneakers - NEVERBE`,
@@ -56,7 +56,7 @@ export async function generateMetadata(context: {
       creator: "@neverbe",
       title,
       description,
-      images: ["https://neverbe.lk/api/v1/og"],
+      images: ["https://neverbe.lk/shoes-og.jpg"],
     },
     robots: {
       index: true,
@@ -86,7 +86,7 @@ const Page = async (context: { params: Promise<{ brand: string }> }) => {
   }
 
   /* ✅ Schema.org: CollectionPage (Removed "Brand" Entity) */
-  // Note: We removed the standalone "@type": "Brand" schema because 
+  // Note: We removed the standalone "@type": "Brand" schema because
   // unless you are the official owner of Nike, you cannot claim the page represents the Brand entity.
   const productListSchema = {
     "@context": "https://schema.org",
@@ -98,17 +98,18 @@ const Page = async (context: { params: Promise<{ brand: string }> }) => {
     mainEntity: {
       "@type": "ItemList",
       itemListElement: items.map((product, index) => ({
-        "@type": "ListItem", 
+        "@type": "ListItem",
         position: index + 1,
         item: {
           "@type": "Product",
           name: product.name,
           image: product.thumbnail?.url || "https://neverbe.lk/api/v1/og",
-          description: product.description || `Shop ${product.name} at NEVERBE.`,
+          description:
+            product.description || `Shop ${product.name} at NEVERBE.`,
           url: `https://neverbe.lk/collections/products/${product.id}`,
           brand: {
             "@type": "Brand",
-            name: "NEVERBE", 
+            name: "NEVERBE",
           },
           offers: {
             "@type": "Offer",
@@ -133,13 +134,13 @@ const Page = async (context: { params: Promise<{ brand: string }> }) => {
 
       <section className="w-full">
         <BrandHeader brand={brand} />
-        
+
         {items.length > 0 ? (
-             <BrandProducts items={items} brand={brand} />
+          <BrandProducts items={items} brand={brand} />
         ) : (
-            <div className="text-center py-20 text-gray-500">
-                <p>No products found for {brand}.</p>
-            </div>
+          <div className="text-center py-20 text-gray-500">
+            <p>No products found for {brand}.</p>
+          </div>
         )}
       </section>
     </main>

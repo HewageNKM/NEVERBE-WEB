@@ -12,7 +12,7 @@ import { seoKeywords } from "@/constants";
 
 export const metadata: Metadata = {
   title: {
-    default: "NEVERBE — Premium First Copy & Replica Shoes in Sri Lanka",
+    default: "NEVERBE — Premium Shoes in Sri Lanka",
     template: "%s | NEVERBE",
   },
   metadataBase: new URL("https://neverbe.lk"),
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   },
   description:
     "Buy high-quality 7A and Master Copy shoes in Sri Lanka. Best prices for Nike, Adidas, and New Balance inspired sneakers. Islandwide delivery available.",
-  applicationName: "NEVERBE",
+  applicationName: "NEVERBE - Your Premium Shoe House",
   keywords: [
     "first copy shoes sri lanka",
     "master copy sneakers",
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "NEVERBE — Best Shoe Copies & Replicas in Sri Lanka",
+    title: "NEVERBE — Best Shoe House in Sri Lanka",
     description:
       "Get the best look for less. Premium replica sneakers including Nike and Adidas designs. Fast delivery in Colombo and Islandwide.",
     url: "https://neverbe.lk",
@@ -65,15 +65,27 @@ export const metadata: Metadata = {
 
 // OPTIMIZATION: Switch to ISR (Incremental Static Regeneration)
 // This caches the page for 1 hour (3600s). This is much faster than force-dynamic.
-export const revalidate = 3600; 
+export const revalidate = 3600;
 
 const Page = async () => {
   // OPTIMIZATION: Fetch data in parallel to reduce load time
   const dataPromise = Promise.all([
-    getRecentItems().catch((err) => { console.error("Recent items failed", err); return []; }),
-    getSliders().catch((err) => { console.error("Sliders failed", err); return []; }),
-    getHotProducts().catch((err) => { console.error("Hot items failed", err); return []; }),
-    getBrands().catch((err) => { console.error("Brands failed", err); return []; }),
+    getRecentItems().catch((err) => {
+      console.error("Recent items failed", err);
+      return [];
+    }),
+    getSliders().catch((err) => {
+      console.error("Sliders failed", err);
+      return [];
+    }),
+    getHotProducts().catch((err) => {
+      console.error("Hot items failed", err);
+      return [];
+    }),
+    getBrands().catch((err) => {
+      console.error("Brands failed", err);
+      return [];
+    }),
   ]);
 
   const [arrivals, sliders, hotItems, brands] = await dataPromise;
@@ -88,12 +100,13 @@ const Page = async () => {
         url: "https://neverbe.lk",
         logo: "https://neverbe.lk/api/v1/og",
         image: "https://neverbe.lk/api/v1/og",
-        description: "Retailer of fashion footwear and inspired sneaker designs in Sri Lanka.",
+        description:
+          "Retailer of fashion footwear and inspired sneaker designs in Sri Lanka.",
         priceRange: "$$",
         address: {
           "@type": "PostalAddress",
           addressCountry: "LK",
-          addressRegion: "Western Province"
+          addressRegion: "Western Province",
         },
         contactPoint: {
           "@type": "ContactPoint",
@@ -123,8 +136,8 @@ const Page = async () => {
             },
           },
         ],
-      }
-    ]
+      },
+    ],
   };
 
   return (
@@ -135,12 +148,12 @@ const Page = async () => {
       />
 
       <Hero slides={sliders} />
-      
+
       {/* OPTIMIZATION: Render sections only if data exists to prevent layout shift */}
       {hotItems.length > 0 && <PopularProducts hotItems={hotItems} />}
       {arrivals.length > 0 && <NewArrivals arrivals={arrivals} />}
       {brands.length > 0 && <BrandsSlider items={brands} />}
-      
+
       <WhyUs />
       <FAQ />
     </main>

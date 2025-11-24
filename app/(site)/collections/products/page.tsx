@@ -7,7 +7,7 @@ import type { Metadata } from "next";
 
 // OPTIMIZATION: Switch to ISR. Cache this page for 1 hour.
 // This makes the "All Products" page load instantly instead of waiting for the DB every time.
-export const revalidate = 3600; 
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: {
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     locale: "en_LK",
     images: [
       {
-        url: "https://neverbe.lk/api/v1/og",
+        url: "https://neverbe.lk/shoes-og.jpg",
         width: 1200,
         height: 630,
         alt: "NEVERBE Collection",
@@ -56,7 +56,7 @@ export const metadata: Metadata = {
     title: "Shop Premium First Copy Sneakers | NEVERBE",
     description:
       "Browse premium inspired footwear at NEVERBE. Islandwide delivery available.",
-    images: ["https://neverbe.lk/api/v1/og"],
+    images: ["https://neverbe.lk/shoes-og.jpg"],
   },
   robots: {
     index: true,
@@ -100,23 +100,25 @@ const Page = async () => {
         "@type": "ListItem", // Correct type for list items
         position: index + 1,
         item: {
-            "@type": "Product",
-            name: product?.name,
-            image: product?.thumbnail?.url || "https://neverbe.lk/api/v1/og",
-            description: product?.description || "Premium footwear available at NEVERBE Sri Lanka.",
-            // FIX: Ensure this URL matches your actual route structure (/collections/products/ID)
-            url: `https://neverbe.lk/collections/products/${product?.id}`, 
-            brand: {
-                "@type": "Brand",
-                name: "NEVERBE" // Legal Safeguard: Do not claim "Nike" here
-            },
-            offers: {
-              "@type": "Offer",
-              priceCurrency: "LKR",
-              price: product?.sellingPrice || product?.price || "0.00", // Use sellingPrice if available
-              availability: "https://schema.org/InStock",
-            },
-        }
+          "@type": "Product",
+          name: product?.name,
+          image: product?.thumbnail?.url || "https://neverbe.lk/api/v1/og",
+          description:
+            product?.description ||
+            "Premium footwear available at NEVERBE Sri Lanka.",
+          // FIX: Ensure this URL matches your actual route structure (/collections/products/ID)
+          url: `https://neverbe.lk/collections/products/${product?.id}`,
+          brand: {
+            "@type": "Brand",
+            name: "NEVERBE", // Legal Safeguard: Do not claim "Nike" here
+          },
+          offers: {
+            "@type": "Offer",
+            priceCurrency: "LKR",
+            price: product?.sellingPrice || product?.price || "0.00", // Use sellingPrice if available
+            availability: "https://schema.org/InStock",
+          },
+        },
       })),
     },
   };
