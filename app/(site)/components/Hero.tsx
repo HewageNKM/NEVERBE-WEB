@@ -1,6 +1,5 @@
 "use client";
 import ImagesSlider from "@/app/(site)/components/ImagesSlider";
-import Link from "next/link";
 import { Slide } from "@/interfaces";
 import { collectionList } from "@/constants";
 import CollectionCard from "@/app/(site)/components/CollectionCard";
