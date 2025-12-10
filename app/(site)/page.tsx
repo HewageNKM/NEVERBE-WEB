@@ -4,15 +4,42 @@ import WhyUs from "@/app/(site)/components/WhyUs";
 import PopularProducts from "@/app/(site)/components/PopularProducts";
 import FAQ from "@/app/(site)/components/FAQ";
 import BrandsSlider from "./components/BrandsSlider";
+
 import { getHotProducts, getRecentItems } from "@/services/ProductService";
 import { getSliders } from "@/services/SlideService";
 import { getBrands } from "@/services/OtherService";
 import type { Metadata } from "next";
-import { seoKeywords } from "@/constants";
+import SEOContent from "./components/SEOContent";
+
+// Broad keywords targeting the generic "Shoe" intent
+const seoKeywords: string[] = [
+  "shoes",
+  "shoes sri lanka",
+  "buy shoes",
+  "footwear sri lanka",
+  "online shoe store",
+  "mens shoes",
+  "womens shoes",
+  "sneakers",
+  "sports shoes",
+  "running shoes",
+  "casual shoes",
+  "canvas shoes",
+  "loafers",
+  "boots sri lanka",
+  "sandals",
+  "slippers",
+  "nike copy shoes",
+  "adidas copy shoes",
+  "master copy sneakers",
+];
 
 export const metadata: Metadata = {
+  // META TITLE STRATEGY:
+  // [Broad Keyword] | [Secondary Keyword] | [Brand]
   title: {
-    default: "NEVERBE — Premium Shoes in Sri Lanka",
+    default:
+      "Shoes in Sri Lanka | Buy Sneakers, Men's & Women's Footwear — NEVERBE",
     template: "%s | NEVERBE",
   },
   metadataBase: new URL("https://neverbe.lk"),
@@ -20,34 +47,13 @@ export const metadata: Metadata = {
     canonical: "https://neverbe.lk",
   },
   description:
-    "Buy high-quality 7A and Master Copy shoes in Sri Lanka. Best prices for Nike, Adidas, and New Balance inspired sneakers. Islandwide delivery available.",
-  applicationName: "NEVERBE - Your Premium Shoe House",
-  keywords: [
-    "first copy shoes sri lanka",
-    "master copy sneakers",
-    "branded copy shoes",
-    "budget shoes sri lanka",
-    "nike copy prices",
-    "7a quality shoes sri lanka",
-    ...seoKeywords,
-  ],
-  category: "Fashion E-commerce",
-  authors: [{ name: "NEVERBE", url: "https://neverbe.lk" }],
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-snippet": -1,
-      "max-image-preview": "large",
-      "max-video-preview": -1,
-    },
-  },
+    "The #1 Online Shoe Store in Sri Lanka. Shop a massive collection of Sneakers, Running Shoes, Casual Footwear, and Master Copies. Cash on Delivery Island-wide.",
+  applicationName: "NEVERBE",
+  keywords: seoKeywords,
   openGraph: {
-    title: "NEVERBE — Best Shoe House in Sri Lanka",
+    title: "Shoes in Sri Lanka | Buy Sneakers & Footwear Online",
     description:
-      "Get the best look for less. Premium replica sneakers including Nike and Adidas designs. Fast delivery in Colombo and Islandwide.",
+      "Looking for shoes? We have them all. Sports, Casual, Party, and Office wear. Best prices in Sri Lanka with Island-wide delivery.",
     url: "https://neverbe.lk",
     siteName: "NEVERBE",
     type: "website",
@@ -55,7 +61,7 @@ export const metadata: Metadata = {
     images: [
       {
         url: "https://neverbe.lk/api/v1/og",
-        alt: "NEVERBE Sneaker Store",
+        alt: "NEVERBE - Largest Shoe Collection in Sri Lanka",
         width: 1200,
         height: 630,
       },
@@ -63,79 +69,62 @@ export const metadata: Metadata = {
   },
 };
 
-// OPTIMIZATION: Switch to ISR (Incremental Static Regeneration)
-// This caches the page for 1 hour (3600s). This is much faster than force-dynamic.
 export const revalidate = 3600;
 
 const Page = async () => {
-  // OPTIMIZATION: Fetch data in parallel to reduce load time
   const dataPromise = Promise.all([
-    getRecentItems().catch((err) => {
-      console.error("Recent items failed", err);
-      return [];
-    }),
-    getSliders().catch((err) => {
-      console.error("Sliders failed", err);
-      return [];
-    }),
-    getHotProducts().catch((err) => {
-      console.error("Hot items failed", err);
-      return [];
-    }),
-    getBrands().catch((err) => {
-      console.error("Brands failed", err);
-      return [];
-    }),
+    getRecentItems().catch((err) => []),
+    getSliders().catch((err) => []),
+    getHotProducts().catch((err) => []),
+    getBrands().catch((err) => []),
   ]);
 
   const [arrivals, sliders, hotItems, brands] = await dataPromise;
 
-  /* ✅ Schema.org Structured Data */
+  /* SCHEMA STRATEGY: 
+     We use "ShoeStore" and map "hasOfferCatalog" to tell Google 
+     we have many different categories.
+  */
   const structuredData = {
     "@context": "https://schema.org",
     "@graph": [
       {
-        "@type": "Store",
+        "@type": "ShoeStore",
         name: "NEVERBE",
         url: "https://neverbe.lk",
-        logo: "https://neverbe.lk/api/v1/og",
         image: "https://neverbe.lk/api/v1/og",
-        description:
-          "Retailer of fashion footwear and inspired sneaker designs in Sri Lanka.",
-        priceRange: "$$",
+        description: "The largest online destination for shoes in Sri Lanka.",
+        telephone: "+94 70 520 8999",
         address: {
           "@type": "PostalAddress",
           addressCountry: "LK",
           addressRegion: "Western Province",
         },
-        contactPoint: {
-          "@type": "ContactPoint",
-          telephone: "+94 70 520 8999",
-          contactType: "Customer Service",
-          areaServed: "LK",
-          availableLanguage: ["English", "Sinhala", "Tamil"],
+        priceRange: "$$",
+        openingHoursSpecification: {
+          "@type": "OpeningHoursSpecification",
+          dayOfWeek: [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+            "Sunday",
+          ],
+          opens: "00:00",
+          closes: "23:59",
         },
       },
       {
-        "@type": "FAQPage",
-        mainEntity: [
-          {
-            "@type": "Question",
-            name: "Are these shoes original brands?",
-            acceptedAnswer: {
-              "@type": "Answer",
-              text: "No, these are high-quality premium replicas (First Copy/Master Copy) inspired by popular designs, offering a similar look at a budget-friendly price.",
-            },
-          },
-          {
-            "@type": "Question",
-            name: "Do you deliver across Sri Lanka?",
-            acceptedAnswer: {
-              "@type": "Answer",
-              text: "Yes, NEVERBE delivers islandwide within 2–5 business days via trusted courier partners.",
-            },
-          },
-        ],
+        "@type": "WebSite",
+        url: "https://neverbe.lk",
+        name: "NEVERBE - Shoes Sri Lanka",
+        potentialAction: {
+          "@type": "SearchAction",
+          target: "https://neverbe.lk/search?q={search_term_string}",
+          "query-input": "required name=search_term_string",
+        },
       },
     ],
   };
@@ -149,13 +138,18 @@ const Page = async () => {
 
       <Hero slides={sliders} />
 
-      {/* OPTIMIZATION: Render sections only if data exists to prevent layout shift */}
       {hotItems.length > 0 && <PopularProducts hotItems={hotItems} />}
       {arrivals.length > 0 && <NewArrivals arrivals={arrivals} />}
       {brands.length > 0 && <BrandsSlider items={brands} />}
 
       <WhyUs />
       <FAQ />
+
+      {/* THE KEY TO RANKING:
+         This section provides the text density Google needs to rank you 
+         for generic terms like "Shoes" or "Footwear".
+      */}
+      <SEOContent />
     </main>
   );
 };

@@ -16,46 +16,53 @@ import { FaMobile } from "react-icons/fa";
 import { FaMessage, FaPhone } from "react-icons/fa6";
 
 export const seoKeywords: string[] = [
-  // Brand Identity
-  "never be lk",
-  "neverbe",
-  "neverbe shoes",
-
-  // Core Product Keywords (High Volume)
+  // 1. The Broadest Terms (Highest Volume)
+  "shoes",
   "shoes sri lanka",
-  "sneakers sri lanka",
+  "footwear",
+  "footwear sri lanka",
+  "buy shoes online",
+  "shoe shop",
+  "shoe store near me",
+
+  // 2. Category Specific (Capturing "any type")
+  "sneakers",
+  "running shoes",
+  "sports shoes",
+  "gym shoes",
+  "casual shoes",
+  "canvas shoes",
+  "formal shoes", // Even if you don't have many, listing it helps the domain authority
+  "boots",
+  "slides",
+  "slippers",
+  "sandals",
+  "flip flops",
+  "jogging shoes",
+  "walking shoes",
+
+  // 3. Gender Specific
+  "mens shoes",
   "mens shoes sri lanka",
-  "womens shoes sri lanka",
-  "running shoes sri lanka",
-  "sports shoes sri lanka",
+  "womens shoes",
+  "ladies shoes",
+  "boys shoes",
 
-  // The "Copy" Market Keywords (Targeting the right intent)
-  "first copy shoes sri lanka",
-  "first copy sneakers colombo",
-  "master copy shoes sri lanka",
-  "7a quality shoes sri lanka",
-  "first copy branded shoes",
-  "replica shoes sri lanka",
-  "premium copy sneakers",
+  // 4. The Niche (Your specific strength)
+  "first copy shoes",
+  "master copy sneakers",
+  "7a quality shoes",
   "branded copy shoes",
-  "factory reject shoes sri lanka", 
-  "vietnam copy shoes",
+  "nike copy",
+  "adidas copy",
 
-  // Location Based (Safe)
-  "shoe delivery colombo",
-  "shoe delivery gampaha",
-  "online shoe store colombo",
-  "cash on delivery shoes sri lanka",
-
-  // Style/Category Keywords (No Brand Names)
-  "basketball shoes sri lanka",
-  "gym shoes sri lanka",
-  "casual sneakers sri lanka",
-  "high top sneakers",
-  "canvas shoes sri lanka",
-  "slippers and sandals sri lanka",
-  "budget shoe shop sri lanka",
+  // 5. Locations
+  "shoes colombo",
+  "shoes gampaha",
+  "shoes kandy",
+  "cash on delivery shoes",
 ];
+
 export const sortingOptions = [
   {
     name: "Not Selected",

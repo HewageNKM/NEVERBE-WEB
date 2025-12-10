@@ -1,5 +1,3 @@
-// ❗ No "use client" here
-
 export const metadata = {
   title: "Maintenance | NEVERBE",
   description:
