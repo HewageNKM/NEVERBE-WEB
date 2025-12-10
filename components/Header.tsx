@@ -20,11 +20,13 @@ import { Product } from "@/interfaces/Product";
 import { ProductVariant } from "@/interfaces/ProductVariant";
 import axios from "axios";
 
+import SeasonalPromo from "@/app/(site)/components/SeasonalPromo";
+
 const Header = () => {
   const cartItems = useSelector((state: RootState) => state.cartSlice.cart);
   const dispatch: AppDispatch = useDispatch();
-    const [brands, setBrands] = useState([]);
-    const [categories, setCategories] = useState([]);
+  const [brands, setBrands] = useState([]);
+  const [categories, setCategories] = useState([]);
 
   const [search, setSearch] = useState("");
   const [items, setItems] = useState<Product[]>([]);
@@ -36,28 +38,28 @@ const Header = () => {
   const searchClient = getAlgoliaClient();
   let searchTimeout: NodeJS.Timeout;
 
-    const fetchBrands = async () => {
-      try {
-        const result = await axios.get(`/api/v1/brands/dropdown`);
-        setBrands(result.data || []);
-      } catch (error: any) {
-        console.error("Error fetching brands:", error);
-      }
-    };
-  
-    const fetchCategories = async () => {
-      try {
-        const result = await axios.get(`/api/v1/categories/dropdown`);
-        setCategories(result.data || []);
-      } catch (error: any) {
-        console.error("Error fetching categories:", error);
-      }
-    };
+  const fetchBrands = async () => {
+    try {
+      const result = await axios.get(`/api/v1/brands/dropdown`);
+      setBrands(result.data || []);
+    } catch (error: any) {
+      console.error("Error fetching brands:", error);
+    }
+  };
 
-    useEffect(() => {
-      fetchBrands();
-      fetchCategories();
-    }, []);
+  const fetchCategories = async () => {
+    try {
+      const result = await axios.get(`/api/v1/categories/dropdown`);
+      setCategories(result.data || []);
+    } catch (error: any) {
+      console.error("Error fetching categories:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchBrands();
+    fetchCategories();
+  }, []);
 
   // ✅ Debounced Search Function
   const searchItems = useCallback(
@@ -129,20 +131,24 @@ const Header = () => {
   }, []);
 
   return (
-    <header id="header" className="fixed top-0 left-0 w-full z-40 backdrop-blur-md bg-black/70 border-b border-gray-800 shadow-sm">
+    <header
+      id="header"
+      className="fixed top-0 left-0 w-full z-40 backdrop-blur-md bg-black/70 border-b border-gray-800 shadow-sm"
+    >
+      <SeasonalPromo />
       <div className="max-w-7xl mx-auto gap-5 md:gap-0 flex justify-between items-center px-4 md:px-8 py-3 transition-all duration-300">
         {/* ---------- LEFT: LOGO ---------- */}
         <Link href="/" className="flex items-center gap-2">
           <Image
             src={Logo}
-            alt="Neverbe Logo"
+            alt="NEVERBE Logo"
             width={110}
             height={110}
             className="hidden lg:block"
           />
           <Image
             src={Banner}
-            alt="Neverbe Banner"
+            alt="NEVERBE Banner"
             width={160}
             height={160}
             className="block lg:hidden"
@@ -153,7 +159,10 @@ const Header = () => {
         <nav className="hidden lg:block relative">
           <ul className="flex gap-5 text-white text-sm font-medium uppercase tracking-wide">
             <li>
-              <Link href="/" className="hover:text-primary-100 transition-colors">
+              <Link
+                href="/"
+                className="hover:text-primary-100 transition-colors"
+              >
                 Home
               </Link>
             </li>
@@ -217,7 +226,9 @@ const Header = () => {
                     {brands.map((brand) => (
                       <li key={brand.id || brand.name}>
                         <Link
-                          href={`/collections/brands/${brand.slug || brand.label}`}
+                          href={`/collections/brands/${
+                            brand.slug || brand.label
+                          }`}
                           className="block px-4 py-2 hover:bg-primary-200/20 text-sm text-gray-200 whitespace-nowrap"
                         >
                           {brand.label}
@@ -252,7 +263,10 @@ const Header = () => {
             {isSearching ? (
               <div className="absolute top-2.5 right-3 w-4 h-4 border-2 border-gray-400 border-t-primary-200 rounded-full animate-spin"></div>
             ) : (
-              <IoSearch size={20} className="absolute top-2.5 right-3 text-gray-400" />
+              <IoSearch
+                size={20}
+                className="absolute top-2.5 right-3 text-gray-400"
+              />
             )}
             <AnimatePresence>
               {showSearchResult && (

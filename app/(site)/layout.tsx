@@ -2,6 +2,7 @@ import "@/app/globals.css";
 import StoreProvider from "@/app/(site)/components/StoreProvider";
 import GlobalProvider from "@/app/(site)/components/GlobalProvider";
 import ReCaptchaProviderWrapper from "@/app/(site)/components/ReCaptchaProvider";
+import SeasonalAnimations from "@/app/(site)/components/SeasonalAnimations";
 
 export default async function RootLayout({
   children,
@@ -11,7 +12,10 @@ export default async function RootLayout({
   return (
     <ReCaptchaProviderWrapper>
       <StoreProvider>
-        <GlobalProvider>{children}</GlobalProvider>
+        <GlobalProvider>
+          <SeasonalAnimations />
+          {children}
+        </GlobalProvider>
       </StoreProvider>
     </ReCaptchaProviderWrapper>
   );

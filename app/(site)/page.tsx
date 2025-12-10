@@ -1,3 +1,4 @@
+// pages or app route file (your home page)
 import Hero from "@/app/(site)/components/Hero";
 import NewArrivals from "@/app/(site)/components/NewArrivals";
 import WhyUs from "@/app/(site)/components/WhyUs";
@@ -11,35 +12,10 @@ import { getBrands } from "@/services/OtherService";
 import type { Metadata } from "next";
 import SEOContent from "./components/SEOContent";
 
-// Broad keywords targeting the generic "Shoe" intent
-const seoKeywords: string[] = [
-  "shoes",
-  "shoes sri lanka",
-  "buy shoes",
-  "footwear sri lanka",
-  "online shoe store",
-  "mens shoes",
-  "womens shoes",
-  "sneakers",
-  "sports shoes",
-  "running shoes",
-  "casual shoes",
-  "canvas shoes",
-  "loafers",
-  "boots sri lanka",
-  "sandals",
-  "slippers",
-  "nike copy shoes",
-  "adidas copy shoes",
-  "master copy sneakers",
-];
-
 export const metadata: Metadata = {
-  // META TITLE STRATEGY:
-  // [Broad Keyword] | [Secondary Keyword] | [Brand]
   title: {
     default:
-      "Shoes in Sri Lanka | Buy Sneakers, Men's & Women's Footwear — NEVERBE",
+      "NEVERBE — Shoes in Sri Lanka | Buy Sneakers, Men's & Women's Footwear",
     template: "%s | NEVERBE",
   },
   metadataBase: new URL("https://neverbe.lk"),
@@ -47,13 +23,25 @@ export const metadata: Metadata = {
     canonical: "https://neverbe.lk",
   },
   description:
-    "The #1 Online Shoe Store in Sri Lanka. Shop a massive collection of Sneakers, Running Shoes, Casual Footwear, and Master Copies. Cash on Delivery Island-wide.",
+    "NEVERBE — The #1 Online Shoe Store in Sri Lanka. Shop Sneakers, Running Shoes, Casual Footwear, and Master Copies. Cash on Delivery island-wide.",
   applicationName: "NEVERBE",
-  keywords: seoKeywords,
+  keywords: [
+    "shoes",
+    "shoes sri lanka",
+    "buy shoes",
+    "footwear sri lanka",
+    "online shoe store",
+    "mens shoes",
+    "womens shoes",
+    "sneakers",
+    "running shoes",
+    "master copy sneakers",
+    "NEVERBE",
+  ],
   openGraph: {
-    title: "Shoes in Sri Lanka | Buy Sneakers & Footwear Online",
+    title: "NEVERBE — Shoes in Sri Lanka | Buy Sneakers & Footwear Online",
     description:
-      "Looking for shoes? We have them all. Sports, Casual, Party, and Office wear. Best prices in Sri Lanka with Island-wide delivery.",
+      "Looking for shoes? NEVERBE has them all — sports, casual, party, and office wear. Best prices in Sri Lanka with island-wide delivery.",
     url: "https://neverbe.lk",
     siteName: "NEVERBE",
     type: "website",
@@ -81,16 +69,31 @@ const Page = async () => {
 
   const [arrivals, sliders, hotItems, brands] = await dataPromise;
 
-  /* SCHEMA STRATEGY: 
-     We use "ShoeStore" and map "hasOfferCatalog" to tell Google 
-     we have many different categories.
+  /* STRUCTURED DATA: Organization + ShoeStore + WebSite
+     Explicitly set name, legalName, alternateName, and logo to enforce brand text.
   */
   const structuredData = {
     "@context": "https://schema.org",
     "@graph": [
       {
-        "@type": "ShoeStore",
+        "@type": "Organization",
+        "@id": "https://neverbe.lk/#organization",
         name: "NEVERBE",
+        legalName: "NEVERBE",
+        alternateName: "NEVERBE",
+        url: "https://neverbe.lk",
+        logo: "https://neverbe.lk/api/v1/og",
+        sameAs: [
+          // add social urls when available
+        ],
+      },
+      {
+        "@type": "ShoeStore",
+        "@id": "https://neverbe.lk/#shoestore",
+        name: "NEVERBE",
+        brand: "NEVERBE",
+        legalName: "NEVERBE",
+        alternateName: "NEVERBE Shoe Store",
         url: "https://neverbe.lk",
         image: "https://neverbe.lk/api/v1/og",
         description: "The largest online destination for shoes in Sri Lanka.",
@@ -118,8 +121,10 @@ const Page = async () => {
       },
       {
         "@type": "WebSite",
+        "@id": "https://neverbe.lk/#website",
         url: "https://neverbe.lk",
-        name: "NEVERBE - Shoes Sri Lanka",
+        name: "NEVERBE",
+        publisher: { "@id": "https://neverbe.lk/#organization" },
         potentialAction: {
           "@type": "SearchAction",
           target: "https://neverbe.lk/search?q={search_term_string}",
@@ -131,8 +136,10 @@ const Page = async () => {
 
   return (
     <main className="flex min-h-screen flex-col">
+      {/* JSON-LD inserted (use <script> for app dir or Next's Script in pages) */}
       <script
         type="application/ld+json"
+        // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
 
@@ -145,10 +152,7 @@ const Page = async () => {
       <WhyUs />
       <FAQ />
 
-      {/* THE KEY TO RANKING:
-         This section provides the text density Google needs to rank you 
-         for generic terms like "Shoes" or "Footwear".
-      */}
+      {/* Text density / SEO content block */}
       <SEOContent />
     </main>
   );
