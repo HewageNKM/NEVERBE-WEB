@@ -23,7 +23,7 @@ const ImagesSlider = ({ images }: { images: Slide[] }) => {
       {images.map((image, index) => (
         <SwiperSlide key={image.id} className="w-full">
           <figure className="w-full p-4">
-            <div className="overflow-hidden rounded-2xl shadow-md">
+            <div className="overflow-hidden rounded-2xl shadow-md aspect-[1200/628] bg-gray-100">
               <Image
                 width={1200}
                 height={628}

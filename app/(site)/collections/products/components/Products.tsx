@@ -145,12 +145,7 @@ const Products = ({ items }: { items: Product[] }) => {
         {/* --- Products Section --- */}
         <div className="flex-1 relative">
           {/* Toolbar */}
-          <m.div
-            initial={{ opacity: 0, y: -15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-            className="sticky top-0 z-20 flex justify-between items-center mb-6 bg-white/80 backdrop-blur-sm p-4 rounded-lg shadow-sm"
-          >
+          <div className="sticky top-0 z-20 flex justify-between items-center mb-6 bg-white/80 backdrop-blur-sm p-4 rounded-lg shadow-sm">
             {/* Mobile Filter Button */}
             <div className="lg:hidden">
               <button
@@ -200,7 +195,7 @@ const Products = ({ items }: { items: Product[] }) => {
                 )}
               </AnimatePresence>
             </div>
-          </m.div>
+          </div>
 
           {/* --- Products Grid --- */}
           {isLoading ? (
@@ -208,41 +203,19 @@ const Products = ({ items }: { items: Product[] }) => {
           ) : products.length === 0 ? (
             <EmptyState heading="Products Not Available!" />
           ) : (
-            <m.ul
-              key={page} // triggers animation on page change
-              initial="hidden"
-              animate="visible"
-              variants={{
-                hidden: { opacity: 0, y: 15 },
-                visible: {
-                  opacity: 1,
-                  y: 0,
-                  transition: { staggerChildren: 0.05, duration: 0.4 },
-                },
-              }}
+            <ul
+              key={page}
               className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-4 items-center justify-center content-center"
             >
               {products?.map((item) => (
-                <m.li
-                  key={item.id}
-                  variants={{
-                    hidden: { opacity: 0, y: 20 },
-                    visible: { opacity: 1, y: 0 },
-                  }}
-                  className="group"
-                >
+                <li key={item.id} className="group">
                   <ItemCard item={item} />
-                </m.li>
+                </li>
               ))}
-            </m.ul>
+            </ul>
           )}
 
-          <m.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
-            className="flex justify-center mt-10"
-          >
+          <div className="flex justify-center mt-10">
             <Pagination
               count={Math.ceil(totalProduct / size)}
               page={page}
@@ -250,7 +223,7 @@ const Products = ({ items }: { items: Product[] }) => {
               shape="rounded"
               onChange={(event, value) => dispatch(setPage(value))}
             />
-          </m.div>
+          </div>
         </div>
       </section>
     </LazyMotion>

@@ -1,6 +1,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { Roboto_Mono } from "next/font/google";
+import { WebVitals } from "@/components/WebVitals";
 
 export const metadata: Metadata = {
   title: {
@@ -39,7 +40,8 @@ export default function RootLayout({
       <body
         className={`${mono.className} antialiased min-h-screen flex flex-col`}
       >
-        <main className="flex-1 animate-fade">{children}</main>
+        <main className="flex-1">{children}</main>
+        <WebVitals />
       </body>
     </html>
   );

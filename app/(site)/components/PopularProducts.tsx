@@ -2,7 +2,6 @@
 
 import ItemCard from "@/components/ItemCard";
 import EmptyState from "@/components/EmptyState";
-import { motion } from "framer-motion";
 
 // Swiper imports
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -39,20 +38,14 @@ const PopularProducts = ({ hotItems }: { hotItems: Product[] }) => {
     <section className="w-full my-8">
       <div className="lg:px-16 px-2 py-4">
         {/* Header */}
-        <motion.div
-          className="text-center md:text-left"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-        >
+        <div className="text-center md:text-left">
           <h2 className="text-3xl font-display md:text-4xl font-bold text-gray-800">
             Popular Products
           </h2>
           <h3 className="text-primary text-lg md:text-xl mt-2 font-medium">
             Check out our best-selling products
           </h3>
-        </motion.div>
+        </div>
 
         {/* Swiper Slider */}
         <div className="mt-10 relative group">
@@ -86,14 +79,7 @@ const PopularProducts = ({ hotItems }: { hotItems: Product[] }) => {
           >
             {hotItems.map((item) => (
               <SwiperSlide key={item.id}>
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, ease: "easeOut" }}
-                >
-                  <ItemCard item={item} />
-                </motion.div>
+                <ItemCard item={item} />
               </SwiperSlide>
             ))}
           </Swiper>

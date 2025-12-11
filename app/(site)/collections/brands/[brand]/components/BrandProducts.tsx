@@ -203,24 +203,18 @@ const BrandProducts = ({
         ) : products.length === 0 ? (
           <EmptyState heading="Products Not Available!" />
         ) : (
-          <motion.ul
-            className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-4"
-            variants={gridVariants}
-            initial="hidden"
-            animate="visible"
-          >
+          <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-4">
             {products.map((item) => (
               <motion.li
                 key={item.id}
                 className="group"
-                variants={cardVariants}
-                whileHover="hover"
-                whileTap="tap"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
                 <ItemCard item={item} />
               </motion.li>
             ))}
-          </motion.ul>
+          </ul>
         )}
 
         <motion.div

@@ -2,7 +2,7 @@
 import React from "react";
 import { contactInfo } from "@/constants";
 import Link from "next/link";
-import { motion } from "framer-motion";
+
 
 const ContactDetailsSection = () => {
   const containerVariants = {
@@ -20,22 +20,14 @@ const ContactDetailsSection = () => {
   };
 
   return (
-    <motion.section
-      className="flex flex-col gap-6"
-      initial="hidden"
-      animate="visible"
-      variants={containerVariants}
-    >
-      <motion.h2
-        className="text-2xl font-semibold text-gray-900 font-display"
-        variants={itemVariants}
-      >
+    <section className="flex flex-col gap-6">
+      <h2 className="text-2xl font-semibold text-gray-900 font-display">
         Reach Us At
-      </motion.h2>
+      </h2>
 
-      <motion.ul className="flex flex-col gap-4" variants={containerVariants}>
+      <ul className="flex flex-col gap-4">
         {contactInfo.map((info, idx) => (
-          <motion.li key={idx} variants={itemVariants}>
+          <li key={idx}>
             <Link
               href={info.link}
               target="_blank"
@@ -48,18 +40,15 @@ const ContactDetailsSection = () => {
               />
               <span className="text-lg">{info.content}</span>
             </Link>
-          </motion.li>
+          </li>
         ))}
-      </motion.ul>
+      </ul>
 
-      <motion.p
-        className="text-gray-600 text-sm leading-relaxed max-w-md"
-        variants={itemVariants}
-      >
+      <p className="text-gray-600 text-sm leading-relaxed max-w-md">
         You can contact us via email for any inquiries, support requests, or
         partnership opportunities. We typically respond within 24 hours.
-      </motion.p>
-    </motion.section>
+      </p>
+    </section>
   );
 };
 

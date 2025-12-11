@@ -148,6 +148,7 @@ const Header = () => {
             alt="NEVERBE Logo"
             width={110}
             height={110}
+            priority
             className="hidden lg:block object-contain"
           />
           <Image

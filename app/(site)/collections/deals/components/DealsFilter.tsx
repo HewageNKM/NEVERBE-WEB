@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { motion } from "framer-motion";
 import { BiReset } from "react-icons/bi";
 import {
   resetFilter,
@@ -10,14 +9,8 @@ import {
   setInStock,
 } from "@/redux/dealsSlice/dealsSlice";
 import { AppDispatch, RootState } from "@/redux/store";
-
 import { Switch } from "@mui/material";
 import { toast } from "react-toastify";
-
-const containerVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { staggerChildren: 0.1 } },
-};
 
 const DealsFilter = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -77,12 +70,7 @@ const DealsFilter = () => {
   };
 
   return (
-    <motion.aside
-      className="hidden lg:flex flex-col w-72 p-6 bg-white/80 backdrop-blur-sm rounded-xl border border-gray-200 shadow-sm sticky top-20 gap-6"
-      initial="hidden"
-      animate="visible"
-      variants={containerVariants}
-    >
+    <aside className="hidden lg:flex flex-col w-72 p-6 bg-white/80 backdrop-blur-sm rounded-xl border border-gray-200 shadow-sm sticky top-20 gap-6">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold text-gray-800">Filters</h2>
         <button
@@ -173,7 +161,7 @@ const DealsFilter = () => {
               })}
         </div>
       </div>
-    </motion.aside>
+    </aside>
   );
 };
 

@@ -133,55 +133,39 @@ const ProductHero = ({ item }: { item: Product }) => {
   };
 
   return (
-    <motion.section
-      className="w-full flex flex-col md:mt-5 gap-4 md:gap-6 lg:gap-5"
-      initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6 }}
-    >
+    <section className="w-full flex flex-col md:mt-5 gap-4 md:gap-6 lg:gap-5">
       {/* Breadcrumb */}
-      <motion.div
-        className="flex gap-2 text-gray-600 text-sm"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.2 }}
-      >
+      <div className="flex gap-2 text-gray-600 text-sm">
         <Link href="/collections/products" className="hover:underline">
           Products
         </Link>
         <span>/</span>
         <span className="font-medium">{item.name}</span>
-      </motion.div>
+      </div>
 
       {/* Product section */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
         {/* Left — Images */}
-        <motion.div
-          className="flex flex-col gap-4"
-          initial={{ opacity: 0, x: -30 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.3 }}
-        >
+        <div className="flex flex-col gap-4">
           <div
             ref={imageRef}
-            className="relative w-full rounded-xl overflow-hidden shadow-md"
+            className="relative w-full rounded-xl overflow-hidden shadow-md aspect-square bg-gray-100"
           >
-            <AnimatePresence mode="wait">
+            <AnimatePresence mode="popLayout">
               <motion.div
                 key={selectedImage.url}
-                initial={{ opacity: 0, scale: 1.05 }}
-                animate={{ opacity: 1, scale: 1 }}
+                animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.3 }}
+                className="w-full h-full"
               >
                 <Image
                   src={selectedImage.url}
                   alt={item.name}
-                  width={600}
-                  height={600}
+                  fill
                   priority
                   sizes="(max-width: 768px) 100vw, 50vw"
-                  className="w-full h-full object-contain"
+                  className="object-cover"
                 />
               </motion.div>
             </AnimatePresence>
@@ -209,15 +193,10 @@ const ProductHero = ({ item }: { item: Product }) => {
               </motion.button>
             ))}
           </div>
-        </motion.div>
+        </div>
 
         {/* Right — Product Details */}
-        <motion.div
-          className="flex flex-col gap-4"
-          initial={{ opacity: 0, x: 30 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.4 }}
-        >
+        <div className="flex flex-col gap-4">
           <p className="text-gray-500 font-medium capitalize">{item.brand}</p>
           <h1 className="text-2xl md:text-3xl font-extrabold text-gray-900">
             {item.name}
@@ -387,24 +366,19 @@ const ProductHero = ({ item }: { item: Product }) => {
             *This product is a premium inspired version (Master Copy/7A). NOT an
             original branded item.
           </div>
-        </motion.div>
+        </div>
       </div>
 
       {/* Description */}
-      <motion.div
-        className="mt-6"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.5 }}
-      >
+      <div className="mt-6">
         <h2 className="text-xl md:text-2xl font-bold text-gray-800">
           Description
         </h2>
         <p className="text-gray-600 mt-2">
           {item.description || "No description available."}
         </p>
-      </motion.div>
-    </motion.section>
+      </div>
+    </section>
   );
 };
 

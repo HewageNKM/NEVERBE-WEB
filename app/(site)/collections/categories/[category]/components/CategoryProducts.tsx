@@ -16,7 +16,7 @@ import {
   toggleFilter,
 } from "@/redux/categorySlice/categorySlice";
 import { sortingOptions } from "@/constants";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import { Product } from "@/interfaces/Product";
 
 const CategoryProducts = ({
@@ -164,24 +164,16 @@ const CategoryProducts = ({
         {isLoading ? (
           <ComponentLoader />
         ) : products?.length ? (
-          <motion.div
-            layout
-            className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4"
-          >
+          <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
             {products?.map((item, i) => (
               <ItemCard key={i} item={item} />
             ))}
-          </motion.div>
+          </div>
         ) : (
           <EmptyState message="No products found." />
         )}
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          className="flex justify-center mt-10"
-        >
+        <div className="flex justify-center mt-10">
           <Pagination
             variant="outlined"
             shape="rounded"
@@ -189,7 +181,7 @@ const CategoryProducts = ({
             count={Math.ceil(totalProducts / size)}
             onChange={(event, value) => dispatch(setPage(value))}
           />
-        </motion.div>
+        </div>
       </div>
     </section>
   );

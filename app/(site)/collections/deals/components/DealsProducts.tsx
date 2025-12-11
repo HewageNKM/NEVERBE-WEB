@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import Pagination from "@mui/material/Pagination";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
@@ -125,11 +125,7 @@ const DealsProducts = ({ items }: { items: Product[] }) => {
       </aside>
 
       <div className="flex-1 relative">
-        <motion.div
-          className="sticky top-0 z-20 flex justify-between items-center mb-6 bg-white/80 backdrop-blur-sm p-4 rounded-lg shadow-sm"
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-        >
+        <div className="sticky top-0 z-20 flex justify-between items-center mb-6 bg-white/80 backdrop-blur-sm p-4 rounded-lg shadow-sm">
           <div className="lg:hidden">
             <button
               onClick={() => dispatch(toggleFilter())}
@@ -176,25 +172,20 @@ const DealsProducts = ({ items }: { items: Product[] }) => {
               )}
             </AnimatePresence>
           </div>
-        </motion.div>
+        </div>
 
         {isLoading ? (
           <ComponentLoader />
         ) : products.length === 0 ? (
           <EmptyState heading="No deals available!" />
         ) : (
-          <motion.ul
-            key={page}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6"
-          >
+          <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
             {products.map((item) => (
-              <motion.li key={item.id}>
+              <li key={item.id}>
                 <ItemCard item={item} />
-              </motion.li>
+              </li>
             ))}
-          </motion.ul>
+          </ul>
         )}
 
         <div className="flex justify-center mt-10">
