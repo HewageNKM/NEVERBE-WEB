@@ -1,6 +1,6 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import { Roboto_Mono } from "next/font/google";
+import { Roboto_Mono, Inter, Plus_Jakarta_Sans } from "next/font/google";
 import { WebVitals } from "@/components/WebVitals";
 
 export const metadata: Metadata = {
@@ -28,6 +28,19 @@ export const metadata: Metadata = {
 const mono = Roboto_Mono({
   subsets: ["latin"],
   display: "swap",
+  variable: "--font-mono",
+});
+
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-inter",
+});
+
+const plusJakartaSans = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-plus-jakarta-sans",
 });
 
 export default function RootLayout({
@@ -38,7 +51,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="bg-white text-neutral-900">
       <body
-        className={`${mono.className} antialiased min-h-screen flex flex-col`}
+        className={`${mono.variable} ${inter.variable} ${plusJakartaSans.variable} antialiased min-h-screen flex flex-col font-sans`}
       >
         <main className="flex-1">{children}</main>
         <WebVitals />

@@ -97,25 +97,6 @@ const PopularProducts = ({ hotItems }: { hotItems: Product[] }) => {
               Let's try a hybrid approach: Render the Swiper, but ensure the container has min-height.
               However, Swiper acts as a flex container.
           */}
-          <Swiper
-            modules={[Navigation]}
-            onInit={handleInit}
-            spaceBetween={16}
-            slidesPerView={2}
-            breakpoints={{
-              640: { slidesPerView: 2 },
-              768: { slidesPerView: 3 },
-              1024: { slidesPerView: 4 },
-            }}
-            loop={hotItems.length > 2}
-            className="pb-10!" // Add padding bottom for potential paging or shadow
-          >
-            {hotItems.map((item, index) => (
-              <SwiperSlide key={item.id}>
-                <ItemCard item={item} priority={index < 4} />
-              </SwiperSlide>
-            ))}
-          </Swiper>
         </div>
       </div>
     </section>
