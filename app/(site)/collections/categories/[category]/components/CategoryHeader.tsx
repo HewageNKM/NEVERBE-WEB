@@ -18,7 +18,14 @@ const CategoryHeader = ({ category }: { category: string }) => {
         transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
         className="w-full h-48 md:h-88 relative"
       >
-        <Image src={DefaultBG} alt={`${title} Banner`} fill className="object-cover" />
+        <Image
+          src={DefaultBG}
+          alt={`${title} Banner`}
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover"
+        />
         <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/40 to-transparent" />
       </motion.figure>
 

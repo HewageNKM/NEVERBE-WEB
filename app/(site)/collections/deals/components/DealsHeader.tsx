@@ -20,6 +20,7 @@ const DealsHeader = () => {
           alt={`${title} Banner`}
           fill
           priority
+          sizes="100vw"
           className="object-cover"
         />
         <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/40 to-transparent" />

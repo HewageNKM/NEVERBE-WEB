@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, LazyMotion, domAnimation, AnimatePresence } from "framer-motion";
 import Pagination from "@mui/material/Pagination";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
@@ -131,121 +131,125 @@ const Products = ({ items }: { items: Product[] }) => {
   }, []);
 
   return (
-    <section className="w-full flex flex-col lg:flex-row gap-6 pt-5 lg:justify-between">
-      {/* --- Desktop Filters --- */}
-      <aside className="hidden lg:block w-[22%]">
-        <ProductsFilter />
-      </aside>
+    <LazyMotion features={domAnimation}>
+      <section className="w-full flex flex-col lg:flex-row gap-6 pt-5 lg:justify-between">
+        {/* --- Desktop Filters --- */}
+        <aside className="hidden lg:block w-[22%]">
+          <ProductsFilter />
+        </aside>
 
-      {/* --- Products Section --- */}
-      <div className="flex-1 relative">
-        {/* Toolbar */}
-        <motion.div
-          initial={{ opacity: 0, y: -15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-          className="sticky top-0 z-20 flex justify-between items-center mb-6 bg-white/80 backdrop-blur-sm p-4 rounded-lg shadow-sm"
-        >
-          {/* Mobile Filter Button */}
-          <div className="lg:hidden">
-            <button
-              onClick={() => dispatch(toggleFilter())}
-              className="flex items-center gap-2 px-3 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition"
-            >
-              <FiFilter size={20} />
-              <span className="text-sm font-medium text-gray-700">Filter</span>
-            </button>
-          </div>
-
-          <div className="relative" ref={sortRef}>
-            <button
-              onClick={() => setOpenSort(!openSort)}
-              className="flex items-center gap-2 text-gray-700 px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-100 transition"
-            >
-              <IoFilter />
-              <span>Sort by: {selectedSort.toUpperCase()}</span>
-            </button>
-
-            <AnimatePresence>
-              {openSort && (
-                <motion.ul
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-30 overflow-hidden"
-                >
-                  {sortingOptions.map((opt, i) => (
-                    <motion.li
-                      key={i}
-                      onClick={() => {
-                        dispatch(setSelectedSort(opt.value));
-                        setOpenSort(false);
-                      }}
-                      className={`px-4 py-2 text-sm flex items-center justify-between cursor-pointer hover:bg-gray-100 ${
-                        selectedSort === opt.value ? "text-primary" : ""
-                      }`}
-                    >
-                      {opt.name}
-                      {selectedSort === opt.value && <IoCheckmark />}
-                    </motion.li>
-                  ))}
-                </motion.ul>
-              )}
-            </AnimatePresence>
-          </div>
-        </motion.div>
-
-        {/* --- Products Grid --- */}
-        {isLoading ? (
-          <ComponentLoader />
-        ) : products.length === 0 ? (
-          <EmptyState heading="Products Not Available!" />
-        ) : (
-          <motion.ul
-            key={page} // triggers animation on page change
-            initial="hidden"
-            animate="visible"
-            variants={{
-              hidden: { opacity: 0, y: 15 },
-              visible: {
-                opacity: 1,
-                y: 0,
-                transition: { staggerChildren: 0.05, duration: 0.4 },
-              },
-            }}
-            className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-4 items-center justify-center content-center"
+        {/* --- Products Section --- */}
+        <div className="flex-1 relative">
+          {/* Toolbar */}
+          <m.div
+            initial={{ opacity: 0, y: -15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="sticky top-0 z-20 flex justify-between items-center mb-6 bg-white/80 backdrop-blur-sm p-4 rounded-lg shadow-sm"
           >
-            {products?.map((item) => (
-              <motion.li
-                key={item.id}
-                variants={{
-                  hidden: { opacity: 0, y: 20 },
-                  visible: { opacity: 1, y: 0 },
-                }}
-                className="group"
+            {/* Mobile Filter Button */}
+            <div className="lg:hidden">
+              <button
+                onClick={() => dispatch(toggleFilter())}
+                className="flex items-center gap-2 px-3 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition"
               >
-                <ItemCard item={item} />
-              </motion.li>
-            ))}
-          </motion.ul>
-        )}
+                <FiFilter size={20} />
+                <span className="text-sm font-medium text-gray-700">
+                  Filter
+                </span>
+              </button>
+            </div>
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          className="flex justify-center mt-10"
-        >
-          <Pagination
-            count={Math.ceil(totalProduct / size)}
-            page={page}
-            variant="outlined"
-            shape="rounded"
-            onChange={(event, value) => dispatch(setPage(value))}
-          />
-        </motion.div>
-      </div>
-    </section>
+            <div className="relative" ref={sortRef}>
+              <button
+                onClick={() => setOpenSort(!openSort)}
+                className="flex items-center gap-2 text-gray-700 px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-100 transition"
+              >
+                <IoFilter />
+                <span>Sort by: {selectedSort.toUpperCase()}</span>
+              </button>
+
+              <AnimatePresence>
+                {openSort && (
+                  <m.ul
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-30 overflow-hidden"
+                  >
+                    {sortingOptions.map((opt, i) => (
+                      <m.li
+                        key={i}
+                        onClick={() => {
+                          dispatch(setSelectedSort(opt.value));
+                          setOpenSort(false);
+                        }}
+                        className={`px-4 py-2 text-sm flex items-center justify-between cursor-pointer hover:bg-gray-100 ${
+                          selectedSort === opt.value ? "text-primary" : ""
+                        }`}
+                      >
+                        {opt.name}
+                        {selectedSort === opt.value && <IoCheckmark />}
+                      </m.li>
+                    ))}
+                  </m.ul>
+                )}
+              </AnimatePresence>
+            </div>
+          </m.div>
+
+          {/* --- Products Grid --- */}
+          {isLoading ? (
+            <ComponentLoader />
+          ) : products.length === 0 ? (
+            <EmptyState heading="Products Not Available!" />
+          ) : (
+            <m.ul
+              key={page} // triggers animation on page change
+              initial="hidden"
+              animate="visible"
+              variants={{
+                hidden: { opacity: 0, y: 15 },
+                visible: {
+                  opacity: 1,
+                  y: 0,
+                  transition: { staggerChildren: 0.05, duration: 0.4 },
+                },
+              }}
+              className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-4 items-center justify-center content-center"
+            >
+              {products?.map((item) => (
+                <m.li
+                  key={item.id}
+                  variants={{
+                    hidden: { opacity: 0, y: 20 },
+                    visible: { opacity: 1, y: 0 },
+                  }}
+                  className="group"
+                >
+                  <ItemCard item={item} />
+                </m.li>
+              ))}
+            </m.ul>
+          )}
+
+          <m.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            className="flex justify-center mt-10"
+          >
+            <Pagination
+              count={Math.ceil(totalProduct / size)}
+              page={page}
+              variant="outlined"
+              shape="rounded"
+              onChange={(event, value) => dispatch(setPage(value))}
+            />
+          </m.div>
+        </div>
+      </section>
+    </LazyMotion>
   );
 };
 

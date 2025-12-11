@@ -21,6 +21,7 @@ const ProductsHeader = () => {
           alt={`${title} Banner`}
           fill
           priority
+          sizes="100vw"
           className="object-cover"
         />
         {/* Gradient Overlay */}

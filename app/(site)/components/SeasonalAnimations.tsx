@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { m, LazyMotion, domAnimation } from "framer-motion";
 
 const SeasonalAnimations = () => {
   const [season, setSeason] = useState<"christmas" | "newYear" | null>(null);
@@ -32,10 +32,12 @@ const SeasonalAnimations = () => {
   if (!season) return null;
 
   return (
-    <div className="pointer-events-none fixed inset-0 z-50 overflow-hidden">
-      {season === "christmas" && <SnowAnimation />}
-      {season === "newYear" && <FireworksAnimation />}
-    </div>
+    <LazyMotion features={domAnimation}>
+      <div className="pointer-events-none fixed inset-0 z-50 overflow-hidden">
+        {season === "christmas" && <SnowAnimation />}
+        {season === "newYear" && <FireworksAnimation />}
+      </div>
+    </LazyMotion>
   );
 };
 
@@ -52,7 +54,7 @@ const SnowAnimation = () => {
   return (
     <>
       {snowflakes.map((flake) => (
-        <motion.div
+        <m.div
           key={flake.id}
           className="absolute bg-white rounded-full opacity-80"
           style={{

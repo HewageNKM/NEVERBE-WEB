@@ -176,6 +176,8 @@ const ProductHero = ({ item }: { item: Product }) => {
                   alt={item.name}
                   width={600}
                   height={600}
+                  priority
+                  sizes="(max-width: 768px) 100vw, 50vw"
                   className="w-full h-full object-contain"
                 />
               </motion.div>
