@@ -31,6 +31,7 @@ const ImagesSlider = ({ images }: { images: Slide[] }) => {
                 alt={"NEVERBE"}
                 className="object-cover w-full"
                 priority={index === 0}
+                fetchPriority={index === 0 ? "high" : "auto"}
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 100vw"
               />
             </div>

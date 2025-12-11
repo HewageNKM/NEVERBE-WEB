@@ -1,9 +1,24 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+    reactStrictMode: true,
+
+    // Ignore TS errors during build
     typescript: {
         ignoreBuildErrors: true,
     },
+
+    // Great for Docker / Firebase / Node deployments
     output: "standalone",
+
+    // Enable gzip + brotli compression
+    compress: true,
+
+    // Remove console.* calls in production
+    compiler: {
+        removeConsole: process.env.NODE_ENV === "production",
+    },
+
+    // Optimize images (Firebase Storage + Google Cloud)
     images: {
         formats: ["image/avif", "image/webp"],
         remotePatterns: [
@@ -18,6 +33,14 @@ const nextConfig = {
                 pathname: "/**",
             },
         ],
+    },
+
+    // Experimental features supported in Next.js 16
+    experimental: {
+        optimizePackageImports: ["lodash", "date-fns"],
+        serverActions: {
+            bodySizeLimit: "2mb",
+        },
     },
 };
 

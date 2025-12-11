@@ -11,7 +11,6 @@ import { getSliders } from "@/services/SlideService";
 import { getBrands } from "@/services/OtherService";
 import type { Metadata } from "next";
 import SEOContent from "./components/SEOContent";
-
 export const metadata: Metadata = {
   title: {
     default:
@@ -157,5 +156,4 @@ const Page = async () => {
     </main>
   );
 };
-
 export default Page;

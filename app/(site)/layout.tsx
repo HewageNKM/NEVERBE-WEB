@@ -18,5 +18,3 @@ export default async function RootLayout({
     </StoreProvider>
   );
 }
-
-export const dynamic = "force-dynamic";
