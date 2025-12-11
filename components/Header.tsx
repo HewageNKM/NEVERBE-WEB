@@ -20,7 +20,7 @@ import { Product } from "@/interfaces/Product";
 import { ProductVariant } from "@/interfaces/ProductVariant";
 import SeasonalPromo from "@/app/(site)/components/SeasonalPromo";
 
-const Header = () => {
+const Header = ({ season }: { season: "christmas" | "newYear" | null }) => {
   const cartItems = useSelector((state: RootState) => state.cartSlice.cart);
   const dispatch: AppDispatch = useDispatch();
   const [brands, setBrands] = useState([]);
@@ -141,7 +141,7 @@ const Header = () => {
       id="header"
       className="fixed top-0 left-0 w-full z-40 backdrop-blur-md bg-black/70 border-b border-gray-800 shadow-sm"
     >
-      <SeasonalPromo />
+      <SeasonalPromo season={season} />
       <div className="max-w-7xl mx-auto gap-5 md:gap-0 flex justify-between items-center px-4 md:px-8 py-3 transition-all duration-300">
         {/* ---------- LEFT: LOGO ---------- */}
         <Link href="/" className="flex items-center gap-2">
@@ -159,6 +159,8 @@ const Header = () => {
             width={160}
             height={160}
             className="block lg:hidden object-contain"
+            priority
+            fetchPriority="high"
           />
         </Link>
 

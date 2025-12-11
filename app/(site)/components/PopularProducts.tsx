@@ -65,6 +65,38 @@ const PopularProducts = ({ hotItems }: { hotItems: Product[] }) => {
             <BiChevronRight size={24} />
           </button>
 
+          {/* SSR Fallback & Swiper */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:hidden">
+            {hotItems.slice(0, 4).map((item, index) => (
+              <ItemCard key={item.id} item={item} priority={index < 2} />
+            ))}
+          </div>
+
+          <div className="hidden md:block">
+            <Swiper
+              modules={[Navigation]}
+              onInit={handleInit}
+              spaceBetween={16}
+              slidesPerView={2}
+              breakpoints={{
+                640: { slidesPerView: 2 },
+                768: { slidesPerView: 3 },
+                1024: { slidesPerView: 4 },
+              }}
+              loop={hotItems.length > 2}
+            >
+              {hotItems.map((item, index) => (
+                <SwiperSlide key={item.id}>
+                  <ItemCard item={item} priority={index < 4} />
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          </div>
+          {/* Mobile Swiper (Always visible on mobile to replace grid if needed, or just use Swiper everywhere but ensure height) */}
+          {/* Actually, a better approach for CLS is to just render the Swiper but give the slide a fixed width/height via CSS or the fallback grid method.
+              Let's try a hybrid approach: Render the Swiper, but ensure the container has min-height.
+              However, Swiper acts as a flex container.
+          */}
           <Swiper
             modules={[Navigation]}
             onInit={handleInit}
@@ -76,10 +108,11 @@ const PopularProducts = ({ hotItems }: { hotItems: Product[] }) => {
               1024: { slidesPerView: 4 },
             }}
             loop={hotItems.length > 2}
+            className="pb-10!" // Add padding bottom for potential paging or shadow
           >
-            {hotItems.map((item) => (
+            {hotItems.map((item, index) => (
               <SwiperSlide key={item.id}>
-                <ItemCard item={item} />
+                <ItemCard item={item} priority={index < 4} />
               </SwiperSlide>
             ))}
           </Swiper>

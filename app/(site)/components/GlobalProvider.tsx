@@ -13,9 +13,15 @@ import { setUser } from "@/redux/authSlice/authSlice";
 import Menu from "@/components/Menu";
 import { ToastContainer } from "react-toastify";
 import { Analytics } from "@vercel/analytics/next";
-import {SpeedInsights} from "@vercel/speed-insights/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
-const GlobalProvider = ({ children }: { children: ReactNode }) => {
+const GlobalProvider = ({
+  children,
+  season,
+}: {
+  children: ReactNode;
+  season: "christmas" | "newYear" | null;
+}) => {
   const dispatch: AppDispatch = useDispatch();
 
   const showCart = useSelector((state: RootState) => state.cartSlice.showCart);
@@ -42,7 +48,7 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
         autoClose={3000}
         hideProgressBar={false}
       />
-      <Header />
+      <Header season={season} />
       {children}
       <Footer />
       <AnimatePresence>{showCart && <Cart />}</AnimatePresence>

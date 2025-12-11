@@ -1,40 +1,15 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import "swiper/css";
 
-const SeasonalPromo = () => {
-  const [season, setSeason] = useState<"christmas" | "newYear" | null>(null);
-
-  useEffect(() => {
-    const checkSeason = () => {
-      const today = new Date();
-      const month = today.getMonth(); // 0-indexed
-
-      // Christmas: December (Month 11)
-      // For testing purposes, uncomment the line below to force Christmas
-      // if (true || month === 11) {
-      if (month === 11) {
-        setSeason("christmas");
-        return;
-      }
-
-      // Sinhala/Tamil New Year: April (Month 3)
-      // For testing purposes, uncomment the line below to force New Year
-      // if (true || month === 3) {
-      if (month === 3) {
-        setSeason("newYear");
-        return;
-      }
-
-      setSeason(null);
-    };
-
-    checkSeason();
-  }, []);
-
+const SeasonalPromo = ({
+  season,
+}: {
+  season: "christmas" | "newYear" | null;
+}) => {
   if (!season) return null;
   const christmasOffers = [
     "🎄 Christmas Sale! Up to 50% OFF on selected items!",

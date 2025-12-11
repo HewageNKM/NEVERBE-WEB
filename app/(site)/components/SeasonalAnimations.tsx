@@ -1,34 +1,13 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { m, LazyMotion, domAnimation } from "framer-motion";
 
-const SeasonalAnimations = () => {
-  const [season, setSeason] = useState<"christmas" | "newYear" | null>(null);
-
-  useEffect(() => {
-    const checkSeason = () => {
-      const today = new Date();
-      const month = today.getMonth(); // 0-indexed (0 is Jan, 11 is Dec)
-
-      // Christmas: December (Month 11)
-      if (month === 11) {
-        setSeason("christmas");
-        return;
-      }
-
-      // Sinhala/Tamil New Year: April (Month 3)
-      if (month === 3) {
-        setSeason("newYear");
-        return;
-      }
-
-      setSeason(null);
-    };
-
-    checkSeason();
-  }, []);
-
+const SeasonalAnimations = ({
+  season,
+}: {
+  season: "christmas" | "newYear" | null;
+}) => {
   if (!season) return null;
 
   return (

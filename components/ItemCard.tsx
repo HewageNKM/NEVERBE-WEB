@@ -7,7 +7,13 @@ import { RootState } from "@/redux/store";
 import { KOKOLogo } from "@/assets/images";
 import { Product } from "@/interfaces/Product";
 
-const ItemCard = ({ item }: { item: Product }) => {
+const ItemCard = ({
+  item,
+  priority = false,
+}: {
+  item: Product;
+  priority?: boolean;
+}) => {
   const [outOfStocks, setOutOfStocks] = useState(false);
   const [outOfStocksLabel, setOutOfStocksLabel] = useState("Out of Stock");
   const { user } = useSelector((state: RootState) => state.authSlice);
@@ -34,7 +40,7 @@ const ItemCard = ({ item }: { item: Product }) => {
         aria-label={`View details for ${item.name}`}
       >
         {/* ---------- IMAGE ---------- */}
-        <div className="relative h-40 sm:h-[220px] overflow-hidden">
+        <div className="relative aspect-square w-full overflow-hidden">
           <Image
             width={300}
             height={300}
@@ -42,6 +48,7 @@ const ItemCard = ({ item }: { item: Product }) => {
             alt={item.name}
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
             sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
+            priority={priority}
           />
           {/* Gradient overlay on hover */}
           <div className="absolute inset-0 bg-linear-to-t from-black/50 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
