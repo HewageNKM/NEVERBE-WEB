@@ -144,14 +144,16 @@ const Header = () => {
             alt="NEVERBE Logo"
             width={110}
             height={110}
-            className="hidden lg:block"
+            className="hidden lg:block w-auto h-auto"
+            style={{ width: "auto", height: "auto" }}
           />
           <Image
             src={Banner}
             alt="NEVERBE Banner"
             width={160}
             height={160}
-            className="block lg:hidden"
+            className="block lg:hidden w-auto h-auto"
+            style={{ width: "auto", height: "auto" }}
           />
         </Link>
 

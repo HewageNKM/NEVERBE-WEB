@@ -20,7 +20,7 @@ const ImagesSlider = ({ images }: { images: Slide[] }) => {
       modules={[Pagination, Autoplay]}
       className="w-full relative mt-5"
     >
-      {images.map((image) => (
+      {images.map((image, index) => (
         <SwiperSlide key={image.id} className="w-full">
           <figure className="w-full p-4">
             <div className="overflow-hidden rounded-2xl shadow-md">
@@ -30,7 +30,8 @@ const ImagesSlider = ({ images }: { images: Slide[] }) => {
                 src={image.url}
                 alt={"NEVERBE"}
                 className="object-cover w-full"
-                loading="lazy"
+                priority={index === 0}
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 100vw"
               />
             </div>
           </figure>
