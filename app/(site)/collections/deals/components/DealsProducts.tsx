@@ -15,7 +15,7 @@ import {
   setSelectedSort,
   toggleFilter,
 } from "@/redux/dealsSlice/dealsSlice";
-import axios from "axios";
+
 import { sortingOptions } from "@/constants";
 import { Product } from "@/interfaces/Product";
 
@@ -65,10 +65,14 @@ const DealsProducts = ({ items }: { items: Product[] }) => {
       selectedCategories.forEach((c) => queryParts.push(`tag=${c}`));
 
       const queryString = queryParts.join("&");
-      const response = await axios.get(`/api/v1/products/deals?${queryString}`);
+      const response = await fetch(`/api/v1/products/deals?${queryString}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
 
-      setProducts(response.data.dataList);
-      setTotalProducts(response.data.total);
+      setProducts(data.dataList);
+      setTotalProducts(data.total);
     } catch (error) {
       console.error("Error fetching deals:", error);
     } finally {

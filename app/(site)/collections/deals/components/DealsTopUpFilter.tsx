@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { IoClose } from "react-icons/io5";
 import { BiReset } from "react-icons/bi";
 import { Switch } from "@mui/material";
-import axios from "axios";
+
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import DropShadow from "@/components/DropShadow";
@@ -70,8 +70,12 @@ const DealsTopUpFilter = () => {
   const fetchBrands = async () => {
     setLoadingBrands(true);
     try {
-      const res = await axios.get(`/api/v1/brands/dropdown`);
-      setBrands(res.data || []);
+      const res = await fetch(`/api/v1/brands/dropdown`);
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+      const data = await res.json();
+      setBrands(data || []);
     } catch {
       toast.error("Failed to fetch brands");
     } finally {
@@ -82,8 +86,12 @@ const DealsTopUpFilter = () => {
   const fetchCategories = async () => {
     setLoadingCategories(true);
     try {
-      const res = await axios.get(`/api/v1/categories/dropdown`);
-      setCategories(res.data || []);
+      const res = await fetch(`/api/v1/categories/dropdown`);
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+      const data = await res.json();
+      setCategories(data || []);
     } catch {
       console.error("Failed to fetch categories");
     } finally {

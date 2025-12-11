@@ -4,9 +4,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { BiReset } from "react-icons/bi";
 import { motion } from "framer-motion";
 import { AppDispatch, RootState } from "@/redux/store";
-import { resetFilter, setInStock, setSelectedCategories } from "@/redux/brandSlice/brandSlice";
+import {
+  resetFilter,
+  setInStock,
+  setSelectedCategories,
+} from "@/redux/brandSlice/brandSlice";
 import Switch from "@mui/material/Switch";
-import axios from "axios";
 
 const sectionVariants = {
   hidden: { opacity: 0, y: 10 },
@@ -32,10 +35,7 @@ const buttonVariants = {
 // Skeleton loading placeholders
 const renderSkeletons = (count: number) =>
   Array.from({ length: count }).map((_, i) => (
-    <div
-      key={i}
-      className="w-20 h-8 bg-gray-200 animate-pulse rounded-lg"
-    />
+    <div key={i} className="w-20 h-8 bg-gray-200 animate-pulse rounded-lg" />
   ));
 
 const BrandFilter = () => {
@@ -54,8 +54,12 @@ const BrandFilter = () => {
   const fetchCategories = async () => {
     try {
       setLoadingCategories(true);
-      const result = await axios.get("/api/v1/categories/dropdown");
-      setCategories(result.data || []);
+      const response = await fetch("/api/v1/categories/dropdown");
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      setCategories(data || []);
     } catch (error) {
       console.error("Error fetching categories:", error);
     } finally {
@@ -124,7 +128,9 @@ const BrandFilter = () => {
           {loadingCategories
             ? renderSkeletons(6)
             : categories.map((category, index) => {
-                const isSelected = selectedCategories.includes(category.label.toLowerCase());
+                const isSelected = selectedCategories.includes(
+                  category.label.toLowerCase()
+                );
                 return (
                   <motion.button
                     key={index}

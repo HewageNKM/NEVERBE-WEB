@@ -10,7 +10,7 @@ import {
   setInStock,
 } from "@/redux/productsSlice/productsSlice";
 import { AppDispatch, RootState } from "@/redux/store";
-import axios from "axios";
+
 import { Switch } from "@mui/material";
 
 const containerVariants = {
@@ -77,8 +77,12 @@ const ProductsFilter = () => {
   const fetchBrands = async () => {
     setLoadingBrands(true);
     try {
-      const result = await axios.get(`/api/v1/brands/dropdown`);
-      setBrands(result.data);
+      const response = await fetch(`/api/v1/brands/dropdown`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      setBrands(data);
     } catch (error: any) {
       console.error("Error fetching brands:", error);
     } finally {
@@ -89,8 +93,12 @@ const ProductsFilter = () => {
   const fetchCategories = async () => {
     setLoadingCategories(true);
     try {
-      const result = await axios.get(`/api/v1/categories/dropdown`);
-      setCategories(result.data);
+      const response = await fetch(`/api/v1/categories/dropdown`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      setCategories(data);
     } catch (error: any) {
       console.error("Error fetching categories:", error);
     } finally {

@@ -17,7 +17,7 @@ import {
   toggleFilter,
 } from "@/redux/productsSlice/productsSlice";
 import { sortingOptions } from "@/constants";
-import axios from "axios";
+
 import { Product } from "@/interfaces/Product";
 
 const Products = ({ items }: { items: Product[] }) => {
@@ -109,9 +109,13 @@ const Products = ({ items }: { items: Product[] }) => {
 
       const queryString = queryParts.join("&");
 
-      const response = await axios.get(`/api/v1/products?${queryString}`);
-      dispatch(setProducts(response.data.dataList));
-      setTotalProduct(response.data.total);
+      const response = await fetch(`/api/v1/products?${queryString}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      dispatch(setProducts(data.dataList));
+      setTotalProduct(data.total);
     } catch (error) {
       console.error("Error fetching products:", error);
     } finally {

@@ -1,6 +1,6 @@
 import { adminFirestore } from "@/firebase/firebaseAdmin";
 import { Order, OrderItem } from "@/interfaces";
-import axios from "axios";
+
 import crypto from "crypto";
 import { getOrderByIdForInvoice } from "./OrderService";
 import { verifyCaptchaToken } from "./CapchaService";
@@ -113,16 +113,18 @@ export const sendCODVerificationOTP = async (
     const text = `Your verification code is ${otp}. Valid for 5 minutes.`;
     console.log(`[OTP Service] Sending SMS via API to ${phone}: ${text}`);
 
-    await axios.post(
-      "https://api.textit.biz/",
-      { to: phone, text },
-      {
-        headers: {
-          Authorization: `Basic ${TEXT_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const response = await fetch("https://api.textit.biz/", {
+      method: "POST",
+      headers: {
+        Authorization: `Basic ${TEXT_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ to: phone, text }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
 
     console.log(`[OTP Service] OTP sent successfully to ${phone}`);
     return { success: true, message: "OTP sent successfully." };
@@ -232,17 +234,19 @@ export const sendOrderConfirmedSMS = async (orderId: string) => {
       return false;
     }
 
-    await axios.post(
-      "https://api.textit.biz/",
-      { to: phone, text },
-      {
-        headers: {
-          Authorization: `Basic ${TEXT_API_KEY}`,
-          "Content-Type": "application/json",
-          Accept: "*/*",
-        },
-      }
-    );
+    const response = await fetch("https://api.textit.biz/", {
+      method: "POST",
+      headers: {
+        Authorization: `Basic ${TEXT_API_KEY}`,
+        "Content-Type": "application/json",
+        Accept: "*/*",
+      },
+      body: JSON.stringify({ to: phone, text }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
     console.log(
       `[Notification Service] SMS sent for order ${orderId} to ${phone}`
     );

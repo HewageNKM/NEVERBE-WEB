@@ -14,7 +14,6 @@ import {
 } from "@/util";
 import { PaymentMethod } from "@/interfaces";
 import PaymentOptions from "./PaymentOptions";
-import axios from "axios";
 
 interface PaymentDetailsProps {
   paymentType: string;
@@ -42,9 +41,12 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
   const fetchPaymentMethods = async () => {
     try {
       setIsPaymentLoading(true);
-      const results = await axios.get("/api/v1/payment-methods");
-      const methods = results.data || [];
-      setPaymentOptions(methods);
+      const response = await fetch("/api/v1/payment-methods");
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const methods = await response.json();
+      setPaymentOptions(methods || []);
       if (methods.length > 0 && !paymentType) {
         setPaymentType(methods[0].name || "");
         setPaymentTypeId(methods[0].paymentId || "");

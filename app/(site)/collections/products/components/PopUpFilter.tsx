@@ -13,7 +13,7 @@ import {
 } from "@/redux/productsSlice/productsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
-import axios from "axios";
+
 import { toast } from "react-toastify";
 import { Switch } from "@mui/material";
 
@@ -104,8 +104,12 @@ const PopUpFilter = () => {
   const fetchBrands = async () => {
     setLoadingBrands(true);
     try {
-      const result = await axios.get(`/api/v1/brands/dropdown`);
-      setBrands(result.data || []);
+      const response = await fetch(`/api/v1/brands/dropdown`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      setBrands(data || []);
     } catch (error: any) {
       toast.error(error?.response?.data?.message || "Failed to fetch brands");
     } finally {
@@ -116,8 +120,12 @@ const PopUpFilter = () => {
   const fetchCategories = async () => {
     setLoadingCategories(true);
     try {
-      const result = await axios.get(`/api/v1/categories/dropdown`);
-      setCategories(result.data || []);
+      const response = await fetch(`/api/v1/categories/dropdown`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      setCategories(data || []);
     } catch (error: any) {
       toast.error(
         error?.response?.data?.message || "Failed to fetch categories"

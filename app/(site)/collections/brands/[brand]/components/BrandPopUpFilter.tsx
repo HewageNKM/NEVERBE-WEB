@@ -12,7 +12,7 @@ import {
 } from "@/redux/brandSlice/brandSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
-import axios from "axios";
+
 import Switch from "@mui/material/Switch";
 
 const sectionVariants = {
@@ -56,8 +56,12 @@ const BrandTopUpFilter = () => {
   const fetchCategories = async () => {
     try {
       setLoadingCategories(true);
-      const result = await axios.get("/api/v1/categories/dropdown");
-      setCategories(result.data || []);
+      const response = await fetch("/api/v1/categories/dropdown");
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      setCategories(data || []);
     } catch (error) {
       console.error("Error fetching categories:", error);
     } finally {

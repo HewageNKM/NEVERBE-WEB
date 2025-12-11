@@ -12,7 +12,7 @@ import {
   setSelectedBrands,
   toggleFilter,
 } from "@/redux/categorySlice/categorySlice";
-import axios from "axios";
+
 import { toast } from "react-toastify";
 import { Switch } from "@mui/material";
 
@@ -61,10 +61,16 @@ const CategoryPopUpFilter = () => {
   const fetchCategories = async () => {
     try {
       setLoading(true);
-      const res = await axios.get("/api/v1/categories/dropdown");
-      setCategories(res.data || []);
+      const response = await fetch("/api/v1/categories/dropdown");
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      setCategories(data || []);
     } catch (error: any) {
-      toast.error(error?.response?.data?.message || "Failed to fetch categories");
+      toast.error(
+        error?.response?.data?.message || "Failed to fetch categories"
+      );
     } finally {
       setLoading(false);
     }

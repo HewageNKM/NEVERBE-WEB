@@ -8,7 +8,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import axios from "axios";
 
 import { AppDispatch } from "@/redux/store";
 import { pushToCart } from "@/redux/cartSlice/cartSlice";
@@ -69,10 +68,14 @@ const ProductHero = ({ item }: { item: Product }) => {
   const getAvailableStockFor = async (size: string) => {
     try {
       setStockLoading(true);
-      const res = await axios.get(
+      const res = await fetch(
         `/api/v1/inventory?productId=${item.id}&variantId=${selectedVariant.variantId}&size=${size}`
       );
-      setAvailableStock(res.data.quantity || 0);
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+      const data = await res.json();
+      setAvailableStock(data.quantity || 0);
     } catch (error) {
       console.error("Error fetching stock:", error);
       setAvailableStock(0);

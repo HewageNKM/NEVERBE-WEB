@@ -10,7 +10,7 @@ import {
   setInStock,
 } from "@/redux/dealsSlice/dealsSlice";
 import { AppDispatch, RootState } from "@/redux/store";
-import axios from "axios";
+
 import { Switch } from "@mui/material";
 import { toast } from "react-toastify";
 
@@ -36,11 +36,19 @@ const DealsFilter = () => {
   const fetchDropdowns = async () => {
     try {
       const [brandsRes, categoriesRes] = await Promise.all([
-        axios.get(`/api/v1/brands/dropdown`),
-        axios.get(`/api/v1/categories/dropdown`),
+        fetch(`/api/v1/brands/dropdown`),
+        fetch(`/api/v1/categories/dropdown`),
       ]);
-      setBrands(brandsRes.data || []);
-      setCategories(categoriesRes.data || []);
+
+      if (!brandsRes.ok || !categoriesRes.ok) {
+        throw new Error("Failed to fetch filter data");
+      }
+
+      const brandsData = await brandsRes.json();
+      const categoriesData = await categoriesRes.json();
+
+      setBrands(brandsData || []);
+      setCategories(categoriesData || []);
     } catch {
       toast.error("Failed to fetch filter data");
     } finally {
@@ -104,7 +112,10 @@ const DealsFilter = () => {
             ? Array(6)
                 .fill(0)
                 .map((_, i) => (
-                  <div key={i} className="w-20 h-8 bg-gray-200 animate-pulse rounded-lg" />
+                  <div
+                    key={i}
+                    className="w-20 h-8 bg-gray-200 animate-pulse rounded-lg"
+                  />
                 ))
             : categories.map((cat, i) => {
                 const isSelected = selectedCategories.includes(
@@ -137,7 +148,10 @@ const DealsFilter = () => {
             ? Array(6)
                 .fill(0)
                 .map((_, i) => (
-                  <div key={i} className="w-20 h-8 bg-gray-200 animate-pulse rounded-lg" />
+                  <div
+                    key={i}
+                    className="w-20 h-8 bg-gray-200 animate-pulse rounded-lg"
+                  />
                 ))
             : brands.map((brand, i) => {
                 const isSelected = selectedBrands.includes(

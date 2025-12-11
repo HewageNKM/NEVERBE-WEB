@@ -1,5 +1,3 @@
-import axios from "axios";
-
 /**
  * Verifies Google reCAPTCHA v3 token.
  * @param token - The token received from the frontend.
@@ -11,7 +9,9 @@ export const verifyCaptchaToken = async (token: string): Promise<boolean> => {
 
     if (!process.env.RECAPTCHA_SECRET_KEY) {
       console.error("[Captcha] RECAPTCHA_SECRET_KEY not set");
-      throw new Error("RECAPTCHA_SECRET_KEY is not set in environment variables.");
+      throw new Error(
+        "RECAPTCHA_SECRET_KEY is not set in environment variables."
+      );
     }
 
     const secret = process.env.RECAPTCHA_SECRET_KEY;
@@ -21,12 +21,19 @@ export const verifyCaptchaToken = async (token: string): Promise<boolean> => {
     params.append("secret", secret);
     params.append("response", token);
 
-    console.log("[Captcha] Sending request to Google reCAPTCHA API with token:", token);
-
-    const { data } = await axios.post(
-      "https://www.google.com/recaptcha/api/siteverify",
-      params
+    console.log(
+      "[Captcha] Sending request to Google reCAPTCHA API with token:",
+      token
     );
+
+    const response = await fetch(
+      "https://www.google.com/recaptcha/api/siteverify",
+      {
+        method: "POST",
+        body: params,
+      }
+    );
+    const data = await response.json();
 
     console.log("[Captcha] reCAPTCHA API response:", data);
 
@@ -36,7 +43,10 @@ export const verifyCaptchaToken = async (token: string): Promise<boolean> => {
         console.log("[Captcha] reCAPTCHA v3 score:", data.score);
       }
     } else {
-      console.warn("[Captcha] Verification failed:", data["error-codes"] || "Unknown error");
+      console.warn(
+        "[Captcha] Verification failed:",
+        data["error-codes"] || "Unknown error"
+      );
     }
 
     // For reCAPTCHA v3, consider score >= 0.5 as human
@@ -45,7 +55,11 @@ export const verifyCaptchaToken = async (token: string): Promise<boolean> => {
 
     return isHuman;
   } catch (error: any) {
-    console.error("[Captcha] Error during verification:", error.message, error.stack);
+    console.error(
+      "[Captcha] Error during verification:",
+      error.message,
+      error.stack
+    );
     return false;
   }
 };

@@ -18,7 +18,6 @@ import { getAlgoliaClient } from "@/util";
 import { AnimatePresence, motion } from "framer-motion";
 import { Product } from "@/interfaces/Product";
 import { ProductVariant } from "@/interfaces/ProductVariant";
-import axios from "axios";
 
 const Header = () => {
   const cartItems = useSelector((state: RootState) => state.cartSlice.cart);
@@ -38,8 +37,12 @@ const Header = () => {
 
   const fetchBrands = async () => {
     try {
-      const result = await axios.get(`/api/v1/brands/dropdown`);
-      setBrands(result.data || []);
+      const response = await fetch(`/api/v1/brands/dropdown`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      setBrands(data || []);
     } catch (error: any) {
       console.error("Error fetching brands:", error);
     }
@@ -47,8 +50,12 @@ const Header = () => {
 
   const fetchCategories = async () => {
     try {
-      const result = await axios.get(`/api/v1/categories/dropdown`);
-      setCategories(result.data || []);
+      const response = await fetch(`/api/v1/categories/dropdown`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      setCategories(data || []);
     } catch (error: any) {
       console.error("Error fetching categories:", error);
     }
