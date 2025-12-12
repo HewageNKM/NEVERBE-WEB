@@ -9,6 +9,8 @@ import {
 } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { auth } from "@/firebase/firebaseClient";
+import Image from "next/image";
+import { Logo } from "@/assets/images";
 
 const AuthPage = () => {
   const router = useRouter();
@@ -83,7 +85,16 @@ const AuthPage = () => {
 
   return (
     <div className="min-h-screen bg-white text-black flex flex-col items-center justify-center px-4 font-sans selection:bg-gray-200">
-      <div className="mb-8 text-center">
+      <div className="mb-8 text-center flex flex-col items-center">
+        <div className="w-16 h-16 md:w-24 md:h-24 relative">
+          <Image
+            width={100}
+            height={100}
+            src={Logo}
+            alt="NEVERBE Logo"
+            className="w-full h-full object-contain"
+          />
+        </div>
         <h1 className="text-3xl font-bold uppercase tracking-tighter mb-2">
           {isLogin ? "Your Account" : "Become A Member"}
         </h1>

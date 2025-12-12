@@ -14,6 +14,8 @@ import { auth, db } from "@/firebase/firebaseClient";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { setUser } from "@/redux/authSlice/authSlice";
+import Image from "next/image";
+import { Logo } from "@/assets/images";
 
 const Account = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -439,7 +441,16 @@ const Account = () => {
   return (
     <div className="min-h-screen bg-white text-black font-sans selection:bg-gray-200">
       <div className="max-w-7xl mx-auto px-6 py-12 md:py-20">
-        <div className="mb-10 md:hidden">
+        <div className="mb-10 md:hidden flex flex-col items-center text-center">
+          <div className="relative mb-4">
+            <Image
+              src={Logo}
+              width={100}
+              height={100}
+              alt="NEVERBE Logo"
+              className="object-contain"
+            />
+          </div>
           <h1 className="text-3xl font-bold uppercase tracking-tighter">
             My Account
           </h1>
@@ -449,6 +460,14 @@ const Account = () => {
           {/* Sidebar */}
           <div className="w-full md:w-64 shrink-0">
             <div className="md:sticky md:top-24">
+              <div className="hidden md:block w-32 h-16 relative mb-8">
+                <Image
+                  src={Logo}
+                  alt="NEVERBE Logo"
+                  fill
+                  className="object-contain object-left"
+                />
+              </div>
               <h1 className="hidden md:block text-3xl font-medium uppercase tracking-tighter mb-8">
                 Settings
               </h1>
