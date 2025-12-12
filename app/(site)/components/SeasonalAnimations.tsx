@@ -12,7 +12,7 @@ const SeasonalAnimations = ({
 
   return (
     <LazyMotion features={domAnimation}>
-      <div className="pointer-events-none fixed inset-0 z-50 overflow-hidden">
+      <div className="pointer-events-none fixed inset-0 z-[100] overflow-hidden">
         {season === "christmas" && <SnowAnimation />}
         {season === "newYear" && <FireworksAnimation />}
       </div>
@@ -22,12 +22,14 @@ const SeasonalAnimations = ({
 
 const SnowAnimation = () => {
   // Generate random snowflakes
-  const snowflakes = Array.from({ length: 50 }).map((_, i) => ({
+  // Reduced size (2-6px) and opacity (0.3-0.6) for a premium, subtle look
+  const snowflakes = Array.from({ length: 60 }).map((_, i) => ({
     id: i,
     left: `${Math.random() * 100}%`,
-    duration: Math.random() * 5 + 5, // 5-10s
-    delay: Math.random() * 5,
-    size: Math.random() * 10 + 5, // 5-15px
+    duration: Math.random() * 10 + 10, // Slower, more elegant fall (10-20s)
+    delay: Math.random() * 10,
+    size: Math.random() * 4 + 2, // 2px - 6px
+    opacity: Math.random() * 0.4 + 0.2, // 0.2 - 0.6 opacity
   }));
 
   return (
@@ -35,16 +37,17 @@ const SnowAnimation = () => {
       {snowflakes.map((flake) => (
         <m.div
           key={flake.id}
-          className="absolute bg-white rounded-full opacity-80"
+          className="absolute bg-white rounded-full blur-[0.5px]"
           style={{
             left: flake.left,
             width: flake.size,
             height: flake.size,
+            opacity: flake.opacity,
             top: -20,
           }}
           animate={{
             y: ["0vh", "100vh"],
-            x: [0, Math.random() * 20 - 10], // slight horizontal drift
+            x: [0, Math.random() * 50 - 25], // Natural drift
           }}
           transition={{
             duration: flake.duration,
@@ -58,7 +61,7 @@ const SnowAnimation = () => {
   );
 };
 
-// Basic Canvas-based Firework implementation
+// Canvas-based Firework implementation
 const FireworksAnimation = () => {
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
 
@@ -85,16 +88,19 @@ const FireworksAnimation = () => {
       vy: number;
       alpha: number;
       color: string;
+      decay: number;
 
       constructor(x: number, y: number, color: string) {
         this.x = x;
         this.y = y;
         const angle = Math.random() * Math.PI * 2;
-        const velocity = Math.random() * 3 + 2;
+        // Faster, sharper explosion
+        const velocity = Math.random() * 4 + 2;
         this.vx = Math.cos(angle) * velocity;
         this.vy = Math.sin(angle) * velocity;
         this.alpha = 1;
         this.color = color;
+        this.decay = Math.random() * 0.015 + 0.01; // Varying fade speed
       }
 
       draw() {
@@ -103,7 +109,7 @@ const FireworksAnimation = () => {
         ctx.globalAlpha = this.alpha;
         ctx.fillStyle = this.color;
         ctx.beginPath();
-        ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
+        ctx.arc(this.x, this.y, 1.5, 0, Math.PI * 2); // Smaller particles
         ctx.fill();
         ctx.restore();
       }
@@ -111,39 +117,39 @@ const FireworksAnimation = () => {
       update() {
         this.x += this.vx;
         this.y += this.vy;
-        this.vy += 0.05; // gravity
-        this.alpha -= 0.01;
+        this.vy += 0.08; // Slightly heavier gravity
+        this.vx *= 0.98; // Air resistance
+        this.vy *= 0.98;
+        this.alpha -= this.decay;
       }
     }
 
+    // Premium Color Palette: Gold, Silver, White, Champagne
     const colors = [
-      "#ff0000",
-      "#00ff00",
-      "#0000ff",
-      "#ffff00",
-      "#00ffff",
-      "#ff00ff",
+      "#FFD700", // Gold
+      "#C0C0C0", // Silver
+      "#FFFFFF", // White
+      "#F0E68C", // Khaki/Champagne
+      "#B8860B", // Dark Goldenrod
     ];
 
     const createFirework = () => {
-      // Random position in the top half of the screen
+      // Random position in the top 40% of the screen
       const x = Math.random() * canvas.width;
-      const y = Math.random() * (canvas.height / 2);
+      const y = Math.random() * (canvas.height * 0.4);
       const color = colors[Math.floor(Math.random() * colors.length)];
 
-      for (let i = 0; i < 50; i++) {
+      for (let i = 0; i < 80; i++) {
         particles.push(new Particle(x, y, color));
       }
     };
 
     const animate = () => {
-      ctx.fillStyle = "rgba(0, 0, 0, 0.1)"; // Trails effect (but problematic with overlay transparency)
-      // Since we want transparency, we must use clearRect but trails are tricky.
-      // For global overlay, we usually want clear rect.
+      // Use clearRect for transparency, no trails to keep it clean over product images
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Randomly spawn fireworks
-      if (Math.random() < 0.03) {
+      // Less frequent fireworks for less distraction (0.015 chance)
+      if (Math.random() < 0.015) {
         createFirework();
       }
 

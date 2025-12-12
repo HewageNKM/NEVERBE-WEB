@@ -1,18 +1,11 @@
 "use client";
-import React from "react";
-import { Item } from "@/interfaces";
+import React, { useRef } from "react";
 import ItemCard from "@/components/ItemCard";
-import EmptyState from "@/components/EmptyState";
-
-// Swiper imports
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import type { Swiper as SwiperType } from "swiper";
-import { useRef } from "react";
-import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
-
+import { IoChevronBack, IoChevronForward } from "react-icons/io5";
 import "swiper/css";
-import "swiper/css/navigation";
 import { Product } from "@/interfaces/Product";
 
 const SimilarProducts = ({ items }: { items: Product[] }) => {
@@ -31,52 +24,50 @@ const SimilarProducts = ({ items }: { items: Product[] }) => {
     }
   };
 
-  if (items.length === 0) {
-    return <EmptyState heading="No similar products available!" />;
-  }
+  if (items.length === 0) return null;
 
   return (
-    <section className="w-full my-10">
-      <h2 className="text-xl md:text-2xl font-display font-bold text-gray-800 mb-6">
-        Similar Products
-      </h2>
+    <section className="w-full max-w-[1440px] mx-auto py-16 border-t border-gray-100">
+      <div className="flex justify-between items-end mb-8 px-2">
+        <h2 className="text-xl md:text-2xl font-black uppercase tracking-tighter">
+          You Might Also Like
+        </h2>
 
-      <div className="max-w-6xl mx-auto md:px-2 relative group">
-        {/* Custom Navigation Buttons */}
-        <button
-          ref={prevRef}
-          className="absolute -left-2 md:-left-8 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white shadow-custom rounded-full flex items-center justify-center text-gray-800 transition-all disabled:opacity-30 disabled:cursor-not-allowed hover:bg-primary-50"
-          aria-label="Previous slide"
-        >
-          <BiChevronLeft size={24} />
-        </button>
-        <button
-          ref={nextRef}
-          className="absolute -right-2 md:-right-8 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white shadow-custom rounded-full flex items-center justify-center text-gray-800 transition-all disabled:opacity-30 disabled:cursor-not-allowed hover:bg-primary-50"
-          aria-label="Next slide"
-        >
-          <BiChevronRight size={24} />
-        </button>
-
-        <Swiper
-          modules={[Navigation]}
-          onInit={handleInit}
-          spaceBetween={16}
-          slidesPerView={2} // mobile default
-          breakpoints={{
-            640: { slidesPerView: 2 },
-            768: { slidesPerView: 3 },
-            1024: { slidesPerView: 4 },
-          }}
-          loop={items.length > 2} // only loop if more than 2 slide
-        >
-          {items.map((item) => (
-            <SwiperSlide key={item.id}>
-              <ItemCard item={item} />
-            </SwiperSlide>
-          ))}
-        </Swiper>
+        {/* Minimal Nav Buttons */}
+        <div className="flex gap-2">
+          <button
+            ref={prevRef}
+            className="p-2 rounded-full border border-gray-300 hover:border-black hover:bg-black hover:text-white transition-all disabled:opacity-30"
+          >
+            <IoChevronBack size={18} />
+          </button>
+          <button
+            ref={nextRef}
+            className="p-2 rounded-full border border-gray-300 hover:border-black hover:bg-black hover:text-white transition-all disabled:opacity-30"
+          >
+            <IoChevronForward size={18} />
+          </button>
+        </div>
       </div>
+
+      <Swiper
+        modules={[Navigation]}
+        onInit={handleInit}
+        spaceBetween={20}
+        slidesPerView={1.5}
+        breakpoints={{
+          640: { slidesPerView: 2.2 },
+          1024: { slidesPerView: 4.2 },
+        }}
+        loop={items.length > 4}
+        className="!pb-10"
+      >
+        {items.map((item) => (
+          <SwiperSlide key={item.id}>
+            <ItemCard item={item} />
+          </SwiperSlide>
+        ))}
+      </Swiper>
     </section>
   );
 };

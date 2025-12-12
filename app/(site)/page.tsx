@@ -3,7 +3,6 @@ import Hero from "@/app/(site)/components/Hero";
 import NewArrivals from "@/app/(site)/components/NewArrivals";
 import WhyUs from "@/app/(site)/components/WhyUs";
 import PopularProducts from "@/app/(site)/components/PopularProducts";
-import FAQ from "@/app/(site)/components/FAQ";
 import BrandsSlider from "./components/BrandsSlider";
 
 import { getHotProducts, getRecentItems } from "@/services/ProductService";
@@ -11,6 +10,8 @@ import { getSliders } from "@/services/SlideService";
 import { getBrands } from "@/services/OtherService";
 import type { Metadata } from "next";
 import SEOContent from "./components/SEOContent";
+import FeaturedCategories from "./components/FeaturedCategory";
+
 export const metadata: Metadata = {
   title: {
     default:
@@ -134,25 +135,24 @@ const Page = async () => {
   };
 
   return (
-    <main className="flex min-h-screen flex-col">
-      {/* JSON-LD inserted (use <script> for app dir or Next's Script in pages) */}
-      <script
-        type="application/ld+json"
-        // eslint-disable-next-line react/no-danger
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-      />
+    <main className="flex min-h-screen flex-col bg-white text-black">
+      {/* JSON-LD Script here */}
 
       <Hero slides={sliders} />
 
-      {hotItems.length > 0 && <PopularProducts hotItems={hotItems} />}
-      {arrivals.length > 0 && <NewArrivals arrivals={arrivals} />}
-      {brands.length > 0 && <BrandsSlider items={brands} />}
+      {/* The "Nike-style" Essentials Grid */}
+      <FeaturedCategories />
 
-      <WhyUs />
-      <FAQ />
+      <div className="space-y-20 pb-20">
+        {hotItems.length > 0 && <PopularProducts hotItems={hotItems} />}
+        {arrivals.length > 0 && <NewArrivals arrivals={arrivals} />}
 
-      {/* Text density / SEO content block */}
-      <SEOContent />
+        {/* A large visual break for Brands */}
+        {brands.length > 0 && <BrandsSlider items={brands} />}
+
+        <WhyUs />
+        <SEOContent />
+      </div>
     </main>
   );
 };

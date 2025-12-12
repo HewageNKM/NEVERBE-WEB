@@ -1,15 +1,14 @@
 "use client";
 import React, { useEffect, useState, useRef } from "react";
-import { m, LazyMotion, domAnimation, AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import Pagination from "@mui/material/Pagination";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
 import ItemCard from "@/components/ItemCard";
 import EmptyState from "@/components/EmptyState";
 import ComponentLoader from "@/components/ComponentLoader";
-import ProductsFilter from "@/app/(site)/collections/products/components/ProductsFilter";
-import { IoFilter, IoCheckmark } from "react-icons/io5";
-import { FiFilter } from "react-icons/fi";
+import ProductsFilter from "./ProductsFilter";
+import { IoChevronDownOutline, IoOptionsOutline } from "react-icons/io5";
 import {
   setPage,
   setProducts,
@@ -17,7 +16,6 @@ import {
   toggleFilter,
 } from "@/redux/productsSlice/productsSlice";
 import { sortingOptions } from "@/constants";
-
 import { Product } from "@/interfaces/Product";
 
 const Products = ({ items }: { items: Product[] }) => {
@@ -37,196 +35,155 @@ const Products = ({ items }: { items: Product[] }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [totalProduct, setTotalProduct] = useState(0);
 
+  // --- Initial Set ---
   useEffect(() => {
     dispatch(setProducts(items));
   }, [dispatch, items]);
 
+  // --- Fetch Logic (Consolidated) ---
   useEffect(() => {
-    fetchProducts();
-  }, [dispatch, page, size, selectedBrands, selectedCategories, inStock]);
-
-  useEffect(() => {
-    sortProducts();
-  }, [selectedSort]);
-
-  const sortProducts = () => {
-    if (!products || products.length === 0) return [];
-    let sortedProducts = [...products];
-    setIsLoading(true);
-    switch (selectedSort) {
-      case "LOW TO HIGH":
-        sortedProducts.sort(
-          (a, b) => (a.sellingPrice || 0) - (b.sellingPrice || 0)
-        );
-        break;
-
-      case "HIGH TO LOW":
-        sortedProducts.sort(
-          (a, b) => (b.sellingPrice || 0) - (a.sellingPrice || 0)
-        );
-        break;
-
-      default:
-        sortedProducts = [...products];
-        break;
-    }
-    setProducts(sortedProducts);
-    setIsLoading(false);
-  };
-
-  const fetchProducts = async () => {
-    try {
+    const fetchAndSort = async () => {
       setIsLoading(true);
-      const params: Record<string, any> = {
-        page,
-        size,
-      };
-      const queryParts: string[] = [];
-
-      Object.entries(params).forEach(([key, value]) => {
-        if (value !== undefined && value !== null) {
-          queryParts.push(
-            `${encodeURIComponent(key)}=${encodeURIComponent(value)}`
-          );
-        }
-      });
-
-      if (inStock) {
-        queryParts.push("inStock=true");
-      }
-
-      if (selectedBrands?.length) {
-        selectedBrands.forEach((brand: string) => {
-          queryParts.push(`tag=${encodeURIComponent(brand)}`);
+      try {
+        const params = new URLSearchParams({
+          page: page.toString(),
+          size: size.toString(),
+          ...(inStock && { inStock: "true" }),
         });
-      }
+        selectedBrands.forEach((b) => params.append("tag", b));
+        selectedCategories.forEach((c) => params.append("tag", c));
 
-      if (selectedCategories?.length) {
-        selectedCategories.forEach((cat: string) => {
-          queryParts.push(`tag=${encodeURIComponent(cat)}`);
-        });
-      }
+        const res = await fetch(`/api/v1/products?${params}`);
+        const data = await res.json();
 
-      const queryString = queryParts.join("&");
+        // Client-side Sort (if API doesn't handle it)
+        let sorted = [...data.dataList];
+        if (selectedSort === "LOW TO HIGH")
+          sorted.sort((a, b) => a.sellingPrice - b.sellingPrice);
+        if (selectedSort === "HIGH TO LOW")
+          sorted.sort((a, b) => b.sellingPrice - a.sellingPrice);
 
-      const response = await fetch(`/api/v1/products?${queryString}`);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-      dispatch(setProducts(data.dataList));
-      setTotalProduct(data.total);
-    } catch (error) {
-      console.error("Error fetching products:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // Close dropdown on outside click
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (sortRef.current && !sortRef.current.contains(event.target as Node)) {
-        setOpenSort(false);
+        dispatch(setProducts(sorted));
+        setTotalProduct(data.total);
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setIsLoading(false);
       }
     };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    fetchAndSort();
+  }, [
+    dispatch,
+    page,
+    size,
+    selectedBrands,
+    selectedCategories,
+    inStock,
+    selectedSort,
+  ]);
+
+  // Close Sort Dropdown
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      if (sortRef.current && !sortRef.current.contains(e.target as Node))
+        setOpenSort(false);
+    };
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
   }, []);
 
   return (
-    <LazyMotion features={domAnimation}>
-      <section className="w-full flex flex-col lg:flex-row gap-6 pt-5 lg:justify-between">
-        {/* --- Desktop Filters --- */}
-        <aside className="hidden lg:block w-[22%]">
-          <ProductsFilter />
-        </aside>
+    <section className="w-full max-w-[1440px] mx-auto px-4 md:px-8 pb-20 flex gap-12">
+      {/* Desktop Sidebar */}
+      <ProductsFilter />
 
-        {/* --- Products Section --- */}
-        <div className="flex-1 relative">
-          {/* Toolbar */}
-          <div className="sticky top-0 z-20 flex justify-between items-center mb-6 bg-white/80 backdrop-blur-sm p-4 rounded-lg shadow-sm">
-            {/* Mobile Filter Button */}
-            <div className="lg:hidden">
-              <button
-                onClick={() => dispatch(toggleFilter())}
-                className="flex items-center gap-2 px-3 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition"
-              >
-                <FiFilter size={20} />
-                <span className="text-sm font-medium text-gray-700">
-                  Filter
-                </span>
-              </button>
-            </div>
+      <div className="flex-1 w-full">
+        {/* --- Toolbar --- */}
+        <div className="sticky top-[60px] md:top-20 z-30 bg-white/95 backdrop-blur-md py-4 mb-6 border-b border-gray-100 flex justify-between items-center">
+          {/* Mobile Filter Trigger */}
+          <button
+            onClick={() => dispatch(toggleFilter())}
+            className="lg:hidden flex items-center gap-2 text-sm font-bold uppercase tracking-wide border border-gray-300 rounded-full px-4 py-2 hover:border-black transition-colors"
+          >
+            <IoOptionsOutline size={18} /> Filters
+          </button>
 
-            <div className="relative" ref={sortRef}>
-              <button
-                onClick={() => setOpenSort(!openSort)}
-                className="flex items-center gap-2 text-gray-700 px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-100 transition"
-              >
-                <IoFilter />
-                <span>Sort by: {selectedSort.toUpperCase()}</span>
-              </button>
+          <p className="hidden lg:block text-gray-400 text-sm font-medium">
+            Showing {products.length} Results
+          </p>
 
-              <AnimatePresence>
-                {openSort && (
-                  <m.ul
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-30 overflow-hidden"
-                  >
-                    {sortingOptions.map((opt, i) => (
-                      <m.li
-                        key={i}
-                        onClick={() => {
-                          dispatch(setSelectedSort(opt.value));
-                          setOpenSort(false);
-                        }}
-                        className={`px-4 py-2 text-sm flex items-center justify-between cursor-pointer hover:bg-gray-100 ${
-                          selectedSort === opt.value ? "text-primary" : ""
-                        }`}
-                      >
-                        {opt.name}
-                        {selectedSort === opt.value && <IoCheckmark />}
-                      </m.li>
-                    ))}
-                  </m.ul>
-                )}
-              </AnimatePresence>
-            </div>
-          </div>
-
-          {/* --- Products Grid --- */}
-          {isLoading ? (
-            <ComponentLoader />
-          ) : products.length === 0 ? (
-            <EmptyState heading="Products Not Available!" />
-          ) : (
-            <ul
-              key={page}
-              className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-4 items-center justify-center content-center"
+          {/* Sort Dropdown */}
+          <div className="relative" ref={sortRef}>
+            <button
+              onClick={() => setOpenSort(!openSort)}
+              className="flex items-center gap-1 text-sm font-bold uppercase hover:text-gray-600 transition-colors"
             >
-              {products?.map((item) => (
-                <li key={item.id} className="group">
-                  <ItemCard item={item} />
-                </li>
-              ))}
-            </ul>
-          )}
-
-          <div className="flex justify-center mt-10">
-            <Pagination
-              count={Math.ceil(totalProduct / size)}
-              page={page}
-              variant="outlined"
-              shape="rounded"
-              onChange={(event, value) => dispatch(setPage(value))}
-            />
+              Sort By <IoChevronDownOutline />
+            </button>
+            <AnimatePresence>
+              {openSort && (
+                <motion.ul
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 10 }}
+                  className="absolute right-0 mt-2 w-48 bg-white border border-gray-100 shadow-xl z-50 py-2 rounded-sm"
+                >
+                  {sortingOptions.map((opt, i) => (
+                    <li
+                      key={i}
+                      onClick={() => {
+                        dispatch(setSelectedSort(opt.value));
+                        setOpenSort(false);
+                      }}
+                      className={`px-4 py-2 text-xs font-bold uppercase tracking-wide cursor-pointer hover:bg-gray-50 ${
+                        selectedSort === opt.value
+                          ? "text-black bg-gray-50"
+                          : "text-gray-500"
+                      }`}
+                    >
+                      {opt.name}
+                    </li>
+                  ))}
+                </motion.ul>
+              )}
+            </AnimatePresence>
           </div>
         </div>
-      </section>
-    </LazyMotion>
+
+        {/* --- Product Grid --- */}
+        {isLoading ? (
+          <div className="h-[50vh] relative">
+            <ComponentLoader />
+          </div>
+        ) : products.length === 0 ? (
+          <EmptyState heading="No Products Found" />
+        ) : (
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-10 md:gap-x-6 md:gap-y-12">
+            {products.map((item) => (
+              <ItemCard key={item.id} item={item} />
+            ))}
+          </div>
+        )}
+
+        {/* --- Pagination --- */}
+        <div className="flex justify-center mt-16">
+          <Pagination
+            count={Math.ceil(totalProduct / size)}
+            page={page}
+            shape="rounded"
+            size="large"
+            onChange={(e, v) => dispatch(setPage(v))}
+            sx={{
+              "& .MuiPaginationItem-root": {
+                fontFamily: "var(--font-display)",
+                fontWeight: "bold",
+                "&.Mui-selected": { backgroundColor: "black", color: "white" },
+              },
+            }}
+          />
+        </div>
+      </div>
+    </section>
   );
 };
 

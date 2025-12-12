@@ -3,13 +3,20 @@ import { Metadata } from "next";
 import CheckoutForm from "@/app/(site)/checkout/components/CheckoutForm";
 
 export const metadata: Metadata = {
-  title: "Checkout",
+  title: "Secure Checkout | NEVERBE",
 };
 
 const Page = () => {
   return (
-    <main className="w-full mt-2 md:mt-28 my-5 overflow-clip">
-      <div className="w-full flex justify-center items-center">
+    <main className="w-full min-h-screen bg-white">
+      {/* Simple Header for Checkout Focus */}
+      <div className="w-full border-b border-gray-100 py-6 text-center">
+        <h1 className="text-2xl font-black uppercase tracking-tighter">
+          Checkout
+        </h1>
+      </div>
+
+      <div className="w-full max-w-[1440px] mx-auto">
         <CheckoutForm />
       </div>
     </main>

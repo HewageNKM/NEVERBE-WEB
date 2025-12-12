@@ -1,8 +1,8 @@
 "use client";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
-import "swiper/css/pagination";
-import { Autoplay, Pagination } from "swiper/modules";
+import "swiper/css/effect-fade";
+import { Autoplay, EffectFade } from "swiper/modules";
 import Image from "next/image";
 import { Slide } from "@/interfaces";
 
@@ -10,36 +10,28 @@ const ImagesSlider = ({ images }: { images: Slide[] }) => {
   return (
     <Swiper
       autoplay={{
-        delay: 5000,
-        disableOnInteraction: true,
+        delay: 6000,
+        disableOnInteraction: false,
       }}
-      pagination={{
-        clickable: true,
-        el: ".custom-pagination",
-      }}
-      modules={[Pagination, Autoplay]}
-      className="w-full relative mt-5"
+      effect="fade"
+      modules={[EffectFade, Autoplay]}
+      className="w-full h-full"
     >
       {images.map((image, index) => (
-        <SwiperSlide key={image.id} className="w-full">
-          <figure className="w-full p-4">
-            <div className="overflow-hidden rounded-2xl shadow-md aspect-[1200/628] bg-gray-100">
-              <Image
-                width={1200}
-                height={628}
-                src={image.url}
-                alt={"NEVERBE"}
-                className="object-cover w-full"
-                priority={index === 0}
-                fetchPriority={index === 0 ? "high" : "auto"}
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 100vw"
-              />
-            </div>
-          </figure>
+        <SwiperSlide key={image.id} className="w-full h-full bg-gray-900">
+          <div className="relative w-full h-full">
+            <Image
+              src={image.url}
+              alt="NEVERBE Hero"
+              fill
+              className="object-cover object-center"
+              priority={index === 0}
+            />
+            {/* Dark Gradient Overlay for text readability */}
+            <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-black/30" />
+          </div>
         </SwiperSlide>
       ))}
-      {/* Custom Pagination */}
-      <div className="custom-pagination mt-3 mb-2 flex justify-center gap-3"></div>
     </Swiper>
   );
 };

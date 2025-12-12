@@ -9,7 +9,10 @@ interface SearchResultCardProps {
   onClick: () => void;
 }
 
-const SearchResultCard: React.FC<SearchResultCardProps> = ({ item, onClick }) => {
+const SearchResultCard: React.FC<SearchResultCardProps> = ({
+  item,
+  onClick,
+}) => {
   const discountedPrice =
     item.discount > 0
       ? Math.round(
@@ -21,54 +24,47 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({ item, onClick }) =>
     <Link
       href={`/collections/products/${item.id}`}
       onClick={onClick}
-      className="group flex items-center gap-4 rounded-xl p-3 sm:p-4 transition-all hover:bg-gray-50 hover:shadow-sm border border-transparent hover:border-gray-200 cursor-pointer"
+      className="group flex items-start gap-4 p-4 hover:bg-gray-50 transition-colors cursor-pointer w-full"
     >
-      {/* Product Image */}
-      <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-lg overflow-hidden bg-gray-100 shrink-0">
+      {/* Product Image - Nike Style Gray Box */}
+      <div className="relative w-16 h-16 bg-[#f6f6f6] rounded-md overflow-hidden shrink-0">
         <Image
           src={item.thumbnail.url}
           alt={item.name}
-          width={80}
-          height={80}
-          className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
+          width={100}
+          height={100}
+          className="object-cover w-full h-full mix-blend-multiply group-hover:scale-105 transition-transform duration-500"
         />
         {item.discount > 0 && (
-          <span className="absolute top-1 left-1 bg-red-500 text-white text-[10px] sm:text-xs font-semibold px-1.5 py-0.5 rounded">
+          <span className="absolute top-1 left-1 bg-white text-black text-[8px] font-bold px-1.5 py-0.5 shadow-sm">
             -{item.discount}%
           </span>
         )}
       </div>
 
       {/* Product Info */}
-      <div className="flex-1 overflow-hidden">
-        <h2 className="font-semibold text-gray-900 text-sm sm:text-base truncate group-hover:text-primary transition-colors">
+      <div className="flex-1 min-w-0 flex flex-col gap-0.5">
+        <h2 className="font-bold text-black text-sm uppercase tracking-tight truncate leading-none mt-1">
           {item.name}
         </h2>
 
-        <div className="flex items-center flex-wrap gap-2 mt-1">
-          <span className="text-gray-900 font-bold text-sm sm:text-base">
-            Rs {discountedPrice.toFixed(2)}
+        {/* Subtitle / Category Tag */}
+        <p className="text-[10px] text-gray-500 font-medium capitalize truncate">
+          {item.tags && item.tags.length > 0 ? item.tags[0] : "Men's Footwear"}
+        </p>
+
+        {/* Price Row */}
+        <div className="flex items-center gap-2 mt-1.5">
+          <span className="text-black font-bold text-sm">
+            Rs. {discountedPrice.toLocaleString()}
           </span>
 
           {item.discount > 0 && (
-            <span className="text-gray-400 text-xs sm:text-sm line-through">
-              Rs {item.marketPrice.toFixed(2)}
+            <span className="text-gray-400 text-xs line-through decoration-1">
+              Rs. {item.marketPrice.toLocaleString()}
             </span>
           )}
         </div>
-
-        {item.tags?.length > 0 && (
-          <div className="mt-1 flex flex-wrap gap-1">
-            {item.tags.slice(0, 2).map((tag, i) => (
-              <span
-                key={i}
-                className="text-[10px] sm:text-xs px-1.5 py-0.5 bg-gray-100 rounded-full text-gray-600"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-        )}
       </div>
     </Link>
   );

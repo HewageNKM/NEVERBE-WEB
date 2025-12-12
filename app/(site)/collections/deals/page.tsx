@@ -110,66 +110,47 @@ const Page = async () => {
   };
 
   return (
-    <main className="w-full relative lg:mt-28 mt-16 mb-5 overflow-clip">
+    <main className="w-full relative lg:mt-24 mt-16 mb-10 min-h-screen bg-white">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(dealsSchema) }}
       />
-
       <DealsHeader />
 
-      <div className="px-4">
+      <div className="w-full">
         {dealsList.length > 0 ? (
           <DealsProducts items={dealsList} />
         ) : (
-          <EmptyState heading="No deals available at this time." />
+          <EmptyState
+            heading="No deals active right now."
+            subHeading="Check back later for new drops."
+          />
         )}
       </div>
 
-      {/* ✅ SEO STRATEGY: CAPTURING THE "CHEAP/BUDGET" INTENT
-          This section is crucial for ranking for "Price" related queries.
-      */}
-      <section className="container mx-auto px-4 py-12 border-t border-gray-100 mt-12 bg-gray-50 rounded-xl">
-        <article className="prose prose-sm max-w-none text-gray-600">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">
-            Best Shoe Sale in Sri Lanka - Discounts & Offers
-          </h2>
-          <div className="grid md:grid-cols-2 gap-8">
-            <div>
-              <p>
-                Everyone loves a bargain! At NEVERBE, we host the most exciting
-                <strong> shoe sale in Sri Lanka</strong>. If you are looking for
-                <strong> cheap shoes</strong> that do not compromise on quality,
-                our deals section is updated daily with the latest offers.
-              </p>
-              <p className="mt-2">
-                Get the premium look for less. We offer massive discounts on
-                <strong> Master Copy sneakers</strong>, running shoes, and
-                slides. Why pay full price when you can get the best
-                <strong> sneaker deals in Colombo</strong> right here?
-              </p>
-            </div>
-            <div>
-              <h3 className="font-semibold text-gray-900 mb-2">
-                Why Shop Our Sale?
-              </h3>
-              <ul className="list-disc pl-5 space-y-1">
-                <li>
-                  <strong>Unbeatable Prices:</strong> We monitor the market to
-                  ensure our <strong>shoe prices</strong> are the lowest in Sri
-                  Lanka.
-                </li>
-                <li>
-                  <strong>Limited Time Offers:</strong> Grab high-quality
-                  <strong> 7A quality shoes</strong> at clearance rates before
-                  stocks run out.
-                </li>
-                <li>
-                  <strong>Budget Friendly:</strong> Find amazing footwear under
-                  LKR 5000 and LKR 8000.
-                </li>
-              </ul>
-            </div>
+      {/* SEO Footer - Fine Print Style */}
+      <section className="max-w-[1440px] mx-auto px-4 py-12 border-t border-gray-100 mt-12">
+        <article className="grid md:grid-cols-2 gap-8 text-xs text-gray-400 leading-relaxed text-justify md:text-left">
+          <div>
+            <h2 className="text-black font-bold uppercase tracking-wide mb-2">
+              Best Sneaker Deals in Sri Lanka
+            </h2>
+            <p>
+              NEVERBE hosts the most exciting shoe sale events in Colombo. Find
+              high-quality Master Copy sneakers, running shoes, and slides at
+              clearance prices. We ensure the lowest shoe prices in Sri Lanka
+              without compromising on the premium look and feel.
+            </p>
+          </div>
+          <div>
+            <h3 className="text-black font-bold uppercase tracking-wide mb-2">
+              Why Shop Our Sale?
+            </h3>
+            <ul className="list-disc pl-4 space-y-1">
+              <li>Unbeatable Prices under LKR 5000</li>
+              <li>Limited Time Offers on 7A Quality Shoes</li>
+              <li>Island-wide Delivery on all discounted items</li>
+            </ul>
           </div>
         </article>
       </section>

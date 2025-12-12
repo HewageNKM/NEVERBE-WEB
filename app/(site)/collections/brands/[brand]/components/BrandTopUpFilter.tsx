@@ -8,36 +8,36 @@ import { AppDispatch, RootState } from "@/redux/store";
 import {
   resetFilter,
   setInStock,
-  setSelectedBrands,
+  setSelectedCategories,
   toggleFilter,
-} from "@/redux/categorySlice/categorySlice";
-import { Switch } from "@mui/material";
+} from "@/redux/brandSlice/brandSlice";
+import Switch from "@mui/material/Switch";
 
-const CategoryPopUpFilter = () => {
+const BrandTopUpFilter = () => {
   const dispatch: AppDispatch = useDispatch();
-  const { selectedBrands, inStock } = useSelector(
-    (state: RootState) => state.categorySlice
+  const { selectedCategories, inStock } = useSelector(
+    (state: RootState) => state.brandSlice
   );
-  const [brands, setBrands] = useState<{ label: string }[]>([]);
+  const [categories, setCategories] = useState<{ label: string }[]>([]);
 
   useEffect(() => {
-    const fetchBrands = async () => {
+    const fetchCategories = async () => {
       try {
-        const res = await fetch("/api/v1/brands/dropdown");
-        setBrands(await res.json());
+        const res = await fetch("/api/v1/categories/dropdown");
+        setCategories(await res.json());
       } catch (e) {
         console.error(e);
       }
     };
-    fetchBrands();
+    fetchCategories();
   }, []);
 
-  const toggleBrand = (brand: string) => {
-    const lower = brand.toLowerCase();
-    const newBrands = selectedBrands.includes(lower)
-      ? selectedBrands.filter((c) => c !== lower)
-      : [...selectedBrands, lower];
-    if (newBrands.length <= 5) dispatch(setSelectedBrands(newBrands));
+  const toggleCategory = (cat: string) => {
+    const lower = cat.toLowerCase();
+    const newCats = selectedCategories.includes(lower)
+      ? selectedCategories.filter((c) => c !== lower)
+      : [...selectedCategories, lower];
+    if (newCats.length <= 5) dispatch(setSelectedCategories(newCats));
   };
 
   return (
@@ -72,21 +72,23 @@ const CategoryPopUpFilter = () => {
           </div>
 
           <div>
-            <h3 className="font-bold text-lg mb-4">Brands</h3>
+            <h3 className="font-bold text-lg mb-4">Categories</h3>
             <div className="flex flex-wrap gap-2">
-              {brands.map((b, i) => {
-                const isActive = selectedBrands.includes(b.label.toLowerCase());
+              {categories.map((c, i) => {
+                const isActive = selectedCategories.includes(
+                  c.label.toLowerCase()
+                );
                 return (
                   <button
                     key={i}
-                    onClick={() => toggleBrand(b.label)}
+                    onClick={() => toggleCategory(c.label)}
                     className={`px-4 py-2 rounded-full text-sm font-medium border transition-all ${
                       isActive
                         ? "bg-black text-white border-black"
                         : "bg-white text-gray-700 border-gray-300 hover:border-gray-800"
                     }`}
                   >
-                    {b.label}
+                    {c.label}
                   </button>
                 );
               })}
@@ -114,4 +116,4 @@ const CategoryPopUpFilter = () => {
   );
 };
 
-export default CategoryPopUpFilter;
+export default BrandTopUpFilter;

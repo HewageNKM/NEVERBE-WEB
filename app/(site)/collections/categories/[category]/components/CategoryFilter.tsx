@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { BiReset } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
 import {
@@ -9,6 +8,7 @@ import {
   setSelectedBrands,
 } from "@/redux/categorySlice/categorySlice";
 import Switch from "@mui/material/Switch";
+import { IoCheckbox, IoSquareOutline } from "react-icons/io5";
 
 const CategoryFilter = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -16,93 +16,92 @@ const CategoryFilter = () => {
     (state: RootState) => state.categorySlice
   );
 
-  const toggleBrand = (brand: string) => {
-    if (selectedBrands.includes(brand)) {
-      dispatch(setSelectedBrands(selectedBrands.filter((b) => b !== brand)));
-    } else if (selectedBrands.length < 5) {
-      dispatch(setSelectedBrands([...selectedBrands, brand]));
-    }
-  };
-
   const [brands, setBrands] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const fetchBrands = async () => {
+      try {
+        const response = await fetch("/api/v1/brands/dropdown");
+        const data = await response.json();
+        setBrands(data || []);
+      } catch (e) {
+        console.error(e);
+      }
+    };
     fetchBrands();
   }, []);
 
-  const fetchBrands = async () => {
-    try {
-      setLoading(true);
-      const response = await fetch("/api/v1/brands/dropdown");
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-      setBrands(data || []);
-    } catch (e) {
-      console.error("Error fetching categories:", e);
-    } finally {
-      setLoading(false);
-    }
+  const toggleBrand = (brand: string) => {
+    const lower = brand.toLowerCase();
+    const newBrands = selectedBrands.includes(lower)
+      ? selectedBrands.filter((b) => b !== lower)
+      : [...selectedBrands, lower];
+
+    // Limit to 5
+    if (newBrands.length <= 5) dispatch(setSelectedBrands(newBrands));
   };
 
   return (
-    <aside className="hidden lg:flex flex-col w-72 p-6 bg-white/80 backdrop-blur-sm rounded-xl border border-gray-200 shadow-[0_0_20px_rgba(0,0,0,0.05)] sticky top-20 gap-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-display font-bold text-gray-800">
-          Filter
-        </h2>
+    <aside className="hidden lg:block w-64 pr-8 sticky top-24 h-fit max-h-[85vh] overflow-y-auto hide-scrollbar">
+      {/* Header */}
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-xl font-black uppercase tracking-tight">Refine</h2>
         <button
           onClick={() => dispatch(resetFilter())}
-          className="p-2 rounded-full bg-primary hover:bg-primary transition hover:scale-110 active:scale-95"
+          className="text-xs font-bold underline text-gray-400 hover:text-black"
         >
-          <BiReset size={22} className="text-white" />
+          Clear
         </button>
       </div>
 
-      <div className="flex justify-between items-center">
-        <h3 className="text-lg font-semibold text-gray-700">In Stock</h3>
+      {/* In Stock */}
+      <div className="flex justify-between items-center pb-6 border-b border-gray-100">
+        <span className="text-sm font-bold uppercase">In Stock Only</span>
         <Switch
           checked={inStock}
           onChange={(e) => dispatch(setInStock(e.target.checked))}
-          color="warning"
+          color="default"
+          size="small"
         />
       </div>
 
-      <div>
-        <h3 className="text-lg font-semibold mb-3 text-gray-700 border-b border-gray-200 pb-2 flex justify-between items-center">
-          <span>Brands</span>
-          <span className="text-xs text-gray-400">
-            {selectedBrands.length}/5
-          </span>
+      {/* Brands List */}
+      <div className="py-6">
+        <h3 className="text-sm font-bold uppercase tracking-wide mb-4">
+          Brands
         </h3>
-        <div className="flex flex-wrap gap-3">
-          {loading
-            ? Array.from({ length: 6 }).map((_, i) => (
+        <div className="flex flex-col gap-2">
+          {brands.map((brand, i) => {
+            const isSelected = selectedBrands.includes(
+              brand.label.toLowerCase()
+            );
+            return (
+              <button
+                key={i}
+                onClick={() => toggleBrand(brand.label)}
+                className="flex items-center gap-3 group text-left"
+              >
                 <div
-                  key={i}
-                  className="w-20 h-8 bg-gray-200 animate-pulse rounded-lg"
-                />
-              ))
-            : brands.map((brand, i) => {
-                const selected = selectedBrands.includes(
-                  brand.label.toLowerCase()
-                );
-                return (
-                  <button
-                    key={i}
-                    onClick={() => toggleBrand(brand.label.toLowerCase())}
-                    className={`px-3 py-1.5 rounded-lg border font-medium transition hover:scale-105 active:scale-95 ${
-                      selected
-                        ? "bg-primary text-white border-primary"
-                        : "bg-gray-50 hover:bg-gray-100 border-gray-300"
-                    }`}
-                  >
-                    {brand.label}
-                  </button>
-                );
-              })}
+                  className={`text-lg transition-colors ${
+                    isSelected
+                      ? "text-black"
+                      : "text-gray-300 group-hover:text-gray-400"
+                  }`}
+                >
+                  {isSelected ? <IoCheckbox /> : <IoSquareOutline />}
+                </div>
+                <span
+                  className={`text-sm font-medium transition-colors ${
+                    isSelected
+                      ? "text-black"
+                      : "text-gray-500 group-hover:text-black"
+                  }`}
+                >
+                  {brand.label}
+                </span>
+              </button>
+            );
+          })}
         </div>
       </div>
     </aside>

@@ -2,8 +2,6 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
 import { KOKOLogo } from "@/assets/images";
 import { Product } from "@/interfaces/Product";
 
@@ -15,16 +13,12 @@ const ItemCard = ({
   priority?: boolean;
 }) => {
   const [outOfStocks, setOutOfStocks] = useState(false);
-  const [outOfStocksLabel, setOutOfStocksLabel] = useState("Out of Stock");
-  const { user } = useSelector((state: RootState) => state.authSlice);
 
   useEffect(() => {
     if (!item.variants?.length) {
       setOutOfStocks(true);
-      setOutOfStocksLabel("Coming Soon");
-      return;
     }
-  }, [item, user]);
+  }, [item]);
 
   const discountedPrice =
     item.discount > 0
@@ -34,95 +28,74 @@ const ItemCard = ({
       : Math.round(item.sellingPrice);
 
   return (
-    <article className="relative group w-36 sm:w-48 md:w-60 rounded-2xl bg-white border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden">
+    <article className="group w-full flex flex-col gap-2">
       <Link
         href={`/collections/products/${item?.id}`}
-        aria-label={`View details for ${item.name}`}
+        className="block relative"
       >
-        {/* ---------- IMAGE ---------- */}
-        <div className="relative aspect-square w-full overflow-hidden">
+        {/* IMAGE CONTAINER - The "Nike" Gray Box */}
+        <div className="relative aspect-square w-full bg-[#f6f6f6] rounded-xl overflow-hidden mb-2">
           <Image
-            width={300}
-            height={300}
+            width={600}
+            height={600}
             src={item.thumbnail.url}
             alt={item.name}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-            sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
+            className="w-full h-full object-cover mix-blend-multiply transition-transform duration-500 group-hover:scale-105"
             priority={priority}
-            fetchPriority="auto"
           />
-          {/* Gradient overlay on hover */}
-          <div className="absolute inset-0 bg-linear-to-t from-black/50 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
-          {/* Manufacturer badge */}
-          <span className="absolute top-2 left-2 bg-black/80 text-white text-[0.65rem] sm:text-xs px-2 py-1 rounded-full uppercase tracking-wide">
-            {item.brand.replace("-", " ")}
-          </span>
-
-          {/* Discount badge */}
+          {/* Badges */}
           {item.discount > 0 && (
-            <span className="absolute top-2 right-2 bg-red-500 text-white text-[0.65rem] sm:text-xs px-2 py-1 rounded-full">
+            <span className="absolute top-3 left-3 bg-white text-black text-xs font-bold px-2 py-1 rounded-md shadow-sm">
               -{item.discount}%
             </span>
           )}
+          {outOfStocks && (
+            <div className="absolute inset-0 bg-white/60 flex items-center justify-center">
+              <span className="bg-black text-white px-3 py-1 text-xs font-bold uppercase rounded-full">
+                Sold Out
+              </span>
+            </div>
+          )}
         </div>
 
-        {/* ---------- CONTENT ---------- */}
-        <div className="p-3 sm:p-4 flex flex-col gap-1">
-          <h2 className="text-sm font-display sm:text-base md:text-lg font-semibold">
-            {item.name}
-          </h2>
-
-          {/* Pricing */}
-          <div className="flex items-baseline gap-2">
-            <p className="text-gray-400 line-through text-xs sm:text-sm">
-              Rs. {item.marketPrice.toFixed(2)}
-            </p>
-            <p className="text-gray-900 font-bold text-sm sm:text-base">
-              Rs. {discountedPrice.toFixed(2)}
-            </p>
+        {/* DETAILS */}
+        <div className="flex flex-col gap-1 px-1">
+          <div className="flex justify-between items-start">
+            <h3 className="text-base font-semibold text-black leading-tight group-hover:text-gray-600 transition-colors line-clamp-2">
+              {item.name}
+            </h3>
           </div>
 
-          {/* KOKO Payment */}
-          <div className="flex items-center gap-1 text-xs sm:text-sm text-gray-500 mt-1">
-            <p>or 3x Rs.{(discountedPrice / 3).toFixed(2)} with</p>
-            <Image
-              alt="KOKO logo"
-              src={KOKOLogo}
-              width={30}
-              height={30}
-              className="inline-block"
-            />
+          <p className="text-gray-500 text-sm capitalize">
+            {item.category?.replace("-", " ") || "Men's Shoes"}
+          </p>
+
+          <div className="mt-2 flex items-center gap-2">
+            <span className="text-black font-bold text-lg">
+              Rs. {discountedPrice.toLocaleString()}
+            </span>
+            {item.discount > 0 && (
+              <span className="text-gray-400 text-sm line-through decoration-1">
+                Rs. {item.marketPrice.toLocaleString()}
+              </span>
+            )}
           </div>
 
-          {/* Colors + Sizes */}
-          <div className="flex justify-between items-center text-[0.75rem] sm:text-sm text-gray-600 mt-2">
-            <p>{item.variants.length} Colors</p>
-          </div>
-
-          {/* Action Link */}
-          <div className="mt-3">
-            <p className="text-primary font-medium text-sm hover:underline">
-              Pick a Color →
-            </p>
+          {/* Optional KOKO Text - Small and discrete */}
+          <div className="flex items-center gap-1 text-[10px] text-gray-500">
+            <span>or 3 installments with</span>
+            <div className="w-8 h-3 relative opacity-60">
+              <Image
+                src={KOKOLogo}
+                alt="KOKO"
+                fill
+                className="object-contain"
+              />
+            </div>
           </div>
         </div>
       </Link>
-
-      {/* ---------- OUT OF STOCK OVERLAY ---------- */}
-      {outOfStocks && (
-        <div className="absolute inset-0 bg-black/70 backdrop-blur-sm flex justify-center items-center">
-          <h2
-            className={`text-white px-4 py-2 rounded-full text-sm sm:text-lg font-semibold tracking-wide ${
-              outOfStocksLabel === "Coming Soon"
-                ? "bg-yellow-500"
-                : "bg-red-600"
-            }`}
-          >
-            {outOfStocksLabel}
-          </h2>
-        </div>
-      )}
     </article>
   );
 };

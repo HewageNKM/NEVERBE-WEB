@@ -5,13 +5,29 @@ import TermsContent from "./TermsContent";
 
 const TermsClient = () => {
   return (
-    <main className="w-full lg:mt-32 md:mt-16 mt-20 min-h-screen lg:px-48 md:px-24 px-8 py-16">
-      <h1 className="lg:text-6xl md:text-5xl text-3xl font-extrabold text-gray-900 tracking-wide text-center mb-12">
-        Terms & Conditions
-      </h1>
+    <main className="w-full min-h-screen bg-white pt-32 md:pt-40 pb-20 px-4 md:px-8">
+      <div className="max-w-[1440px] mx-auto">
+        {/* Header */}
+        <div className="mb-16 md:mb-24 border-b border-black pb-8">
+          <h1 className="text-5xl md:text-8xl font-black uppercase tracking-tighter text-black leading-[0.9]">
+            Terms & <br /> Conditions
+          </h1>
 
-      <div>
-        <TermsContent />
+          <div className="flex flex-col md:flex-row md:items-center gap-4 mt-6">
+            <p className="text-xs font-bold uppercase tracking-widest text-gray-400">
+              User Agreement
+            </p>
+            <div className="hidden md:block h-px w-12 bg-gray-300"></div>
+            <p className="text-xs font-bold uppercase tracking-widest text-gray-400">
+              Effective Date: {new Date().getFullYear()}
+            </p>
+          </div>
+        </div>
+
+        {/* Content Container */}
+        <div className="max-w-5xl">
+          <TermsContent />
+        </div>
       </div>
     </main>
   );

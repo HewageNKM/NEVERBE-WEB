@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { BiReset } from "react-icons/bi";
 import {
   resetFilter,
   setSelectedBrand,
@@ -10,7 +9,7 @@ import {
 } from "@/redux/dealsSlice/dealsSlice";
 import { AppDispatch, RootState } from "@/redux/store";
 import { Switch } from "@mui/material";
-import { toast } from "react-toastify";
+import { IoCheckbox, IoSquareOutline } from "react-icons/io5";
 
 const DealsFilter = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -20,147 +19,113 @@ const DealsFilter = () => {
 
   const [brands, setBrands] = useState<any[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchDropdowns();
+    const fetchData = async () => {
+      try {
+        const [bRes, cRes] = await Promise.all([
+          fetch(`/api/v1/brands/dropdown`),
+          fetch(`/api/v1/categories/dropdown`),
+        ]);
+        setBrands(await bRes.json());
+        setCategories(await cRes.json());
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    fetchData();
   }, []);
 
-  const fetchDropdowns = async () => {
-    try {
-      const [brandsRes, categoriesRes] = await Promise.all([
-        fetch(`/api/v1/brands/dropdown`),
-        fetch(`/api/v1/categories/dropdown`),
-      ]);
-
-      if (!brandsRes.ok || !categoriesRes.ok) {
-        throw new Error("Failed to fetch filter data");
-      }
-
-      const brandsData = await brandsRes.json();
-      const categoriesData = await categoriesRes.json();
-
-      setBrands(brandsData || []);
-      setCategories(categoriesData || []);
-    } catch {
-      toast.error("Failed to fetch filter data");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const toggleBrand = (value: string) => {
-    const lower = value.toLowerCase();
-    if (selectedBrands.includes(lower)) {
-      dispatch(setSelectedBrand(selectedBrands.filter((b) => b !== lower)));
-    } else {
-      dispatch(setSelectedBrand([...selectedBrands, lower]));
-    }
+    const lowerValue = value.toLowerCase();
+    const newBrands = selectedBrands.includes(lowerValue)
+      ? selectedBrands.filter((b) => b !== lowerValue)
+      : [...selectedBrands, lowerValue];
+    dispatch(setSelectedBrand(newBrands.slice(0, 5)));
   };
 
   const toggleCategory = (value: string) => {
-    const lower = value.toLowerCase();
-    if (selectedCategories.includes(lower)) {
-      dispatch(
-        setSelectedCategories(selectedCategories.filter((c) => c !== lower))
-      );
-    } else {
-      dispatch(setSelectedCategories([...selectedCategories, lower]));
-    }
+    const lowerValue = value.toLowerCase();
+    const newCats = selectedCategories.includes(lowerValue)
+      ? selectedCategories.filter((c) => c !== lowerValue)
+      : [...selectedCategories, lowerValue];
+    dispatch(setSelectedCategories(newCats.slice(0, 5)));
   };
 
+  const FilterSection = ({ title, items, selectedItems, onToggle }: any) => (
+    <div className="py-6 border-t border-gray-100">
+      <h3 className="text-sm font-bold uppercase tracking-wide mb-4">
+        {title}
+      </h3>
+      <div className="flex flex-col gap-2">
+        {items.map((item: any, idx: number) => {
+          const isSelected = selectedItems.includes(item.label?.toLowerCase());
+          return (
+            <button
+              key={idx}
+              onClick={() => onToggle(item.label)}
+              className="flex items-center gap-3 group text-left"
+            >
+              <div
+                className={`text-lg transition-colors ${
+                  isSelected
+                    ? "text-black"
+                    : "text-gray-300 group-hover:text-gray-400"
+                }`}
+              >
+                {isSelected ? <IoCheckbox /> : <IoSquareOutline />}
+              </div>
+              <span
+                className={`text-sm font-medium transition-colors ${
+                  isSelected
+                    ? "text-black"
+                    : "text-gray-500 group-hover:text-black"
+                }`}
+              >
+                {item.label}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+
   return (
-    <aside className="hidden lg:flex flex-col w-72 p-6 bg-white/80 backdrop-blur-sm rounded-xl border border-gray-200 shadow-sm sticky top-20 gap-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-gray-800">Filters</h2>
+    <aside className="hidden lg:block w-64 pr-8 sticky top-24 h-fit max-h-[85vh] overflow-y-auto hide-scrollbar">
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-xl font-black uppercase tracking-tight">Filters</h2>
         <button
           onClick={() => dispatch(resetFilter())}
-          className="p-2 bg-primary rounded-full text-white"
+          className="text-xs font-bold underline text-gray-400 hover:text-black"
         >
-          <BiReset size={18} />
+          Clear All
         </button>
       </div>
 
-      <div className="flex justify-between items-center">
-        <span className="text-lg font-semibold text-gray-700">In Stock</span>
+      <div className="flex justify-between items-center pb-6">
+        <span className="text-sm font-bold uppercase">In Stock Only</span>
         <Switch
           checked={inStock}
           onChange={(e) => dispatch(setInStock(e.target.checked))}
-          color="warning"
+          color="default"
+          size="small"
         />
       </div>
 
-      {/* Categories */}
-      <div>
-        <h3 className="font-semibold mb-3 text-gray-700 border-b pb-2">
-          Categories
-        </h3>
-        <div className="flex flex-wrap gap-2">
-          {loading
-            ? Array(6)
-                .fill(0)
-                .map((_, i) => (
-                  <div
-                    key={i}
-                    className="w-20 h-8 bg-gray-200 animate-pulse rounded-lg"
-                  />
-                ))
-            : categories.map((cat, i) => {
-                const isSelected = selectedCategories.includes(
-                  cat.label?.toLowerCase()
-                );
-                return (
-                  <button
-                    key={i}
-                    onClick={() => toggleCategory(cat.label)}
-                    className={`px-3 py-1 rounded-lg border font-medium transition ${
-                      isSelected
-                        ? "bg-primary text-white border-primary"
-                        : "bg-gray-50 hover:bg-gray-100 border-gray-300"
-                    }`}
-                  >
-                    {cat.label}
-                  </button>
-                );
-              })}
-        </div>
-      </div>
+      <FilterSection
+        title="Categories"
+        items={categories}
+        selectedItems={selectedCategories}
+        onToggle={toggleCategory}
+      />
 
-      {/* Brands */}
-      <div>
-        <h3 className="font-semibold mb-3 text-gray-700 border-b pb-2">
-          Brands
-        </h3>
-        <div className="flex flex-wrap gap-2">
-          {loading
-            ? Array(6)
-                .fill(0)
-                .map((_, i) => (
-                  <div
-                    key={i}
-                    className="w-20 h-8 bg-gray-200 animate-pulse rounded-lg"
-                  />
-                ))
-            : brands.map((brand, i) => {
-                const isSelected = selectedBrands.includes(
-                  brand.label?.toLowerCase()
-                );
-                return (
-                  <button
-                    key={i}
-                    onClick={() => toggleBrand(brand.label)}
-                    className={`px-3 py-1 rounded-lg border font-medium transition ${
-                      isSelected
-                        ? "bg-primary text-white border-primary"
-                        : "bg-gray-50 hover:bg-gray-100 border-gray-300"
-                    }`}
-                  >
-                    {brand.label}
-                  </button>
-                );
-              })}
-        </div>
-      </div>
+      <FilterSection
+        title="Brands"
+        items={brands}
+        selectedItems={selectedBrands}
+        onToggle={toggleBrand}
+      />
     </aside>
   );
 };

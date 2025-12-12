@@ -1,74 +1,76 @@
 "use client";
 import "@/app/globals.css";
-import { FaArrowRight } from "react-icons/fa6";
+import { FaArrowRightLong } from "react-icons/fa6";
 import { motion } from "framer-motion";
 
 export default function MaintenancePage() {
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.3,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.6, ease: "easeOut" },
-    },
-  };
-
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-4 relative overflow-hidden">
-      {/* Animated Background Decoration */}
-      <motion.div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-blue-600/20 rounded-full blur-3xl pointer-events-none"
-        animate={{
-          scale: [1, 1.2, 1],
-          opacity: [0.3, 0.5, 0.3],
-        }}
-        transition={{
-          duration: 8,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      />
+    <div className="min-h-screen bg-white text-black flex flex-col items-center justify-center p-6 relative overflow-hidden">
+      <main className="relative z-10 w-full max-w-[1440px] mx-auto flex flex-col items-center text-center">
+        {/* Brand Name - Massive & Bold */}
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+          className="text-6xl md:text-9xl font-black uppercase tracking-tighter leading-none mb-8"
+        >
+          Neverbe
+        </motion.h1>
 
-      <main className="relative z-10 text-center max-w-lg mx-auto">
-        <h1 className="text-5xl md:text-7xl font-bold tracking-tighter mb-6">
-          neverbe<span className="text-primary">.</span>
-        </h1>
+        {/* Animated Line - "Loading" feel */}
+        <motion.div
+          initial={{ scaleX: 0 }}
+          animate={{ scaleX: 1 }}
+          transition={{ duration: 1.5, ease: "circOut" }}
+          className="w-full max-w-xs h-1 bg-gray-100 overflow-hidden mb-10"
+        >
+          <motion.div
+            className="h-full bg-black w-full origin-left"
+            animate={{ x: ["-100%", "100%"] }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          />
+        </motion.div>
 
-        <h2 className="text-2xl font-light text-gray-300 mb-4">
-          We are currently upgrading our systems.
-        </h2>
+        {/* Status Text */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.4, duration: 0.8 }}
+          className="space-y-4 max-w-md"
+        >
+          <h2 className="text-lg font-bold uppercase tracking-widest">
+            System Upgrade In Progress
+          </h2>
+          <p className="text-gray-500 font-medium text-sm leading-relaxed">
+            We are currently updating our store to bring you a better shopping
+            experience. We will be back online shortly.
+          </p>
+        </motion.div>
 
-        <p className="text-gray-500 mb-8">
-          We'll be back shortly with a better experience. Thank you for your
-          patience.
-        </p>
-
-        <div className="flex items-center justify-center space-x-4">
+        {/* Action */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6, duration: 0.8 }}
+          className="mt-12"
+        >
           <a
-            href="mailto:support@neverbe.com"
-            className="text-sm text-white flex items-center gap-2 group hover:text-primary transition-transform active:scale-95"
+            href="mailto:support@neverbe.lk"
+            className="group flex items-center gap-3 text-xs font-black uppercase tracking-widest hover:text-gray-600 transition-all"
           >
             Contact Support
-            <span className="transition-transform group-hover:translate-x-1">
-              <FaArrowRight size={16} />
+            <span className="group-hover:translate-x-1 transition-transform">
+              <FaArrowRightLong size={14} />
             </span>
           </a>
-        </div>
+        </motion.div>
       </main>
 
-      <footer className="absolute bottom-8 text-gray-600 text-xs text-center w-full">
-        &copy; {new Date().getFullYear()} neverbe. All rights reserved.
+      {/* Footer */}
+      <footer className="absolute bottom-8 w-full text-center">
+        <p className="text-[10px] font-bold uppercase text-gray-300 tracking-widest">
+          &copy; {new Date().getFullYear()} NEVERBE. All Rights Reserved.
+        </p>
       </footer>
     </div>
   );

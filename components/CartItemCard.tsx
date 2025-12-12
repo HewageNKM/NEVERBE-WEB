@@ -1,6 +1,6 @@
+"use client";
 import React from "react";
 import Image from "next/image";
-import { IoClose } from "react-icons/io5";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";
 import { removeFromCart } from "@/redux/cartSlice/cartSlice";
@@ -8,37 +8,56 @@ import { CartItem } from "@/interfaces";
 
 const CartItemCard = ({ item }: { item: CartItem }) => {
   const dispatch: AppDispatch = useDispatch();
+  const totalPrice = item.price * item.quantity;
 
   return (
-    <div className="flex items-center gap-4 p-3 border border-gray-200  rounded-xl bg-gray-50 relative hover:shadow-md transition-all">
-      <div className="shrink-0">
+    <div className="flex gap-4 w-full">
+      {/* Image Container - Nike Style Gray Box */}
+      <div className="relative w-24 h-24 bg-[#f6f6f6] rounded-md shrink-0 overflow-hidden">
         <Image
           src={item.thumbnail}
-          alt={item.variantName}
-          width={80}
-          height={80}
-          className="rounded-lg object-cover"
+          alt={item.name}
+          width={150}
+          height={150}
+          className="w-full h-full object-cover mix-blend-multiply" // Blends white background images nicely
         />
       </div>
 
-      <div className="flex flex-col grow capitalize">
-        <h3 className="font-semibold font-display text-lg line-clamp-1">{item.name}</h3>
-        <p className="text-sm text-gray-500">
-          {item.variantName} | Size: {item.size}
-        </p>
-        <p className="text-md font-medium mt-1">
-          Rs. {(item.price * item.quantity).toFixed(2)}
-        </p>
-        <p className="text-sm text-gray-500 mt-1">Qty: {item.quantity}</p>
-      </div>
+      {/* Details Column */}
+      <div className="flex flex-1 flex-col justify-between py-1">
+        {/* Top: Name & Price */}
+        <div>
+          <div className="flex justify-between items-start gap-2">
+            <h3 className="font-bold text-sm uppercase leading-tight line-clamp-2 text-black">
+              {item.name}
+            </h3>
+            <p className="font-bold text-sm shrink-0">
+              Rs. {totalPrice.toLocaleString()}
+            </p>
+          </div>
 
-      <button
-        onClick={() => dispatch(removeFromCart(item))}
-        className="absolute top-2 right-2 text-gray-400 hover:text-red-500 transition"
-        aria-label="Remove item"
-      >
-        <IoClose size={22} />
-      </button>
+          {/* Middle: Variants */}
+          <div className="mt-1 text-xs text-gray-500 font-medium space-y-0.5">
+            <p className="capitalize text-gray-800">{item.variantName}</p>
+            <p>
+              Size: <span className="text-black">{item.size}</span>
+            </p>
+            <p>
+              Qty: <span className="text-black">{item.quantity}</span>
+            </p>
+          </div>
+        </div>
+
+        {/* Bottom: Actions */}
+        <div className="flex justify-start mt-2">
+          <button
+            onClick={() => dispatch(removeFromCart(item))}
+            className="text-[10px] font-bold uppercase tracking-wider text-gray-400 hover:text-red-600 underline transition-colors"
+          >
+            Remove
+          </button>
+        </div>
+      </div>
     </div>
   );
 };

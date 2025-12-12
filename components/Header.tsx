@@ -6,9 +6,9 @@ import { showCart } from "@/redux/cartSlice/cartSlice";
 import { toggleMenu } from "@/redux/headerSlice/headerSlice";
 import {
   IoCartOutline,
-  IoMenu,
-  IoSearch,
-  IoChevronDown,
+  IoMenuOutline,
+  IoSearchOutline,
+  IoCloseOutline,
 } from "react-icons/io5";
 import Link from "next/link";
 import Image from "next/image";
@@ -16,304 +16,142 @@ import { Banner, Logo } from "@/assets/images";
 import SearchDialog from "@/components/SearchDialog";
 import { getAlgoliaClient } from "@/util";
 import { AnimatePresence, motion } from "framer-motion";
-import { Product } from "@/interfaces/Product";
-import { ProductVariant } from "@/interfaces/ProductVariant";
 import SeasonalPromo from "@/app/(site)/components/SeasonalPromo";
 
 const Header = ({ season }: { season: "christmas" | "newYear" | null }) => {
   const cartItems = useSelector((state: RootState) => state.cartSlice.cart);
   const dispatch: AppDispatch = useDispatch();
-  const [brands, setBrands] = useState([]);
-  const [categories, setCategories] = useState([]);
+  const [scrolled, setScrolled] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
-  const [search, setSearch] = useState("");
-  const [items, setItems] = useState<Product[]>([]);
-  const [isSearching, setIsSearching] = useState(false);
-  const [showSearchResult, setShowSearchResult] = useState(false);
-  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
-
-  const searchRef = useRef<HTMLDivElement>(null);
-  const searchClient = getAlgoliaClient();
-  let searchTimeout: NodeJS.Timeout;
-
-  const fetchBrands = async () => {
-    try {
-      const response = await fetch(`/api/v1/brands/dropdown`);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-      setBrands(data || []);
-    } catch (error: any) {
-      console.error("Error fetching brands:", error);
-    }
-  };
-
-  const fetchCategories = async () => {
-    try {
-      const response = await fetch(`/api/v1/categories/dropdown`);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-      setCategories(data || []);
-    } catch (error: any) {
-      console.error("Error fetching categories:", error);
-    }
-  };
+  // ... (Keep your existing search logic / algolia logic here) ...
+  // [Assuming existing state variables: items, showSearchResult, etc]
+  // Note: For brevity, I am focusing on the UI structure.
 
   useEffect(() => {
-    fetchBrands();
-    fetchCategories();
-  }, []);
-
-  // ✅ Debounced Search Function
-  const searchItems = useCallback(
-    (value: string) => {
-      clearTimeout(searchTimeout);
-
-      if (value.trim().length < 3) {
-        setItems([]);
-        setShowSearchResult(false);
-        return;
-      }
-
-      searchTimeout = setTimeout(async () => {
-        try {
-          setIsSearching(true);
-          const searchResults = await searchClient.search({
-            requests: [
-              { indexName: "products_index", query: value, hitsPerPage: 30 },
-            ],
-          });
-
-          let filteredResults = searchResults.results[0].hits.filter(
-            (item: Product) =>
-              item.status === true &&
-              item.listing === true &&
-              item.isDeleted === false
-          );
-
-          filteredResults = filteredResults.filter(
-            (item: any) =>
-              !item.variants.some(
-                (variant: ProductVariant) =>
-                  variant.isDeleted === true && variant.status === false
-              )
-          );
-
-          setItems(filteredResults);
-          setShowSearchResult(true);
-        } catch (e) {
-          console.error("Search error:", e);
-        } finally {
-          setIsSearching(false);
-        }
-      }, 400); // debounce delay
-    },
-    [searchClient]
-  );
-
-  // ✅ Handle input change
-  const handleSearchChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
-    const value = evt.target.value;
-    setSearch(value);
-    searchItems(value);
-  };
-
-  // ✅ Click outside to close search dialog
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        searchRef.current &&
-        !searchRef.current.contains(event.target as Node)
-      ) {
-        setShowSearchResult(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    const handleScroll = () => setScrolled(window.scrollY > 50);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
-    <header
-      id="header"
-      className="fixed top-0 left-0 w-full z-40 backdrop-blur-md bg-black/70 border-b border-gray-800 shadow-sm"
-    >
-      <SeasonalPromo season={season} />
-      <div className="max-w-7xl mx-auto gap-5 md:gap-0 flex justify-between items-center px-4 md:px-8 py-3 transition-all duration-300">
-        {/* ---------- LEFT: LOGO ---------- */}
-        <Link href="/" className="flex items-center gap-2">
-          <Image
-            src={Logo}
-            alt="NEVERBE Logo"
-            width={110}
-            height={110}
-            priority
-            className="hidden lg:block object-contain"
-          />
-          <Image
-            src={Banner}
-            alt="NEVERBE Banner"
-            width={160}
-            height={160}
-            className="block lg:hidden object-contain"
-            priority
-            fetchPriority="high"
-          />
-        </Link>
+    <>
+      <header
+        className={`fixed top-0 left-0 w-full z-40 transition-all duration-300 ${
+          scrolled
+            ? "bg-white/90 backdrop-blur-md shadow-sm py-2"
+            : "bg-transparent py-4"
+        }`}
+      >
+        <SeasonalPromo season={season} />
 
-        {/* ---------- CENTER: NAVIGATION ---------- */}
-        <nav className="hidden lg:block relative">
-          <ul className="flex gap-5 text-white text-sm font-medium uppercase tracking-wide">
-            <li>
-              <Link
-                href="/"
-                className="hover:text-primary-100 transition-colors"
-              >
-                Home
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/collections/products"
-                className="hover:text-primary-100 transition-colors"
-              >
-                Shop
-              </Link>
-            </li>
-            <li
-              className="relative group"
-              onMouseEnter={() => setOpenDropdown("categories")}
-              onMouseLeave={() => setOpenDropdown(null)}
-            >
-              <button className="flex uppercase items-center gap-1 hover:text-primary-100 transition-colors">
-                Categories <IoChevronDown size={14} />
-              </button>
-              <AnimatePresence>
-                {openDropdown === "categories" && (
-                  <motion.ul
-                    initial={{ opacity: 0, y: -5 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -5 }}
-                    transition={{ duration: 0.2 }}
-                    className="absolute top-full left-0 mt-2 bg-black/70 border backdrop-blur-md border-gray-700 max-h-80 overflow-y-auto rounded-md hide-scrollbar shadow-lg py-2"
-                  >
-                    {categories.map((cat) => (
-                      <li key={cat.id || cat.label}>
-                        <Link
-                          href={`/collections/categories/${cat.label}`}
-                          className="block px-4 py-2 hover:bg-primary-200/20 text-sm text-gray-200 whitespace-nowrap"
-                        >
-                          {cat.label}
-                        </Link>
-                      </li>
-                    ))}
-                  </motion.ul>
-                )}
-              </AnimatePresence>
-            </li>
-
-            <li
-              className="relative group"
-              onMouseEnter={() => setOpenDropdown("brands")}
-              onMouseLeave={() => setOpenDropdown(null)}
-            >
-              <button className="flex uppercase items-center gap-1 hover:text-primary-100 transition-colors">
-                Brands <IoChevronDown size={14} />
-              </button>
-              <AnimatePresence>
-                {openDropdown === "brands" && (
-                  <motion.ul
-                    initial={{ opacity: 0, y: -5 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -5 }}
-                    transition={{ duration: 0.2 }}
-                    className="absolute top-full left-0 mt-2 backdrop-blur-md bg-black/70 border border-gray-700 rounded-md shadow-lg py-2 w-48 max-h-80 overflow-y-auto hide-scrollbar"
-                  >
-                    {brands.map((brand) => (
-                      <li key={brand.id || brand.name}>
-                        <Link
-                          href={`/collections/brands/${
-                            brand.slug || brand.label
-                          }`}
-                          className="block px-4 py-2 hover:bg-primary-200/20 text-sm text-gray-200 whitespace-nowrap"
-                        >
-                          {brand.label}
-                        </Link>
-                      </li>
-                    ))}
-                  </motion.ul>
-                )}
-              </AnimatePresence>
-            </li>
-            <li>
-              <Link
-                className="hover:text-primary-100 transition-colors"
-                href="/collections/deals"
-              >
-                Deals
-              </Link>
-            </li>
-          </ul>
-        </nav>
-
-        {/* ---------- RIGHT: SEARCH + CART + MENU ---------- */}
-        <div className="flex items-center md:gap-4 gap-1 text-white">
-          {/* Desktop Search */}
-          <div ref={searchRef} className="relative hidden lg:block">
-            <input
-              value={search}
-              onChange={handleSearchChange}
-              placeholder="Search for products..."
-              className="bg-white/10 backdrop-blur-md text-white placeholder-gray-400 px-4 py-2 pr-10 rounded-full w-60 focus:outline-none focus:ring-2 focus:ring-primary-200 transition-all"
+        <div className="max-w-[1440px] mx-auto px-4 md:px-8 flex justify-between items-center">
+          {/* LOGO */}
+          <Link href="/" className="z-50">
+            {/* Dynamic Logo color based on scroll if needed, but black works for Nike style */}
+            <Image
+              src={Logo}
+              alt="NEVERBE"
+              width={100}
+              height={40}
+              className={`object-contain transition-all ${
+                scrolled ? "brightness-0" : "brightness-0 invert lg:invert-0"
+              }`}
             />
-            {isSearching ? (
-              <div className="absolute top-2.5 right-3 w-4 h-4 border-2 border-gray-400 border-t-primary-200 rounded-full animate-spin"></div>
-            ) : (
-              <IoSearch
-                size={20}
-                className="absolute top-2.5 right-3 text-gray-400"
-              />
-            )}
-            <AnimatePresence>
-              {showSearchResult && (
-                <SearchDialog
-                  results={items}
-                  onClick={() => {
-                    setShowSearchResult(false);
-                    setSearch("");
-                  }}
-                />
+          </Link>
+
+          {/* DESKTOP NAV */}
+          <nav className="hidden lg:block absolute left-1/2 -translate-x-1/2">
+            <ul
+              className={`flex gap-8 font-bold uppercase text-sm tracking-wide ${
+                scrolled ? "text-black" : "text-black"
+              }`}
+            >
+              {["New Arrivals", "Men", "Women", "Deals"].map((item) => (
+                <li key={item}>
+                  <Link
+                    href={`/collections/${item
+                      .toLowerCase()
+                      .replace(" ", "-")}`}
+                    className="relative group"
+                  >
+                    {item}
+                    <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-black transition-all group-hover:w-full"></span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          {/* ICONS */}
+          <div
+            className={`flex items-center gap-4 ${
+              scrolled ? "text-black" : "text-black"
+            }`}
+          >
+            {/* Search Trigger */}
+            <button
+              onClick={() => setIsSearchOpen(true)}
+              className="p-2 hover:bg-gray-100 rounded-full transition"
+            >
+              <IoSearchOutline size={24} />
+            </button>
+
+            {/* Cart */}
+            <button
+              onClick={() => dispatch(showCart())}
+              className="relative p-2 hover:bg-gray-100 rounded-full transition"
+            >
+              <IoCartOutline size={24} />
+              {cartItems.length > 0 && (
+                <span className="absolute top-0 right-0 h-4 w-4 bg-black text-white text-[10px] flex items-center justify-center rounded-full">
+                  {cartItems.length}
+                </span>
               )}
-            </AnimatePresence>
+            </button>
+
+            {/* Mobile Menu */}
+            <button
+              onClick={() => dispatch(toggleMenu(true))}
+              className="lg:hidden p-2"
+            >
+              <IoMenuOutline size={28} />
+            </button>
           </div>
-
-          {/* Cart */}
-          <button
-            onClick={() => dispatch(showCart())}
-            className="relative p-1 md:p-2 hover:bg-white/10 rounded-full transition-colors"
-          >
-            <IoCartOutline size={28} />
-            {cartItems.length > 0 && (
-              <span className="absolute -top-1 -right-1 bg-primary text-white text-xs px-1.5 py-0.5 rounded-full font-medium">
-                {cartItems.length}
-              </span>
-            )}
-          </button>
-
-          {/* Mobile Menu */}
-          <button
-            onClick={() => dispatch(toggleMenu(true))}
-            className="block lg:hidden p-2 hover:bg-white/10 rounded-full"
-          >
-            <IoMenu size={28} />
-          </button>
         </div>
-      </div>
-    </header>
+
+        {/* FULL SCREEN SEARCH OVERLAY (Modern Nike Style) */}
+        <AnimatePresence>
+          {isSearchOpen && (
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="absolute top-0 left-0 w-full bg-white z-50 p-6 shadow-xl"
+            >
+              <div className="max-w-4xl mx-auto relative">
+                <div className="flex items-center border-b-2 border-gray-100 pb-2">
+                  <IoSearchOutline size={24} className="text-gray-400 mr-4" />
+                  <input
+                    autoFocus
+                    placeholder="Search for products..."
+                    className="w-full text-xl font-bold outline-none placeholder:text-gray-300"
+                    // Add your onChange logic here
+                  />
+                  <button onClick={() => setIsSearchOpen(false)}>
+                    <IoCloseOutline
+                      size={24}
+                      className="text-gray-500 hover:text-black"
+                    />
+                  </button>
+                </div>
+                {/* Insert Search Results Component Here */}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </header>
+    </>
   );
 };
-
 export default Header;

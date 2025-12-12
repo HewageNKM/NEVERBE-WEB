@@ -2,12 +2,17 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { IoSearch, IoClose, IoChevronDown, IoChevronUp } from "react-icons/io5";
+import {
+  IoSearchOutline,
+  IoCloseOutline,
+  IoChevronDownOutline,
+  IoChevronUpOutline,
+  IoChevronForward,
+} from "react-icons/io5";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";
 import { toggleMenu } from "@/redux/headerSlice/headerSlice";
 import { getAlgoliaClient } from "@/util";
-import DropShadow from "@/components/DropShadow";
 import SearchDialog from "@/components/SearchDialog";
 import { ProductVariant } from "@/interfaces/ProductVariant";
 
@@ -22,7 +27,7 @@ const Menu = () => {
   const [categories, setCategories] = useState<any[]>([]);
   const [openSection, setOpenSection] = useState<string | null>(null);
 
-  // --- SEARCH ---
+  // --- SEARCH LOGIC (Kept identical for functionality) ---
   const onSearch = async (evt: React.ChangeEvent<HTMLInputElement>) => {
     const query = evt.target.value;
     setSearch(query);
@@ -62,121 +67,131 @@ const Menu = () => {
     }
   };
 
-  // --- FETCH BRANDS & CATEGORIES ---
-  const fetchBrands = async () => {
-    try {
-      const result = await fetch(`/api/v1/brands/dropdown`);
-      const data = await result.json();
-      setBrands(data);
-    } catch (error) {
-      console.error("Error fetching brands:", error);
-    }
-  };
-
-  const fetchCategories = async () => {
-    try {
-      const result = await fetch(`/api/v1/categories/dropdown`);
-      const data = await result.json();
-      setCategories(data);
-    } catch (error) {
-      console.error("Error fetching categories:", error);
-    }
-  };
-
+  // --- DATA FETCHING ---
   useEffect(() => {
-    fetchBrands();
-    fetchCategories();
+    const fetchData = async () => {
+      try {
+        const [bRes, cRes] = await Promise.all([
+          fetch(`/api/v1/brands/dropdown`),
+          fetch(`/api/v1/categories/dropdown`),
+        ]);
+        setBrands(await bRes.json());
+        setCategories(await cRes.json());
+      } catch (e) {
+        console.error("Menu data fetch error", e);
+      }
+    };
+    fetchData();
   }, []);
 
   const handleOverlayClick = () => dispatch(toggleMenu(false));
-
   const toggleSection = (section: string) => {
     setOpenSection((prev) => (prev === section ? null : section));
   };
 
   return (
-    <DropShadow
-      containerStyle="fixed inset-0 flex justify-end items-start bg-black/50 z-50"
-      onClick={handleOverlayClick}
-    >
+    <div className="fixed inset-0 z-[60] flex justify-end">
+      {/* Dark Overlay */}
       <motion.div
-        initial={{ opacity: 0, x: "100%" }}
-        animate={{ opacity: 1, x: 0 }}
-        exit={{ opacity: 0, x: "100%" }}
-        transition={{ duration: 0.3 }}
-        className="w-[85vw] max-w-sm h-full bg-white shadow-xl relative flex flex-col"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        onClick={handleOverlayClick}
+        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+      />
+
+      {/* Drawer Container */}
+      <motion.div
+        initial={{ x: "100%" }}
+        animate={{ x: 0 }}
+        exit={{ x: "100%" }}
+        transition={{ type: "tween", duration: 0.3, ease: "easeOut" }}
+        className="relative w-full max-w-md h-full bg-white text-black flex flex-col shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-200">
-          <h2 className="font-bold font-display text-lg text-gray-800">Menu</h2>
+        <div className="flex items-center justify-between px-6 py-5 border-b border-gray-100">
+          <span className="font-black text-xl uppercase tracking-tighter">
+            Menu
+          </span>
           <button
             onClick={() => dispatch(toggleMenu(false))}
-            className="p-2 text-gray-600 hover:text-gray-900 transition-colors"
+            className="p-2 -mr-2 text-black hover:bg-gray-100 rounded-full transition-colors"
           >
-            <IoClose size={24} />
+            <IoCloseOutline size={28} />
           </button>
         </div>
 
-        {/* Search */}
-        <div className="p-4 border-b border-gray-200 relative">
-          <input
-            type="text"
-            value={search}
-            onChange={onSearch}
-            placeholder="Search products..."
-            className="w-full p-3 pr-10 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-100"
-          />
-          {isSearching ? (
-            <div className="absolute top-7 right-6 w-6 h-6 border-2 border-gray-300 border-t-primary-500 rounded-full animate-spin"></div>
-          ) : (
-            <IoSearch
-              className="absolute top-7 right-6 text-gray-500"
-              size={25}
+        {/* Search Bar */}
+        <div className="px-6 py-4">
+          <div className="relative group">
+            <input
+              type="text"
+              value={search}
+              onChange={onSearch}
+              placeholder="Search products..."
+              className="w-full bg-gray-100 text-black px-5 py-3 pl-12 rounded-full font-medium focus:outline-none focus:ring-2 focus:ring-black transition-all placeholder:text-gray-400"
             />
-          )}
-
+            <div className="absolute top-1/2 -translate-y-1/2 left-4 text-gray-400">
+              {isSearching ? (
+                <div className="w-5 h-5 border-2 border-gray-400 border-t-black rounded-full animate-spin" />
+              ) : (
+                <IoSearchOutline size={22} />
+              )}
+            </div>
+          </div>
+          {/* Search Results Dropdown */}
           {showSearchResult && items.length > 0 && (
-            <SearchDialog
-              containerStyle="absolute top-16 left-0 right-0 max-h-[60vh] overflow-y-auto shadow-lg bg-white rounded-md z-50"
-              results={items}
-              onClick={() => {
-                setShowSearchResult(false);
-                setSearch("");
-                dispatch(toggleMenu(false));
-              }}
-            />
+            <div className="absolute left-0 right-0 top-[140px] z-50 px-4">
+              <SearchDialog
+                containerStyle="max-h-[60vh] shadow-2xl rounded-2xl border border-gray-200"
+                results={items}
+                onClick={() => {
+                  setShowSearchResult(false);
+                  setSearch("");
+                  dispatch(toggleMenu(false));
+                }}
+              />
+            </div>
           )}
         </div>
 
-        {/* Navigation */}
-        <nav className="flex flex-col mt-2 overflow-y-auto">
+        {/* Navigation Links */}
+        <nav className="flex-1 overflow-y-auto px-6 py-2 space-y-1">
+          {/* Primary Links */}
           {[
             { name: "Home", href: "/" },
-            { name: "Shop", href: "/collections/products" },
-            { name: "Deals", href: "/collections/deals" },
+            { name: "New Arrivals", href: "/collections/products?sort=newest" },
+            { name: "Deals", href: "/collections/deals", highlight: true },
           ].map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="p-4 text-gray-700 border-b border-gray-200 hover:text-primary-100 transition-colors font-medium"
               onClick={() => dispatch(toggleMenu(false))}
+              className={`flex items-center justify-between py-4 border-b border-gray-100 group ${
+                link.highlight ? "text-red-600" : "text-black"
+              }`}
             >
-              {link.name}
+              <span className="text-2xl font-black uppercase tracking-tight group-hover:pl-2 transition-all">
+                {link.name}
+              </span>
+              <IoChevronForward className="text-gray-300 group-hover:text-black transition-colors" />
             </Link>
           ))}
 
-          {/* CATEGORIES DROPDOWN */}
-          <div className="border-b border-gray-200">
+          {/* Collapsible: Categories */}
+          <div className="border-b border-gray-100">
             <button
               onClick={() => toggleSection("categories")}
-              className="w-full flex justify-between items-center p-4 text-gray-700 hover:text-primary-100 font-medium"
+              className="w-full flex justify-between items-center py-4 text-black group"
             >
-              Categories
+              <span className="text-2xl font-black uppercase tracking-tight group-hover:pl-2 transition-all">
+                Categories
+              </span>
               {openSection === "categories" ? (
-                <IoChevronUp size={20} />
+                <IoChevronUpOutline size={20} />
               ) : (
-                <IoChevronDown size={20} />
+                <IoChevronDownOutline size={20} />
               )}
             </button>
             <AnimatePresence>
@@ -185,35 +200,38 @@ const Menu = () => {
                   initial={{ height: 0, opacity: 0 }}
                   animate={{ height: "auto", opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.25 }}
-                  className="flex flex-col pl-6 bg-gray-50"
+                  className="overflow-hidden"
                 >
-                  {categories.map((cat) => (
-                    <Link
-                      key={cat.id}
-                      href={`/collections/categories/${cat.label}`}
-                      className="py-2 text-gray-600 hover:text-primary-100 text-sm border-b border-gray-100"
-                      onClick={() => dispatch(toggleMenu(false))}
-                    >
-                      {cat.label}
-                    </Link>
-                  ))}
+                  <div className="flex flex-col pb-4 pl-2 space-y-3">
+                    {categories.map((cat) => (
+                      <Link
+                        key={cat.id}
+                        href={`/collections/categories/${cat.label}`}
+                        className="text-lg font-medium text-gray-500 hover:text-black transition-colors"
+                        onClick={() => dispatch(toggleMenu(false))}
+                      >
+                        {cat.label}
+                      </Link>
+                    ))}
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>
           </div>
 
-          {/* BRANDS DROPDOWN */}
-          <div className="border-b border-gray-200">
+          {/* Collapsible: Brands */}
+          <div className="border-b border-gray-100">
             <button
               onClick={() => toggleSection("brands")}
-              className="w-full flex justify-between items-center p-4 text-gray-700 hover:text-primary-100 font-medium"
+              className="w-full flex justify-between items-center py-4 text-black group"
             >
-              Brands
+              <span className="text-2xl font-black uppercase tracking-tight group-hover:pl-2 transition-all">
+                Brands
+              </span>
               {openSection === "brands" ? (
-                <IoChevronUp size={20} />
+                <IoChevronUpOutline size={20} />
               ) : (
-                <IoChevronDown size={20} />
+                <IoChevronDownOutline size={20} />
               )}
             </button>
             <AnimatePresence>
@@ -222,19 +240,20 @@ const Menu = () => {
                   initial={{ height: 0, opacity: 0 }}
                   animate={{ height: "auto", opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.25 }}
-                  className="flex flex-col pl-6 bg-gray-50 max-h-60 overflow-y-auto"
+                  className="overflow-hidden"
                 >
-                  {brands.map((brand) => (
-                    <Link
-                      key={brand.id}
-                      href={`/collections/brands/${brand.label}`}
-                      className="py-2 text-gray-600 hover:text-primary-100 text-sm border-b border-gray-100"
-                      onClick={() => dispatch(toggleMenu(false))}
-                    >
-                      {brand.label}
-                    </Link>
-                  ))}
+                  <div className="flex flex-col pb-4 pl-2 space-y-3">
+                    {brands.map((brand) => (
+                      <Link
+                        key={brand.id}
+                        href={`/collections/brands/${brand.label}`}
+                        className="text-lg font-medium text-gray-500 hover:text-black transition-colors"
+                        onClick={() => dispatch(toggleMenu(false))}
+                      >
+                        {brand.label}
+                      </Link>
+                    ))}
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -242,11 +261,27 @@ const Menu = () => {
         </nav>
 
         {/* Footer */}
-        <div className="mt-auto p-4 text-gray-400 text-sm text-center">
-          &copy; {new Date().getFullYear()} NEVERBE
+        <div className="p-6 bg-gray-50 border-t border-gray-100">
+          <div className="flex gap-4 justify-center mb-4">
+            <Link
+              href="/pages/contact"
+              className="text-sm font-bold text-gray-500 uppercase hover:text-black"
+            >
+              Contact Us
+            </Link>
+            <Link
+              href="/pages/help"
+              className="text-sm font-bold text-gray-500 uppercase hover:text-black"
+            >
+              Help
+            </Link>
+          </div>
+          <p className="text-xs text-center text-gray-400 font-medium">
+            &copy; {new Date().getFullYear()} NEVERBE. All Rights Reserved.
+          </p>
         </div>
       </motion.div>
-    </DropShadow>
+    </div>
   );
 };
 

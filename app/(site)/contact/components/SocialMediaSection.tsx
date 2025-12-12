@@ -1,78 +1,60 @@
 "use client";
 import React from "react";
-import { FaFacebook, FaInstagram, FaTiktok, FaWhatsapp } from "react-icons/fa";
+import { FaFacebookF, FaInstagram, FaTiktok, FaWhatsapp } from "react-icons/fa";
 import Link from "next/link";
 import { socialMedia } from "@/constants";
 
 const SocialMediaSection = () => {
   const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER;
   const message = encodeURIComponent(
-    "Hello NEVERBE, I’d like to get in touch with you."
+    "Hello NEVERBE, I’d like to get in touch."
   );
 
+  // Helper to map icons based on URL or logic
+  const getIcon = (url: string) => {
+    if (url.includes("facebook")) return <FaFacebookF size={18} />;
+    if (url.includes("instagram")) return <FaInstagram size={18} />;
+    if (url.includes("tiktok")) return <FaTiktok size={18} />;
+    return null;
+  };
+
   return (
-    <section className="flex flex-col gap-6">
-      <h2 className="text-2xl font-semibold text-gray-900 font-display">
-        Connect With Us
+    <section className="flex flex-col gap-8 mt-8 pt-8 border-t border-gray-100">
+      <h2 className="text-xl font-black uppercase tracking-tighter">
+        Follow Us
       </h2>
 
-      <p className="text-gray-600 max-w-md text-sm leading-relaxed">
-        Reach out through our social media channels or send us a WhatsApp
-        message — we’re always happy to chat!
-      </p>
+      <div className="grid grid-cols-2 gap-4">
+        {/* WhatsApp - Primary Action */}
+        <Link
+          href={`https://wa.me/${whatsappNumber}?text=${message}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="col-span-2 flex items-center justify-center gap-3 bg-black text-white px-6 py-4 hover:bg-gray-800 transition-all active:scale-[0.98]"
+        >
+          <FaWhatsapp size={20} />
+          <span className="font-bold uppercase tracking-widest text-xs">
+            Chat on WhatsApp
+          </span>
+        </Link>
 
-      <div className="flex flex-wrap gap-4">
-        {/* WhatsApp */}
-        <div className="transition hover:scale-105 active:scale-95">
+        {/* Social Grid */}
+        {socialMedia.map((media, idx) => (
           <Link
-            href={`https://wa.me/${whatsappNumber}?text=${message}`}
+            key={idx}
+            href={media.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-all shadow-sm"
+            className="flex items-center justify-center gap-3 border border-gray-200 px-6 py-4 hover:border-black hover:bg-gray-50 transition-all group"
           >
-            <FaWhatsapp size={20} />
-            <span>WhatsApp</span>
+            <span className="text-gray-400 group-hover:text-black transition-colors">
+              {media.icon ? <media.icon size={18} /> : getIcon(media.url)}
+            </span>
+            <span className="font-bold uppercase tracking-wide text-xs text-gray-500 group-hover:text-black">
+              {media.name}
+            </span>
           </Link>
-        </div>
-
-        {/* Facebook */}
-        <div className="transition hover:scale-105 active:scale-95">
-          <Link
-            href={socialMedia[0].url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 text-gray-700 hover:text-blue-600 transition-colors"
-          >
-            <FaFacebook size={24} />
-            <span>Facebook</span>
-          </Link>
-        </div>
-
-        {/* Instagram */}
-        <div className="transition hover:scale-105 active:scale-95">
-          <Link
-            href={socialMedia[1].url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 text-gray-700 hover:text-pink-500 transition-colors"
-          >
-            <FaInstagram size={24} />
-            <span>Instagram</span>
-          </Link>
-        </div>
-
-        {/* TikTok */}
-        <div className="transition hover:scale-105 active:scale-95">
-          <Link
-            href={socialMedia[2].url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 text-gray-700 hover:text-black transition-colors"
-          >
-            <FaTiktok size={24} />
-            <span>TikTok</span>
-          </Link>
-        </div>
+        ))}
       </div>
     </section>
   );

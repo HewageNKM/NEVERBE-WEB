@@ -110,72 +110,39 @@ const Page = async (context: { params: Promise<{ category: string }> }) => {
   };
 
   return (
-    <main className="w-full relative lg:mt-28 mt-16 mb-5 overflow-hidden">
+    <main className="w-full relative lg:mt-24 mt-20 mb-5 overflow-hidden min-h-screen bg-white">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(categorySchema) }}
       />
-
       <section className="w-full">
         <CategoryHeader category={categoryName} />
-
-        {items.length > 0 ? (
-          <CategoryProducts items={items} category={categoryName} />
-        ) : (
-          <div className="text-center py-20 bg-gray-50 rounded-lg mx-4">
-            <h3 className="text-xl font-bold text-gray-700">
-              Collection Update In Progress
-            </h3>
-            <p className="text-gray-500 mt-2">
-              We are restocking our {categoryName}. Check back soon!
-            </p>
-          </div>
-        )}
+        <CategoryProducts items={items} category={categoryName} />
       </section>
 
-      {/* ✅ DYNAMIC SEO FOOTER: The Key to Ranking Specific Categories */}
-      <section className="container mx-auto px-4 py-12 border-t border-gray-100 mt-12 bg-gray-50 rounded-xl">
-        <article className="prose prose-sm max-w-none text-gray-600">
-          <h2 className="text-xl font-bold text-gray-900 mb-4 capitalize">
-            Buy {categoryName} in Sri Lanka
-          </h2>
-          <div className="grid md:grid-cols-2 gap-8">
-            <div>
-              <p>
-                Browse our exclusive collection of{" "}
-                <strong>{categoryName}</strong> at NEVERBE. Whether you are
-                looking for durability, style, or comfort, we bring you the best
-                options in the market. We are one of the leading online stores
-                for
-                <strong> {categoryName} in Sri Lanka</strong>.
-              </p>
-              <p className="mt-2">
-                Get the premium look you deserve. Our range of{" "}
-                <strong>{categoryName}</strong> is perfect for daily wear or
-                special occasions. Order online today and enjoy fast island-wide
-                delivery to your doorstep.
-              </p>
-            </div>
-            <div>
-              <h3 className="font-semibold text-gray-900 mb-2">
-                Why Buy From Us?
-              </h3>
-              <ul className="list-disc pl-5 space-y-1">
-                <li>
-                  <strong>Best Prices:</strong> We offer the most competitive
-                  rates for
-                  <strong> {categoryName}</strong> in Colombo and island-wide.
-                </li>
-                <li>
-                  <strong>Quality Guarantee:</strong> Every pair is inspected to
-                  ensure you get premium quality footwear.
-                </li>
-                <li>
-                  <strong>Cash on Delivery:</strong> Shop with confidence and
-                  pay only when you receive your order.
-                </li>
-              </ul>
-            </div>
+      {/* Fine Print SEO Footer */}
+      <section className="max-w-[1440px] mx-auto px-4 py-12 border-t border-gray-100 mt-12">
+        <article className="grid md:grid-cols-2 gap-8 text-xs text-gray-400 leading-relaxed text-justify md:text-left">
+          <div>
+            <h2 className="text-black font-bold uppercase tracking-wide mb-2">
+              Premium {categoryName} in Sri Lanka
+            </h2>
+            <p>
+              Browse our exclusive collection of {categoryName} at NEVERBE. We
+              are one of the leading online stores for premium footwear in Sri
+              Lanka. Our Master Copy collection offers the look and feel of
+              global brands at a fraction of the price.
+            </p>
+          </div>
+          <div>
+            <h3 className="text-black font-bold uppercase tracking-wide mb-2">
+              Why Buy From Us?
+            </h3>
+            <ul className="list-disc pl-4 space-y-1">
+              <li>Best Prices in Colombo</li>
+              <li>Cash on Delivery Island-wide</li>
+              <li>Premium Quality Guaranteed</li>
+            </ul>
           </div>
         </article>
       </section>

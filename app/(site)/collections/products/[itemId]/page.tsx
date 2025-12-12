@@ -5,8 +5,9 @@ import { notFound } from "next/navigation";
 import { getProductById, getSimilarItems } from "@/services/ProductService";
 import type { Metadata } from "next";
 import { Product } from "@/interfaces/Product";
+import ProductFAQ from "./components/ProductFAQ";
 
-const getProduct = cache(async (id: string) : Promise<Product | null>=> {
+const getProduct = cache(async (id: string): Promise<Product | null> => {
   try {
     return await getProductById(id);
   } catch (e) {
@@ -35,7 +36,7 @@ export async function generateMetadata(context: {
     title: safeTitle,
     description: `Get the best deal on ${item.name} (Master Copy) in Sri Lanka. High-quality materials, 7A grade finish, and islandwide delivery available at NEVERBE.`,
     keywords: [
-      item.name, 
+      item.name,
       "first copy sneakers sri lanka",
       "7a quality shoes",
       "master copy shoes",
@@ -66,10 +67,7 @@ export async function generateMetadata(context: {
 
 const Page = async (context: { params: Promise<{ itemId: string }> }) => {
   const params = await context.params;
-  
-  // Fetch data in parallel for speed
-  // 1. getProduct is cached, so it won't hit the DB again if called in metadata
-  // 2. getSimilarItems runs at the same time
+
   const itemData = getProduct(params.itemId);
   const similarData = getSimilarItems(params.itemId).catch(() => []);
 
@@ -77,19 +75,16 @@ const Page = async (context: { params: Promise<{ itemId: string }> }) => {
 
   if (!item) return notFound();
 
-  /* ✅ LEGAL SAFEGUARD: Structured Data */
-  // Never claim the brand is "Nike" in Schema if it is a copy.
-  // This is the #1 reason Google bans Merchant Center accounts.
   const productSchema = {
     "@context": "https://schema.org",
     "@type": "Product",
-    name: item.name, 
+    name: item.name,
     image: [item.thumbnail?.url || "https://neverbe.lk/api/v1/og"],
     description: `High-quality inspired design of ${item.name}. Note: This is a premium replica intended for fashion purposes.`,
     sku: item.id,
     brand: {
       "@type": "Brand",
-      name: "NEVERBE", // ALWAYS use your store name, never the trademarked brand
+      name: "NEVERBE",
     },
     offers: {
       "@type": "Offer",
@@ -106,16 +101,14 @@ const Page = async (context: { params: Promise<{ itemId: string }> }) => {
   };
 
   return (
-    <main className="w-full lg:mt-32 mt-20 md:mt-28 overflow-clip">
+    <main className="w-full relative mt-[80px] md:mt-[100px] min-h-screen px-4 md:px-8 bg-white text-black">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
       />
-      
-      <div className="md:px-8 px-4 py-4">
-        <ProductHero item={item} />
-        <SimilarProducts items={similarItems || []} />
-      </div>
+      <ProductHero item={item} />
+      <ProductFAQ />
+      <SimilarProducts items={similarItems || []} />
     </main>
   );
 };

@@ -110,77 +110,36 @@ const Page = async () => {
   };
 
   return (
-    <main className="w-full relative lg:mt-28 mt-16 mb-5 overflow-clip">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(productListingSchema),
-        }}
-      />
-
+    <main className="w-full relative lg:mt-24 mt-16 mb-10 min-h-screen">
       <ProductsHeader />
 
-      <div className="px-4">
-        {productList.length > 0 ? (
-          <Products items={productList} />
-        ) : (
-          <EmptyState heading="No products available at this time." />
-        )}
+      <div className="w-full">
+        <Products items={productList} />
       </div>
 
-      {/* ✅ SEO FOOTER TEXT
-        This is the "Secret Sauce" for ranking category pages. 
-        It sits at the bottom, so it doesn't annoy users, but Google reads it 
-        to understand that this page covers ALL types of shoes.
-      */}
-      <section className="container mx-auto px-4 py-12 border-t border-gray-100 mt-12 bg-gray-50 rounded-xl">
-        <article className="prose prose-sm max-w-none text-gray-600">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">
-            Shop the Best Collection of Shoes in Sri Lanka
-          </h2>
-          <div className="grid md:grid-cols-2 gap-8">
-            <div>
-              <p>
-                Are you looking to{" "}
-                <strong>buy shoes online in Sri Lanka</strong>? You have come to
-                the right place. NEVERBE offers an extensive range of footwear
-                designed to meet every lifestyle need. Our catalog features
-                hundreds of options, from high-performance{" "}
-                <strong>sports shoes</strong>
-                to stylish <strong>casual sneakers</strong>.
-              </p>
-              <p className="mt-2">
-                We understand that price matters. That is why we provide the
-                best <strong>shoe prices in Sri Lanka</strong>
-                without compromising on quality. Whether you are looking for
-                budget-friendly daily wear or premium
-                <strong>Master Copy sneakers</strong> that look exactly like the
-                big brands, we have something for everyone.
-              </p>
-            </div>
-            <div>
-              <h3 className="font-semibold text-gray-900 mb-2">
-                Explore Our Categories
-              </h3>
-              <ul className="list-disc pl-5 space-y-1">
-                <li>
-                  <strong>Men's Shoes:</strong> From formal wear to gym
-                  trainers, find durable and stylish options for men.
-                </li>
-                <li>
-                  <strong>Running Shoes:</strong> Lightweight, breathable, and
-                  comfortable shoes perfect for jogging or the gym.
-                </li>
-                <li>
-                  <strong>Slides & Sandals:</strong> The perfect choice for Sri
-                  Lanka's tropical weather. Comfortable and trendy.
-                </li>
-                <li>
-                  <strong>Boots:</strong> Rugged footwear for a bold fashion
-                  statement.
-                </li>
-              </ul>
-            </div>
+      {/* SEO Footer - Fine Print Style */}
+      <section className="max-w-[1440px] mx-auto px-4 py-12 border-t border-gray-100 mt-12">
+        <article className="grid md:grid-cols-2 gap-8 text-xs text-gray-400 leading-relaxed text-justify md:text-left">
+          <div>
+            <h2 className="text-black font-bold uppercase tracking-wide mb-2">
+              The #1 Online Shoe Store in Sri Lanka
+            </h2>
+            <p className="mb-4">
+              NEVERBE offers an extensive range of footwear designed to meet
+              every lifestyle need. Our catalog features hundreds of options,
+              from high-performance sports shoes to stylish casual sneakers. We
+              provide the best shoe prices in Sri Lanka without compromising on
+              quality.
+            </p>
+          </div>
+          <div>
+            <h3 className="text-black font-bold uppercase tracking-wide mb-2">
+              Popular Categories
+            </h3>
+            <p>
+              Men's Sneakers • Women's Running Shoes • Slides & Sandals •
+              High-Ankle Boots • Gym Footwear
+            </p>
           </div>
         </article>
       </section>

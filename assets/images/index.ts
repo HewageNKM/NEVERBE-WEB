@@ -2,7 +2,7 @@ import DeliveryImage from "./delivery.png";
 import MoneyImage from "./money.png";
 import GoodsImage from "./goods.png";
 import SupportImage from "./support.png";
-import Logo from "./logo.png";
+import Logo from "./logo_new.png";
 import Banner from "./banner.png";
 import DefaultBG from "./defaulBG.jpg";
 import PayHereWhiteLongBanner from "./payhere_long_banner.png";

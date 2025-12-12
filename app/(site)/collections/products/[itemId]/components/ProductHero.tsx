@@ -2,7 +2,12 @@
 
 import React, { useRef, useState, useEffect } from "react";
 import Image from "next/image";
-import { IoAdd, IoCartOutline, IoRemove } from "react-icons/io5";
+import {
+  IoAdd,
+  IoRemove,
+  IoHeartOutline,
+  IoShareSocialOutline,
+} from "react-icons/io5";
 import { FaWhatsapp } from "react-icons/fa6";
 import { motion, AnimatePresence } from "framer-motion";
 import { useDispatch } from "react-redux";
@@ -32,52 +37,32 @@ const ProductHero = ({ item }: { item: Product }) => {
   );
 
   const [selectedSize, setSelectedSize] = useState<string>("");
-  const [qty, setQty] = useState(0);
+  const [qty, setQty] = useState(1); // Start at 1 for better UX
   const [availableStock, setAvailableStock] = useState<number>(0);
   const [outOfStocks, setOutOfStocks] = useState(false);
-  const [outOfStocksLabel, setOutOfStocksLabel] = useState("Out of Stock");
   const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER;
   const [stockLoading, setStockLoading] = useState(false);
 
-  const imageRef = useRef<HTMLDivElement>(null);
-
+  // --- Init Logic ---
   useEffect(() => {
     if (item.variants?.length) {
       const defaultVariant = item.variants[0];
-      const defaultSize = defaultVariant.sizes?.[0] || "";
-
       setSelectedVariant(defaultVariant);
       setSelectedImage(defaultVariant.images[0] || item.thumbnail);
-      setSelectedSize(defaultSize);
-
-      // 🔹 Automatically fetch stock for the default size
-      if (defaultSize && item.id) {
-        getAvailableStockFor(defaultSize);
-      }
+      // Don't auto-select size, let user choose (Nike style)
     }
   }, [item]);
 
-  // 🔹 Fetch stock when variant or size changes
-  useEffect(() => {
-    if (selectedVariant && selectedSize && item.id) {
-      getAvailableStockFor(selectedSize);
-    }
-  }, [selectedVariant, selectedSize]);
-
-  // 🔹 Fetch stock quantity from API
+  // --- Stock Logic ---
   const getAvailableStockFor = async (size: string) => {
     try {
       setStockLoading(true);
       const res = await fetch(
         `/api/v1/inventory?productId=${item.id}&variantId=${selectedVariant.variantId}&size=${size}`
       );
-      if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`);
-      }
       const data = await res.json();
       setAvailableStock(data.quantity || 0);
     } catch (error) {
-      console.error("Error fetching stock:", error);
       setAvailableStock(0);
     } finally {
       setStockLoading(false);
@@ -85,23 +70,18 @@ const ProductHero = ({ item }: { item: Product }) => {
   };
 
   useEffect(() => {
-    if (availableStock <= 0) {
-      setOutOfStocks(true);
-      setOutOfStocksLabel("Out of Stock");
-    } else {
-      setOutOfStocks(false);
-    }
-  }, [availableStock]);
+    if (selectedSize) getAvailableStockFor(selectedSize);
+  }, [selectedSize, selectedVariant]);
 
-  // 🔹 Quantity adjustment
-  const setQuantity = (dir: "inc" | "dec") => {
-    if (dir === "inc" && qty < availableStock) setQty(qty + 1);
-    else if (dir === "dec" && qty > 0) setQty(qty - 1);
-  };
+  useEffect(() => {
+    setOutOfStocks(selectedSize !== "" && !stockLoading && availableStock <= 0);
+  }, [availableStock, selectedSize, stockLoading]);
 
-  // 🔹 Add to cart
+  // --- Cart Actions ---
   const addToCart = () => {
-    if (qty === 0 || !selectedSize) return;
+    if (!selectedSize) return alert("Please select a size");
+    if (outOfStocks) return;
+
     const cartItem = {
       bPrice: item.buyingPrice,
       discount:
@@ -117,266 +97,243 @@ const ProductHero = ({ item }: { item: Product }) => {
       price: item.sellingPrice,
     };
     dispatch(pushToCart(cartItem));
-    resetSelection();
+    // Optional: open cart drawer here
   };
 
-  // 🔹 Buy Now
-  const buyNow = async () => {
+  const buyNow = () => {
     addToCart();
     router.push("/checkout");
   };
 
-  // 🔹 Reset after adding to cart
-  const resetSelection = () => {
-    setSelectedSize("");
-    setQty(0);
-  };
+  const discountedPrice =
+    Math.round(
+      (item.discount > 0
+        ? item.sellingPrice - (item.sellingPrice * item.discount) / 100
+        : item.sellingPrice) / 10
+    ) * 10;
 
   return (
-    <section className="w-full flex flex-col md:mt-5 gap-4 md:gap-6 lg:gap-5">
-      {/* Breadcrumb */}
-      <div className="flex gap-2 text-gray-600 text-sm">
-        <Link href="/collections/products" className="hover:underline">
-          Products
-        </Link>
-        <span>/</span>
-        <span className="font-medium">{item.name}</span>
-      </div>
+    <section className="w-full max-w-[1440px] mx-auto flex flex-col lg:flex-row gap-8 lg:gap-16 pt-4 pb-12">
+      {/* --- LEFT COLUMN: IMAGES (Scrollable) --- */}
+      <div className="flex-1 lg:w-[60%] flex flex-col gap-4">
+        {/* Main Image View - Sticky on Mobile, Static on Desktop Grid */}
+        <div className="relative w-full aspect-square bg-[#f6f6f6] rounded-xl overflow-hidden cursor-zoom-in group">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={selectedImage.url}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="w-full h-full"
+            >
+              <Image
+                src={selectedImage.url}
+                alt={item.name}
+                fill
+                priority
+                className="object-cover mix-blend-multiply group-hover:scale-105 transition-transform duration-700"
+                sizes="(max-width: 768px) 100vw, 60vw"
+              />
+            </motion.div>
+          </AnimatePresence>
 
-      {/* Product section */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-        {/* Left — Images */}
-        <div className="flex flex-col gap-4">
-          <div
-            ref={imageRef}
-            className="relative w-full rounded-xl overflow-hidden shadow-md aspect-square bg-gray-100"
-          >
-            <AnimatePresence mode="popLayout">
-              <motion.div
-                key={selectedImage.url}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.3 }}
-                className="w-full h-full"
-              >
-                <Image
-                  src={selectedImage.url}
-                  alt={item.name}
-                  fill
-                  priority
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                  className="object-cover"
-                />
-              </motion.div>
-            </AnimatePresence>
-          </div>
+          {item.discount > 0 && (
+            <div className="absolute top-4 left-4 bg-white px-3 py-1 font-bold text-xs shadow-sm rounded-md">
+              -{item.discount}%
+            </div>
+          )}
+        </div>
 
-          {/* Variant thumbnails */}
-          <div className="flex gap-3 p-2 overflow-x-auto hide-scrollbar">
+        {/* Thumbnail Grid (If variant has multiple images) */}
+        {selectedVariant.images.length > 1 && (
+          <div className="grid grid-cols-4 gap-2">
             {selectedVariant.images.map((img, idx) => (
-              <motion.button
+              <button
                 key={idx}
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
+                onMouseEnter={() => setSelectedImage(img)}
                 onClick={() => setSelectedImage(img)}
-                className={`p-1 rounded-lg transition ring-2 ${
-                  selectedImage === img ? "ring-primary" : "ring-transparent"
+                className={`relative aspect-square bg-[#f6f6f6] rounded-lg overflow-hidden border-2 transition-all ${
+                  selectedImage.url === img.url
+                    ? "border-black"
+                    : "border-transparent"
                 }`}
               >
                 <Image
                   src={img.url}
-                  alt={item.name}
-                  width={60}
-                  height={60}
-                  className="rounded-lg"
+                  alt=""
+                  fill
+                  className="object-cover mix-blend-multiply"
                 />
-              </motion.button>
+              </button>
             ))}
           </div>
+        )}
+
+        {/* Description (Desktop Position) */}
+        <div className="hidden lg:block mt-8">
+          <h3 className="font-bold uppercase tracking-wide text-sm border-b border-gray-200 pb-2 mb-4">
+            Description
+          </h3>
+          <p className="text-gray-600 leading-relaxed text-sm whitespace-pre-line">
+            {item.description ||
+              "Designed for comfort and style, these sneakers feature premium materials and a modern silhouette perfect for everyday wear."}
+          </p>
         </div>
+      </div>
 
-        {/* Right — Product Details */}
-        <div className="flex flex-col gap-4">
-          <p className="text-gray-500 font-medium capitalize">{item.brand}</p>
-          <h1 className="text-2xl md:text-3xl font-extrabold text-gray-900">
-            {item.name}
-          </h1>
+      {/* --- RIGHT COLUMN: DETAILS (Sticky) --- */}
+      <div className="lg:w-[40%] relative">
+        <div className="sticky top-24 flex flex-col gap-6">
+          {/* Header */}
+          <div>
+            <h2 className="text-black font-medium text-lg capitalize mb-1">
+              {item.brand?.replace("-", " ")}
+            </h2>
+            <h1 className="text-3xl md:text-5xl font-black uppercase tracking-tight leading-none text-black mb-4">
+              {item.name}
+            </h1>
 
-          {/* Pricing */}
-          <div className="flex flex-col gap-1">
-            <div className="flex items-baseline gap-2">
-              <p className="text-gray-400 line-through text-sm">
-                Rs. {item.marketPrice.toFixed(2)}
-              </p>
-              <p className="text-gray-900 font-bold text-lg">
-                Rs.{" "}
-                {(
-                  Math.round(
-                    (item.discount > 0
-                      ? item.sellingPrice -
-                        (item.sellingPrice * item.discount) / 100
-                      : item.sellingPrice) / 10
-                  ) * 10
-                ).toFixed(2)}
-              </p>
+            <div className="flex items-center gap-4">
+              <span className="text-xl font-bold">
+                Rs. {discountedPrice.toLocaleString()}
+              </span>
+              {item.discount > 0 && (
+                <span className="text-gray-400 line-through text-base">
+                  Rs. {item.marketPrice.toLocaleString()}
+                </span>
+              )}
             </div>
-            <div className="flex items-center gap-1 text-xs text-gray-500 mt-1">
-              <p>
-                or 3 x Rs.
-                {(
-                  (item.sellingPrice -
-                    (item.sellingPrice * item.discount) / 100) /
-                  3
-                ).toFixed(2)}{" "}
-                with
-              </p>
-              <Image src={KOKOLogo} alt="KOKO" width={25} height={25} />
+
+            {/* KOKO */}
+            <div className="flex items-center gap-2 mt-2 opacity-60">
+              <span className="text-[10px] uppercase font-bold text-gray-500">
+                Pay in 3 with
+              </span>
+              <Image src={KOKOLogo} alt="Koko" width={40} height={15} />
             </div>
           </div>
 
-          {/* Variants */}
+          {/* Colors */}
           <div>
-            <h3 className="font-medium text-gray-700 mb-1">Colors</h3>
-            <div className="flex gap-2 flex-wrap">
-              {item.variants.map((v, i) => (
-                <motion.button
-                  key={i}
-                  whileTap={{ scale: 0.9 }}
-                  whileHover={{ scale: 1.05 }}
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-sm font-bold uppercase">Select Color</span>
+              <span className="text-sm text-gray-500 capitalize">
+                {selectedVariant.variantName}
+              </span>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              {item.variants.map((v) => (
+                <button
+                  key={v.variantId}
                   onClick={() => {
                     setSelectedVariant(v);
                     setSelectedImage(v.images[0]);
                     setSelectedSize("");
-                    setQty(0);
                   }}
-                  className={`px-3 py-1 rounded-md text-sm capitalize ${
+                  className={`h-20 w-20 bg-[#f6f6f6] rounded-md overflow-hidden border-2 transition-all ${
                     selectedVariant.variantId === v.variantId
-                      ? "bg-primary text-white"
-                      : "bg-gray-200"
+                      ? "border-black"
+                      : "border-transparent hover:border-gray-300"
                   }`}
                 >
-                  {v.variantName}
-                </motion.button>
+                  <div className="relative w-full h-full">
+                    <Image
+                      src={v.images[0].url}
+                      alt={v.variantName}
+                      fill
+                      className="object-cover mix-blend-multiply"
+                    />
+                  </div>
+                </button>
               ))}
             </div>
           </div>
 
           {/* Sizes */}
           <div>
-            <h3 className="font-medium text-gray-700 mb-1">Sizes</h3>
-            <div className="flex gap-2 flex-wrap">
-              {selectedVariant.sizes.map((size, idx) => (
-                <motion.button
-                  key={idx}
-                  disabled={stockLoading}
-                  whileHover={{ scale: stockLoading ? 1 : 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => {
-                    setSelectedSize(size);
-                    getAvailableStockFor(size);
-                  }}
-                  className={`relative flex items-center justify-center min-w-[45px] px-3 py-1 rounded-md text-sm border transition-all duration-150 ${
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-sm font-bold uppercase">Select Size</span>
+              <Link
+                href="/size-guide"
+                className="text-xs text-gray-400 underline hover:text-black"
+              >
+                Size Guide
+              </Link>
+            </div>
+            <div className="grid grid-cols-4 gap-2">
+              {selectedVariant.sizes.map((size) => (
+                <button
+                  key={size}
+                  onClick={() => setSelectedSize(size)}
+                  className={`py-3 rounded-md text-sm font-bold border transition-all ${
                     selectedSize === size
-                      ? "bg-primary text-white border-primary"
-                      : "bg-gray-100 border-gray-300 text-gray-700"
-                  } ${
-                    stockLoading && selectedSize === size ? "opacity-70" : ""
+                      ? "border-black bg-black text-white"
+                      : "border-gray-200 text-black hover:border-black"
                   }`}
                 >
-                  {stockLoading && selectedSize === size ? (
-                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  ) : (
-                    size
-                  )}
-                </motion.button>
+                  {size}
+                </button>
               ))}
             </div>
-
-            {/* Stock Info */}
-            {selectedSize && !stockLoading && (
-              <p
-                className={`text-sm font-bold font-display mt-3 ${
-                  availableStock > 0 ? "text-primary" : "text-red-500"
-                }`}
-              >
-                {availableStock > 0
-                  ? `In Stock: ${availableStock}`
-                  : "Out of Stock"}
+            {!selectedSize && (
+              <p className="text-red-500 text-xs mt-2 font-medium">
+                * Please select a size
               </p>
+            )}
+
+            {/* Stock Indicator */}
+            {selectedSize && (
+              <div className="mt-2 text-xs font-bold uppercase tracking-wide">
+                {stockLoading ? (
+                  <span className="text-gray-400">Checking Stock...</span>
+                ) : availableStock > 0 ? (
+                  <span className="text-green-600">In Stock</span>
+                ) : (
+                  <span className="text-red-600">Out of Stock</span>
+                )}
+              </div>
             )}
           </div>
 
-          {/* Quantity & Buttons */}
-          <div className="flex flex-col md:flex-row gap-4 md:items-center mt-1">
-            <div className="flex items-center gap-2 w-fit border border-gray-200 rounded-md p-1">
-              <button
-                onClick={() => setQuantity("dec")}
-                className="p-2 text-gray-700"
-              >
-                <IoRemove />
-              </button>
-              <span className="px-4">{qty}</span>
-              <button
-                onClick={() => setQuantity("inc")}
-                className="p-2 text-gray-700"
-              >
-                <IoAdd />
-              </button>
-            </div>
-
-            <motion.button
+          {/* Actions */}
+          <div className="space-y-3 pt-4 border-t border-gray-100">
+            <button
               onClick={addToCart}
-              disabled={qty === 0 || outOfStocks}
-              whileHover={{ scale: qty === 0 ? 1 : 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="flex items-center w-fit gap-2 px-4 py-2 bg-primary text-white rounded-md disabled:opacity-50"
+              disabled={!selectedSize || outOfStocks}
+              className="w-full py-4 rounded-full bg-black text-white font-bold uppercase tracking-widest hover:bg-gray-800 disabled:bg-gray-300 disabled:cursor-not-allowed transition-all"
             >
-              <IoCartOutline /> Add to Cart
-            </motion.button>
+              {outOfStocks ? "Out of Stock" : "Add to Bag"}
+            </button>
 
-            <motion.button
+            <button
               onClick={buyNow}
-              disabled={qty === 0 || outOfStocks}
-              whileHover={{ scale: qty === 0 ? 1 : 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-4 py-2 border w-fit border-primary rounded-md text-primary disabled:opacity-50"
+              disabled={!selectedSize || outOfStocks}
+              className="w-full py-4 rounded-full border border-gray-300 text-black font-bold uppercase tracking-widest hover:border-black transition-all"
             >
-              Buy Now
-            </motion.button>
+              Buy It Now
+            </button>
 
-            <motion.a
-              href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
-                `Hello, I would like to inquire about the product:\nProduct: ${
-                  item.name
-                }\nVariant: ${selectedVariant.variantName || "N/A"}\nSize: ${
-                  selectedSize || "N/A"
-                }`
-              )}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="flex w-fit items-center gap-2 px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition"
-            >
-              <FaWhatsapp size={20} />
-              Inquire
-            </motion.a>
+            {/* Secondary Actions */}
+            <div className="flex gap-2 justify-center mt-2">
+              <a
+                href={`https://wa.me/${WHATSAPP_NUMBER}?text=Hi, I'm interested in ${item.name}`}
+                target="_blank"
+                className="flex items-center gap-2 text-xs font-bold uppercase text-gray-500 hover:text-green-600 py-2"
+              >
+                <FaWhatsapp size={16} /> WhatsApp Inquiry
+              </a>
+            </div>
           </div>
-          <div className="mt-4 text-xs text-gray-500 text-left max-w-2xl mx-auto">
-            *This product is a premium inspired version (Master Copy/7A). NOT an
-            original branded item.
+
+          {/* Mobile Description (Visible only on mobile) */}
+          <div className="block lg:hidden mt-6 border-t border-gray-100 pt-6">
+            <h3 className="font-bold uppercase tracking-wide text-sm mb-2">
+              Description
+            </h3>
+            <p className="text-gray-600 text-sm">{item.description}</p>
           </div>
         </div>
-      </div>
-
-      {/* Description */}
-      <div className="mt-6">
-        <h2 className="text-xl md:text-2xl font-bold text-gray-800">
-          Description
-        </h2>
-        <p className="text-gray-600 mt-2">
-          {item.description || "No description available."}
-        </p>
       </div>
     </section>
   );

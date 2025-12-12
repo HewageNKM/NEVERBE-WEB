@@ -24,14 +24,15 @@ import {
   verifyOTP,
 } from "@/actions/orderAction";
 import { signUser } from "@/firebase/firebaseClient";
-import BillingDetails from "./BillingDetails"; // Billing (main)
-import ShippingDetails from "./ShippingDetails"; // Shipping (optional)
-import PaymentDetails from "@/app/(site)/checkout/components/PaymentDetails"; // <--- restored
+import BillingDetails from "./BillingDetails";
+import ShippingDetails from "./ShippingDetails";
+import PaymentDetails from "@/app/(site)/checkout/components/PaymentDetails";
 import ComponentLoader from "@/components/ComponentLoader";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 
+// ... (Keep your helper functions like createCustomerFromForm and formatSriLankanPhoneNumber exactly as they are)
 const createCustomerFromForm = (form: any): Customer => {
   const name = `${form.first_name.value} ${form.last_name.value}`;
   return {
@@ -53,6 +54,7 @@ const CheckoutForm = () => {
   const cartItems = useSelector((state: RootState) => state.cartSlice.cart);
   const user = useSelector((state: RootState) => state.authSlice.user);
 
+  // ... (Keep all your existing state: billingCustomer, paymentType, etc.)
   const [billingCustomer, setBillingCustomer] = useState<Customer | null>(null);
   const [shippingSameAsBilling, setShippingSameAsBilling] = useState(true);
   const [shippingCustomer, setShippingCustomer] =
@@ -71,9 +73,9 @@ const CheckoutForm = () => {
   const [pendingOrder, setPendingOrder] = useState<Order | null>(null);
   const [resendCooldown, setResendCooldown] = useState(0);
 
-
   const { executeRecaptcha } = useGoogleReCaptcha();
 
+  // ... (Keep your useEffects and Handlers exactly as they are)
   useEffect(() => {
     const savedCustomer = window.localStorage.getItem("neverbeBillingCustomer");
     if (savedCustomer) setBillingCustomer(JSON.parse(savedCustomer));
@@ -105,10 +107,9 @@ const CheckoutForm = () => {
       setResendCooldown(60);
       res.success
         ? toast.success(`OTP sent to ${phoneNumber}`)
-        : toast.error(res.message || "Failed to send OTP");
+        : toast.error(res.message);
     } catch (err: any) {
-      console.error(err);
-      toast.error(err.message || "Failed to send OTP");
+      toast.error(err.message);
     } finally {
       setIsResendingOtp(false);
     }
@@ -116,14 +117,12 @@ const CheckoutForm = () => {
 
   const handleOtpVerification = async () => {
     if (!pendingOrder || !otp) return toast.error("Invalid OTP");
-
     setIsVerifyingOtp(true);
     try {
       const res = await verifyOTP(
         formatSriLankanPhoneNumber(pendingOrder.customer.phone),
         otp
       );
-
       if (!executeRecaptcha) return toast.error("reCAPTCHA not ready");
 
       if (res.success) {
@@ -135,14 +134,10 @@ const CheckoutForm = () => {
         dispatch(clearCart());
         toast.success("Order verified successfully!");
         router.replace(`/checkout/success/${pendingOrder.orderId}`);
-
         setShowOtpModal(false);
-        setOtp("");
-        setPendingOrder(null);
       } else toast.error(res.message || "Invalid OTP");
     } catch (err: any) {
-      console.error(err);
-      toast.error(err.message || "Invalid OTP");
+      toast.error(err.message);
     } finally {
       setIsVerifyingOtp(false);
     }
@@ -150,13 +145,11 @@ const CheckoutForm = () => {
 
   const handlePaymentSubmit = async (evt: React.FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
-
     if (!executeRecaptcha) return toast.error("reCAPTCHA not ready");
     if (cartItems.length === 0) return toast.error("Cart is empty");
     if (!paymentType) return toast.error("Select payment method");
 
     setIsSubmitting(true);
-
     const form = evt.currentTarget;
     const orderId = generateOrderId();
     const newBilling = createCustomerFromForm(form);
@@ -169,12 +162,9 @@ const CheckoutForm = () => {
     else localStorage.removeItem("neverbeBillingCustomer");
 
     try {
-
       const userId = user?.uid || (await signUser())?.uid;
       const amount = calculateSubTotal(cartItems, paymentFee);
-      const discount = calculateTotalDiscount(cartItems);
-      const transactionFeeCharge = calculateTransactionFeeCharge(cartItems,paymentFee)
-      const fee = calculateFee(paymentFee, cartItems)
+      const fee = calculateFee(paymentFee, cartItems);
 
       const orderCustomer: Customer = {
         ...newBilling,
@@ -205,32 +195,32 @@ const CheckoutForm = () => {
         paymentMethodId: paymentTypeId,
         fee: fee,
         shippingFee: calculateShippingCost(cartItems),
-        transactionFeeCharge,
+        transactionFeeCharge: calculateTransactionFeeCharge(
+          cartItems,
+          paymentFee
+        ),
         paymentStatus: "Pending",
-        status:"Processing",
+        status: "Processing",
         from: "Website",
-        discount,
+        discount: calculateTotalDiscount(cartItems),
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       };
 
-      const token = await executeRecaptcha("new_order");  
-      console.log("New Order:", newOrder);
+      const token = await executeRecaptcha("new_order");
+
       switch (paymentTypeId?.toUpperCase()) {
-        case "PM-006":
-          //KOKO
+        case "PM-006": // KOKO
           await addNewOrder(newOrder, token);
           dispatch(clearCart());
           await processKokoPayment(orderId, orderCustomer, amount);
           break;
-        case "PM-001":
-          //COD
+        case "PM-001": // COD
           setPendingOrder(newOrder);
           await handleRequestOtp(newBilling.phone);
           setShowOtpModal(true);
           break;
-        case "PM-003":
-          //Payhere
+        case "PM-003": // Payhere
           await addNewOrder(newOrder, token);
           dispatch(clearCart());
           await processPayherePayment(orderId, orderCustomer, amount);
@@ -239,7 +229,6 @@ const CheckoutForm = () => {
           throw new Error("Invalid payment method");
       }
     } catch (err: any) {
-      console.error(err);
       toast.error("Payment failed. Redirecting...");
       router.replace(`/checkout/fail?orderId=${orderId}`);
     } finally {
@@ -247,7 +236,7 @@ const CheckoutForm = () => {
     }
   };
 
-  // --- Payment Process Helpers ---
+  // ... (Keep processPayherePayment and processKokoPayment helpers)
   const processPayherePayment = async (
     orderId: string,
     customer: Customer,
@@ -271,23 +260,8 @@ const CheckoutForm = () => {
       cancelUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/checkout/fail?orderId=${orderId}`,
       notifyUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/ipg/payhere/notify`,
     };
-
     const payherePayload = await initiatePayHerePayment(payload);
-    const form = document.createElement("form");
-    form.method = "POST";
-    form.action = process.env.NEXT_PUBLIC_PAYHERE_URL || "";
-    form.style.display = "none";
-
-    Object.entries(payherePayload).forEach(([key, value]) => {
-      const input = document.createElement("input");
-      input.type = "hidden";
-      input.name = key;
-      input.value = value;
-      form.appendChild(input);
-    });
-
-    document.body.appendChild(form);
-    form.submit();
+    submitForm(process.env.NEXT_PUBLIC_PAYHERE_URL || "", payherePayload);
   };
 
   const processKokoPayment = async (
@@ -307,32 +281,34 @@ const CheckoutForm = () => {
       email: customer.email,
       description: `${cartItems.length} products`,
     };
-
     const kokoPayload = await initiateKOKOPayment(payload);
+    submitForm(process.env.NEXT_PUBLIC_KOKO_REDIRECT_URL || "", kokoPayload);
+  };
+
+  const submitForm = (action: string, payload: any) => {
     const form = document.createElement("form");
     form.method = "POST";
-    form.action = process.env.NEXT_PUBLIC_KOKO_REDIRECT_URL || "";
+    form.action = action;
     form.style.display = "none";
-
-    Object.entries(kokoPayload).forEach(([key, value]) => {
+    Object.entries(payload).forEach(([key, value]) => {
       const input = document.createElement("input");
       input.type = "hidden";
       input.name = key;
-      input.value = value;
+      input.value = value as string;
       form.appendChild(input);
     });
-
     document.body.appendChild(form);
     form.submit();
   };
 
   return (
-    <div className="flex justify-center items-center">
+    <>
       <form
         onSubmit={handlePaymentSubmit}
-        className="flex flex-row flex-wrap justify-center lg:flex-nowrap gap-6 mt-10 w-full"
+        className="flex flex-col lg:flex-row w-full gap-8 lg:gap-16 px-4 md:px-8 py-8"
       >
-        <div className="flex flex-col">
+        {/* --- LEFT COLUMN: FORMS (Scrollable) --- */}
+        <div className="w-full lg:w-[60%] flex flex-col gap-10">
           <BillingDetails
             saveAddress={saveAddress}
             setSaveAddress={setSaveAddress}
@@ -347,41 +323,40 @@ const CheckoutForm = () => {
           />
         </div>
 
-        {/* Payment option UI */}
-        <PaymentDetails
-          setPaymentType={setPaymentType}
-          paymentType={paymentType || ""}
-          setPaymentTypeId={setPaymentTypeId}
-          setPaymentFee={setPaymentFee}
-          selectedPaymentFee={paymentFee}
-        />
+        {/* --- RIGHT COLUMN: SUMMARY & PAYMENT (Sticky) --- */}
+        <div className="w-full lg:w-[40%] relative">
+          <div className="sticky top-10">
+            <PaymentDetails
+              setPaymentType={setPaymentType}
+              paymentType={paymentType || ""}
+              setPaymentTypeId={setPaymentTypeId}
+              setPaymentFee={setPaymentFee}
+              selectedPaymentFee={paymentFee}
+            />
+          </div>
+        </div>
       </form>
 
-      {/* OTP Modal */}
+      {/* --- OTP MODAL (Redesigned) --- */}
       {showOtpModal && pendingOrder && (
-        <div className="fixed inset-0 bg-black/60 flex justify-center items-center z-50 p-4">
-          <div className="relative bg-white p-8 rounded-lg shadow-xl w-full max-w-sm">
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex justify-center items-center z-[100] p-4">
+          <div className="relative bg-white p-8 w-full max-w-sm border border-gray-200 shadow-2xl">
             <button
               onClick={() => {
                 setShowOtpModal(false);
                 setPendingOrder(null);
                 setOtp("");
               }}
-              className="absolute top-3 right-3 text-gray-400 hover:text-gray-700 transition-colors"
-              aria-label="Close OTP Modal"
+              className="absolute top-4 right-4 text-black hover:scale-110 transition"
             >
               <FiX size={24} />
             </button>
 
-            <h2 className="text-2xl font-bold mb-4 text-center text-gray-800">
-              Verify Your Order
+            <h2 className="text-xl font-black uppercase tracking-tight mb-2 text-center">
+              Verify Number
             </h2>
-            <p className="text-center text-gray-600 mb-6">
-              An OTP has been sent to{" "}
-              <span className="font-semibold">
-                {pendingOrder.customer.phone}
-              </span>
-              .
+            <p className="text-center text-sm text-gray-500 mb-6 font-medium">
+              Enter the code sent to {pendingOrder.customer.phone}
             </p>
 
             <div className="flex flex-col gap-4">
@@ -390,39 +365,36 @@ const CheckoutForm = () => {
                 value={otp}
                 disabled={isVerifyingOtp}
                 onChange={(e) => setOtp(e.target.value)}
-                placeholder="Enter 6-digit OTP"
-                className="p-3 border-2 border-gray-300 rounded-lg text-center tracking-widest text-lg focus:border-primary-300 focus:ring-1 focus:ring-primary-300 transition"
+                placeholder="000000"
+                className="w-full h-14 text-center text-2xl tracking-[0.5em] font-bold border-2 border-gray-200 focus:border-black outline-none transition-colors"
                 maxLength={6}
-                autoComplete="one-time-code"
               />
               <button
                 onClick={handleOtpVerification}
-                className="bg-primary text-white p-3 rounded-lg hover:bg-primary-200 transition-colors font-semibold disabled:bg-gray-400"
                 disabled={isVerifyingOtp}
+                className="w-full py-4 bg-black text-white font-bold uppercase tracking-widest hover:bg-gray-800 disabled:bg-gray-400 transition"
               >
-                {isVerifyingOtp ? "Verifying..." : "Verify & Place Order"}
+                {isVerifyingOtp ? "Processing..." : "Confirm Order"}
               </button>
 
-              {resendCooldown === 0 ? (
-                <button
-                  onClick={() => handleRequestOtp(pendingOrder.customer.phone)}
-                  className="text-sm text-primary hover:text-primary-100 transition-colors mt-2"
-                  disabled={isResendingOtp}
-                >
-                  {isResendingOtp ? "Sending OTP..." : "Resend OTP"}
-                </button>
-              ) : (
-                <p className="text-sm text-gray-500 text-center mt-2">
-                  Resend in {resendCooldown}s
-                </p>
-              )}
+              <button
+                onClick={() => handleRequestOtp(pendingOrder.customer.phone)}
+                disabled={isResendingOtp || resendCooldown > 0}
+                className="text-xs font-bold uppercase tracking-wide text-gray-400 hover:text-black transition"
+              >
+                {resendCooldown > 0
+                  ? `Resend in ${resendCooldown}s`
+                  : isResendingOtp
+                  ? "Sending..."
+                  : "Resend Code"}
+              </button>
             </div>
           </div>
         </div>
       )}
 
       {isSubmitting && <ComponentLoader />}
-    </div>
+    </>
   );
 };
 

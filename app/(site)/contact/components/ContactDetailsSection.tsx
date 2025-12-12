@@ -3,51 +3,44 @@ import React from "react";
 import { contactInfo } from "@/constants";
 import Link from "next/link";
 
-
 const ContactDetailsSection = () => {
-  const containerVariants = {
-    hidden: {},
-    visible: {
-      transition: {
-        staggerChildren: 0.15,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 10 },
-    visible: { opacity: 1, y: 0 },
-  };
-
   return (
-    <section className="flex flex-col gap-6">
-      <h2 className="text-2xl font-semibold text-gray-900 font-display">
-        Reach Us At
-      </h2>
+    <section className="flex flex-col gap-8">
+      <div>
+        <h2 className="text-xl font-black uppercase tracking-tighter mb-2">
+          Get in Touch
+        </h2>
+        <div className="h-1 w-12 bg-black"></div>
+      </div>
 
-      <ul className="flex flex-col gap-4">
+      <p className="text-sm font-medium text-gray-500 leading-relaxed max-w-sm">
+        For inquiries regarding online orders, shipping, or returns, please
+        contact our support team. We typically respond within 24 hours.
+      </p>
+
+      <ul className="flex flex-col gap-6">
         {contactInfo.map((info, idx) => (
           <li key={idx}>
             <Link
               href={info.link}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-3 text-gray-700 hover:text-black transition-colors"
+              className="group flex flex-col items-start gap-1"
             >
-              <info.icon
-                size={24}
-                className="text-gray-500 transition-transform duration-200 hover:scale-110"
-              />
-              <span className="text-lg">{info.content}</span>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400 group-hover:text-black transition-colors">
+                {info.title || "Contact"}{" "}
+                {/* Assuming your constant might have a title, if not, hardcode or infer */}
+              </span>
+              <div className="flex items-center gap-3">
+                <info.icon size={20} className="text-black" />
+                <span className="text-lg font-bold text-black border-b border-transparent group-hover:border-black transition-all">
+                  {info.content}
+                </span>
+              </div>
             </Link>
           </li>
         ))}
       </ul>
-
-      <p className="text-gray-600 text-sm leading-relaxed max-w-md">
-        You can contact us via email for any inquiries, support requests, or
-        partnership opportunities. We typically respond within 24 hours.
-      </p>
     </section>
   );
 };

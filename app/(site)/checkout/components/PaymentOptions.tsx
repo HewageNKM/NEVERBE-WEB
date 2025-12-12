@@ -15,7 +15,7 @@ const PaymentOptions: React.FC<PaymentOptionsProps> = ({
   paymentType,
   setPaymentType,
   setPaymentTypeId,
-  setPaymentFee
+  setPaymentFee,
 }) => {
   const handleSelect = (option: PaymentMethod) => {
     setPaymentType(option.name);
@@ -24,45 +24,46 @@ const PaymentOptions: React.FC<PaymentOptionsProps> = ({
   };
 
   return (
-    <ul className="space-y-4">
+    <div className="space-y-3">
       {paymentOptions.map((option) => {
         const isSelected = option.name === paymentType;
         return (
-          <li
+          <div
             key={option.paymentId}
             onClick={() => handleSelect(option)}
-            className={`flex items-start gap-3 p-4 border rounded-xl transition cursor-pointer ${
+            className={`flex items-center gap-3 p-4 border cursor-pointer transition-all bg-white ${
               isSelected
-                ? "border-primary bg-primary/10 shadow-sm"
-                : "border-gray-200 hover:border-primary/50 hover:bg-gray-50"
+                ? "border-black shadow-sm"
+                : "border-gray-200 hover:border-gray-300"
             }`}
           >
-            <input
-              id={`payment-${option.paymentId}`}
-              type="radio"
-              name="payment"
-              value={option.name}
-              checked={isSelected}
-              onChange={() => handleSelect(option)}
-              className="h-5 w-5 text-primary focus:ring-primary/40 mt-1"
-            />
+            {/* Custom Radio Circle */}
+            <div
+              className={`h-4 w-4 rounded-full border flex items-center justify-center ${
+                isSelected ? "border-black" : "border-gray-300"
+              }`}
+            >
+              {isSelected && <div className="h-2 w-2 rounded-full bg-black" />}
+            </div>
+
             <div>
-              <label
-                htmlFor={`payment-${option.paymentId}`}
-                className="font-semibold text-gray-900 text-base cursor-pointer"
+              <p
+                className={`text-sm font-bold uppercase tracking-wide ${
+                  isSelected ? "text-black" : "text-gray-600"
+                }`}
               >
                 {option.name}
-              </label>
+              </p>
               {option.description && (
-                <p className="text-gray-500 text-sm mt-1">
+                <p className="text-xs text-gray-400 mt-0.5">
                   {option.description}
                 </p>
               )}
             </div>
-          </li>
+          </div>
         );
       })}
-    </ul>
+    </div>
   );
 };
 

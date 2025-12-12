@@ -11,7 +11,9 @@ const ShippingDetails = ({
   shippingSameAsBilling: boolean;
   setShippingSameAsBilling: React.Dispatch<React.SetStateAction<boolean>>;
   shippingCustomer: Partial<Customer> | null;
-  setShippingCustomer: React.Dispatch<React.SetStateAction<Partial<Customer> | null>>;
+  setShippingCustomer: React.Dispatch<
+    React.SetStateAction<Partial<Customer> | null>
+  >;
 }) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setShippingCustomer((prev) => ({
@@ -21,31 +23,34 @@ const ShippingDetails = ({
   };
 
   return (
-    <section className="bg-white px-3 md:px-6 py-8 mt-6 w-full">
-      <h2 className="text-2xl font-bold text-gray-900 mb-2">
-        Shipping Details
-      </h2>
-      <p className="text-gray-500 mb-4 text-sm">
-        Enter your delivery address details.
-      </p>
+    <section className="w-full">
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-xl font-black uppercase tracking-tight">
+          Shipping
+        </h2>
+      </div>
 
-      <div className="flex items-center gap-3 mb-6">
+      <div className="flex items-center gap-3 mb-6 p-4 bg-gray-50 border border-gray-100">
         <input
           type="checkbox"
+          id="sameAddress"
           checked={shippingSameAsBilling}
           onChange={() => setShippingSameAsBilling((prev) => !prev)}
-          className="h-5 w-5 text-primary focus:ring-2 focus:ring-primary/50 rounded transition"
+          className="h-4 w-4 text-black border-gray-300 focus:ring-black accent-black rounded-sm"
         />
-        <span className="text-gray-700 text-base">
+        <label
+          htmlFor="sameAddress"
+          className="text-sm font-bold uppercase tracking-wide text-gray-700 select-none cursor-pointer"
+        >
           Same as billing address
-        </span>
+        </label>
       </div>
 
       {!shippingSameAsBilling && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6 w-full animate-fadeIn">
           <div>
-            <label className="text-sm font-semibold text-gray-700">
-              * Shipping Name
+            <label className="block text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-1">
+              Recipient Name *
             </label>
             <input
               type="text"
@@ -53,31 +58,27 @@ const ShippingDetails = ({
               required
               value={shippingCustomer?.shippingName || ""}
               onChange={handleChange}
-              placeholder="John Doe"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/40 focus:outline-none"
+              className="w-full h-12 px-4 bg-gray-50 border border-transparent focus:border-black focus:bg-white outline-none transition-all placeholder:text-gray-400 text-sm font-medium"
             />
           </div>
 
           <div>
-            <label className="text-sm font-semibold text-gray-700">
-              * Shipping Phone
+            <label className="block text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-1">
+              Phone *
             </label>
             <input
               type="tel"
               name="shippingPhone"
-              pattern="^07\d{8}$"
-              title="Enter a valid phone number starting with 07XXXXXXXX"
               required
               value={shippingCustomer?.shippingPhone || ""}
               onChange={handleChange}
-              placeholder="0712345678"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/40 focus:outline-none"
+              className="w-full h-12 px-4 bg-gray-50 border border-transparent focus:border-black focus:bg-white outline-none transition-all placeholder:text-gray-400 text-sm font-medium"
             />
           </div>
 
           <div className="md:col-span-2">
-            <label className="text-sm font-semibold text-gray-700">
-              * Shipping Address
+            <label className="block text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-1">
+              Address *
             </label>
             <input
               type="text"
@@ -85,44 +86,34 @@ const ShippingDetails = ({
               required
               value={shippingCustomer?.shippingAddress || ""}
               onChange={handleChange}
-              placeholder="123 Main Street"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/40 focus:outline-none"
+              className="w-full h-12 px-4 bg-gray-50 border border-transparent focus:border-black focus:bg-white outline-none transition-all placeholder:text-gray-400 text-sm font-medium"
             />
           </div>
 
           <div>
-            <label className="text-sm font-semibold text-gray-700">* City</label>
+            <label className="block text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-1">
+              City *
+            </label>
             <input
               type="text"
               name="shippingCity"
               required
               value={shippingCustomer?.shippingCity || ""}
               onChange={handleChange}
-              placeholder="Kandy"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/40 focus:outline-none"
+              className="w-full h-12 px-4 bg-gray-50 border border-transparent focus:border-black focus:bg-white outline-none transition-all placeholder:text-gray-400 text-sm font-medium"
             />
           </div>
 
           <div>
-            <label className="text-sm font-semibold text-gray-700">Postal Code</label>
+            <label className="block text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-1">
+              Postal Code
+            </label>
             <input
               type="text"
               name="shippingZip"
               value={shippingCustomer?.shippingZip || ""}
               onChange={handleChange}
-              placeholder="20000"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/40 focus:outline-none"
-            />
-          </div>
-
-          <div className="md:col-span-2">
-            <label className="text-sm font-semibold text-gray-700">Country</label>
-            <input
-              type="text"
-              name="shippingCountry"
-              value="Sri Lanka"
-              disabled
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-800"
+              className="w-full h-12 px-4 bg-gray-50 border border-transparent focus:border-black focus:bg-white outline-none transition-all placeholder:text-gray-400 text-sm font-medium"
             />
           </div>
         </div>

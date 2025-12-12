@@ -117,77 +117,40 @@ const Page = async (context: { params: Promise<{ brand: string }> }) => {
   };
 
   return (
-    <main className="w-full relative lg:mt-28 mt-16 mb-5 overflow-hidden">
+    <main className="w-full relative lg:mt-24 mt-20 mb-5 overflow-hidden min-h-screen bg-white">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(productListSchema),
         }}
       />
-
       <section className="w-full">
         <BrandHeader brand={brandName} />
-
-        {items.length > 0 ? (
-          <BrandProducts items={items} brand={brandName} />
-        ) : (
-          <div className="text-center py-20 bg-gray-50 rounded-lg mx-4">
-            <h3 className="text-xl font-bold text-gray-700">
-              New Stock Coming Soon
-            </h3>
-            <p className="text-gray-500 mt-2">
-              We are updating our collection of {brandName} sneakers. Please
-              check back later!
-            </p>
-          </div>
-        )}
+        <BrandProducts items={items} brand={brandName} />
       </section>
 
-      {/* ✅ DYNAMIC SEO FOOTER: Brand Specific Content */}
-      <section className="container mx-auto px-4 py-12 border-t border-gray-100 mt-12 bg-gray-50 rounded-xl">
-        <article className="prose prose-sm max-w-none text-gray-600">
-          <h2 className="text-xl font-bold text-gray-900 mb-4 capitalize">
-            {brandName} Shoes Price in Sri Lanka
-          </h2>
-          <div className="grid md:grid-cols-2 gap-8">
-            <div>
-              <p>
-                Are you looking for the best{" "}
-                <strong>{brandName} shoes price in Sri Lanka</strong>? NEVERBE
-                is your ultimate destination. We stock a wide range of
-                <strong> {brandName} first copy shoes</strong> that offer the
-                same premium look and feel as the originals but at a fraction of
-                the cost.
-              </p>
-              <p className="mt-2">
-                Our collection features the latest{" "}
-                <strong>{brandName} Master Copy</strong> sneakers, perfect for
-                sports, gym, or casual wear. Why overpay when you can get
-                high-quality
-                <strong> 7A quality {brandName} sneakers</strong> delivered to
-                your doorstep?
-              </p>
-            </div>
-            <div>
-              <h3 className="font-semibold text-gray-900 mb-2 capitalize">
-                Why Buy {brandName} Copies from NEVERBE?
-              </h3>
-              <ul className="list-disc pl-5 space-y-1">
-                <li>
-                  <strong>Premium Quality:</strong> We ensure our{" "}
-                  <strong>{brandName} replicas</strong>
-                  are durable and comfortable.
-                </li>
-                <li>
-                  <strong>Island-wide Delivery:</strong> Get your favorite kicks
-                  delivered to Colombo, Kandy, Galle, or anywhere in Sri Lanka.
-                </li>
-                <li>
-                  <strong>Best Rates:</strong> We offer the most competitive
-                  <strong> {brandName} copy shoe prices</strong> in the market.
-                </li>
-              </ul>
-            </div>
+      {/* Fine Print SEO Footer */}
+      <section className="max-w-[1440px] mx-auto px-4 py-12 border-t border-gray-100 mt-12">
+        <article className="grid md:grid-cols-2 gap-8 text-xs text-gray-400 leading-relaxed text-justify md:text-left">
+          <div>
+            <h2 className="text-black font-bold uppercase tracking-wide mb-2">
+              {brandName} First Copy Shoes in Sri Lanka
+            </h2>
+            <p>
+              NEVERBE is your ultimate destination for {brandName} Master Copy
+              offer the same premium look and feel as the originals but at a
+              fraction of the cost.
+            </p>
+          </div>
+          <div>
+            <h3 className="text-black font-bold uppercase tracking-wide mb-2">
+              Why Buy {brandName} Copies?
+            </h3>
+            <ul className="list-disc pl-4 space-y-1">
+              <li>Premium Quality 7A Grade Materials</li>
+              <li>Competitive Prices in Sri Lanka</li>
+              <li>Island-wide Delivery to Colombo, Kandy, Galle</li>
+            </ul>
           </div>
         </article>
       </section>

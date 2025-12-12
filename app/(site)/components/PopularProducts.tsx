@@ -1,106 +1,33 @@
 "use client";
-
 import ItemCard from "@/components/ItemCard";
-import EmptyState from "@/components/EmptyState";
-
-// Swiper imports
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation } from "swiper/modules";
-import type { Swiper as SwiperType } from "swiper";
-import { useRef } from "react";
-import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
-
 import "swiper/css";
-import "swiper/css/navigation";
-import { Product } from "@/interfaces/Product";
 
-const PopularProducts = ({ hotItems }: { hotItems: Product[] }) => {
-  const prevRef = useRef<HTMLButtonElement>(null);
-  const nextRef = useRef<HTMLButtonElement>(null);
-
-  const handleInit = (swiper: SwiperType) => {
-    if (
-      swiper.params.navigation &&
-      typeof swiper.params.navigation !== "boolean"
-    ) {
-      swiper.params.navigation.prevEl = prevRef.current;
-      swiper.params.navigation.nextEl = nextRef.current;
-      swiper.navigation.init();
-      swiper.navigation.update();
-    }
-  };
-
-  if (hotItems.length === 0) {
-    return <EmptyState heading="No hot products available!" />;
-  }
-
+const PopularProducts = ({ hotItems }: { hotItems: any[] }) => {
   return (
-    <section className="w-full my-8">
-      <div className="lg:px-16 px-2 py-4">
-        {/* Header */}
-        <div className="text-center md:text-left">
-          <h2 className="text-3xl font-display md:text-4xl font-bold text-gray-800">
-            Popular Products
-          </h2>
-          <h3 className="text-primary text-lg md:text-xl mt-2 font-medium">
-            Check out our best-selling products
-          </h3>
-        </div>
-
-        {/* Swiper Slider */}
-        <div className="mt-10 relative group">
-          {/* Custom Navigation Buttons */}
-          <button
-            ref={prevRef}
-            className="absolute -left-2 md:-left-8 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white shadow-custom rounded-full flex items-center justify-center text-gray-800 transition-all disabled:opacity-30 disabled:cursor-not-allowed hover:bg-primary-50"
-            aria-label="Previous slide"
-          >
-            <BiChevronLeft size={24} />
-          </button>
-          <button
-            ref={nextRef}
-            className="absolute -right-2 md:-right-8 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white shadow-custom rounded-full flex items-center justify-center text-gray-800 transition-all disabled:opacity-30 disabled:cursor-not-allowed hover:bg-primary-50"
-            aria-label="Next slide"
-          >
-            <BiChevronRight size={24} />
-          </button>
-
-          {/* SSR Fallback & Swiper */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:hidden">
-            {hotItems.slice(0, 4).map((item, index) => (
-              <ItemCard key={item.id} item={item} priority={index < 2} />
-            ))}
-          </div>
-
-          <div className="hidden md:block">
-            <Swiper
-              modules={[Navigation]}
-              onInit={handleInit}
-              spaceBetween={16}
-              slidesPerView={2}
-              breakpoints={{
-                640: { slidesPerView: 2 },
-                768: { slidesPerView: 3 },
-                1024: { slidesPerView: 4 },
-              }}
-              loop={hotItems.length > 2}
-            >
-              {hotItems.map((item, index) => (
-                <SwiperSlide key={item.id}>
-                  <ItemCard item={item} priority={index < 4} />
-                </SwiperSlide>
-              ))}
-            </Swiper>
-          </div>
-          {/* Mobile Swiper (Always visible on mobile to replace grid if needed, or just use Swiper everywhere but ensure height) */}
-          {/* Actually, a better approach for CLS is to just render the Swiper but give the slide a fixed width/height via CSS or the fallback grid method.
-              Let's try a hybrid approach: Render the Swiper, but ensure the container has min-height.
-              However, Swiper acts as a flex container.
-          */}
-        </div>
+    <section className="w-full max-w-[1440px] mx-auto px-4 md:px-8">
+      <div className="flex justify-between items-end mb-8">
+        <h2 className="text-2xl md:text-3xl font-black uppercase tracking-tight">
+          Popular Right Now
+        </h2>
       </div>
+
+      <Swiper
+        spaceBetween={20}
+        slidesPerView={1.5} // Shows part of next slide to encourage scroll
+        breakpoints={{
+          640: { slidesPerView: 2.2 },
+          1024: { slidesPerView: 4.2 },
+        }}
+        className="!pb-10"
+      >
+        {hotItems.map((item, index) => (
+          <SwiperSlide key={item.id}>
+            <ItemCard item={item} priority={index < 4} />
+          </SwiperSlide>
+        ))}
+      </Swiper>
     </section>
   );
 };
-
 export default PopularProducts;
