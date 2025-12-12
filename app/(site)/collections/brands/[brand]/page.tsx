@@ -117,7 +117,7 @@ const Page = async (context: { params: Promise<{ brand: string }> }) => {
   };
 
   return (
-    <main className="w-full relative lg:mt-24 mt-20 mb-5 overflow-hidden min-h-screen bg-white">
+    <main className="w-full relative mt-4 lg:mt-8 mb-5 overflow-hidden min-h-screen bg-white">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{

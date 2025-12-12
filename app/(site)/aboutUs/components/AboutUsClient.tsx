@@ -3,7 +3,7 @@ import React from "react";
 
 const AboutUsClient = () => {
   return (
-    <main className="w-full bg-white text-black min-h-screen pt-24 md:pt-32">
+    <main className="w-full bg-white text-black min-h-screen pt-8 md:pt-12">
       {/* 1. HERO MANIFESTO */}
       <section className="w-full px-4 md:px-8 mb-20">
         <div className="max-w-[1440px] mx-auto">

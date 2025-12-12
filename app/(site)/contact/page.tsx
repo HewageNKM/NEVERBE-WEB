@@ -92,7 +92,7 @@ const ContactPage = () => {
   ];
 
   return (
-    <div className="min-h-screen mt-24 lg:mt-40 flex flex-col items-center px-4 sm:px-6 lg:px-12">
+    <div className="min-h-screen mt-8 lg:mt-12 flex flex-col items-center px-4 sm:px-6 lg:px-12">
       {/* Structured Data JSON-LD */}
       <script
         type="application/ld+json"

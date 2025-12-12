@@ -110,7 +110,7 @@ const Page = async () => {
   };
 
   return (
-    <main className="w-full relative lg:mt-24 mt-16 mb-10 min-h-screen bg-white">
+    <main className="w-full relative mt-4 lg:mt-8 mb-10 min-h-screen bg-white">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(dealsSchema) }}

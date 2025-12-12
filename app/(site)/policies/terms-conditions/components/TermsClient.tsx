@@ -5,7 +5,7 @@ import TermsContent from "./TermsContent";
 
 const TermsClient = () => {
   return (
-    <main className="w-full min-h-screen bg-white pt-32 md:pt-40 pb-20 px-4 md:px-8">
+    <main className="w-full min-h-screen bg-white pt-8 md:pt-12 pb-20 px-4 md:px-8">
       <div className="max-w-[1440px] mx-auto">
         {/* Header */}
         <div className="mb-16 md:mb-24 border-b border-black pb-8">
