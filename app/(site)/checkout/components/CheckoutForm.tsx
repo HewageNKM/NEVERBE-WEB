@@ -351,7 +351,7 @@ const CheckoutForm = () => {
 
       {/* --- OTP MODAL (Redesigned) --- */}
       {showOtpModal && pendingOrder && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex justify-center items-center z-[100] p-4">
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex justify-center items-center z-100 p-4">
           <div className="relative bg-white p-8 w-full max-w-sm border border-gray-200 shadow-2xl">
             <button
               onClick={() => {

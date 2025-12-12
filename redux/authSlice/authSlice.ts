@@ -1,23 +1,23 @@
-import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {User} from "@firebase/auth-types";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { SerializableUser } from "@/interfaces";
 
 interface AuthSlice {
-    user: User | null;
+  user: SerializableUser | null;
 }
 
 const initialState: AuthSlice = {
-    user: null,
+  user: null,
 };
 
 const authSlice = createSlice({
-    name: "auth",
-    initialState,
-    reducers: {
-        setUser: (state, action: PayloadAction<User | null>) => {
-            state.user = action.payload;
-        }
-    }
+  name: "auth",
+  initialState,
+  reducers: {
+    setUser: (state, action: PayloadAction<SerializableUser | null>) => {
+      state.user = action.payload;
+    },
+  },
 });
 
-export const {setUser} = authSlice.actions;
+export const { setUser } = authSlice.actions;
 export default authSlice.reducer;

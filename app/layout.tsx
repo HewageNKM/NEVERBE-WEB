@@ -43,6 +43,9 @@ const plusJakartaSans = Plus_Jakarta_Sans({
   variable: "--font-plus-jakarta-sans",
 });
 
+import StoreProvider from "@/app/(site)/components/StoreProvider";
+import AuthProvider from "@/components/AuthProvider";
+
 export default function RootLayout({
   children,
 }: {
@@ -53,8 +56,12 @@ export default function RootLayout({
       <body
         className={`${mono.variable} ${inter.variable} ${plusJakartaSans.variable} antialiased min-h-screen flex flex-col font-sans`}
       >
-        <main className="flex-1">{children}</main>
-        <WebVitals />
+        <StoreProvider>
+          <AuthProvider>
+            <main className="flex-1">{children}</main>
+            <WebVitals />
+          </AuthProvider>
+        </StoreProvider>
       </body>
     </html>
   );

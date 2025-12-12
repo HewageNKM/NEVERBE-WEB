@@ -11,22 +11,18 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        // Serialize the user object (Redux doesn't like non-serializable data)
-        const serializedUser = {
+        const serializableUser = {
           uid: user.uid,
           email: user.email,
           displayName: user.displayName,
           photoURL: user.photoURL,
+          phoneNumber: user.phoneNumber,
+          providerId: user.providerId,
           emailVerified: user.emailVerified,
+          isAnonymous: user.isAnonymous,
+          memberSince: user.metadata.creationTime,
         };
-        // We cast to any or User type depending on strictness,
-        // but passing the full User object often causes serializable errors in Redux Toolkit.
-        // However, existing slice expects 'User | null'.
-        // If the slice defined User as the Firebase type, we might get warnings.
-        // For now, let's pass it, but ideally we should map it.
-        // Checking authSlice again... it imports User from @firebase/auth-types.
-        // I'll try passing user directly first, as some setups preserve it (ignoring serializable check).
-        dispatch(setUser(user as any));
+        dispatch(setUser(serializableUser));
       } else {
         dispatch(setUser(null));
       }

@@ -15,7 +15,9 @@ export const getProducts = async (
   size: number = 20
 ): Promise<{ total: number; dataList: Product[] }> => {
   try {
-    console.log(`[ProductService] getProducts → Page: ${page}, Size: ${size}, Tags: ${tags}, InStock: ${inStock}`);
+    console.log(
+      `[ProductService] getProducts → Page: ${page}, Size: ${size}, Tags: ${tags}, InStock: ${inStock}`
+    );
     let query: FirebaseFirestore.Query = adminFirestore
       .collection("products")
       .where("isDeleted", "==", false)
@@ -42,9 +44,14 @@ export const getProducts = async (
 
     const products: Product[] = snapshot.docs
       .map((doc) => {
-        const product = { ...(doc.data() as Product), createdAt: null, updatedAt: null };
+        const product = {
+          ...(doc.data() as Product),
+          createdAt: null,
+          updatedAt: null,
+        };
         const filteredVariants = (product.variants || []).filter(
-          (variant: ProductVariant) => variant.status === true && variant.isDeleted === false
+          (variant: ProductVariant) =>
+            variant.status === true && variant.isDeleted === false
         );
         return { ...product, variants: filteredVariants };
       })
@@ -54,6 +61,98 @@ export const getProducts = async (
     return { total, dataList: products };
   } catch (error) {
     console.error("[ProductService] getProducts error:", error);
+    throw error;
+  }
+};
+
+// ====================== New Arrivals ======================
+export const getNewArrivals = async (
+  page: number = 1,
+  size: number = 20
+): Promise<{ total: number; dataList: Product[] }> => {
+  try {
+    console.log(
+      `[ProductService] getNewArrivals → Page: ${page}, Size: ${size}`
+    );
+    const offset = (page - 1) * size;
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    const dateThreshold = thirtyDaysAgo.toISOString();
+
+    console.log(
+      `[ProductService] Checking for products updated since: ${dateThreshold}`
+    );
+
+    let query: FirebaseFirestore.Query = adminFirestore
+      .collection("products")
+      .where("isDeleted", "==", false)
+      .where("status", "==", true)
+      .where("listing", "==", true)
+      .where("createdAt", ">=", dateThreshold);
+
+    const snapshot = await query.get();
+    let total = snapshot.size;
+
+    console.log(
+      `[ProductService] Found ${total} new arrivals in last 30 days.`
+    );
+
+    let products: Product[] = [];
+
+    if (total === 0 && page === 1) {
+      console.log(
+        "[ProductService] No new arrivals found. Falling back to recent updated items."
+      );
+      query = adminFirestore
+        .collection("products")
+        .where("isDeleted", "==", false)
+        .where("status", "==", true)
+        .where("listing", "==", true)
+        .orderBy("updatedAt", "desc");
+
+      total = (await query.get()).size;
+      query = query.offset(offset).limit(size);
+      const fallbackSnapshot = await query.get();
+      products = fallbackSnapshot.docs
+        .map((doc) => {
+          const product = doc.data() as Product;
+          const filteredVariants = (product.variants || []).filter(
+            (v) => v.status && !(v as any).isDeleted
+          );
+          return {
+            ...product,
+            variants: filteredVariants,
+            createdAt: null,
+            updatedAt: null,
+          };
+        })
+        .filter((p) => (p.variants?.length ?? 0) > 0);
+    } else {
+      query = query.orderBy("updatedAt", "desc").offset(offset).limit(size);
+      const pagedSnapshot = await query.get();
+
+      products = pagedSnapshot.docs
+        .map((doc) => {
+          const product = doc.data() as Product;
+          const filteredVariants = (product.variants || []).filter(
+            (v) => v.status && !(v as any).isDeleted
+          );
+          return {
+            ...product,
+            variants: filteredVariants,
+            createdAt: null,
+            updatedAt: null,
+          };
+        })
+        .filter((p) => (p.variants?.length ?? 0) > 0);
+    }
+
+    console.log(`[ProductService] New Arrivals fetched: ${products.length}`);
+    return { total, dataList: products };
+  } catch (error) {
+    console.error("[ProductService] getNewArrivals error:", error);
+    // If index error, might fall through here.
+    // Ideally we should handle it, but throwing allows debugging.
     throw error;
   }
 };
@@ -71,7 +170,11 @@ export const getRecentItems = async () => {
       .get();
     console.log(`[ProductService] Recent items fetched: ${docs.size}`);
 
-    const items: Product[] = docs.docs.map((doc) => ({ ...doc.data(), createdAt: null, updatedAt: null }));
+    const items: Product[] = docs.docs.map((doc) => ({
+      ...doc.data(),
+      createdAt: null,
+      updatedAt: null,
+    }));
     return items;
   } catch (error) {
     console.error("[ProductService] getRecentItems error:", error);
@@ -82,15 +185,21 @@ export const getRecentItems = async () => {
 // ====================== Hot Products ======================
 export const getHotProducts = async () => {
   try {
-    console.log("[ProductService] getHotProducts → Calculating hot products based on orders.");
-    const ordersSnapshot = await adminFirestore.collection("orders").limit(100).get();
+    console.log(
+      "[ProductService] getHotProducts → Calculating hot products based on orders."
+    );
+    const ordersSnapshot = await adminFirestore
+      .collection("orders")
+      .limit(100)
+      .get();
     const itemCount: Record<string, number> = {};
 
     ordersSnapshot.forEach((doc) => {
       const order = doc.data();
       if (Array.isArray(order.items)) {
         order.items.forEach((item) => {
-          if (item?.itemId) itemCount[item.itemId] = (itemCount[item.itemId] || 0) + 1;
+          if (item?.itemId)
+            itemCount[item.itemId] = (itemCount[item.itemId] || 0) + 1;
         });
       }
     });
@@ -109,7 +218,12 @@ export const getHotProducts = async () => {
         .where("listing", "==", true)
         .where("id", "==", itemId)
         .get();
-      if (!itemDoc.empty) hotProducts.push({ ...itemDoc.docs[0].data(), createdAt: null, updatedAt: null });
+      if (!itemDoc.empty)
+        hotProducts.push({
+          ...itemDoc.docs[0].data(),
+          createdAt: null,
+          updatedAt: null,
+        });
       if (hotProducts.length === 10) break;
     }
 
@@ -135,9 +249,13 @@ export const getProductById = async (itemId: string) => {
 
     if (itemDoc.empty) throw new Error(`Product not found: ${itemId}`);
     const docData = itemDoc.docs[0].data();
-    const variants = docData.variants.filter((v: ProductVariant) => v.status && !v.isDeleted);
+    const variants = docData.variants.filter(
+      (v: ProductVariant) => v.status && !v.isDeleted
+    );
 
-    console.log(`[ProductService] Product ${itemId} fetched with ${variants.length} valid variants.`);
+    console.log(
+      `[ProductService] Product ${itemId} fetched with ${variants.length} valid variants.`
+    );
     return { ...docData, variants, createdAt: null, updatedAt: null };
   } catch (error) {
     console.error(`[ProductService] getProductById error:`, error);
@@ -154,7 +272,9 @@ export const getProductsByCategory = async (
   inStock?: boolean
 ) => {
   try {
-    console.log(`[ProductService] getProductsByCategory → Category: ${category}, Page: ${page}, Size: ${size}`);
+    console.log(
+      `[ProductService] getProductsByCategory → Category: ${category}, Page: ${page}, Size: ${size}`
+    );
     const offset = (page - 1) * size;
     let query = adminFirestore
       .collection("products")
@@ -176,10 +296,13 @@ export const getProductsByCategory = async (
     query = query.offset(offset).limit(size);
 
     const snapshot = await query.get();
-    const products: Product[] = snapshot.docs.map((doc) => ({ ...doc.data(), createdAt: null, updatedAt: null }))
+    const products: Product[] = snapshot.docs
+      .map((doc) => ({ ...doc.data(), createdAt: null, updatedAt: null }))
       .filter((p) => (p.variants?.length ?? 0) > 0);
 
-    console.log(`[ProductService] Products by category fetched: ${products.length}`);
+    console.log(
+      `[ProductService] Products by category fetched: ${products.length}`
+    );
     return { total, dataList: products };
   } catch (error) {
     console.error("[ProductService] getProductsByCategory error:", error);
@@ -196,7 +319,9 @@ export const getProductsByBrand = async (
   inStock?: boolean
 ) => {
   try {
-    console.log(`[ProductService] getProductsByBrand → Brand: ${brand}, Page: ${page}, Size: ${size}`);
+    console.log(
+      `[ProductService] getProductsByBrand → Brand: ${brand}, Page: ${page}, Size: ${size}`
+    );
     const offset = (page - 1) * size;
     let query: FirebaseFirestore.Query = adminFirestore
       .collection("products")
@@ -220,12 +345,21 @@ export const getProductsByBrand = async (
     const products: Product[] = snapshot.docs
       .map((doc) => {
         const product = doc.data() as Product;
-        const filteredVariants = (product.variants || []).filter(v => v.status && !v.isDeleted);
-        return { ...product, variants: filteredVariants, createdAt: null, updatedAt: null };
+        const filteredVariants = (product.variants || []).filter(
+          (v) => v.status && !v.isDeleted
+        );
+        return {
+          ...product,
+          variants: filteredVariants,
+          createdAt: null,
+          updatedAt: null,
+        };
       })
       .filter((p) => (p.variants?.length ?? 0) > 0);
 
-    console.log(`[ProductService] Products by brand fetched: ${products.length}`);
+    console.log(
+      `[ProductService] Products by brand fetched: ${products.length}`
+    );
     return { total, dataList: products };
   } catch (error) {
     console.error("[ProductService] getProductsByBrand error:", error);
@@ -241,7 +375,9 @@ export const getDealsProducts = async (
   inStock?: boolean
 ) => {
   try {
-    console.log(`[ProductService] getDealsProducts → Page: ${page}, Size: ${size}`);
+    console.log(
+      `[ProductService] getDealsProducts → Page: ${page}, Size: ${size}`
+    );
     let query = adminFirestore
       .collection("products")
       .where("isDeleted", "==", false)
@@ -249,12 +385,18 @@ export const getDealsProducts = async (
       .where("listing", "==", true)
       .where("discount", ">", 0);
 
-    if (tags && tags.length > 0) query = query.where("tags", "array-contains-any", tags);
-    if (typeof inStock === "boolean") query = query.where("inStock", "==", inStock);
+    if (tags && tags.length > 0)
+      query = query.where("tags", "array-contains-any", tags);
+    if (typeof inStock === "boolean")
+      query = query.where("inStock", "==", inStock);
 
     const total = (await query.get()).size;
-    const snapshot = await query.offset((page - 1) * size).limit(size).get();
-    const products: Product[] = snapshot.docs.map((doc) => ({ ...doc.data(), createdAt: null, updatedAt: null }))
+    const snapshot = await query
+      .offset((page - 1) * size)
+      .limit(size)
+      .get();
+    const products: Product[] = snapshot.docs
+      .map((doc) => ({ ...doc.data(), createdAt: null, updatedAt: null }))
       .filter((p) => (p.variants?.length ?? 0) > 0);
 
     console.log(`[ProductService] Deals products fetched: ${products.length}`);
@@ -266,10 +408,19 @@ export const getDealsProducts = async (
 };
 
 // ====================== Get Product Stock ======================
-export const getProductStock = async (productId: string, variantId: string, size: string) => {
+export const getProductStock = async (
+  productId: string,
+  variantId: string,
+  size: string
+) => {
   try {
-    console.log(`[ProductService] getProductStock → Product: ${productId}, Variant: ${variantId}, Size: ${size}`);
-    const settingsSnap = await adminFirestore.collection("app_settings").doc("erp_settings").get();
+    console.log(
+      `[ProductService] getProductStock → Product: ${productId}, Variant: ${variantId}, Size: ${size}`
+    );
+    const settingsSnap = await adminFirestore
+      .collection("app_settings")
+      .doc("erp_settings")
+      .get();
     const stockId = settingsSnap.data()?.onlineStockId;
     if (!stockId) throw new Error("onlineStockId not found in ERP settings");
 
@@ -300,7 +451,10 @@ export const getProductStock = async (productId: string, variantId: string, size
 export const getSimilarItems = async (itemId: string) => {
   try {
     console.log(`[ProductService] getSimilarItems → Item ID: ${itemId}`);
-    const itemDoc = await adminFirestore.collection("products").doc(itemId).get();
+    const itemDoc = await adminFirestore
+      .collection("products")
+      .doc(itemId)
+      .get();
     if (!itemDoc.exists) throw new Error(`Item with ID ${itemId} not found`);
     const item = itemDoc.data() as Product;
 
@@ -314,10 +468,17 @@ export const getSimilarItems = async (itemId: string) => {
       .get();
 
     const similarItems: Product[] = similarItemsQuery.docs
-      .filter(doc => doc.id !== itemId)
-      .map(doc => ({ ...doc.data(), itemId: doc.id, createdAt: null, updatedAt: null }));
+      .filter((doc) => doc.id !== itemId)
+      .map((doc) => ({
+        ...doc.data(),
+        itemId: doc.id,
+        createdAt: null,
+        updatedAt: null,
+      }));
 
-    console.log(`[ProductService] Similar items fetched: ${similarItems.length}`);
+    console.log(
+      `[ProductService] Similar items fetched: ${similarItems.length}`
+    );
     return similarItems;
   } catch (error) {
     console.error("[ProductService] getSimilarItems error:", error);
@@ -328,7 +489,9 @@ export const getSimilarItems = async (itemId: string) => {
 // ====================== Sitemap ======================
 export const getProductsForSitemap = async () => {
   try {
-    console.log("[ProductService] getProductsForSitemap → Fetching all products");
+    console.log(
+      "[ProductService] getProductsForSitemap → Fetching all products"
+    );
     const snapshot = await adminFirestore
       .collection("products")
       .where("status", "==", true)
@@ -336,8 +499,10 @@ export const getProductsForSitemap = async () => {
       .where("listing", "==", true)
       .get();
 
-    const products = snapshot.docs.map(doc => ({
-      url: `${process.env.NEXT_PUBLIC_BASE_URL}/collections/products/${doc.data().id}`,
+    const products = snapshot.docs.map((doc) => ({
+      url: `${process.env.NEXT_PUBLIC_BASE_URL}/collections/products/${
+        doc.data().id
+      }`,
       lastModified: new Date(),
       priority: 0.7,
     }));
@@ -360,8 +525,10 @@ export const getBrandForSitemap = async () => {
       .where("listing", "==", true)
       .get();
 
-    const brands = snapshot.docs.map(doc => ({
-      url: `${process.env.NEXT_PUBLIC_BASE_URL}/collections/brands/${encodeURIComponent(doc.data().name)}`,
+    const brands = snapshot.docs.map((doc) => ({
+      url: `${
+        process.env.NEXT_PUBLIC_BASE_URL
+      }/collections/brands/${encodeURIComponent(doc.data().name)}`,
       lastModified: new Date(),
       priority: 0.8,
     }));
@@ -376,20 +543,26 @@ export const getBrandForSitemap = async () => {
 
 export const getCategoriesForSitemap = async () => {
   try {
-    console.log("[ProductService] getCategoriesForSitemap → Fetching categories");
+    console.log(
+      "[ProductService] getCategoriesForSitemap → Fetching categories"
+    );
     const snapshot = await adminFirestore
       .collection("categories")
       .where("status", "==", true)
       .where("isDeleted", "==", false)
       .get();
 
-    const categories = snapshot.docs.map(doc => ({
-      url: `${process.env.NEXT_PUBLIC_BASE_URL}/collections/categories/${encodeURIComponent(doc.data().name)}`,
+    const categories = snapshot.docs.map((doc) => ({
+      url: `${
+        process.env.NEXT_PUBLIC_BASE_URL
+      }/collections/categories/${encodeURIComponent(doc.data().name)}`,
       lastModified: new Date(),
       priority: 0.8,
     }));
 
-    console.log(`[ProductService] Categories for sitemap: ${categories.length}`);
+    console.log(
+      `[ProductService] Categories for sitemap: ${categories.length}`
+    );
     return categories;
   } catch (error) {
     console.error("[ProductService] getCategoriesForSitemap error:", error);
@@ -400,14 +573,16 @@ export const getCategoriesForSitemap = async () => {
 // ====================== Payment Methods ======================
 export const getPaymentMethods = async () => {
   try {
-    console.log("[ProductService] getPaymentMethods → Fetching active payment methods");
+    console.log(
+      "[ProductService] getPaymentMethods → Fetching active payment methods"
+    );
     const snapshot = await adminFirestore
       .collection("paymentMethods")
       .where("status", "==", "Active")
       .where("available", "array-contains", "Website")
       .get();
 
-    const methods: PaymentMethod[] = snapshot.docs.map(doc => ({
+    const methods: PaymentMethod[] = snapshot.docs.map((doc) => ({
       ...doc.data(),
       createdAt: null,
       updatedAt: null,

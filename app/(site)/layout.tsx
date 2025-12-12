@@ -1,6 +1,4 @@
 import "@/app/globals.css";
-import AuthProvider from "@/components/AuthProvider";
-import StoreProvider from "@/app/(site)/components/StoreProvider";
 import GlobalProvider from "@/app/(site)/components/GlobalProvider";
 import { getSeason } from "@/util/getSeason";
 
@@ -14,13 +12,9 @@ export default async function RootLayout({
   const season = getSeason();
 
   return (
-    <StoreProvider>
-      <AuthProvider>
-        <GlobalProvider season={season}>
-          <SeasonalAnimationsWrapper season={season} />
-          {children}
-        </GlobalProvider>
-      </AuthProvider>
-    </StoreProvider>
+    <GlobalProvider season={season}>
+      <SeasonalAnimationsWrapper season={season} />
+      {children}
+    </GlobalProvider>
   );
 }

@@ -1,81 +1,87 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import { signOut, updateProfile, updatePassword } from "firebase/auth";
 import {
-  onAuthStateChanged,
-  signOut,
-  updateProfile,
-  updatePassword,
-} from "firebase/auth";
-import { collection, getDocs, query, where } from "firebase/firestore";
+  collection,
+  getDocs,
+  query,
+  where,
+  addDoc,
+  deleteDoc,
+  doc,
+} from "firebase/firestore";
 import { auth, db } from "@/firebase/firebaseClient";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import { setUser } from "@/redux/authSlice/authSlice";
 
 const Account = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
-  const [user, setUser] = useState(null);
   const [orders, setOrders] = useState([]);
   const [addresses, setAddresses] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [addingAddress, setAddingAddress] = useState(false);
+  const { user } = useSelector((state: RootState) => state.authSlice);
+  const dispatch = useDispatch();
 
   // --- Data Fetching ---
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      if (currentUser) {
-        // 1. Set Basic User Info
-        setUser({
-          name: currentUser.displayName || "Member",
-          email: currentUser.email,
-          uid: currentUser.uid,
-          memberSince: currentUser.metadata.creationTime
-            ? new Date(currentUser.metadata.creationTime).getFullYear()
-            : "2024",
-        });
-
-        // 2. Fetch Orders & Addresses from Firestore
-        // Assumes structure: users/{uid}/orders AND users/{uid}/addresses
+    const fetchData = async () => {
+      if (user?.uid) {
         try {
-          const ordersRef = collection(db, "users", currentUser.uid, "orders");
-          const addrRef = collection(db, "users", currentUser.uid, "addresses");
-
-          const [ordersSnap, addrSnap] = await Promise.all([
-            getDocs(ordersRef),
-            getDocs(addrRef),
-          ]);
-
-          setOrders(
-            ordersSnap.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
+          // Fetch Orders
+          const ordersQuery = query(
+            collection(db, "orders"),
+            where("userId", "==", user.uid)
           );
-          setAddresses(
-            addrSnap.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
-          );
+          const ordersSnapshot = await getDocs(ordersQuery);
+          const ordersData = ordersSnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+          setOrders(ordersData); // @ts-ignore
+
+          // Fetch Addresses
+          const addressesRef = collection(db, "users", user.uid, "addresses");
+          const addressesSnapshot = await getDocs(addressesRef);
+          const addressesData = addressesSnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+          setAddresses(addressesData); // @ts-ignore
         } catch (error) {
-          console.error("Error loading user data:", error);
+          console.error("Error fetching data:", error);
+        } finally {
+          setLoading(false);
         }
       } else {
-        // Redirect to login if needed, or just clear state
-        setUser(null);
-        window.location.href = "/login";
+        // Wait a bit for auth to initialize if not yet present
+        const timer = setTimeout(() => {
+          setLoading(false);
+        }, 2000);
+        return () => clearTimeout(timer);
       }
-      setLoading(false);
-    });
+    };
 
-    return () => unsubscribe();
-  }, []);
+    fetchData();
+  }, [user]);
 
   // --- Handlers ---
   const handleLogout = async () => {
     try {
       await signOut(auth);
-      window.location.href = "/login";
+      window.location.href = "/account/login";
     } catch (error) {
       console.error("Logout failed", error);
     }
   };
 
-  const handleUpdateProfile = async (e) => {
+  const handleUpdateProfile = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const fName = e.target.fName.value;
-    const lName = e.target.lName.value;
-    const newPass = e.target.newPass.value;
+    const formData = new FormData(e.currentTarget);
+    const fName = formData.get("fName") as string;
+    const lName = formData.get("lName") as string;
+    const newPass = formData.get("newPass") as string;
 
     try {
       if (auth.currentUser) {
@@ -88,11 +94,67 @@ const Account = () => {
         }
         alert("Profile updated successfully!");
 
-        // Update local state to reflect name change immediately
-        setUser((prev) => ({ ...prev, name: `${fName} ${lName}`.trim() }));
+        // Update Redux state manually to reflect changes immediately
+        const updatedUser = {
+          uid: auth.currentUser.uid,
+          email: auth.currentUser.email,
+          displayName: auth.currentUser.displayName,
+          photoURL: auth.currentUser.photoURL,
+          phoneNumber: auth.currentUser.phoneNumber,
+          providerId: auth.currentUser.providerId,
+          emailVerified: auth.currentUser.emailVerified,
+          isAnonymous: auth.currentUser.isAnonymous,
+          memberSince: auth.currentUser.metadata.creationTime,
+        };
+
+        dispatch(setUser(updatedUser));
       }
-    } catch (err) {
+    } catch (err: any) {
       alert("Error updating profile: " + err.message);
+    }
+  };
+
+  const handleAddAddress = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const newAddress = {
+      type: formData.get("type") as string,
+      address: formData.get("address") as string,
+      city: formData.get("city") as string,
+      phone: formData.get("phone") as string,
+      default: formData.get("default") === "on",
+      createdAt: new Date().toISOString(),
+    };
+
+    try {
+      if (user?.uid) {
+        // @ts-ignore
+        const docRef = await addDoc(
+          collection(db, "users", user.uid, "addresses"),
+          newAddress
+        );
+        // @ts-ignore
+        setAddresses([...addresses, { id: docRef.id, ...newAddress }]);
+        setAddingAddress(false);
+        e.currentTarget.reset();
+      }
+    } catch (error) {
+      console.error("Error adding address", error);
+    }
+  };
+
+  const handleRemoveAddress = async (id) => {
+    if (confirm("Are you sure you want to remove this address?")) {
+      try {
+        if (user?.uid) {
+          // @ts-ignore
+          await deleteDoc(doc(db, "users", user.uid, "addresses", id));
+          // @ts-ignore
+          setAddresses(addresses.filter((addr) => addr.id !== id));
+        }
+      } catch (error) {
+        console.error("Error deleting address", error);
+      }
     }
   };
 
@@ -103,7 +165,11 @@ const Account = () => {
         Loading Account...
       </div>
     );
-  if (!user) return null; // Or return a login prompt
+  if (!user) {
+    // Ideally redirect or show login
+    if (typeof window !== "undefined") window.location.href = "/account/login";
+    return null;
+  }
 
   // --- Sub-Components (Views) ---
 
@@ -113,7 +179,12 @@ const Account = () => {
         <h2 className="text-2xl font-medium uppercase tracking-tight mb-2">
           Member Profile
         </h2>
-        <p className="text-gray-500">Member since {user.memberSince}</p>
+        <p className="text-gray-500">
+          Member since{" "}
+          {user.memberSince
+            ? new Date(user.memberSince).toDateString()
+            : "Recent"}
+        </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -154,14 +225,18 @@ const Account = () => {
         {orders.length === 0 ? (
           <p className="text-gray-500">No orders found.</p>
         ) : (
-          orders.map((order) => (
+          orders.map((order: any) => (
             <div
               key={order.id}
               className="flex flex-col sm:flex-row border border-gray-200 p-6 gap-6 hover:border-black transition-colors"
             >
               <div className="w-24 h-24 bg-gray-100 shrink-0">
+                {/* Assuming order.items is an array and we take the first item's image */}
                 <img
-                  src={order.img || "https://placehold.co/400?text=No+Image"}
+                  src={
+                    order.items?.[0]?.thumbnail ||
+                    "https://placehold.co/400?text=No+Image"
+                  }
                   alt="Product"
                   className="w-full h-full object-cover mix-blend-multiply"
                 />
@@ -172,15 +247,17 @@ const Account = () => {
                     {order.status || "Processing"}
                   </h3>
                   <span className="text-gray-500 text-sm">
-                    {order.createdAt?.toDate
-                      ? order.createdAt.toDate().toDateString()
+                    {order.createdAt
+                      ? new Date(order.createdAt).toDateString()
                       : "Recent"}
                   </span>
                 </div>
                 <p className="text-gray-600 text-sm mb-1">
-                  Order #{order.id.slice(0, 8)}
+                  Order #{order.orderId || order.id.slice(0, 8)}
                 </p>
-                <p className="font-medium mt-2">{order.total || "LKR 0.00"}</p>
+                <p className="font-medium mt-2">
+                  LKR {order.total?.toLocaleString() || "0.00"}
+                </p>
               </div>
               <div className="flex flex-col gap-2 justify-center">
                 <button className="px-6 py-2 border border-gray-300 text-sm hover:border-black transition-colors">
@@ -200,15 +277,64 @@ const Account = () => {
         <h2 className="text-2xl font-medium uppercase tracking-tight">
           Saved Addresses
         </h2>
-        <button className="text-sm border-b border-black pb-0.5 hover:text-gray-600">
-          Add New
+        <button
+          onClick={() => setAddingAddress(!addingAddress)}
+          className="text-sm border-b border-black pb-0.5 hover:text-gray-600"
+        >
+          {addingAddress ? "Cancel" : "Add New"}
         </button>
       </div>
+
+      {addingAddress && (
+        <form
+          onSubmit={handleAddAddress}
+          className="bg-gray-50 p-6 border border-gray-200 space-y-4"
+        >
+          <h3 className="font-medium mb-4">New Address</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <input
+              name="type"
+              placeholder="Address Type (e.g. Home, Work)"
+              required
+              className="p-3 border w-full"
+            />
+            <input
+              name="phone"
+              placeholder="Phone Number"
+              required
+              className="p-3 border w-full"
+            />
+          </div>
+          <input
+            name="address"
+            placeholder="Address"
+            required
+            className="p-3 border w-full"
+          />
+          <input
+            name="city"
+            placeholder="City"
+            required
+            className="p-3 border w-full"
+          />
+          <label className="flex items-center gap-2 text-sm">
+            <input type="checkbox" name="default" />
+            Set as default address
+          </label>
+          <button
+            type="submit"
+            className="bg-black text-white px-6 py-2 text-sm font-bold uppercase"
+          >
+            Save Address
+          </button>
+        </form>
+      )}
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {addresses.length === 0 ? (
+        {addresses.length === 0 && !addingAddress ? (
           <p className="text-gray-500">No addresses saved.</p>
         ) : (
-          addresses.map((addr, idx) => (
+          addresses.map((addr: any, idx) => (
             <div
               key={idx}
               className="border border-gray-200 p-6 flex flex-col justify-between h-full min-h-[200px]"
@@ -232,7 +358,10 @@ const Account = () => {
               </div>
               <div className="flex gap-4 mt-6 text-sm font-medium underline-offset-4">
                 <button className="underline hover:text-gray-600">Edit</button>
-                <button className="underline hover:text-gray-600">
+                <button
+                  onClick={() => handleRemoveAddress(addr.id)}
+                  className="underline hover:text-gray-600"
+                >
                   Remove
                 </button>
               </div>

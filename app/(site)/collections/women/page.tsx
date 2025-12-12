@@ -22,11 +22,11 @@ const WomenPage = async () => {
 
   return (
     <main className="w-full min-h-screen bg-white pt-8">
-      <div className="text-center mb-8">
+      <div className="w-full max-w-[1440px] mx-auto px-4 md:px-8 mb-8 text-left">
         <h1 className="text-3xl md:text-5xl font-black uppercase tracking-tighter mb-4">
-          Women's Collection
+          Women
         </h1>
-        <p className="text-gray-500 max-w-xl mx-auto text-sm md:text-base">
+        <p className="text-gray-500 max-w-xl text-sm md:text-base">
           Discover sneakers and slides curated for women.
         </p>
       </div>

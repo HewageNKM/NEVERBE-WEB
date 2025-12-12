@@ -1,6 +1,5 @@
 "use client";
-import { ReactNode, useEffect, useState } from "react";
-import { auth } from "@/firebase/firebaseClient";
+import { ReactNode, useEffect } from "react";
 import { AppDispatch, RootState } from "@/redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { initializeBag } from "@/redux/bagSlice/bagSlice";
@@ -8,8 +7,6 @@ import { AnimatePresence } from "framer-motion";
 import Bag from "@/components/Bag";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { onAuthStateChanged } from "firebase/auth";
-import { setUser } from "@/redux/authSlice/authSlice";
 import Menu from "@/components/Menu";
 import { ToastContainer } from "react-toastify";
 import { Analytics } from "@vercel/analytics/next";
@@ -30,14 +27,6 @@ const GlobalProvider = ({
   );
 
   useEffect(() => {
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        dispatch(setUser(user));
-        console.log("User Logged In");
-      } else {
-        console.log("No User Logged In");
-      }
-    });
     dispatch(initializeBag());
   }, []);
 
