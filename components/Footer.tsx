@@ -34,7 +34,7 @@ const Footer = () => {
                 alt="NEVERBE"
                 width={120}
                 height={40}
-                className="object-contain brightness-0 invert"
+                className="object-contain invert mix-blend-screen"
               />
             </Link>
 

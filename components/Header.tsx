@@ -35,15 +35,11 @@ const Header = ({ season }: { season: "christmas" | "newYear" | null }) => {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 w-full z-40 transition-all duration-300 ${
-          scrolled
-            ? "bg-white/90 backdrop-blur-md shadow-sm py-2"
-            : "bg-transparent py-4"
-        }`}
+        className={`sticky top-0 left-0 w-full z-40 transition-all duration-300 bg-white shadow-sm`}
       >
         <SeasonalPromo season={season} />
 
-        <div className="max-w-[1440px] mx-auto px-4 md:px-8 flex justify-between items-center">
+        <div className="max-w-[1440px] mx-auto px-4 md:px-8 flex justify-between items-center py-2">
           {/* LOGO */}
           <Link href="/" className="z-50">
             {/* Dynamic Logo color based on scroll if needed, but black works for Nike style */}
@@ -52,18 +48,14 @@ const Header = ({ season }: { season: "christmas" | "newYear" | null }) => {
               alt="NEVERBE"
               width={100}
               height={40}
-              className={`object-contain transition-all ${
-                scrolled ? "brightness-0" : "brightness-0 invert lg:invert-0"
-              }`}
+              className={`object-contain transition-all mix-blend-multiply`}
             />
           </Link>
 
           {/* DESKTOP NAV */}
           <nav className="hidden lg:block absolute left-1/2 -translate-x-1/2">
             <ul
-              className={`flex gap-8 font-bold uppercase text-sm tracking-wide ${
-                scrolled ? "text-black" : "text-black"
-              }`}
+              className={`flex gap-8 font-bold uppercase text-sm tracking-wide text-black`}
             >
               {["New Arrivals", "Men", "Women", "Deals"].map((item) => (
                 <li key={item}>
@@ -82,11 +74,7 @@ const Header = ({ season }: { season: "christmas" | "newYear" | null }) => {
           </nav>
 
           {/* ICONS */}
-          <div
-            className={`flex items-center gap-4 ${
-              scrolled ? "text-black" : "text-black"
-            }`}
-          >
+          <div className={`flex items-center gap-4 text-black`}>
             {/* Search Trigger */}
             <button
               onClick={() => setIsSearchOpen(true)}
