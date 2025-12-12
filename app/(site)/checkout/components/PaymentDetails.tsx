@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { IoArrowForward } from "react-icons/io5";
-import CartItemCard from "@/components/CartItemCard";
+import BagItemCard from "@/components/BagItemCard";
 import {
   calculateFee,
   calculateShippingCost,
@@ -30,7 +30,7 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
   setPaymentFee,
   selectedPaymentFee,
 }) => {
-  const cartItems = useSelector((state: RootState) => state.cartSlice.cart);
+  const bagItems = useSelector((state: RootState) => state.bagSlice.bag);
   const [paymentOptions, setPaymentOptions] = useState<PaymentMethod[]>([]);
   const [isPaymentLoading, setIsPaymentLoading] = useState(false);
 
@@ -55,10 +55,10 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
     fetchMethods();
   }, []);
 
-  const subtotal = calculateSubTotal(cartItems, selectedPaymentFee);
-  const shipping = calculateShippingCost(cartItems);
-  const discount = calculateTotalDiscount(cartItems);
-  const fee = calculateFee(selectedPaymentFee, cartItems);
+  const subtotal = calculateSubTotal(bagItems, selectedPaymentFee);
+  const shipping = calculateShippingCost(bagItems);
+  const discount = calculateTotalDiscount(bagItems);
+  const fee = calculateFee(selectedPaymentFee, bagItems);
 
   return (
     <div className="bg-[#f6f6f6] p-6 md:p-8 w-full border border-gray-200">
@@ -66,10 +66,10 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
         Order Summary
       </h2>
 
-      {/* Cart Mini List */}
+      {/* Bag Mini List */}
       <div className="mb-6 space-y-4 max-h-[300px] overflow-y-auto pr-2">
-        {cartItems.map((item, index) => (
-          <CartItemCard key={index} item={item} /> // Ensure CartItemCard uses the new minimal styling provided earlier
+        {bagItems.map((item, index) => (
+          <BagItemCard key={index} item={item} /> // Ensure BagItemCard uses the new minimal styling provided earlier
         ))}
       </div>
 
@@ -100,7 +100,7 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
         <div className="flex justify-between">
           <span>Subtotal</span>
           <span className="text-black">
-            Rs. {calculateTotal(cartItems).toLocaleString()}
+            Rs. {calculateTotal(bagItems).toLocaleString()}
           </span>
         </div>
         <div className="flex justify-between text-red-600">
@@ -128,7 +128,7 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
 
       {/* Submit Button */}
       <button
-        disabled={cartItems.length === 0 || !paymentType}
+        disabled={bagItems.length === 0 || !paymentType}
         type="submit"
         className="w-full flex items-center justify-center gap-2 py-4 bg-black text-white font-bold uppercase tracking-widest hover:bg-gray-800 disabled:bg-gray-400 transition-all"
       >

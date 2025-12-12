@@ -2,13 +2,14 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
-import { showCart } from "@/redux/cartSlice/cartSlice";
+import { showBag } from "@/redux/bagSlice/bagSlice";
 import { toggleMenu } from "@/redux/headerSlice/headerSlice";
 import {
-  IoCartOutline,
+  IoBagHandleOutline,
   IoMenuOutline,
   IoSearchOutline,
   IoCloseOutline,
+  IoPersonOutline,
 } from "react-icons/io5";
 import Link from "next/link";
 import Image from "next/image";
@@ -17,7 +18,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import SeasonalPromo from "@/app/(site)/components/SeasonalPromo";
 
 const Header = ({ season }: { season: "christmas" | "newYear" | null }) => {
-  const cartItems = useSelector((state: RootState) => state.cartSlice.cart);
+  const bagItems = useSelector((state: RootState) => state.bagSlice.bag);
+  const user = useSelector((state: RootState) => state.authSlice.user);
   const dispatch: AppDispatch = useDispatch();
   const [scrolled, setScrolled] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -83,15 +85,31 @@ const Header = ({ season }: { season: "christmas" | "newYear" | null }) => {
               <IoSearchOutline size={24} />
             </button>
 
-            {/* Cart */}
+            {/* Account Icon */}
+            <Link
+              href="/account"
+              className="p-2 hover:bg-gray-100 rounded-full transition"
+            >
+              {user ? (
+                <div className="w-6 h-6 bg-black text-white rounded-full flex items-center justify-center text-xs font-bold">
+                  {user.displayName
+                    ? user.displayName.charAt(0).toUpperCase()
+                    : "U"}
+                </div>
+              ) : (
+                <IoPersonOutline size={24} />
+              )}
+            </Link>
+
+            {/* Bag */}
             <button
-              onClick={() => dispatch(showCart())}
+              onClick={() => dispatch(showBag())}
               className="relative p-2 hover:bg-gray-100 rounded-full transition"
             >
-              <IoCartOutline size={24} />
-              {cartItems.length > 0 && (
+              <IoBagHandleOutline size={24} />
+              {bagItems.length > 0 && (
                 <span className="absolute top-0 right-0 h-4 w-4 bg-black text-white text-[10px] flex items-center justify-center rounded-full">
-                  {cartItems.length}
+                  {bagItems.length}
                 </span>
               )}
             </button>

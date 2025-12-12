@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import { AppDispatch, RootState } from "@/redux/store";
 import { Customer, Order } from "@/interfaces";
-import { clearCart } from "@/redux/cartSlice/cartSlice";
+import { clearBag } from "@/redux/bagSlice/bagSlice";
 import { FiX } from "react-icons/fi";
 import {
   calculateFee,
@@ -51,7 +51,7 @@ const createCustomerFromForm = (form: any): Customer => {
 const CheckoutForm = () => {
   const dispatch: AppDispatch = useDispatch();
   const router = useRouter();
-  const cartItems = useSelector((state: RootState) => state.cartSlice.cart);
+  const bagItems = useSelector((state: RootState) => state.bagSlice.bag);
   const user = useSelector((state: RootState) => state.authSlice.user);
 
   // ... (Keep all your existing state: billingCustomer, paymentType, etc.)
@@ -131,7 +131,7 @@ const CheckoutForm = () => {
         const notifToken = await executeRecaptcha("cod_notification");
         await sendCODOrderNotifications(pendingOrder.orderId, notifToken);
 
-        dispatch(clearCart());
+        dispatch(clearBag());
         toast.success("Order verified successfully!");
         router.replace(`/checkout/success/${pendingOrder.orderId}`);
         setShowOtpModal(false);
@@ -146,7 +146,7 @@ const CheckoutForm = () => {
   const handlePaymentSubmit = async (evt: React.FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
     if (!executeRecaptcha) return toast.error("reCAPTCHA not ready");
-    if (cartItems.length === 0) return toast.error("Cart is empty");
+    if (bagItems.length === 0) return toast.error("Bag is empty");
     if (!paymentType) return toast.error("Select payment method");
 
     setIsSubmitting(true);
@@ -163,8 +163,8 @@ const CheckoutForm = () => {
 
     try {
       const userId = user?.uid || (await signUser())?.uid;
-      const amount = calculateSubTotal(cartItems, paymentFee);
-      const fee = calculateFee(paymentFee, cartItems);
+      const amount = calculateSubTotal(bagItems, paymentFee);
+      const fee = calculateFee(paymentFee, bagItems);
 
       const orderCustomer: Customer = {
         ...newBilling,
@@ -189,20 +189,20 @@ const CheckoutForm = () => {
         orderId,
         userId: userId || "anonymous-user",
         customer: orderCustomer,
-        items: cartItems,
+        items: bagItems,
         total: parseFloat(amount),
         paymentMethod: paymentType,
         paymentMethodId: paymentTypeId,
         fee: fee,
-        shippingFee: calculateShippingCost(cartItems),
+        shippingFee: calculateShippingCost(bagItems),
         transactionFeeCharge: calculateTransactionFeeCharge(
-          cartItems,
+          bagItems,
           paymentFee
         ),
         paymentStatus: "Pending",
         status: "Processing",
         from: "Website",
-        discount: calculateTotalDiscount(cartItems),
+        discount: calculateTotalDiscount(bagItems),
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       };
@@ -212,7 +212,7 @@ const CheckoutForm = () => {
       switch (paymentTypeId?.toUpperCase()) {
         case "PM-006": // KOKO
           await addNewOrder(newOrder, token);
-          dispatch(clearCart());
+          dispatch(clearBag());
           await processKokoPayment(orderId, orderCustomer, amount);
           break;
         case "PM-001": // COD
@@ -222,7 +222,7 @@ const CheckoutForm = () => {
           break;
         case "PM-003": // Payhere
           await addNewOrder(newOrder, token);
-          dispatch(clearCart());
+          dispatch(clearBag());
           await processPayherePayment(orderId, orderCustomer, amount);
           break;
         default:
@@ -255,7 +255,7 @@ const CheckoutForm = () => {
       phone: customer.phone,
       address: customer.address,
       city: customer.city,
-      items: `${cartItems.length} Products`,
+      items: `${bagItems.length} Products`,
       returnUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/checkout/success/${orderId}`,
       cancelUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/checkout/fail?orderId=${orderId}`,
       notifyUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/ipg/payhere/notify`,
@@ -279,7 +279,7 @@ const CheckoutForm = () => {
       firstName,
       lastName: lastNameParts.join(" ") || firstName,
       email: customer.email,
-      description: `${cartItems.length} products`,
+      description: `${bagItems.length} products`,
     };
     const kokoPayload = await initiateKOKOPayment(payload);
     submitForm(process.env.NEXT_PUBLIC_KOKO_REDIRECT_URL || "", kokoPayload);
@@ -309,6 +309,18 @@ const CheckoutForm = () => {
       >
         {/* --- LEFT COLUMN: FORMS (Scrollable) --- */}
         <div className="w-full lg:w-[60%] flex flex-col gap-10">
+          {!user && (
+            <div className="bg-gray-50 border border-gray-200 p-4 flex justify-between items-center text-sm">
+              <span className="text-gray-600">Already have an account?</span>
+              <button
+                type="button"
+                onClick={() => router.push("/account/login?redirect=/checkout")}
+                className="font-bold underline hover:text-gray-600 transition-colors"
+              >
+                Log in for faster checkout
+              </button>
+            </div>
+          )}
           <BillingDetails
             saveAddress={saveAddress}
             setSaveAddress={setSaveAddress}

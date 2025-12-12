@@ -1,6 +1,6 @@
 "use client";
 import { SHIPPING_FLAT_RATE_1, SHIPPING_FLAT_RATE_2 } from "@/constants";
-import { CartItem } from "@/interfaces";
+import { BagItem } from "@/interfaces";
 import { algoliasearch } from "algoliasearch";
 
 export const generateOrderId = () => {
@@ -10,11 +10,11 @@ export const generateOrderId = () => {
   return `${datePart}${randPart}`;
 };
 
-export const calculateTotalItems = (items: CartItem[]) => {
+export const calculateTotalItems = (items: BagItem[]) => {
   return items.reduce((acc, item) => acc + item.quantity, 0);
 };
 
-export const calculateShippingCost = (items: CartItem[]) => {
+export const calculateShippingCost = (items: BagItem[]) => {
   const totalItems = calculateTotalItems(items);
   if (totalItems > 1) {
     return SHIPPING_FLAT_RATE_2;
@@ -24,20 +24,20 @@ export const calculateShippingCost = (items: CartItem[]) => {
   return SHIPPING_FLAT_RATE_1;
 };
 
-export const calculateTotalDiscount = (items: CartItem[]) => {
+export const calculateTotalDiscount = (items: BagItem[]) => {
   return items.reduce((acc, item) => acc + item.discount, 0);
 };
 
-export const calculateTotal = (items: CartItem[]) => {
+export const calculateTotal = (items: BagItem[]) => {
   return items.reduce((acc, item) => acc + item.price * item.quantity, 0);
 };
 
-export const calculateFee = (fee:number, items:CartItem[]) =>{
-  return parseFloat((calculateTotal(items) * (fee / 100)).toFixed(2))
-}
+export const calculateFee = (fee: number, items: BagItem[]) => {
+  return parseFloat((calculateTotal(items) * (fee / 100)).toFixed(2));
+};
 
 export const calculateTransactionFeeCharge = (
-  items: CartItem[],
+  items: BagItem[],
   fee: number
 ) => {
   const total =
@@ -49,7 +49,7 @@ export const calculateTransactionFeeCharge = (
   return parseFloat(transactionFee);
 };
 
-export const calculateSubTotal = (items: CartItem[],fee:number) => {
+export const calculateSubTotal = (items: BagItem[], fee: number) => {
   return (
     calculateTotal(items) -
     calculateTotalDiscount(items) +

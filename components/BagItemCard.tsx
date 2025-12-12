@@ -3,10 +3,10 @@ import React from "react";
 import Image from "next/image";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";
-import { removeFromCart } from "@/redux/cartSlice/cartSlice";
-import { CartItem } from "@/interfaces";
+import { removeFromBag } from "@/redux/bagSlice/bagSlice";
+import { BagItem } from "@/interfaces";
 
-const CartItemCard = ({ item }: { item: CartItem }) => {
+const BagItemCard = ({ item }: { item: BagItem }) => {
   const dispatch: AppDispatch = useDispatch();
   const totalPrice = item.price * item.quantity;
 
@@ -51,7 +51,7 @@ const CartItemCard = ({ item }: { item: CartItem }) => {
         {/* Bottom: Actions */}
         <div className="flex justify-start mt-2">
           <button
-            onClick={() => dispatch(removeFromCart(item))}
+            onClick={() => dispatch(removeFromBag(item))}
             className="text-[10px] font-bold uppercase tracking-wider text-gray-400 hover:text-red-600 underline transition-colors"
           >
             Remove
@@ -62,4 +62,4 @@ const CartItemCard = ({ item }: { item: CartItem }) => {
   );
 };
 
-export default CartItemCard;
+export default BagItemCard;

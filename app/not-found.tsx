@@ -1,55 +1,58 @@
 import "@/app/globals.css";
 import Link from "next/link";
-import { FaArrowLeft } from "react-icons/fa6";
 import { Metadata } from "next";
 
-export const metadata: Metadata = {
-  title: "Page Not Found | NEVERBE",
+export const metadata = {
+  title: "404 - Page Not Found | NEVERBE",
 };
 
 const NotFound = () => {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-neutral-50 px-6">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-white px-6 text-black font-sans selection:bg-gray-200">
       {/* Container */}
-      <div className="text-center max-w-xl w-full">
-        
-        {/* 404 */}
-        <h1 className="text-[110px] leading-none font-bold text-neutral-900 tracking-tight">
+      <div className="text-center max-w-lg w-full space-y-6">
+        {/* 404 - Massive & Tight */}
+        <h1 className="text-[120px] md:text-[160px] leading-none font-bold tracking-tighter select-none">
           404
         </h1>
 
-        {/* Title */}
-        <h2 className="mt-4 text-2xl md:text-3xl font-semibold text-neutral-800">
-          This page can’t be found
-        </h2>
+        {/* Message */}
+        <div className="space-y-2">
+          <h2 className="text-xl md:text-2xl font-medium uppercase tracking-tight">
+            We can't find that page.
+          </h2>
+          <p className="text-gray-500 text-sm md:text-base leading-relaxed max-w-md mx-auto">
+            The page you are looking for might have been removed, had its name
+            changed, or is temporarily unavailable.
+          </p>
+        </div>
 
-        {/* Description */}
-        <p className="mt-3 text-neutral-500 text-base md:text-lg leading-relaxed">
-          The page you're looking for may have been moved, deleted, or never existed.
-        </p>
-
-        {/* Action */}
-        <div className="mt-8">
+        {/* Action Buttons */}
+        <div className="flex flex-col md:flex-row gap-4 justify-center pt-4">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-neutral-300 bg-white text-neutral-900 font-medium hover:border-neutral-400 hover:bg-neutral-100 transition-all duration-200"
+            className="inline-flex items-center justify-center px-8 py-3 bg-black text-white text-sm font-bold uppercase tracking-wider rounded-full hover:bg-gray-800 transition-colors"
           >
-            <FaArrowLeft size={16} />
-            Back to Home
+            Return Home
+          </Link>
+          <Link
+            href="/collections/new-arrivals"
+            className="inline-flex items-center justify-center px-8 py-3 border border-gray-300 text-black text-sm font-bold uppercase tracking-wider rounded-full hover:border-black transition-colors"
+          >
+            Shop New Arrivals
           </Link>
         </div>
       </div>
 
-      {/* Footer help text */}
-      <p className="absolute bottom-10 text-neutral-400 text-sm">
-        Need assistance?{" "}
+      {/* Footer link */}
+      <p className="absolute bottom-10 text-xs text-gray-400 font-medium uppercase tracking-wide">
+        Need help?{" "}
         <Link
           href="/contact"
-          className="underline text-neutral-700 hover:text-neutral-900 transition"
+          className="text-black underline underline-offset-4 hover:text-gray-600"
         >
-          Contact support
+          Contact Us
         </Link>
-        .
       </p>
     </div>
   );

@@ -15,7 +15,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 import { AppDispatch } from "@/redux/store";
-import { pushToCart } from "@/redux/cartSlice/cartSlice";
+import { addToBag } from "@/redux/bagSlice/bagSlice";
 import { Product } from "@/interfaces/Product";
 import { ProductVariant } from "@/interfaces/ProductVariant";
 import { KOKOLogo } from "@/assets/images";
@@ -77,12 +77,12 @@ const ProductHero = ({ item }: { item: Product }) => {
     setOutOfStocks(selectedSize !== "" && !stockLoading && availableStock <= 0);
   }, [availableStock, selectedSize, stockLoading]);
 
-  // --- Cart Actions ---
-  const addToCart = () => {
+  // --- Bag Actions ---
+  const handleAddToBag = () => {
     if (!selectedSize) return alert("Please select a size");
     if (outOfStocks) return;
 
-    const cartItem = {
+    const bagItem = {
       bPrice: item.buyingPrice,
       discount:
         Math.round((item.sellingPrice * (item.discount / 100)) / 10) * 10 * qty,
@@ -96,12 +96,12 @@ const ProductHero = ({ item }: { item: Product }) => {
       category: item.category,
       price: item.sellingPrice,
     };
-    dispatch(pushToCart(cartItem));
-    // Optional: open cart drawer here
+    dispatch(addToBag(bagItem));
+    // Optional: open bag drawer here
   };
 
   const buyNow = () => {
-    addToCart();
+    handleAddToBag();
     router.push("/checkout");
   };
 
@@ -299,7 +299,7 @@ const ProductHero = ({ item }: { item: Product }) => {
           {/* Actions */}
           <div className="space-y-3 pt-4 border-t border-gray-100">
             <button
-              onClick={addToCart}
+              onClick={handleAddToBag}
               disabled={!selectedSize || outOfStocks}
               className="w-full py-4 rounded-full bg-black text-white font-bold uppercase tracking-widest hover:bg-gray-800 disabled:bg-gray-300 disabled:cursor-not-allowed transition-all"
             >

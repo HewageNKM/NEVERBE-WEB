@@ -3,9 +3,9 @@ import { ReactNode, useEffect, useState } from "react";
 import { auth } from "@/firebase/firebaseClient";
 import { AppDispatch, RootState } from "@/redux/store";
 import { useDispatch, useSelector } from "react-redux";
-import { initializeCart } from "@/redux/cartSlice/cartSlice";
+import { initializeBag } from "@/redux/bagSlice/bagSlice";
 import { AnimatePresence } from "framer-motion";
-import Cart from "@/components/Cart";
+import Bag from "@/components/Bag";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { onAuthStateChanged } from "firebase/auth";
@@ -24,7 +24,7 @@ const GlobalProvider = ({
 }) => {
   const dispatch: AppDispatch = useDispatch();
 
-  const showCart = useSelector((state: RootState) => state.cartSlice.showCart);
+  const showBag = useSelector((state: RootState) => state.bagSlice.showBag);
   const showMenu = useSelector(
     (state: RootState) => state.headerSlice.showMenu
   );
@@ -38,7 +38,7 @@ const GlobalProvider = ({
         console.log("No User Logged In");
       }
     });
-    dispatch(initializeCart());
+    dispatch(initializeBag());
   }, []);
 
   return (
@@ -51,7 +51,7 @@ const GlobalProvider = ({
       <Header season={season} />
       {children}
       <Footer />
-      <AnimatePresence>{showCart && <Cart />}</AnimatePresence>
+      <AnimatePresence>{showBag && <Bag />}</AnimatePresence>
       <AnimatePresence>{showMenu && <Menu />}</AnimatePresence>
       <Analytics />
       <SpeedInsights />

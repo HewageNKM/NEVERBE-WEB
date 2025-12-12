@@ -5,8 +5,8 @@ import { motion } from "framer-motion";
 import { IoCloseOutline, IoBagHandleOutline } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
-import { hideCart } from "@/redux/cartSlice/cartSlice";
-import CartItemCard from "@/components/CartItemCard";
+import { hideBag } from "@/redux/bagSlice/bagSlice";
+import BagItemCard from "@/components/BagItemCard";
 import { useRouter } from "next/navigation";
 import {
   calculateShippingCost,
@@ -15,10 +15,10 @@ import {
   calculateTotalDiscount,
 } from "@/util";
 
-const Cart = () => {
+const Bag = () => {
   const dispatch: AppDispatch = useDispatch();
   const router = useRouter();
-  const cartItems = useSelector((state: RootState) => state.cartSlice.cart);
+  const bagItems = useSelector((state: RootState) => state.bagSlice.bag);
 
   return (
     <DropShadow containerStyle="flex justify-end">
@@ -33,12 +33,12 @@ const Cart = () => {
         {/* --- Header --- */}
         <div className="flex justify-between items-center px-6 py-6 border-b border-gray-100">
           <h2 className="text-xl font-black uppercase tracking-tight">
-            Your Bag ({cartItems.length})
+            Your Bag ({bagItems.length})
           </h2>
           <button
-            onClick={() => dispatch(hideCart())}
+            onClick={() => dispatch(hideBag())}
             className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-            aria-label="Close Cart"
+            aria-label="Close Bag"
           >
             <IoCloseOutline size={24} />
           </button>
@@ -46,10 +46,10 @@ const Cart = () => {
 
         {/* --- Items List --- */}
         <div className="flex-1 overflow-y-auto px-6 py-4">
-          {cartItems.length > 0 ? (
+          {bagItems.length > 0 ? (
             <div className="space-y-6">
-              {cartItems.map((item, index) => (
-                <CartItemCard key={index} item={item} />
+              {bagItems.map((item, index) => (
+                <BagItemCard key={index} item={item} />
               ))}
             </div>
           ) : (
@@ -59,7 +59,7 @@ const Cart = () => {
                 Your bag is empty
               </p>
               <button
-                onClick={() => dispatch(hideCart())}
+                onClick={() => dispatch(hideBag())}
                 className="mt-4 text-xs font-bold underline hover:text-gray-500"
               >
                 Start Shopping
@@ -69,22 +69,22 @@ const Cart = () => {
         </div>
 
         {/* --- Summary Footer --- */}
-        {cartItems.length > 0 && (
+        {bagItems.length > 0 && (
           <div className="border-t border-gray-100 p-6 bg-white space-y-4">
             {/* Price Breakdown */}
             <div className="space-y-2 text-sm">
               <div className="flex justify-between text-gray-500">
                 <span>Subtotal</span>
                 <span className="text-black font-medium">
-                  Rs. {calculateTotal(cartItems).toLocaleString()}
+                  Rs. {calculateTotal(bagItems).toLocaleString()}
                 </span>
               </div>
 
-              {calculateTotalDiscount(cartItems) > 0 && (
+              {calculateTotalDiscount(bagItems) > 0 && (
                 <div className="flex justify-between text-red-600">
                   <span>Discount</span>
                   <span>
-                    - Rs. {calculateTotalDiscount(cartItems).toLocaleString()}
+                    - Rs. {calculateTotalDiscount(bagItems).toLocaleString()}
                   </span>
                 </div>
               )}
@@ -92,11 +92,9 @@ const Cart = () => {
               <div className="flex justify-between text-gray-500">
                 <span>Estimated Shipping</span>
                 <span className="text-black font-medium">
-                  {calculateShippingCost(cartItems) === 0
+                  {calculateShippingCost(bagItems) === 0
                     ? "Free"
-                    : `Rs. ${calculateShippingCost(
-                        cartItems
-                      ).toLocaleString()}`}
+                    : `Rs. ${calculateShippingCost(bagItems).toLocaleString()}`}
                 </span>
               </div>
             </div>
@@ -105,14 +103,14 @@ const Cart = () => {
             <div className="flex justify-between items-end border-t border-gray-100 pt-4 pb-2">
               <span className="font-bold uppercase tracking-wide">Total</span>
               <span className="font-black text-xl">
-                Rs. {calculateSubTotal(cartItems, 0).toLocaleString()}
+                Rs. {calculateSubTotal(bagItems, 0).toLocaleString()}
               </span>
             </div>
 
             {/* Checkout Button */}
             <button
               onClick={() => {
-                dispatch(hideCart());
+                dispatch(hideBag());
                 router.push("/checkout");
               }}
               className="w-full py-4 bg-black text-white text-sm font-bold uppercase tracking-widest hover:bg-gray-800 transition-all active:scale-[0.98]"
@@ -130,4 +128,4 @@ const Cart = () => {
   );
 };
 
-export default Cart;
+export default Bag;
