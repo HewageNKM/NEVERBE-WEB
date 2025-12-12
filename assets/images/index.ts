@@ -10,6 +10,7 @@ import RunningShoeBG from "./runningShoeBg.webp";
 import SlidesBG from "./slidesBg.jpg";
 import KOKOLogo from "./koko.png";
 import BOOTSBG from "./bootsBG.jpeg";
+import LOGO_NEW from "./logo_new.png";
 
 export {
   PayHereWhiteLongBanner,

@@ -1,53 +1,65 @@
-import React from "react";
 import Link from "next/link";
-import { IoHeadset } from "react-icons/io5";
-import { FaArrowLeft } from "react-icons/fa";
+import { IoHelpCircleOutline, IoRefresh } from "react-icons/io5";
 import FailAnimationComponent from "@/app/(site)/checkout/fail/components/FailAnimationComponent";
 import { Metadata } from "next";
 
-export const metadata:Metadata = {
-  title: "Order Failed",
+export const metadata: Metadata = {
+  title: "Transaction Failed | NEVERBE",
 };
 
 const Page = () => {
   return (
-    <main className="w-full min-h-screen flex justify-center items-center">
-      <div className="w-fit">
-        <div className="md:mt-32 mt-24 w-fit rounded-2xl md:p-10 p-2 flex flex-row gap-6">
-          {/* ❌ Fail Animation */}
-          <FailAnimationComponent />
+    <main className="w-full min-h-screen bg-white pt-32 pb-20 px-4 md:px-8 flex flex-col items-center justify-center text-center">
+      <div className="w-full max-w-xl animate-fadeIn">
+        {/* Animation */}
+        <FailAnimationComponent />
 
-          {/* Text + Buttons Section */}
-          <div className="w-full flex flex-col gap-2">
-            <div>
-              <h2 className="font-display md:text-3xl text-xl font-bold text-red-600 mb-2">
-                Order Placement Failed!
-              </h2>
-              <p className="text-gray-600 mb-4 text-base md:text-lg">
-                We couldn’t complete your order. Please try again or contact our
-                support team for assistance.
-              </p>
-            </div>
+        {/* Heading */}
+        <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tighter leading-none mb-4 text-black">
+          Order Failed
+        </h1>
 
-            {/* Buttons */}
-            <div className="flex flex-row flex-wrap gap-2 md:mt-2 mt-1 justify-start items-start">
-              <a
-                href="/contact"
-                className="px-6 py-3 flex flex-row md:text-lg text-xs justify-center items-center gap-2 rounded-lg text-white font-button bg-red-600 hover:bg-red-700 transition-all"
-              >
-                <IoHeadset size={20} />
-                Contact Support
-              </a>
+        <p className="text-lg text-gray-500 font-medium mb-8 leading-relaxed">
+          We couldn’t process your transaction. This might be due to a network
+          issue or a declined payment.
+        </p>
 
-              <Link
-                href="/"
-                className="px-6 py-3 flex flex-row md:text-lg text-xs justify-center items-center gap-2 font-button text-red-600 hover:text-red-700 transition-all"
-              >
-                <FaArrowLeft size={20} />
-                Back to Home
-              </Link>
-            </div>
-          </div>
+        {/* Error Code Decoration */}
+        <div className="inline-block px-4 py-1 bg-red-50 border border-red-100 rounded-sm mb-10">
+          <p className="text-xs font-bold uppercase tracking-widest text-red-600">
+            Error: Transaction_Declined
+          </p>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="flex flex-col sm:flex-row gap-4 justify-center w-full">
+          {/* Retry Action */}
+          <Link
+            href="/checkout"
+            className="flex-1 sm:flex-none py-4 px-8 bg-black text-white font-bold uppercase tracking-widest hover:bg-gray-800 transition-all rounded-sm flex items-center justify-center gap-2"
+          >
+            <IoRefresh size={18} />
+            Try Again
+          </Link>
+
+          {/* Support Action */}
+          <Link
+            href="/pages/contact"
+            className="flex-1 sm:flex-none py-4 px-8 border border-black text-black font-bold uppercase tracking-widest hover:bg-gray-50 transition-all rounded-sm flex items-center justify-center gap-2"
+          >
+            <IoHelpCircleOutline size={20} />
+            Contact Support
+          </Link>
+        </div>
+
+        {/* Footer Link */}
+        <div className="mt-12">
+          <Link
+            href="/"
+            className="text-[10px] font-bold uppercase tracking-widest text-gray-400 hover:text-black transition-colors border-b border-transparent hover:border-black pb-0.5"
+          >
+            Return to Home Page
+          </Link>
         </div>
       </div>
     </main>

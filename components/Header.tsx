@@ -12,9 +12,7 @@ import {
 } from "react-icons/io5";
 import Link from "next/link";
 import Image from "next/image";
-import { Banner, Logo } from "@/assets/images";
-import SearchDialog from "@/components/SearchDialog";
-import { getAlgoliaClient } from "@/util";
+import { Logo } from "@/assets/images";
 import { AnimatePresence, motion } from "framer-motion";
 import SeasonalPromo from "@/app/(site)/components/SeasonalPromo";
 
