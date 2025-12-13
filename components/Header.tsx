@@ -16,6 +16,9 @@ import Image from "next/image";
 import { Logo } from "@/assets/images";
 import { AnimatePresence, motion } from "framer-motion";
 import SeasonalPromo from "@/app/(site)/components/SeasonalPromo";
+import { getAlgoliaClient } from "@/util";
+import SearchDialog from "@/components/SearchDialog";
+import { ProductVariant } from "@/interfaces/ProductVariant";
 
 const Header = ({ season }: { season: "christmas" | "newYear" | null }) => {
   const bagItems = useSelector((state: RootState) => state.bagSlice.bag);
@@ -24,9 +27,51 @@ const Header = ({ season }: { season: "christmas" | "newYear" | null }) => {
   const [scrolled, setScrolled] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
-  // ... (Keep your existing search logic / algolia logic here) ...
-  // [Assuming existing state variables: items, showSearchResult, etc]
-  // Note: For brevity, I am focusing on the UI structure.
+  // --- SEARCH LOGIC ---
+  const searchClient = getAlgoliaClient();
+  const [search, setSearch] = useState("");
+  const [items, setItems] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [showSearchResult, setShowSearchResult] = useState(false);
+
+  const onSearch = async (evt: React.ChangeEvent<HTMLInputElement>) => {
+    const query = evt.target.value;
+    setSearch(query);
+
+    if (query.trim().length < 3) {
+      setItems([]);
+      setShowSearchResult(false);
+      return;
+    }
+
+    setIsSearching(true);
+    try {
+      const searchResults = await searchClient.search({
+        requests: [
+          { indexName: "products_index", query: query.trim(), hitsPerPage: 30 },
+        ],
+      });
+      let filteredResults = searchResults.results[0].hits.filter(
+        (item: any) =>
+          item.status === true &&
+          item.listing === true &&
+          item.isDeleted == false
+      );
+      filteredResults = filteredResults.filter(
+        (item: any) =>
+          !item.variants.some(
+            (variant: ProductVariant) =>
+              variant.isDeleted === true && variant.status === false
+          )
+      );
+      setItems(filteredResults);
+      setShowSearchResult(true);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsSearching(false);
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -135,12 +180,20 @@ const Header = ({ season }: { season: "christmas" | "newYear" | null }) => {
             >
               <div className="max-w-4xl mx-auto relative">
                 <div className="flex items-center border-b-2 border-gray-100 pb-2">
-                  <IoSearchOutline size={24} className="text-gray-400 mr-4" />
+                  <div className="mr-4 relative">
+                    <IoSearchOutline size={24} className="text-gray-400" />
+                    {isSearching && (
+                      <div className="absolute top-0 left-0 w-full h-full">
+                        <div className="w-6 h-6 border-2 border-gray-400 border-t-black rounded-full animate-spin" />
+                      </div>
+                    )}
+                  </div>
                   <input
                     autoFocus
                     placeholder="Search for products..."
                     className="w-full text-xl font-bold outline-none placeholder:text-gray-300"
-                    // Add your onChange logic here
+                    onChange={onSearch}
+                    value={search}
                   />
                   <button onClick={() => setIsSearchOpen(false)}>
                     <IoCloseOutline
@@ -149,7 +202,20 @@ const Header = ({ season }: { season: "christmas" | "newYear" | null }) => {
                     />
                   </button>
                 </div>
-                {/* Insert Search Results Component Here */}
+                {/* Search Results */}
+                {showSearchResult && items.length > 0 && (
+                  <div className="absolute left-0 right-0 top-[60px] z-50">
+                    <SearchDialog
+                      containerStyle="max-h-[70vh] shadow-2xl rounded-b-2xl border-x border-b border-gray-200"
+                      results={items}
+                      onClick={() => {
+                        setIsSearchOpen(false);
+                        setSearch("");
+                        setShowSearchResult(false);
+                      }}
+                    />
+                  </div>
+                )}
               </div>
             </motion.div>
           )}
