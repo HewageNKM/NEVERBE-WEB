@@ -9,7 +9,7 @@ export async function GET(req: Request) {
     const uid = token.uid;
 
     const addressesRef = adminFirestore
-      .collection("users")
+      .collection("customers")
       .doc(uid)
       .collection("addresses");
 
