@@ -10,8 +10,10 @@ import { Logo } from "@/assets/images";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { signOut, updatePassword, updateProfile } from "@firebase/auth";
+import { useRouter } from "next/navigation";
 
 const Account = () => {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState("dashboard");
   const [orders, setOrders] = useState([]);
   const [addresses, setAddresses] = useState([]);
@@ -435,7 +437,7 @@ const Account = () => {
   // --- Main Layout ---
   return (
     <div className="min-h-screen bg-white text-black font-sans selection:bg-gray-200">
-      <div className="max-w-7xl mx-auto px-6 py-12 md:py-20">
+      <div className="max-w-[1440px] mx-auto px-4 md:px-8 py-12 md:py-20">
         <div className="mb-10 md:hidden flex flex-col items-center text-center">
           <div className="relative mb-4">
             <Image

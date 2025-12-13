@@ -283,8 +283,13 @@ const CheckoutForm = () => {
           throw new Error("Invalid payment method");
       }
     } catch (err: any) {
-      toast.error("Payment failed. Redirecting...");
-      router.replace(`/checkout/fail?orderId=${orderId}`);
+      console.error("Payment Error:", err);
+      toast.error("Payment failed. Inspecting error...");
+      router.replace(
+        `/checkout/fail?orderId=${orderId}&error=${encodeURIComponent(
+          err.message || "Unknown Error"
+        )}`
+      );
     } finally {
       setIsSubmitting(false);
     }

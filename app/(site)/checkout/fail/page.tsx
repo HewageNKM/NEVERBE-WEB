@@ -7,7 +7,15 @@ export const metadata: Metadata = {
   title: "Transaction Failed | NEVERBE",
 };
 
-const Page = () => {
+const Page = ({
+  searchParams,
+}: {
+  searchParams: { orderId?: string; error?: string };
+}) => {
+  const errorMsg = searchParams.error
+    ? decodeURIComponent(searchParams.error)
+    : "Transaction_Declined";
+
   return (
     <main className="w-full min-h-screen bg-white pt-32 pb-20 px-4 md:px-8 flex flex-col items-center justify-center text-center">
       <div className="w-full max-w-xl animate-fadeIn">
@@ -27,7 +35,7 @@ const Page = () => {
         {/* Error Code Decoration */}
         <div className="inline-block px-4 py-1 bg-red-50 border border-red-100 rounded-sm mb-10">
           <p className="text-xs font-bold uppercase tracking-widest text-red-600">
-            Error: Transaction_Declined
+            Error: {errorMsg}
           </p>
         </div>
 

@@ -10,7 +10,7 @@ import {
   linkWithCredential,
   EmailAuthProvider,
 } from "firebase/auth";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { auth } from "@/firebase/firebaseClient";
 import Image from "next/image";
 import { Logo } from "@/assets/images";
@@ -19,6 +19,8 @@ import "react-toastify/dist/ReactToastify.css";
 
 const AuthPage = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectUrl = searchParams.get("redirect") || "/account";
   const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(false);
 
@@ -43,7 +45,7 @@ const AuthPage = () => {
         try {
           await linkWithPopup(auth.currentUser, provider);
           toast.success("Account upgraded successfully!");
-          router.push("/account");
+          router.push(redirectUrl);
           return;
         } catch (linkError: any) {
           // If account exists, linkWithPopup fails. We fall back to normal sign in.
@@ -59,8 +61,7 @@ const AuthPage = () => {
       }
 
       await signInWithPopup(auth, provider);
-      router.push("/account");
-      router.push("/account");
+      router.push(redirectUrl);
     } catch (err: any) {
       // Clean error handling - no traces
       const msg = "Failed to sign in with Google. Please try again.";
@@ -81,24 +82,21 @@ const AuthPage = () => {
           formData.email,
           formData.password
         );
-        router.push("/account");
+        router.push(redirectUrl);
       } else {
-        // Sign Up Flow
-        if (auth.currentUser && auth.currentUser.isAnonymous) {
+        const user = auth.currentUser;
+        if (user && user.isAnonymous) {
           // Convert anonymous account to email/password
           const credential = EmailAuthProvider.credential(
             formData.email,
             formData.password
           );
-          const userCred = await linkWithCredential(
-            auth.currentUser,
-            credential
-          );
+          await linkWithCredential(user, credential);
 
-          await updateProfile(userCred.user, {
+          await updateProfile(user, {
             displayName: `${formData.firstName} ${formData.lastName}`.trim(),
           });
-          toast.success("Account created and linked!");
+          toast.success("Anonymous account linked to email!");
         } else {
           // Standard Sign Up
           const userCredential = await createUserWithEmailAndPassword(
@@ -110,7 +108,7 @@ const AuthPage = () => {
             displayName: `${formData.firstName} ${formData.lastName}`.trim(),
           });
         }
-        router.push("/account");
+        router.push(redirectUrl);
       }
     } catch (err: any) {
       let msg = "An error occurred. Please try again.";
