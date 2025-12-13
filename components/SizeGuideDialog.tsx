@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { IoClose } from "react-icons/io5";
 
@@ -8,10 +8,53 @@ interface SizeGuideDialogProps {
   onClose: () => void;
 }
 
+const menSizes = [
+  { us: "7", uk: "6", eu: "40", cm: "25" },
+  { us: "7.5", uk: "6.5", eu: "40.5", cm: "25.5" },
+  { us: "8", uk: "7", eu: "41", cm: "26" },
+  { us: "8.5", uk: "7.5", eu: "42", cm: "26.5" },
+  { us: "9", uk: "8", eu: "42.5", cm: "27" },
+  { us: "9.5", uk: "8.5", eu: "43", cm: "27.5" },
+  { us: "10", uk: "9", eu: "44", cm: "28" },
+  { us: "10.5", uk: "9.5", eu: "44.5", cm: "28.5" },
+  { us: "11", uk: "10", eu: "45", cm: "29" },
+  { us: "11.5", uk: "10.5", eu: "45.5", cm: "29.5" },
+  { us: "12", uk: "11", eu: "46", cm: "30" },
+];
+
+const womenSizes = [
+  { us: "5", uk: "2.5", eu: "35.5", cm: "22" },
+  { us: "5.5", uk: "3", eu: "36", cm: "22.5" },
+  { us: "6", uk: "3.5", eu: "36.5", cm: "23" },
+  { us: "6.5", uk: "4", eu: "37.5", cm: "23.5" },
+  { us: "7", uk: "4.5", eu: "38", cm: "24" },
+  { us: "7.5", uk: "5", eu: "38.5", cm: "24.5" },
+  { us: "8", uk: "5.5", eu: "39", cm: "25" },
+  { us: "8.5", uk: "6", eu: "40", cm: "25.5" },
+  { us: "9", uk: "6.5", eu: "40.5", cm: "26" },
+  { us: "9.5", uk: "7", eu: "41", cm: "26.5" },
+  { us: "10", uk: "7.5", eu: "42", cm: "27" },
+];
+
+const kidSizes = [
+  { us: "10C", uk: "9.5", eu: "27", cm: "16" },
+  { us: "11C", uk: "10.5", eu: "28", cm: "17" },
+  { us: "12C", uk: "11.5", eu: "29.5", cm: "18" },
+  { us: "13C", uk: "12.5", eu: "31", cm: "19" },
+  { us: "1Y", uk: "13.5", eu: "32", cm: "20" },
+  { us: "2Y", uk: "1.5", eu: "33.5", cm: "21" },
+  { us: "3Y", uk: "2.5", eu: "35", cm: "22" },
+  { us: "4Y", uk: "3.5", eu: "36", cm: "23" },
+  { us: "5Y", uk: "4.5", eu: "37.5", cm: "23.5" },
+  { us: "6Y", uk: "5.5", eu: "38.5", cm: "24" },
+];
+
 const SizeGuideDialog: React.FC<SizeGuideDialogProps> = ({
   isOpen,
   onClose,
 }) => {
+  const [activeTab, setActiveTab] = useState<"men" | "women" | "kids">("men");
+
   if (!isOpen) return null;
 
   return (
@@ -54,6 +97,29 @@ const SizeGuideDialog: React.FC<SizeGuideDialogProps> = ({
                 sizes, we recall ordering the next size up.
               </p>
 
+              {/* Tabs */}
+              <div className="flex gap-4 mb-6 border-b border-gray-100">
+                {(["men", "women", "kids"] as const).map((tab) => (
+                  <button
+                    key={tab}
+                    onClick={() => setActiveTab(tab)}
+                    className={`pb-2 text-sm font-bold uppercase tracking-wide transition-colors relative ${
+                      activeTab === tab
+                        ? "text-black"
+                        : "text-gray-400 hover:text-gray-600"
+                    }`}
+                  >
+                    {tab}
+                    {activeTab === tab && (
+                      <motion.div
+                        layoutId="tab"
+                        className="absolute bottom-0 left-0 right-0 h-0.5 bg-black"
+                      />
+                    )}
+                  </button>
+                ))}
+              </div>
+
               <div className="overflow-x-auto">
                 <table className="w-full text-sm text-left whitespace-nowrap md:whitespace-normal">
                   <thead className="bg-gray-50 text-xs uppercase font-bold text-gray-700">
@@ -69,19 +135,12 @@ const SizeGuideDialog: React.FC<SizeGuideDialogProps> = ({
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-100">
-                    {[
-                      { us: "7", uk: "6", eu: "40", cm: "25" },
-                      { us: "7.5", uk: "6.5", eu: "40.5", cm: "25.5" },
-                      { us: "8", uk: "7", eu: "41", cm: "26" },
-                      { us: "8.5", uk: "7.5", eu: "42", cm: "26.5" },
-                      { us: "9", uk: "8", eu: "42.5", cm: "27" },
-                      { us: "9.5", uk: "8.5", eu: "43", cm: "27.5" },
-                      { us: "10", uk: "9", eu: "44", cm: "28" },
-                      { us: "10.5", uk: "9.5", eu: "44.5", cm: "28.5" },
-                      { us: "11", uk: "10", eu: "45", cm: "29" },
-                      { us: "11.5", uk: "10.5", eu: "45.5", cm: "29.5" },
-                      { us: "12", uk: "11", eu: "46", cm: "30" },
-                    ].map((row, idx) => (
+                    {(activeTab === "men"
+                      ? menSizes
+                      : activeTab === "women"
+                      ? womenSizes
+                      : kidSizes
+                    ).map((row, idx) => (
                       <tr
                         key={idx}
                         className="hover:bg-gray-50 transition-colors"
