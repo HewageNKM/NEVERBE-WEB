@@ -131,12 +131,18 @@ const SavedAddresses: React.FC<SavedAddressesProps> = ({
           )}
         </div>
         <div className="mt-6">
-          <button
-            onClick={() => setIsEditing(true)}
-            className="text-sm font-medium underline underline-offset-4 hover:text-gray-600"
-          >
-            {existing ? "Edit" : "Add"}
-          </button>
+          {user?.isAnonymous ? (
+            <p className="text-sm text-gray-400 italic">
+              Sign in to manage addresses
+            </p>
+          ) : (
+            <button
+              onClick={() => setIsEditing(true)}
+              className="text-sm font-medium underline underline-offset-4 hover:text-gray-600"
+            >
+              {existing ? "Edit" : "Add"}
+            </button>
+          )}
         </div>
       </div>
     );
