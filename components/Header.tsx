@@ -180,12 +180,11 @@ const Header = ({ season }: { season: "christmas" | "newYear" | null }) => {
             >
               <div className="max-w-4xl mx-auto relative">
                 <div className="flex items-center border-b-2 border-gray-100 pb-2">
-                  <div className="mr-4 relative">
-                    <IoSearchOutline size={24} className="text-gray-400" />
-                    {isSearching && (
-                      <div className="absolute top-0 left-0 w-full h-full">
-                        <div className="w-6 h-6 border-2 border-gray-400 border-t-black rounded-full animate-spin" />
-                      </div>
+                  <div className="mr-4 relative w-6 h-6 shrink-0">
+                    {isSearching ? (
+                      <div className="w-6 h-6 border-2 border-gray-400 border-t-black rounded-full animate-spin" />
+                    ) : (
+                      <IoSearchOutline size={24} className="text-gray-400" />
                     )}
                   </div>
                   <input
