@@ -22,9 +22,9 @@ export async function GET(req: Request) {
         type: doc.id, // Using doc ID as type ('Shipping' or 'Billing')
         ...data,
         // Decrypt sensitive fields
-        address: decryptData(data.address),
-        city: decryptData(data.city),
-        phone: decryptData(data.phone),
+        address: decryptData(data.address, uid),
+        city: decryptData(data.city, uid),
+        phone: decryptData(data.phone, uid),
       };
     });
 
@@ -61,9 +61,9 @@ export async function POST(req: Request) {
     const dataToSave = {
       type,
       // Encrypt sensitive fields
-      address: encryptData(address),
-      city: encryptData(city),
-      phone: encryptData(phone),
+      address: encryptData(address, uid),
+      city: encryptData(city, uid),
+      phone: encryptData(phone, uid),
       default: !!isDefault,
       updatedAt: new Date().toISOString(),
     };

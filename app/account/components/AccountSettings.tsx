@@ -63,7 +63,9 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
                 <input
                   name="fName"
                   type="text"
-                  defaultValue={user.name ? user.name.split(" ")[0] : ""}
+                  defaultValue={
+                    user.displayName ? user.displayName.split(" ")[0] : ""
+                  }
                   placeholder="First Name"
                   className="w-full p-3 border border-gray-300 focus:border-black focus:ring-0 outline-none rounded-none placeholder-gray-500 transition-colors"
                 />
@@ -73,8 +75,8 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
                   name="lName"
                   type="text"
                   defaultValue={
-                    user.name && user.name.split(" ").length > 1
-                      ? user.name.split(" ")[1]
+                    user.displayName && user.displayName.split(" ").length > 1
+                      ? user.displayName.split(" ")[1]
                       : ""
                   }
                   placeholder="Last Name"
