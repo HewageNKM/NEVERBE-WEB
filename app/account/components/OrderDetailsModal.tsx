@@ -87,7 +87,7 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
                   <p className="font-semibold capitalize">{status}</p>
                   <Link
                     href={`/checkout/success/${orderId}`}
-                    className="text-xs underline text-blue-600 hover:text-blue-800"
+                    className="text-xs underline text-black hover:text-black"
                   >
                     View Confirmation
                   </Link>
