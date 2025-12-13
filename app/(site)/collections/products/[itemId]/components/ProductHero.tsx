@@ -19,6 +19,7 @@ import { addToBag } from "@/redux/bagSlice/bagSlice";
 import { Product } from "@/interfaces/Product";
 import { ProductVariant } from "@/interfaces/ProductVariant";
 import { KOKOLogo } from "@/assets/images";
+import SizeGuideDialog from "@/components/SizeGuideDialog";
 
 const ProductHero = ({ item }: { item: Product }) => {
   const router = useRouter();
@@ -42,6 +43,7 @@ const ProductHero = ({ item }: { item: Product }) => {
   const [outOfStocks, setOutOfStocks] = useState(false);
   const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER;
   const [stockLoading, setStockLoading] = useState(false);
+  const [showSizeGuide, setShowSizeGuide] = useState(false);
 
   // --- Init Logic ---
   useEffect(() => {
@@ -254,12 +256,12 @@ const ProductHero = ({ item }: { item: Product }) => {
           <div>
             <div className="flex justify-between items-center mb-2">
               <span className="text-sm font-bold uppercase">Select Size</span>
-              <Link
-                href="/size-guide"
+              <button
+                onClick={() => setShowSizeGuide(true)}
                 className="text-xs text-gray-400 underline hover:text-black"
               >
                 Size Guide
-              </Link>
+              </button>
             </div>
             <div className="grid grid-cols-4 gap-2">
               {selectedVariant.sizes.map((size) => (
@@ -335,6 +337,10 @@ const ProductHero = ({ item }: { item: Product }) => {
           </div>
         </div>
       </div>
+      <SizeGuideDialog
+        isOpen={showSizeGuide}
+        onClose={() => setShowSizeGuide(false)}
+      />
     </section>
   );
 };

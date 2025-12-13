@@ -6,6 +6,8 @@ import autoTable from "jspdf-autotable";
 import { Order } from "@/interfaces";
 import { Logo } from "@/assets/images";
 import toast from "react-hot-toast";
+import { Timestamp } from "firebase/firestore";
+import { format } from "date-fns";
 
 interface InvoiceProps {
   order: Order;
