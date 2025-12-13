@@ -79,6 +79,13 @@ const Account = () => {
     fetchData();
   }, [user]);
 
+  // --- Auth Redirection ---
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push("/account/login");
+    }
+  }, [loading, user, router]);
+
   // --- Handlers ---
   const handleLogout = async () => {
     try {

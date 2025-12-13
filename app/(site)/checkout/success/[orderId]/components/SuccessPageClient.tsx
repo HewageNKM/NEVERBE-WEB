@@ -81,6 +81,13 @@ export default function SuccessPageClient({
           >
             Continue Shopping <IoArrowForward />
           </Link>
+
+          <Link
+            href="/account"
+            className="flex-1 sm:flex-none py-4 px-8 border border-black text-black font-bold uppercase tracking-widest hover:bg-gray-50 transition-all rounded-sm flex items-center justify-center gap-2"
+          >
+            Go to Account
+          </Link>
         </div>
 
         <p className="mt-12 text-[10px] text-gray-400 font-medium uppercase tracking-wide">

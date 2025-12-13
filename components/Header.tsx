@@ -87,7 +87,7 @@ const Header = ({ season }: { season: "christmas" | "newYear" | null }) => {
 
             {/* Account Icon */}
             <Link
-              href="/account"
+              href={user ? "/account" : "/account/login"}
               className="p-2 hover:bg-gray-100 rounded-full transition"
             >
               {user ? (
