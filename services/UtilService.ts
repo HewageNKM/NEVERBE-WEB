@@ -1,20 +1,19 @@
-import { Timestamp } from "firebase-admin/firestore";
 import { formatInTimeZone } from "date-fns-tz";
 
 export const toSafeLocaleString = (val: any) => {
   if (!val) {
-    console.log("[UtilService] toSafeLocaleString → value is null or undefined");
+    console.log(
+      "[UtilService] toSafeLocaleString → value is null or undefined"
+    );
     return null;
   }
 
   try {
     let date: Date;
 
-    if (val instanceof Timestamp) {
+    // Check for Firestore Timestamp (duck typing to avoid importing firebase-admin or firebase/firestore in client/server shared code improperly)
+    if (val && typeof val.toDate === "function") {
       date = val.toDate();
-      console.log("[UtilService] Firestore Timestamp detected:", date);
-    } else if (typeof (val as Timestamp)?.toDate === "function") {
-      date = (val as Timestamp).toDate();
       console.log("[UtilService] Timestamp-like object detected:", date);
     } else {
       date = new Date(val);
@@ -22,7 +21,10 @@ export const toSafeLocaleString = (val: any) => {
     }
 
     if (isNaN(date.getTime())) {
-      console.warn("[UtilService] Invalid date, returning original value:", val);
+      console.warn(
+        "[UtilService] Invalid date, returning original value:",
+        val
+      );
       return String(val);
     }
 
