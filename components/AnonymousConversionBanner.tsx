@@ -7,7 +7,7 @@ import { User, ArrowRight } from "lucide-react";
 const AnonymousConversionBanner: React.FC = () => {
   const user = useSelector((state: RootState) => state.authSlice.user);
 
-  if (!user || !user.isAnonymous) return null;
+  if (user && !user.isAnonymous) return null;
 
   return (
     <div className="bg-neutral-900 text-white px-4 py-3 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-6 text-sm text-center animate-fadeIn relative z-40">
