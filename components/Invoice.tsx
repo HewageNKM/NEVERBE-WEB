@@ -73,7 +73,16 @@ const Invoice: React.FC<InvoiceProps> = ({
       doc.setFont("helvetica", "normal");
       doc.setTextColor(100);
       doc.text(`ID: #${order.orderId}`, 140, yPos + 5);
-      doc.text(`Date: ${order.createdAt}`, 140, yPos + 10);
+      const formatDate = (date: Timestamp | string) => {
+        if (!date) return "-";
+        if (typeof date === "string") {
+          return format(new Date(date), "dd MMM yyyy, HH:mm");
+        }
+        return format(date.toDate(), "dd MMM yyyy, HH:mm");
+      };
+
+      doc.text(`ID: #${order.orderId}`, 140, yPos + 5);
+      doc.text(`Date: ${formatDate(order.createdAt)}`, 140, yPos + 10);
       doc.text(`Payment: ${order.paymentMethod}`, 140, yPos + 15);
 
       yPos += 25;
