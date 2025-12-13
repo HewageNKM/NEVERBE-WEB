@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect } from "react";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { Toaster } from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/firebase/firebaseClient";
@@ -35,11 +34,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <>
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-      />
+      <Toaster position="top-right" />
       {children}
     </>
   );

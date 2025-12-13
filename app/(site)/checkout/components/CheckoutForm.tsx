@@ -28,8 +28,7 @@ import BillingDetails from "./BillingDetails";
 import ShippingDetails from "./ShippingDetails";
 import PaymentDetails from "@/app/(site)/checkout/components/PaymentDetails";
 import ComponentLoader from "@/components/ComponentLoader";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import toast from "react-hot-toast";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 
 // ... (Keep your helper functions like createCustomerFromForm and formatSriLankanPhoneNumber exactly as they are)

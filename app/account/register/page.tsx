@@ -14,8 +14,7 @@ import { auth } from "@/firebase/firebaseClient";
 import Image from "next/image";
 import Link from "next/link";
 import { Logo } from "@/assets/images";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import toast from "react-hot-toast";
 import ComponentLoader from "@/components/ComponentLoader";
 
 const RegisterPage = () => {

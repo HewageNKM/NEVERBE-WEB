@@ -6,7 +6,7 @@ import {
   reauthenticateWithCredential,
   EmailAuthProvider,
 } from "firebase/auth";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 import { auth } from "@/firebase/firebaseClient";
 import { useDispatch } from "react-redux";
 import { setUser } from "@/redux/authSlice/authSlice";

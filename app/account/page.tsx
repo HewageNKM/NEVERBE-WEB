@@ -25,7 +25,7 @@ import ProfileOverview from "./components/ProfileOverview";
 import OrdersView from "./components/OrdersView";
 import SavedAddresses from "./components/SavedAddresses";
 import AccountSettings from "./components/AccountSettings";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 
 const Account = () => {
   const router = useRouter();

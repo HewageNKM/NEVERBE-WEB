@@ -5,7 +5,7 @@ import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 import { Order } from "@/interfaces";
 import { Logo } from "@/assets/images";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 
 interface InvoiceProps {
   order: Order;
