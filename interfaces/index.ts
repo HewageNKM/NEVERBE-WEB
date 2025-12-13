@@ -115,6 +115,7 @@ export interface OrderItem {
   quantity: number;
   price: number;
   bPrice: number;
+  discount?: number;
 }
 
 export interface FooterLink {

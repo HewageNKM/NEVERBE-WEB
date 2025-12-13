@@ -28,9 +28,7 @@ export default function SuccessPageClient({
       const imgHeight = 25;
       const centerX = 105;
 
-      // Black Circle Logo Background
-      doc.setFillColor(0, 0, 0);
-      doc.circle(centerX, 30, 18, "F");
+      // Logo (No Background)
       doc.addImage(
         Logo.src,
         "PNG",
@@ -48,7 +46,7 @@ export default function SuccessPageClient({
       // --- Details Section ---
       let yPos = 80;
 
-      // Left: Company
+      // Company Info
       doc.setFontSize(10);
       doc.setFont("helvetica", "bold");
       doc.text("NEVERBE", 20, yPos);
@@ -58,22 +56,57 @@ export default function SuccessPageClient({
       doc.text("Delgoda, Sri Lanka", 20, yPos + 10);
       doc.text("support@neverbe.lk", 20, yPos + 15);
 
-      // Right: Order Info
+      // Order Info
       doc.setTextColor(0);
       doc.setFont("helvetica", "bold");
       doc.text("Order Details", 140, yPos);
       doc.setFont("helvetica", "normal");
       doc.setTextColor(100);
       doc.text(`ID: #${order.orderId}`, 140, yPos + 5);
-      doc.text(
-        `Date: ${new Date(order.createdAt).toLocaleDateString()}`,
-        140,
-        yPos + 10
-      );
+      doc.text(`Date: ${order.createdAt}`, 140, yPos + 10);
       doc.text(`Payment: ${order.paymentMethod}`, 140, yPos + 15);
 
-      // Divider
       yPos += 25;
+
+      // --- Addresses ---
+      const { customer } = order;
+
+      // Billing Address
+      doc.setTextColor(0);
+      doc.setFont("helvetica", "bold");
+      doc.text("Billing Address", 20, yPos);
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(100);
+      doc.text(customer.name, 20, yPos + 5);
+      doc.text(customer.address, 20, yPos + 10);
+      doc.text(
+        `${customer.city}${customer.zip ? `, ${customer.zip}` : ""}`,
+        20,
+        yPos + 15
+      );
+      doc.text(customer.phone, 20, yPos + 20);
+
+      // Shipping Address
+      doc.setTextColor(0);
+      doc.setFont("helvetica", "bold");
+      doc.text("Shipping Address", 140, yPos);
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(100);
+      doc.text(customer.shippingName || customer.name, 140, yPos + 5);
+      doc.text(customer.shippingAddress || customer.address, 140, yPos + 10);
+      doc.text(
+        `${customer.shippingCity || customer.city}${
+          customer.shippingZip || customer.zip
+            ? `, ${customer.shippingZip || customer.zip}`
+            : ""
+        }`,
+        140,
+        yPos + 15
+      );
+      doc.text(customer.shippingPhone || customer.phone, 140, yPos + 20);
+
+      // Divider
+      yPos += 30;
       doc.setDrawColor(230);
       doc.line(20, yPos, 190, yPos);
 
@@ -83,12 +116,13 @@ export default function SuccessPageClient({
         item.size || "-",
         item.quantity,
         `Rs. ${item.price.toLocaleString()}`,
+        `Rs. ${(item.discount || 0).toLocaleString()}`,
         `Rs. ${(item.price * item.quantity).toLocaleString()}`,
       ]);
 
       autoTable(doc, {
         startY: yPos + 10,
-        head: [["Item", "Size", "Qty", "Price", "Total"]],
+        head: [["Item", "Size", "Qty", "Price", "Discount", "Total"]],
         body: itemData,
         theme: "plain",
         headStyles: { fillColor: [0, 0, 0], textColor: 255, fontStyle: "bold" },
@@ -96,15 +130,18 @@ export default function SuccessPageClient({
       });
 
       // --- Totals ---
-      // Calculation logic preserved from your original code
       const subtotal = order.items.reduce(
         (sum, i) => sum + i.price * i.quantity,
         0
       );
-      const totalDiscount = order.items.reduce(
+      const itemsDiscount = order.items.reduce(
         (sum, i) => sum + (i.discount || 0),
         0
       );
+      // Total discount might also include a global order discount if applicable,
+      // ensuring we capture everything.
+      const totalDiscount = itemsDiscount + (order.discount || 0);
+
       const grandTotal =
         subtotal - totalDiscount + (order.shippingFee || 0) + (order.fee || 0);
 
