@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Login | NEVERBE",
+  title: "Register | NEVERBE - Become A Member",
   description:
-    "Sign in to your NEVERBE account to view orders and manage your profile.",
+    "Create your profile to get access to the best products and inspiration.",
 };
 
-export default function LoginLayout({
+export default function RegisterLayout({
   children,
 }: {
   children: React.ReactNode;
