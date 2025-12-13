@@ -14,6 +14,14 @@ export const metadata: Metadata = {
       "Discover the newest 7A quality sneakers, slides, and footwear drops in Sri Lanka.",
     url: "https://neverbe.lk/collections/new-arrivals",
     type: "website",
+    images: [
+      {
+        url: "https://neverbe.lk/logo-og.png", // Ensure this image is generic/appealing
+        width: 1200,
+        height: 630,
+        alt: "NEVERBE New Arrivals",
+      },
+    ],
   },
 };
 

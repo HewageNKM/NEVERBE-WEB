@@ -47,7 +47,7 @@ export async function generateMetadata(context: {
       locale: "en_LK",
       images: [
         {
-          url: "https://neverbe.lk/api/v1/og", // Ideally, dynamic images per category
+          url: "https://neverbe.lk/logo-og.png", // Ideally, dynamic images per category
           width: 1200,
           height: 630,
           alt: `${capitalized} Collection`,
@@ -91,7 +91,7 @@ const Page = async (context: { params: Promise<{ category: string }> }) => {
         item: {
           "@type": "Product",
           name: product.name,
-          image: product.thumbnail?.url || "https://neverbe.lk/api/v1/og",
+          image: product.thumbnail?.url || "https://neverbe.lk/logo-og.png",
           url: `https://neverbe.lk/collections/products/${product.id}`,
           brand: {
             "@type": "Brand",

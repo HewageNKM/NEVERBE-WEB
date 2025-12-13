@@ -48,7 +48,7 @@ export async function generateMetadata(context: {
       locale: "en_LK",
       images: [
         {
-          url: "https://neverbe.lk/api/v1/og", // Dynamic brand image would be better if available
+          url: "https://neverbe.lk/logo-og.png", // Dynamic brand image would be better if available
           width: 1200,
           height: 630,
           alt: `${capitalizedBrand} Sneakers Sri Lanka`,

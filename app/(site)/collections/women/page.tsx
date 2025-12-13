@@ -13,6 +13,14 @@ export const metadata: Metadata = {
     description: "Shop the best collection of women's sneakers in Sri Lanka.",
     url: "https://neverbe.lk/collections/women",
     type: "website",
+    images: [
+      {
+        url: "https://neverbe.lk/logo-og.png", // Ensure this image is generic/appealing
+        width: 1200,
+        height: 630,
+        alt: "NEVERBE Women's Collection",
+      },
+    ],
   },
 };
 

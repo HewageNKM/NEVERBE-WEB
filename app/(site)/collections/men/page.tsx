@@ -12,6 +12,14 @@ export const metadata: Metadata = {
     title: "Men's Sneakers & Footwear | NEVERBE",
     description: "Shop the best collection of men's sneakers in Sri Lanka.",
     url: "https://neverbe.lk/collections/men",
+    images: [
+      {
+        url: "https://neverbe.lk/logo-og.png", // Ensure this image is generic/appealing
+        width: 1200,
+        height: 630,
+        alt: "NEVERBE Men's Collection",
+      },
+    ],
     type: "website",
   },
 };

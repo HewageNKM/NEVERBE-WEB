@@ -55,7 +55,7 @@ export async function generateMetadata(context: {
       siteName: "NEVERBE",
       images: [
         {
-          url: item.thumbnail?.url || "https://neverbe.lk/api/v1/og",
+          url: item.thumbnail?.url || "https://neverbe.lk/logo-og.png",
           width: 1200,
           height: 630,
           alt: `${item.name} - Detailed View`,
@@ -79,7 +79,7 @@ const Page = async (context: { params: Promise<{ itemId: string }> }) => {
     "@context": "https://schema.org",
     "@type": "Product",
     name: item.name,
-    image: [item.thumbnail?.url || "https://neverbe.lk/api/v1/og"],
+    image: [item.thumbnail?.url || "https://neverbe.lk/logo-og.png"],
     description: `High-quality inspired design of ${item.name}. Note: This is a premium replica intended for fashion purposes.`,
     sku: item.id,
     brand: {

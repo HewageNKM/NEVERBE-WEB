@@ -1,6 +1,5 @@
 import Products from "@/app/(site)/collections/products/components/Products";
 import ProductsHeader from "@/app/(site)/collections/products/components/ProductsHeader";
-import EmptyState from "@/components/EmptyState";
 import { getProducts } from "@/services/ProductService";
 import { seoKeywords } from "@/constants";
 import type { Metadata } from "next";
@@ -25,7 +24,7 @@ export const metadata: Metadata = {
     "canvas shoes sri lanka",
     "party shoes",
     "office shoes",
-    ...seoKeywords, // Your existing keywords
+    ...seoKeywords,
   ],
   alternates: {
     canonical: "https://neverbe.lk/collections/products",
@@ -46,17 +45,6 @@ export const metadata: Metadata = {
         alt: "NEVERBE Shoe Collection",
       },
     ],
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-snippet": -1,
-      "max-image-preview": "large",
-      "max-video-preview": -1,
-    },
   },
   metadataBase: new URL("https://neverbe.lk"),
 };

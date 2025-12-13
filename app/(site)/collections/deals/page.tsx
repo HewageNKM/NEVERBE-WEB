@@ -84,7 +84,7 @@ const Page = async () => {
         item: {
           "@type": "Product",
           name: product?.name,
-          image: product?.thumbnail?.url || "https://neverbe.lk/api/v1/og",
+          image: product?.thumbnail?.url || "https://neverbe.lk/logo-og.png",
           description:
             product?.description ||
             "Discounted premium footwear at NEVERBE Sri Lanka.",
@@ -96,8 +96,6 @@ const Page = async () => {
           offers: {
             "@type": "Offer",
             priceCurrency: "LKR",
-            // Schema trick: Explicitly showing it's a "SalePrice" isn't standard in basic Offer,
-            // but we ensure the price reflects the discount here.
             price: product?.sellingPrice || "0.00",
             availability: "https://schema.org/InStock",
             priceValidUntil: new Date(
