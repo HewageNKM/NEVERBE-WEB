@@ -12,6 +12,7 @@ const NOTIFICATION_TRACKER = "notifications_sent";
 const OTP_TTL_DAYS = 1;
 const COOLDOWN_SECONDS = 60;
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+const MAIL_COLLECTION = "mail";
 
 /** Generate a 6-digit OTP */
 const generateOTP = (): string => {
@@ -25,6 +26,15 @@ const hashOTP = (otp: string): string => {
   const hashed = crypto.createHash("sha256").update(otp).digest("hex");
   console.log("[OTP] Hashed OTP:", hashed);
   return hashed;
+};
+
+/** Helper to format currency (LKR) */
+const formatMoney = (amount: number = 0): string => {
+  return new Intl.NumberFormat("en-LK", {
+    style: "currency",
+    currency: "LKR",
+    minimumFractionDigits: 2,
+  }).format(amount);
 };
 
 /** Generate SHA256 hash for content (duplicate prevention) */
@@ -214,10 +224,9 @@ export const sendOrderConfirmedSMS = async (orderId: string) => {
 
     const customerName = order.customer.name.split(" ")[0];
     const invoiceDownloadUrl = `${BASE_URL}/checkout/success/${orderId}`;
-    const text = `✅ Hi ${customerName}, your order #${orderId.toUpperCase()} totaling Rs.${total.toFixed(
+    const text = `NEVERBE: Got it, ${customerName}. Order #${orderId.toUpperCase()} is confirmed. Total: Rs.${total.toFixed(
       2
-    )} has been received by NEVERBE to be processed. Download your invoice (valid 7 days): ${invoiceDownloadUrl}`;
-
+    )}. Invoice: ${invoiceDownloadUrl}`;
     const hashValue = generateHash(phone + text);
 
     const existing = await adminFirestore
@@ -263,6 +272,144 @@ export const sendOrderConfirmedSMS = async (orderId: string) => {
   } catch (error) {
     console.error(
       `[Notification Service] Failed to queue SMS for order ${orderId}:`,
+      error
+    );
+    return false;
+  }
+};
+
+/** * Send Order Confirmation Email via Firebase Extension
+ * Robust error handling prevents crashes if order data is incomplete.
+ * Uses stored totals directly instead of re-calculating.
+ */
+export const sendOrderConfirmedEmail = async (orderId: string) => {
+  try {
+    console.log(
+      `[Notification Service] sendOrderConfirmedEmail called for order: ${orderId}`
+    );
+
+    if (!orderId) {
+      console.warn("[Notification Service] Missing orderId.");
+      return false;
+    }
+
+    // 1. Fetch Order Data
+    const order: Order = await getOrderByIdForInvoice(orderId);
+
+    // CRASH PROOF: Check if order exists before proceeding
+    if (!order) {
+      console.warn(`[Notification Service] Order not found: ${orderId}`);
+      return false;
+    }
+
+    // CRASH PROOF: Safely access email with optional chaining
+    const email = order.customer?.email?.trim();
+
+    if (!email) {
+      console.warn(
+        `[Notification Service] No valid email found for order: ${orderId}`
+      );
+      return false;
+    }
+
+    // 2. Prevent Duplicate Emails (Idempotency)
+    const hashValue = generateHash(email + "ORDER_CONFIRMATION" + orderId);
+
+    const existing = await adminFirestore
+      .collection(NOTIFICATION_TRACKER)
+      .where("orderId", "==", orderId)
+      .where("hashValue", "==", hashValue)
+      .where("type", "==", "email")
+      .get();
+
+    if (!existing.empty) {
+      console.warn(
+        `[Notification Service] Duplicate Email detected for order: ${orderId}`
+      );
+      return false;
+    }
+
+    // 3. Prepare Data for Handlebars Template
+
+    // CRASH PROOF: Default to empty array if items is missing
+    const safeItems = Array.isArray(order.items) ? order.items : [];
+
+    // Calculate 'subtotal' only for display purposes (sum of items)
+    // We keep this calculation because 'subtotal' is rarely stored explicitly on the root
+    const subtotalRaw = safeItems.reduce(
+      (acc, item) => acc + (item.price || 0) * (item.quantity || 1),
+      0
+    );
+
+    // USE STORED VALUES (No Recalculation)
+    // We cast to 'any' for total in case it's missing from your strict Order interface
+    const totalRaw = (order as any).total || 0;
+    const shippingRaw = order.shippingFee || 0;
+    const discountRaw = order.discount || 0;
+
+    const emailPayload = {
+      to: [email],
+      template: {
+        name: "order_confirmation",
+        data: {
+          // CRASH PROOF: Fallbacks for all string fields
+          customerName: order.customer?.name || "Customer",
+          orderId: (order.orderId || orderId).toUpperCase(),
+
+          items: safeItems.map((item) => ({
+            name: item.name || "Unknown Item",
+            variantName: item.variantName || "",
+            size: item.size || "-",
+            quantity: item.quantity || 1,
+            thumbnail:
+              item.thumbnail || "https://placehold.co/100x100?text=No+Img",
+            formattedPrice: formatMoney(item.price || 0),
+          })),
+
+          customer: {
+            address: order.customer?.address || "N/A",
+            city: order.customer?.city || "",
+            phone: order.customer?.phone || "",
+            shippingAddress: {
+              line1: order.customer?.address || "N/A",
+              city: order.customer?.city || "",
+              postalCode: "",
+              country: "Sri Lanka",
+            },
+          },
+
+          paymentMethod: order.paymentMethod || "N/A",
+          paymentStatus: order.paymentStatus || "Pending",
+
+          // Formatted Values
+          subtotal: formatMoney(subtotalRaw),
+          shippingFee: formatMoney(shippingRaw),
+          discount: discountRaw > 0 ? formatMoney(discountRaw) : null,
+          total: formatMoney(totalRaw), // Uses the database total directly
+        },
+      },
+    };
+
+    // 4. Trigger Email
+    console.log(`[Notification Service] Queuing email for ${email}`);
+    await adminFirestore.collection(MAIL_COLLECTION).add(emailPayload);
+
+    // 5. Log Notification
+    await adminFirestore.collection(NOTIFICATION_TRACKER).add({
+      orderId,
+      type: "email",
+      to: email,
+      hashValue,
+      createdAt: new Date(),
+    });
+
+    console.log(
+      `[Notification Service] Email queued successfully for ${orderId}`
+    );
+    return true;
+  } catch (error) {
+    console.error(
+      `[Notification Service] CRITICAL ERROR sending email for order ${orderId}:`,
       error
     );
     return false;

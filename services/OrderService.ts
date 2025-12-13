@@ -1,5 +1,8 @@
 import { adminFirestore } from "@/firebase/firebaseAdmin";
-import { sendOrderConfirmedSMS } from "./NotificationService";
+import {
+  sendOrderConfirmedEmail,
+  sendOrderConfirmedSMS,
+} from "./NotificationService";
 import { updateOrAddOrderHash } from "./IntegrityService";
 import { toSafeLocaleString } from "./UtilService";
 import { FieldValue } from "firebase-admin/firestore";
@@ -86,6 +89,8 @@ export const updatePayment = async (
       console.log(`[OrderService] Sending confirmation SMS for ${orderId}`);
       await sendOrderConfirmedSMS(orderId);
       console.log(`[OrderService] Confirmation SMS sent for ${orderId}`);
+      await sendOrderConfirmedEmail(orderId);
+      console.log(`[OrderService] Confirmation Email sent for ${orderId}`);
     }
 
     console.log(`[OrderService] Updating order hash for ${orderId}`);
