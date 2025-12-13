@@ -90,7 +90,7 @@ const SEOContent = () => {
             </Link>
             <span className="text-gray-300">/</span>
             <Link
-              href="/collections/categories/Sandals"
+              href="/collections/categories/Sandals%20&%20Slippers%20&%20Slides"
               className="hover:text-black hover:underline transition-colors"
             >
               Men's Sandals
@@ -111,7 +111,7 @@ const SEOContent = () => {
             </Link>
             <span className="text-gray-300">/</span>
             <Link
-              href="/"
+              href="/collections/categories/Sneakers  "
               className="hover:text-black hover:underline transition-colors"
             >
               Best Sneakers 2025
