@@ -1,6 +1,7 @@
 import React from "react";
 import { Metadata } from "next";
 import CheckoutForm from "@/app/(site)/checkout/components/CheckoutForm";
+import AnonymousConversionBanner from "@/components/AnonymousConversionBanner";
 
 export const metadata: Metadata = {
   title: "Secure Checkout | NEVERBE",
@@ -15,6 +16,7 @@ const Page = () => {
           Checkout
         </h1>
       </div>
+      <AnonymousConversionBanner />
 
       <div className="w-full max-w-[1440px] mx-auto">
         <CheckoutForm />
