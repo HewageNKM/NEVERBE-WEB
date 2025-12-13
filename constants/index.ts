@@ -261,7 +261,7 @@ export const privacyPolicy = {
         "To protect against legal liability",
       ],
     },
-    securityOfData: `We strive to use commercially acceptable means to protect your Personal Data but cannot guarantee its absolute security.`,
+    securityOfData: `We prioritize the security of your Personal Data. All sensitive information, including your shipping addresses, billing addresses, and phone numbers, is encrypted using industry-standard encryption algorithms before being stored in our databases. While we strive to use commercially acceptable means to protect your Personal Data, we cannot guarantee its absolute security.`,
     serviceProviders: `We may employ third party companies to facilitate our Service, provide the Service on our behalf, perform Service-related services, or assist us in analyzing how our Service is used.`,
     analytics: {
       googleAnalytics: `Google Analytics is a web analytics service that tracks and reports website traffic. You can opt out by installing the Google Analytics opt-out browser add-on.`,

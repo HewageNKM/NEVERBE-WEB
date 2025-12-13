@@ -8,7 +8,6 @@ import Bag from "@/components/Bag";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Menu from "@/components/Menu";
-import { ToastContainer } from "react-toastify";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
@@ -32,11 +31,6 @@ const GlobalProvider = ({
 
   return (
     <main className="w-full relative flex flex-col justify-between min-h-screen overflow-clip">
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-      />
       <Header season={season} />
       {children}
       <Footer />

@@ -6,17 +6,21 @@ import {
   updateProfile,
   GoogleAuthProvider,
   signInWithPopup,
+  linkWithPopup,
+  linkWithCredential,
+  EmailAuthProvider,
 } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { auth } from "@/firebase/firebaseClient";
 import Image from "next/image";
 import { Logo } from "@/assets/images";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const AuthPage = () => {
   const router = useRouter();
   const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
 
   const [formData, setFormData] = useState({
     email: "",
@@ -27,20 +31,40 @@ const AuthPage = () => {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    setError("");
   };
 
   const handleGoogleLogin = async () => {
     setLoading(true);
-    setError("");
     const provider = new GoogleAuthProvider();
 
     try {
+      // Check if current user is anonymous
+      if (auth.currentUser && auth.currentUser.isAnonymous) {
+        try {
+          await linkWithPopup(auth.currentUser, provider);
+          toast.success("Account upgraded successfully!");
+          router.push("/account");
+          return;
+        } catch (linkError: any) {
+          // If account exists, linkWithPopup fails. We fall back to normal sign in.
+          if (linkError.code === "auth/credential-already-in-use") {
+            toast.info(
+              "Account already exists. Switching to existing account..."
+            );
+            // proceed to normal sign in below
+          } else {
+            throw linkError;
+          }
+        }
+      }
+
       await signInWithPopup(auth, provider);
       router.push("/account");
-    } catch (err) {
-      console.error(err);
-      setError("Failed to sign in with Google.");
+      router.push("/account");
+    } catch (err: any) {
+      // Clean error handling - no traces
+      const msg = "Failed to sign in with Google. Please try again.";
+      toast.error(msg);
     } finally {
       setLoading(false);
     }
@@ -49,7 +73,6 @@ const AuthPage = () => {
   const handleAuth = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
 
     try {
       if (isLogin) {
@@ -60,24 +83,50 @@ const AuthPage = () => {
         );
         router.push("/account");
       } else {
-        const userCredential = await createUserWithEmailAndPassword(
-          auth,
-          formData.email,
-          formData.password
-        );
-        await updateProfile(userCredential.user, {
-          displayName: `${formData.firstName} ${formData.lastName}`.trim(),
-        });
+        // Sign Up Flow
+        if (auth.currentUser && auth.currentUser.isAnonymous) {
+          // Convert anonymous account to email/password
+          const credential = EmailAuthProvider.credential(
+            formData.email,
+            formData.password
+          );
+          const userCred = await linkWithCredential(
+            auth.currentUser,
+            credential
+          );
+
+          await updateProfile(userCred.user, {
+            displayName: `${formData.firstName} ${formData.lastName}`.trim(),
+          });
+          toast.success("Account created and linked!");
+        } else {
+          // Standard Sign Up
+          const userCredential = await createUserWithEmailAndPassword(
+            auth,
+            formData.email,
+            formData.password
+          );
+          await updateProfile(userCredential.user, {
+            displayName: `${formData.firstName} ${formData.lastName}`.trim(),
+          });
+        }
         router.push("/account");
       }
-    } catch (err) {
+    } catch (err: any) {
+      let msg = "An error occurred. Please try again.";
       if (err.code === "auth/email-already-in-use")
-        setError("That email is already registered.");
-      else if (err.code === "auth/wrong-password")
-        setError("Incorrect password.");
+        msg = "That email is already registered.";
+      else if (
+        err.code === "auth/wrong-password" ||
+        err.code === "auth/invalid-credential"
+      )
+        msg = "Invalid email or password.";
       else if (err.code === "auth/user-not-found")
-        setError("No account found with that email.");
-      else setError(err.message);
+        msg = "No account found with that email.";
+      else if (err.code === "auth/weak-password")
+        msg = "Password should be at least 6 characters.";
+
+      toast.error(msg);
     } finally {
       setLoading(false);
     }
@@ -157,9 +206,7 @@ const AuthPage = () => {
             </div>
           )}
 
-          {error && (
-            <p className="text-red-600 text-xs text-center mt-2">{error}</p>
-          )}
+          {/* Error text removed, using toast */}
 
           <p className="text-xs text-gray-500 text-center leading-relaxed px-4">
             By logging in, you agree to our Privacy Policy and Terms of Use.
@@ -217,7 +264,6 @@ const AuthPage = () => {
             <button
               onClick={() => {
                 setIsLogin(!isLogin);
-                setError("");
               }}
               className="text-black font-medium underline underline-offset-4 hover:text-gray-600 ml-1"
             >

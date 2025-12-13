@@ -23,7 +23,7 @@ import {
   sendCODOrderNotifications,
   verifyOTP,
 } from "@/actions/orderAction";
-import { signUser } from "@/firebase/firebaseClient";
+import { signUser, auth } from "@/firebase/firebaseClient";
 import BillingDetails from "./BillingDetails";
 import ShippingDetails from "./ShippingDetails";
 import PaymentDetails from "@/app/(site)/checkout/components/PaymentDetails";
@@ -77,9 +77,63 @@ const CheckoutForm = () => {
 
   // ... (Keep your useEffects and Handlers exactly as they are)
   useEffect(() => {
-    const savedCustomer = window.localStorage.getItem("neverbeBillingCustomer");
-    if (savedCustomer) setBillingCustomer(JSON.parse(savedCustomer));
-  }, []);
+    const loadAddresses = async () => {
+      // 1. Load from API if logged in
+      if (user?.uid) {
+        try {
+          const token = await auth.currentUser?.getIdToken();
+          const res = await fetch("/api/v1/user/addresses", {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          if (res.ok) {
+            const addresses = await res.json();
+            // Map addresses to customer format
+            const billingAddr = addresses.find(
+              (a: any) => a.type === "Billing"
+            );
+            const shippingAddr = addresses.find(
+              (a: any) => a.type === "Shipping"
+            );
+
+            if (billingAddr) {
+              setBillingCustomer(
+                (prev) =>
+                  ({
+                    ...prev,
+                    name: user.displayName || prev?.name || "",
+                    email: user.email || prev?.email || "",
+                    phone: billingAddr.phone,
+                    address: billingAddr.address,
+                    city: billingAddr.city,
+                    // zip? API doesn't have zip yet, maybe add to API later or keep usage generic
+                  } as Customer)
+              );
+            }
+
+            if (shippingAddr) {
+              setShippingCustomer((prev) => ({
+                ...prev,
+                shippingName: user.displayName || prev?.shippingName,
+                shippingAddress: shippingAddr.address,
+                shippingCity: shippingAddr.city,
+                shippingPhone: shippingAddr.phone,
+              }));
+              setShippingSameAsBilling(false); // If specific shipping address exists, don't default to same as billing
+            }
+          }
+        } catch (error) {
+          console.error("Error loading addresses", error);
+        }
+      } else {
+        // 2. Fallback to Local Storage if not logged in (or if no API data? Maybe merge?)
+        const savedCustomer = window.localStorage.getItem(
+          "neverbeBillingCustomer"
+        );
+        if (savedCustomer) setBillingCustomer(JSON.parse(savedCustomer));
+      }
+    };
+    loadAddresses();
+  }, [user]);
 
   useEffect(() => {
     if (resendCooldown <= 0) return;

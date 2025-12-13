@@ -1,21 +1,15 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { signOut, updateProfile, updatePassword } from "firebase/auth";
-import {
-  collection,
-  getDocs,
-  query,
-  where,
-  addDoc,
-  deleteDoc,
-  doc,
-} from "firebase/firestore";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import { auth, db } from "@/firebase/firebaseClient";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { setUser } from "@/redux/authSlice/authSlice";
 import Image from "next/image";
 import { Logo } from "@/assets/images";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { signOut, updatePassword, updateProfile } from "@firebase/auth";
 
 const Account = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -38,26 +32,26 @@ const Account = () => {
           );
           const ordersSnapshot = await getDocs(ordersQuery);
           const ordersData = ordersSnapshot.docs.map((doc) => ({
-            id: doc.id,
+            id: doc.id, // @ts-ignore
             ...doc.data(),
           }));
           setOrders(ordersData); // @ts-ignore
 
-          // Fetch Addresses
-          const addressesRef = collection(db, "users", user.uid, "addresses");
-          const addressesSnapshot = await getDocs(addressesRef);
-          const addressesData = addressesSnapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          }));
-          setAddresses(addressesData); // @ts-ignore
+          // Fetch Addresses via API
+          const token = await auth.currentUser?.getIdToken();
+          const res = await fetch("/api/v1/user/addresses", {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          if (res.ok) {
+            const data = await res.json();
+            setAddresses(data);
+          }
         } catch (error) {
           console.error("Error fetching data:", error);
         } finally {
           setLoading(false);
         }
       } else {
-        // Wait a bit for auth to initialize if not yet present
         const timer = setTimeout(() => {
           setLoading(false);
         }, 2000);
@@ -94,7 +88,7 @@ const Account = () => {
         if (newPass) {
           await updatePassword(auth.currentUser, newPass);
         }
-        alert("Profile updated successfully!");
+        toast.success("Profile updated successfully!");
 
         // Update Redux state manually to reflect changes immediately
         const updatedUser = {
@@ -112,51 +106,55 @@ const Account = () => {
         dispatch(setUser(updatedUser));
       }
     } catch (err: any) {
-      alert("Error updating profile: " + err.message);
+      toast.error("Error updating profile: " + err.message);
     }
   };
 
-  const handleAddAddress = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSaveAddress = async (
+    e: React.FormEvent<HTMLFormElement>,
+    type: string
+  ) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const newAddress = {
-      type: formData.get("type") as string,
+      type,
       address: formData.get("address") as string,
       city: formData.get("city") as string,
       phone: formData.get("phone") as string,
-      default: formData.get("default") === "on",
-      createdAt: new Date().toISOString(),
+      isDefault: false, // Default logic simplified for now
     };
 
     try {
       if (user?.uid) {
-        // @ts-ignore
-        const docRef = await addDoc(
-          collection(db, "users", user.uid, "addresses"),
-          newAddress
-        );
-        // @ts-ignore
-        setAddresses([...addresses, { id: docRef.id, ...newAddress }]);
-        setAddingAddress(false);
-        e.currentTarget.reset();
+        const token = await auth.currentUser?.getIdToken();
+        const res = await fetch("/api/v1/user/addresses", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(newAddress),
+        });
+
+        if (res.ok) {
+          // Refresh addresses
+          // Ideally we update state locally to avoid refetch, but refetch is safer for encrypted data flow verification?
+          // Actually, we need to show the decrypted data. The API returns it on GET.
+          // Let's just refetch or update local state aggressively if needed.
+          // For simplicity, I'll refetch.
+          const fetchRes = await fetch("/api/v1/user/addresses", {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          if (fetchRes.ok) {
+            const data = await fetchRes.json();
+            setAddresses(data);
+          }
+          toast.success(`${type} Address updated!`);
+          setAddingAddress(false); // Used as toggle for editing view? I'll reuse or change state logic.
+        }
       }
     } catch (error) {
-      console.error("Error adding address", error);
-    }
-  };
-
-  const handleRemoveAddress = async (id) => {
-    if (confirm("Are you sure you want to remove this address?")) {
-      try {
-        if (user?.uid) {
-          // @ts-ignore
-          await deleteDoc(doc(db, "users", user.uid, "addresses", id));
-          // @ts-ignore
-          setAddresses(addresses.filter((addr) => addr.id !== id));
-        }
-      } catch (error) {
-        console.error("Error deleting address", error);
-      }
+      console.error("Error saving address", error);
     }
   };
 
@@ -273,103 +271,100 @@ const Account = () => {
     </div>
   );
 
-  const AddressesView = () => (
-    <div className="space-y-8">
-      <div className="flex justify-between items-end">
-        <h2 className="text-2xl font-medium uppercase tracking-tight">
-          Saved Addresses
-        </h2>
-        <button
-          onClick={() => setAddingAddress(!addingAddress)}
-          className="text-sm border-b border-black pb-0.5 hover:text-gray-600"
-        >
-          {addingAddress ? "Cancel" : "Add New"}
-        </button>
-      </div>
+  const AddressCard = ({ type }: { type: string }) => {
+    // @ts-ignore
+    const existing = addresses.find((a) => a.type === type);
+    const [isEditing, setIsEditing] = useState(false);
 
-      {addingAddress && (
+    if (isEditing) {
+      return (
         <form
-          onSubmit={handleAddAddress}
-          className="bg-gray-50 p-6 border border-gray-200 space-y-4"
+          onSubmit={(e) => {
+            handleSaveAddress(e, type);
+            setIsEditing(false);
+          }}
+          className="bg-gray-50 p-6 border border-gray-200 space-y-4 h-full"
         >
-          <h3 className="font-medium mb-4">New Address</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <input
-              name="type"
-              placeholder="Address Type (e.g. Home, Work)"
-              required
-              className="p-3 border w-full"
-            />
-            <input
-              name="phone"
-              placeholder="Phone Number"
-              required
-              className="p-3 border w-full"
-            />
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="font-medium">{type} Address</h3>
+            <button
+              type="button"
+              onClick={() => setIsEditing(false)}
+              className="text-sm underline"
+            >
+              Cancel
+            </button>
           </div>
+
           <input
             name="address"
+            defaultValue={existing?.address || ""}
             placeholder="Address"
             required
-            className="p-3 border w-full"
+            className="p-3 border w-full text-sm"
           />
           <input
             name="city"
+            defaultValue={existing?.city || ""}
             placeholder="City"
             required
-            className="p-3 border w-full"
+            className="p-3 border w-full text-sm"
           />
-          <label className="flex items-center gap-2 text-sm">
-            <input type="checkbox" name="default" />
-            Set as default address
-          </label>
+          <input
+            name="phone"
+            defaultValue={existing?.phone || ""}
+            placeholder="Phone Number"
+            required
+            className="p-3 border w-full text-sm"
+          />
           <button
             type="submit"
-            className="bg-black text-white px-6 py-2 text-sm font-bold uppercase"
+            className="bg-black text-white px-6 py-2 text-sm font-bold uppercase w-full"
           >
-            Save Address
+            Save {type} Address
           </button>
         </form>
-      )}
+      );
+    }
 
+    return (
+      <div className="border border-gray-200 p-6 flex flex-col justify-between h-full min-h-[200px]">
+        <div>
+          <h3 className="font-medium text-lg mb-4">{type} Address</h3>
+          {existing ? (
+            <p className="text-gray-600 leading-relaxed">
+              {existing.address}
+              <br />
+              {existing.city}
+              <br />
+              {existing.phone}
+            </p>
+          ) : (
+            <p className="text-gray-400 italic">
+              No {type.toLowerCase()} address set.
+            </p>
+          )}
+        </div>
+        <div className="mt-6">
+          <button
+            onClick={() => setIsEditing(true)}
+            className="text-sm font-medium underline underline-offset-4 hover:text-gray-600"
+          >
+            {existing ? "Edit" : "Add"}
+          </button>
+        </div>
+      </div>
+    );
+  };
+
+  const AddressesView = () => (
+    <div className="space-y-8">
+      <h2 className="text-2xl font-medium uppercase tracking-tight">
+        Saved Addresses
+      </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {addresses.length === 0 && !addingAddress ? (
-          <p className="text-gray-500">No addresses saved.</p>
-        ) : (
-          addresses.map((addr: any, idx) => (
-            <div
-              key={idx}
-              className="border border-gray-200 p-6 flex flex-col justify-between h-full min-h-[200px]"
-            >
-              <div>
-                <div className="flex justify-between mb-4">
-                  <h3 className="font-medium text-lg">{addr.type}</h3>
-                  {addr.default && (
-                    <span className="text-xs bg-black text-white px-2 py-1">
-                      DEFAULT
-                    </span>
-                  )}
-                </div>
-                <p className="text-gray-600 leading-relaxed">
-                  {user.name}
-                  <br />
-                  {addr.address}
-                  <br />
-                  {addr.phone}
-                </p>
-              </div>
-              <div className="flex gap-4 mt-6 text-sm font-medium underline-offset-4">
-                <button className="underline hover:text-gray-600">Edit</button>
-                <button
-                  onClick={() => handleRemoveAddress(addr.id)}
-                  className="underline hover:text-gray-600"
-                >
-                  Remove
-                </button>
-              </div>
-            </div>
-          ))
-        )}
+        <AddressCard type="Shipping" />
+        <AddressCard type="Billing" />
       </div>
     </div>
   );
