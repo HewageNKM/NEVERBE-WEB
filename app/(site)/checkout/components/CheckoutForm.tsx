@@ -368,18 +368,6 @@ const CheckoutForm = () => {
       >
         {/* --- LEFT COLUMN: FORMS (Scrollable) --- */}
         <div className="w-full lg:w-[60%] flex flex-col gap-10">
-          {!user && (
-            <div className="bg-gray-50 border border-gray-200 p-4 flex justify-between items-center text-sm">
-              <span className="text-gray-600">Already have an account?</span>
-              <button
-                type="button"
-                onClick={() => router.push("/account/login?redirect=/checkout")}
-                className="font-bold underline hover:text-gray-600 transition-colors"
-              >
-                Log in for faster checkout
-              </button>
-            </div>
-          )}
           <BillingDetails
             saveAddress={saveAddress}
             setSaveAddress={setSaveAddress}
