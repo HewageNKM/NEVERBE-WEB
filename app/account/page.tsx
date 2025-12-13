@@ -85,18 +85,10 @@ const Account = () => {
     }
   };
 
-  // --- Loading State ---
-  if (loading) return <ComponentLoader />;
-  if (!user) {
-    // Ideally redirect or show login
-    if (typeof window !== "undefined") window.location.href = "/account/login";
-    return null;
-  }
-
   // --- Main Layout ---
   return (
     <div className="min-h-screen bg-white text-black font-sans selection:bg-gray-200">
-      <div className="max-w-[1440px] mx-auto px-4 md:px-8 py-12 md:py-20">
+      <div className="max-w-[1440px] mx-auto px-4 md:px-8 py-6 md:py-10">
         <div className="mb-10 md:hidden flex flex-col items-center text-center">
           <Link href="/" className="relative mb-4 block w-24 h-24">
             <Image
@@ -112,80 +104,95 @@ const Account = () => {
           </h1>
         </div>
 
-        <div className="flex flex-col md:flex-row gap-12 lg:gap-24">
-          {/* Sidebar */}
-          <div className="w-full md:w-64 shrink-0">
-            <div className="md:sticky md:top-24">
-              <Link
-                href="/"
-                className="hidden md:block w-32 h-16 relative mb-8"
-              >
-                <Image
-                  src={Logo}
-                  alt="NEVERBE Logo"
-                  fill
-                  className="object-contain object-left hover:opacity-80 transition-opacity"
-                />
-              </Link>
-              <h1 className="hidden md:block text-3xl font-medium uppercase tracking-tighter mb-8">
-                Settings
-              </h1>
-              <nav className="flex flex-row md:flex-col overflow-x-auto md:overflow-visible gap-8 md:gap-4 pb-4 md:pb-0 border-b md:border-none border-gray-200">
-                {[
-                  { id: "dashboard", label: "Profile" },
-                  { id: "orders", label: "Orders" },
-                  { id: "addresses", label: "Addresses" },
-                  { id: "details", label: "Account Details" },
-                ].map((item) => (
-                  <button
-                    key={item.id}
-                    onClick={() => setActiveTab(item.id)}
-                    className={`text-left whitespace-nowrap text-lg transition-colors ${
-                      activeTab === item.id
-                        ? "font-medium text-black"
-                        : "text-gray-500 hover:text-black"
-                    }`}
-                  >
-                    {item.label}
-                  </button>
-                ))}
-                <div className="pt-4 md:pt-0 border-t md:border-none border-gray-100 flex flex-col items-start">
-                  <Link
-                    href="/"
-                    className="text-left text-lg text-gray-500 hover:text-black mt-4 whitespace-nowrap hidden md:block"
-                  >
-                    ← Back to Store
-                  </Link>
-                  <button
-                    onClick={handleLogout}
-                    className="text-left text-lg text-gray-400 hover:text-gray-600 mt-4"
-                  >
-                    Log Out
-                  </button>
-                </div>
-              </nav>
+        <div className="flex flex-col gap-12">
+          {/* Header & Nav */}
+          <div className="sticky top-0 bg-white z-10 -mx-4 px-4 md:mx-0 md:px-0 border-b border-gray-100 pt-4 md:pt-8">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-4">
+              {/* Left: Logo/Title (Hidden on mobile as it's at top, shown on MD) */}
+              <div className="hidden md:flex items-center gap-6">
+                <Link href="/" className="relative w-24 h-12 block">
+                  <Image
+                    src={Logo}
+                    alt="NEVERBE Logo"
+                    fill
+                    className="object-contain object-left"
+                  />
+                </Link>
+                <div className="h-6 w-px bg-gray-200"></div>
+                <h1 className="text-xl font-medium uppercase tracking-tight">
+                  My Account
+                </h1>
+              </div>
+
+              {/* Right: Actions */}
+              <div className="flex items-center gap-6 self-end md:self-auto">
+                <Link
+                  href="/"
+                  className="text-sm font-medium text-gray-500 hover:text-black transition-colors"
+                >
+                  Return to Store
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="text-sm font-medium text-gray-400 hover:text-red-600 transition-colors"
+                >
+                  Log Out
+                </button>
+              </div>
             </div>
+
+            {/* Navigation Tabs */}
+            <nav className="flex items-center gap-8 overflow-x-auto no-scrollbar pb-1">
+              {[
+                { id: "dashboard", label: "Profile" },
+                { id: "orders", label: "Orders" },
+                { id: "addresses", label: "Addresses" },
+                { id: "details", label: "Settings" },
+              ].map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => setActiveTab(item.id)}
+                  className={`whitespace-nowrap pb-3 text-lg transition-all border-b-2 ${
+                    activeTab === item.id
+                      ? "font-medium text-black border-black"
+                      : "text-gray-500 border-transparent hover:text-black"
+                  }`}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </nav>
           </div>
 
           {/* Main Content */}
-          <div className="flex-1 min-h-[60vh]">
-            {activeTab === "dashboard" && (
-              <ProfileOverview
-                user={user}
-                setActiveTab={setActiveTab}
-                ordersCount={orders.length}
-              />
-            )}
-            {activeTab === "orders" && <OrdersView orders={orders} />}
-            {activeTab === "addresses" && (
-              <SavedAddresses
-                addresses={addresses}
-                setAddresses={setAddresses}
-                user={user}
-              />
-            )}
-            {activeTab === "details" && (
-              <AccountSettings user={user} dispatch={dispatch} />
+          <div className="min-h-[60vh] relative pt-4">
+            {loading ? (
+              <ComponentLoader />
+            ) : !user ? (
+              <div className="flex items-center justify-center h-64">
+                <p>Please log in.</p>
+              </div>
+            ) : (
+              <>
+                {activeTab === "dashboard" && (
+                  <ProfileOverview
+                    user={user}
+                    setActiveTab={setActiveTab}
+                    ordersCount={orders.length}
+                  />
+                )}
+                {activeTab === "orders" && <OrdersView orders={orders} />}
+                {activeTab === "addresses" && (
+                  <SavedAddresses
+                    addresses={addresses}
+                    setAddresses={setAddresses}
+                    user={user}
+                  />
+                )}
+                {activeTab === "details" && (
+                  <AccountSettings user={user} dispatch={dispatch} />
+                )}
+              </>
             )}
           </div>
         </div>

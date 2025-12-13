@@ -52,49 +52,56 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
     };
 
     return (
-      <form className="space-y-6" onSubmit={handleUpdate}>
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-1">
-            <input
-              name="fName"
-              type="text"
-              defaultValue={user.name ? user.name.split(" ")[0] : ""}
-              placeholder="First Name"
-              className="w-full p-3 border border-gray-300 focus:border-black focus:ring-0 outline-none rounded-none placeholder-gray-500 transition-colors"
-            />
-          </div>
-          <div className="space-y-1">
-            <input
-              name="lName"
-              type="text"
-              defaultValue={
-                user.name && user.name.split(" ").length > 1
-                  ? user.name.split(" ")[1]
-                  : ""
-              }
-              placeholder="Last Name"
-              className="w-full p-3 border border-gray-300 focus:border-black focus:ring-0 outline-none rounded-none placeholder-gray-500 transition-colors"
-            />
-          </div>
+      <div className="h-full">
+        <div className="flex flex-col gap-6">
+          <h3 className="text-lg font-medium uppercase tracking-tight">
+            Account Details
+          </h3>
+          <form className="space-y-6" onSubmit={handleUpdate}>
+            <div className="flex flex-wrap justify-between gap-4">
+              <div className="space-y-1">
+                <input
+                  name="fName"
+                  type="text"
+                  defaultValue={user.name ? user.name.split(" ")[0] : ""}
+                  placeholder="First Name"
+                  className="w-full p-3 border border-gray-300 focus:border-black focus:ring-0 outline-none rounded-none placeholder-gray-500 transition-colors"
+                />
+              </div>
+              <div className="space-y-1">
+                <input
+                  name="lName"
+                  type="text"
+                  defaultValue={
+                    user.name && user.name.split(" ").length > 1
+                      ? user.name.split(" ")[1]
+                      : ""
+                  }
+                  placeholder="Last Name"
+                  className="w-full p-3 border border-gray-300 focus:border-black focus:ring-0 outline-none rounded-none placeholder-gray-500 transition-colors"
+                />
+              </div>
+            </div>
+            <div className="space-y-1">
+              <input
+                readOnly
+                type="email"
+                value={user.email}
+                className="w-full p-3 border border-gray-300 bg-gray-100 text-gray-500 cursor-not-allowed outline-none rounded-none"
+              />
+            </div>
+            <div className="flex justify-end">
+              <button
+                type="submit"
+                disabled={isUpdating}
+                className="bg-black text-white px-8 py-3 text-sm font-bold uppercase tracking-wider hover:bg-gray-800 rounded-full transition-colors disabled:opacity-50"
+              >
+                {isUpdating ? "Saving..." : "Save Details"}
+              </button>
+            </div>
+          </form>
         </div>
-        <div className="space-y-1">
-          <input
-            readOnly
-            type="email"
-            value={user.email}
-            className="w-full p-3 border border-gray-300 bg-gray-100 text-gray-500 cursor-not-allowed outline-none rounded-none"
-          />
-        </div>
-        <div className="flex justify-end">
-          <button
-            type="submit"
-            disabled={isUpdating}
-            className="bg-black text-white px-8 py-3 text-sm font-bold uppercase tracking-wider hover:bg-gray-800 rounded-full transition-colors disabled:opacity-50"
-          >
-            {isUpdating ? "Saving..." : "Save Details"}
-          </button>
-        </div>
-      </form>
+      </div>
     );
   };
 
@@ -163,64 +170,67 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
     };
 
     return (
-      <div className="pt-8 border-t border-gray-200 mt-8">
-        <h3 className="text-lg font-medium mb-4 uppercase tracking-tight">
-          Security
-        </h3>
-        <p className="text-sm text-gray-500 mb-4">
-          To ensure this is you, please enter your current password to make
-          changes.
-        </p>
-        <form className="space-y-4" onSubmit={handleUpdate}>
-          <input
-            name="currentPass"
-            type="password"
-            placeholder="Current Password"
-            required
-            className="w-full p-3 border border-gray-300 focus:border-black focus:ring-0 outline-none rounded-none placeholder-gray-500"
-          />
-          <input
-            name="newPass"
-            type="password"
-            placeholder="New Password"
-            required
-            className="w-full p-3 border border-gray-300 focus:border-black focus:ring-0 outline-none rounded-none placeholder-gray-500"
-          />
-          <input
-            name="confirmPass"
-            type="password"
-            placeholder="Confirm New Password"
-            required
-            className="w-full p-3 border border-gray-300 focus:border-black focus:ring-0 outline-none rounded-none placeholder-gray-500"
-          />
-          <div className="flex justify-between items-center pt-2">
-            <button
-              type="button"
-              onClick={handleForgotPassword}
-              className="text-xs text-gray-500 underline underline-offset-4 hover:text-black"
-            >
-              Forgot Password?
-            </button>
-            <button
-              type="submit"
-              disabled={isUpdating}
-              className="bg-black text-white px-8 py-3 text-sm font-bold uppercase tracking-wider hover:bg-gray-800 rounded-full transition-colors disabled:opacity-50"
-            >
-              {isUpdating ? "Updating..." : "Update Password"}
-            </button>
+      <div className="h-full pt-8 lg:pt-0 border-t lg:border-t-0 border-gray-200 mt-8 lg:mt-0">
+        <div className="flex flex-col gap-6">
+          <div>
+            <h3 className="text-lg font-medium uppercase tracking-tight mb-4">
+              Security
+            </h3>
+            <p className="text-sm text-gray-500">
+              To ensure this is you, please enter your current password to make
+              changes.
+            </p>
           </div>
-        </form>
+          <form className="space-y-4" onSubmit={handleUpdate}>
+            <input
+              name="currentPass"
+              type="password"
+              placeholder="Current Password"
+              required
+              className="w-full p-3 border border-gray-300 focus:border-black focus:ring-0 outline-none rounded-none placeholder-gray-500"
+            />
+            <input
+              name="newPass"
+              type="password"
+              placeholder="New Password"
+              required
+              className="w-full p-3 border border-gray-300 focus:border-black focus:ring-0 outline-none rounded-none placeholder-gray-500"
+            />
+            <input
+              name="confirmPass"
+              type="password"
+              placeholder="Confirm New Password"
+              required
+              className="w-full p-3 border border-gray-300 focus:border-black focus:ring-0 outline-none rounded-none placeholder-gray-500"
+            />
+            <div className="flex justify-between items-center pt-2">
+              <button
+                type="button"
+                onClick={handleForgotPassword}
+                className="text-xs text-gray-500 underline underline-offset-4 hover:text-black"
+              >
+                Forgot Password?
+              </button>
+              <button
+                type="submit"
+                disabled={isUpdating}
+                className="bg-black text-white px-8 py-3 text-sm font-bold uppercase tracking-wider hover:bg-gray-800 rounded-full transition-colors disabled:opacity-50"
+              >
+                {isUpdating ? "Updating..." : "Update Password"}
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     );
   };
 
   return (
-    <div className="max-w-xl">
-      <h2 className="text-2xl font-medium uppercase tracking-tight mb-8">
-        Account Details
-      </h2>
-      <ProfileForm />
-      <PasswordForm />
+    <div className="w-full">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24">
+        <ProfileForm />
+        <PasswordForm />
+      </div>
     </div>
   );
 };

@@ -14,9 +14,10 @@ const OrdersView: React.FC<OrdersViewProps> = ({ orders }) => {
       <div className="space-y-6">
         {orders.length === 0 ? (
           <EmptyState
-            message="No orders found."
+            heading="No orders found."
+            subHeading="You have not made any orders yet."
             actionLabel="Start Shopping"
-            actionLink="/collections/products"
+            onAction={() => router.push("/collections/products")}
           />
         ) : (
           orders.map((order: any) => (

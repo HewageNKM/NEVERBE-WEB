@@ -36,6 +36,10 @@
   You can add them directly or use @layer.
 */
 
+html {
+  scrollbar-gutter: stable;
+}
+
 /* Hides the recaptcha badge */
 .grecaptcha-badge {
   visibility: hidden;
