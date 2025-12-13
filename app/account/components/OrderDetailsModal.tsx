@@ -1,6 +1,7 @@
 import React from "react";
 import { Order } from "@/interfaces";
 import { X, Download, Package, MapPin, CreditCard } from "lucide-react";
+import { toSafeLocaleString } from "@/services/UtilService";
 
 interface OrderDetailsModalProps {
   order: Order | null;
@@ -42,15 +43,6 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
   const total = subtotal - totalDiscount + (shippingFee || 0) + (fee || 0);
 
   // Safe date rendering
-  const renderDate = (dateVal: any) => {
-    if (!dateVal) return "N/A";
-    if (typeof dateVal === "string") return dateVal;
-    try {
-      return new Date(dateVal).toLocaleDateString();
-    } catch {
-      return "Invalid Date";
-    }
-  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
@@ -66,7 +58,7 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
               Order Details
             </h2>
             <p className="text-sm text-gray-500 mt-1">
-              #{orderId} • {renderDate(createdAt)}
+              #{orderId} • {toSafeLocaleString(createdAt)}
             </p>
           </div>
           <button
