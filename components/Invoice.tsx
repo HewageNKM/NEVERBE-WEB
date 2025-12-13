@@ -78,9 +78,9 @@ const Invoice: React.FC<InvoiceProps> = ({
       const formatDate = (date: Timestamp | string) => {
         if (!date) return "-";
         if (typeof date === "string") {
-          return format(new Date(date), "dd MMM yyyy, HH:mm");
+          return format(new Date(date), "dd MMM yyyy, hh:mm a");
         }
-        return format(date.toDate(), "dd MMM yyyy, HH:mm");
+        return format(date.toDate(), "dd MMM yyyy, hh:mm a");
       };
 
       doc.text(`ID: #${order.orderId}`, 140, yPos + 5);
