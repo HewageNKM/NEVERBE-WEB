@@ -45,7 +45,7 @@ export default function SuccessPageClient({
 
   // --- SUCCESS STATE ---
   return (
-    <main className="w-full min-h-screen bg-white pt-32 pb-20 px-4 md:px-8 flex flex-col items-center justify-center text-center">
+    <main className="w-full min-h-screen bg-white pt-10 md:pt-16 pb-20 px-4 md:px-8 flex flex-col items-center justify-center text-center">
       <div className="w-full max-w-2xl animate-fadeIn">
         <SuccessAnimationComponents />
 
