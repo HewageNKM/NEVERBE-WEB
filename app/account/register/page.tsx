@@ -1,9 +1,13 @@
 "use client";
 import React, { useState } from "react";
 import {
-  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  updateProfile,
   GoogleAuthProvider,
   signInWithPopup,
+  linkWithPopup,
+  linkWithCredential,
+  EmailAuthProvider,
 } from "firebase/auth";
 import { useRouter, useSearchParams } from "next/navigation";
 import { auth } from "@/firebase/firebaseClient";
@@ -14,7 +18,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ComponentLoader from "@/components/ComponentLoader";
 
-const AuthPage = () => {
+const RegisterPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectUrl = searchParams.get("redirect") || "/account";
@@ -23,43 +27,89 @@ const AuthPage = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
+    firstName: "",
+    lastName: "",
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleGoogleLogin = async () => {
+  const handleGoogleRegister = async () => {
     setLoading(true);
     const provider = new GoogleAuthProvider();
 
     try {
-      // Simple sign in for existing users
+      if (auth.currentUser && auth.currentUser.isAnonymous) {
+        // Upgrade anonymous account
+        try {
+          await linkWithPopup(auth.currentUser, provider);
+          toast.success("Account upgraded successfully!");
+          router.push(redirectUrl);
+          return;
+        } catch (linkError: any) {
+          if (linkError.code === "auth/credential-already-in-use") {
+            toast.error(
+              "This Google account is already in use. Please log in."
+            );
+          } else {
+            toast.error("Failed to link account: " + linkError.message);
+          }
+          setLoading(false);
+          return;
+        }
+      }
+
+      // Normal Sign Up/In with Google
       await signInWithPopup(auth, provider);
       router.push(redirectUrl);
     } catch (err: any) {
-      toast.error("Failed to sign in with Google.");
+      toast.error("Failed to sign up with Google.");
     } finally {
       setLoading(false);
     }
   };
 
-  const handleAuth = async (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      await signInWithEmailAndPassword(auth, formData.email, formData.password);
+      const user = auth.currentUser;
+      if (user && user.isAnonymous) {
+        // Upgrade anonymous account logic
+        const credential = EmailAuthProvider.credential(
+          formData.email,
+          formData.password
+        );
+        await linkWithCredential(user, credential);
+
+        await updateProfile(user, {
+          displayName: `${formData.firstName} ${formData.lastName}`.trim(),
+        });
+        toast.success("Account created and order history saved!");
+      } else {
+        // Create new account
+        const userCredential = await createUserWithEmailAndPassword(
+          auth,
+          formData.email,
+          formData.password
+        );
+        await updateProfile(userCredential.user, {
+          displayName: `${formData.firstName} ${formData.lastName}`.trim(),
+        });
+        toast.success("Account created successfully!");
+      }
+
       router.push(redirectUrl);
     } catch (err: any) {
       let msg = "An error occurred. Please try again.";
-      if (
-        err.code === "auth/wrong-password" ||
-        err.code === "auth/invalid-credential"
-      )
-        msg = "Invalid email or password.";
-      else if (err.code === "auth/user-not-found")
-        msg = "No account found with that email.";
+      if (err.code === "auth/email-already-in-use")
+        msg = "That email is already registered.";
+      else if (err.code === "auth/weak-password")
+        msg = "Password should be at least 6 characters.";
+      else if (err.code === "auth/credential-already-in-use")
+        msg = "This email is already associated with an account.";
 
       toast.error(msg);
     } finally {
@@ -81,15 +131,35 @@ const AuthPage = () => {
           />
         </Link>
         <h1 className="text-3xl font-bold uppercase tracking-tighter mb-2">
-          Your Account
+          Become A Member
         </h1>
         <p className="text-gray-500 text-sm max-w-xs mx-auto text-center leading-relaxed">
-          Sign in to access your orders, saved items and profile.
+          Create your profile to get access to the best products and
+          inspiration.
         </p>
       </div>
 
       <div className="w-full max-w-md space-y-6">
-        <form onSubmit={handleAuth} className="space-y-4">
+        <form onSubmit={handleRegister} className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <input
+              name="firstName"
+              type="text"
+              placeholder="First Name"
+              required
+              className="w-full p-3 border border-gray-300 focus:border-black outline-none rounded-none placeholder-gray-500 transition-colors"
+              onChange={handleChange}
+            />
+            <input
+              name="lastName"
+              type="text"
+              placeholder="Last Name"
+              required
+              className="w-full p-3 border border-gray-300 focus:border-black outline-none rounded-none placeholder-gray-500 transition-colors"
+              onChange={handleChange}
+            />
+          </div>
+
           <input
             name="email"
             type="email"
@@ -108,17 +178,9 @@ const AuthPage = () => {
             onChange={handleChange}
           />
 
-          <div className="flex justify-end">
-            <button
-              type="button"
-              className="text-xs text-gray-500 underline underline-offset-4 hover:text-black"
-            >
-              Forgot your password?
-            </button>
-          </div>
-
           <p className="text-xs text-gray-500 text-center leading-relaxed px-4">
-            By logging in, you agree to our Privacy Policy and Terms of Use.
+            By creating an account, you agree to our Privacy Policy and Terms of
+            Use.
           </p>
 
           <button
@@ -126,7 +188,7 @@ const AuthPage = () => {
             disabled={loading}
             className="w-full bg-black text-white font-bold uppercase tracking-wider py-3 mt-4 hover:bg-gray-800 transition-colors disabled:opacity-50"
           >
-            {loading ? "Processing..." : "Sign In"}
+            {loading ? "Processing..." : "Join Us"}
           </button>
         </form>
 
@@ -139,7 +201,7 @@ const AuthPage = () => {
 
         {/* --- Google Button --- */}
         <button
-          onClick={handleGoogleLogin}
+          onClick={handleGoogleRegister}
           type="button"
           className="w-full border border-gray-300 flex items-center justify-center gap-3 py-3 hover:border-black transition-colors bg-white"
         >
@@ -166,17 +228,17 @@ const AuthPage = () => {
           </span>
         </button>
 
-        {/* Toggle View */}
+        {/* Toggle Login Link */}
         <div className="text-center pt-2">
           <p className="text-gray-500 text-sm">
-            Not a member?{" "}
+            Already a member?{" "}
             <Link
-              href={`/account/register${
+              href={`/account/login${
                 redirectUrl !== "/account" ? `?redirect=${redirectUrl}` : ""
               }`}
               className="text-black font-medium underline underline-offset-4 hover:text-gray-600 ml-1"
             >
-              Join Us.
+              Sign In.
             </Link>
           </p>
         </div>
@@ -194,4 +256,4 @@ const AuthPage = () => {
   );
 };
 
-export default AuthPage;
+export default RegisterPage;

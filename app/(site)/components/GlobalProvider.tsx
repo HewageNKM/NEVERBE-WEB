@@ -10,7 +10,6 @@ import Footer from "@/components/Footer";
 import Menu from "@/components/Menu";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import AnonymousConversionBanner from "@/components/AnonymousConversionBanner";
 
 const GlobalProvider = ({
   children,
@@ -32,7 +31,6 @@ const GlobalProvider = ({
 
   return (
     <main className="w-full relative flex flex-col justify-between min-h-screen overflow-clip">
-      <AnonymousConversionBanner />
       <Header season={season} />
       {children}
       <Footer />

@@ -56,7 +56,7 @@ const Account = () => {
 
           // Fetch Addresses via API
           const token = await auth.currentUser?.getIdToken();
-          const res = await fetch("/api/v1/user/addresses", {
+          const res = await fetch("/api/v1/customers/addresses", {
             headers: { Authorization: `Bearer ${token}` },
           });
           if (res.ok) {

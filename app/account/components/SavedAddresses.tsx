@@ -34,7 +34,7 @@ const SavedAddresses: React.FC<SavedAddressesProps> = ({
       try {
         if (user?.uid) {
           const token = await auth.currentUser?.getIdToken();
-          const res = await fetch("/api/v1/user/addresses", {
+          const res = await fetch("/api/v1/customers/addresses", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -44,7 +44,7 @@ const SavedAddresses: React.FC<SavedAddressesProps> = ({
           });
 
           if (res.ok) {
-            const fetchRes = await fetch("/api/v1/user/addresses", {
+            const fetchRes = await fetch("/api/v1/customers/addresses", {
               headers: { Authorization: `Bearer ${token}` },
             });
             if (fetchRes.ok) {
