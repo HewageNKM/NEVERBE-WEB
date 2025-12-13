@@ -1,10 +1,14 @@
 import { verifyToken } from "@/services/AuthService";
 import { verifyCaptchaToken } from "@/services/CapchaService";
-import { sendOrderConfirmedSMS } from "@/services/NotificationService";
+import {
+  sendOrderConfirmedEmail,
+  sendOrderConfirmedSMS,
+} from "@/services/NotificationService";
 
 export const GET = async (
   req: Request,
-  context: { params: Promise<{ orderId: string }> }) => {
+  context: { params: Promise<{ orderId: string }> }
+) => {
   try {
     console.log("[Order Notification API] Incoming request");
 
@@ -17,16 +21,24 @@ export const GET = async (
 
     // Get captcha token from query
     const captchaToken = new URL(req.url).searchParams.get("capchaToken");
-    console.log("[Order Notification API] Captcha token received:", captchaToken);
+    console.log(
+      "[Order Notification API] Captcha token received:",
+      captchaToken
+    );
 
     // Verify captcha
     const captchaVerified = await verifyCaptchaToken(captchaToken);
-    console.log("[Order Notification API] Captcha verification result:", captchaVerified);
+    console.log(
+      "[Order Notification API] Captcha verification result:",
+      captchaVerified
+    );
 
     if (captchaVerified) {
       console.log("[Order Notification API] Sending order confirmed SMS...");
       await sendOrderConfirmedSMS(orderId);
       console.log("[Order Notification API] SMS sent successfully");
+      await sendOrderConfirmedEmail(orderId);
+      console.log("[Order Notification API] Email sent successfully");
 
       return new Response(
         JSON.stringify({
@@ -46,7 +58,11 @@ export const GET = async (
       );
     }
   } catch (error: any) {
-    console.error("[Order Notification API] Error:", error.message, error.stack);
+    console.error(
+      "[Order Notification API] Error:",
+      error.message,
+      error.stack
+    );
     return new Response(
       JSON.stringify({
         status: false,
