@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     locale: "en_LK",
     images: [
       {
-        url: "https://neverbe.lk/api/v1/og",
+        url: "https://neverbe.lk/logo-og.png",
         width: 1200,
         height: 630,
         alt: "NEVERBE Logo",
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     title: "Contact Us - NEVERBE",
     description:
       "Reach out to NEVERBE via email, social media, WhatsApp, or visit our store in Sri Lanka.",
-    images: ["https://neverbe.lk/api/v1/og"],
+    images: ["https://neverbe.lk/logo-og.png"],
   },
   robots: {
     index: true,
@@ -75,7 +75,7 @@ const ContactPage = () => {
       "@type": "Organization",
       name: "NEVERBE",
       url: "https://neverbe.lk",
-      logo: "https://neverbe.lk/api/v1/og",
+      logo: "https://neverbe.lk/logo-og.png",
       contactPoint: {
         "@type": "ContactPoint",
         telephone: "+94 70 520 8999",

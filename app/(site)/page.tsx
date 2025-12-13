@@ -48,7 +48,7 @@ export const metadata: Metadata = {
     locale: "en_LK",
     images: [
       {
-        url: "https://neverbe.lk/api/v1/og",
+        url: "/logo-og.png",
         alt: "NEVERBE - Largest Shoe Collection in Sri Lanka",
         width: 1200,
         height: 630,
@@ -82,7 +82,7 @@ const Page = async () => {
         legalName: "NEVERBE",
         alternateName: "NEVERBE",
         url: "https://neverbe.lk",
-        logo: "https://neverbe.lk/api/v1/og",
+        logo: "https://neverbe.lk/logo-og.png",
         sameAs: [
           // add social urls when available
         ],
@@ -95,7 +95,7 @@ const Page = async () => {
         legalName: "NEVERBE",
         alternateName: "NEVERBE Shoe Store",
         url: "https://neverbe.lk",
-        image: "https://neverbe.lk/api/v1/og",
+        image: "https://neverbe.lk/logo-og.png",
         description: "The largest online destination for shoes in Sri Lanka.",
         telephone: "+94 70 520 8999",
         address: {

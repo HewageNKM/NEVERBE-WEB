@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     locale: "en_LK",
     images: [
       {
-        url: "https://neverbe.lk/api/v1/og", // Ensure this image is generic/appealing
+        url: "https://neverbe.lk/logo-og.png", // Ensure this image is generic/appealing
         width: 1200,
         height: 630,
         alt: "NEVERBE Shoe Collection",
@@ -90,7 +90,7 @@ const Page = async () => {
         item: {
           "@type": "Product",
           name: product?.name,
-          image: product?.thumbnail?.url || "https://neverbe.lk/api/v1/og",
+          image: product?.thumbnail?.url || "https://neverbe.lk/logo-og.png",
           description: product?.description || "Premium footwear in Sri Lanka.",
           url: `https://neverbe.lk/collections/products/${product?.id}`,
           brand: {

@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     locale: "en_LK",
     images: [
       {
-        url: "https://neverbe.lk/api/v1/og",
+        url: "https://neverbe.lk/logo-og.png",
         width: 1200,
         height: 630,
         alt: "NEVERBE Logo",
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     title: "Shipping & Return Policy - NEVERBE Sri Lanka",
     description:
       "Read NEVERBE's shipping & return policy outlining how we manage shipping and returns.",
-    images: ["https://neverbe.lk/api/v1/og"],
+    images: ["https://neverbe.lk/logo-og.png"],
   },
   robots: {
     index: true,
@@ -62,7 +62,7 @@ const Page = () => {
       "@type": "Organization",
       name: "NEVERBE",
       url: "https://neverbe.lk",
-      logo: "https://neverbe.lk/api/v1/og",
+      logo: "https://neverbe.lk/logo-og.png",
       contactPoint: {
         "@type": "ContactPoint",
         telephone: "+94 70 520 8999",

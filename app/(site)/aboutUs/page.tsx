@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     locale: "en_LK",
     images: [
       {
-        url: "https://neverbe.lk/api/v1/og",
+        url: "https://neverbe.lk/logo-og.png",
         width: 1200,
         height: 630,
         alt: "NEVERBE Logo",
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     title: "About NEVERBE - Sri Lanka's Trusted Replica Shoe Store",
     description:
       "Learn about NEVERBE, Sri Lanka's trusted destination for premium replica shoes.",
-    images: ["https://neverbe.lk/api/v1/og"],
+    images: ["https://neverbe.lk/logo-og.png"],
   },
   robots: {
     index: true,
@@ -51,7 +51,6 @@ export const metadata: Metadata = {
 };
 
 const AboutUs = () => {
-
   /* ✅ Structured Data for AboutPage + Organization */
   const structuredData = {
     "@context": "https://schema.org",
@@ -60,7 +59,7 @@ const AboutUs = () => {
         "@type": "Organization",
         name: "NEVERBE",
         url: "https://neverbe.lk",
-        logo: "https://neverbe.lk/api/v1/og",
+        logo: "https://neverbe.lk/logo-og.png",
         sameAs: [
           "https://www.facebook.com/neverbe196",
           "https://www.instagram.com/neverbe196",

@@ -16,11 +16,19 @@ export const metadata: Metadata = {
     icon: "/favicon.ico",
     shortcut: "/favicon.ico",
   },
+  metadataBase: new URL("https://neverbe.lk"),
   openGraph: {
     title: "NEVERBE — Shoes in Sri Lanka",
     siteName: "NEVERBE",
     url: "https://neverbe.lk",
-    images: ["https://neverbe.lk/api/v1/og"],
+    images: [
+      {
+        url: "/logo-og.png",
+        width: 1200,
+        height: 630,
+        alt: "NEVERBE",
+      },
+    ],
     type: "website",
   },
 };
