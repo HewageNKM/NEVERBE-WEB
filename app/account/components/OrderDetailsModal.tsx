@@ -1,0 +1,241 @@
+import React from "react";
+import { Order } from "@/interfaces";
+import { X, Download, Package, MapPin, CreditCard } from "lucide-react";
+
+interface OrderDetailsModalProps {
+  order: Order | null;
+  isOpen: boolean;
+  onClose: () => void;
+  onDownloadInvoice: (order: Order) => void;
+}
+
+const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
+  order,
+  isOpen,
+  onClose,
+  onDownloadInvoice,
+}) => {
+  if (!isOpen || !order) return null;
+
+  const {
+    orderId,
+    createdAt,
+    status,
+    items,
+    customer,
+    paymentMethod,
+    shippingFee,
+    fee,
+    discount,
+  } = order;
+
+  // Calculate totals
+  const subtotal = items.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
+  const itemsDiscount = items.reduce(
+    (sum, item) => sum + (item.discount || 0),
+    0
+  );
+  const totalDiscount = itemsDiscount + (discount || 0);
+  const total = subtotal - totalDiscount + (shippingFee || 0) + (fee || 0);
+
+  // Safe date rendering
+  const renderDate = (dateVal: any) => {
+    if (!dateVal) return "N/A";
+    if (typeof dateVal === "string") return dateVal;
+    try {
+      return new Date(dateVal).toLocaleDateString();
+    } catch {
+      return "Invalid Date";
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+      <div
+        className="bg-white w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-sm shadow-xl animate-fadeIn"
+        role="dialog"
+        aria-modal="true"
+      >
+        {/* Header */}
+        <div className="sticky top-0 bg-white border-b border-gray-100 p-6 flex items-center justify-between z-10">
+          <div>
+            <h2 className="text-xl font-bold uppercase tracking-tight">
+              Order Details
+            </h2>
+            <p className="text-sm text-gray-500 mt-1">
+              #{orderId} • {renderDate(createdAt)}
+            </p>
+          </div>
+          <button
+            onClick={onClose}
+            className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+          >
+            <X size={24} />
+          </button>
+        </div>
+
+        <div className="p-6 space-y-8">
+          {/* Status & Actions */}
+          <div className="flex flex-wrap items-center justify-between gap-4 bg-gray-50 p-4 rounded-sm border border-gray-100">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-black text-white rounded-full">
+                <Package size={20} />
+              </div>
+              <div>
+                <p className="text-xs font-bold uppercase tracking-wider text-gray-500">
+                  Status
+                </p>
+                <p className="font-semibold capitalize">{status}</p>
+              </div>
+            </div>
+            <button
+              onClick={() => onDownloadInvoice(order)}
+              className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 hover:border-black hover:bg-gray-50 transition-all text-sm font-medium rounded-sm shadow-sm"
+            >
+              <Download size={16} />
+              Download Invoice
+            </button>
+          </div>
+
+          {/* Items */}
+          <div>
+            <h3 className="text-sm font-bold uppercase tracking-wider text-gray-900 border-b pb-2 mb-4">
+              Items ({items.length})
+            </h3>
+            <div className="space-y-4">
+              {items.map((item, idx) => (
+                <div key={idx} className="flex gap-4 py-2">
+                  <div className="w-20 h-20 bg-gray-100 shrink-0 rounded-sm overflow-hidden">
+                    {/* Thumbnail handling */}
+                    <img
+                      src={"https://placehold.co/100?text=Product"} // Ideally pass thumbnail from item if available, assuming item structure has it or fallback
+                      alt={item.name}
+                      className="w-full h-full object-cover mix-blend-multiply"
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <h4 className="font-medium text-gray-900 line-clamp-2">
+                          {item.name}
+                        </h4>
+                        <p className="text-sm text-gray-500 mt-1">
+                          Size: {item.size}
+                        </p>
+                        <p className="text-sm text-gray-500">
+                          Qty: {item.quantity}
+                        </p>
+                      </div>
+                      <p className="font-medium">
+                        Rs. {item.price.toLocaleString()}
+                      </p>
+                    </div>
+                    {item.discount ? (
+                      <p className="text-right text-xs text-red-600 mt-1">
+                        - Rs. {item.discount.toLocaleString()}
+                      </p>
+                    ) : null}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Details Grid */}
+          <div className="grid md:grid-cols-2 gap-8">
+            {/* Addresses */}
+            <div className="space-y-6">
+              <div>
+                <div className="flex items-center gap-2 mb-3">
+                  <MapPin size={18} className="text-gray-400" />
+                  <h3 className="text-sm font-bold uppercase tracking-wider text-gray-900">
+                    Billing Address
+                  </h3>
+                </div>
+                <address className="not-italic text-sm text-gray-600 leading-relaxed pl-7 border-l-2 border-gray-100">
+                  <p className="font-medium text-gray-900">{customer.name}</p>
+                  <p>{customer.address}</p>
+                  <p>
+                    {customer.city} {customer.zip && `, ${customer.zip}`}
+                  </p>
+                  <p>{customer.phone}</p>
+                </address>
+              </div>
+              <div>
+                <div className="flex items-center gap-2 mb-3">
+                  <MapPin size={18} className="text-gray-400" />
+                  <h3 className="text-sm font-bold uppercase tracking-wider text-gray-900">
+                    Shipping Address
+                  </h3>
+                </div>
+                <address className="not-italic text-sm text-gray-600 leading-relaxed pl-7 border-l-2 border-gray-100">
+                  <p className="font-medium text-gray-900">
+                    {customer.shippingName || customer.name}
+                  </p>
+                  <p>{customer.shippingAddress || customer.address}</p>
+                  <p>
+                    {customer.shippingCity || customer.city}{" "}
+                    {customer.shippingZip ||
+                      (customer.zip &&
+                        `, ${customer.shippingZip || customer.zip}`)}
+                  </p>
+                  <p>{customer.shippingPhone || customer.phone}</p>
+                </address>
+              </div>
+            </div>
+
+            {/* Payment & Summary */}
+            <div className="space-y-6">
+              <div>
+                <div className="flex items-center gap-2 mb-3">
+                  <CreditCard size={18} className="text-gray-400" />
+                  <h3 className="text-sm font-bold uppercase tracking-wider text-gray-900">
+                    Payment Info
+                  </h3>
+                </div>
+                <div className="pl-7">
+                  <p className="text-sm text-gray-600 capitalize">
+                    {paymentMethod}
+                  </p>
+                </div>
+              </div>
+
+              <div className="bg-gray-50 p-6 rounded-sm space-y-3 text-sm">
+                <div className="flex justify-between text-gray-600">
+                  <span>Subtotal</span>
+                  <span>Rs. {subtotal.toLocaleString()}</span>
+                </div>
+                {totalDiscount > 0 && (
+                  <div className="flex justify-between text-red-600">
+                    <span>Discount</span>
+                    <span>- Rs. {totalDiscount.toLocaleString()}</span>
+                  </div>
+                )}
+                <div className="flex justify-between text-gray-600">
+                  <span>Shipping</span>
+                  <span>Rs. {(shippingFee || 0).toLocaleString()}</span>
+                </div>
+                {fee ? (
+                  <div className="flex justify-between text-gray-600">
+                    <span>Handling Fee</span>
+                    <span>Rs. {fee.toLocaleString()}</span>
+                  </div>
+                ) : null}
+
+                <div className="pt-3 mt-3 border-t border-gray-200 flex justify-between items-center font-bold text-lg">
+                  <span>Total</span>
+                  <span>Rs. {total.toLocaleString()}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default OrderDetailsModal;
