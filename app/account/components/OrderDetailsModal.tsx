@@ -2,6 +2,9 @@ import React from "react";
 import { Order } from "@/interfaces";
 import { X, Download, Package, MapPin, CreditCard } from "lucide-react";
 import { toSafeLocaleString } from "@/services/UtilService";
+import Image from "next/image";
+import Invoice from "@/components/Invoice";
+import Link from "next/link";
 
 interface OrderDetailsModalProps {
   order: Order | null;
@@ -80,16 +83,27 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
                 <p className="text-xs font-bold uppercase tracking-wider text-gray-500">
                   Status
                 </p>
-                <p className="font-semibold capitalize">{status}</p>
+                <div className="flex items-center gap-2">
+                  <p className="font-semibold capitalize">{status}</p>
+                  <Link
+                    href={`/checkout/success/${orderId}`}
+                    className="text-xs underline text-blue-600 hover:text-blue-800"
+                  >
+                    View Confirmation
+                  </Link>
+                </div>
               </div>
             </div>
-            <button
-              onClick={() => onDownloadInvoice(order)}
+            <Invoice
+              order={order}
               className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 hover:border-black hover:bg-gray-50 transition-all text-sm font-medium rounded-sm shadow-sm"
-            >
-              <Download size={16} />
-              Download Invoice
-            </button>
+              btnText={
+                <>
+                  <Download size={16} />
+                  Download Invoice
+                </>
+              }
+            />
           </div>
 
           {/* Items */}
@@ -101,9 +115,13 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
               {items.map((item, idx) => (
                 <div key={idx} className="flex gap-4 py-2">
                   <div className="w-20 h-20 bg-gray-100 shrink-0 rounded-sm overflow-hidden">
-                    {/* Thumbnail handling */}
-                    <img
-                      src={"https://placehold.co/100?text=Product"} // Ideally pass thumbnail from item if available, assuming item structure has it or fallback
+                    <Image
+                      width={80}
+                      height={80}
+                      src={
+                        item.thumbnail ||
+                        "https://placehold.co/100?text=Product"
+                      }
                       alt={item.name}
                       className="w-full h-full object-cover mix-blend-multiply"
                     />
