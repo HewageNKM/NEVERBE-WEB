@@ -114,7 +114,7 @@ const ComboModal = ({
         price: prod.sellingPrice,
         name: prod.name,
         image: variant?.images[0]?.url || "",
-        discount: discountAmount, // Apply effective discount
+        discount: discountAmount * prod._comboQty, // Apply total discount for this qty
         itemType: "COMBO_ITEM",
         maxQuantity: 5, // limit
       };

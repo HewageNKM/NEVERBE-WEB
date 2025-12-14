@@ -55,7 +55,7 @@ const Bag = () => {
         body: JSON.stringify({
           code,
           userId: user?.userId,
-          cartTotal,
+          cartTotal: cartTotal - calculateTotalDiscount(bagItems),
           cartItems: bagItems.map((item) => ({
             itemId: item.itemId,
             variantId: item.variantId,

@@ -83,7 +83,8 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
     setMsg(null);
 
     try {
-      const cartTotal = calculateTotal(bagItems);
+      const cartTotal =
+        calculateTotal(bagItems) - calculateTotalDiscount(bagItems);
 
       const res = await fetch("/api/v1/coupons/validate", {
         method: "POST",
@@ -97,6 +98,7 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
             variantId: item.variantId,
             quantity: item.quantity,
             price: item.price,
+            discount: item.discount,
           })),
         }),
       });

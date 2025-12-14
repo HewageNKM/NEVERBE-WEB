@@ -39,7 +39,9 @@ const Page = async () => {
     // If the user intended to fetch a specific combo, `params.id` would need to be passed to the Page component.
     // For now, I will add the fetch call to `/api/v1/combos` without `params.id` to avoid a runtime error.
     // If the user wants to fetch a specific combo, they need to adjust the Page component signature.
-    const res = await fetch(`/api/v1/combos`); // Modified to remove `params.id` for correctness in this context.
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/combos`
+    ); // Modified to remove `params.id` for correctness in this context.
   } catch (e) {
     console.error("Error fetching deal items:", e);
   }
