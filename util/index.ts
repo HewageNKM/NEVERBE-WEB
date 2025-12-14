@@ -1,6 +1,6 @@
 "use client";
 import { SHIPPING_FLAT_RATE_1, SHIPPING_FLAT_RATE_2 } from "@/constants";
-import { BagItem } from "@/interfaces";
+import { BagItem } from "@/interfaces/BagItem";
 import { algoliasearch } from "algoliasearch";
 
 export const generateOrderId = () => {

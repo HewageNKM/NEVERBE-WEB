@@ -16,7 +16,7 @@ export interface SerializableUser {
   providerId: string;
   emailVerified: boolean;
   isAnonymous: boolean;
-  memberSince?: string; // Custom property
+  memberSince?: string;
 }
 
 export interface PaymentMethod {
@@ -92,20 +92,6 @@ export interface Variant {
   sizes: Size[];
 }
 
-export interface BagItem {
-  itemId: string;
-  variantId: string;
-  name: string;
-  variantName: string;
-  thumbnail: string;
-  discount: number;
-  size: string;
-  category: string;
-  quantity: number;
-  price: number;
-  bPrice: number;
-}
-
 export interface OrderItem {
   itemId: string;
   variantId: string;
@@ -149,6 +135,8 @@ export interface Order {
   shippingFee?: number;
   from: string;
 
+  couponCode?: string; // Added optional property
+
   createdAt: Timestamp | string;
   updatedAt: Timestamp | string;
 }
@@ -171,3 +159,6 @@ export interface Customer {
   createdAt: Timestamp | string;
   updatedAt: Timestamp | string;
 }
+
+// Re-export BagItem if needed, or define it here if it's missing
+export interface BagItem extends OrderItem {}

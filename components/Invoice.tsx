@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
-import { Order } from "@/interfaces";
+import { Order } from "@/interfaces/BagItem";
 import { Logo } from "@/assets/images";
 import toast from "react-hot-toast";
 import { Timestamp } from "firebase/firestore";

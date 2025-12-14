@@ -8,7 +8,7 @@ import {
   SlidesBG,
   SupportImage,
 } from "@/assets/images";
-import { FooterLink, SocialMedia } from "@/interfaces";
+import { FooterLink, SocialMedia } from "@/interfaces/BagItem";
 import { IoLogoTiktok } from "react-icons/io5";
 import { IoLogoFacebook, IoLogoInstagram } from "react-icons/io";
 import { MdEmail } from "react-icons/md";

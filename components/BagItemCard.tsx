@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";
 import { removeFromBag } from "@/redux/bagSlice/bagSlice";
-import { BagItem } from "@/interfaces";
+import { BagItem } from "@/interfaces/BagItem";
 
 const BagItemCard = ({ item }: { item: BagItem }) => {
   const dispatch: AppDispatch = useDispatch();
@@ -15,7 +15,7 @@ const BagItemCard = ({ item }: { item: BagItem }) => {
       {/* Image Container - Nike Style Gray Box */}
       <div className="relative w-24 h-24 bg-[#f6f6f6] rounded-md shrink-0 overflow-hidden">
         <Image
-          src={item.thumbnail}
+          src={item.image || (item as any).thumbnail}
           alt={item.name}
           width={150}
           height={150}
@@ -31,20 +31,42 @@ const BagItemCard = ({ item }: { item: BagItem }) => {
             <h3 className="font-bold text-sm uppercase leading-tight line-clamp-2 text-black">
               {item.name}
             </h3>
-            <p className="font-bold text-sm shrink-0">
-              Rs. {totalPrice.toLocaleString()}
-            </p>
+            <div className="text-right">
+              {item.discount > 0 ? (
+                <>
+                  <p className="font-bold text-sm text-red-600">
+                    Rs. {(totalPrice - item.discount).toLocaleString()}
+                  </p>
+                  <p className="text-[10px] text-gray-400 line-through">
+                    Rs. {totalPrice.toLocaleString()}
+                  </p>
+                </>
+              ) : (
+                <p className="font-bold text-sm shrink-0">
+                  Rs. {totalPrice.toLocaleString()}
+                </p>
+              )}
+            </div>
           </div>
 
-          {/* Middle: Variants */}
-          <div className="mt-1 text-xs text-gray-500 font-medium space-y-0.5">
-            <p className="capitalize text-gray-800">{item.variantName}</p>
-            <p>
-              Size: <span className="text-black">{item.size}</span>
-            </p>
-            <p>
-              Qty: <span className="text-black">{item.quantity}</span>
-            </p>
+          {/* Middle: Variants & Badge */}
+          <div className="mt-1">
+            {item.itemType === "COMBO_ITEM" && (
+              <span className="inline-block bg-black text-white text-[10px] font-bold px-1.5 py-0.5 mb-1 tracking-wider uppercase">
+                Bundle Deal
+              </span>
+            )}
+            <div className="text-xs text-gray-500 font-medium space-y-0.5">
+              {item.variantName && (
+                <p className="capitalize text-gray-800">{item.variantName}</p>
+              )}
+              <p>
+                Size: <span className="text-black">{item.size}</span>
+              </p>
+              <p>
+                Qty: <span className="text-black">{item.quantity}</span>
+              </p>
+            </div>
           </div>
         </div>
 

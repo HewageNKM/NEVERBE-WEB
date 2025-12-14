@@ -3,7 +3,7 @@ import { getApp, getApps, initializeApp } from "firebase/app";
 import { collection, getFirestore, getDocs } from "firebase/firestore";
 import { getAnalytics, isSupported } from "@firebase/analytics";
 import { getAuth, onAuthStateChanged, signInAnonymously } from "firebase/auth";
-import { Item } from "@/interfaces";
+import { Item } from "@/interfaces/BagItem";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,

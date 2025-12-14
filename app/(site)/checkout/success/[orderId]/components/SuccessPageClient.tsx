@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { Order } from "@/interfaces";
+import { Order } from "@/interfaces/BagItem";
 import SuccessAnimationComponents from "./SuccessAnimationComponents";
 import { IoDownloadOutline, IoArrowForward } from "react-icons/io5";
 import { Logo } from "@/assets/images";

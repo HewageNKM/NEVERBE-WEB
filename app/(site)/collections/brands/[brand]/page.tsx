@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Item } from "@/interfaces";
+import { Item } from "@/interfaces/BagItem";
 import BrandProducts from "./components/BrandProducts";
 import BrandHeader from "./components/BrandHeader";
 import { getProductsByBrand } from "@/services/ProductService";

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import EmptyState from "@/components/EmptyState";
 import { useRouter } from "next/navigation";
-import { Order } from "@/interfaces";
+import { Order } from "@/interfaces/BagItem";
 import OrderDetailsModal from "./OrderDetailsModal";
 import { toSafeLocaleString } from "@/services/UtilService";
 

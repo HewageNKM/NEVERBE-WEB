@@ -4,7 +4,7 @@ import "swiper/css";
 import "swiper/css/effect-fade";
 import { Autoplay, EffectFade } from "swiper/modules";
 import Image from "next/image";
-import { Slide } from "@/interfaces";
+import { Slide } from "@/interfaces/BagItem";
 
 const ImagesSlider = ({ images }: { images: Slide[] }) => {
   return (

@@ -1,5 +1,5 @@
 import React from "react";
-import { Customer } from "@/interfaces"; // Or wherever User/Customer is defined
+import { Customer } from "@/interfaces/BagItem"; // Or wherever User/Customer is defined
 
 interface ProfileOverviewProps {
   user: any; // Type properly

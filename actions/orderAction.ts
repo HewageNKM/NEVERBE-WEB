@@ -1,4 +1,4 @@
-import { Order } from "@/interfaces";
+import { Order } from "@/interfaces/BagItem";
 import { getIdToken } from "@/firebase/firebaseClient";
 
 /**

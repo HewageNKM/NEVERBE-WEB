@@ -1,6 +1,6 @@
 "use client";
 import ImagesSlider from "@/app/(site)/components/ImagesSlider";
-import { Slide } from "@/interfaces";
+import { Slide } from "@/interfaces/BagItem";
 import Link from "next/link";
 import { motion } from "framer-motion";
 

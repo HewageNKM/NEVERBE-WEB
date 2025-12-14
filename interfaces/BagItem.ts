@@ -1,0 +1,20 @@
+export * from "./Product";
+export * from "./ProductVariant";
+export * from "./InventoryItem";
+export * from "./Img";
+export * from "./Promotion";
+export * from "./Coupon";
+export * from "./ComboProduct";
+
+export interface BagItem {
+  itemId: string;
+  variantId: string;
+  size: string;
+  quantity: number;
+  price: number;
+  name: string;
+  image: string;
+  discount: number;
+  itemType: string;
+  maxQuantity: number;
+}

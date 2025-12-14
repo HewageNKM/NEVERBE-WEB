@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Customer } from "@/interfaces";
+import { Customer } from "@/interfaces/BagItem";
 
 const ShippingDetails = ({
   shippingSameAsBilling,

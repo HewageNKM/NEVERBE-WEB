@@ -1,5 +1,5 @@
 import React from "react";
-import { Order } from "@/interfaces";
+import { Order } from "@/interfaces/BagItem";
 import { X, Download, Package, MapPin, CreditCard } from "lucide-react";
 import { toSafeLocaleString } from "@/services/UtilService";
 import Image from "next/image";

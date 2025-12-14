@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { applyCoupon, removeCoupon } from "@/redux/bagSlice/bagSlice";
 import { RootState } from "@/redux/store";
 import { IoArrowForward } from "react-icons/io5";
 import BagItemCard from "@/components/BagItemCard";
@@ -30,9 +31,30 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
   setPaymentFee,
   selectedPaymentFee,
 }) => {
+  const dispatch = useDispatch();
   const bagItems = useSelector((state: RootState) => state.bagSlice.bag);
+  const couponDiscount = useSelector(
+    (state: RootState) => state.bagSlice.couponDiscount
+  );
+  const savedCouponCode = useSelector(
+    (state: RootState) => state.bagSlice.couponCode
+  );
+  const { user } = useSelector((state: RootState) => state.authSlice);
+
   const [paymentOptions, setPaymentOptions] = useState<PaymentMethod[]>([]);
   const [isPaymentLoading, setIsPaymentLoading] = useState(false);
+
+  // Coupon State
+  const [code, setCode] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [msg, setMsg] = useState<{
+    type: "error" | "success";
+    text: string;
+  } | null>(null);
+
+  useEffect(() => {
+    if (savedCouponCode) setCode(savedCouponCode);
+  }, [savedCouponCode]);
 
   useEffect(() => {
     const fetchMethods = async () => {
@@ -55,7 +77,60 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
     fetchMethods();
   }, []);
 
-  const subtotal = calculateSubTotal(bagItems, selectedPaymentFee);
+  const handleApplyCoupon = async () => {
+    if (!code) return;
+    setLoading(true);
+    setMsg(null);
+
+    try {
+      const cartTotal = calculateTotal(bagItems);
+
+      const res = await fetch("/api/v1/coupons/validate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          code,
+          userId: user?.userId,
+          cartTotal,
+          cartItems: bagItems.map((item) => ({
+            itemId: item.itemId,
+            variantId: item.variantId,
+            quantity: item.quantity,
+            price: item.price,
+          })),
+        }),
+      });
+
+      const data = await res.json();
+
+      if (data.valid) {
+        dispatch(
+          applyCoupon({ code: data.coupon.code, discount: data.discount })
+        );
+        setMsg({
+          type: "success",
+          text: `Coupon applied! You saved Rs. ${data.discount}`,
+        });
+      } else {
+        setMsg({ type: "error", text: data.message || "Invalid coupon" });
+        dispatch(removeCoupon());
+      }
+    } catch (error) {
+      console.error(error);
+      setMsg({ type: "error", text: "Failed to validate coupon" });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRemoveCoupon = () => {
+    dispatch(removeCoupon());
+    setCode("");
+    setMsg(null);
+  };
+
+  const subtotal =
+    calculateSubTotal(bagItems, selectedPaymentFee) - couponDiscount;
   const shipping = calculateShippingCost(bagItems);
   const discount = calculateTotalDiscount(bagItems);
   const fee = calculateFee(selectedPaymentFee, bagItems);
@@ -69,7 +144,7 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
       {/* Bag Mini List */}
       <div className="mb-6 space-y-4 max-h-[300px] overflow-y-auto pr-2">
         {bagItems.map((item, index) => (
-          <BagItemCard key={index} item={item} /> // Ensure BagItemCard uses the new minimal styling provided earlier
+          <BagItemCard key={index} item={item} />
         ))}
       </div>
 
@@ -95,6 +170,50 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
 
       <div className="h-px bg-gray-200 w-full mb-6"></div>
 
+      {/* Coupon Section */}
+      <div className="mb-6">
+        <h3 className="text-sm font-bold uppercase tracking-wide mb-3">
+          Coupon Code
+        </h3>
+        <div className="flex gap-2">
+          <input
+            type="text"
+            value={code}
+            onChange={(e) => setCode(e.target.value.toUpperCase())}
+            placeholder="ENTER CODE"
+            disabled={!!savedCouponCode}
+            className="flex-1 h-10 px-3 bg-white border border-gray-300 focus:border-black focus:outline-none text-sm uppercase placeholder:normal-case font-medium disabled:bg-gray-100 disabled:text-gray-500"
+          />
+          {savedCouponCode ? (
+            <button
+              onClick={handleRemoveCoupon}
+              className="px-4 bg-gray-200 text-gray-800 text-xs font-bold uppercase hover:bg-gray-300 transition-colors h-10"
+            >
+              Remove
+            </button>
+          ) : (
+            <button
+              onClick={handleApplyCoupon}
+              disabled={!code || loading}
+              className="px-4 bg-black text-white text-xs font-bold uppercase hover:bg-gray-800 disabled:opacity-50 transition-colors h-10 min-w-[80px]"
+            >
+              {loading ? "..." : "Apply"}
+            </button>
+          )}
+        </div>
+        {msg && (
+          <p
+            className={`text-[11px] font-medium mt-2 ${
+              msg.type === "error" ? "text-red-500" : "text-green-600"
+            }`}
+          >
+            {msg.text}
+          </p>
+        )}
+      </div>
+
+      <div className="h-px bg-gray-200 w-full mb-6"></div>
+
       {/* Totals */}
       <div className="space-y-3 text-sm font-medium text-gray-600 mb-6">
         <div className="flex justify-between">
@@ -103,10 +222,21 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
             Rs. {calculateTotal(bagItems).toLocaleString()}
           </span>
         </div>
-        <div className="flex justify-between text-red-600">
-          <span>Discount</span>
-          <span>- Rs. {discount.toLocaleString()}</span>
-        </div>
+
+        {discount > 0 && (
+          <div className="flex justify-between text-red-600">
+            <span>Item Discount</span>
+            <span>- Rs. {discount.toLocaleString()}</span>
+          </div>
+        )}
+
+        {couponDiscount > 0 && (
+          <div className="flex justify-between text-green-600">
+            <span>Coupon Discount</span>
+            <span>- Rs. {couponDiscount.toLocaleString()}</span>
+          </div>
+        )}
+
         <div className="flex justify-between">
           <span>Shipping</span>
           <span className="text-black">

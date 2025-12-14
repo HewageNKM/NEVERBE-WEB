@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { IoCloseOutline, IoBagHandleOutline } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
-import { hideBag } from "@/redux/bagSlice/bagSlice";
+import { hideBag, applyCoupon, removeCoupon } from "@/redux/bagSlice/bagSlice";
 import BagItemCard from "@/components/BagItemCard";
 import { useRouter } from "next/navigation";
 import {
@@ -18,7 +18,90 @@ import {
 const Bag = () => {
   const dispatch: AppDispatch = useDispatch();
   const router = useRouter();
+
+  // State
   const bagItems = useSelector((state: RootState) => state.bagSlice.bag);
+  const couponDiscount = useSelector(
+    (state: RootState) => state.bagSlice.couponDiscount
+  );
+  const savedCouponCode = useSelector(
+    (state: RootState) => state.bagSlice.couponCode
+  );
+  const { user } = useSelector((state: RootState) => state.authSlice); // Assuming authSlice has user
+
+  const [code, setCode] = React.useState("");
+  const [loading, setLoading] = React.useState(false);
+  const [msg, setMsg] = React.useState<{
+    type: "error" | "success";
+    text: string;
+  } | null>(null);
+
+  React.useEffect(() => {
+    if (savedCouponCode) setCode(savedCouponCode);
+  }, [savedCouponCode]);
+
+  const handleApplyCoupon = async () => {
+    if (!code) return;
+    setLoading(true);
+    setMsg(null);
+
+    try {
+      // Calculate total before discount for validation
+      const cartTotal = calculateTotal(bagItems);
+
+      const res = await fetch("/api/v1/coupons/validate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          code,
+          userId: user?.userId,
+          cartTotal,
+          cartItems: bagItems.map((item) => ({
+            itemId: item.itemId,
+            variantId: item.variantId,
+            quantity: item.quantity,
+            price: item.price,
+          })),
+        }),
+      });
+
+      const data = await res.json();
+
+      if (data.valid) {
+        dispatch(
+          applyCoupon({ code: data.coupon.code, discount: data.discount })
+        );
+        setMsg({
+          type: "success",
+          text: `Coupon applied! You saved Rs. ${data.discount}`,
+        });
+      } else {
+        setMsg({ type: "error", text: data.message || "Invalid coupon" });
+        dispatch(removeCoupon());
+      }
+    } catch (error) {
+      console.error(error);
+      setMsg({ type: "error", text: "Failed to validate coupon" });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRemoveCoupon = () => {
+    dispatch(removeCoupon());
+    setCode("");
+    setMsg(null);
+  };
+
+  // Derived Totals
+  const subTotalBeforeCoupon = calculateTotal(bagItems);
+  const itemDiscounts = calculateTotalDiscount(bagItems);
+  const shipping = calculateShippingCost(bagItems);
+
+  // Final Total = (Price - ItemDisc) + Shipping + Fee - CouponDisc
+  // Note: calculateSubTotal includes item disc and shipping.
+  // Let's rely on standard calc but subtract coupon.
+  const finalTotal = calculateSubTotal(bagItems, 0) - couponDiscount;
 
   return (
     <DropShadow containerStyle="flex justify-end">
@@ -71,8 +154,47 @@ const Bag = () => {
         {/* --- Summary Footer --- */}
         {bagItems.length > 0 && (
           <div className="border-t border-gray-100 p-6 bg-white space-y-4">
+            {/* Coupon Input */}
+            <div>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={code}
+                  onChange={(e) => setCode(e.target.value.toUpperCase())}
+                  placeholder="COUPON CODE"
+                  disabled={!!savedCouponCode}
+                  className="flex-1 border border-gray-300 px-3 py-2 text-sm uppercase placeholder:normal-case focus:outline-none focus:border-black disabled:bg-gray-50 disabled:text-gray-500"
+                />
+                {savedCouponCode ? (
+                  <button
+                    onClick={handleRemoveCoupon}
+                    className="bg-gray-200 text-gray-800 px-4 py-2 text-xs font-bold uppercase hover:bg-gray-300 transition-colors"
+                  >
+                    Remove
+                  </button>
+                ) : (
+                  <button
+                    onClick={handleApplyCoupon}
+                    disabled={!code || loading}
+                    className="bg-black text-white px-4 py-2 text-xs font-bold uppercase hover:bg-gray-800 disabled:opacity-50 transition-colors min-w-[80px]"
+                  >
+                    {loading ? "..." : "Apply"}
+                  </button>
+                )}
+              </div>
+              {msg && (
+                <p
+                  className={`text-[10px] mt-1 ${
+                    msg.type === "error" ? "text-red-500" : "text-green-600"
+                  }`}
+                >
+                  {msg.text}
+                </p>
+              )}
+            </div>
+
             {/* Price Breakdown */}
-            <div className="space-y-2 text-sm">
+            <div className="space-y-2 text-sm pt-2 border-t border-dashed border-gray-200">
               <div className="flex justify-between text-gray-500">
                 <span>Subtotal</span>
                 <span className="text-black font-medium">
@@ -82,10 +204,17 @@ const Bag = () => {
 
               {calculateTotalDiscount(bagItems) > 0 && (
                 <div className="flex justify-between text-red-600">
-                  <span>Discount</span>
+                  <span>Item Discount</span>
                   <span>
                     - Rs. {calculateTotalDiscount(bagItems).toLocaleString()}
                   </span>
+                </div>
+              )}
+
+              {couponDiscount > 0 && (
+                <div className="flex justify-between text-green-600 font-medium">
+                  <span>Coupon Discount</span>
+                  <span>- Rs. {couponDiscount.toLocaleString()}</span>
                 </div>
               )}
 
@@ -103,7 +232,7 @@ const Bag = () => {
             <div className="flex justify-between items-end border-t border-gray-100 pt-4 pb-2">
               <span className="font-bold uppercase tracking-wide">Total</span>
               <span className="font-black text-xl">
-                Rs. {calculateSubTotal(bagItems, 0).toLocaleString()}
+                Rs. {Math.max(0, finalTotal).toLocaleString()}
               </span>
             </div>
 

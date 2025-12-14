@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import { AppDispatch, RootState } from "@/redux/store";
-import { Customer, Order } from "@/interfaces";
 import { clearBag } from "@/redux/bagSlice/bagSlice";
 import { FiX } from "react-icons/fi";
 import {
@@ -23,21 +22,41 @@ import {
   sendCODOrderNotifications,
   verifyOTP,
 } from "@/actions/orderAction";
-import { signUser, auth } from "@/firebase/firebaseClient";
 import BillingDetails from "./BillingDetails";
 import ShippingDetails from "./ShippingDetails";
 import PaymentDetails from "@/app/(site)/checkout/components/PaymentDetails";
 import ComponentLoader from "@/components/ComponentLoader";
 import toast from "react-hot-toast";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
+import { Order, Customer } from "@/interfaces";
+const formatSriLankanPhoneNumber = (phone: string) => {
+  // Remove any non-digit characters
+  const cleaned = phone.replace(/\D/g, "");
 
-// ... (Keep your helper functions like createCustomerFromForm and formatSriLankanPhoneNumber exactly as they are)
+  // If it starts with 0 (e.g., 0771234567), replace 0 with +94
+  if (cleaned.startsWith("0") && cleaned.length === 10) {
+    return `+94${cleaned.slice(1)}`;
+  }
+
+  // If it's already in 94 format (e.g., 94771234567), add +
+  if (cleaned.startsWith("94") && cleaned.length === 11) {
+    return `+${cleaned}`;
+  }
+
+  // If it's a 9 digit number without prefix (e.g. 771234567), add +94
+  if (cleaned.length === 9) {
+    return `+94${cleaned}`;
+  }
+
+  return phone;
+};
+
 const createCustomerFromForm = (form: any): Customer => {
   const name = `${form.first_name.value} ${form.last_name.value}`;
   return {
     name,
     email: form.email.value,
-    phone: form.phone.value,
+    phone: formatSriLankanPhoneNumber(form.phone.value),
     address: form.address.value,
     city: form.city.value,
     zip: form.zip.value || "",
@@ -51,250 +70,109 @@ const CheckoutForm = () => {
   const dispatch: AppDispatch = useDispatch();
   const router = useRouter();
   const bagItems = useSelector((state: RootState) => state.bagSlice.bag);
+  const couponDiscount = useSelector(
+    (state: RootState) => state.bagSlice.couponDiscount
+  );
+  const couponCode = useSelector(
+    (state: RootState) => state.bagSlice.couponCode
+  );
   const user = useSelector((state: RootState) => state.authSlice.user);
+  const { executeRecaptcha } = useGoogleReCaptcha();
 
-  // ... (Keep all your existing state: billingCustomer, paymentType, etc.)
-  const [billingCustomer, setBillingCustomer] = useState<Customer | null>(null);
+  const [paymentType, setPaymentType] = useState<string>("");
+  const [paymentTypeId, setPaymentTypeId] = useState<string>("");
+  const [paymentFee, setPaymentFee] = useState<number>(0);
   const [shippingSameAsBilling, setShippingSameAsBilling] = useState(true);
-  const [shippingCustomer, setShippingCustomer] =
-    useState<Partial<Customer> | null>(null);
-  const [paymentType, setPaymentType] = useState<string | null>(null);
-  const [paymentTypeId, setPaymentTypeId] = useState<string | null>(null);
-  const [paymentFee, setPaymentFee] = useState(0);
   const [saveAddress, setSaveAddress] = useState(true);
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isVerifyingOtp, setIsVerifyingOtp] = useState(false);
-  const [isResendingOtp, setIsResendingOtp] = useState(false);
+  // Initialize billing customer with user data if available
+  const initialCustomerState: Customer = {
+    id: user?.uid || "",
+    name: user?.displayName || "",
+    email: user?.email || "",
+    phone: user?.phoneNumber || "",
+    address: "",
+    city: "",
+    zip: "",
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  };
+
+  const [billingCustomer, setBillingCustomer] =
+    useState<Customer>(initialCustomerState);
+  const [shippingCustomer, setShippingCustomer] =
+    useState<Partial<Customer> | null>(null);
 
   const [showOtpModal, setShowOtpModal] = useState(false);
   const [otp, setOtp] = useState("");
   const [pendingOrder, setPendingOrder] = useState<Order | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isVerifyingOtp, setIsVerifyingOtp] = useState(false);
+  const [isResendingOtp, setIsResendingOtp] = useState(false);
   const [resendCooldown, setResendCooldown] = useState(0);
 
-  const { executeRecaptcha } = useGoogleReCaptcha();
+  const [orderId] = useState(generateOrderId());
 
-  // ... (Keep your useEffects and Handlers exactly as they are)
   useEffect(() => {
-    const loadAddresses = async () => {
-      // 1. Load from API if logged in
-      if (user?.uid) {
-        try {
-          const token = await auth.currentUser?.getIdToken();
-          const res = await fetch("/api/v1/customers/addresses", {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          if (res.ok) {
-            const addresses = await res.json();
-            // Map addresses to customer format
-            const billingAddr = addresses.find(
-              (a: any) => a.type === "Billing"
-            );
-            const shippingAddr = addresses.find(
-              (a: any) => a.type === "Shipping"
-            );
-
-            if (billingAddr) {
-              setBillingCustomer(
-                (prev) =>
-                  ({
-                    ...prev,
-                    name: user.displayName || prev?.name || "",
-                    email: user.email || prev?.email || "",
-                    phone: billingAddr.phone,
-                    address: billingAddr.address,
-                    city: billingAddr.city,
-                    // zip? API doesn't have zip yet, maybe add to API later or keep usage generic
-                  } as Customer)
-              );
-            }
-
-            if (shippingAddr) {
-              setShippingCustomer((prev) => ({
-                ...prev,
-                shippingName: user.displayName || prev?.shippingName,
-                shippingAddress: shippingAddr.address,
-                shippingCity: shippingAddr.city,
-                shippingPhone: shippingAddr.phone,
-              }));
-              setShippingSameAsBilling(false); // If specific shipping address exists, don't default to same as billing
-            }
-          }
-        } catch (error) {
-          console.error("Error loading addresses", error);
-        }
-      } else {
-        // 2. Fallback to Local Storage if not logged in (or if no API data? Maybe merge?)
-        const savedCustomer = window.localStorage.getItem(
-          "neverbeBillingCustomer"
-        );
-        if (savedCustomer) setBillingCustomer(JSON.parse(savedCustomer));
-      }
-    };
-    loadAddresses();
+    if (user) {
+      // Potentially fetch saved address here if not already in user object
+    }
   }, [user]);
 
   useEffect(() => {
-    if (resendCooldown <= 0) return;
-    const timer = setTimeout(() => setResendCooldown((c) => c - 1), 1000);
-    return () => clearTimeout(timer);
+    let timer: NodeJS.Timeout;
+    if (resendCooldown > 0) {
+      timer = setInterval(() => {
+        setResendCooldown((prev) => prev - 1);
+      }, 1000);
+    }
+    return () => clearInterval(timer);
   }, [resendCooldown]);
 
-  const formatSriLankanPhoneNumber = (phone: string): string => {
-    const digits = phone.replace(/\D/g, "");
-    if (digits.startsWith("07") && digits.length === 10)
-      return `94${digits.substring(1)}`;
-    if (digits.startsWith("7") && digits.length === 9) return `94${digits}`;
-    return digits;
-  };
-
   const handleRequestOtp = async (phoneNumber: string) => {
-    if (!executeRecaptcha) return toast.error("reCAPTCHA not ready");
-    setIsResendingOtp(true);
+    if (!executeRecaptcha) {
+      toast.error("Recaptcha not ready");
+      return;
+    }
+
     try {
-      const token = await executeRecaptcha("otp_request");
-      const res = await requestOTP(
-        formatSriLankanPhoneNumber(phoneNumber),
-        token
-      );
+      setIsResendingOtp(true);
+      const token = await executeRecaptcha("request_otp");
+      await requestOTP(phoneNumber, token);
       setResendCooldown(60);
-      res.success
-        ? toast.success(`OTP sent to ${phoneNumber}`)
-        : toast.error(res.message);
+      toast.success("OTP sent successfully!");
     } catch (err: any) {
-      toast.error(err.message);
+      console.error(err);
+      toast.error(err.message || "Failed to send OTP");
     } finally {
       setIsResendingOtp(false);
     }
   };
 
   const handleOtpVerification = async () => {
-    if (!pendingOrder || !otp) return toast.error("Invalid OTP");
-    setIsVerifyingOtp(true);
+    if (!pendingOrder) return;
+
     try {
-      const res = await verifyOTP(
-        formatSriLankanPhoneNumber(pendingOrder.customer.phone),
-        otp
-      );
-      if (!executeRecaptcha) return toast.error("reCAPTCHA not ready");
+      setIsVerifyingOtp(true);
+      await verifyOTP(pendingOrder.customer.phone, otp);
 
-      if (res.success) {
-        const token = await executeRecaptcha("new_order");
-        await addNewOrder(pendingOrder, token);
-        const notifToken = await executeRecaptcha("cod_notification");
-        await sendCODOrderNotifications(pendingOrder.orderId, notifToken);
+      // If OTP verified, finalize the order
+      if (!executeRecaptcha) throw new Error("Recaptcha failed");
+      const token = await executeRecaptcha("finalize_cod");
 
-        dispatch(clearBag());
-        toast.success("Order verified successfully!");
-        router.replace(`/checkout/success/${pendingOrder.orderId}`);
-        setShowOtpModal(false);
-      } else toast.error(res.message || "Invalid OTP");
+      await addNewOrder(pendingOrder, token);
+      await sendCODOrderNotifications(pendingOrder.orderId, token);
+
+      dispatch(clearBag());
+      router.replace(`/checkout/success/${pendingOrder.orderId}`);
     } catch (err: any) {
-      toast.error(err.message);
+      console.error(err);
+      toast.error(err.message || "Invalid OTP");
     } finally {
       setIsVerifyingOtp(false);
     }
   };
 
-  const handlePaymentSubmit = async (evt: React.FormEvent<HTMLFormElement>) => {
-    evt.preventDefault();
-    if (!executeRecaptcha) return toast.error("reCAPTCHA not ready");
-    if (bagItems.length === 0) return toast.error("Bag is empty");
-    if (!paymentType) return toast.error("Select payment method");
-
-    setIsSubmitting(true);
-    const form = evt.currentTarget;
-    const orderId = generateOrderId();
-    const newBilling = createCustomerFromForm(form);
-
-    if (saveAddress)
-      localStorage.setItem(
-        "neverbeBillingCustomer",
-        JSON.stringify(newBilling)
-      );
-    else localStorage.removeItem("neverbeBillingCustomer");
-
-    try {
-      const userId = user?.uid || (await signUser())?.uid;
-      const amount = calculateSubTotal(bagItems, paymentFee);
-      const fee = calculateFee(paymentFee, bagItems);
-
-      const orderCustomer: Customer = {
-        ...newBilling,
-        ...(shippingSameAsBilling
-          ? {
-              shippingName: newBilling.name,
-              shippingAddress: newBilling.address,
-              shippingCity: newBilling.city,
-              shippingZip: newBilling.zip,
-              shippingPhone: newBilling.phone,
-            }
-          : {
-              shippingName: shippingCustomer?.shippingName,
-              shippingAddress: shippingCustomer?.shippingAddress,
-              shippingCity: shippingCustomer?.shippingCity,
-              shippingZip: shippingCustomer?.shippingZip,
-              shippingPhone: shippingCustomer?.shippingPhone,
-            }),
-      };
-
-      const newOrder: Order = {
-        orderId,
-        userId: userId || "anonymous-user",
-        customer: orderCustomer,
-        items: bagItems,
-        total: parseFloat(amount),
-        paymentMethod: paymentType,
-        paymentMethodId: paymentTypeId,
-        fee: fee,
-        shippingFee: calculateShippingCost(bagItems),
-        transactionFeeCharge: calculateTransactionFeeCharge(
-          bagItems,
-          paymentFee
-        ),
-        paymentStatus: "Pending",
-        status: "Processing",
-        from: "Website",
-        discount: calculateTotalDiscount(bagItems),
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      };
-
-      const token = await executeRecaptcha("new_order");
-
-      switch (paymentTypeId?.toUpperCase()) {
-        case "PM-006": // KOKO
-          await addNewOrder(newOrder, token);
-          dispatch(clearBag());
-          await processKokoPayment(orderId, orderCustomer, amount);
-          break;
-        case "PM-001": // COD
-          setPendingOrder(newOrder);
-          await handleRequestOtp(newBilling.phone);
-          setShowOtpModal(true);
-          break;
-        case "PM-003": // Payhere
-          await addNewOrder(newOrder, token);
-          dispatch(clearBag());
-          await processPayherePayment(orderId, orderCustomer, amount);
-          break;
-        default:
-          throw new Error("Invalid payment method");
-      }
-    } catch (err: any) {
-      console.error("Payment Error:", err);
-      toast.error("Payment failed. Inspecting error...");
-      router.replace(
-        `/checkout/fail?orderId=${orderId}&error=${encodeURIComponent(
-          err.message || "Unknown Error"
-        )}`
-      );
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  // ... (Keep processPayherePayment and processKokoPayment helpers)
   const processPayherePayment = async (
     orderId: string,
     customer: Customer,
@@ -359,6 +237,97 @@ const CheckoutForm = () => {
     form.submit();
   };
 
+  const handlePaymentSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!executeRecaptcha) return;
+    setIsSubmitting(true);
+
+    try {
+      // Validate Logic
+      const form = e.target as any;
+      const newBilling = createCustomerFromForm(form);
+      const userId = user?.id || null; // Ensure User ID is captured if exists
+
+      const amount = (
+        calculateSubTotal(bagItems, paymentFee) - couponDiscount
+      ).toFixed(2);
+      const fee = calculateFee(paymentFee, bagItems);
+
+      const orderCustomer: Customer = {
+        ...newBilling,
+        ...(shippingSameAsBilling
+          ? {
+              shippingName: newBilling.name,
+              shippingAddress: newBilling.address,
+              shippingCity: newBilling.city,
+              shippingZip: newBilling.zip,
+              shippingPhone: newBilling.phone,
+            }
+          : {
+              shippingName: shippingCustomer?.shippingName || "",
+              shippingAddress: shippingCustomer?.shippingAddress || "",
+              shippingCity: shippingCustomer?.shippingCity || "",
+              shippingZip: shippingCustomer?.shippingZip || "",
+              shippingPhone: shippingCustomer?.shippingPhone || "",
+            }),
+      };
+
+      const newOrder: Order = {
+        orderId,
+        userId: userId || "anonymous-user",
+        customer: orderCustomer,
+        items: bagItems,
+        total: parseFloat(amount),
+        paymentMethod: paymentType,
+        paymentMethodId: paymentTypeId,
+        fee: fee,
+        shippingFee: calculateShippingCost(bagItems),
+        transactionFeeCharge: calculateTransactionFeeCharge(
+          bagItems,
+          paymentFee
+        ),
+        paymentStatus: "Pending",
+        status: "Processing",
+        from: "Website",
+        discount: calculateTotalDiscount(bagItems) + couponDiscount,
+        couponCode: couponCode || undefined,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+
+      const token = await executeRecaptcha("new_order");
+
+      switch (paymentTypeId?.toUpperCase()) {
+        case "PM-006": // KOKO
+          await addNewOrder(newOrder, token);
+          dispatch(clearBag());
+          await processKokoPayment(orderId, orderCustomer, amount);
+          break;
+        case "PM-001": // COD
+          setPendingOrder(newOrder);
+          // Request OTP
+          await handleRequestOtp(newBilling.phone);
+          setShowOtpModal(true);
+          break;
+        case "PM-003": // Payhere
+          await addNewOrder(newOrder, token);
+          dispatch(clearBag());
+          await processPayherePayment(orderId, orderCustomer, amount);
+          break;
+        default:
+          throw new Error("Invalid payment method selected");
+      }
+    } catch (err: any) {
+      console.error("Payment Error:", err);
+      toast.error("Payment failed. Please try again.");
+      if (err.message && err.message.length < 50) {
+        toast.error(err.message);
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <>
       <form
@@ -397,7 +366,7 @@ const CheckoutForm = () => {
 
       {/* --- OTP MODAL (Redesigned) --- */}
       {showOtpModal && pendingOrder && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex justify-center items-center z-100 p-4">
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex justify-center items-center z-50 p-4">
           <div className="relative bg-white p-8 w-full max-w-sm border border-gray-200 shadow-2xl">
             <button
               onClick={() => {
@@ -428,6 +397,7 @@ const CheckoutForm = () => {
                 maxLength={6}
               />
               <button
+                type="button"
                 onClick={handleOtpVerification}
                 disabled={isVerifyingOtp}
                 className="w-full py-4 bg-black text-white font-bold uppercase tracking-widest hover:bg-gray-800 disabled:bg-gray-400 transition"
@@ -436,6 +406,7 @@ const CheckoutForm = () => {
               </button>
 
               <button
+                type="button"
                 onClick={() => handleRequestOtp(pendingOrder.customer.phone)}
                 disabled={isResendingOtp || resendCooldown > 0}
                 className="text-xs font-bold uppercase tracking-wide text-gray-400 hover:text-black transition"

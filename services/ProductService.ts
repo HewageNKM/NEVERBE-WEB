@@ -1,5 +1,5 @@
 import { adminFirestore } from "@/firebase/firebaseAdmin";
-import { Item, PaymentMethod } from "@/interfaces";
+import { Item, PaymentMethod } from "@/interfaces/BagItem";
 import { Product } from "@/interfaces/Product";
 import { ProductVariant } from "@/interfaces/ProductVariant";
 

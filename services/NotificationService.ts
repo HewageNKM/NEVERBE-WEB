@@ -1,5 +1,5 @@
 import { adminFirestore } from "@/firebase/firebaseAdmin";
-import { Order, OrderItem } from "@/interfaces";
+import { Order, OrderItem } from "@/interfaces/BagItem";
 
 import crypto from "crypto";
 import { getOrderByIdForInvoice } from "./OrderService";

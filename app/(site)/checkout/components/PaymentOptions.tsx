@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { PaymentMethod } from "@/interfaces";
+import { PaymentMethod } from "@/interfaces/BagItem";
 
 interface PaymentOptionsProps {
   paymentOptions: PaymentMethod[];

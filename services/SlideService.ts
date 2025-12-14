@@ -1,5 +1,5 @@
 import { adminFirestore } from "@/firebase/firebaseAdmin";
-import { Slide } from "@/interfaces";
+import { Slide } from "@/interfaces/BagItem";
 import { toSafeLocaleString } from "./UtilService";
 
 // Function to fetch all slider items
