@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { getComboById } from "@/services/PromotionService";
 import ComboHero from "./components/ComboHero";
 
+// Cache the fetch to dedupe requests
 const getCombo = cache(async (id: string) => {
   try {
     return await getComboById(id);
@@ -13,6 +14,7 @@ const getCombo = cache(async (id: string) => {
   }
 });
 
+// Dynamic Metadata
 export async function generateMetadata(context: {
   params: Promise<{ comboId: string }>;
 }): Promise<Metadata> {
@@ -58,7 +60,7 @@ const ComboDetailPage = async (context: {
 
   if (!combo) return notFound();
 
-  // Build structured data
+  // JSON-LD Structured Data for SEO
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "Product",
@@ -74,12 +76,16 @@ const ComboDetailPage = async (context: {
   };
 
   return (
-    <main className="w-full relative mt-[80px] md:mt-[100px] min-h-screen px-4 md:px-8 bg-white text-black">
+    <main className="w-full relative bg-white text-black">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
-      <ComboHero combo={combo} />
+
+      {/* Container with Nike-style spacing */}
+      <div className="max-w-[1440px] mx-auto pt-[100px] md:pt-[140px] px-6 md:px-12 pb-20">
+        <ComboHero combo={combo} />
+      </div>
     </main>
   );
 };

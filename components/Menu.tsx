@@ -90,7 +90,7 @@ const Menu = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-[60] flex justify-end">
+    <div className="fixed inset-0 z-60 flex justify-end">
       {/* Dark Overlay */}
       <motion.div
         initial={{ opacity: 0 }}
@@ -161,8 +161,7 @@ const Menu = () => {
           {/* Primary Links */}
           {[
             { name: "Home", href: "/" },
-            { name: "New Arrivals", href: "/collections/products?sort=newest" },
-            { name: "Combos", href: "/collections/combos", highlight: true },
+            { name: "Bundles", href: "/collections/combos", highlight: true },
             { name: "Deals", href: "/collections/deals", highlight: true },
           ].map((link) => (
             <Link
@@ -265,13 +264,13 @@ const Menu = () => {
         <div className="p-6 bg-gray-50 border-t border-gray-100">
           <div className="flex gap-4 justify-center mb-4">
             <Link
-              href="/pages/contact"
+              href="/contact"
               className="text-sm font-bold text-gray-500 uppercase hover:text-black"
             >
               Contact Us
             </Link>
             <Link
-              href="/pages/help"
+              href="/contact"
               className="text-sm font-bold text-gray-500 uppercase hover:text-black"
             >
               Help

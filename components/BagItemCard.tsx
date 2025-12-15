@@ -6,43 +6,96 @@ import { AppDispatch } from "@/redux/store";
 import { removeFromBag } from "@/redux/bagSlice/bagSlice";
 import { BagItem } from "@/interfaces/BagItem";
 
-const BagItemCard = ({ item }: { item: BagItem }) => {
+interface BagItemCardProps {
+  item: BagItem;
+  compact?: boolean; // For checkout summary
+}
+
+const BagItemCard = ({ item, compact = false }: BagItemCardProps) => {
   const dispatch: AppDispatch = useDispatch();
   const totalPrice = item.price * item.quantity;
+  const netPrice = totalPrice - item.discount;
 
+  if (compact) {
+    // Compact version for checkout summary
+    return (
+      <div className="flex gap-3 py-2">
+        <div className="relative w-14 h-14 bg-[#f6f6f6] shrink-0 border border-gray-100">
+          <Image
+            src={item.image || ""}
+            alt={item.name}
+            fill
+            className="object-cover mix-blend-multiply"
+          />
+          {item.isComboItem && (
+            <span className="absolute -top-1 -left-1 bg-black text-white text-[7px] font-bold px-1">
+              Bundle
+            </span>
+          )}
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="text-xs font-bold uppercase truncate">{item.name}</p>
+          <p className="text-[10px] text-gray-500 uppercase">
+            Size: {item.size} · Qty: {item.quantity}
+          </p>
+          {item.isComboItem && item.comboName && (
+            <p className="text-[9px] text-gray-400 uppercase mt-0.5">
+              {item.comboName}
+            </p>
+          )}
+        </div>
+        <div className="text-right shrink-0">
+          <p className="text-xs font-bold font-mono">
+            Rs. {netPrice.toLocaleString()}
+          </p>
+          {item.discount > 0 && (
+            <p className="text-[9px] text-gray-400 line-through">
+              Rs. {totalPrice.toLocaleString()}
+            </p>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // Full version with remove button
   return (
     <div className="flex gap-4 w-full">
-      {/* Image Container - Nike Style Gray Box */}
-      <div className="relative w-24 h-24 bg-[#f6f6f6] rounded-md shrink-0 overflow-hidden">
+      {/* Image Container */}
+      <div className="relative w-20 h-20 bg-[#f6f6f6] shrink-0">
         <Image
-          src={item.image || (item as any).thumbnail}
+          src={item.image || ""}
           alt={item.name}
-          width={150}
-          height={150}
-          className="w-full h-full object-cover mix-blend-multiply" // Blends white background images nicely
+          fill
+          className="object-cover mix-blend-multiply"
         />
+        {item.isComboItem && (
+          <span className="absolute top-0 left-0 bg-black text-white text-[8px] font-bold px-1 py-0.5 uppercase">
+            Bundle
+          </span>
+        )}
       </div>
 
       {/* Details Column */}
-      <div className="flex flex-1 flex-col justify-between py-1">
+      <div className="flex flex-1 flex-col justify-between py-0.5">
         {/* Top: Name & Price */}
         <div>
           <div className="flex justify-between items-start gap-2">
             <h3 className="font-bold text-sm uppercase leading-tight line-clamp-2 text-black">
               {item.name}
             </h3>
-            <div className="text-right">
+            <div className="text-right shrink-0">
               {item.discount > 0 ? (
                 <>
-                  <p className="font-bold text-sm text-red-600">
-                    Rs. {(totalPrice - item.discount).toLocaleString()}
+                  <p className="font-bold text-sm text-black">
+                    Rs. {netPrice.toLocaleString()}
                   </p>
                   <p className="text-[10px] text-gray-400 line-through">
                     Rs. {totalPrice.toLocaleString()}
                   </p>
                 </>
               ) : (
-                <p className="font-bold text-sm shrink-0">
+                <p className="font-bold text-sm">
                   Rs. {totalPrice.toLocaleString()}
                 </p>
               )}
@@ -51,27 +104,22 @@ const BagItemCard = ({ item }: { item: BagItem }) => {
 
           {/* Middle: Variants & Badge */}
           <div className="mt-1">
-            {/* Combo Badge */}
-            {item.isComboItem && (
-              <span className="inline-block bg-orange-500 text-white text-[10px] font-bold px-1.5 py-0.5 mb-1 tracking-wider uppercase">
-                {item.comboName || "Bundle Deal"}
+            {item.isComboItem && item.comboName && (
+              <span className="inline-block bg-black text-white text-[9px] font-bold px-1.5 py-0.5 mb-1 tracking-wider uppercase">
+                {item.comboName}
               </span>
             )}
-            {/* Legacy COMBO_ITEM support */}
-            {!item.isComboItem && item.itemType === "COMBO_ITEM" && (
-              <span className="inline-block bg-black text-white text-[10px] font-bold px-1.5 py-0.5 mb-1 tracking-wider uppercase">
-                Bundle Deal
-              </span>
-            )}
-            <div className="text-xs text-gray-500 font-medium space-y-0.5">
+            <div className="text-[10px] text-gray-500 font-medium uppercase space-y-0.5">
               {item.variantName && (
-                <p className="capitalize text-gray-800">{item.variantName}</p>
+                <p className="text-gray-800">{item.variantName}</p>
               )}
               <p>
-                Size: <span className="text-black">{item.size}</span>
-              </p>
-              <p>
-                Qty: <span className="text-black">{item.quantity}</span>
+                Size:{" "}
+                <span className="text-black font-semibold">{item.size}</span> ·
+                Qty:{" "}
+                <span className="text-black font-semibold">
+                  {item.quantity}
+                </span>
               </p>
             </div>
           </div>

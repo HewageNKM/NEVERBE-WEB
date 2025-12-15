@@ -4,11 +4,12 @@ import React from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  IoGift,
-  IoFlash,
-  IoCheckmarkCircle,
+  IoGiftOutline,
+  IoFlashOutline,
+  IoCheckmarkCircleOutline,
   IoArrowForward,
-  IoLockClosed,
+  IoLockClosedOutline,
+  IoAlertCircleOutline,
 } from "react-icons/io5";
 import usePromotions, { ActivePromotion } from "@/hooks/usePromotions";
 
@@ -31,18 +32,23 @@ const PromotionBanner: React.FC<PromotionBannerProps> = ({
     isBlocked,
   } = usePromotions();
 
-  // Show blocked message if combo items are in the bag
+  // --- BLOCKED STATE (Combo Items) ---
   if (isBlocked && hasComboItems && variant === "inline") {
     return (
       <motion.div
         initial={{ opacity: 0, y: -5 }}
         animate={{ opacity: 1, y: 0 }}
-        className={`flex items-center gap-2 p-3 bg-amber-50 border border-amber-200 rounded-sm ${className}`}
+        className={`flex items-start gap-3 p-4 border border-black bg-gray-50 ${className}`}
       >
-        <IoLockClosed className="text-amber-600 shrink-0" size={18} />
-        <p className="text-xs font-medium text-amber-800">
-          Promotions cannot be combined with combo deals.
-        </p>
+        <IoLockClosedOutline className="text-black shrink-0 mt-0.5" size={16} />
+        <div>
+          <p className="text-xs font-black uppercase tracking-wide text-black leading-tight">
+            Promotion Locked
+          </p>
+          <p className="text-[10px] uppercase tracking-wide text-gray-500 mt-1 font-medium">
+            Promotions cannot be combined with combo deals.
+          </p>
+        </div>
       </motion.div>
     );
   }
@@ -58,19 +64,19 @@ const PromotionBanner: React.FC<PromotionBannerProps> = ({
   const getIcon = (type: ActivePromotion["type"]) => {
     switch (type) {
       case "BOGO":
-        return <IoGift size={18} />;
+        return <IoGiftOutline size={18} />;
       case "PERCENTAGE":
       case "FIXED":
-        return <IoFlash size={18} />;
+        return <IoFlashOutline size={18} />;
       default:
-        return <IoCheckmarkCircle size={18} />;
+        return <IoCheckmarkCircleOutline size={18} />;
     }
   };
 
-  // Inline variant for cart/checkout
+  // --- VARIANT: INLINE (Cart/Checkout) ---
   if (variant === "inline") {
     return (
-      <div className={`space-y-2 ${className}`}>
+      <div className={`space-y-4 ${className}`}>
         {/* Eligible promotion */}
         <AnimatePresence>
           {bestPromo && (
@@ -78,56 +84,63 @@ const PromotionBanner: React.FC<PromotionBannerProps> = ({
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              className="flex items-center gap-3 p-3 bg-green-50 border border-green-200 rounded-sm"
+              className="relative p-4 border border-black bg-white"
             >
-              <div className="text-green-600">{getIcon(bestPromo.type)}</div>
-              <div className="flex-1">
-                <p className="text-xs font-bold text-green-800 uppercase tracking-wide">
-                  {bestPromo.name}
-                </p>
-                <p className="text-[11px] text-green-600">
-                  {bestPromo.message}
-                </p>
-              </div>
-              {bestPromo.savings && (
-                <div className="text-right">
-                  <p className="text-sm font-black text-green-700">
-                    -Rs. {bestPromo.savings.toLocaleString()}
-                  </p>
+              <div className="flex items-start gap-4">
+                <div className="text-black">{getIcon(bestPromo.type)}</div>
+                <div className="flex-1">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <p className="text-xs font-black text-black uppercase tracking-wider">
+                        {bestPromo.name}
+                      </p>
+                      <p className="text-[10px] text-gray-500 uppercase tracking-wide mt-1 font-medium">
+                        {bestPromo.message}
+                      </p>
+                    </div>
+                    {bestPromo.savings && (
+                      <div className="text-right bg-black text-white px-2 py-1">
+                        <p className="text-xs font-bold uppercase tracking-wide">
+                          -Rs. {bestPromo.savings.toLocaleString()}
+                        </p>
+                      </div>
+                    )}
+                  </div>
                 </div>
-              )}
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
 
-        {/* Nearby promotion (spend X more to unlock) */}
+        {/* Nearby promotion (Spend X more) */}
         {showNearby && nearestPromo && !bestPromo && (
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="p-3 bg-yellow-50 border border-yellow-200 rounded-sm"
+            className="p-4 border border-dashed border-gray-400 bg-gray-50"
           >
-            <div className="flex items-center gap-3">
-              <div className="text-yellow-600">
-                {getIcon(nearestPromo.type)}
-              </div>
+            <div className="flex items-center gap-3 mb-3">
+              <IoAlertCircleOutline className="text-gray-500" size={18} />
               <div className="flex-1">
-                <p className="text-xs font-bold text-yellow-800 uppercase tracking-wide">
-                  Almost There!
+                <p className="text-xs font-black text-black uppercase tracking-wider">
+                  Unlock Offer
                 </p>
-                <p className="text-[11px] text-yellow-700">
-                  Spend Rs. {nearestPromo.remaining?.toLocaleString()} more to
-                  unlock <span className="font-bold">{nearestPromo.name}</span>
+                <p className="text-[10px] text-gray-500 uppercase tracking-wide mt-0.5 font-medium">
+                  Add Rs. {nearestPromo.remaining?.toLocaleString()} to get{" "}
+                  <span className="text-black font-bold">
+                    {nearestPromo.name}
+                  </span>
                 </p>
               </div>
             </div>
-            {/* Progress bar */}
-            <div className="mt-2 h-1.5 bg-yellow-200 rounded-full overflow-hidden">
+
+            {/* Sharp Progress Bar */}
+            <div className="w-full h-2 bg-gray-200 rounded-none">
               <motion.div
                 initial={{ width: 0 }}
                 animate={{ width: `${nearestPromo.progress}%` }}
                 transition={{ duration: 0.5, ease: "easeOut" }}
-                className="h-full bg-yellow-500"
+                className="h-full bg-black"
               />
             </div>
           </motion.div>
@@ -136,7 +149,7 @@ const PromotionBanner: React.FC<PromotionBannerProps> = ({
     );
   }
 
-  // Sticky banner for top of page
+  // --- VARIANT: STICKY (Top Bar) ---
   if (variant === "sticky") {
     const promo = bestPromo || nearestPromo;
     if (!promo) return null;
@@ -145,25 +158,27 @@ const PromotionBanner: React.FC<PromotionBannerProps> = ({
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className={`w-full bg-black text-white py-2 px-4 ${className}`}
+        className={`w-full bg-black text-white py-3 px-4 border-b border-gray-800 ${className}`}
       >
         <div className="max-w-[1440px] mx-auto flex items-center justify-center gap-3">
           <div className="flex items-center gap-2">
             {getIcon(promo.type)}
-            <span className="text-xs font-bold uppercase tracking-wide">
+            <span className="text-[10px] md:text-xs font-bold uppercase tracking-widest">
               {promo.isEligible ? (
                 <>
                   {promo.message}
                   {promo.savings && (
-                    <span className="ml-2 text-green-400">
-                      Save Rs. {promo.savings.toLocaleString()}!
+                    <span className="ml-3 px-2 py-0.5 bg-white text-black font-black">
+                      Save Rs. {promo.savings.toLocaleString()}
                     </span>
                   )}
                 </>
               ) : (
                 <>
                   Spend Rs. {promo.remaining?.toLocaleString()} more for{" "}
-                  {promo.name}
+                  <span className="border-b border-white pb-0.5">
+                    {promo.name}
+                  </span>
                 </>
               )}
             </span>
@@ -173,37 +188,47 @@ const PromotionBanner: React.FC<PromotionBannerProps> = ({
     );
   }
 
-  // Card variant for display on pages
+  // --- VARIANT: CARD (Page Display) ---
   if (variant === "card") {
     return (
-      <div className={`grid gap-4 ${className}`}>
+      <div className={`grid gap-6 ${className}`}>
         {eligiblePromotions.map((promo) => (
           <motion.div
             key={promo.id}
-            initial={{ opacity: 0, scale: 0.95 }}
+            initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="p-5 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-lg"
+            className="p-6 border border-black bg-white relative overflow-hidden group"
           >
-            <div className="flex items-start gap-4">
-              <div className="p-3 bg-green-100 rounded-full text-green-600">
+            {/* Hover Effect Background */}
+            <div className="absolute top-0 right-0 w-32 h-32 bg-gray-50 rounded-bl-full -mr-10 -mt-10 transition-transform group-hover:scale-110 duration-500 z-0" />
+
+            <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center gap-6">
+              <div className="p-4 border border-black bg-black text-white">
                 {getIcon(promo.type)}
               </div>
-              <div className="flex-1">
-                <h3 className="font-bold text-lg text-green-800">
-                  {promo.name}
-                </h3>
-                <p className="text-sm text-green-600 mt-1">
+
+              <div className="flex-1 space-y-2">
+                <div className="flex items-center gap-2">
+                  <span className="bg-black text-white text-[9px] font-bold px-1.5 py-0.5 uppercase tracking-widest">
+                    Active
+                  </span>
+                  <h3 className="font-black text-xl text-black uppercase tracking-tighter italic">
+                    {promo.name}
+                  </h3>
+                </div>
+                <p className="text-xs text-gray-500 uppercase tracking-wide font-medium max-w-md">
                   {promo.description}
                 </p>
                 {promo.savings && (
-                  <p className="mt-2 text-lg font-black text-green-700">
-                    You save Rs. {promo.savings.toLocaleString()}
+                  <p className="text-2xl font-black text-black tracking-tight mt-1">
+                    Save Rs. {promo.savings.toLocaleString()}
                   </p>
                 )}
               </div>
+
               <Link
                 href="/checkout"
-                className="flex items-center gap-1 px-4 py-2 bg-green-600 text-white font-bold text-xs uppercase tracking-wide rounded-sm hover:bg-green-700 transition-colors"
+                className="flex items-center gap-2 px-8 py-3 bg-black text-white text-xs font-bold uppercase tracking-widest rounded-full hover:bg-gray-800 transition-all hover:pr-10 duration-300"
               >
                 Checkout <IoArrowForward size={14} />
               </Link>
@@ -215,34 +240,45 @@ const PromotionBanner: React.FC<PromotionBannerProps> = ({
           nearbyPromotions.map((promo) => (
             <motion.div
               key={promo.id}
-              initial={{ opacity: 0, scale: 0.95 }}
+              initial={{ opacity: 0, scale: 0.98 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="p-5 bg-gradient-to-r from-yellow-50 to-amber-50 border border-yellow-200 rounded-lg"
+              className="p-6 border border-gray-300 bg-white opacity-80 hover:opacity-100 transition-opacity"
             >
-              <div className="flex items-start gap-4">
-                <div className="p-3 bg-yellow-100 rounded-full text-yellow-600">
+              <div className="flex flex-col md:flex-row items-start gap-6">
+                <div className="p-4 border border-gray-300 text-gray-400">
                   {getIcon(promo.type)}
                 </div>
-                <div className="flex-1">
-                  <h3 className="font-bold text-lg text-yellow-800">
-                    {promo.name}
-                  </h3>
-                  <p className="text-sm text-yellow-700 mt-1">
-                    Add Rs. {promo.remaining?.toLocaleString()} to your cart to
-                    unlock this offer!
+
+                <div className="flex-1 w-full">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="border border-black text-black text-[9px] font-bold px-1.5 py-0.5 uppercase tracking-widest">
+                      Locked
+                    </span>
+                    <h3 className="font-bold text-lg text-gray-800 uppercase tracking-tight">
+                      {promo.name}
+                    </h3>
+                  </div>
+
+                  <p className="text-xs text-black uppercase tracking-wide font-bold mt-2 mb-4">
+                    Add{" "}
+                    <span className="border-b border-black">
+                      Rs. {promo.remaining?.toLocaleString()}
+                    </span>{" "}
+                    to unlock
                   </p>
-                  {/* Progress bar */}
-                  <div className="mt-3">
-                    <div className="flex justify-between text-[10px] text-yellow-600 mb-1">
+
+                  {/* Technical Progress Bar */}
+                  <div className="w-full max-w-md">
+                    <div className="flex justify-between text-[9px] text-gray-500 uppercase tracking-widest mb-1 font-bold">
                       <span>Progress</span>
                       <span>{promo.progress}%</span>
                     </div>
-                    <div className="h-2 bg-yellow-200 rounded-full overflow-hidden">
+                    <div className="h-1.5 bg-gray-100 w-full rounded-none">
                       <motion.div
                         initial={{ width: 0 }}
                         animate={{ width: `${promo.progress}%` }}
                         transition={{ duration: 0.5, ease: "easeOut" }}
-                        className="h-full bg-yellow-500"
+                        className="h-full bg-black"
                       />
                     </div>
                   </div>
