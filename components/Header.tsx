@@ -19,13 +19,31 @@ import SeasonalPromo from "@/app/(site)/components/SeasonalPromo";
 import { getAlgoliaClient } from "@/util";
 import SearchDialog from "@/components/SearchDialog";
 import { ProductVariant } from "@/interfaces/ProductVariant";
+import { NavigationItem } from "@/services/WebsiteService";
 
-const Header = ({ season }: { season: "christmas" | "newYear" | null }) => {
+// Default navigation items as fallback
+const DEFAULT_NAV_ITEMS: NavigationItem[] = [
+  { title: "New Arrivals", link: "/collections/new-arrivals" },
+  { title: "Men", link: "/collections/men" },
+  { title: "Women", link: "/collections/women" },
+  { title: "Combos", link: "/collections/combos" },
+  { title: "Deals", link: "/collections/deals" },
+];
+
+interface HeaderProps {
+  season: "christmas" | "newYear" | null;
+  mainNav?: NavigationItem[];
+}
+
+const Header = ({ season, mainNav = [] }: HeaderProps) => {
   const bagItems = useSelector((state: RootState) => state.bagSlice.bag);
   const user = useSelector((state: RootState) => state.authSlice.user);
   const dispatch: AppDispatch = useDispatch();
   const [scrolled, setScrolled] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+
+  // Use dynamic nav if available, otherwise fallback to defaults
+  const navItems = mainNav.length > 0 ? mainNav : DEFAULT_NAV_ITEMS;
 
   // --- SEARCH LOGIC ---
   const searchClient = getAlgoliaClient();
@@ -104,16 +122,10 @@ const Header = ({ season }: { season: "christmas" | "newYear" | null }) => {
             <ul
               className={`flex gap-8 font-bold uppercase text-sm tracking-wide text-black`}
             >
-              {[
-                { label: "New Arrivals", href: "/collections/new-arrivals" },
-                { label: "Men", href: "/collections/men" },
-                { label: "Women", href: "/collections/women" },
-                { label: "Combos", href: "/collections/combos" },
-                { label: "Deals", href: "/collections/deals" },
-              ].map((item) => (
-                <li key={item.label}>
-                  <Link href={item.href} className="relative group">
-                    {item.label}
+              {navItems.map((item) => (
+                <li key={item.title}>
+                  <Link href={item.link} className="relative group">
+                    {item.title}
                     <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-black transition-all group-hover:w-full"></span>
                   </Link>
                 </li>

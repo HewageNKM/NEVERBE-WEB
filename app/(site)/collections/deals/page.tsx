@@ -1,11 +1,10 @@
 import { getDealsProducts } from "@/services/ProductService";
-import { getActiveCombos } from "@/services/PromotionService";
 import { Product } from "@/interfaces/Product";
 import type { Metadata } from "next";
-import ComboSection from "./components/ComboSection";
 import DealsHeader from "./components/DealsHeader";
 import DealsProducts from "./components/DealsProducts";
 import EmptyState from "@/components/EmptyState";
+import Link from "next/link";
 
 export const revalidate = 3600;
 
@@ -62,16 +61,10 @@ export const metadata: Metadata = {
 
 const Page = async () => {
   let items: { dataList: Product[] } = { dataList: [] };
-  let combos: any[] = [];
 
   try {
-    const [dealsResult, combosResult] = await Promise.all([
-      getDealsProducts(undefined, undefined, 1, 20),
-      getActiveCombos(),
-    ]);
-
+    const dealsResult = await getDealsProducts(undefined, undefined, 1, 20);
     items = dealsResult || { dataList: [] };
-    combos = combosResult || [];
   } catch (e) {
     console.error("Error fetching deal items:", e);
   }
@@ -126,7 +119,29 @@ const Page = async () => {
       <DealsHeader />
 
       <div className="w-full">
-        {combos.length > 0 && <ComboSection combos={combos} />}
+        {/* Link to Combos Page */}
+        <div className="max-w-[1440px] mx-auto px-4 mb-8">
+          <Link
+            href="/collections/combos"
+            className="block bg-gradient-to-r from-black to-gray-800 text-white p-6 hover:from-gray-800 hover:to-black transition-all group"
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">
+                  Bundle & Save
+                </p>
+                <h3 className="text-xl md:text-2xl font-black uppercase tracking-tight">
+                  Shop Combo Deals →
+                </h3>
+              </div>
+              <div className="hidden md:block text-right">
+                <p className="text-sm text-gray-300">
+                  Get more for less with our exclusive combo bundles
+                </p>
+              </div>
+            </div>
+          </Link>
+        </div>
 
         {dealsList.length > 0 ? (
           <DealsProducts items={dealsList} />

@@ -10,14 +10,23 @@ import Footer from "@/components/Footer";
 import Menu from "@/components/Menu";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { NavigationItem, SocialMediaItem } from "@/services/WebsiteService";
+
+interface GlobalProviderProps {
+  children: ReactNode;
+  season: "christmas" | "newYear" | null;
+  mainNav?: NavigationItem[];
+  footerNav?: NavigationItem[];
+  socialLinks?: SocialMediaItem[];
+}
 
 const GlobalProvider = ({
   children,
   season,
-}: {
-  children: ReactNode;
-  season: "christmas" | "newYear" | null;
-}) => {
+  mainNav = [],
+  footerNav = [],
+  socialLinks = [],
+}: GlobalProviderProps) => {
   const dispatch: AppDispatch = useDispatch();
 
   const showBag = useSelector((state: RootState) => state.bagSlice.showBag);
@@ -31,9 +40,9 @@ const GlobalProvider = ({
 
   return (
     <main className="w-full relative flex flex-col justify-between min-h-screen overflow-clip">
-      <Header season={season} />
+      <Header season={season} mainNav={mainNav} />
       {children}
-      <Footer />
+      <Footer footerNav={footerNav} socialLinks={socialLinks} />
       <AnimatePresence>{showBag && <Bag />}</AnimatePresence>
       <AnimatePresence>{showMenu && <Menu />}</AnimatePresence>
       <Analytics />

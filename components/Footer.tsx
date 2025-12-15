@@ -11,8 +11,46 @@ import {
 import Image from "next/image";
 import { Logo } from "@/assets/images";
 import { GoLocation } from "react-icons/go";
+import { NavigationItem, SocialMediaItem } from "@/services/WebsiteService";
+import { IoLogoFacebook, IoLogoInstagram } from "react-icons/io";
+import { IoLogoTiktok, IoLogoYoutube, IoLogoTwitter } from "react-icons/io5";
+import { IconType } from "react-icons";
 
-const Footer = () => {
+// Icon mapping for dynamic social links
+const SOCIAL_ICON_MAP: Record<string, IconType> = {
+  facebook: IoLogoFacebook,
+  instagram: IoLogoInstagram,
+  tiktok: IoLogoTiktok,
+  youtube: IoLogoYoutube,
+  twitter: IoLogoTwitter,
+};
+
+interface FooterProps {
+  footerNav?: NavigationItem[];
+  socialLinks?: SocialMediaItem[];
+}
+
+const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
+  // Use dynamic footer nav if available, otherwise fallback to constants
+  const helpLinks =
+    footerNav.length > 0
+      ? footerNav
+      : informationLinks.map((item) => ({ title: item.title, link: item.url }));
+
+  // Use dynamic social links if available, otherwise fallback to constants
+  const socialLinksToRender =
+    socialLinks.length > 0
+      ? socialLinks.map((item) => ({
+          name: item.name,
+          url: item.url,
+          Icon: SOCIAL_ICON_MAP[item.name.toLowerCase()] || IoLogoFacebook,
+        }))
+      : socialMedia.map((item) => ({
+          name: item.name,
+          url: item.url,
+          Icon: item.icon,
+        }));
+
   return (
     <footer
       id="footer"
@@ -65,10 +103,10 @@ const Footer = () => {
               Get Help
             </h3>
             <ul className="flex flex-col gap-2">
-              {informationLinks.map((link, idx) => (
+              {helpLinks.map((link, idx) => (
                 <li key={idx}>
                   <Link
-                    href={link.url}
+                    href={link.link}
                     className="text-xs text-gray-400 hover:text-white transition-colors font-medium capitalize"
                   >
                     {link.title}
@@ -109,7 +147,7 @@ const Footer = () => {
               Follow Us
             </h3>
             <div className="flex gap-4">
-              {socialMedia.map((media, idx) => (
+              {socialLinksToRender.map((media, idx) => (
                 <Link
                   key={idx}
                   href={media.url}
@@ -118,7 +156,7 @@ const Footer = () => {
                   aria-label={`Follow us on ${media.name}`}
                   className="bg-gray-800 hover:bg-white text-white hover:text-black p-2 rounded-full transition-all duration-300"
                 >
-                  <media.icon size={18} />
+                  <media.Icon size={18} />
                 </Link>
               ))}
             </div>

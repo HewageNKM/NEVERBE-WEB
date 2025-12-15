@@ -44,14 +44,20 @@ export const getPromotions = async (): Promise<Promotion[]> => {
 // ============ NAVIGATION CONFIG ============
 
 export interface NavigationItem {
-  label: string;
-  href: string;
+  title: string;
+  link: string;
   children?: NavigationItem[];
+}
+
+export interface SocialMediaItem {
+  name: string; // e.g., "facebook", "instagram", "tiktok"
+  url: string;
 }
 
 export interface NavigationConfig {
   mainNav: NavigationItem[];
   footerNav: NavigationItem[];
+  socialLinks?: SocialMediaItem[];
 }
 
 const CONFIG_COLLECTION = "site_config";
