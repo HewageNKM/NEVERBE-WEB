@@ -1,6 +1,5 @@
 import { getDealsProducts } from "@/services/ProductService";
 import { getActiveCombos } from "@/services/PromotionService";
-import { seoKeywords } from "@/constants";
 import { Product } from "@/interfaces/Product";
 import type { Metadata } from "next";
 import ComboSection from "./components/ComboSection";
@@ -8,16 +7,57 @@ import DealsHeader from "./components/DealsHeader";
 import DealsProducts from "./components/DealsProducts";
 import EmptyState from "@/components/EmptyState";
 
-// OPTIMIZATION: Cache for 1 hour.
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  // ... existing metadata ...
-  title: {
-    default: "Shoe Sale Sri Lanka | Best Sneaker Deals & Discounts — NEVERBE",
-    template: "%s | NEVERBE",
+  title: "Shoe Sale Sri Lanka | Best Sneaker Deals & Discounts — NEVERBE",
+  description:
+    "Shop the best shoe deals in Sri Lanka. Get up to 50% off on premium sneakers, running shoes, slides, and combo bundles. Limited time offers with island-wide delivery.",
+  keywords: [
+    "shoe sale Sri Lanka",
+    "sneaker deals Colombo",
+    "cheap shoes Sri Lanka",
+    "discount sneakers",
+    "Nike replica Sri Lanka",
+    "Adidas replica Sri Lanka",
+    "Jordan shoes Sri Lanka",
+    "master copy shoes",
+    "7A quality shoes",
+    "online shoe store Sri Lanka",
+    "buy shoes online Sri Lanka",
+    "shoes under 5000 LKR",
+    "clearance shoes",
+    "combo deals shoes",
+    "footwear sale",
+    "NEVERBE deals",
+  ],
+  openGraph: {
+    title: "Shoe Sale Sri Lanka | Best Sneaker Deals — NEVERBE",
+    description:
+      "Shop the best shoe deals in Sri Lanka. Premium sneakers, running shoes & combo bundles at unbeatable prices.",
+    url: "https://neverbe.lk/collections/deals",
+    siteName: "NEVERBE",
+    images: [
+      {
+        url: "https://neverbe.lk/og-deals.jpg",
+        width: 1200,
+        height: 630,
+        alt: "NEVERBE Shoe Deals & Discounts",
+      },
+    ],
+    locale: "en_LK",
+    type: "website",
   },
-  // ...
+  twitter: {
+    card: "summary_large_image",
+    title: "Shoe Sale Sri Lanka | Best Sneaker Deals — NEVERBE",
+    description:
+      "Premium sneakers, running shoes & combo bundles at unbeatable prices. Island-wide delivery.",
+    images: ["https://neverbe.lk/og-deals.jpg"],
+  },
+  alternates: {
+    canonical: "https://neverbe.lk/collections/deals",
+  },
 };
 
 const Page = async () => {
@@ -29,26 +69,15 @@ const Page = async () => {
       getDealsProducts(undefined, undefined, 1, 20),
       getActiveCombos(),
     ]);
-    // The instruction implies an update, but the provided code edit adds a new fetch call.
-    // Assuming the intent is to add this new fetch call, but without `params.id` as it's undefined here.
-    // If `params.id` was intended to be used, the component signature would need to be `Page = async ({ params }: { params: { id: string } }) => { ... }`
-    // For now, adding the fetch call without `params.id` to maintain syntactical correctness.
-    // If the original instruction meant to modify an existing call within `getActiveCombos`, that would require modifying `PromotionService.ts`.
-    // Given the explicit `Code Edit` block, I'm adding the line as shown, but without the undefined `params.id`.
-    // If the user intended to fetch all combos, the URL would be `/api/v1/combos`.
-    // If the user intended to fetch a specific combo, `params.id` would need to be passed to the Page component.
-    // For now, I will add the fetch call to `/api/v1/combos` without `params.id` to avoid a runtime error.
-    // If the user wants to fetch a specific combo, they need to adjust the Page component signature.
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/combos`
-    ); // Modified to remove `params.id` for correctness in this context.
+
+    items = dealsResult || { dataList: [] };
+    combos = combosResult || [];
   } catch (e) {
     console.error("Error fetching deal items:", e);
   }
 
   const dealsList = items?.dataList || [];
 
-  /* ✅ Structured Data: "SaleEvent" helps Google highlight discounts */
   const dealsSchema = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
