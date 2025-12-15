@@ -12,6 +12,7 @@ export interface BagItem {
   size: string;
   quantity: number;
   price: number;
+  bPrice: number; // Buying price for profit calculation
   name: string;
   image: string;
   discount: number;

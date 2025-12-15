@@ -171,7 +171,7 @@ export interface BagItem {
   size: string;
   quantity: number;
   price: number;
-  bPrice?: number;
+  bPrice: number; // Buying price for profit tracking
   name: string;
   image: string;
   thumbnail?: string;

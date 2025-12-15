@@ -85,18 +85,19 @@ const ProductHero = ({ item }: { item: Product }) => {
     if (outOfStocks) return;
 
     const bagItem = {
-      bPrice: item.buyingPrice,
-      discount:
-        Math.round((item.sellingPrice * (item.discount / 100)) / 10) * 10 * qty,
       itemId: item.id,
       variantId: selectedVariant.variantId,
-      name: item.name,
-      variantName: selectedVariant.variantName,
-      thumbnail: selectedVariant.images[0]?.url || item.thumbnail.url,
       size: selectedSize,
       quantity: qty,
-      category: item.category,
       price: item.sellingPrice,
+      bPrice: item.buyingPrice || 0,
+      name: item.name,
+      image: selectedVariant.images[0]?.url || item.thumbnail.url,
+      discount:
+        Math.round((item.sellingPrice * (item.discount / 100)) / 10) * 10 * qty,
+      itemType: "product",
+      maxQuantity: 10,
+      variantName: selectedVariant.variantName,
     };
     dispatch(addToBag(bagItem));
     // Optional: open bag drawer here
