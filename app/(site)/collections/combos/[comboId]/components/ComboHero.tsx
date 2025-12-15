@@ -147,7 +147,7 @@ const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
     setSelections(initialSelections);
   }, [slots]);
 
-  // Check stock for a slot
+  // Check stock for a single size
   const checkStock = async (
     slotId: string,
     productId: string,
@@ -155,6 +155,10 @@ const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
     size: string
   ) => {
     const key = `${slotId}-${variantId}-${size}`;
+
+    // Skip if already loaded
+    if (stockStatus[key] !== undefined) return;
+
     setStockLoading((prev) => ({ ...prev, [key]: true }));
 
     try {
@@ -170,11 +174,54 @@ const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
     }
   };
 
+  // Preload stock for all sizes of a slot's current variant
+  const preloadStockForSlot = async (slot: ComboSlot, variantId: string) => {
+    if (!slot.product) return;
+
+    const variant = slot.product.variants.find(
+      (v) => v.variantId === variantId
+    );
+    if (!variant?.sizes) return;
+
+    // Check stock for all sizes in parallel
+    await Promise.all(
+      variant.sizes.map((size) =>
+        checkStock(slot.slotId, slot.productId, variantId, size)
+      )
+    );
+  };
+
+  // Preload stock when active slot or variant changes
+  useEffect(() => {
+    const slot = slots[activeSlotIndex];
+    const selection = selections[slot?.slotId];
+    if (slot && selection?.variantId) {
+      preloadStockForSlot(slot, selection.variantId);
+    }
+  }, [activeSlotIndex, selections, slots]);
+
+  // Get stock status for a specific size
+  const getStockForSize = (slotId: string, variantId: string, size: string) => {
+    const key = `${slotId}-${variantId}-${size}`;
+    return {
+      quantity: stockStatus[key],
+      loading: stockLoading[key],
+      isOutOfStock: stockStatus[key] !== undefined && stockStatus[key] <= 0,
+    };
+  };
+
   // Handle size selection for a specific slot
   const handleSizeSelect = (slotId: string, size: string) => {
     const selection = selections[slotId];
     const slot = slots.find((s) => s.slotId === slotId);
     if (!selection || !slot) return;
+
+    // Check if size is out of stock
+    const stockInfo = getStockForSize(slotId, selection.variantId, size);
+    if (stockInfo.isOutOfStock) {
+      toast.error(`Size ${size} is out of stock`);
+      return;
+    }
 
     setSelections((prev) => ({
       ...prev,
@@ -184,13 +231,12 @@ const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
         isValid: true,
       },
     }));
-
-    // Check stock
-    checkStock(slotId, slot.productId, selection.variantId, size);
   };
 
   // Handle variant selection for a specific slot
   const handleVariantSelect = (slotId: string, variantId: string) => {
+    const slot = slots.find((s) => s.slotId === slotId);
+
     setSelections((prev) => ({
       ...prev,
       [slotId]: {
@@ -200,6 +246,11 @@ const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
         isValid: false,
       },
     }));
+
+    // Preload stock for new variant
+    if (slot) {
+      preloadStockForSlot(slot, variantId);
+    }
   };
 
   // Check if all required slots have valid selections
@@ -594,23 +645,46 @@ const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
                     Select Size for {activeSlot.label}
                   </label>
                   <div className="grid grid-cols-4 gap-2">
-                    {activeVariant.sizes.map((size) => (
-                      <button
-                        key={size}
-                        onClick={() =>
-                          handleSizeSelect(activeSlot.slotId, size)
-                        }
-                        className={`py-2.5 rounded-md text-sm font-bold border transition-all ${
-                          activeSelection?.size === size
-                            ? activeSlot.isFreeUnit
-                              ? "border-green-500 bg-green-500 text-white"
-                              : "border-black bg-black text-white"
-                            : "border-gray-200 text-black hover:border-black"
-                        }`}
-                      >
-                        {size}
-                      </button>
-                    ))}
+                    {activeVariant.sizes.map((size) => {
+                      const stockInfo = getStockForSize(
+                        activeSlot.slotId,
+                        activeSelection?.variantId || "",
+                        size
+                      );
+                      const isSelected = activeSelection?.size === size;
+                      const isOutOfStock = stockInfo.isOutOfStock;
+                      const isLoading = stockInfo.loading;
+
+                      return (
+                        <button
+                          key={size}
+                          onClick={() =>
+                            handleSizeSelect(activeSlot.slotId, size)
+                          }
+                          disabled={isOutOfStock || isLoading}
+                          className={`py-2.5 rounded-md text-sm font-bold border transition-all relative ${
+                            isSelected
+                              ? activeSlot.isFreeUnit
+                                ? "border-green-500 bg-green-500 text-white"
+                                : "border-black bg-black text-white"
+                              : isOutOfStock
+                              ? "border-gray-100 bg-gray-50 text-gray-300 cursor-not-allowed line-through"
+                              : "border-gray-200 text-black hover:border-black"
+                          }`}
+                        >
+                          {isLoading ? (
+                            <span className="animate-pulse">...</span>
+                          ) : (
+                            size
+                          )}
+                          {isOutOfStock && !isSelected && (
+                            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[8px] px-1 rounded">
+                              ✕
+                            </span>
+                          )}
+                        </button>
+                      );
+                    })}
                   </div>
 
                   {/* Stock Status */}
