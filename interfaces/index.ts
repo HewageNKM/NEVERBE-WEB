@@ -164,5 +164,24 @@ export interface Customer {
   updatedAt: Timestamp | string;
 }
 
-// Re-export BagItem if needed, or define it here if it's missing
-export interface BagItem extends OrderItem {}
+// Re-export BagItem with full properties
+export interface BagItem {
+  itemId: string;
+  variantId: string;
+  size: string;
+  quantity: number;
+  price: number;
+  bPrice?: number;
+  name: string;
+  image: string;
+  thumbnail?: string;
+  discount: number;
+  itemType: string;
+  maxQuantity: number;
+  variantName?: string;
+
+  // Combo-specific properties
+  comboId?: string;
+  comboName?: string;
+  isComboItem?: boolean;
+}

@@ -14,7 +14,8 @@ import {
   calculateTotal,
   calculateTotalDiscount,
 } from "@/util";
-import { PaymentMethod, BagItem } from "@/interfaces";
+import { PaymentMethod } from "@/interfaces";
+import { BagItem } from "@/interfaces/BagItem";
 import PaymentOptions from "./PaymentOptions";
 import Image from "next/image";
 

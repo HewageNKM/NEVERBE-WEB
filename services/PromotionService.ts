@@ -297,6 +297,71 @@ export const getActiveCombosWithProducts = async () => {
 };
 
 /**
+ * Get paginated active combos with product details
+ */
+export const getPaginatedCombos = async (
+  page: number = 1,
+  pageSize: number = 6
+): Promise<{ combos: any[]; total: number; totalPages: number }> => {
+  try {
+    // Get all active combos first (for accurate count)
+    const allCombosSnapshot = await adminFirestore
+      .collection("combo_products")
+      .where("status", "==", "ACTIVE")
+      .get();
+
+    const total = allCombosSnapshot.size;
+    const totalPages = Math.ceil(total / pageSize);
+
+    // Get paginated slice
+    const offset = (page - 1) * pageSize;
+    const paginatedDocs = allCombosSnapshot.docs.slice(
+      offset,
+      offset + pageSize
+    );
+
+    const combos = paginatedDocs.map((doc) =>
+      serializeCombo({ id: doc.id, ...doc.data() })
+    );
+
+    // Populate with product thumbnails
+    const populatedCombos = await Promise.all(
+      combos.map(async (combo: any) => {
+        const firstItem = combo.items?.[0];
+        if (!firstItem) return combo;
+
+        try {
+          const productDoc = await adminFirestore
+            .collection("products")
+            .doc(firstItem.productId)
+            .get();
+
+          if (!productDoc.exists) return combo;
+
+          const productData = productDoc.data();
+          return {
+            ...combo,
+            previewThumbnail:
+              combo.thumbnail?.url || productData?.thumbnail?.url,
+          };
+        } catch {
+          return combo;
+        }
+      })
+    );
+
+    return {
+      combos: populatedCombos,
+      total,
+      totalPages,
+    };
+  } catch (e) {
+    console.error("Error fetching paginated combos", e);
+    return { combos: [], total: 0, totalPages: 0 };
+  }
+};
+
+/**
  * Validate combo items selection for add to cart
  */
 export const validateComboSelection = (
