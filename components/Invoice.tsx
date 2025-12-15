@@ -132,14 +132,70 @@ const Invoice: React.FC<InvoiceProps> = ({
       doc.line(20, yPos, 190, yPos);
 
       // --- Item Table ---
-      const itemData = order.items.map((item) => [
-        item.name,
-        item.size || "-",
-        item.quantity,
-        `Rs. ${item.price.toLocaleString()}`,
-        `Rs. ${(item.discount || 0).toLocaleString()}`,
-        `Rs. ${(item.price * item.quantity).toLocaleString()}`,
-      ]);
+      // Group items: combo items grouped by comboId, regular items separate
+      const comboGroups = new Map<string, typeof order.items>();
+      const regularItems: typeof order.items = [];
+
+      order.items.forEach((item) => {
+        if (item.isComboItem && item.comboId) {
+          if (!comboGroups.has(item.comboId)) {
+            comboGroups.set(item.comboId, []);
+          }
+          comboGroups.get(item.comboId)!.push(item);
+        } else {
+          regularItems.push(item);
+        }
+      });
+
+      // Build table data with combo grouping
+      const itemData: (string | number)[][] = [];
+
+      // Add regular items first
+      regularItems.forEach((item) => {
+        itemData.push([
+          item.name,
+          item.size || "-",
+          item.quantity,
+          `Rs. ${item.price.toLocaleString()}`,
+          `Rs. ${(item.discount || 0).toLocaleString()}`,
+          `Rs. ${(item.price * item.quantity).toLocaleString()}`,
+        ]);
+      });
+
+      // Add combo groups
+      comboGroups.forEach((items, comboId) => {
+        const comboName = items[0]?.comboName || "Combo Bundle";
+        const comboTotal = items.reduce(
+          (sum, i) => sum + i.price * i.quantity,
+          0
+        );
+        const comboDiscount = items.reduce(
+          (sum, i) => sum + (i.discount || 0),
+          0
+        );
+
+        // Add combo header row
+        itemData.push([
+          `[COMBO] ${comboName}`,
+          "",
+          "",
+          "",
+          `- Rs. ${comboDiscount.toLocaleString()}`,
+          "",
+        ]);
+
+        // Add each item in the combo (indented)
+        items.forEach((item) => {
+          itemData.push([
+            `    └ ${item.name}`,
+            item.size || "-",
+            item.quantity,
+            `Rs. ${item.price.toLocaleString()}`,
+            "",
+            `Rs. ${(item.price * item.quantity).toLocaleString()}`,
+          ]);
+        });
+      });
 
       autoTable(doc, {
         startY: yPos + 10,
@@ -148,6 +204,25 @@ const Invoice: React.FC<InvoiceProps> = ({
         theme: "plain",
         headStyles: { fillColor: [0, 0, 0], textColor: 255, fontStyle: "bold" },
         styles: { fontSize: 10, cellPadding: 3 },
+        didParseCell: (data: any) => {
+          // Style combo header rows differently
+          if (
+            data.section === "body" &&
+            data.row.raw &&
+            data.row.raw[0]?.toString().startsWith("[COMBO]")
+          ) {
+            data.cell.styles.fontStyle = "bold";
+            data.cell.styles.fillColor = [245, 245, 245];
+          }
+          // Style combo items (indented) with lighter text
+          if (
+            data.section === "body" &&
+            data.row.raw &&
+            data.row.raw[0]?.toString().startsWith("    └")
+          ) {
+            data.cell.styles.textColor = [80, 80, 80];
+          }
+        },
       });
 
       // --- Totals ---

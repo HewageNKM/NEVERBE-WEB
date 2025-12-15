@@ -112,45 +112,142 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
               Items ({items.length})
             </h3>
             <div className="space-y-4">
-              {items.map((item, idx) => (
-                <div key={idx} className="flex gap-4 py-2">
-                  <div className="w-20 h-20 bg-gray-100 shrink-0 rounded-sm overflow-hidden">
-                    <Image
-                      width={80}
-                      height={80}
-                      src={
-                        item.thumbnail ||
-                        "https://placehold.co/100?text=Product"
-                      }
-                      alt={item.name}
-                      className="w-full h-full object-cover mix-blend-multiply"
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <h4 className="font-medium text-gray-900 line-clamp-2">
-                          {item.name}
-                        </h4>
-                        <p className="text-sm text-gray-500 mt-1">
-                          Size: {item.size}
-                        </p>
-                        <p className="text-sm text-gray-500">
-                          Qty: {item.quantity}
-                        </p>
+              {(() => {
+                // Group items: combo items by comboId, regular items separate
+                const comboGroups = new Map<string, typeof items>();
+                const regularItems: typeof items = [];
+
+                items.forEach((item) => {
+                  if (item.isComboItem && item.comboId) {
+                    if (!comboGroups.has(item.comboId)) {
+                      comboGroups.set(item.comboId, []);
+                    }
+                    comboGroups.get(item.comboId)!.push(item);
+                  } else {
+                    regularItems.push(item);
+                  }
+                });
+
+                return (
+                  <>
+                    {/* Regular Items */}
+                    {regularItems.map((item, idx) => (
+                      <div key={`regular-${idx}`} className="flex gap-4 py-2">
+                        <div className="w-20 h-20 bg-gray-100 shrink-0 rounded-sm overflow-hidden">
+                          <Image
+                            width={80}
+                            height={80}
+                            src={
+                              item.thumbnail ||
+                              "https://placehold.co/100?text=Product"
+                            }
+                            alt={item.name}
+                            className="w-full h-full object-cover mix-blend-multiply"
+                          />
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex justify-between items-start">
+                            <div>
+                              <h4 className="font-medium text-gray-900 line-clamp-2">
+                                {item.name}
+                              </h4>
+                              <p className="text-sm text-gray-500 mt-1">
+                                Size: {item.size}
+                              </p>
+                              <p className="text-sm text-gray-500">
+                                Qty: {item.quantity}
+                              </p>
+                            </div>
+                            <p className="font-medium">
+                              Rs. {item.price.toLocaleString()}
+                            </p>
+                          </div>
+                          {item.discount ? (
+                            <p className="text-right text-xs text-red-600 mt-1">
+                              - Rs. {item.discount.toLocaleString()}
+                            </p>
+                          ) : null}
+                        </div>
                       </div>
-                      <p className="font-medium">
-                        Rs. {item.price.toLocaleString()}
-                      </p>
-                    </div>
-                    {item.discount ? (
-                      <p className="text-right text-xs text-red-600 mt-1">
-                        - Rs. {item.discount.toLocaleString()}
-                      </p>
-                    ) : null}
-                  </div>
-                </div>
-              ))}
+                    ))}
+
+                    {/* Combo Groups */}
+                    {Array.from(comboGroups.entries()).map(
+                      ([comboId, comboItems]) => {
+                        const comboName =
+                          comboItems[0]?.comboName || "Combo Bundle";
+                        const comboDiscount = comboItems.reduce(
+                          (sum, i) => sum + (i.discount || 0),
+                          0
+                        );
+
+                        return (
+                          <div
+                            key={comboId}
+                            className="border border-gray-200 rounded-sm overflow-hidden"
+                          >
+                            {/* Combo Header */}
+                            <div className="bg-gray-50 px-4 py-3 flex items-center justify-between border-b border-gray-200">
+                              <div className="flex items-center gap-2">
+                                <span className="bg-black text-white text-xs font-bold px-2 py-1 rounded-sm uppercase">
+                                  Combo
+                                </span>
+                                <h4 className="font-bold text-gray-900">
+                                  {comboName}
+                                </h4>
+                              </div>
+                              {comboDiscount > 0 && (
+                                <span className="text-red-600 text-sm font-medium">
+                                  - Rs. {comboDiscount.toLocaleString()} saved
+                                </span>
+                              )}
+                            </div>
+
+                            {/* Combo Items */}
+                            <div className="divide-y divide-gray-100">
+                              {comboItems.map((item, idx) => (
+                                <div
+                                  key={`combo-${comboId}-${idx}`}
+                                  className="flex gap-4 p-4"
+                                >
+                                  <div className="w-16 h-16 bg-gray-100 shrink-0 rounded-sm overflow-hidden">
+                                    <Image
+                                      width={64}
+                                      height={64}
+                                      src={
+                                        item.thumbnail ||
+                                        "https://placehold.co/100?text=Product"
+                                      }
+                                      alt={item.name}
+                                      className="w-full h-full object-cover mix-blend-multiply"
+                                    />
+                                  </div>
+                                  <div className="flex-1">
+                                    <div className="flex justify-between items-start">
+                                      <div>
+                                        <h4 className="font-medium text-gray-900 text-sm">
+                                          {item.name}
+                                        </h4>
+                                        <p className="text-xs text-gray-500 mt-1">
+                                          Size: {item.size} • Qty:{" "}
+                                          {item.quantity}
+                                        </p>
+                                      </div>
+                                      <p className="text-sm text-gray-600">
+                                        Rs. {item.price.toLocaleString()}
+                                      </p>
+                                    </div>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        );
+                      }
+                    )}
+                  </>
+                );
+              })()}
             </div>
           </div>
 
