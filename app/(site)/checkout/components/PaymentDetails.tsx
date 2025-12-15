@@ -210,6 +210,7 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
             key={`${item.itemId}-${item.variantId}-${item.size}-${index}`}
             item={item}
             compact
+            showRemove
           />
         ))}
       </div>

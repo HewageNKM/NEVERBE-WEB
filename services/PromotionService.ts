@@ -54,6 +54,28 @@ export const getCouponByCode = async (code: string): Promise<Coupon | null> => {
   }
 };
 
+/**
+ * Helper to check how many times a user used a coupon.
+ * Matches backend implementation for per-user limit validation.
+ */
+const getUserCouponUsageCount = async (
+  couponId: string,
+  userId: string
+): Promise<number> => {
+  try {
+    const snapshot = await adminFirestore
+      .collection(COUPON_USAGE_COLLECTION)
+      .where("couponId", "==", couponId)
+      .where("userId", "==", userId)
+      .count()
+      .get();
+    return snapshot.data().count;
+  } catch (error) {
+    console.error("Error getting coupon usage count:", error);
+    return 0;
+  }
+};
+
 export const validateCoupon = async (
   code: string,
   userId: string | null,
@@ -111,7 +133,19 @@ export const validateCoupon = async (
     }
   }
 
-  // 5. Minimum Order Amount
+  // 5. Per User Limit (check usage history)
+  if (userId && coupon.perUserLimit) {
+    const usageCount = await getUserCouponUsageCount(coupon.id, userId);
+    if (usageCount >= coupon.perUserLimit) {
+      return {
+        valid: false,
+        discount: 0,
+        message: "You have already used this coupon",
+      };
+    }
+  }
+
+  // 6. Minimum Order Amount
   if (coupon.minOrderAmount && cartTotal < coupon.minOrderAmount) {
     return {
       valid: false,

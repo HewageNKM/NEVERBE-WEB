@@ -12,6 +12,7 @@ export interface ActivePromotion {
   name: string;
   description: string;
   type: "COMBO" | "BOGO" | "PERCENTAGE" | "FIXED" | "FREE_SHIPPING";
+  priority?: number; // For priority-based selection (matches backend)
   discountValue?: number;
   minOrderAmount?: number;
   applicableProducts?: string[];
@@ -80,8 +81,8 @@ export const usePromotions = (): UsePromotionsReturn => {
         const data = await res.json();
 
         // Process promotions to check eligibility
-        const processedPromotions: ActivePromotion[] = (data || []).map(
-          (promo: any) => {
+        const processedPromotions: ActivePromotion[] = (data || [])
+          .map((promo: any) => {
             const isEligible = checkEligibility(promo, bagItems, cartTotal);
             const { progress, remaining } = calculateProgress(promo, cartTotal);
 
@@ -90,6 +91,7 @@ export const usePromotions = (): UsePromotionsReturn => {
               name: promo.name,
               description: promo.description,
               type: promo.type,
+              priority: promo.priority || 0, // Include priority for sorting
               discountValue: promo.actions?.[0]?.value,
               minOrderAmount: promo.conditions?.find(
                 (c: any) => c.type === "MIN_AMOUNT"
@@ -104,20 +106,19 @@ export const usePromotions = (): UsePromotionsReturn => {
               progress,
               remaining,
             };
-          }
-        );
+          })
+          // Sort by priority (high to low) to match backend behavior
+          .sort((a: any, b: any) => (b.priority || 0) - (a.priority || 0));
 
         setPromotions(processedPromotions);
 
-        // Auto-apply best eligible promotion
+        // Auto-apply best eligible promotion (highest priority first, matching backend)
         const eligible = processedPromotions.filter(
           (p) => p.isEligible && p.savings && p.savings > 0
         );
         if (eligible.length > 0) {
-          // Find the promotion with highest savings
-          const bestPromo = eligible.reduce((best, curr) =>
-            (curr.savings || 0) > (best.savings || 0) ? curr : best
-          );
+          // Take the first eligible promotion (highest priority due to sorting)
+          const bestPromo = eligible[0];
 
           // Apply if different from current or not applied
           if (bestPromo.id !== appliedPromotionId) {

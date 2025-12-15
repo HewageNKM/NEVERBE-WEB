@@ -1,5 +1,5 @@
 "use client";
-import React, { useMemo } from "react";
+import React, { useMemo, useEffect } from "react";
 import DropShadow from "@/components/DropShadow";
 import { motion } from "framer-motion";
 import {
@@ -9,7 +9,12 @@ import {
 } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
-import { hideBag, removeFromBag } from "@/redux/bagSlice/bagSlice";
+import {
+  hideBag,
+  removeFromBag,
+  removeCoupon,
+  removePromotion,
+} from "@/redux/bagSlice/bagSlice";
 import { useRouter } from "next/navigation";
 import {
   calculateShippingCost,
@@ -220,6 +225,18 @@ const Bag = () => {
   const handleRemove = (item: BagItem) => {
     dispatch(removeFromBag(item));
   };
+
+  // Clear discounts when cart becomes empty
+  useEffect(() => {
+    if (bagItems.length === 0) {
+      if (couponDiscount > 0) {
+        dispatch(removeCoupon());
+      }
+      if (promotionDiscount > 0) {
+        dispatch(removePromotion());
+      }
+    }
+  }, [bagItems.length, couponDiscount, promotionDiscount, dispatch]);
 
   const finalTotal =
     calculateSubTotal(bagItems, 0) - couponDiscount - promotionDiscount;

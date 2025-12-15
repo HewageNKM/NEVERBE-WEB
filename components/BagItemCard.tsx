@@ -9,9 +9,14 @@ import { BagItem } from "@/interfaces/BagItem";
 interface BagItemCardProps {
   item: BagItem;
   compact?: boolean; // For checkout summary
+  showRemove?: boolean; // Show remove button in compact mode
 }
 
-const BagItemCard = ({ item, compact = false }: BagItemCardProps) => {
+const BagItemCard = ({
+  item,
+  compact = false,
+  showRemove = false,
+}: BagItemCardProps) => {
   const dispatch: AppDispatch = useDispatch();
   const totalPrice = item.price * item.quantity;
   const netPrice = totalPrice - item.discount;
@@ -19,7 +24,7 @@ const BagItemCard = ({ item, compact = false }: BagItemCardProps) => {
   if (compact) {
     // Compact version for checkout summary
     return (
-      <div className="flex gap-3 py-2">
+      <div className="flex gap-3 py-2 group">
         <div className="relative w-14 h-14 bg-[#f6f6f6] shrink-0 border border-gray-100">
           <Image
             src={item.image || ""}
@@ -42,6 +47,14 @@ const BagItemCard = ({ item, compact = false }: BagItemCardProps) => {
             <p className="text-[9px] text-gray-400 uppercase mt-0.5">
               {item.comboName}
             </p>
+          )}
+          {showRemove && (
+            <button
+              onClick={() => dispatch(removeFromBag(item))}
+              className="text-[9px] font-bold uppercase tracking-wide text-gray-400 hover:text-red-600 underline transition-colors mt-1"
+            >
+              Remove
+            </button>
           )}
         </div>
         <div className="text-right shrink-0">

@@ -29,6 +29,7 @@ import ComponentLoader from "@/components/ComponentLoader";
 import toast from "react-hot-toast";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { Order, Customer } from "@/interfaces";
+import { auth } from "@/firebase/firebaseClient";
 const formatSriLankanPhoneNumber = (phone: string) => {
   // Remove any non-digit characters
   const cleaned = phone.replace(/\D/g, "");
@@ -73,10 +74,12 @@ const CheckoutForm = () => {
   const couponDiscount = useSelector(
     (state: RootState) => state.bagSlice.couponDiscount
   );
+  const promotionDiscount =
+    useSelector((state: RootState) => state.bagSlice.promotionDiscount) || 0;
   const couponCode = useSelector(
     (state: RootState) => state.bagSlice.couponCode
   );
-  const user = useSelector((state: RootState) => state.authSlice.user);
+  const user = auth?.currentUser;
   const { executeRecaptcha } = useGoogleReCaptcha();
 
   const [paymentType, setPaymentType] = useState<string>("");
@@ -87,7 +90,7 @@ const CheckoutForm = () => {
 
   // Initialize billing customer with user data if available
   const initialCustomerState: Customer = {
-    id: user?.uid || "",
+    id: user?.uid || "", // Firebase user UID
     name: user?.displayName || "",
     email: user?.email || "",
     phone: user?.phoneNumber || "",
@@ -246,10 +249,12 @@ const CheckoutForm = () => {
       // Validate Logic
       const form = e.target as any;
       const newBilling = createCustomerFromForm(form);
-      const userId = user?.id || null; // Ensure User ID is captured if exists
+      const userId = user?.uid || null; // Firebase user UID
 
       const amount = (
-        calculateSubTotal(bagItems, paymentFee) - couponDiscount
+        calculateSubTotal(bagItems, paymentFee) -
+        couponDiscount -
+        promotionDiscount
       ).toFixed(2);
       const fee = calculateFee(paymentFee, bagItems);
 
@@ -289,8 +294,11 @@ const CheckoutForm = () => {
         paymentStatus: "Pending",
         status: "Processing",
         from: "Website",
-        discount: calculateTotalDiscount(bagItems) + couponDiscount,
+        discount:
+          calculateTotalDiscount(bagItems) + couponDiscount + promotionDiscount,
         couponCode: couponCode || undefined,
+        couponDiscount: couponDiscount,
+        promotionDiscount: promotionDiscount,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       };
