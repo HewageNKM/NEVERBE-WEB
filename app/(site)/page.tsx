@@ -4,10 +4,12 @@ import NewArrivals from "@/app/(site)/components/NewArrivals";
 import WhyUs from "@/app/(site)/components/WhyUs";
 import PopularProducts from "@/app/(site)/components/PopularProducts";
 import BrandsSlider from "./components/BrandsSlider";
+import PromotionalAds from "./components/PromotionalAds";
 
 import { getHotProducts, getRecentItems } from "@/services/ProductService";
 import { getSliders } from "@/services/SlideService";
 import { getBrands } from "@/services/OtherService";
+import { getPromotions } from "@/services/WebsiteService";
 import type { Metadata } from "next";
 import SEOContent from "./components/SEOContent";
 import FeaturedCategories from "./components/FeaturedCategory";
@@ -65,9 +67,10 @@ const Page = async () => {
     getSliders().catch((err) => []),
     getHotProducts().catch((err) => []),
     getBrands().catch((err) => []),
+    getPromotions().catch((err) => []),
   ]);
 
-  const [arrivals, sliders, hotItems, brands] = await dataPromise;
+  const [arrivals, sliders, hotItems, brands, promotions] = await dataPromise;
 
   /* STRUCTURED DATA: Organization + ShoeStore + WebSite
      Explicitly set name, legalName, alternateName, and logo to enforce brand text.
@@ -142,6 +145,9 @@ const Page = async () => {
 
       {/* The "Nike-style" Essentials Grid */}
       <FeaturedCategories />
+
+      {/* Promotional Ads from NEVER-PANEL */}
+      <PromotionalAds promotions={promotions} />
 
       <div className="space-y-20 pb-20">
         {hotItems.length > 0 && <PopularProducts hotItems={hotItems} />}
