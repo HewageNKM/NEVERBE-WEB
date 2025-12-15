@@ -20,11 +20,6 @@ const OrdersView: React.FC<OrdersViewProps> = ({ orders }) => {
   };
 
   const handleDownloadInvoice = (order: Order) => {
-    // Redirect to invoice generation or handle download logic
-    // Since invoice page is at /checkout/success/[orderId], we can reuse that for now
-    // Or ideally rework SuccessPage logic to be reusable.
-    // For now, let's just open the success page which has the download button, or we can copy that logic here.
-    // Better approach: Navigate to the success page which acts as the order confirmation/invoice page.
     router.push(`/checkout/success/${order.orderId}`);
   };
 
