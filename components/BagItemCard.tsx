@@ -51,7 +51,14 @@ const BagItemCard = ({ item }: { item: BagItem }) => {
 
           {/* Middle: Variants & Badge */}
           <div className="mt-1">
-            {item.itemType === "COMBO_ITEM" && (
+            {/* Combo Badge */}
+            {item.isComboItem && (
+              <span className="inline-block bg-orange-500 text-white text-[10px] font-bold px-1.5 py-0.5 mb-1 tracking-wider uppercase">
+                {item.comboName || "Bundle Deal"}
+              </span>
+            )}
+            {/* Legacy COMBO_ITEM support */}
+            {!item.isComboItem && item.itemType === "COMBO_ITEM" && (
               <span className="inline-block bg-black text-white text-[10px] font-bold px-1.5 py-0.5 mb-1 tracking-wider uppercase">
                 Bundle Deal
               </span>

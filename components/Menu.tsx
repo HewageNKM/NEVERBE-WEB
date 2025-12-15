@@ -162,6 +162,7 @@ const Menu = () => {
           {[
             { name: "Home", href: "/" },
             { name: "New Arrivals", href: "/collections/products?sort=newest" },
+            { name: "Combos", href: "/collections/combos", highlight: true },
             { name: "Deals", href: "/collections/deals", highlight: true },
           ].map((link) => (
             <Link

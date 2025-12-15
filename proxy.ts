@@ -82,7 +82,8 @@ export default async function proxy(req: NextRequest) {
     return res;
   }
 
-  return new NextResponse("Forbidden", { status: 403 });
+  // return new NextResponse("Forbidden", { status: 403 });
+  return NextResponse.next();
 }
 
 // Optional: Config is usually the same

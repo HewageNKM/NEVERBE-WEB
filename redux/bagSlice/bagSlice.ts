@@ -1,11 +1,13 @@
 import { BagItem } from "@/interfaces/BagItem";
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface BagSlice {
   bag: BagItem[];
   showBag: boolean;
   couponCode: string | null;
   couponDiscount: number;
+  promotionId: string | null;
+  promotionDiscount: number;
 }
 
 const initialState: BagSlice = {
@@ -13,6 +15,8 @@ const initialState: BagSlice = {
   showBag: false,
   couponCode: null,
   couponDiscount: 0,
+  promotionId: null,
+  promotionDiscount: 0,
 };
 
 const bagSlice = createSlice({
@@ -33,6 +37,7 @@ const bagSlice = createSlice({
 
       if (couponCode) state.couponCode = couponCode;
       if (couponDiscount) state.couponDiscount = Number(couponDiscount);
+      // Note: promotions are session-only, not persisted
     },
     applyCoupon(state, action) {
       state.couponCode = action.payload.code;
@@ -48,6 +53,17 @@ const bagSlice = createSlice({
       state.couponDiscount = 0;
       window.localStorage.removeItem("NEVERBECouponCode");
       window.localStorage.removeItem("NEVERBEDiscount");
+    },
+    applyPromotion(
+      state,
+      action: PayloadAction<{ id: string; discount: number }>
+    ) {
+      state.promotionId = action.payload.id;
+      state.promotionDiscount = action.payload.discount;
+    },
+    removePromotion(state) {
+      state.promotionId = null;
+      state.promotionDiscount = 0;
     },
 
     addToBag(state, action) {
@@ -125,6 +141,12 @@ const bagSlice = createSlice({
       state.bag = [];
       window.localStorage.setItem("NEVERBEBag", JSON.stringify([]));
     },
+    // Remove all items from a specific combo
+    removeComboFromBag(state, action: PayloadAction<string>) {
+      const comboId = action.payload;
+      state.bag = state.bag.filter((item) => item.comboId !== comboId);
+      window.localStorage.setItem("NEVERBEBag", JSON.stringify(state.bag));
+    },
   },
 });
 
@@ -138,6 +160,9 @@ export const {
   hideBag,
   applyCoupon,
   removeCoupon,
+  applyPromotion,
+  removePromotion,
   addMultipleToBag,
+  removeComboFromBag,
 } = bagSlice.actions;
 export default bagSlice.reducer;

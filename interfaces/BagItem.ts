@@ -17,4 +17,10 @@ export interface BagItem {
   discount: number;
   itemType: string;
   maxQuantity: number;
+  variantName?: string;
+
+  // Combo-specific properties
+  comboId?: string;
+  comboName?: string;
+  isComboItem?: boolean;
 }

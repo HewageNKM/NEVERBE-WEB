@@ -104,15 +104,16 @@ const Header = ({ season }: { season: "christmas" | "newYear" | null }) => {
             <ul
               className={`flex gap-8 font-bold uppercase text-sm tracking-wide text-black`}
             >
-              {["New Arrivals", "Men", "Women", "Deals"].map((item) => (
-                <li key={item}>
-                  <Link
-                    href={`/collections/${item
-                      .toLowerCase()
-                      .replace(" ", "-")}`}
-                    className="relative group"
-                  >
-                    {item}
+              {[
+                { label: "New Arrivals", href: "/collections/new-arrivals" },
+                { label: "Men", href: "/collections/men" },
+                { label: "Women", href: "/collections/women" },
+                { label: "Combos", href: "/collections/combos" },
+                { label: "Deals", href: "/collections/deals" },
+              ].map((item) => (
+                <li key={item.label}>
+                  <Link href={item.href} className="relative group">
+                    {item.label}
                     <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-black transition-all group-hover:w-full"></span>
                   </Link>
                 </li>

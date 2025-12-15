@@ -128,14 +128,18 @@ export interface Order {
   items: OrderItem[];
   paymentStatus: string;
   paymentMethod: string;
+  paymentMethodId?: string;
   customer: Customer;
   status: string;
   discount: number;
   fee?: number;
   shippingFee?: number;
+  transactionFeeCharge?: number;
+  total?: number;
   from: string;
+  userId?: string;
 
-  couponCode?: string; // Added optional property
+  couponCode?: string;
 
   createdAt: Timestamp | string;
   updatedAt: Timestamp | string;

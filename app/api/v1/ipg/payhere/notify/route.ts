@@ -68,14 +68,26 @@ export const POST = async (req: Request) => {
     if (status_code === "2") {
       console.log("✅ Payment successful for order:", order_id);
       await updatePayment(order_id, payment_id, "Paid");
-      return NextResponse.json({ message: "Payment Successful" }, { status: 200 });
+      return NextResponse.json(
+        { message: "Payment Successful" },
+        { status: 200 }
+      );
     } else {
-      console.warn("❌ Payment failed for order:", order_id, "Status code:", status_code);
+      console.warn(
+        "❌ Payment failed for order:",
+        order_id,
+        "Status code:",
+        status_code
+      );
       await updatePayment(order_id, payment_id, "Failed");
       return NextResponse.json({ message: "Payment Failed" }, { status: 400 });
     }
   } catch (err: any) {
-    console.error("[PayHere Notify API] Error processing notification:", err.message, err.stack);
+    console.error(
+      "[PayHere Notify API] Error processing notification:",
+      err.message,
+      err.stack
+    );
     return NextResponse.json(
       { message: "Error processing payment", error: err.message },
       { status: 500 }
