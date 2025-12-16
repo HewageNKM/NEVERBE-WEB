@@ -301,6 +301,32 @@ const ProductHero = ({ item }: { item: Product }) => {
             )}
           </div>
 
+          {/* Quantity Selector */}
+          <div>
+            <span className="text-sm font-bold uppercase block mb-2">
+              Quantity
+            </span>
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => setQty((prev) => Math.max(1, prev - 1))}
+                disabled={qty <= 1}
+                className="w-10 h-10 flex items-center justify-center border border-gray-200 rounded-md text-lg font-bold hover:border-black transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                <IoRemove size={18} />
+              </button>
+              <span className="text-lg font-bold w-8 text-center">{qty}</span>
+              <button
+                onClick={() =>
+                  setQty((prev) => Math.min(availableStock || 10, prev + 1))
+                }
+                disabled={qty >= (availableStock || 10)}
+                className="w-10 h-10 flex items-center justify-center border border-gray-200 rounded-md text-lg font-bold hover:border-black transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                <IoAdd size={18} />
+              </button>
+            </div>
+          </div>
+
           {/* Actions */}
           <div className="space-y-3 pt-4 border-t border-gray-100">
             <button

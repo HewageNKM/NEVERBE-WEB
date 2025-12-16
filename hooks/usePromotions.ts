@@ -90,7 +90,11 @@ export const usePromotions = (): UsePromotionsReturn => {
         const processedPromotions: ActivePromotion[] = (data || [])
           .map((promo: any) => {
             const isEligible = checkEligibility(promo, bagItems, cartTotal);
-            const { progress, remaining } = calculateProgress(promo, cartTotal);
+            const { progress, remaining } = calculateProgress(
+              promo,
+              cartTotal,
+              bagItems
+            );
 
             return {
               id: promo.id,
@@ -224,17 +228,39 @@ export const usePromotions = (): UsePromotionsReturn => {
     // Check conditions
     if (!promo.conditions || promo.conditions.length === 0) return true;
 
+    // Collect all SPECIFIC_PRODUCT values into one array for easier checking
+    const specificProductIds: string[] = [];
+    promo.conditions.forEach((condition: any) => {
+      if (condition.type === "SPECIFIC_PRODUCT") {
+        if (condition.value) specificProductIds.push(condition.value);
+        if (condition.productIds)
+          specificProductIds.push(...condition.productIds);
+      }
+    });
+
     return promo.conditions.every((condition: any) => {
       switch (condition.type) {
         case "MIN_AMOUNT":
-          return total >= condition.value;
+          return total >= Number(condition.value);
         case "MIN_QUANTITY":
-          const totalQty = items.reduce((sum, item) => sum + item.quantity, 0);
-          return totalQty >= condition.value;
-        case "SPECIFIC_PRODUCT":
-          return items.some((item) =>
-            condition.productIds?.includes(item.itemId)
+          // If there are specific products, count only those
+          const applicableItems =
+            specificProductIds.length > 0
+              ? items.filter((item) => specificProductIds.includes(item.itemId))
+              : items;
+          const totalQty = applicableItems.reduce(
+            (sum, item) => sum + item.quantity,
+            0
           );
+          return totalQty >= Number(condition.value);
+        case "SPECIFIC_PRODUCT":
+          // Check if any cart item matches any of the collected specific product IDs
+          if (specificProductIds.length > 0) {
+            return items.some((item) =>
+              specificProductIds.includes(item.itemId)
+            );
+          }
+          return true;
         case "CATEGORY":
           return items.some(
             (item) =>
@@ -254,11 +280,55 @@ export const usePromotions = (): UsePromotionsReturn => {
     });
   };
 
-  // Calculate progress towards min amount
+  // Calculate progress towards promotion conditions
   const calculateProgress = (
     promo: any,
-    total: number
+    total: number,
+    items: BagItem[]
   ): { progress: number; remaining: number } => {
+    // Build list of applicable product IDs from SPECIFIC_PRODUCT conditions
+    const applicableProductIds: string[] = [];
+    if (promo.conditions && promo.conditions.length > 0) {
+      promo.conditions.forEach((condition: any) => {
+        if (condition.type === "SPECIFIC_PRODUCT") {
+          if (condition.value) applicableProductIds.push(condition.value);
+          if (condition.productIds)
+            applicableProductIds.push(...condition.productIds);
+        }
+      });
+    }
+
+    // If promotion has specific products, check if cart has any
+    if (applicableProductIds.length > 0) {
+      const applicableItems = items.filter((item) =>
+        applicableProductIds.includes(item.itemId)
+      );
+
+      // No applicable products in cart - no progress
+      if (applicableItems.length === 0) {
+        return { progress: 0, remaining: 0 };
+      }
+
+      // Check MIN_QUANTITY for applicable items
+      const minQtyCondition = promo.conditions?.find(
+        (c: any) => c.type === "MIN_QUANTITY"
+      );
+      if (minQtyCondition) {
+        const requiredQty = Number(minQtyCondition.value);
+        const applicableQty = applicableItems.reduce(
+          (sum, item) => sum + item.quantity,
+          0
+        );
+        const progress = Math.min(
+          Math.round((applicableQty / requiredQty) * 100),
+          100
+        );
+        const remaining = Math.max(requiredQty - applicableQty, 0);
+        return { progress, remaining };
+      }
+    }
+
+    // Fallback to MIN_AMOUNT check
     const minAmount = promo.conditions?.find(
       (c: any) => c.type === "MIN_AMOUNT"
     )?.value;
@@ -280,13 +350,34 @@ export const usePromotions = (): UsePromotionsReturn => {
     const action = promo.actions?.[0];
     if (!action) return 0;
 
-    // Calculate applicable total (respecting targeting and exclusions)
+    // Build list of applicable product IDs from multiple sources:
+    // 1. promo.applicableProducts (direct targeting)
+    // 2. SPECIFIC_PRODUCT conditions (condition-based targeting)
+    const applicableProductIds: string[] = [];
+
+    // Add from applicableProducts field
+    if (promo.applicableProducts && promo.applicableProducts.length > 0) {
+      applicableProductIds.push(...promo.applicableProducts);
+    }
+
+    // Add from SPECIFIC_PRODUCT conditions
+    if (promo.conditions && promo.conditions.length > 0) {
+      promo.conditions.forEach((condition: any) => {
+        if (condition.type === "SPECIFIC_PRODUCT") {
+          if (condition.value) applicableProductIds.push(condition.value);
+          if (condition.productIds)
+            applicableProductIds.push(...condition.productIds);
+        }
+      });
+    }
+
+    // Calculate applicable total
     let applicableTotal = total;
 
-    // If applicable products specified, only count those
-    if (promo.applicableProducts && promo.applicableProducts.length > 0) {
+    // If we have specific products, only count those
+    if (applicableProductIds.length > 0) {
       applicableTotal = items
-        .filter((item) => promo.applicableProducts.includes(item.itemId))
+        .filter((item) => applicableProductIds.includes(item.itemId))
         .reduce((sum, item) => sum + item.price * item.quantity, 0);
     }
 
@@ -322,9 +413,13 @@ export const usePromotions = (): UsePromotionsReturn => {
         }
         return 0;
       case "BOGO":
-        // Buy One Get One - calculate the value of the cheapest item
-        if (items.length >= 2) {
-          const sortedPrices = items
+        // Buy One Get One - calculate the value of the cheapest applicable item
+        const applicableItems =
+          applicableProductIds.length > 0
+            ? items.filter((item) => applicableProductIds.includes(item.itemId))
+            : items;
+        if (applicableItems.length >= 2) {
+          const sortedPrices = applicableItems
             .map((item) => item.price)
             .sort((a, b) => a - b);
           return sortedPrices[0]; // Cheapest item is free
