@@ -7,6 +7,13 @@ import { applyPromotions, removePromotion } from "@/redux/bagSlice/bagSlice";
 import { BagItem } from "@/interfaces/BagItem";
 import { calculateTotal, calculateTotalDiscount } from "@/util";
 
+// Interface for product variant targeting
+interface ProductVariantTarget {
+  productId: string;
+  variantMode: "ALL_VARIANTS" | "SPECIFIC_VARIANTS";
+  variantIds?: string[];
+}
+
 export interface ActivePromotion {
   id: string;
   name: string;
@@ -17,12 +24,15 @@ export interface ActivePromotion {
   discountValue?: number;
   minOrderAmount?: number;
   applicableProducts?: string[];
+  applicableProductVariants?: ProductVariantTarget[]; // Variant-level targeting
   applicableCategories?: string[];
   applicableBrands?: string[];
   excludedProducts?: string[];
   message: string;
   savings?: number;
   isEligible: boolean;
+  isRestricted?: boolean; // Eligible by conditions but restricted by targeting
+  restrictionReason?: string; // Why it's restricted
   progress?: number; // 0-100 for min amount progress
   remaining?: number; // Amount remaining to qualify
   isFreeShipping?: boolean; // Flag for free shipping promotions
@@ -32,6 +42,7 @@ interface UsePromotionsReturn {
   activePromotions: ActivePromotion[];
   eligiblePromotions: ActivePromotion[];
   nearbyPromotions: ActivePromotion[];
+  restrictedPromotions: ActivePromotion[]; // Promotions restricted by targeting
   isLoading: boolean;
   hasComboItems: boolean;
   isBlocked: boolean;
@@ -89,7 +100,11 @@ export const usePromotions = (): UsePromotionsReturn => {
         // Process promotions to check eligibility
         const processedPromotions: ActivePromotion[] = (data || [])
           .map((promo: any) => {
-            const isEligible = checkEligibility(promo, bagItems, cartTotal);
+            const eligibilityResult = checkEligibility(
+              promo,
+              bagItems,
+              cartTotal
+            );
             const { progress, remaining } = calculateProgress(
               promo,
               cartTotal,
@@ -108,14 +123,17 @@ export const usePromotions = (): UsePromotionsReturn => {
                 (c: any) => c.type === "MIN_AMOUNT"
               )?.value,
               applicableProducts: promo.applicableProducts,
+              applicableProductVariants: promo.applicableProductVariants, // Include variant targeting
               applicableCategories: promo.applicableCategories,
               applicableBrands: promo.applicableBrands,
               excludedProducts: promo.excludedProducts,
-              message: getPromoMessage(promo, isEligible),
-              savings: isEligible
+              message: getPromoMessage(promo, eligibilityResult.eligible),
+              savings: eligibilityResult.eligible
                 ? calculateSavings(promo, cartTotal, bagItems)
                 : undefined,
-              isEligible,
+              isEligible: eligibilityResult.eligible,
+              isRestricted: eligibilityResult.restricted,
+              restrictionReason: eligibilityResult.reason,
               progress,
               remaining,
               isFreeShipping:
@@ -172,21 +190,90 @@ export const usePromotions = (): UsePromotionsReturn => {
     }
   }, [bagItems, cartTotal, hasComboItems, dispatch]);
 
+  // Helper: Check if cart items are eligible based on variant-level targeting
+  const checkVariantEligibility = (
+    items: BagItem[],
+    targets: ProductVariantTarget[]
+  ): boolean => {
+    if (!targets || targets.length === 0) return true;
+
+    for (const target of targets) {
+      const matchingCartItems = items.filter(
+        (item) => item.itemId === target.productId
+      );
+
+      if (matchingCartItems.length === 0) continue;
+
+      if (target.variantMode === "ALL_VARIANTS") return true;
+
+      if (target.variantMode === "SPECIFIC_VARIANTS" && target.variantIds) {
+        const hasMatchingVariant = matchingCartItems.some(
+          (item) =>
+            item.variantId && target.variantIds!.includes(item.variantId)
+        );
+        if (hasMatchingVariant) return true;
+      }
+    }
+    return false;
+  };
+
+  // Helper: Get cart items that match variant-level targeting (for discount calculation)
+  const getEligibleCartItems = (
+    items: BagItem[],
+    targets: ProductVariantTarget[]
+  ): BagItem[] => {
+    if (!targets || targets.length === 0) return items;
+
+    return items.filter((item) => {
+      for (const target of targets) {
+        if (item.itemId !== target.productId) continue;
+
+        if (target.variantMode === "ALL_VARIANTS") return true;
+
+        if (target.variantMode === "SPECIFIC_VARIANTS" && target.variantIds) {
+          return item.variantId && target.variantIds.includes(item.variantId);
+        }
+      }
+      return false;
+    });
+  };
+
   // Check if cart meets promotion conditions
+  // Returns: { eligible: boolean, restricted: boolean, reason?: string }
   const checkEligibility = (
     promo: any,
     items: BagItem[],
     total: number
-  ): boolean => {
+  ): { eligible: boolean; restricted: boolean; reason?: string } => {
     // First check date validity
     const now = new Date();
     if (promo.startDate) {
       const startDate = new Date(promo.startDate);
-      if (now < startDate) return false;
+      if (now < startDate)
+        return { eligible: false, restricted: false, reason: "Not yet active" };
     }
     if (promo.endDate) {
       const endDate = new Date(promo.endDate);
-      if (now > endDate) return false;
+      if (now > endDate)
+        return { eligible: false, restricted: false, reason: "Expired" };
+    }
+
+    // Check variant-level targeting FIRST (this is the fix)
+    if (
+      promo.applicableProductVariants &&
+      promo.applicableProductVariants.length > 0
+    ) {
+      const variantEligible = checkVariantEligibility(
+        items,
+        promo.applicableProductVariants
+      );
+      if (!variantEligible) {
+        return {
+          eligible: false,
+          restricted: true,
+          reason: "Requires specific product variants not in your cart",
+        };
+      }
     }
 
     // Check applicable products targeting (if any cart item matches)
@@ -194,7 +281,13 @@ export const usePromotions = (): UsePromotionsReturn => {
       const hasApplicableProduct = items.some((item) =>
         promo.applicableProducts.includes(item.itemId)
       );
-      if (!hasApplicableProduct) return false;
+      if (!hasApplicableProduct) {
+        return {
+          eligible: false,
+          restricted: true,
+          reason: "Requires specific products not in your cart",
+        };
+      }
     }
 
     // Check applicable categories targeting
@@ -204,7 +297,13 @@ export const usePromotions = (): UsePromotionsReturn => {
           (item as any).category &&
           promo.applicableCategories.includes((item as any).category)
       );
-      if (!hasApplicableCategory) return false;
+      if (!hasApplicableCategory) {
+        return {
+          eligible: false,
+          restricted: true,
+          reason: "Requires products from specific categories",
+        };
+      }
     }
 
     // Check applicable brands targeting
@@ -214,7 +313,13 @@ export const usePromotions = (): UsePromotionsReturn => {
           (item as any).brand &&
           promo.applicableBrands.includes((item as any).brand)
       );
-      if (!hasApplicableBrand) return false;
+      if (!hasApplicableBrand) {
+        return {
+          eligible: false,
+          restricted: true,
+          reason: "Requires products from specific brands",
+        };
+      }
     }
 
     // Check excluded products (if ALL items are excluded, promo doesn't apply)
@@ -222,11 +327,19 @@ export const usePromotions = (): UsePromotionsReturn => {
       const allExcluded = items.every((item) =>
         promo.excludedProducts.includes(item.itemId)
       );
-      if (allExcluded) return false;
+      if (allExcluded) {
+        return {
+          eligible: false,
+          restricted: true,
+          reason: "All cart items are excluded from this promotion",
+        };
+      }
     }
 
     // Check conditions
-    if (!promo.conditions || promo.conditions.length === 0) return true;
+    if (!promo.conditions || promo.conditions.length === 0) {
+      return { eligible: true, restricted: false };
+    }
 
     // Collect all SPECIFIC_PRODUCT values into one array for easier checking
     const specificProductIds: string[] = [];
@@ -238,7 +351,7 @@ export const usePromotions = (): UsePromotionsReturn => {
       }
     });
 
-    return promo.conditions.every((condition: any) => {
+    const conditionsMet = promo.conditions.every((condition: any) => {
       switch (condition.type) {
         case "MIN_AMOUNT":
           return total >= Number(condition.value);
@@ -254,6 +367,18 @@ export const usePromotions = (): UsePromotionsReturn => {
           );
           return totalQty >= Number(condition.value);
         case "SPECIFIC_PRODUCT":
+          // Check variant restrictions within the condition
+          if (
+            condition.variantMode === "SPECIFIC_VARIANTS" &&
+            condition.variantIds
+          ) {
+            return items.some(
+              (item) =>
+                specificProductIds.includes(item.itemId) &&
+                item.variantId &&
+                condition.variantIds.includes(item.variantId)
+            );
+          }
           // Check if any cart item matches any of the collected specific product IDs
           if (specificProductIds.length > 0) {
             return items.some((item) =>
@@ -278,6 +403,8 @@ export const usePromotions = (): UsePromotionsReturn => {
           return true;
       }
     });
+
+    return { eligible: conditionsMet, restricted: false };
   };
 
   // Calculate progress towards promotion conditions
@@ -350,6 +477,25 @@ export const usePromotions = (): UsePromotionsReturn => {
     const action = promo.actions?.[0];
     if (!action) return 0;
 
+    // PRIORITY 1: Variant-level targeting (most specific)
+    if (
+      promo.applicableProductVariants &&
+      promo.applicableProductVariants.length > 0
+    ) {
+      const eligibleItems = getEligibleCartItems(
+        items,
+        promo.applicableProductVariants
+      );
+      const eligibleTotal = eligibleItems.reduce(
+        (sum, item) => sum + item.price * item.quantity,
+        0
+      );
+
+      // Apply discount only to eligible items
+      return calculateDiscountAmount(action, eligibleTotal, eligibleItems);
+    }
+
+    // PRIORITY 2: Product-level targeting
     // Build list of applicable product IDs from multiple sources:
     // 1. promo.applicableProducts (direct targeting)
     // 2. SPECIFIC_PRODUCT conditions (condition-based targeting)
@@ -373,22 +519,39 @@ export const usePromotions = (): UsePromotionsReturn => {
 
     // Calculate applicable total
     let applicableTotal = total;
+    let eligibleItems = items;
 
     // If we have specific products, only count those
     if (applicableProductIds.length > 0) {
-      applicableTotal = items
-        .filter((item) => applicableProductIds.includes(item.itemId))
-        .reduce((sum, item) => sum + item.price * item.quantity, 0);
+      eligibleItems = items.filter((item) =>
+        applicableProductIds.includes(item.itemId)
+      );
+      applicableTotal = eligibleItems.reduce(
+        (sum, item) => sum + item.price * item.quantity,
+        0
+      );
     }
 
     // Exclude excluded products from calculation
     if (promo.excludedProducts && promo.excludedProducts.length > 0) {
-      const excludedTotal = items
-        .filter((item) => promo.excludedProducts.includes(item.itemId))
-        .reduce((sum, item) => sum + item.price * item.quantity, 0);
-      applicableTotal = Math.max(0, applicableTotal - excludedTotal);
+      eligibleItems = eligibleItems.filter(
+        (item) => !promo.excludedProducts.includes(item.itemId)
+      );
+      applicableTotal = eligibleItems.reduce(
+        (sum, item) => sum + item.price * item.quantity,
+        0
+      );
     }
 
+    return calculateDiscountAmount(action, applicableTotal, eligibleItems);
+  };
+
+  // Helper: Calculate discount amount based on action type
+  const calculateDiscountAmount = (
+    action: any,
+    applicableTotal: number,
+    eligibleItems: BagItem[]
+  ): number => {
     switch (action.type) {
       case "PERCENTAGE_OFF":
         let discount = (applicableTotal * action.value) / 100;
@@ -404,8 +567,8 @@ export const usePromotions = (): UsePromotionsReturn => {
       case "FREE_ITEM":
         // Return the price of the free item if specified
         if (action.freeProductId) {
-          const freeItem = items.find(
-            (item) => item.itemId === action.freeProductId
+          const freeItem = eligibleItems.find(
+            (item: BagItem) => item.itemId === action.freeProductId
           );
           if (freeItem) {
             return freeItem.price;
@@ -413,15 +576,11 @@ export const usePromotions = (): UsePromotionsReturn => {
         }
         return 0;
       case "BOGO":
-        // Buy One Get One - calculate the value of the cheapest applicable item
-        const applicableItems =
-          applicableProductIds.length > 0
-            ? items.filter((item) => applicableProductIds.includes(item.itemId))
-            : items;
-        if (applicableItems.length >= 2) {
-          const sortedPrices = applicableItems
-            .map((item) => item.price)
-            .sort((a, b) => a - b);
+        // Buy One Get One - calculate the value of the cheapest eligible item
+        if (eligibleItems.length >= 2) {
+          const sortedPrices = eligibleItems
+            .map((item: BagItem) => item.price)
+            .sort((a: number, b: number) => a - b);
           return sortedPrices[0]; // Cheapest item is free
         }
         return 0;
@@ -479,7 +638,11 @@ export const usePromotions = (): UsePromotionsReturn => {
   // Split promotions by eligibility
   const eligiblePromotions = promotions.filter((p) => p.isEligible);
   const nearbyPromotions = promotions.filter(
-    (p) => !p.isEligible && (p.progress || 0) >= 50
+    (p) => !p.isEligible && !p.isRestricted && (p.progress || 0) >= 50
+  );
+  // Promotions that user could qualify for if they had the right items
+  const restrictedPromotions = promotions.filter(
+    (p) => !p.isEligible && p.isRestricted
   );
 
   // Get applied promotions from Redux state
@@ -506,6 +669,7 @@ export const usePromotions = (): UsePromotionsReturn => {
     activePromotions: promotions,
     eligiblePromotions,
     nearbyPromotions,
+    restrictedPromotions,
     isLoading,
     hasComboItems,
     isBlocked,

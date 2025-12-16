@@ -27,6 +27,7 @@ const PromotionBanner: React.FC<PromotionBannerProps> = ({
   const {
     eligiblePromotions,
     nearbyPromotions,
+    restrictedPromotions,
     isLoading,
     hasComboItems,
     isBlocked,
@@ -61,7 +62,8 @@ const PromotionBanner: React.FC<PromotionBannerProps> = ({
   const bestPromo = eligiblePromotions[0];
   const nearestPromo = nearbyPromotions[0];
 
-  if (!bestPromo && !nearestPromo) return null;
+  if (!bestPromo && !nearestPromo && restrictedPromotions.length === 0)
+    return null;
 
   const getIcon = (type: ActivePromotion["type"]) => {
     switch (type) {
@@ -173,6 +175,43 @@ const PromotionBanner: React.FC<PromotionBannerProps> = ({
                 transition={{ duration: 0.5, ease: "easeOut" }}
                 className="h-full bg-black"
               />
+            </div>
+          </motion.div>
+        )}
+
+        {/* Restricted promotions (user can see but cannot apply) */}
+        {restrictedPromotions.length > 0 && !bestPromo && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="p-4 border border-dashed border-gray-300 bg-gray-50/50"
+          >
+            <div className="flex items-start gap-3">
+              <IoLockClosedOutline
+                className="text-gray-400 shrink-0 mt-0.5"
+                size={16}
+              />
+              <div className="flex-1">
+                <p className="text-xs font-bold text-gray-600 uppercase tracking-wider">
+                  Available Offers
+                </p>
+                <div className="mt-2 space-y-2">
+                  {restrictedPromotions.slice(0, 2).map((promo) => (
+                    <div key={promo.id} className="flex items-start gap-2">
+                      <div className="w-1.5 h-1.5 bg-gray-400 rounded-full mt-1.5 shrink-0" />
+                      <div>
+                        <p className="text-[10px] font-bold text-gray-700 uppercase tracking-wide">
+                          {promo.name}
+                        </p>
+                        <p className="text-[9px] text-gray-500 mt-0.5">
+                          {promo.restrictionReason ||
+                            "Add eligible items to unlock"}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </motion.div>
         )}
