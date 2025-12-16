@@ -20,6 +20,10 @@ export interface BagItem {
   maxQuantity: number;
   variantName?: string;
 
+  // Product targeting fields for promotions
+  category?: string;
+  brand?: string;
+
   // Combo-specific properties
   comboId?: string;
   comboName?: string;

@@ -98,6 +98,8 @@ const ProductHero = ({ item }: { item: Product }) => {
       itemType: "product",
       maxQuantity: 10,
       variantName: selectedVariant.variantName,
+      category: item.category || "",
+      brand: item.brand || "",
     };
     dispatch(addToBag(bagItem));
     // Optional: open bag drawer here

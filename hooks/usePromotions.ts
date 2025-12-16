@@ -18,11 +18,14 @@ export interface ActivePromotion {
   minOrderAmount?: number;
   applicableProducts?: string[];
   applicableCategories?: string[];
+  applicableBrands?: string[];
+  excludedProducts?: string[];
   message: string;
   savings?: number;
   isEligible: boolean;
   progress?: number; // 0-100 for min amount progress
   remaining?: number; // Amount remaining to qualify
+  isFreeShipping?: boolean; // Flag for free shipping promotions
 }
 
 interface UsePromotionsReturn {
@@ -102,6 +105,8 @@ export const usePromotions = (): UsePromotionsReturn => {
               )?.value,
               applicableProducts: promo.applicableProducts,
               applicableCategories: promo.applicableCategories,
+              applicableBrands: promo.applicableBrands,
+              excludedProducts: promo.excludedProducts,
               message: getPromoMessage(promo, isEligible),
               savings: isEligible
                 ? calculateSavings(promo, cartTotal, bagItems)
@@ -109,6 +114,9 @@ export const usePromotions = (): UsePromotionsReturn => {
               isEligible,
               progress,
               remaining,
+              isFreeShipping:
+                promo.type === "FREE_SHIPPING" ||
+                promo.actions?.[0]?.type === "FREE_SHIPPING",
             };
           })
           // Sort by priority (high to low) to match backend behavior
@@ -166,6 +174,54 @@ export const usePromotions = (): UsePromotionsReturn => {
     items: BagItem[],
     total: number
   ): boolean => {
+    // First check date validity
+    const now = new Date();
+    if (promo.startDate) {
+      const startDate = new Date(promo.startDate);
+      if (now < startDate) return false;
+    }
+    if (promo.endDate) {
+      const endDate = new Date(promo.endDate);
+      if (now > endDate) return false;
+    }
+
+    // Check applicable products targeting (if any cart item matches)
+    if (promo.applicableProducts && promo.applicableProducts.length > 0) {
+      const hasApplicableProduct = items.some((item) =>
+        promo.applicableProducts.includes(item.itemId)
+      );
+      if (!hasApplicableProduct) return false;
+    }
+
+    // Check applicable categories targeting
+    if (promo.applicableCategories && promo.applicableCategories.length > 0) {
+      const hasApplicableCategory = items.some(
+        (item) =>
+          (item as any).category &&
+          promo.applicableCategories.includes((item as any).category)
+      );
+      if (!hasApplicableCategory) return false;
+    }
+
+    // Check applicable brands targeting
+    if (promo.applicableBrands && promo.applicableBrands.length > 0) {
+      const hasApplicableBrand = items.some(
+        (item) =>
+          (item as any).brand &&
+          promo.applicableBrands.includes((item as any).brand)
+      );
+      if (!hasApplicableBrand) return false;
+    }
+
+    // Check excluded products (if ALL items are excluded, promo doesn't apply)
+    if (promo.excludedProducts && promo.excludedProducts.length > 0) {
+      const allExcluded = items.every((item) =>
+        promo.excludedProducts.includes(item.itemId)
+      );
+      if (allExcluded) return false;
+    }
+
+    // Check conditions
     if (!promo.conditions || promo.conditions.length === 0) return true;
 
     return promo.conditions.every((condition: any) => {
@@ -185,6 +241,13 @@ export const usePromotions = (): UsePromotionsReturn => {
               (item as any).category === condition.value ||
               promo.applicableCategories?.includes((item as any).category)
           );
+        case "CUSTOMER_TAG":
+          // Customer tag validation would require user data - skip for now
+          // This should be validated server-side when processing order
+          console.log(
+            "CUSTOMER_TAG condition present - will be validated server-side"
+          );
+          return true; // Allow eligibility, final check done server-side
         default:
           return true;
       }
@@ -217,15 +280,56 @@ export const usePromotions = (): UsePromotionsReturn => {
     const action = promo.actions?.[0];
     if (!action) return 0;
 
+    // Calculate applicable total (respecting targeting and exclusions)
+    let applicableTotal = total;
+
+    // If applicable products specified, only count those
+    if (promo.applicableProducts && promo.applicableProducts.length > 0) {
+      applicableTotal = items
+        .filter((item) => promo.applicableProducts.includes(item.itemId))
+        .reduce((sum, item) => sum + item.price * item.quantity, 0);
+    }
+
+    // Exclude excluded products from calculation
+    if (promo.excludedProducts && promo.excludedProducts.length > 0) {
+      const excludedTotal = items
+        .filter((item) => promo.excludedProducts.includes(item.itemId))
+        .reduce((sum, item) => sum + item.price * item.quantity, 0);
+      applicableTotal = Math.max(0, applicableTotal - excludedTotal);
+    }
+
     switch (action.type) {
       case "PERCENTAGE_OFF":
-        let discount = (total * action.value) / 100;
+        let discount = (applicableTotal * action.value) / 100;
         if (action.maxDiscount) {
           discount = Math.min(discount, action.maxDiscount);
         }
         return Math.round(discount);
       case "FIXED_OFF":
-        return action.value;
+        return Math.min(action.value, applicableTotal);
+      case "FREE_SHIPPING":
+        // Return a nominal value to indicate savings (actual shipping cost varies)
+        return 0; // Will be handled separately in checkout
+      case "FREE_ITEM":
+        // Return the price of the free item if specified
+        if (action.freeProductId) {
+          const freeItem = items.find(
+            (item) => item.itemId === action.freeProductId
+          );
+          if (freeItem) {
+            return freeItem.price;
+          }
+        }
+        return 0;
+      case "BOGO":
+        // Buy One Get One - calculate the value of the cheapest item
+        if (items.length >= 2) {
+          const sortedPrices = items
+            .map((item) => item.price)
+            .sort((a, b) => a - b);
+          return sortedPrices[0]; // Cheapest item is free
+        }
+        return 0;
       default:
         return 0;
     }

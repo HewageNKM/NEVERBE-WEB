@@ -77,6 +77,24 @@ const getUserCouponUsageCount = async (
   }
 };
 
+/**
+ * Helper to check if this is the user's first order
+ */
+const isFirstOrder = async (userId: string): Promise<boolean> => {
+  try {
+    const ordersSnapshot = await adminFirestore
+      .collection("orders")
+      .where("userId", "==", userId)
+      .where("status", "!=", "CANCELLED")
+      .limit(1)
+      .get();
+    return ordersSnapshot.empty;
+  } catch (error) {
+    console.error("Error checking first order:", error);
+    return false;
+  }
+};
+
 export const validateCoupon = async (
   code: string,
   userId: string | null,
@@ -146,26 +164,128 @@ export const validateCoupon = async (
     }
   }
 
-  // 6. Minimum Order Amount
+  // 6. First Order Only Check
+  if (coupon.firstOrderOnly) {
+    if (!userId) {
+      return {
+        valid: false,
+        discount: 0,
+        message: "Please sign in to use this coupon",
+      };
+    }
+    const isFirst = await isFirstOrder(userId);
+    if (!isFirst) {
+      return {
+        valid: false,
+        discount: 0,
+        message: "This coupon is only valid for first-time orders",
+      };
+    }
+  }
+
+  // 7. Minimum Order Amount
   if (coupon.minOrderAmount && cartTotal < coupon.minOrderAmount) {
     return {
       valid: false,
       discount: 0,
-      message: `Minimum order amount of ${coupon.minOrderAmount} required`,
+      message: `Minimum order amount of Rs. ${coupon.minOrderAmount.toLocaleString()} required`,
     };
   }
 
-  // 6. Calculate Discount
+  // 8. Minimum Quantity Check
+  if (coupon.minQuantity) {
+    const totalQuantity = cartItems.reduce(
+      (sum, item) => sum + item.quantity,
+      0
+    );
+    if (totalQuantity < coupon.minQuantity) {
+      return {
+        valid: false,
+        discount: 0,
+        message: `Minimum ${coupon.minQuantity} items required to use this coupon`,
+      };
+    }
+  }
+
+  // 9. Applicable Products Check
+  if (coupon.applicableProducts && coupon.applicableProducts.length > 0) {
+    const hasApplicableProduct = cartItems.some((item) =>
+      coupon.applicableProducts!.includes(item.itemId)
+    );
+    if (!hasApplicableProduct) {
+      return {
+        valid: false,
+        discount: 0,
+        message: "This coupon is not valid for items in your cart",
+      };
+    }
+  }
+
+  // 10. Applicable Categories Check
+  if (coupon.applicableCategories && coupon.applicableCategories.length > 0) {
+    // Get product details to check categories
+    const productIds = cartItems.map((item) => item.itemId);
+    const productsSnapshot = await adminFirestore
+      .collection("products")
+      .where("__name__", "in", productIds.slice(0, 10)) // Firestore 'in' limit is 10
+      .get();
+
+    const productCategories = productsSnapshot.docs.map(
+      (doc) => doc.data().category
+    );
+    const hasApplicableCategory = productCategories.some((cat) =>
+      coupon.applicableCategories!.includes(cat)
+    );
+
+    if (!hasApplicableCategory) {
+      return {
+        valid: false,
+        discount: 0,
+        message: "This coupon is not valid for the categories in your cart",
+      };
+    }
+  }
+
+  // 11. Excluded Products Check
+  if (coupon.excludedProducts && coupon.excludedProducts.length > 0) {
+    const allExcluded = cartItems.every((item) =>
+      coupon.excludedProducts!.includes(item.itemId)
+    );
+    if (allExcluded) {
+      return {
+        valid: false,
+        discount: 0,
+        message: "This coupon cannot be applied to the items in your cart",
+      };
+    }
+  }
+
+  // 12. Calculate Discount
   let discountAmount = 0;
   if (coupon.discountType === "FIXED") {
     discountAmount = coupon.discountValue;
   } else if (coupon.discountType === "PERCENTAGE") {
-    discountAmount = (cartTotal * coupon.discountValue) / 100;
+    // If applicable products are specified, only apply discount to those
+    let applicableTotal = cartTotal;
+    if (coupon.applicableProducts && coupon.applicableProducts.length > 0) {
+      applicableTotal = cartItems
+        .filter((item) => coupon.applicableProducts!.includes(item.itemId))
+        .reduce((sum, item) => sum + item.price * item.quantity, 0);
+    }
+    // Exclude excluded products from discount calculation
+    if (coupon.excludedProducts && coupon.excludedProducts.length > 0) {
+      const excludedTotal = cartItems
+        .filter((item) => coupon.excludedProducts!.includes(item.itemId))
+        .reduce((sum, item) => sum + item.price * item.quantity, 0);
+      applicableTotal = applicableTotal - excludedTotal;
+    }
+
+    discountAmount = (applicableTotal * coupon.discountValue) / 100;
     if (coupon.maxDiscount && discountAmount > coupon.maxDiscount) {
       discountAmount = coupon.maxDiscount;
     }
   } else if (coupon.discountType === "FREE_SHIPPING") {
-    discountAmount = 0; // Handled as flag
+    discountAmount = 0; // Handled as flag - shipping discount applied separately
   }
 
   return { valid: true, discount: discountAmount, coupon };
