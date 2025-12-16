@@ -84,7 +84,7 @@ const BundleCard = ({ bundle }: { bundle: BundleGroup }) => {
               Rs. {bundle.totalPrice.toLocaleString()}
             </span>
           )}
-          <span className="text-xs font-bold">
+          <span className="text-xs font-bold text-red-600">
             Rs. {netPrice.toLocaleString()}
           </span>
         </div>
@@ -257,7 +257,7 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
         </div>
 
         {itemDiscount > 0 && (
-          <div className="flex justify-between items-center text-sm text-red-600">
+          <div className="flex justify-between items-center text-sm text-green-600">
             <span className="font-medium">Discounts</span>
             <span className="font-bold font-mono">
               - Rs. {itemDiscount.toLocaleString()}
@@ -266,7 +266,7 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
         )}
 
         {promotionDiscount > 0 && (
-          <div className="flex justify-between items-center text-sm text-black">
+          <div className="flex justify-between items-center text-sm text-green-600">
             <span className="font-medium">Promotion</span>
             <span className="font-bold font-mono">
               - Rs. {promotionDiscount.toLocaleString()}
@@ -275,7 +275,7 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
         )}
 
         {couponDiscount > 0 && (
-          <div className="flex justify-between items-center text-sm text-green-700">
+          <div className="flex justify-between items-center text-sm text-green-600">
             <span className="font-medium">Coupon</span>
             <span className="font-bold font-mono">
               - Rs. {couponDiscount.toLocaleString()}

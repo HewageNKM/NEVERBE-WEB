@@ -2,14 +2,14 @@
 
 import React, { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { IoCheckmark, IoChevronForward } from "react-icons/io5";
 import { FaWhatsapp } from "react-icons/fa6";
 import toast from "react-hot-toast";
 
-import { AppDispatch } from "@/redux/store";
+import { AppDispatch, RootState } from "@/redux/store";
 import { addMultipleToBag } from "@/redux/bagSlice/bagSlice";
 import { ComboProduct, ComboItem } from "@/interfaces/ComboProduct";
 import { BagItem, VariantMode } from "@/interfaces/BagItem";
@@ -72,7 +72,18 @@ interface ComboHeroProps {
 const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
   const dispatch: AppDispatch = useDispatch();
   const router = useRouter();
+  const bagItems = useSelector((state: RootState) => state.bag.items);
   const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER;
+
+  // Helper to get bag quantity
+  const getBagQty = (productId: string, variantId: string, size: string) => {
+    return (
+      bagItems.find(
+        (b) =>
+          b.itemId === productId && b.variantId === variantId && b.size === size
+      )?.quantity || 0
+    );
+  };
 
   // --- Logic: Expand Items to Slots ---
   const slots = useMemo<ComboSlot[]>(() => {
@@ -196,10 +207,14 @@ const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
 
   const getStockForSize = (slotId: string, variantId: string, size: string) => {
     const key = `${slotId}-${variantId}-${size}`;
+    const quantity = stockStatus[key];
+    const loading = stockLoading[key];
+    const isOutOfStock = quantity !== undefined && quantity <= 0;
+
     return {
-      quantity: stockStatus[key],
-      loading: stockLoading[key],
-      isOutOfStock: stockStatus[key] !== undefined && stockStatus[key] <= 0,
+      quantity,
+      loading,
+      isOutOfStock,
     };
   };
 
@@ -223,6 +238,13 @@ const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
     if (stockInfo.isOutOfStock) {
       toast.error(`Size ${size} is out of stock`);
       return;
+    }
+
+    const bagQty = getBagQty(slot.productId, selection.variantId, size);
+    if (stockInfo.quantity !== undefined && bagQty + 1 > stockInfo.quantity) {
+      toast.error(
+        `Limit reached! You have ${bagQty} in bag and only ${stockInfo.quantity} available.`
+      );
     }
 
     setSelections((prev) => ({
@@ -251,13 +273,40 @@ const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
       return;
     }
 
-    const bagItems: BagItem[] = [];
+    // Validate Stock Limits again strictly
+    for (const slot of slots) {
+      if (!slot.product) continue;
+      const selection = selections[slot.slotId];
+      if (!selection?.isValid && slot.required) {
+        toast.error(`Please select a size for ${slot.label}`);
+        return;
+      }
+      if (!selection?.isValid) continue; // Skip optional if not selected
+
+      const stockKey = `${slot.slotId}-${selection.variantId}-${selection.size}`;
+      const stockQty = stockStatus[stockKey];
+      const bagQty = getBagQty(
+        slot.productId,
+        selection.variantId,
+        selection.size
+      );
+
+      if (stockQty !== undefined && bagQty + 1 > stockQty) {
+        toast.error(
+          `Cannot add bundle: Item "${slot.product.name}" (${selection.size}) limit reached. Stock: ${stockQty}, In Bag: ${bagQty}`
+        );
+        return;
+      }
+    }
+
+    const bagItemsToAdd: BagItem[] = [];
     const totalSlots = slots.length;
 
     slots.forEach((slot) => {
       if (!slot.product) return;
       const selection = selections[slot.slotId];
       if (!selection?.isValid && slot.required) return;
+      if (!selection.isValid) return; // Fix for optional skipping
 
       const variant = slot.product.variants.find(
         (v) => v.variantId === selection.variantId
@@ -269,7 +318,7 @@ const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
       // Calculate proportional buying price for profit tracking
       const slotBuyingPrice = slot.product.buyingPrice || 0;
 
-      bagItems.push({
+      bagItemsToAdd.push({
         itemId: slot.productId,
         variantId: selection.variantId,
         size: selection.size,
@@ -287,7 +336,7 @@ const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
       });
     });
 
-    dispatch(addMultipleToBag(bagItems));
+    dispatch(addMultipleToBag(bagItemsToAdd));
     toast.success("Combo added to bag!");
   };
 
@@ -634,10 +683,30 @@ const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
                 <div className="mt-3 text-[10px] font-bold uppercase tracking-widest">
                   {(() => {
                     const stock = getStockForSlot(activeSlot.slotId);
-                    if (stock?.quantity && stock.quantity > 0)
-                      return <span className="text-green-600">In Stock</span>;
-                    if (stock?.quantity === 0)
-                      return <span className="text-red-600">Sold Out</span>;
+                    const bagQty = getBagQty(
+                      activeSlot.productId,
+                      activeSelection.variantId,
+                      activeSelection.size
+                    );
+
+                    if (stock?.quantity !== undefined) {
+                      if (stock.quantity <= 0)
+                        return <span className="text-red-600">Sold Out</span>;
+
+                      if (bagQty + 1 > stock.quantity) {
+                        return (
+                          <span className="text-yellow-600">
+                            Limit Reached ({bagQty} in bag)
+                          </span>
+                        );
+                      }
+
+                      return (
+                        <span className="text-green-600">
+                          {stock.quantity} In Stock
+                        </span>
+                      );
+                    }
                     return null;
                   })()}
                 </div>

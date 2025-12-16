@@ -10,11 +10,11 @@ import {
 } from "react-icons/io5";
 import { FaWhatsapp } from "react-icons/fa6";
 import { motion, AnimatePresence } from "framer-motion";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-import { AppDispatch } from "@/redux/store";
+import { AppDispatch, RootState } from "@/redux/store";
 import { addToBag } from "@/redux/bagSlice/bagSlice";
 import { Product } from "@/interfaces/Product";
 import { ProductVariant } from "@/interfaces/ProductVariant";
@@ -24,6 +24,7 @@ import SizeGuideDialog from "@/components/SizeGuideDialog";
 const ProductHero = ({ item }: { item: Product }) => {
   const router = useRouter();
   const dispatch: AppDispatch = useDispatch();
+  const bagItems = useSelector((state: RootState) => state.bag.items);
 
   const [selectedImage, setSelectedImage] = useState(item.thumbnail);
   const [selectedVariant, setSelectedVariant] = useState<ProductVariant>(
@@ -44,6 +45,21 @@ const ProductHero = ({ item }: { item: Product }) => {
   const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER;
   const [stockLoading, setStockLoading] = useState(false);
   const [showSizeGuide, setShowSizeGuide] = useState(false);
+
+  // Calculate quantity already in bag
+  const bagQty =
+    bagItems.find(
+      (b) =>
+        b.itemId === item.id &&
+        b.variantId === selectedVariant.variantId &&
+        b.size === selectedSize
+    )?.quantity || 0;
+
+  const isLimitReached =
+    selectedSize !== "" &&
+    !stockLoading &&
+    availableStock > 0 &&
+    bagQty + qty > availableStock;
 
   // --- Init Logic ---
   useEffect(() => {
@@ -83,6 +99,10 @@ const ProductHero = ({ item }: { item: Product }) => {
   const handleAddToBag = () => {
     if (!selectedSize) return alert("Please select a size");
     if (outOfStocks) return;
+    if (isLimitReached)
+      return alert(
+        `Limit reached! You already have ${bagQty} in bag and stock is ${availableStock}`
+      );
 
     const bagItem = {
       itemId: item.id,
@@ -293,7 +313,19 @@ const ProductHero = ({ item }: { item: Product }) => {
                 {stockLoading ? (
                   <span className="text-gray-400">Checking Stock...</span>
                 ) : availableStock > 0 ? (
-                  <span className="text-green-600">In Stock</span>
+                  isLimitReached ? (
+                    <span className="text-yellow-600">
+                      Limit Reached ({bagQty} in bag)
+                    </span>
+                  ) : availableStock < 5 ? (
+                    <span className="text-red-600 animate-pulse">
+                      Only {availableStock} Left!
+                    </span>
+                  ) : (
+                    <span className="text-green-600">
+                      {availableStock} In Stock
+                    </span>
+                  )
                 ) : (
                   <span className="text-red-600">Out of Stock</span>
                 )}
@@ -317,30 +349,45 @@ const ProductHero = ({ item }: { item: Product }) => {
               <span className="text-lg font-bold w-8 text-center">{qty}</span>
               <button
                 onClick={() =>
-                  setQty((prev) => Math.min(availableStock || 10, prev + 1))
+                  setQty((prev) =>
+                    Math.min(availableStock - bagQty || 10, prev + 1)
+                  )
                 }
-                disabled={qty >= (availableStock || 10)}
+                disabled={
+                  qty >= availableStock - bagQty ||
+                  qty >= 10 ||
+                  availableStock === 0
+                }
                 className="w-10 h-10 flex items-center justify-center border border-gray-200 rounded-md text-lg font-bold hover:border-black transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 <IoAdd size={18} />
               </button>
             </div>
+            {bagQty > 0 && selectedSize && (
+              <p className="text-xs text-gray-500 mt-1">
+                You have {bagQty} in your bag.
+              </p>
+            )}
           </div>
 
           {/* Actions */}
           <div className="space-y-3 pt-4 border-t border-gray-100">
             <button
               onClick={handleAddToBag}
-              disabled={!selectedSize || outOfStocks}
-              className="w-full py-4 rounded-full bg-black text-white font-bold uppercase tracking-widest hover:bg-gray-800 disabled:bg-gray-300 disabled:cursor-not-allowed transition-all"
+              disabled={!selectedSize || outOfStocks || isLimitReached}
+              className="w-full py-4 bg-black text-white font-bold uppercase tracking-widest hover:bg-gray-800 disabled:bg-gray-300 disabled:cursor-not-allowed transition-all"
             >
-              {outOfStocks ? "Out of Stock" : "Add to Bag"}
+              {isLimitReached
+                ? "Limit Reached"
+                : outOfStocks
+                ? "Out of Stock"
+                : "Add to Bag"}
             </button>
 
             <button
               onClick={buyNow}
-              disabled={!selectedSize || outOfStocks}
-              className="w-full py-4 rounded-full border border-gray-300 text-black font-bold uppercase tracking-widest hover:border-black transition-all"
+              disabled={!selectedSize || outOfStocks || isLimitReached}
+              className="w-full py-4 border border-gray-300 text-black font-bold uppercase tracking-widest hover:border-black transition-all"
             >
               Buy It Now
             </button>

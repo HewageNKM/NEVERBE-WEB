@@ -99,7 +99,7 @@ const BundleGroupCard = ({
               Rs. {bundle.totalPrice.toLocaleString()}
             </p>
           )}
-          <p className="text-sm font-black text-black">
+          <p className="text-sm font-black text-red-600">
             Rs. {netPrice.toLocaleString()}
           </p>
         </div>
@@ -326,7 +326,7 @@ const Bag = () => {
               </div>
 
               {calculateTotalDiscount(bagItems) > 0 && (
-                <div className="flex justify-between text-red-600">
+                <div className="flex justify-between text-green-600">
                   <span className="font-medium">Discounts</span>
                   <span className="font-bold font-mono">
                     - Rs. {calculateTotalDiscount(bagItems).toLocaleString()}
@@ -335,7 +335,7 @@ const Bag = () => {
               )}
 
               {promotionDiscount > 0 && (
-                <div className="flex justify-between text-black">
+                <div className="flex justify-between text-green-600">
                   <span className="font-medium">Promotion</span>
                   <span className="font-bold font-mono">
                     - Rs. {promotionDiscount.toLocaleString()}

@@ -58,7 +58,7 @@ const BagItemCard = ({
           )}
         </div>
         <div className="text-right shrink-0">
-          <p className="text-xs font-bold font-mono">
+          <p className="text-xs font-bold font-mono text-red-600">
             Rs. {netPrice.toLocaleString()}
           </p>
           {item.discount > 0 && (
@@ -100,7 +100,7 @@ const BagItemCard = ({
             <div className="text-right shrink-0">
               {item.discount > 0 ? (
                 <>
-                  <p className="font-bold text-sm text-black">
+                  <p className="font-bold text-sm text-red-600">
                     Rs. {netPrice.toLocaleString()}
                   </p>
                   <p className="text-[10px] text-gray-400 line-through">
