@@ -105,6 +105,13 @@ export const validateCoupon = async (
   discount: number;
   message?: string;
   coupon?: Coupon;
+  conditionFeedback?: {
+    type: string;
+    met: boolean;
+    current?: number;
+    required?: number;
+    message: string;
+  }[];
 }> => {
   const coupon = await getCouponByCode(code);
 
@@ -288,7 +295,100 @@ export const validateCoupon = async (
     discountAmount = 0; // Handled as flag - shipping discount applied separately
   }
 
-  return { valid: true, discount: discountAmount, coupon };
+  // Build condition feedback for real-time customer hints
+  const totalQuantity = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+  const conditionFeedback: {
+    type: string;
+    met: boolean;
+    current?: number;
+    required?: number;
+    message: string;
+  }[] = [];
+
+  // Min order amount feedback
+  if (coupon.minOrderAmount) {
+    const met = cartTotal >= coupon.minOrderAmount;
+    conditionFeedback.push({
+      type: "MIN_ORDER_AMOUNT",
+      met,
+      current: cartTotal,
+      required: coupon.minOrderAmount,
+      message: met
+        ? `✓ Minimum order of Rs. ${coupon.minOrderAmount.toLocaleString()} met`
+        : `Add Rs. ${(
+            coupon.minOrderAmount - cartTotal
+          ).toLocaleString()} more to use this coupon`,
+    });
+  }
+
+  // Min quantity feedback
+  if (coupon.minQuantity) {
+    const met = totalQuantity >= coupon.minQuantity;
+    conditionFeedback.push({
+      type: "MIN_QUANTITY",
+      met,
+      current: totalQuantity,
+      required: coupon.minQuantity,
+      message: met
+        ? `✓ Minimum ${coupon.minQuantity} items in cart`
+        : `Add ${coupon.minQuantity - totalQuantity} more item${
+            coupon.minQuantity - totalQuantity > 1 ? "s" : ""
+          } to use this coupon`,
+    });
+  }
+
+  // First order only feedback
+  if (coupon.firstOrderOnly) {
+    conditionFeedback.push({
+      type: "FIRST_ORDER_ONLY",
+      met: true, // Already passed validation if we got here
+      message: "✓ First order only coupon",
+    });
+  }
+
+  // Applicable products/categories hint
+  if (coupon.applicableProducts && coupon.applicableProducts.length > 0) {
+    conditionFeedback.push({
+      type: "APPLICABLE_PRODUCTS",
+      met: true,
+      message: `Applies to ${
+        coupon.applicableProducts.length
+      } specific product${coupon.applicableProducts.length > 1 ? "s" : ""}`,
+    });
+  }
+
+  if (coupon.applicableCategories && coupon.applicableCategories.length > 0) {
+    conditionFeedback.push({
+      type: "APPLICABLE_CATEGORIES",
+      met: true,
+      message: `Applies to: ${coupon.applicableCategories.join(", ")}`,
+    });
+  }
+
+  // Excluded products warning
+  if (coupon.excludedProducts && coupon.excludedProducts.length > 0) {
+    const hasExcluded = cartItems.some((item) =>
+      coupon.excludedProducts!.includes(item.itemId)
+    );
+    if (hasExcluded) {
+      conditionFeedback.push({
+        type: "EXCLUDED_PRODUCTS",
+        met: false,
+        message: "Some items in your cart are excluded from this coupon",
+      });
+    }
+  }
+
+  // Free shipping indicator
+  if (coupon.discountType === "FREE_SHIPPING") {
+    conditionFeedback.push({
+      type: "FREE_SHIPPING",
+      met: true,
+      message: "🚚 Free shipping on your order!",
+    });
+  }
+
+  return { valid: true, discount: discountAmount, coupon, conditionFeedback };
 };
 
 /**

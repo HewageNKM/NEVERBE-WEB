@@ -170,6 +170,53 @@ const CouponInput: React.FC<CouponInputProps> = ({
         )}
       </AnimatePresence>
 
+      {/* Real-time Condition Feedback */}
+      <AnimatePresence>
+        {couponState.conditionFeedback &&
+          couponState.conditionFeedback.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              className="mt-3 space-y-2"
+            >
+              {couponState.conditionFeedback.map((condition, index) => (
+                <motion.div
+                  key={condition.type}
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.05 }}
+                  className={`flex items-center gap-2 text-[11px] font-medium px-3 py-2 rounded-sm ${
+                    condition.met
+                      ? "bg-green-50 text-green-700 border border-green-200"
+                      : "bg-amber-50 text-amber-700 border border-amber-200"
+                  }`}
+                >
+                  <span>{condition.message}</span>
+                  {/* Progress bar for min amount/quantity */}
+                  {!condition.met &&
+                    condition.current !== undefined &&
+                    condition.required !== undefined && (
+                      <div className="flex-1 h-1.5 bg-gray-200 rounded-full overflow-hidden ml-2">
+                        <motion.div
+                          initial={{ width: 0 }}
+                          animate={{
+                            width: `${Math.min(
+                              (condition.current / condition.required) * 100,
+                              100
+                            )}%`,
+                          }}
+                          transition={{ duration: 0.5 }}
+                          className="h-full bg-amber-500 rounded-full"
+                        />
+                      </div>
+                    )}
+                </motion.div>
+              ))}
+            </motion.div>
+          )}
+      </AnimatePresence>
+
       {/* Coupon Details (when valid) */}
       <AnimatePresence>
         {couponState.couponDetails &&

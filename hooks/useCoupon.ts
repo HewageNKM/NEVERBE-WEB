@@ -18,8 +18,21 @@ interface CouponValidationResult {
     discountType: string;
     discountValue: number;
     minOrderAmount?: number;
+    minQuantity?: number;
+    applicableProducts?: string[];
+    applicableCategories?: string[];
+    excludedProducts?: string[];
+    firstOrderOnly?: boolean;
     expiresAt?: string;
   };
+  // Condition feedback for real-time hints
+  conditionFeedback?: {
+    type: string;
+    met: boolean;
+    current?: number;
+    required?: number;
+    message: string;
+  }[];
 }
 
 interface CouponState {
@@ -30,6 +43,7 @@ interface CouponState {
   message: string | null;
   messageType: "success" | "error" | "info" | null;
   couponDetails: CouponValidationResult["coupon"] | null;
+  conditionFeedback: CouponValidationResult["conditionFeedback"] | null;
 }
 
 interface UseCouponOptions {
@@ -79,6 +93,7 @@ export const useCoupon = (options: UseCouponOptions = {}): UseCouponReturn => {
     message: savedCouponCode ? `Coupon ${savedCouponCode} applied` : null,
     messageType: savedCouponCode ? "success" : null,
     couponDetails: null,
+    conditionFeedback: null,
   });
 
   const debounceTimer = useRef<NodeJS.Timeout | null>(null);
@@ -181,6 +196,7 @@ export const useCoupon = (options: UseCouponOptions = {}): UseCouponReturn => {
           message: getSuccessMessage(result),
           messageType: "success",
           couponDetails: result.coupon || null,
+          conditionFeedback: result.conditionFeedback || null,
         }));
       } else {
         setCouponState((prev) => ({
@@ -190,6 +206,7 @@ export const useCoupon = (options: UseCouponOptions = {}): UseCouponReturn => {
           message: result.message || "Invalid coupon code",
           messageType: "error",
           couponDetails: null,
+          conditionFeedback: result.conditionFeedback || null,
           isApplied: false,
         }));
 
@@ -332,6 +349,7 @@ export const useCoupon = (options: UseCouponOptions = {}): UseCouponReturn => {
       message: null,
       messageType: null,
       couponDetails: null,
+      conditionFeedback: null,
     });
 
     lastValidatedCode.current = "";
