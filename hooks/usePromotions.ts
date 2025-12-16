@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import { applyPromotion, removePromotion } from "@/redux/bagSlice/bagSlice";
+import { applyPromotions, removePromotion } from "@/redux/bagSlice/bagSlice";
 import { BagItem } from "@/interfaces/BagItem";
 import { calculateTotal, calculateTotalDiscount } from "@/util";
 
@@ -13,6 +13,7 @@ export interface ActivePromotion {
   description: string;
   type: "COMBO" | "BOGO" | "PERCENTAGE" | "FIXED" | "FREE_SHIPPING";
   priority?: number; // For priority-based selection (matches backend)
+  stackable?: boolean; // Whether this promotion can stack with others
   discountValue?: number;
   minOrderAmount?: number;
   applicableProducts?: string[];
@@ -31,7 +32,9 @@ interface UsePromotionsReturn {
   isLoading: boolean;
   hasComboItems: boolean;
   isBlocked: boolean;
-  appliedPromotion: ActivePromotion | null;
+  appliedPromotion: ActivePromotion | null; // Primary (backward compat)
+  appliedPromotions: ActivePromotion[]; // All stacked promotions
+  totalPromotionDiscount: number; // Combined discount
   refreshPromotions: () => Promise<void>;
 }
 
@@ -92,6 +95,7 @@ export const usePromotions = (): UsePromotionsReturn => {
               description: promo.description,
               type: promo.type,
               priority: promo.priority || 0, // Include priority for sorting
+              stackable: promo.stackable || false, // Include stackable flag
               discountValue: promo.actions?.[0]?.value,
               minOrderAmount: promo.conditions?.find(
                 (c: any) => c.type === "MIN_AMOUNT"
@@ -112,28 +116,41 @@ export const usePromotions = (): UsePromotionsReturn => {
 
         setPromotions(processedPromotions);
 
-        // Auto-apply best eligible promotion (highest priority first, matching backend)
+        // --- STACKING LOGIC ---
+        // Filter eligible promotions with savings
         const eligible = processedPromotions.filter(
           (p) => p.isEligible && p.savings && p.savings > 0
         );
-        if (eligible.length > 0) {
-          // Take the first eligible promotion (highest priority due to sorting)
-          const bestPromo = eligible[0];
 
-          // Apply if different from current or not applied
-          if (bestPromo.id !== appliedPromotionId) {
+        if (eligible.length > 0) {
+          const firstEligible = eligible[0];
+
+          // If highest-priority promotion is NOT stackable, apply only that one
+          if (!firstEligible.stackable) {
             dispatch(
-              applyPromotion({
-                id: bestPromo.id,
-                discount: bestPromo.savings || 0,
-              })
+              applyPromotions([
+                {
+                  id: firstEligible.id,
+                  name: firstEligible.name,
+                  discount: firstEligible.savings || 0,
+                },
+              ])
             );
+          } else {
+            // First promotion IS stackable - collect all stackable promotions
+            const stackedPromos = eligible
+              .filter((p) => p.stackable)
+              .map((p) => ({
+                id: p.id,
+                name: p.name,
+                discount: p.savings || 0,
+              }));
+
+            dispatch(applyPromotions(stackedPromos));
           }
         } else {
           // No eligible promotions, clear any applied
-          if (appliedPromotionId) {
-            dispatch(removePromotion());
-          }
+          dispatch(removePromotion());
         }
       }
     } catch (error) {
@@ -141,7 +158,7 @@ export const usePromotions = (): UsePromotionsReturn => {
     } finally {
       setIsLoading(false);
     }
-  }, [bagItems, cartTotal, hasComboItems, appliedPromotionId, dispatch]);
+  }, [bagItems, cartTotal, hasComboItems, dispatch]);
 
   // Check if cart meets promotion conditions
   const checkEligibility = (
@@ -266,9 +283,25 @@ export const usePromotions = (): UsePromotionsReturn => {
     (p) => !p.isEligible && (p.progress || 0) >= 50
   );
 
-  // Find currently applied promotion
+  // Get applied promotions from Redux state
+  const appliedPromotionIds = useSelector(
+    (state: RootState) => state.bagSlice.promotionIds
+  );
+  const totalPromotionDiscount = useSelector(
+    (state: RootState) => state.bagSlice.promotionDiscount
+  );
+  const reduxAppliedPromotions = useSelector(
+    (state: RootState) => state.bagSlice.appliedPromotions
+  );
+
+  // Find currently applied promotion (primary - for backward compat)
   const appliedPromotion =
     promotions.find((p) => p.id === appliedPromotionId) || null;
+
+  // Find all applied promotions
+  const appliedPromotionsFromState: ActivePromotion[] = promotions.filter((p) =>
+    appliedPromotionIds.includes(p.id)
+  );
 
   return {
     activePromotions: promotions,
@@ -278,6 +311,8 @@ export const usePromotions = (): UsePromotionsReturn => {
     hasComboItems,
     isBlocked,
     appliedPromotion,
+    appliedPromotions: appliedPromotionsFromState,
+    totalPromotionDiscount,
     refreshPromotions: fetchPromotions,
   };
 };

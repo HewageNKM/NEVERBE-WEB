@@ -140,6 +140,9 @@ export interface Order {
   userId?: string;
 
   couponCode?: string;
+  couponDiscount?: number;
+  promotionDiscount?: number;
+  appliedPromotionIds?: string[]; // All stacked promotion IDs
 
   createdAt: Timestamp | string;
   updatedAt: Timestamp | string;

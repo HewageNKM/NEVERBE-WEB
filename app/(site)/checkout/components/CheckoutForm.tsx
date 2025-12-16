@@ -76,6 +76,9 @@ const CheckoutForm = () => {
   );
   const promotionDiscount =
     useSelector((state: RootState) => state.bagSlice.promotionDiscount) || 0;
+  const promotionIds = useSelector(
+    (state: RootState) => state.bagSlice.promotionIds
+  );
   const couponCode = useSelector(
     (state: RootState) => state.bagSlice.couponCode
   );
@@ -299,6 +302,7 @@ const CheckoutForm = () => {
         couponCode: couponCode || undefined,
         couponDiscount: couponDiscount,
         promotionDiscount: promotionDiscount,
+        appliedPromotionIds: promotionIds, // Include all stacked promotion IDs
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       };

@@ -1,13 +1,21 @@
 import { BagItem } from "@/interfaces/BagItem";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+interface AppliedPromotion {
+  id: string;
+  name: string;
+  discount: number;
+}
+
 interface BagSlice {
   bag: BagItem[];
   showBag: boolean;
   couponCode: string | null;
   couponDiscount: number;
-  promotionId: string | null;
-  promotionDiscount: number;
+  promotionId: string | null; // Primary (backward compat)
+  promotionIds: string[]; // All stacked promotion IDs
+  promotionDiscount: number; // Total combined discount
+  appliedPromotions: AppliedPromotion[]; // Detailed breakdown
 }
 
 const initialState: BagSlice = {
@@ -16,7 +24,9 @@ const initialState: BagSlice = {
   couponCode: null,
   couponDiscount: 0,
   promotionId: null,
+  promotionIds: [],
   promotionDiscount: 0,
+  appliedPromotions: [],
 };
 
 const bagSlice = createSlice({
@@ -56,14 +66,47 @@ const bagSlice = createSlice({
     },
     applyPromotion(
       state,
-      action: PayloadAction<{ id: string; discount: number }>
+      action: PayloadAction<{ id: string; name?: string; discount: number }>
     ) {
+      // Single promotion - backward compatibility
       state.promotionId = action.payload.id;
+      state.promotionIds = [action.payload.id];
       state.promotionDiscount = action.payload.discount;
+      state.appliedPromotions = [
+        {
+          id: action.payload.id,
+          name: action.payload.name || "Promotion",
+          discount: action.payload.discount,
+        },
+      ];
+    },
+    // New action for applying multiple stacked promotions
+    applyPromotions(
+      state,
+      action: PayloadAction<{ id: string; name: string; discount: number }[]>
+    ) {
+      const promotions = action.payload;
+      if (promotions.length === 0) {
+        state.promotionId = null;
+        state.promotionIds = [];
+        state.promotionDiscount = 0;
+        state.appliedPromotions = [];
+        return;
+      }
+
+      state.promotionId = promotions[0].id; // Primary for backward compat
+      state.promotionIds = promotions.map((p) => p.id);
+      state.promotionDiscount = promotions.reduce(
+        (sum, p) => sum + p.discount,
+        0
+      );
+      state.appliedPromotions = promotions;
     },
     removePromotion(state) {
       state.promotionId = null;
+      state.promotionIds = [];
       state.promotionDiscount = 0;
+      state.appliedPromotions = [];
     },
 
     addToBag(state, action) {
@@ -161,6 +204,7 @@ export const {
   applyCoupon,
   removeCoupon,
   applyPromotion,
+  applyPromotions,
   removePromotion,
   addMultipleToBag,
   removeComboFromBag,

@@ -30,6 +30,8 @@ const PromotionBanner: React.FC<PromotionBannerProps> = ({
     isLoading,
     hasComboItems,
     isBlocked,
+    appliedPromotions,
+    totalPromotionDiscount,
   } = usePromotions();
 
   // --- BLOCKED STATE (Combo Items) ---
@@ -75,11 +77,20 @@ const PromotionBanner: React.FC<PromotionBannerProps> = ({
 
   // --- VARIANT: INLINE (Cart/Checkout) ---
   if (variant === "inline") {
+    // Use applied promotions if available, otherwise show best eligible
+    const displayPromotions =
+      appliedPromotions.length > 0
+        ? appliedPromotions
+        : bestPromo
+        ? [bestPromo]
+        : [];
+    const hasStackedPromotions = displayPromotions.length > 1;
+
     return (
       <div className={`space-y-4 ${className}`}>
-        {/* Eligible promotion */}
+        {/* Applied/Eligible promotions */}
         <AnimatePresence>
-          {bestPromo && (
+          {displayPromotions.length > 0 && (
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -87,22 +98,42 @@ const PromotionBanner: React.FC<PromotionBannerProps> = ({
               className="relative p-4 border border-black bg-white"
             >
               <div className="flex items-start gap-4">
-                <div className="text-black">{getIcon(bestPromo.type)}</div>
+                <div className="text-black">
+                  {getIcon(displayPromotions[0].type)}
+                </div>
                 <div className="flex-1">
                   <div className="flex justify-between items-start">
                     <div>
-                      <p className="text-xs font-black text-black uppercase tracking-wider">
-                        {bestPromo.name}
-                      </p>
-                      <p className="text-[10px] text-gray-500 uppercase tracking-wide mt-1 font-medium">
-                        {bestPromo.message}
-                      </p>
+                      {hasStackedPromotions ? (
+                        <>
+                          <p className="text-xs font-black text-black uppercase tracking-wider">
+                            {displayPromotions.length} Promotions Applied
+                          </p>
+                          <p className="text-[10px] text-gray-500 uppercase tracking-wide mt-1 font-medium">
+                            {displayPromotions.map((p) => p.name).join(" + ")}
+                          </p>
+                        </>
+                      ) : (
+                        <>
+                          <p className="text-xs font-black text-black uppercase tracking-wider">
+                            {displayPromotions[0].name}
+                          </p>
+                          <p className="text-[10px] text-gray-500 uppercase tracking-wide mt-1 font-medium">
+                            {displayPromotions[0].message}
+                          </p>
+                        </>
+                      )}
                     </div>
-                    {bestPromo.savings && (
+                    {totalPromotionDiscount > 0 && (
                       <div className="text-right bg-black text-white px-2 py-1">
                         <p className="text-xs font-bold uppercase tracking-wide">
-                          -Rs. {bestPromo.savings.toLocaleString()}
+                          -Rs. {totalPromotionDiscount.toLocaleString()}
                         </p>
+                        {hasStackedPromotions && (
+                          <p className="text-[8px] text-gray-300 uppercase tracking-wide">
+                            Combined Savings
+                          </p>
+                        )}
                       </div>
                     )}
                   </div>
