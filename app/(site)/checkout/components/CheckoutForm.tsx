@@ -14,22 +14,14 @@ import {
   calculateTransactionFeeCharge,
   generateOrderId,
 } from "@/util";
-import {
-  addNewOrder,
-  initiateKOKOPayment,
-  initiatePayHerePayment,
-  requestOTP,
-  sendCODOrderNotifications,
-  verifyOTP,
-} from "@/actions/orderAction";
 import BillingDetails from "./BillingDetails";
 import ShippingDetails from "./ShippingDetails";
 import PaymentDetails from "@/app/(site)/checkout/components/PaymentDetails";
 import ComponentLoader from "@/components/ComponentLoader";
 import toast from "react-hot-toast";
-import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { Order, Customer } from "@/interfaces";
 import { auth } from "@/firebase/firebaseClient";
+import { usePayment } from "@/hooks/usePayment";
 const formatSriLankanPhoneNumber = (phone: string) => {
   // Remove any non-digit characters
   const cleaned = phone.replace(/\D/g, "");
@@ -79,11 +71,7 @@ const CheckoutForm = () => {
   const promotionIds = useSelector(
     (state: RootState) => state.bagSlice.promotionIds
   );
-  const couponCode = useSelector(
-    (state: RootState) => state.bagSlice.couponCode
-  );
   const user = auth?.currentUser;
-  const { executeRecaptcha } = useGoogleReCaptcha();
 
   const [paymentType, setPaymentType] = useState<string>("");
   const [paymentTypeId, setPaymentTypeId] = useState<string>("");
@@ -109,15 +97,23 @@ const CheckoutForm = () => {
   const [shippingCustomer, setShippingCustomer] =
     useState<Partial<Customer> | null>(null);
 
-  const [showOtpModal, setShowOtpModal] = useState(false);
-  const [otp, setOtp] = useState("");
-  const [pendingOrder, setPendingOrder] = useState<Order | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isVerifyingOtp, setIsVerifyingOtp] = useState(false);
-  const [isResendingOtp, setIsResendingOtp] = useState(false);
-  const [resendCooldown, setResendCooldown] = useState(0);
+  // Initialize Payment Hook
+  const {
+    isProcessing,
+    otpState,
+    calculateTotals,
+    buildOrderPayload,
+    processPayment,
+    handleOTPVerification,
+    handleResendOTP,
+    closeOTPModal,
+  } = usePayment({
+    paymentMethodId: paymentTypeId,
+    paymentMethodName: paymentType,
+    paymentFee: paymentFee,
+  });
 
-  const [orderId] = useState(generateOrderId());
+  const [otp, setOtp] = useState("");
 
   useEffect(() => {
     if (user) {
@@ -125,141 +121,14 @@ const CheckoutForm = () => {
     }
   }, [user]);
 
-  useEffect(() => {
-    let timer: NodeJS.Timeout;
-    if (resendCooldown > 0) {
-      timer = setInterval(() => {
-        setResendCooldown((prev) => prev - 1);
-      }, 1000);
-    }
-    return () => clearInterval(timer);
-  }, [resendCooldown]);
-
-  const handleRequestOtp = async (phoneNumber: string) => {
-    if (!executeRecaptcha) {
-      toast.error("Recaptcha not ready");
-      return;
-    }
-
-    try {
-      setIsResendingOtp(true);
-      const token = await executeRecaptcha("request_otp");
-      await requestOTP(phoneNumber, token);
-      setResendCooldown(60);
-      toast.success("OTP sent successfully!");
-    } catch (err: any) {
-      console.error(err);
-      toast.error(err.message || "Failed to send OTP");
-    } finally {
-      setIsResendingOtp(false);
-    }
-  };
-
-  const handleOtpVerification = async () => {
-    if (!pendingOrder) return;
-
-    try {
-      setIsVerifyingOtp(true);
-      await verifyOTP(pendingOrder.customer.phone, otp);
-
-      // If OTP verified, finalize the order
-      if (!executeRecaptcha) throw new Error("Recaptcha failed");
-      const token = await executeRecaptcha("finalize_cod");
-
-      await addNewOrder(pendingOrder, token);
-      await sendCODOrderNotifications(pendingOrder.orderId, token);
-
-      dispatch(clearBag());
-      router.replace(`/checkout/success/${pendingOrder.orderId}`);
-    } catch (err: any) {
-      console.error(err);
-      toast.error(err.message || "Invalid OTP");
-    } finally {
-      setIsVerifyingOtp(false);
-    }
-  };
-
-  const processPayherePayment = async (
-    orderId: string,
-    customer: Customer,
-    amount: string
-  ) => {
-    const amountFormatted = parseFloat(amount)
-      .toLocaleString("en-US", { minimumFractionDigits: 2 })
-      .replace(/,/g, "");
-    const [firstName, ...lastNameParts] = customer.name.split(" ");
-    const payload = {
-      orderId,
-      amount: amountFormatted,
-      firstName,
-      lastName: lastNameParts.join(" ") || firstName,
-      email: customer.email,
-      phone: customer.phone,
-      address: customer.address,
-      city: customer.city,
-      items: `${bagItems.length} Products`,
-      returnUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/checkout/success/${orderId}`,
-      cancelUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/checkout/fail?orderId=${orderId}`,
-      notifyUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/ipg/payhere/notify`,
-    };
-    const payherePayload = await initiatePayHerePayment(payload);
-    submitForm(process.env.NEXT_PUBLIC_PAYHERE_URL || "", payherePayload);
-  };
-
-  const processKokoPayment = async (
-    orderId: string,
-    customer: Customer,
-    amount: string
-  ) => {
-    const amountFormatted = parseFloat(amount)
-      .toLocaleString("en-US", { minimumFractionDigits: 2 })
-      .replace(/,/g, "");
-    const [firstName, ...lastNameParts] = customer.name.split(" ");
-    const payload = {
-      orderId,
-      amount: amountFormatted,
-      firstName,
-      lastName: lastNameParts.join(" ") || firstName,
-      email: customer.email,
-      description: `${bagItems.length} products`,
-    };
-    const kokoPayload = await initiateKOKOPayment(payload);
-    submitForm(process.env.NEXT_PUBLIC_KOKO_REDIRECT_URL || "", kokoPayload);
-  };
-
-  const submitForm = (action: string, payload: any) => {
-    const form = document.createElement("form");
-    form.method = "POST";
-    form.action = action;
-    form.style.display = "none";
-    Object.entries(payload).forEach(([key, value]) => {
-      const input = document.createElement("input");
-      input.type = "hidden";
-      input.name = key;
-      input.value = value as string;
-      form.appendChild(input);
-    });
-    document.body.appendChild(form);
-    form.submit();
-  };
-
   const handlePaymentSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!executeRecaptcha) return;
-    setIsSubmitting(true);
 
     try {
       // Validate Logic
       const form = e.target as any;
       const newBilling = createCustomerFromForm(form);
-      const userId = user?.uid || null; // Firebase user UID
-
-      const amount = (
-        calculateSubTotal(bagItems, paymentFee) -
-        couponDiscount -
-        promotionDiscount
-      ).toFixed(2);
-      const fee = calculateFee(paymentFee, bagItems);
+      const userId = user?.uid || null;
 
       const orderCustomer: Customer = {
         ...newBilling,
@@ -280,65 +149,32 @@ const CheckoutForm = () => {
             }),
       };
 
-      const newOrder: Order = {
-        orderId,
-        userId: userId || "anonymous-user",
-        customer: orderCustomer,
-        items: bagItems,
-        total: parseFloat(amount),
-        paymentMethod: paymentType,
-        paymentMethodId: paymentTypeId,
-        fee: fee,
-        shippingFee: calculateShippingCost(bagItems),
-        transactionFeeCharge: calculateTransactionFeeCharge(
-          bagItems,
-          paymentFee
-        ),
-        paymentStatus: "Pending",
-        status: "Processing",
-        from: "Website",
-        discount:
-          calculateTotalDiscount(bagItems) + couponDiscount + promotionDiscount,
-        couponCode: couponCode || undefined,
-        couponDiscount: couponDiscount,
-        promotionDiscount: promotionDiscount,
-        appliedPromotionIds: promotionIds, // Include all stacked promotion IDs
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      };
+      // 1. Calculate Totals
+      const totals = calculateTotals(
+        bagItems,
+        couponDiscount,
+        promotionDiscount
+      );
 
-      console.log("New Order:", newOrder);
+      // 2. Build Order Payload
+      const newOrder = buildOrderPayload(
+        orderCustomer,
+        bagItems,
+        totals,
+        userId,
+        {
+          appliedPromotionId: promotionIds[0] || null, // Assuming first is primary if needed
+          appliedPromotionIds: promotionIds,
+        }
+      );
 
-      const token = await executeRecaptcha("new_order");
+      console.log("New Order Payload:", newOrder);
 
-      switch (paymentTypeId?.toUpperCase()) {
-        case "PM-006": // KOKO
-          await addNewOrder(newOrder, token);
-          dispatch(clearBag());
-          await processKokoPayment(orderId, orderCustomer, amount);
-          break;
-        case "PM-001": // COD
-          setPendingOrder(newOrder);
-          // Request OTP
-          await handleRequestOtp(newBilling.phone);
-          setShowOtpModal(true);
-          break;
-        case "PM-003": // Payhere
-          await addNewOrder(newOrder, token);
-          dispatch(clearBag());
-          await processPayherePayment(orderId, orderCustomer, amount);
-          break;
-        default:
-          throw new Error("Invalid payment method selected");
-      }
+      // 3. Process Payment (Delegated to hook)
+      await processPayment(newOrder, orderCustomer);
     } catch (err: any) {
-      console.error("Payment Error:", err);
-      toast.error("Payment failed. Please try again.");
-      if (err.message && err.message.length < 50) {
-        toast.error(err.message);
-      }
-    } finally {
-      setIsSubmitting(false);
+      console.error("Payment Submission Error:", err);
+      toast.error("Failed to process order. Please try again.");
     }
   };
 
@@ -378,14 +214,13 @@ const CheckoutForm = () => {
         </div>
       </form>
 
-      {/* --- OTP MODAL (Redesigned) --- */}
-      {showOtpModal && pendingOrder && (
+      {/* --- OTP MODAL (Using Hook State) --- */}
+      {otpState.showModal && otpState.pendingOrder && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex justify-center items-center z-50 p-4">
           <div className="relative bg-white p-8 w-full max-w-sm border border-gray-200 shadow-2xl">
             <button
               onClick={() => {
-                setShowOtpModal(false);
-                setPendingOrder(null);
+                closeOTPModal();
                 setOtp("");
               }}
               className="absolute top-4 right-4 text-black hover:scale-110 transition"
@@ -397,14 +232,14 @@ const CheckoutForm = () => {
               Verify Number
             </h2>
             <p className="text-center text-sm text-gray-500 mb-6 font-medium">
-              Enter the code sent to {pendingOrder.customer.phone}
+              Enter the code sent to {otpState.pendingOrder.customer.phone}
             </p>
 
             <div className="flex flex-col gap-4">
               <input
                 type="tel"
                 value={otp}
-                disabled={isVerifyingOtp}
+                disabled={otpState.isVerifying}
                 onChange={(e) => setOtp(e.target.value)}
                 placeholder="000000"
                 className="w-full h-14 text-center text-2xl tracking-[0.5em] font-bold border-2 border-gray-200 focus:border-black outline-none transition-colors"
@@ -412,22 +247,24 @@ const CheckoutForm = () => {
               />
               <button
                 type="button"
-                onClick={handleOtpVerification}
-                disabled={isVerifyingOtp}
+                onClick={() => handleOTPVerification(otp)}
+                disabled={otpState.isVerifying}
                 className="w-full py-4 bg-black text-white font-bold uppercase tracking-widest hover:bg-gray-800 disabled:bg-gray-400 transition"
               >
-                {isVerifyingOtp ? "Processing..." : "Confirm Order"}
+                {otpState.isVerifying ? "Processing..." : "Confirm Order"}
               </button>
 
               <button
                 type="button"
-                onClick={() => handleRequestOtp(pendingOrder.customer.phone)}
-                disabled={isResendingOtp || resendCooldown > 0}
+                onClick={() =>
+                  handleResendOTP(otpState.pendingOrder!.customer.phone)
+                }
+                disabled={otpState.isResending || otpState.cooldown > 0}
                 className="text-xs font-bold uppercase tracking-wide text-gray-400 hover:text-black transition"
               >
-                {resendCooldown > 0
-                  ? `Resend in ${resendCooldown}s`
-                  : isResendingOtp
+                {otpState.cooldown > 0
+                  ? `Resend in ${otpState.cooldown}s`
+                  : otpState.isResending
                   ? "Sending..."
                   : "Resend Code"}
               </button>
@@ -436,7 +273,7 @@ const CheckoutForm = () => {
         </div>
       )}
 
-      {isSubmitting && <ComponentLoader />}
+      {isProcessing && <ComponentLoader />}
     </>
   );
 };

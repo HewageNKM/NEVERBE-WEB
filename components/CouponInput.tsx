@@ -51,6 +51,8 @@ const CouponInput: React.FC<CouponInputProps> = ({
         ) : (
           <IoInformationCircle className="text-blue-500" size={16} />
         );
+      case "restricted":
+        return <IoLockClosed className="text-amber-500" size={16} />;
       default:
         return null;
     }
@@ -64,6 +66,8 @@ const CouponInput: React.FC<CouponInputProps> = ({
         return "text-red-500";
       case "info":
         return "text-gray-500";
+      case "restricted":
+        return "text-amber-600";
       default:
         return "text-gray-500";
     }
@@ -105,6 +109,8 @@ const CouponInput: React.FC<CouponInputProps> = ({
                   ? "bg-green-50 border-green-300 text-green-700"
                   : couponState.messageType === "error"
                   ? "border-red-300 focus:ring-red-500 focus:border-red-500"
+                  : couponState.messageType === "restricted"
+                  ? "bg-amber-50 border-amber-300 text-amber-800 focus:ring-amber-500 focus:border-amber-500"
                   : "border-gray-300 focus:ring-black focus:border-black"
               }
               disabled:cursor-not-allowed

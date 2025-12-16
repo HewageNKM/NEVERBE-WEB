@@ -38,6 +38,7 @@ interface PaymentTotals {
   subtotal: number;
   itemDiscount: number;
   couponDiscount: number;
+  promotionDiscount: number;
   shippingFee: number;
   paymentFee: number;
   total: number;
@@ -67,7 +68,8 @@ interface UsePaymentReturn {
   // Totals
   calculateTotals: (
     bagItems: BagItem[],
-    couponDiscount: number
+    couponDiscount: number,
+    promotionDiscount: number
   ) => PaymentTotals;
 
   // Order building
@@ -75,7 +77,11 @@ interface UsePaymentReturn {
     customer: Customer,
     bagItems: BagItem[],
     totals: PaymentTotals,
-    userId: string | null
+    userId: string | null,
+    promotionData?: {
+      appliedPromotionId: string | null;
+      appliedPromotionIds: string[];
+    }
   ) => Order;
 
   // Payment processing
@@ -121,17 +127,22 @@ export const usePayment = (options: UsePaymentOptions): UsePaymentReturn => {
    * Calculate all order totals
    */
   const calculateTotals = useCallback(
-    (bagItems: BagItem[], couponDisc: number): PaymentTotals => {
+    (
+      bagItems: BagItem[],
+      couponDisc: number,
+      promotionDisc: number = 0
+    ): PaymentTotals => {
       const itemDiscount = calculateTotalDiscount(bagItems);
       const shippingFee = calculateShippingCost(bagItems);
       const paymentFee = calculateFee(options.paymentFee, bagItems);
       const subtotal = calculateSubTotal(bagItems, options.paymentFee);
-      const total = subtotal - couponDisc;
+      const total = subtotal - couponDisc - promotionDisc;
 
       return {
-        subtotal: subtotal - couponDisc,
+        subtotal: subtotal - couponDisc - promotionDisc,
         itemDiscount,
         couponDiscount: couponDisc,
+        promotionDiscount: promotionDisc,
         shippingFee,
         paymentFee,
         total,
@@ -148,7 +159,11 @@ export const usePayment = (options: UsePaymentOptions): UsePaymentReturn => {
       customer: Customer,
       bagItems: BagItem[],
       totals: PaymentTotals,
-      userId: string | null
+      userId: string | null,
+      promotionData?: {
+        appliedPromotionId: string | null;
+        appliedPromotionIds: string[];
+      }
     ): Order => ({
       orderId,
       paymentId: "",
@@ -167,8 +182,13 @@ export const usePayment = (options: UsePaymentOptions): UsePaymentReturn => {
       paymentStatus: "Pending",
       status: "Processing",
       from: "Website",
-      discount: totals.itemDiscount + totals.couponDiscount,
+      discount:
+        totals.itemDiscount + totals.couponDiscount + totals.promotionDiscount,
       couponCode: couponCode || undefined,
+      couponDiscount: totals.couponDiscount,
+      promotionDiscount: totals.promotionDiscount,
+      appliedPromotionId: promotionData?.appliedPromotionId,
+      appliedPromotionIds: promotionData?.appliedPromotionIds,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     }),

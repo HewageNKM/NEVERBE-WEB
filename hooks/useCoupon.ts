@@ -33,6 +33,8 @@ interface CouponValidationResult {
     required?: number;
     message: string;
   }[];
+  restricted?: boolean;
+  restrictionReason?: string;
 }
 
 interface CouponState {
@@ -41,9 +43,11 @@ interface CouponState {
   isApplied: boolean;
   discount: number;
   message: string | null;
-  messageType: "success" | "error" | "info" | null;
+  messageType: "success" | "error" | "info" | "restricted" | null;
   couponDetails: CouponValidationResult["coupon"] | null;
   conditionFeedback: CouponValidationResult["conditionFeedback"] | null;
+  isRestricted: boolean;
+  restrictionReason: string | null;
 }
 
 interface UseCouponOptions {
@@ -94,6 +98,8 @@ export const useCoupon = (options: UseCouponOptions = {}): UseCouponReturn => {
     messageType: savedCouponCode ? "success" : null,
     couponDetails: null,
     conditionFeedback: null,
+    isRestricted: false,
+    restrictionReason: null,
   });
 
   const debounceTimer = useRef<NodeJS.Timeout | null>(null);
@@ -199,15 +205,18 @@ export const useCoupon = (options: UseCouponOptions = {}): UseCouponReturn => {
           conditionFeedback: result.conditionFeedback || null,
         }));
       } else {
+        const isRestricted = (result as any).restricted || false;
         setCouponState((prev) => ({
           ...prev,
           isValidating: false,
           discount: 0,
           message: result.message || "Invalid coupon code",
-          messageType: "error",
+          messageType: isRestricted ? "restricted" : "error",
           couponDetails: null,
           conditionFeedback: result.conditionFeedback || null,
           isApplied: false,
+          isRestricted,
+          restrictionReason: result.message || null,
         }));
 
         // Remove from redux if was previously applied
@@ -286,6 +295,8 @@ export const useCoupon = (options: UseCouponOptions = {}): UseCouponReturn => {
           messageType: null,
           discount: 0,
           couponDetails: null,
+          isRestricted: false,
+          restrictionReason: null,
         }));
       }
     },
@@ -323,6 +334,8 @@ export const useCoupon = (options: UseCouponOptions = {}): UseCouponReturn => {
       message: "Coupon removed",
       messageType: "info",
       couponDetails: null,
+      isRestricted: false,
+      restrictionReason: null,
     }));
 
     lastValidatedCode.current = "";
@@ -333,6 +346,8 @@ export const useCoupon = (options: UseCouponOptions = {}): UseCouponReturn => {
         ...prev,
         message: null,
         messageType: null,
+        isRestricted: false,
+        restrictionReason: null,
       }));
     }, 2000);
   }, [dispatch]);
@@ -350,6 +365,8 @@ export const useCoupon = (options: UseCouponOptions = {}): UseCouponReturn => {
       messageType: null,
       couponDetails: null,
       conditionFeedback: null,
+      isRestricted: false,
+      restrictionReason: null,
     });
 
     lastValidatedCode.current = "";
@@ -371,6 +388,8 @@ export const useCoupon = (options: UseCouponOptions = {}): UseCouponReturn => {
         message: "Coupons cannot be combined with combo deals",
         messageType: "error",
         couponDetails: null,
+        isRestricted: false,
+        restrictionReason: null,
       }));
       lastValidatedCode.current = "";
       return;
