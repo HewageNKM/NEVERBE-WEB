@@ -307,6 +307,8 @@ const CheckoutForm = () => {
         updatedAt: new Date().toISOString(),
       };
 
+      console.log("New Order:", newOrder);
+
       const token = await executeRecaptcha("new_order");
 
       switch (paymentTypeId?.toUpperCase()) {
