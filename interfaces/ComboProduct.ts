@@ -1,6 +1,7 @@
 import { firestore } from "firebase-admin";
 import Timestamp = firestore.Timestamp;
 import { Img } from "./Img";
+import { VariantMode } from "./Promotion";
 
 export interface ComboProduct {
   id: string;
@@ -36,7 +37,8 @@ export interface ComboProduct {
 
 export interface ComboItem {
   productId: string;
-  variantId?: string; // Optional if bundle applies to any variant
+  variantMode: VariantMode; // ALL_VARIANTS or SPECIFIC_VARIANTS
+  variantIds?: string[]; // Only used when variantMode is SPECIFIC_VARIANTS
   quantity: number;
   required: boolean; // Is this item mandatory for the bundle?
 }

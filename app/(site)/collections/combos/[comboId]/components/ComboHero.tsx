@@ -12,7 +12,7 @@ import toast from "react-hot-toast";
 import { AppDispatch } from "@/redux/store";
 import { addMultipleToBag } from "@/redux/bagSlice/bagSlice";
 import { ComboProduct, ComboItem } from "@/interfaces/ComboProduct";
-import { BagItem } from "@/interfaces/BagItem";
+import { BagItem, VariantMode } from "@/interfaces/BagItem";
 
 // --- Types ---
 interface PopulatedComboItem extends ComboItem {
@@ -53,6 +53,9 @@ interface ComboSlot {
   required: boolean;
   isFreeUnit: boolean;
   label: string;
+  // Variant restrictions from combo item
+  variantMode: VariantMode;
+  variantIds?: string[];
 }
 
 interface SlotSelection {
@@ -105,6 +108,8 @@ const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
           required: item.required,
           isFreeUnit,
           label,
+          variantMode: item.variantMode || "ALL_VARIANTS",
+          variantIds: item.variantIds,
         });
       }
     });
@@ -124,7 +129,15 @@ const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
     const initialSelections: Record<string, SlotSelection> = {};
     slots.forEach((slot) => {
       if (slot.product) {
-        const variant = slot.variant || slot.product.variants?.[0];
+        // Get allowed variants based on variantMode
+        const allowedVariants =
+          slot.variantMode === "SPECIFIC_VARIANTS" && slot.variantIds?.length
+            ? slot.product.variants.filter((v) =>
+                slot.variantIds!.includes(v.variantId)
+              )
+            : slot.product.variants;
+
+        const variant = slot.variant || allowedVariants?.[0];
         initialSelections[slot.slotId] = {
           slotId: slot.slotId,
           variantId: variant?.variantId || "",
@@ -535,31 +548,44 @@ const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
                   </h3>
                 </div>
                 {/* Variant Color Swatches */}
-                {activeProduct.variants.length > 1 && (
-                  <div className="flex gap-1">
-                    {activeProduct.variants.map((v) => (
-                      <button
-                        key={v.variantId}
-                        onClick={() =>
-                          handleVariantSelect(activeSlot.slotId, v.variantId)
-                        }
-                        className={`w-8 h-8 border-2 ${
-                          activeSelection?.variantId === v.variantId
-                            ? "border-black"
-                            : "border-gray-200"
-                        }`}
-                      >
-                        <Image
-                          src={v.images?.[0]?.url || ""}
-                          alt=""
-                          width={32}
-                          height={32}
-                          className="w-full h-full object-cover"
-                        />
-                      </button>
-                    ))}
-                  </div>
-                )}
+                {(() => {
+                  // Filter variants based on restriction
+                  const allowedVariants =
+                    activeSlot.variantMode === "SPECIFIC_VARIANTS" &&
+                    activeSlot.variantIds?.length
+                      ? activeProduct.variants.filter((v) =>
+                          activeSlot.variantIds!.includes(v.variantId)
+                        )
+                      : activeProduct.variants;
+
+                  if (allowedVariants.length <= 1) return null;
+
+                  return (
+                    <div className="flex gap-1">
+                      {allowedVariants.map((v) => (
+                        <button
+                          key={v.variantId}
+                          onClick={() =>
+                            handleVariantSelect(activeSlot.slotId, v.variantId)
+                          }
+                          className={`w-8 h-8 border-2 ${
+                            activeSelection?.variantId === v.variantId
+                              ? "border-black"
+                              : "border-gray-200"
+                          }`}
+                        >
+                          <Image
+                            src={v.images?.[0]?.url || ""}
+                            alt=""
+                            width={32}
+                            height={32}
+                            className="w-full h-full object-cover"
+                          />
+                        </button>
+                      ))}
+                    </div>
+                  );
+                })()}
               </div>
 
               {/* Size Grid */}

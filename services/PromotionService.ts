@@ -1,5 +1,10 @@
 import { adminFirestore } from "@/firebase/firebaseAdmin";
-import { Coupon, Promotion, CouponUsage } from "@/interfaces/BagItem";
+import {
+  Coupon,
+  Promotion,
+  CouponUsage,
+  ProductVariantTarget,
+} from "@/interfaces/BagItem";
 import { FieldValue, Timestamp } from "firebase-admin/firestore";
 
 const PROMOTIONS_COLLECTION = "promotions";
@@ -37,6 +42,74 @@ interface CartItem {
   quantity: number;
   price: number;
 }
+
+/**
+ * Check if cart items are eligible based on variant-level targeting.
+ * Returns true if at least one cart item matches the targeting rules.
+ */
+const checkVariantEligibility = (
+  cartItems: CartItem[],
+  targets: ProductVariantTarget[]
+): boolean => {
+  if (!targets || targets.length === 0) {
+    return true; // No variant restrictions, all products allowed
+  }
+
+  for (const target of targets) {
+    const matchingCartItems = cartItems.filter(
+      (item) => item.itemId === target.productId
+    );
+
+    if (matchingCartItems.length === 0) {
+      continue; // This target product is not in cart
+    }
+
+    // Check variant mode
+    if (target.variantMode === "ALL_VARIANTS") {
+      return true; // Any variant of this product qualifies
+    }
+
+    if (target.variantMode === "SPECIFIC_VARIANTS" && target.variantIds) {
+      // Check if any cart item has a matching variant
+      const hasMatchingVariant = matchingCartItems.some(
+        (item) => item.variantId && target.variantIds!.includes(item.variantId)
+      );
+      if (hasMatchingVariant) {
+        return true;
+      }
+    }
+  }
+
+  return false; // No matching products/variants found
+};
+
+/**
+ * Get cart items that match the variant-level targeting rules.
+ * Used to calculate discount amount only on eligible items.
+ */
+const getEligibleCartItems = (
+  cartItems: CartItem[],
+  targets: ProductVariantTarget[]
+): CartItem[] => {
+  if (!targets || targets.length === 0) {
+    return cartItems; // No restrictions, all items eligible
+  }
+
+  return cartItems.filter((item) => {
+    for (const target of targets) {
+      if (item.itemId !== target.productId) continue;
+
+      if (target.variantMode === "ALL_VARIANTS") {
+        return true;
+      }
+
+      if (target.variantMode === "SPECIFIC_VARIANTS" && target.variantIds) {
+        return item.variantId && target.variantIds.includes(item.variantId);
+      }
+    }
+    return false;
+  });
+};
 
 export const getCouponByCode = async (code: string): Promise<Coupon | null> => {
   try {
@@ -214,8 +287,32 @@ export const validateCoupon = async (
     }
   }
 
-  // 9. Applicable Products Check
-  if (coupon.applicableProducts && coupon.applicableProducts.length > 0) {
+  // 9a. Variant-Level Products Check (new)
+  if (
+    coupon.applicableProductVariants &&
+    coupon.applicableProductVariants.length > 0
+  ) {
+    const variantEligible = checkVariantEligibility(
+      cartItems,
+      coupon.applicableProductVariants
+    );
+    if (!variantEligible) {
+      return {
+        valid: false,
+        discount: 0,
+        message:
+          "This coupon is not valid for the product variants in your cart",
+      };
+    }
+  }
+
+  // 9b. Applicable Products Check (legacy - product-level only)
+  if (
+    coupon.applicableProducts &&
+    coupon.applicableProducts.length > 0 &&
+    (!coupon.applicableProductVariants ||
+      coupon.applicableProductVariants.length === 0)
+  ) {
     const hasApplicableProduct = cartItems.some((item) =>
       coupon.applicableProducts!.includes(item.itemId)
     );
@@ -274,14 +371,39 @@ export const validateCoupon = async (
   } else if (coupon.discountType === "PERCENTAGE") {
     // If applicable products are specified, only apply discount to those
     let applicableTotal = cartTotal;
-    if (coupon.applicableProducts && coupon.applicableProducts.length > 0) {
-      applicableTotal = cartItems
-        .filter((item) => coupon.applicableProducts!.includes(item.itemId))
-        .reduce((sum, item) => sum + item.price * item.quantity, 0);
+    let eligibleItems = cartItems;
+
+    // If variant-level targeting is specified, use that first
+    if (
+      coupon.applicableProductVariants &&
+      coupon.applicableProductVariants.length > 0
+    ) {
+      eligibleItems = getEligibleCartItems(
+        cartItems,
+        coupon.applicableProductVariants
+      );
+      applicableTotal = eligibleItems.reduce(
+        (sum, item) => sum + item.price * item.quantity,
+        0
+      );
     }
+    // Fallback to legacy product-level targeting
+    else if (
+      coupon.applicableProducts &&
+      coupon.applicableProducts.length > 0
+    ) {
+      eligibleItems = cartItems.filter((item) =>
+        coupon.applicableProducts!.includes(item.itemId)
+      );
+      applicableTotal = eligibleItems.reduce(
+        (sum, item) => sum + item.price * item.quantity,
+        0
+      );
+    }
+
     // Exclude excluded products from discount calculation
     if (coupon.excludedProducts && coupon.excludedProducts.length > 0) {
-      const excludedTotal = cartItems
+      const excludedTotal = eligibleItems
         .filter((item) => coupon.excludedProducts!.includes(item.itemId))
         .reduce((sum, item) => sum + item.price * item.quantity, 0);
       applicableTotal = applicableTotal - excludedTotal;
