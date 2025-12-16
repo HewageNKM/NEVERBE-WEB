@@ -43,6 +43,7 @@ export const getCouponByCode = async (code: string): Promise<Coupon | null> => {
     const snapshot = await adminFirestore
       .collection(COUPONS_COLLECTION)
       .where("code", "==", code)
+      .where("isDeleted", "!=", true)
       .limit(1)
       .get();
     if (snapshot.empty) return null;
@@ -179,6 +180,7 @@ export const getActivePromotions = async () => {
     const snapshot = await adminFirestore
       .collection(PROMOTIONS_COLLECTION)
       .where("status", "==", "ACTIVE")
+      .where("isDeleted", "!=", true)
       .get();
 
     const promotions = snapshot.docs
@@ -216,6 +218,7 @@ export const getActiveCombos = async () => {
     const snapshot = await adminFirestore
       .collection("combo_products")
       .where("status", "==", "ACTIVE")
+      .where("isDeleted", "!=", true)
       .get();
     return snapshot.docs.map((doc) =>
       serializeCombo({ id: doc.id, ...doc.data() })
@@ -236,6 +239,9 @@ export const getComboById = async (id: string) => {
     if (!doc.exists) return null;
 
     const combo = { id: doc.id, ...doc.data() } as any;
+
+    // Skip soft-deleted combos
+    if (combo.isDeleted) return null;
 
     // Populate product details for each combo item
     const populatedItems = await Promise.all(
@@ -343,6 +349,7 @@ export const getPaginatedCombos = async (
     const allCombosSnapshot = await adminFirestore
       .collection("combo_products")
       .where("status", "==", "ACTIVE")
+      .where("isDeleted", "!=", true)
       .get();
 
     const total = allCombosSnapshot.size;

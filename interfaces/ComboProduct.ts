@@ -29,6 +29,9 @@ export interface ComboProduct {
 
   createdAt: Timestamp | string;
   updatedAt: Timestamp | string;
+
+  // Soft delete
+  isDeleted?: boolean;
 }
 
 export interface ComboItem {

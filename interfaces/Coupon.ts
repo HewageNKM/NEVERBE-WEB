@@ -36,6 +36,9 @@ export interface Coupon {
 
   createdAt: Timestamp | string;
   updatedAt: Timestamp | string;
+
+  // Soft delete
+  isDeleted?: boolean;
 }
 
 export interface CouponUsage {
