@@ -24,7 +24,7 @@ import SizeGuideDialog from "@/components/SizeGuideDialog";
 const ProductHero = ({ item }: { item: Product }) => {
   const router = useRouter();
   const dispatch: AppDispatch = useDispatch();
-  const bagItems = useSelector((state: RootState) => state.bag.items);
+  const bagItems = useSelector((state: RootState) => state.bag.bag);
 
   const [selectedImage, setSelectedImage] = useState(item.thumbnail);
   const [selectedVariant, setSelectedVariant] = useState<ProductVariant>(

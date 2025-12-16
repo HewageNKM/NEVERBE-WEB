@@ -62,14 +62,14 @@ const createCustomerFromForm = (form: any): Customer => {
 const CheckoutForm = () => {
   const dispatch: AppDispatch = useDispatch();
   const router = useRouter();
-  const bagItems = useSelector((state: RootState) => state.bagSlice.bag);
+  const bagItems = useSelector((state: RootState) => state.bag.bag);
   const couponDiscount = useSelector(
-    (state: RootState) => state.bagSlice.couponDiscount
+    (state: RootState) => state.bag.couponDiscount
   );
   const promotionDiscount =
-    useSelector((state: RootState) => state.bagSlice.promotionDiscount) || 0;
+    useSelector((state: RootState) => state.bag.promotionDiscount) || 0;
   const promotionIds = useSelector(
-    (state: RootState) => state.bagSlice.promotionIds
+    (state: RootState) => state.bag.promotionIds
   );
   const user = auth?.currentUser;
 

@@ -100,11 +100,11 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
   setPaymentFee,
   selectedPaymentFee,
 }) => {
-  const bagItems = useSelector((state: RootState) => state.bagSlice.bag);
+  const bagItems = useSelector((state: RootState) => state.bag.bag);
   const couponDiscount =
-    useSelector((state: RootState) => state.bagSlice.couponDiscount) || 0;
+    useSelector((state: RootState) => state.bag.couponDiscount) || 0;
   const promotionDiscount =
-    useSelector((state: RootState) => state.bagSlice.promotionDiscount) || 0;
+    useSelector((state: RootState) => state.bag.promotionDiscount) || 0;
 
   const [paymentOptions, setPaymentOptions] = useState<PaymentMethod[]>([]);
   const [isPaymentLoading, setIsPaymentLoading] = useState(false);

@@ -10,7 +10,7 @@ import dealsSlice from "@/redux/dealsSlice/dealsSlice";
 export const makeStore = () => {
   return configureStore({
     reducer: {
-      bagSlice,
+      bag: bagSlice,
       productsSlice,
       authSlice,
       brandSlice,

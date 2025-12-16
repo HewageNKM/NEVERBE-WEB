@@ -182,11 +182,11 @@ const Bag = () => {
   const dispatch: AppDispatch = useDispatch();
   const router = useRouter();
 
-  const bagItems = useSelector((state: RootState) => state.bagSlice.bag);
+  const bagItems = useSelector((state: RootState) => state.bag.bag);
   const couponDiscount =
-    useSelector((state: RootState) => state.bagSlice.couponDiscount) || 0;
+    useSelector((state: RootState) => state.bag.couponDiscount) || 0;
   const promotionDiscount =
-    useSelector((state: RootState) => state.bagSlice.promotionDiscount) || 0;
+    useSelector((state: RootState) => state.bag.promotionDiscount) || 0;
 
   // Group combo items by comboId, keep regular items separate
   const { bundles, regularItems } = useMemo(() => {

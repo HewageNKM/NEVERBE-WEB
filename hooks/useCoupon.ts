@@ -80,12 +80,12 @@ export const useCoupon = (options: UseCouponOptions = {}): UseCouponReturn => {
   const { debounceMs = 500, autoValidate = true } = options;
 
   const dispatch = useDispatch();
-  const bagItems = useSelector((state: RootState) => state.bagSlice.bag);
+  const bagItems = useSelector((state: RootState) => state.bag.bag);
   const savedCouponCode = useSelector(
-    (state: RootState) => state.bagSlice.couponCode
+    (state: RootState) => state.bag.couponCode
   );
   const savedDiscount = useSelector(
-    (state: RootState) => state.bagSlice.couponDiscount
+    (state: RootState) => state.bag.couponDiscount
   );
   const user = useSelector((state: RootState) => state.authSlice.user);
 

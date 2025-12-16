@@ -103,11 +103,9 @@ export const usePayment = (options: UsePaymentOptions): UsePaymentReturn => {
   const { executeRecaptcha } = useGoogleReCaptcha();
 
   const couponDiscount = useSelector(
-    (state: RootState) => state.bagSlice.couponDiscount
+    (state: RootState) => state.bag.couponDiscount
   );
-  const couponCode = useSelector(
-    (state: RootState) => state.bagSlice.couponCode
-  );
+  const couponCode = useSelector((state: RootState) => state.bag.couponCode);
 
   // State
   const [isProcessing, setIsProcessing] = useState(false);
@@ -187,7 +185,7 @@ export const usePayment = (options: UsePaymentOptions): UsePaymentReturn => {
       couponCode: couponCode || undefined,
       couponDiscount: totals.couponDiscount,
       promotionDiscount: totals.promotionDiscount,
-      appliedPromotionId: promotionData?.appliedPromotionId,
+      appliedPromotionId: promotionData?.appliedPromotionId || undefined,
       appliedPromotionIds: promotionData?.appliedPromotionIds,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),

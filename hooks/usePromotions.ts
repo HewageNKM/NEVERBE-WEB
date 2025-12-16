@@ -57,9 +57,9 @@ interface UsePromotionsReturn {
  */
 export const usePromotions = (): UsePromotionsReturn => {
   const dispatch = useDispatch();
-  const bagItems = useSelector((state: RootState) => state.bagSlice.bag);
+  const bagItems = useSelector((state: RootState) => state.bag.bag);
   const appliedPromotionId = useSelector(
-    (state: RootState) => state.bagSlice.promotionId
+    (state: RootState) => state.bag.promotionId
   );
   const [promotions, setPromotions] = useState<ActivePromotion[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -647,13 +647,13 @@ export const usePromotions = (): UsePromotionsReturn => {
 
   // Get applied promotions from Redux state
   const appliedPromotionIds = useSelector(
-    (state: RootState) => state.bagSlice.promotionIds
+    (state: RootState) => state.bag.promotionIds
   );
   const totalPromotionDiscount = useSelector(
-    (state: RootState) => state.bagSlice.promotionDiscount
+    (state: RootState) => state.bag.promotionDiscount
   );
   const reduxAppliedPromotions = useSelector(
-    (state: RootState) => state.bagSlice.appliedPromotions
+    (state: RootState) => state.bag.appliedPromotions
   );
 
   // Find currently applied promotion (primary - for backward compat)

@@ -36,7 +36,7 @@ interface HeaderProps {
 }
 
 const Header = ({ season, mainNav = [] }: HeaderProps) => {
-  const bagItems = useSelector((state: RootState) => state.bagSlice.bag);
+  const bagItems = useSelector((state: RootState) => state.bag.bag);
   const user = useSelector((state: RootState) => state.authSlice.user);
   const dispatch: AppDispatch = useDispatch();
   const [scrolled, setScrolled] = useState(false);

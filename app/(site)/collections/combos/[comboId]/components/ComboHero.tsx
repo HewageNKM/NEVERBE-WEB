@@ -72,7 +72,7 @@ interface ComboHeroProps {
 const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
   const dispatch: AppDispatch = useDispatch();
   const router = useRouter();
-  const bagItems = useSelector((state: RootState) => state.bag.items);
+  const bagItems = useSelector((state: RootState) => state.bag.bag);
   const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER;
 
   // Helper to get bag quantity

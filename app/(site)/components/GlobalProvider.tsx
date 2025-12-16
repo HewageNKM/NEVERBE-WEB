@@ -29,7 +29,7 @@ const GlobalProvider = ({
 }: GlobalProviderProps) => {
   const dispatch: AppDispatch = useDispatch();
 
-  const showBag = useSelector((state: RootState) => state.bagSlice.showBag);
+  const showBag = useSelector((state: RootState) => state.bag.showBag);
   const showMenu = useSelector(
     (state: RootState) => state.headerSlice.showMenu
   );
