@@ -42,6 +42,16 @@ const nextConfig = {
             bodySizeLimit: "2mb",
         },
     },
+
+    async redirects() {
+        return [
+            {
+                source: "/collections/deals",
+                destination: "/collections/offers",
+                permanent: true,
+            },
+        ];
+    },
 };
 
 export default nextConfig;
