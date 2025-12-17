@@ -160,9 +160,49 @@ const OffersPage = async () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {coupons.map((coupon) => (
-                <CouponCard key={coupon.id} coupon={coupon} />
-              ))}
+              {coupons.map((coupon) => {
+                if (coupon.bannerUrl) {
+                  return (
+                    <div
+                      key={coupon.id}
+                      className="group block relative aspect-video bg-gray-100 overflow-hidden rounded-lg"
+                    >
+                      <Image
+                        src={coupon.bannerUrl}
+                        alt={coupon.name}
+                        fill
+                        className="object-cover transition-transform duration-700 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-90" />
+                      <div className="absolute bottom-0 left-0 p-6 w-full">
+                        <h3 className="text-white text-xl font-black uppercase tracking-tight mb-1">
+                          {coupon.code.toUpperCase()}
+                        </h3>
+                        <p className="text-white/80 text-sm font-medium line-clamp-2 mb-2">
+                          {coupon.description}
+                        </p>
+                        <span className="inline-block px-3 py-1 bg-white text-black text-[10px] font-bold uppercase tracking-widest rounded hover:bg-gray-200 cursor-pointer">
+                          Copy Code
+                        </span>
+                      </div>
+                    </div>
+                  );
+                }
+
+                return (
+                  <div
+                    key={coupon.id}
+                    className="bg-gray-50 border border-gray-200 p-6 rounded-lg flex flex-col justify-center text-center"
+                  >
+                    <h3 className="text-3xl font-black uppercase tracking-tight mb-2 text-black">
+                      {coupon.code.toUpperCase()}
+                    </h3>
+                    <p className="text-sm text-gray-500 font-medium leading-relaxed">
+                      {coupon.description || "Apply this code at checkout."}
+                    </p>
+                  </div>
+                );
+              })}
             </div>
           </section>
         )}
