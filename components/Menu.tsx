@@ -16,7 +16,16 @@ import { getAlgoliaClient } from "@/util";
 import SearchDialog from "@/components/SearchDialog";
 import { ProductVariant } from "@/interfaces/ProductVariant";
 
-const Menu = () => {
+import { NavigationItem } from "@/services/WebsiteService";
+
+// Default fallback if no dynamic nav
+const DEFAULT_LINKS: NavigationItem[] = [
+  { title: "Home", link: "/" },
+  { title: "Bundles", link: "/collections/combos" },
+  { title: "Offers", link: "/collections/offers" },
+];
+
+const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
   const dispatch: AppDispatch = useDispatch();
   const searchClient = getAlgoliaClient();
   const [search, setSearch] = useState("");
@@ -26,6 +35,13 @@ const Menu = () => {
   const [brands, setBrands] = useState<any[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
   const [openSection, setOpenSection] = useState<string | null>(null);
+
+  // Use dynamic nav or default
+  // Ensure "Home" is first if not present
+  let displayLinks = mainNav.length > 0 ? mainNav : DEFAULT_LINKS;
+  if (!displayLinks.some((l) => l.link === "/")) {
+    displayLinks = [{ title: "Home", link: "/" }, ...displayLinks];
+  }
 
   // --- SEARCH LOGIC (Kept identical for functionality) ---
   const onSearch = async (evt: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,6 +61,7 @@ const Menu = () => {
           { indexName: "products_index", query: query.trim(), hitsPerPage: 30 },
         ],
       });
+      // @ts-ignore
       let filteredResults = searchResults.results[0].hits.filter(
         (item: any) =>
           item.status === true &&
@@ -159,22 +176,15 @@ const Menu = () => {
         {/* Navigation Links */}
         <nav className="flex-1 overflow-y-auto px-6 py-2 space-y-1">
           {/* Primary Links */}
-          {[
-            { name: "Home", href: "/" },
-            { name: "Bundles", href: "/collections/combos", highlight: true },
-            { name: "Deals", href: "/collections/deals", highlight: true },
-            { name: "Offers", href: "/collections/offers", highlight: true },
-          ].map((link) => (
+          {displayLinks.map((link) => (
             <Link
-              key={link.href}
-              href={link.href}
+              key={link.title}
+              href={link.link}
               onClick={() => dispatch(toggleMenu(false))}
-              className={`flex items-center justify-between py-4 border-b border-gray-100 group ${
-                link.highlight ? "text-red-600" : "text-black"
-              }`}
+              className={`flex items-center justify-between py-4 border-b border-gray-100 group text-black`}
             >
               <span className="text-2xl font-black uppercase tracking-tight group-hover:pl-2 transition-all">
-                {link.name}
+                {link.title}
               </span>
               <IoChevronForward className="text-gray-300 group-hover:text-black transition-colors" />
             </Link>

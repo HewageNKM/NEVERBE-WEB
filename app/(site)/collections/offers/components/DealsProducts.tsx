@@ -85,7 +85,7 @@ const DealsProducts = ({ items }: { items: Product[] }) => {
   }, []);
 
   return (
-    <section className="w-full max-w-[1440px] mx-auto px-4 md:px-8 pb-20 flex gap-12">
+    <section className="w-full flex gap-12">
       {/* Sidebar Filter */}
       <DealsFilter />
 

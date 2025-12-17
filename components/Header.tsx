@@ -27,7 +27,6 @@ const DEFAULT_NAV_ITEMS: NavigationItem[] = [
   { title: "Men", link: "/collections/men" },
   { title: "Women", link: "/collections/women" },
   { title: "Combos", link: "/collections/combos" },
-  { title: "Deals", link: "/collections/deals" },
   { title: "Offers", link: "/collections/offers" },
 ];
 

@@ -46,7 +46,9 @@ const GlobalProvider = ({
         {children}
         <Footer footerNav={footerNav} socialLinks={socialLinks} />
         <AnimatePresence>{showBag && <Bag />}</AnimatePresence>
-        <AnimatePresence>{showMenu && <Menu />}</AnimatePresence>
+        <AnimatePresence>
+          {showMenu && <Menu mainNav={mainNav} />}
+        </AnimatePresence>
         <Analytics />
         <SpeedInsights />
       </PromotionsProvider>
