@@ -370,7 +370,6 @@ export const getProductsByBrand = async (
 // ====================== Get Deals Products ======================
 // ====================== Get Deals Products ======================
 import { getActivePromotions } from "./PromotionService";
-import { FieldPath } from "firebase-admin/firestore";
 
 export const getDealsProducts = async (
   page: number = 1,
@@ -386,9 +385,23 @@ export const getDealsProducts = async (
     // 1. Get Promoted Product IDs (Unified Promotion Model)
     const activePromotions = await getActivePromotions();
     const promoProductIds = new Set<string>();
+    let hasGlobalPromotion = false;
 
     activePromotions.forEach((promo: any) => {
-      // Product Level
+      // Check if this is a global promotion (no specific product targeting)
+      const hasProductTargeting =
+        (promo.applicableProducts && promo.applicableProducts.length > 0) ||
+        (promo.applicableProductVariants &&
+          promo.applicableProductVariants.length > 0) ||
+        (promo.conditions &&
+          promo.conditions.some((c: any) => c.type === "SPECIFIC_PRODUCT"));
+
+      if (!hasProductTargeting) {
+        // This is a global promotion
+        hasGlobalPromotion = true;
+      }
+
+      // Product Level (Legacy)
       if (promo.applicableProducts) {
         promo.applicableProducts.forEach((id: string) =>
           promoProductIds.add(id)
@@ -400,7 +413,72 @@ export const getDealsProducts = async (
           promoProductIds.add(v.productId)
         );
       }
+      // Conditions Level (SPECIFIC_PRODUCT type)
+      if (promo.conditions && Array.isArray(promo.conditions)) {
+        promo.conditions.forEach((cond: any) => {
+          if (cond.type === "SPECIFIC_PRODUCT") {
+            // Handle value as single product ID (the actual format used)
+            if (cond.value && typeof cond.value === "string") {
+              promoProductIds.add(cond.value);
+            }
+            // Also handle productIds array (if present in legacy data)
+            if (cond.productIds && Array.isArray(cond.productIds)) {
+              cond.productIds.forEach((id: string) => promoProductIds.add(id));
+            }
+          }
+        });
+      }
     });
+
+    // If there's a global promotion, fetch ALL products instead
+    if (hasGlobalPromotion) {
+      console.log(
+        "[ProductService] Global promotion detected - fetching all products"
+      );
+
+      let allProductsQuery = adminFirestore
+        .collection("products")
+        .where("isDeleted", "==", false)
+        .where("status", "==", true)
+        .where("listing", "==", true);
+
+      if (tags && tags.length > 0)
+        allProductsQuery = allProductsQuery.where(
+          "tags",
+          "array-contains-any",
+          tags
+        );
+      if (typeof inStock === "boolean")
+        allProductsQuery = allProductsQuery.where("inStock", "==", inStock);
+
+      const totalCount = await allProductsQuery.count().get();
+      const total = totalCount.data().count;
+
+      const offset = (page - 1) * size;
+      const snapshot = await allProductsQuery.offset(offset).limit(size).get();
+
+      const dataList: Product[] = snapshot.docs
+        .map(
+          (doc) =>
+            ({
+              ...doc.data(),
+              createdAt: null,
+              updatedAt: null,
+            } as Product)
+        )
+        .map((p) => ({
+          ...p,
+          variants: (p.variants || []).filter(
+            (v: ProductVariant) => v.status && !v.isDeleted
+          ),
+        }))
+        .filter((p) => (p.variants?.length ?? 0) > 0);
+
+      console.log(
+        `[ProductService] All products fetched for global promo: ${dataList.length}`
+      );
+      return { total, dataList };
+    }
 
     const allPromoIds = Array.from(promoProductIds);
     const promoCount = allPromoIds.length;
@@ -445,21 +523,24 @@ export const getDealsProducts = async (
         // Firestore 'in' limit is 30. Chunk if needed (though page size is usually small)
         const validPromoIds = promoIdsToFetch.slice(0, 30);
 
+        // Query using the custom "id" field, not FieldPath.documentId()
+        // Products store their ID in a custom "id" field
         const promoDocs = await adminFirestore
           .collection("products")
-          .where(FieldPath.documentId(), "in", validPromoIds)
+          .where("id", "in", validPromoIds)
+          .where("isDeleted", "==", false)
+          .where("status", "==", true)
+          .where("listing", "==", true)
           .get();
 
-        const fetchedPromos = promoDocs.docs
-          .map(
-            (doc) =>
-              ({
-                ...doc.data(),
-                createdAt: null,
-                updatedAt: null,
-              } as Product)
-          )
-          .filter((p) => p.status && !p.isDeleted); // Re-check status just in case
+        const fetchedPromos = promoDocs.docs.map(
+          (doc) =>
+            ({
+              ...doc.data(),
+              createdAt: null,
+              updatedAt: null,
+            } as Product)
+        );
 
         dataList = [...dataList, ...fetchedPromos];
       }
