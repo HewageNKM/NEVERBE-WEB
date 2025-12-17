@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { getActiveCombosWithProducts } from "@/services/PromotionService";
+import { getPaginatedCombos } from "@/services/PromotionService";
 import { seoKeywords } from "@/constants";
 import CombosHeader from "./components/CombosHeader";
 import CombosGrid from "./components/CombosGrid";
@@ -39,14 +39,24 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://neverbe.lk"),
 };
 
-const CombosPage = async () => {
+const CombosPage = async ({
+  searchParams,
+}: {
+  searchParams: { page?: string };
+}) => {
+  const page = Number(searchParams?.page) || 1;
+  const pageSize = 6;
   let combos: any[] = [];
+  let total = 0;
+  let totalPages = 0;
 
   try {
-    combos = await getActiveCombosWithProducts();
+    const data = await getPaginatedCombos(page, pageSize);
+    combos = data.combos;
+    total = data.total;
+    totalPages = data.totalPages;
   } catch (e) {
     console.error("Error fetching combos:", e);
-    combos = [];
   }
 
   /* Structured Data for SEO */
@@ -56,7 +66,7 @@ const CombosPage = async () => {
     name: "Bundle Deals & Combo Offers",
     description:
       "Exclusive combo deals, BOGO offers, and bundle discounts on premium footwear in Sri Lanka.",
-    url: "https://neverbe.lk/collections/combos",
+    url: `https://neverbe.lk/collections/combos?page=${page}`,
     inLanguage: "en-LK",
     mainEntity: {
       "@type": "ItemList",
@@ -96,7 +106,11 @@ const CombosPage = async () => {
 
       <div className="w-full max-w-[1440px] mx-auto px-4 md:px-8">
         {combos.length > 0 ? (
-          <CombosGrid combos={combos} itemsPerPage={6} />
+          <CombosGrid
+            combos={combos}
+            currentPage={page}
+            totalPages={totalPages}
+          />
         ) : (
           <EmptyState
             heading="No bundle deals active right now."

@@ -9,10 +9,11 @@ import PromotionalAds from "./components/PromotionalAds";
 import { getHotProducts, getRecentItems } from "@/services/ProductService";
 import { getSliders } from "@/services/SlideService";
 import { getBrands } from "@/services/OtherService";
-import { getPromotions } from "@/services/WebsiteService";
 import type { Metadata } from "next";
 import SEOContent from "./components/SEOContent";
 import FeaturedCategories from "./components/FeaturedCategory";
+import TrendingBundles from "./components/TrendingBundles";
+import { getPaginatedCombos } from "@/services/PromotionService";
 
 export const metadata: Metadata = {
   title: {
@@ -67,10 +68,11 @@ const Page = async () => {
     getSliders().catch((err) => []),
     getHotProducts().catch((err) => []),
     getBrands().catch((err) => []),
-    getPromotions().catch((err) => []),
+    getPaginatedCombos(1, 8).catch((err) => ({ combos: [] })),
   ]);
 
-  const [arrivals, sliders, hotItems, brands, promotions] = await dataPromise;
+  const [arrivals, sliders, hotItems, brands, combosData] = await dataPromise;
+  const combos = combosData?.combos || [];
 
   /* STRUCTURED DATA: Organization + ShoeStore + WebSite
      Explicitly set name, legalName, alternateName, and logo to enforce brand text.
@@ -147,10 +149,14 @@ const Page = async () => {
       <FeaturedCategories />
 
       {/* Promotional Ads from NEVER-PANEL */}
-      <PromotionalAds promotions={promotions} />
+      <PromotionalAds />
 
       <div className="space-y-20 pb-20">
         {hotItems.length > 0 && <PopularProducts hotItems={hotItems} />}
+
+        {/* New Bundles Section */}
+        {combos.length > 0 && <TrendingBundles bundles={combos} />}
+
         {arrivals.length > 0 && <NewArrivals arrivals={arrivals} />}
 
         {/* A large visual break for Brands */}

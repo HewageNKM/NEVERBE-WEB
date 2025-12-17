@@ -28,6 +28,7 @@ const DEFAULT_NAV_ITEMS: NavigationItem[] = [
   { title: "Women", link: "/collections/women" },
   { title: "Combos", link: "/collections/combos" },
   { title: "Deals", link: "/collections/deals" },
+  { title: "Offers", link: "/collections/offers" },
 ];
 
 interface HeaderProps {
@@ -43,7 +44,12 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   // Use dynamic nav if available, otherwise fallback to defaults
-  const navItems = mainNav.length > 0 ? mainNav : DEFAULT_NAV_ITEMS;
+  let navItems = mainNav.length > 0 ? mainNav : DEFAULT_NAV_ITEMS;
+
+  // Manual override: Ensure Offers is present if not in dynamic list (temporary fix until DB updated)
+  if (!navItems.some((item) => item.link === "/collections/offers")) {
+    navItems = [...navItems, { title: "Offers", link: "/collections/offers" }];
+  }
 
   // --- SEARCH LOGIC ---
   const searchClient = getAlgoliaClient();

@@ -5,6 +5,8 @@ import Link from "next/link";
 import { KOKOLogo } from "@/assets/images";
 import { Product } from "@/interfaces/Product";
 
+import { usePromotionsContext } from "@/components/PromotionsProvider";
+
 const ItemCard = ({
   item,
   priority = false,
@@ -13,6 +15,7 @@ const ItemCard = ({
   priority?: boolean;
 }) => {
   const [outOfStocks, setOutOfStocks] = useState(false);
+  const { getPromotionForProduct } = usePromotionsContext();
 
   useEffect(() => {
     if (!item.variants?.length) {
@@ -20,12 +23,46 @@ const ItemCard = ({
     }
   }, [item]);
 
-  const discountedPrice =
-    item.discount > 0
-      ? Math.round(
-          (item.sellingPrice - (item.sellingPrice * item.discount) / 100) / 10
-        ) * 10
-      : Math.round(item.sellingPrice);
+  const activePromo = getPromotionForProduct(item.id);
+
+  let finalPrice = item.sellingPrice;
+  let originalPrice = item.marketPrice; // Usually MSRP
+
+  // 1. Apply Standard Discount first (if no promo overrides or if promo stacks - assuming promo overrides for display simplicity or applying on top?)
+  // The User request says "apply promotion values to retail price".
+  // Usually Application Logic: Market Price -> Standard Discount -> Selling Price.
+  // Promo applies to Selling Price.
+
+  // Base calculation from standard discount
+  if (item.discount > 0) {
+    finalPrice =
+      Math.round(
+        (item.sellingPrice - (item.sellingPrice * item.discount) / 100) / 10
+      ) * 10;
+  } else {
+    finalPrice = Math.round(item.sellingPrice);
+  }
+
+  // 2. Apply Active Promotion (Visual Override)
+  if (activePromo) {
+    if (activePromo.type === "PERCENTAGE" && activePromo.actions?.[0]?.value) {
+      const discountVal = activePromo.actions[0].value;
+      // Apply off the current finalPrice (stacking) or original?
+      // Usually users want to see the final price they pay.
+      finalPrice =
+        Math.round((finalPrice * (100 - discountVal)) / 100 / 10) * 10;
+    } else if (
+      activePromo.type === "FIXED" &&
+      activePromo.actions?.[0]?.value
+    ) {
+      finalPrice = Math.max(0, finalPrice - activePromo.actions[0].value);
+    }
+  }
+
+  const displayedDiscountedPrice = finalPrice;
+  // We keep the variable name consistent with usage below or refactor usage.
+  // The existing code uses `discountedPrice`. Let's map to that.
+  const discountedPrice = displayedDiscountedPrice;
 
   return (
     <article className="group w-full flex flex-col gap-2">
@@ -45,11 +82,27 @@ const ItemCard = ({
           />
 
           {/* Badges */}
-          {item.discount > 0 && (
-            <span className="absolute top-3 left-3 bg-white text-black text-xs font-bold px-2 py-1 rounded-md shadow-sm">
-              -{item.discount}%
-            </span>
-          )}
+          <div className="absolute top-3 left-3 flex flex-col gap-1 items-start">
+            {item.discount > 0 && !activePromo && (
+              <span className="bg-white text-black text-xs font-bold px-2 py-1 rounded-md shadow-sm">
+                -{item.discount}%
+              </span>
+            )}
+
+            {/* Promotion Badge */}
+            {activePromo && (
+              <span className="bg-black text-white text-[10px] font-bold px-2 py-1 rounded-md shadow-sm uppercase tracking-wide animate-pulse">
+                {activePromo.type === "BOGO"
+                  ? "Buy 1 Get 1"
+                  : activePromo.type === "PERCENTAGE"
+                  ? `${activePromo.actions?.[0]?.value}% Off`
+                  : activePromo.type === "FREE_SHIPPING"
+                  ? "Free Ship"
+                  : "Promo"}
+              </span>
+            )}
+          </div>
+
           {outOfStocks && (
             <div className="absolute inset-0 bg-white/60 flex items-center justify-center">
               <span className="bg-black text-white px-3 py-1 text-xs font-bold uppercase rounded-full">
@@ -72,12 +125,19 @@ const ItemCard = ({
           </p>
 
           <div className="mt-2 flex items-center gap-2">
-            <span className="text-black font-bold text-lg">
+            <span
+              className={`${
+                item.discount > 0 || activePromo ? "text-red-600" : "text-black"
+              } font-bold text-lg`}
+            >
               Rs. {discountedPrice.toLocaleString()}
             </span>
-            {item.discount > 0 && (
+            {(item.discount > 0 || activePromo) && (
               <span className="text-gray-400 text-sm line-through decoration-1">
-                Rs. {item.marketPrice.toLocaleString()}
+                Rs.{" "}
+                {item.marketPrice > item.sellingPrice
+                  ? item.marketPrice.toLocaleString()
+                  : item.sellingPrice.toLocaleString()}
               </span>
             )}
           </div>

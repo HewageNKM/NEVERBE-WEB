@@ -11,6 +11,8 @@ import {
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import useCoupon from "@/hooks/useCoupon";
 
+import confetti from "canvas-confetti";
+
 interface CouponInputProps {
   className?: string;
   onDiscountChange?: (discount: number) => void;
@@ -28,6 +30,18 @@ const CouponInput: React.FC<CouponInputProps> = ({
     isBlocked,
     hasComboItems,
   } = useCoupon({ autoValidate: true, debounceMs: 600 });
+
+  // Confetti Effect
+  useEffect(() => {
+    if (couponState.isApplied) {
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ["#000000", "#ffffff"], // Black and White confetti
+      });
+    }
+  }, [couponState.isApplied]);
 
   // Notify parent of discount changes
   useEffect(() => {

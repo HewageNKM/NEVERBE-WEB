@@ -555,6 +555,57 @@ export const getActivePromotions = async () => {
   }
 };
 
+/**
+ * Get all active public coupons
+ */
+export const getActiveCoupons = async () => {
+  try {
+    const now = new Date();
+    const snapshot = await adminFirestore
+      .collection(COUPONS_COLLECTION)
+      .where("status", "==", "ACTIVE")
+      .where("isDeleted", "!=", true)
+      .get();
+
+    const coupons = snapshot.docs
+      .map((doc) => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          ...data,
+          startDate: serializeTimestamp(data.startDate),
+          endDate: serializeTimestamp(data.endDate),
+          createdAt: serializeTimestamp(data.createdAt),
+          updatedAt: serializeTimestamp(data.updatedAt),
+        } as Coupon;
+      })
+      .filter((coupon) => {
+        // Filter by date range
+        const startDate = coupon.startDate
+          ? new Date(coupon.startDate as string)
+          : null;
+        const endDate = coupon.endDate
+          ? new Date(coupon.endDate as string)
+          : null;
+
+        if (startDate && now < startDate) return false;
+        if (endDate && now > endDate) return false;
+
+        // Filter out private coupons (restricted to specific users)
+        if (coupon.restrictedToUsers && coupon.restrictedToUsers.length > 0) {
+          return false;
+        }
+
+        return true;
+      });
+
+    return coupons;
+  } catch (e) {
+    console.error("Error fetching coupons", e);
+    return [];
+  }
+};
+
 export const getActiveCombos = async () => {
   try {
     const snapshot = await adminFirestore

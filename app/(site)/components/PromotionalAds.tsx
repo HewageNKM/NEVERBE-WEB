@@ -4,18 +4,25 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import type { Promotion } from "@/services/WebsiteService";
+import type { Promotion } from "@/services/WebsiteService"; // Keeping type if needed but not from service logic? Actually no, local usage.
 
-interface PromotionalAdsProps {
-  promotions: Promotion[];
-}
+import { usePromotionsContext } from "@/components/PromotionsProvider";
 
-/**
- * Promotional Ads Banner Grid
- * Displays promotional banners from Firestore website_ads collection
- */
-const PromotionalAds: React.FC<PromotionalAdsProps> = ({ promotions }) => {
-  if (!promotions || promotions.length === 0) return null;
+const PromotionalAds: React.FC = () => {
+  const { promotions: systemPromotions } = usePromotionsContext();
+
+  // Map system promotions to UI format
+  const allPromotions = systemPromotions
+    .filter((p) => p.bannerUrl && p.status === "ACTIVE")
+    .map((p) => ({
+      id: p.id,
+      title: p.name, // Or add bannerTitle specifically
+      url: p.bannerUrl!,
+      link: "/collections/deals", // Default to deals page for now
+      type: "SYSTEM",
+    }));
+
+  if (!allPromotions || allPromotions.length === 0) return null;
 
   return (
     <section className="w-full py-12 px-4 md:px-8 max-w-[1440px] mx-auto">
@@ -30,14 +37,14 @@ const PromotionalAds: React.FC<PromotionalAdsProps> = ({ promotions }) => {
 
       <div
         className={`grid gap-4 ${
-          promotions.length === 1
+          allPromotions.length === 1
             ? "grid-cols-1"
-            : promotions.length === 2
+            : allPromotions.length === 2
             ? "grid-cols-1 md:grid-cols-2"
             : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
         }`}
       >
-        {promotions.map((promo, index) => (
+        {allPromotions.map((promo, index) => (
           <motion.div
             key={promo.id}
             initial={{ opacity: 0, y: 20 }}
@@ -46,7 +53,7 @@ const PromotionalAds: React.FC<PromotionalAdsProps> = ({ promotions }) => {
           >
             <Link
               href={promo.link}
-              className="group relative block overflow-hidden bg-gray-100 aspect-[16/9] md:aspect-[2/1]"
+              className="group relative block overflow-hidden bg-gray-100 aspect-video md:aspect-2/1"
             >
               <Image
                 src={promo.url}
@@ -56,7 +63,7 @@ const PromotionalAds: React.FC<PromotionalAdsProps> = ({ promotions }) => {
                 sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
               />
               {/* Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+              <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent" />
               {/* Title */}
               <div className="absolute bottom-0 left-0 right-0 p-6">
                 <h3 className="text-white text-xl md:text-2xl font-black uppercase tracking-tight">

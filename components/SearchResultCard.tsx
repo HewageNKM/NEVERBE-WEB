@@ -3,6 +3,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Product } from "@/interfaces/Product";
+import { usePromotionsContext } from "@/components/PromotionsProvider";
 
 interface SearchResultCardProps {
   item: Product;
@@ -13,12 +14,33 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({
   item,
   onClick,
 }) => {
-  const discountedPrice =
-    item.discount > 0
-      ? Math.round(
-          (item.sellingPrice - (item.discount * item.sellingPrice) / 100) / 10
-        ) * 10
-      : item.sellingPrice;
+  const { getPromotionForProduct } = usePromotionsContext();
+  const activePromo = getPromotionForProduct(item.id);
+
+  let finalPrice = item.sellingPrice;
+  // 1. Apply Standard Discount (match ItemCard logic)
+  if (item.discount > 0) {
+    finalPrice =
+      Math.round(
+        (item.sellingPrice - (item.sellingPrice * item.discount) / 100) / 10
+      ) * 10;
+  } else {
+    finalPrice = Math.round(item.sellingPrice);
+  }
+
+  // 2. Apply Active Promotion
+  if (activePromo) {
+    if (activePromo.type === "PERCENTAGE" && activePromo.actions?.[0]?.value) {
+      const discountVal = activePromo.actions[0].value;
+      finalPrice =
+        Math.round((finalPrice * (100 - discountVal)) / 100 / 10) * 10;
+    } else if (
+      activePromo.type === "FIXED" &&
+      activePromo.actions?.[0]?.value
+    ) {
+      finalPrice = Math.max(0, finalPrice - activePromo.actions[0].value);
+    }
+  }
 
   return (
     <Link
@@ -35,11 +57,26 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({
           height={100}
           className="object-cover w-full h-full mix-blend-multiply group-hover:scale-105 transition-transform duration-500"
         />
-        {item.discount > 0 && (
-          <span className="absolute top-1 left-1 bg-white text-black text-[8px] font-bold px-1.5 py-0.5 shadow-sm">
-            -{item.discount}%
-          </span>
-        )}
+        {/* Badges Container */}
+        <div className="absolute top-1 left-1 flex flex-col gap-1 items-start">
+          {item.discount > 0 && !activePromo && (
+            <span className="bg-white text-black text-[8px] font-bold px-1.5 py-0.5 shadow-sm">
+              -{item.discount}%
+            </span>
+          )}
+
+          {activePromo && (
+            <span className="bg-black text-white text-[7px] font-bold px-1.5 py-0.5 shadow-sm uppercase tracking-wide animate-pulse">
+              {activePromo.type === "BOGO"
+                ? "BOGO"
+                : activePromo.type === "PERCENTAGE"
+                ? `${activePromo.actions?.[0]?.value}% Off`
+                : activePromo.type === "FREE_SHIPPING"
+                ? "Free Ship"
+                : "Promo"}
+            </span>
+          )}
+        </div>
       </div>
 
       {/* Product Info */}
@@ -55,13 +92,20 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({
 
         {/* Price Row */}
         <div className="flex items-center gap-2 mt-1.5">
-          <span className="text-black font-bold text-sm">
-            Rs. {discountedPrice.toLocaleString()}
+          <span
+            className={`${
+              item.discount > 0 || activePromo ? "text-red-600" : "text-black"
+            } font-bold text-sm`}
+          >
+            Rs. {finalPrice.toLocaleString()}
           </span>
 
-          {item.discount > 0 && (
+          {(item.discount > 0 || activePromo) && (
             <span className="text-gray-400 text-xs line-through decoration-1">
-              Rs. {item.marketPrice.toLocaleString()}
+              Rs.{" "}
+              {item.marketPrice > item.sellingPrice
+                ? item.marketPrice.toLocaleString()
+                : item.sellingPrice.toLocaleString()}
             </span>
           )}
         </div>

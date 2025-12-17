@@ -22,6 +22,7 @@ import toast from "react-hot-toast";
 import { Order, Customer } from "@/interfaces";
 import { auth } from "@/firebase/firebaseClient";
 import { usePayment } from "@/hooks/usePayment";
+import usePromotions from "@/hooks/usePromotions";
 const formatSriLankanPhoneNumber = (phone: string) => {
   // Remove any non-digit characters
   const cleaned = phone.replace(/\D/g, "");
@@ -62,6 +63,10 @@ const createCustomerFromForm = (form: any): Customer => {
 const CheckoutForm = () => {
   const dispatch: AppDispatch = useDispatch();
   const router = useRouter();
+
+  // Ensure promotions are calculated
+  usePromotions();
+
   const bagItems = useSelector((state: RootState) => state.bag.bag);
   const couponDiscount = useSelector(
     (state: RootState) => state.bag.couponDiscount

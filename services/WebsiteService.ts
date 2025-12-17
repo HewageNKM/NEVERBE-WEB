@@ -1,46 +1,5 @@
 import { adminFirestore } from "@/firebase/firebaseAdmin";
 
-// ============ PROMOTIONS (ADS) ============
-
-export interface Promotion {
-  id: string;
-  file: string;
-  url: string;
-  title: string;
-  link: string;
-  createdAt?: string;
-}
-
-const ADS_COLLECTION = "website_ads";
-
-/**
- * Fetch all promotional banners/ads
- */
-export const getPromotions = async (): Promise<Promotion[]> => {
-  try {
-    console.log("[WebsiteService] Fetching promotions");
-    const snapshot = await adminFirestore
-      .collection(ADS_COLLECTION)
-      .orderBy("createdAt", "desc")
-      .get();
-
-    return snapshot.docs.map((doc) => {
-      const data = doc.data();
-      return {
-        id: doc.id,
-        file: data.file,
-        url: data.url,
-        title: data.title,
-        link: data.link,
-        createdAt: data.createdAt?.toDate?.()?.toISOString(),
-      };
-    });
-  } catch (error) {
-    console.error("[WebsiteService] Failed to fetch promotions:", error);
-    return [];
-  }
-};
-
 // ============ NAVIGATION CONFIG ============
 
 export interface NavigationItem {

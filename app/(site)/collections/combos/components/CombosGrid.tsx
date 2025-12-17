@@ -1,27 +1,32 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import ComboCard from "./ComboCard";
 import { IoChevronBack, IoChevronForward } from "react-icons/io5";
+import { useRouter, useSearchParams } from "next/navigation";
 
 interface CombosGridProps {
   combos: any[];
-  itemsPerPage?: number;
+  currentPage: number; // Controlled by parent
+  totalPages: number; // Controlled by parent
 }
 
 const CombosGrid: React.FC<CombosGridProps> = ({
   combos,
-  itemsPerPage = 6,
+  currentPage,
+  totalPages,
 }) => {
-  const [currentPage, setCurrentPage] = useState(1);
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
-  const totalPages = Math.ceil(combos.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentCombos = combos.slice(startIndex, endIndex);
+  const handlePageChange = (page: number) => {
+    if (page < 1 || page > totalPages) return;
 
-  const goToPage = (page: number) => {
-    setCurrentPage(Math.max(1, Math.min(page, totalPages)));
-    window.scrollTo({ top: 200, behavior: "smooth" });
+    // Create new URL params
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("page", page.toString());
+
+    // Push new URL
+    router.push(`?${params.toString()}`, { scroll: true });
   };
 
   // Generate page numbers to show
@@ -45,7 +50,7 @@ const CombosGrid: React.FC<CombosGridProps> = ({
     <>
       {/* Combo Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {currentCombos.map((combo: any) => (
+        {combos.map((combo: any) => (
           <ComboCard key={combo.id} combo={combo} />
         ))}
       </div>
@@ -56,8 +61,8 @@ const CombosGrid: React.FC<CombosGridProps> = ({
           <div className="flex items-center gap-2">
             {/* Previous Button */}
             <button
-              onClick={() => goToPage(currentPage - 1)}
-              disabled={currentPage === 1}
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1} // Client-side check, mostly visual
               className="flex items-center gap-1 px-4 py-2 border text-sm font-bold uppercase tracking-wider transition-colors disabled:opacity-30 disabled:cursor-not-allowed border-gray-300 hover:border-black"
             >
               <IoChevronBack size={16} />
@@ -81,7 +86,7 @@ const CombosGrid: React.FC<CombosGridProps> = ({
                 return (
                   <button
                     key={pageNum}
-                    onClick={() => goToPage(pageNum)}
+                    onClick={() => handlePageChange(pageNum)}
                     className={`w-10 h-10 flex items-center justify-center text-sm font-bold transition-colors ${
                       currentPage === pageNum
                         ? "bg-black text-white"
@@ -96,7 +101,7 @@ const CombosGrid: React.FC<CombosGridProps> = ({
 
             {/* Next Button */}
             <button
-              onClick={() => goToPage(currentPage + 1)}
+              onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
               className="flex items-center gap-1 px-4 py-2 border text-sm font-bold uppercase tracking-wider transition-colors disabled:opacity-30 disabled:cursor-not-allowed border-gray-300 hover:border-black"
             >
@@ -107,8 +112,7 @@ const CombosGrid: React.FC<CombosGridProps> = ({
 
           {/* Page Info */}
           <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mt-4">
-            Showing {startIndex + 1}-{Math.min(endIndex, combos.length)} of{" "}
-            {combos.length} Bundle Deals
+            Page {currentPage} of {totalPages}
           </p>
         </div>
       )}

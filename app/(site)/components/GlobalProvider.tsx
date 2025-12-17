@@ -11,6 +11,7 @@ import Menu from "@/components/Menu";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { NavigationItem, SocialMediaItem } from "@/services/WebsiteService";
+import { PromotionsProvider } from "@/components/PromotionsProvider";
 
 interface GlobalProviderProps {
   children: ReactNode;
@@ -40,13 +41,15 @@ const GlobalProvider = ({
 
   return (
     <main className="w-full relative flex flex-col justify-between min-h-screen overflow-clip">
-      <Header season={season} mainNav={mainNav} />
-      {children}
-      <Footer footerNav={footerNav} socialLinks={socialLinks} />
-      <AnimatePresence>{showBag && <Bag />}</AnimatePresence>
-      <AnimatePresence>{showMenu && <Menu />}</AnimatePresence>
-      <Analytics />
-      <SpeedInsights />
+      <PromotionsProvider>
+        <Header season={season} mainNav={mainNav} />
+        {children}
+        <Footer footerNav={footerNav} socialLinks={socialLinks} />
+        <AnimatePresence>{showBag && <Bag />}</AnimatePresence>
+        <AnimatePresence>{showMenu && <Menu />}</AnimatePresence>
+        <Analytics />
+        <SpeedInsights />
+      </PromotionsProvider>
     </main>
   );
 };

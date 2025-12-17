@@ -368,6 +368,10 @@ export const getProductsByBrand = async (
 };
 
 // ====================== Get Deals Products ======================
+// ====================== Get Deals Products ======================
+import { getActivePromotions } from "./PromotionService";
+import { FieldPath } from "firebase-admin/firestore";
+
 export const getDealsProducts = async (
   page: number = 1,
   size: number = 10,
@@ -378,7 +382,34 @@ export const getDealsProducts = async (
     console.log(
       `[ProductService] getDealsProducts → Page: ${page}, Size: ${size}`
     );
-    let query = adminFirestore
+
+    // 1. Get Promoted Product IDs (Unified Promotion Model)
+    const activePromotions = await getActivePromotions();
+    const promoProductIds = new Set<string>();
+
+    activePromotions.forEach((promo: any) => {
+      // Product Level
+      if (promo.applicableProducts) {
+        promo.applicableProducts.forEach((id: string) =>
+          promoProductIds.add(id)
+        );
+      }
+      // Variant Level
+      if (promo.applicableProductVariants) {
+        promo.applicableProductVariants.forEach((v: any) =>
+          promoProductIds.add(v.productId)
+        );
+      }
+    });
+
+    const allPromoIds = Array.from(promoProductIds);
+    const promoCount = allPromoIds.length;
+    console.log(
+      `[ProductService] Found ${promoCount} products in active promotions.`
+    );
+
+    // 2. Base Query for Standard Discounts
+    let discountQuery = adminFirestore
       .collection("products")
       .where("isDeleted", "==", false)
       .where("status", "==", true)
@@ -386,21 +417,96 @@ export const getDealsProducts = async (
       .where("discount", ">", 0);
 
     if (tags && tags.length > 0)
-      query = query.where("tags", "array-contains-any", tags);
+      discountQuery = discountQuery.where("tags", "array-contains-any", tags);
     if (typeof inStock === "boolean")
-      query = query.where("inStock", "==", inStock);
+      discountQuery = discountQuery.where("inStock", "==", inStock);
 
-    const total = (await query.get()).size;
-    const snapshot = await query
-      .offset((page - 1) * size)
-      .limit(size)
-      .get();
-    const products: Product[] = snapshot.docs
-      .map((doc) => ({ ...doc.data(), createdAt: null, updatedAt: null }))
+    // Get total count of discounted products
+    // Note: This adds latency. Ideally cache or estimate.
+    const discountSnapshotCount = await discountQuery.count().get();
+    const discountTotal = discountSnapshotCount.data().count;
+
+    const total = promoCount + discountTotal;
+
+    // 3. Calculate Ranges
+    const startIndex = (page - 1) * size;
+    const endIndex = startIndex + size;
+
+    let dataList: Product[] = [];
+
+    // --- Fetch Promos if in range ---
+    if (startIndex < promoCount) {
+      const promoIdsToFetch = allPromoIds.slice(
+        startIndex,
+        Math.min(endIndex, promoCount)
+      );
+
+      if (promoIdsToFetch.length > 0) {
+        // Firestore 'in' limit is 30. Chunk if needed (though page size is usually small)
+        const validPromoIds = promoIdsToFetch.slice(0, 30);
+
+        const promoDocs = await adminFirestore
+          .collection("products")
+          .where(FieldPath.documentId(), "in", validPromoIds)
+          .get();
+
+        const fetchedPromos = promoDocs.docs
+          .map(
+            (doc) =>
+              ({
+                ...doc.data(),
+                createdAt: null,
+                updatedAt: null,
+              } as Product)
+          )
+          .filter((p) => p.status && !p.isDeleted); // Re-check status just in case
+
+        dataList = [...dataList, ...fetchedPromos];
+      }
+    }
+
+    // --- Fetch Discounts if in range ---
+    // If we haven't filled 'size' yet, fetch from discounts
+    if (dataList.length < size) {
+      const remainingSlots = size - dataList.length;
+      // Calculate offset in the discount list
+      // If we are past all promos, offset is (startIndex - promoCount)
+      // If we are bridging, offset is 0 (start fetching from top of discounts)
+      const discountOffset = Math.max(0, startIndex - promoCount);
+
+      const discountDocs = await discountQuery
+        .offset(discountOffset)
+        .limit(remainingSlots)
+        .get();
+
+      const fetchedDiscounts = discountDocs.docs
+        .map(
+          (doc) =>
+            ({
+              ...doc.data(),
+              createdAt: null,
+              updatedAt: null,
+            } as Product)
+        )
+        .filter((p) => !promoProductIds.has(p.id)); // Client-side Dedupe (simple)
+
+      dataList = [...dataList, ...fetchedDiscounts];
+    }
+
+    // Filter variants for all fetched products
+    dataList = dataList
+      .map((p) => ({
+        ...p,
+        variants: (p.variants || []).filter(
+          (v: ProductVariant) => v.status && !v.isDeleted
+        ),
+      }))
       .filter((p) => (p.variants?.length ?? 0) > 0);
 
-    console.log(`[ProductService] Deals products fetched: ${products.length}`);
-    return { total, dataList: products };
+    console.log(
+      `[ProductService] Deals products fetched (Mixed): ${dataList.length}`
+    );
+    return { total, dataList };
   } catch (error) {
     console.error("[ProductService] getDealsProducts error:", error);
     throw error;

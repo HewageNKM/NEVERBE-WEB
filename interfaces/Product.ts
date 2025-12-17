@@ -21,5 +21,13 @@ export interface Product {
   marketPrice: number;
   discount: number;
 
-  inStock:boolean
+  inStock: boolean;
+  status: boolean;
+  listing?: boolean;
+  isDeleted?: boolean;
+  tags?: string[];
+
+  // Optional timestamps if needed
+  createdAt?: any;
+  updatedAt?: any;
 }

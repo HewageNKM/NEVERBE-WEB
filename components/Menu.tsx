@@ -163,6 +163,7 @@ const Menu = () => {
             { name: "Home", href: "/" },
             { name: "Bundles", href: "/collections/combos", highlight: true },
             { name: "Deals", href: "/collections/deals", highlight: true },
+            { name: "Offers", href: "/collections/offers", highlight: true },
           ].map((link) => (
             <Link
               key={link.href}

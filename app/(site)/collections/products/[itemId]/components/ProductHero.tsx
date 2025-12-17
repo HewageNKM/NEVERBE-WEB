@@ -20,11 +20,14 @@ import { Product } from "@/interfaces/Product";
 import { ProductVariant } from "@/interfaces/ProductVariant";
 import { KOKOLogo } from "@/assets/images";
 import SizeGuideDialog from "@/components/SizeGuideDialog";
+import { usePromotionsContext } from "@/components/PromotionsProvider";
+import UpsellNudge from "./UpsellNudge";
 
 const ProductHero = ({ item }: { item: Product }) => {
   const router = useRouter();
   const dispatch: AppDispatch = useDispatch();
   const bagItems = useSelector((state: RootState) => state.bag.bag);
+  const { getPromotionForProduct } = usePromotionsContext();
 
   const [selectedImage, setSelectedImage] = useState(item.thumbnail);
   const [selectedVariant, setSelectedVariant] = useState<ProductVariant>(
@@ -219,15 +222,77 @@ const ProductHero = ({ item }: { item: Product }) => {
               {item.name}
             </h1>
 
-            <div className="flex items-center gap-4">
-              <span className="text-xl font-bold">
-                Rs. {discountedPrice.toLocaleString()}
-              </span>
-              {item.discount > 0 && (
-                <span className="text-gray-400 line-through text-base">
-                  Rs. {item.marketPrice.toLocaleString()}
-                </span>
-              )}
+            {/* Price & Promo Section */}
+            <div className="flex flex-col gap-2">
+              {(() => {
+                const activePromo = getPromotionForProduct(
+                  item.id,
+                  selectedVariant.variantId
+                );
+
+                // Calculate final price logic locally for display
+                let finalPrice = item.sellingPrice;
+                if (item.discount > 0) {
+                  finalPrice =
+                    Math.round(
+                      (item.sellingPrice -
+                        (item.sellingPrice * item.discount) / 100) /
+                        10
+                    ) * 10;
+                }
+
+                if (activePromo) {
+                  if (
+                    activePromo.type === "PERCENTAGE" &&
+                    activePromo.actions?.[0]?.value
+                  ) {
+                    const discountVal = activePromo.actions[0].value;
+                    finalPrice =
+                      Math.round(
+                        (finalPrice * (100 - discountVal)) / 100 / 10
+                      ) * 10;
+                  } else if (
+                    activePromo.type === "FIXED" &&
+                    activePromo.actions?.[0]?.value
+                  ) {
+                    finalPrice = Math.max(
+                      0,
+                      finalPrice - activePromo.actions[0].value
+                    );
+                  }
+                }
+
+                return (
+                  <>
+                    <div className="flex items-center gap-4">
+                      <span
+                        className={`${
+                          item.discount > 0 || activePromo
+                            ? "text-red-600"
+                            : "text-black"
+                        } text-xl font-bold`}
+                      >
+                        Rs. {finalPrice.toLocaleString()}
+                      </span>
+                      {/* Only show standard discount if NO active promo to avoid confusion */}
+                      {item.discount > 0 && !activePromo && (
+                        <span className="text-gray-400 line-through text-base">
+                          Rs. {item.marketPrice.toLocaleString()}
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Active Promotion Display */}
+                    {activePromo && (
+                      <div className="bg-black text-white text-xs font-bold px-3 py-2 uppercase tracking-wide rounded-sm inline-block self-start animate-pulse">
+                        {activePromo.type === "BOGO"
+                          ? "Buy 1 Get 1 Free"
+                          : activePromo.name || "Special Offer Applied"}
+                      </div>
+                    )}
+                  </>
+                );
+              })()}
             </div>
 
             {/* KOKO */}
@@ -248,30 +313,42 @@ const ProductHero = ({ item }: { item: Product }) => {
               </span>
             </div>
             <div className="flex flex-wrap gap-3">
-              {item.variants.map((v) => (
-                <button
-                  key={v.variantId}
-                  onClick={() => {
-                    setSelectedVariant(v);
-                    setSelectedImage(v.images[0]);
-                    setSelectedSize("");
-                  }}
-                  className={`h-20 w-20 bg-[#f6f6f6] rounded-md overflow-hidden border-2 transition-all ${
-                    selectedVariant.variantId === v.variantId
-                      ? "border-black"
-                      : "border-transparent hover:border-gray-300"
-                  }`}
-                >
-                  <div className="relative w-full h-full">
-                    <Image
-                      src={v.images[0].url}
-                      alt={v.variantName}
-                      fill
-                      className="object-cover mix-blend-multiply"
-                    />
-                  </div>
-                </button>
-              ))}
+              {item.variants.map((v) => {
+                const isPromoEligible = !!getPromotionForProduct(
+                  item.id,
+                  v.variantId
+                );
+                return (
+                  <button
+                    key={v.variantId}
+                    onClick={() => {
+                      setSelectedVariant(v);
+                      setSelectedImage(v.images[0]);
+                      setSelectedSize("");
+                    }}
+                    className={`h-20 w-20 bg-[#f6f6f6] rounded-md overflow-hidden border-2 transition-all relative ${
+                      selectedVariant.variantId === v.variantId
+                        ? "border-black"
+                        : "border-transparent hover:border-gray-300"
+                    }`}
+                  >
+                    <div className="relative w-full h-full">
+                      <Image
+                        src={v.images[0].url}
+                        alt={v.variantName}
+                        fill
+                        className="object-cover mix-blend-multiply"
+                      />
+                    </div>
+                    {isPromoEligible && (
+                      <div
+                        className="absolute top-1 right-1 w-2.5 h-2.5 bg-red-600 rounded-full border border-white z-10"
+                        title="Promotion Available"
+                      />
+                    )}
+                  </button>
+                );
+              })}
             </div>
           </div>
 
@@ -369,6 +446,16 @@ const ProductHero = ({ item }: { item: Product }) => {
               </p>
             )}
           </div>
+
+          {/* Upsell Nudge */}
+          <UpsellNudge
+            activePromo={getPromotionForProduct(
+              item.id,
+              selectedVariant.variantId
+            )}
+            currentQty={qty + bagQty}
+            currentAmount={(qty + bagQty) * item.sellingPrice}
+          />
 
           {/* Actions */}
           <div className="space-y-3 pt-4 border-t border-gray-100">
