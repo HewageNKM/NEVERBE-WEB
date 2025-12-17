@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getActivePromotions } from "@/services/PromotionService";
 
+export const dynamic = "force-dynamic";
+
 export const GET = async (req: NextRequest) => {
   try {
     const promotions = await getActivePromotions();
