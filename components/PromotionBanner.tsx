@@ -104,31 +104,31 @@ const PromotionBanner: React.FC<PromotionBannerProps> = ({
                   {getIcon(displayPromotions[0].type)}
                 </div>
                 <div className="flex-1">
-                  <div className="flex justify-between items-start">
-                    <div>
+                  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 sm:gap-4">
+                    <div className="flex-1 min-w-0">
                       {hasStackedPromotions ? (
                         <>
-                          <p className="text-xs font-black text-black uppercase tracking-wider">
+                          <p className="text-xs font-black text-black uppercase tracking-wider truncate">
                             {displayPromotions.length} Promotions Applied
                           </p>
-                          <p className="text-[10px] text-gray-500 uppercase tracking-wide mt-1 font-medium">
+                          <p className="text-[10px] text-gray-500 uppercase tracking-wide mt-1 font-medium leading-relaxed break-words">
                             {displayPromotions.map((p) => p.name).join(" + ")}
                           </p>
                         </>
                       ) : (
                         <>
-                          <p className="text-xs font-black text-black uppercase tracking-wider">
+                          <p className="text-xs font-black text-black uppercase tracking-wider truncate">
                             {displayPromotions[0].name}
                           </p>
-                          <p className="text-[10px] text-gray-500 uppercase tracking-wide mt-1 font-medium">
+                          <p className="text-[10px] text-gray-500 uppercase tracking-wide mt-1 font-medium break-words">
                             {displayPromotions[0].message}
                           </p>
                         </>
                       )}
                     </div>
                     {totalPromotionDiscount > 0 && (
-                      <div className="text-right bg-black text-white px-2 py-1">
-                        <p className="text-xs font-bold uppercase tracking-wide">
+                      <div className="shrink-0 bg-black text-white px-3 py-1.5 min-w-[100px] text-center sm:text-right self-start">
+                        <p className="text-xs font-bold uppercase tracking-wide whitespace-nowrap">
                           -Rs. {totalPromotionDiscount.toLocaleString()}
                         </p>
                         {hasStackedPromotions && (

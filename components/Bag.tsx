@@ -24,6 +24,8 @@ import {
 } from "@/util";
 import { BagItem } from "@/interfaces/BagItem";
 import Image from "next/image";
+import usePromotions from "@/hooks/usePromotions";
+import PromotionBanner from "@/components/PromotionBanner";
 
 // --- Types ---
 interface BundleGroup {
@@ -182,6 +184,9 @@ const Bag = () => {
   const dispatch: AppDispatch = useDispatch();
   const router = useRouter();
 
+  // Use the promotions hook to trigger calculation and updates
+  usePromotions();
+
   const bagItems = useSelector((state: RootState) => state.bag.bag);
   const couponDiscount =
     useSelector((state: RootState) => state.bag.couponDiscount) || 0;
@@ -277,6 +282,8 @@ const Bag = () => {
 
         {/* --- Items List --- */}
         <div className="flex-1 overflow-y-auto px-6 py-6">
+          <PromotionBanner variant="inline" className="mb-6" />
+
           {bagItems.length > 0 ? (
             <div className="space-y-6">
               {/* Bundles First */}
