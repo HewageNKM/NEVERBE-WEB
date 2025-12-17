@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     locale: "en_LK",
     images: [
       {
-        url: "https://neverbe.lk/shoes-og.jpg", // Ensure this image is generic/appealing
+        url: "https://neverbe.lk/shoes-og.jpg",
         width: 1200,
         height: 630,
         alt: "NEVERBE Shoe Collection",
@@ -61,7 +61,6 @@ const Page = async () => {
 
   const productList = items?.dataList || [];
 
-  /* ✅ Structured Data: Optimized for Google Shopping / Listings */
   const productListingSchema = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
@@ -99,6 +98,12 @@ const Page = async () => {
 
   return (
     <main className="w-full relative mt-4 lg:mt-8 mb-10 min-h-screen">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(productListingSchema),
+        }}
+      />
       <ProductsHeader />
 
       <div className="w-full">

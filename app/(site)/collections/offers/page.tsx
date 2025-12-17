@@ -1,4 +1,3 @@
-import React from "react";
 import {
   getActivePromotions,
   getActiveCoupons,
@@ -14,6 +13,22 @@ export const metadata: Metadata = {
   title: "Offers & Rewards | NEVERBE",
   description:
     "Explore exclusive deals, active promotions, and discount coupons for your next pair of kicks.",
+  openGraph: {
+    title: "Offers & Rewards | NEVERBE",
+    description:
+      "Explore exclusive deals, active promotions, and discount coupons for your next pair of kicks.",
+    url: "https://neverbe.lk/collections/offers",
+    type: "website",
+    siteName: "NEVERBE",
+    images: [
+      {
+        url: "https://neverbe.lk/deals-og.jpg",
+        width: 1200,
+        height: 630,
+        alt: "NEVERBE Offers & Rewards",
+      },
+    ],
+  },
 };
 
 export const revalidate = 600; // Revalidate every 10 minutes
@@ -38,8 +53,48 @@ const OffersPage = async () => {
     console.error("Error fetching deal items:", e);
   }
 
+  /* ✅ Structured Data for Offers */
+  const offersSchema = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: "Offers & Rewards - NEVERBE",
+    description:
+      "Exclusive deals and discounts on premium footwear at NEVERBE.",
+    url: "https://neverbe.lk/collections/offers",
+    inLanguage: "en-LK",
+    mainEntity: {
+      "@type": "ItemList",
+      itemListElement: dealsList.map((product: any, index: number) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        item: {
+          "@type": "Product",
+          name: product?.name,
+          image: product?.thumbnail?.url || "https://neverbe.lk/logo-og.png",
+          description: product?.description || "Discounted footwear.",
+          url: `https://neverbe.lk/collections/products/${product?.id}`,
+          brand: {
+            "@type": "Brand",
+            name: "NEVERBE",
+          },
+          offers: {
+            "@type": "Offer",
+            priceCurrency: "LKR",
+            price: product?.sellingPrice || product?.price || "0.00",
+            availability: "https://schema.org/InStock",
+            itemCondition: "https://schema.org/NewCondition",
+          },
+        },
+      })),
+    },
+  };
+
   return (
     <main className="w-full min-h-screen bg-white pt-8">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(offersSchema) }}
+      />
       {/* Header */}
       <div className="w-full max-w-[1440px] mx-auto px-4 md:px-8 mb-8 text-left">
         <h1 className="text-3xl md:text-5xl font-black uppercase tracking-tighter mb-4">

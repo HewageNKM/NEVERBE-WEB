@@ -51,7 +51,7 @@ export const metadata: Metadata = {
     locale: "en_LK",
     images: [
       {
-        url: "/logo-og.png",
+        url: "https://neverbe.lk/logo-og.png",
         alt: "NEVERBE - Largest Shoe Collection in Sri Lanka",
         width: 1200,
         height: 630,
@@ -141,7 +141,10 @@ const Page = async () => {
 
   return (
     <main className="flex min-h-screen flex-col bg-white text-black">
-      {/* JSON-LD Script here */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
 
       <Hero slides={sliders} />
 

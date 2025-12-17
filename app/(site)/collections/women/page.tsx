@@ -39,6 +39,46 @@ const WomenPage = async () => {
         </p>
       </div>
 
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "CollectionPage",
+            name: "Women's Sneakers & Footwear | NEVERBE",
+            description:
+              "Shop the best collection of women's sneakers in Sri Lanka.",
+            url: "https://neverbe.lk/collections/women",
+            inLanguage: "en-LK",
+            mainEntity: {
+              "@type": "ItemList",
+              itemListElement: dataList.map((product: any, index: number) => ({
+                "@type": "ListItem",
+                position: index + 1,
+                item: {
+                  "@type": "Product",
+                  name: product.name,
+                  image:
+                    product.thumbnail?.url || "https://neverbe.lk/logo-og.png",
+                  url: `https://neverbe.lk/collections/products/${product.id}`,
+                  brand: {
+                    "@type": "Brand",
+                    name: "NEVERBE",
+                  },
+                  offers: {
+                    "@type": "Offer",
+                    priceCurrency: "LKR",
+                    price: product.sellingPrice || "0.00",
+                    availability: "https://schema.org/InStock",
+                    itemCondition: "https://schema.org/NewCondition",
+                  },
+                },
+              })),
+            },
+          }),
+        }}
+      />
+
       <CollectionProducts
         initialItems={dataList}
         collectionType="women"
