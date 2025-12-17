@@ -31,7 +31,7 @@ export const metadata: Metadata = {
   },
 };
 
-export const revalidate = 600; // Revalidate every 10 minutes
+export const revalidate = 600;
 
 const OffersPage = async () => {
   const [promotions, coupons] = await Promise.all([

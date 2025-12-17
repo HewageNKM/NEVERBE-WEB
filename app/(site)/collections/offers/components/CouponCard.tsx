@@ -26,7 +26,7 @@ const CouponCard: React.FC<Props> = ({ coupon }) => {
       className="relative flex flex-col md:flex-row bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow group"
     >
       {/* Left Decoration / Discount Value */}
-      <div className="bg-black text-white p-6 flex flex-col items-center justify-center min-w-[120px] text-center border-r border-dashed border-gray-600 relative">
+      <div className="bg-black text-white p-6 flex flex-col items-center justify-center w-full md:w-auto md:min-w-[120px] text-center border-b md:border-b-0 md:border-r border-dashed border-gray-600 relative">
         <div className="text-3xl font-black tracking-tighter">
           {coupon.discountType === "PERCENTAGE"
             ? `${coupon.discountValue}%`
@@ -39,37 +39,40 @@ const CouponCard: React.FC<Props> = ({ coupon }) => {
         </div>
 
         {/* Semi-circle cutouts simulates perforated ticket */}
-        <div className="absolute -right-3 top-1/2 -translate-y-1/2 w-6 h-6 bg-white rounded-full"></div>
+        <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 md:top-1/2 md:-right-3 md:left-auto md:translate-x-0 md:-translate-y-1/2 w-6 h-6 bg-white rounded-full"></div>
       </div>
 
       {/* Right Content */}
       <div className="flex-1 p-6 flex flex-col justify-between">
         <div>
-          <div className="flex items-center justify-between mb-2">
+          <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
             <span className="inline-block px-2 py-1 bg-gray-100 text-[10px] font-bold uppercase tracking-wider text-gray-600 rounded">
               {coupon.code.toUpperCase()}
             </span>
             {coupon.endDate && (
-              <div className="text-[10px] text-red-500 font-bold uppercase flex items-center gap-1">
+              <div className="text-[10px] text-red-500 font-bold uppercase flex items-center gap-1 whitespace-nowrap">
                 <span>Expires: </span>
                 <CountdownTimer
-                  targetDate={new Date(Number(coupon.endDate)).toISOString()}
+                  targetDate={
+                    typeof coupon.endDate === "string"
+                      ? coupon.endDate
+                      : (coupon.endDate as any)?.toDate
+                      ? (coupon.endDate as any).toDate().toISOString()
+                      : new Date(coupon.endDate as any).toISOString()
+                  }
                   labels={false}
                   className="text-red-500"
                 />
               </div>
             )}
           </div>
-          <h3 className="text-lg font-bold uppercase tracking-tight mb-1">
-            {coupon.name}
-          </h3>
           <p className="text-sm text-gray-500 leading-snug">
             {coupon.description || "Apply this coupon at checkout to save."}
           </p>
 
           {/* Conditions */}
           <div className="mt-3 text-xs text-gray-400 space-y-1">
-            {coupon.minOrderAmount && (
+            {!!coupon.minOrderAmount && coupon.minOrderAmount > 0 && (
               <div>
                 • Min Order: Rs. {coupon.minOrderAmount.toLocaleString()}
               </div>

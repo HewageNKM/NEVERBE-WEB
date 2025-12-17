@@ -121,7 +121,14 @@ export const getCouponByCode = async (code: string): Promise<Coupon | null> => {
       .get();
     if (snapshot.empty) return null;
     const doc = snapshot.docs[0];
-    return { id: doc.id, ...doc.data() } as Coupon;
+    return {
+      id: doc.id,
+      ...doc.data(),
+      createdAt: serializeTimestamp(doc.data().createdAt),
+      updatedAt: serializeTimestamp(doc.data().updatedAt),
+      startDate: serializeTimestamp(doc.data().startDate),
+      endDate: serializeTimestamp(doc.data().endDate),
+    } as Coupon;
   } catch (error) {
     console.error("Error getting coupon:", error);
     return null;
@@ -573,10 +580,10 @@ export const getActiveCoupons = async () => {
         return {
           id: doc.id,
           ...data,
-          startDate: serializeTimestamp(data.startDate),
-          endDate: serializeTimestamp(data.endDate),
-          createdAt: serializeTimestamp(data.createdAt),
-          updatedAt: serializeTimestamp(data.updatedAt),
+          createdAt: serializeTimestamp(doc.data().createdAt),
+          updatedAt: serializeTimestamp(doc.data().updatedAt),
+          startDate: serializeTimestamp(doc.data().startDate),
+          endDate: serializeTimestamp(doc.data().endDate),
         } as Coupon;
       })
       .filter((coupon) => {
