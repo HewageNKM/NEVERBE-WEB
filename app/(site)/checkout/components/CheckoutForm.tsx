@@ -102,6 +102,31 @@ const CheckoutForm = () => {
   const [shippingCustomer, setShippingCustomer] =
     useState<Partial<Customer> | null>(null);
 
+  const [shippingCost, setShippingCost] = useState<number>(0);
+
+  // Fetch dynamic shipping cost
+  useEffect(() => {
+    const fetchShipping = async () => {
+      try {
+        if (bagItems.length === 0) {
+          setShippingCost(0);
+          return;
+        }
+        const res = await fetch("/api/v1/shipping/calculate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ items: bagItems }),
+        });
+        const data = await res.json();
+        setShippingCost(data.cost || 0);
+      } catch (error) {
+        console.error("Failed to fetch shipping cost", error);
+        // Fallback logic could go here, but API handles defaults
+      }
+    };
+    fetchShipping();
+  }, [bagItems]);
+
   // Initialize Payment Hook
   const {
     isProcessing,
@@ -158,7 +183,8 @@ const CheckoutForm = () => {
       const totals = calculateTotals(
         bagItems,
         couponDiscount,
-        promotionDiscount
+        promotionDiscount,
+        shippingCost
       );
 
       // 2. Build Order Payload
@@ -214,6 +240,7 @@ const CheckoutForm = () => {
               setPaymentTypeId={setPaymentTypeId}
               setPaymentFee={setPaymentFee}
               selectedPaymentFee={paymentFee}
+              shippingCost={shippingCost}
             />
           </div>
         </div>

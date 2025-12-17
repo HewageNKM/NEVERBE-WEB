@@ -243,8 +243,47 @@ const Bag = () => {
     }
   }, [bagItems.length, couponDiscount, promotionDiscount, dispatch]);
 
+  // Dynamic Shipping Calculation
+  const [shippingCost, setShippingCost] = React.useState(0);
+  const [loadingShipping, setLoadingShipping] = React.useState(false);
+
+  useEffect(() => {
+    const fetchShipping = async () => {
+      if (bagItems.length === 0) {
+        setShippingCost(0);
+        return;
+      }
+      setLoadingShipping(true);
+      try {
+        const payload = {
+          items: bagItems.map((item) => ({
+            itemId: item.itemId,
+            quantity: item.quantity,
+          })),
+        };
+        const res = await fetch("/api/v1/shipping/calculate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        if (res.ok) {
+          const data = await res.json();
+          setShippingCost(data.cost);
+        }
+      } catch (error) {
+        console.error("Failed to fetch shipping", error);
+      } finally {
+        setLoadingShipping(false);
+      }
+    };
+
+    fetchShipping();
+  }, [bagItems]);
+
   const finalTotal =
-    calculateSubTotal(bagItems, 0) - couponDiscount - promotionDiscount;
+    calculateSubTotal(bagItems, 0, shippingCost) -
+    couponDiscount -
+    promotionDiscount;
 
   const itemCount = bagItems.length;
   const bundleCount = bundles.length;
@@ -362,9 +401,13 @@ const Bag = () => {
               <div className="flex justify-between">
                 <span className="text-gray-500 font-medium">Shipping</span>
                 <span className="font-bold font-mono">
-                  {calculateShippingCost(bagItems) === 0
-                    ? "FREE"
-                    : `Rs. ${calculateShippingCost(bagItems).toLocaleString()}`}
+                  {loadingShipping ? (
+                    <span className="text-gray-400 text-xs">...</span>
+                  ) : shippingCost === 0 ? (
+                    "FREE"
+                  ) : (
+                    `Rs. ${shippingCost.toLocaleString()}`
+                  )}
                 </span>
               </div>
             </div>

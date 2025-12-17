@@ -69,7 +69,8 @@ interface UsePaymentReturn {
   calculateTotals: (
     bagItems: BagItem[],
     couponDiscount: number,
-    promotionDiscount: number
+    promotionDiscount: number,
+    shippingFeeOverride?: number
   ) => PaymentTotals;
 
   // Order building
@@ -128,12 +129,20 @@ export const usePayment = (options: UsePaymentOptions): UsePaymentReturn => {
     (
       bagItems: BagItem[],
       couponDisc: number,
-      promotionDisc: number = 0
+      promotionDisc: number = 0,
+      shippingFeeOverride?: number
     ): PaymentTotals => {
       const itemDiscount = calculateTotalDiscount(bagItems);
-      const shippingFee = calculateShippingCost(bagItems);
+      const shippingFee =
+        shippingFeeOverride !== undefined
+          ? shippingFeeOverride
+          : calculateShippingCost(bagItems);
       const paymentFee = calculateFee(options.paymentFee, bagItems);
-      const subtotal = calculateSubTotal(bagItems, options.paymentFee);
+      const subtotal = calculateSubTotal(
+        bagItems,
+        options.paymentFee,
+        shippingFee
+      );
       const total = subtotal - couponDisc - promotionDisc;
 
       return {
@@ -175,7 +184,8 @@ export const usePayment = (options: UsePaymentOptions): UsePaymentReturn => {
       shippingFee: totals.shippingFee,
       transactionFeeCharge: calculateTransactionFeeCharge(
         bagItems,
-        options.paymentFee
+        options.paymentFee,
+        totals.shippingFee
       ),
       paymentStatus: "Pending",
       status: "Processing",

@@ -25,6 +25,7 @@ interface PaymentDetailsProps {
   setPaymentTypeId: React.Dispatch<React.SetStateAction<string>>;
   setPaymentFee: React.Dispatch<React.SetStateAction<number>>;
   selectedPaymentFee: number;
+  shippingCost: number;
 }
 
 interface BundleGroup {
@@ -99,6 +100,7 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
   setPaymentTypeId,
   setPaymentFee,
   selectedPaymentFee,
+  shippingCost,
 }) => {
   const bagItems = useSelector((state: RootState) => state.bag.bag);
   const couponDiscount =
@@ -165,14 +167,20 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
   }, []);
 
   // Calculations
-  const finalTotal =
-    calculateSubTotal(bagItems, selectedPaymentFee) -
-    couponDiscount -
-    promotionDiscount;
-  const shipping = calculateShippingCost(bagItems);
   const itemDiscount = calculateTotalDiscount(bagItems);
   const fee = calculateFee(selectedPaymentFee, bagItems);
   const rawSubTotal = calculateTotal(bagItems);
+
+  // Reconstruct total with dynamic shipping
+  const finalTotal =
+    rawSubTotal -
+    itemDiscount +
+    shippingCost +
+    fee -
+    couponDiscount -
+    promotionDiscount;
+
+  const shipping = shippingCost;
 
   const Divider = () => <div className="h-px bg-gray-200 w-full my-6" />;
 

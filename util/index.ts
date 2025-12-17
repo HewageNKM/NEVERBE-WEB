@@ -38,22 +38,35 @@ export const calculateFee = (fee: number, items: BagItem[]) => {
 
 export const calculateTransactionFeeCharge = (
   items: BagItem[],
-  fee: number
+  fee: number,
+  shippingOverride?: number
 ) => {
+  const shipping =
+    shippingOverride !== undefined
+      ? shippingOverride
+      : calculateShippingCost(items);
   const total =
     calculateTotal(items) -
     calculateTotalDiscount(items) +
     calculateFee(fee, items) +
-    calculateShippingCost(items);
+    shipping;
   const transactionFee = (total * (fee / 100)).toFixed(2);
   return parseFloat(transactionFee);
 };
 
-export const calculateSubTotal = (items: BagItem[], fee: number) => {
+export const calculateSubTotal = (
+  items: BagItem[],
+  fee: number,
+  shippingOverride?: number
+) => {
+  const shipping =
+    shippingOverride !== undefined
+      ? shippingOverride
+      : calculateShippingCost(items);
   return (
     calculateTotal(items) -
     calculateTotalDiscount(items) +
-    calculateShippingCost(items) +
+    shipping +
     calculateFee(fee, items)
   );
 };
