@@ -17,7 +17,7 @@ import {
 import { sortingOptions } from "@/constants";
 import { AnimatePresence, motion } from "framer-motion";
 import { Product } from "@/interfaces/Product";
-import CategoryPopUpFilter from "../categories/[category]/components/CategoryPopUpFilter";
+import CollectionPopUpFilter from "./CollectionPopUpFilter";
 
 // Mapping for dynamic endpoint construction
 interface CollectionProductsProps {
@@ -146,7 +146,9 @@ const CollectionProducts = ({
       <CollectionFilter />
 
       {/* Mobile Filter Drawer - Reusing CategoryPopUpFilter for now as it likely uses same slice */}
-      <AnimatePresence>{showFilter && <CategoryPopUpFilter />}</AnimatePresence>
+      <AnimatePresence>
+        {showFilter && <CollectionPopUpFilter />}
+      </AnimatePresence>
 
       <div className="flex-1 w-full">
         {/* --- Toolbar --- */}
