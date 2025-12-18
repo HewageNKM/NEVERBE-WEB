@@ -562,8 +562,9 @@ export const usePromotions = (): UsePromotionsReturn => {
       case "FIXED_OFF":
         return Math.min(action.value, applicableTotal);
       case "FREE_SHIPPING":
-        // Return a nominal value to indicate savings (actual shipping cost varies)
-        return 0; // Will be handled separately in checkout
+        // Return estimated average shipping cost for display
+        // Actual shipping ranges from Rs. 380 (1 item) to Rs. 500+ (2+ items)
+        return 400; // Average shipping cost saved
       case "FREE_ITEM":
         // Return the price of the free item if specified
         if (action.freeProductId) {
@@ -608,7 +609,7 @@ export const usePromotions = (): UsePromotionsReturn => {
       case "FIXED_OFF":
         return `Save Rs. ${action.value} on your order`;
       case "FREE_SHIPPING":
-        return "Free shipping on this order!";
+        return isEligible ? "Free shipping applied!" : "Get free shipping!";
       case "BOGO":
         return "Buy one, get one free!";
       default:
