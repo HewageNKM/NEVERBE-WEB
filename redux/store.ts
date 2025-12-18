@@ -2,7 +2,6 @@ import { configureStore } from "@reduxjs/toolkit";
 import bagSlice from "@/redux/bagSlice/bagSlice";
 import productsSlice from "@/redux/productsSlice/productsSlice";
 import authSlice from "@/redux/authSlice/authSlice";
-import brandSlice from "@/redux/brandSlice/brandSlice";
 import headerSlice from "@/redux/headerSlice/headerSlice";
 import categorySlice from "@/redux/categorySlice/categorySlice";
 import dealsSlice from "@/redux/dealsSlice/dealsSlice";
@@ -13,7 +12,6 @@ export const makeStore = () => {
       bag: bagSlice,
       productsSlice,
       authSlice,
-      brandSlice,
       headerSlice,
       categorySlice,
       dealsSlice,

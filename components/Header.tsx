@@ -24,8 +24,8 @@ import { NavigationItem } from "@/services/WebsiteService";
 // Default navigation items as fallback
 const DEFAULT_NAV_ITEMS: NavigationItem[] = [
   { title: "New Arrivals", link: "/collections/new-arrivals" },
-  { title: "Men", link: "/collections/men" },
-  { title: "Women", link: "/collections/women" },
+  { title: "Men", link: "/collections/products?gender=men" },
+  { title: "Women", link: "/collections/products?gender=women" },
   { title: "Combos", link: "/collections/combos" },
   { title: "Offers", link: "/collections/offers" },
 ];

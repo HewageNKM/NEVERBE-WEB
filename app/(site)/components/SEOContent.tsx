@@ -83,35 +83,35 @@ const SEOContent = () => {
           </p>
           <div className="flex flex-wrap gap-3 text-[11px] font-medium text-gray-500 uppercase tracking-wide">
             <Link
-              href="/collections/categories/Running%20Shoes"
+              href="/collections/products?category=Running%20Shoes"
               className="hover:text-black hover:underline transition-colors"
             >
               Running Shoes Sri Lanka
             </Link>
             <span className="text-gray-300">/</span>
             <Link
-              href="/collections/categories/Sandals%20&%20Slippers%20&%20Slides"
+              href="/collections/products?category=Sandals%20%26%20Slippers%20%26%20Slides"
               className="hover:text-black hover:underline transition-colors"
             >
               Men's Sandals
             </Link>
             <span className="text-gray-300">/</span>
             <Link
-              href="/collections/brands/Nike"
+              href="/collections/products?brand=Nike"
               className="hover:text-black hover:underline transition-colors"
             >
               Nike Copy Shoes
             </Link>
             <span className="text-gray-300">/</span>
             <Link
-              href="/collections/deals"
+              href="/collections/offers"
               className="hover:text-black hover:underline transition-colors"
             >
               Shoe Sale
             </Link>
             <span className="text-gray-300">/</span>
             <Link
-              href="/collections/categories/Sneakers  "
+              href="/collections/products?category=Sneakers"
               className="hover:text-black hover:underline transition-colors"
             >
               Best Sneakers 2025

@@ -802,7 +802,7 @@ export const getBrandForSitemap = async () => {
     const brands = snapshot.docs.map((doc) => ({
       url: `${
         process.env.NEXT_PUBLIC_BASE_URL
-      }/collections/brands/${encodeURIComponent(doc.data().name)}`,
+      }/collections/products?brand=${encodeURIComponent(doc.data().name)}`,
       lastModified: new Date(),
       priority: 0.8,
     }));
@@ -829,7 +829,7 @@ export const getCategoriesForSitemap = async () => {
     const categories = snapshot.docs.map((doc) => ({
       url: `${
         process.env.NEXT_PUBLIC_BASE_URL
-      }/collections/categories/${encodeURIComponent(doc.data().name)}`,
+      }/collections/products?category=${encodeURIComponent(doc.data().name)}`,
       lastModified: new Date(),
       priority: 0.8,
     }));

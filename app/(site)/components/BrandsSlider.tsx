@@ -32,7 +32,11 @@ const BrandsSlider = ({ items }: { items: any[] }) => {
             key={brand.id}
             className="flex justify-center items-center opacity-60 hover:opacity-100 transition-opacity"
           >
-            <Link href={`/collections/brands/${brand.name}`}>
+            <Link
+              href={`/collections/products?brand=${encodeURIComponent(
+                brand.name
+              )}`}
+            >
               {brand.logoUrl ? (
                 <Image
                   src={brand.logoUrl}

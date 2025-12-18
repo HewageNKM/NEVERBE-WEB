@@ -340,17 +340,17 @@ export enum ContactUs {
 export const collectionList = [
   {
     label: "Slides & Slippers & Sandals",
-    url: "/collections/categories/Sandals%20&%20Slippers%20&%20Slides",
+    url: "/collections/products?category=Sandals%20%26%20Slippers%20%26%20Slides",
     image: SlidesBG,
   },
   {
     label: "Boots",
-    url: "/collections/categories/Boots",
+    url: "/collections/products?category=Boots",
     image: BOOTSBG,
   },
   {
     label: "Running/Sport Shoes",
-    url: "/collections/categories/Running%20Shoes",
+    url: "/collections/products?category=Running%20Shoes",
     image: RunningShoeBG,
   },
 ];

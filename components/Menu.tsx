@@ -217,7 +217,9 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
                     {categories.map((cat) => (
                       <Link
                         key={cat.id}
-                        href={`/collections/categories/${cat.label}`}
+                        href={`/collections/products?category=${encodeURIComponent(
+                          cat.label
+                        )}`}
                         className="text-lg font-medium text-gray-500 hover:text-black transition-colors"
                         onClick={() => dispatch(toggleMenu(false))}
                       >
@@ -257,7 +259,9 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
                     {brands.map((brand) => (
                       <Link
                         key={brand.id}
-                        href={`/collections/brands/${brand.label}`}
+                        href={`/collections/products?brand=${encodeURIComponent(
+                          brand.label
+                        )}`}
                         className="text-lg font-medium text-gray-500 hover:text-black transition-colors"
                         onClick={() => dispatch(toggleMenu(false))}
                       >
