@@ -315,8 +315,6 @@ const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
       const slotOriginalPrice = slot.product.sellingPrice;
       const slotComboPrice = combo.comboPrice / totalSlots;
       const slotDiscount = slotOriginalPrice - slotComboPrice;
-      // Calculate proportional buying price for profit tracking
-      const slotBuyingPrice = slot.product.buyingPrice || 0;
 
       bagItemsToAdd.push({
         itemId: slot.productId,
@@ -324,7 +322,7 @@ const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
         size: selection.size,
         quantity: 1,
         price: slot.product.sellingPrice,
-        bPrice: slotBuyingPrice,
+        bPrice: 0, // Set server-side in OrderService
         name: slot.product.name,
         image: variant?.images?.[0]?.url || slot.product.thumbnail?.url || "",
         discount: Math.round(slotDiscount),

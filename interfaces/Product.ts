@@ -16,7 +16,7 @@ export interface Product {
   variants: ProductVariant[];
   weight: number;
 
-  buyingPrice: number;
+  buyingPrice?: number; // Optional: only set server-side for orders
   sellingPrice: number;
   marketPrice: number;
   discount: number;

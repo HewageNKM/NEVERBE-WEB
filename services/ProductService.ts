@@ -7,6 +7,16 @@ function capitalizeWords(str: string) {
   return str.replace(/\b\w/g, (char) => char.toUpperCase());
 }
 
+/**
+ * Strip sensitive fields (buyingPrice) from product data before returning to frontend
+ */
+const sanitizeProduct = <T extends { buyingPrice?: number }>(
+  product: T
+): Omit<T, "buyingPrice"> => {
+  const { buyingPrice, ...rest } = product;
+  return rest;
+};
+
 // ====================== Products ======================
 export const getProducts = async (
   tags?: string[],
@@ -53,7 +63,7 @@ export const getProducts = async (
           (variant: ProductVariant) =>
             variant.status === true && variant.isDeleted === false
         );
-        return { ...product, variants: filteredVariants };
+        return sanitizeProduct({ ...product, variants: filteredVariants });
       })
       .filter((p) => (p.variants?.length ?? 0) > 0);
 
@@ -119,12 +129,12 @@ export const getNewArrivals = async (
           const filteredVariants = (product.variants || []).filter(
             (v) => v.status && !(v as any).isDeleted
           );
-          return {
+          return sanitizeProduct({
             ...product,
             variants: filteredVariants,
             createdAt: null,
             updatedAt: null,
-          };
+          });
         })
         .filter((p) => (p.variants?.length ?? 0) > 0);
     } else {
@@ -137,12 +147,12 @@ export const getNewArrivals = async (
           const filteredVariants = (product.variants || []).filter(
             (v) => v.status && !(v as any).isDeleted
           );
-          return {
+          return sanitizeProduct({
             ...product,
             variants: filteredVariants,
             createdAt: null,
             updatedAt: null,
-          };
+          });
         })
         .filter((p) => (p.variants?.length ?? 0) > 0);
     }
@@ -170,11 +180,13 @@ export const getRecentItems = async () => {
       .get();
     console.log(`[ProductService] Recent items fetched: ${docs.size}`);
 
-    const items: Product[] = docs.docs.map((doc) => ({
-      ...doc.data(),
-      createdAt: null,
-      updatedAt: null,
-    }));
+    const items = docs.docs.map((doc) =>
+      sanitizeProduct({
+        ...(doc.data() as Product),
+        createdAt: null,
+        updatedAt: null,
+      })
+    );
     return items;
   } catch (error) {
     console.error("[ProductService] getRecentItems error:", error);
@@ -219,11 +231,13 @@ export const getHotProducts = async () => {
         .where("id", "==", itemId)
         .get();
       if (!itemDoc.empty)
-        hotProducts.push({
-          ...itemDoc.docs[0].data(),
-          createdAt: null,
-          updatedAt: null,
-        });
+        hotProducts.push(
+          sanitizeProduct({
+            ...(itemDoc.docs[0].data() as Product),
+            createdAt: null,
+            updatedAt: null,
+          })
+        );
       if (hotProducts.length === 10) break;
     }
 
@@ -256,7 +270,12 @@ export const getProductById = async (itemId: string) => {
     console.log(
       `[ProductService] Product ${itemId} fetched with ${variants.length} valid variants.`
     );
-    return { ...docData, variants, createdAt: null, updatedAt: null };
+    return sanitizeProduct({
+      ...docData,
+      variants,
+      createdAt: null,
+      updatedAt: null,
+    } as Product);
   } catch (error) {
     console.error(`[ProductService] getProductById error:`, error);
     throw error;
@@ -296,8 +315,14 @@ export const getProductsByCategory = async (
     query = query.offset(offset).limit(size);
 
     const snapshot = await query.get();
-    const products: Product[] = snapshot.docs
-      .map((doc) => ({ ...doc.data(), createdAt: null, updatedAt: null }))
+    const products = snapshot.docs
+      .map((doc) =>
+        sanitizeProduct({
+          ...(doc.data() as Product),
+          createdAt: null,
+          updatedAt: null,
+        })
+      )
       .filter((p) => (p.variants?.length ?? 0) > 0);
 
     console.log(
@@ -342,18 +367,18 @@ export const getProductsByBrand = async (
     const total = (await query.get()).size;
     const snapshot = await query.offset(offset).limit(size).get();
 
-    const products: Product[] = snapshot.docs
+    const products = snapshot.docs
       .map((doc) => {
         const product = doc.data() as Product;
         const filteredVariants = (product.variants || []).filter(
           (v) => v.status && !v.isDeleted
         );
-        return {
+        return sanitizeProduct({
           ...product,
           variants: filteredVariants,
           createdAt: null,
           updatedAt: null,
-        };
+        });
       })
       .filter((p) => (p.variants?.length ?? 0) > 0);
 
@@ -457,7 +482,7 @@ export const getDealsProducts = async (
       const offset = (page - 1) * size;
       const snapshot = await allProductsQuery.offset(offset).limit(size).get();
 
-      const dataList: Product[] = snapshot.docs
+      const dataList = snapshot.docs
         .map(
           (doc) =>
             ({
@@ -472,7 +497,8 @@ export const getDealsProducts = async (
             (v: ProductVariant) => v.status && !v.isDeleted
           ),
         }))
-        .filter((p) => (p.variants?.length ?? 0) > 0);
+        .filter((p) => (p.variants?.length ?? 0) > 0)
+        .map((p) => sanitizeProduct(p));
 
       console.log(
         `[ProductService] All products fetched for global promo: ${dataList.length}`
@@ -574,20 +600,21 @@ export const getDealsProducts = async (
       dataList = [...dataList, ...fetchedDiscounts];
     }
 
-    // Filter variants for all fetched products
-    dataList = dataList
+    // Filter variants for all fetched products and sanitize
+    const sanitizedDataList = dataList
       .map((p) => ({
         ...p,
         variants: (p.variants || []).filter(
           (v: ProductVariant) => v.status && !v.isDeleted
         ),
       }))
-      .filter((p) => (p.variants?.length ?? 0) > 0);
+      .filter((p) => (p.variants?.length ?? 0) > 0)
+      .map((p) => sanitizeProduct(p));
 
     console.log(
-      `[ProductService] Deals products fetched (Mixed): ${dataList.length}`
+      `[ProductService] Deals products fetched (Mixed): ${sanitizedDataList.length}`
     );
-    return { total, dataList };
+    return { total, dataList: sanitizedDataList };
   } catch (error) {
     console.error("[ProductService] getDealsProducts error:", error);
     throw error;

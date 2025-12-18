@@ -674,7 +674,6 @@ export const getComboById = async (id: string) => {
               thumbnail: productData?.thumbnail,
               sellingPrice: productData?.sellingPrice,
               marketPrice: productData?.marketPrice,
-              buyingPrice: productData?.buyingPrice || 0,
               discount: productData?.discount || 0,
               variants: productData?.variants || [],
             },

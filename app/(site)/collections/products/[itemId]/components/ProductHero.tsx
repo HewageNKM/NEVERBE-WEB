@@ -113,7 +113,7 @@ const ProductHero = ({ item }: { item: Product }) => {
       size: selectedSize,
       quantity: qty,
       price: item.sellingPrice,
-      bPrice: item.buyingPrice || 0,
+      bPrice: 0, // Set server-side in OrderService
       name: item.name,
       image: selectedVariant.images[0]?.url || item.thumbnail.url,
       discount:
