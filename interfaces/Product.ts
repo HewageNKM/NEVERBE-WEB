@@ -26,6 +26,8 @@ export interface Product {
   listing?: boolean;
   isDeleted?: boolean;
   tags?: string[];
+  gender?: string[]; // ["men", "women", "kids"]
+  availableSizes?: string[]; // For size filtering
 
   // Optional timestamps if needed
   createdAt?: any;

@@ -5,17 +5,33 @@ import {
   resetFilter,
   setSelectedBrand,
   setSelectedCategories,
+  setSelectedSizes,
   setInStock,
 } from "@/redux/dealsSlice/dealsSlice";
 import { AppDispatch, RootState } from "@/redux/store";
 import { Switch } from "@mui/material";
 import { IoCheckbox, IoSquareOutline } from "react-icons/io5";
 
+// Common shoe sizes
+const AVAILABLE_SIZES = [
+  "36",
+  "37",
+  "38",
+  "39",
+  "40",
+  "41",
+  "42",
+  "43",
+  "44",
+  "45",
+  "46",
+  "47",
+];
+
 const DealsFilter = () => {
   const dispatch: AppDispatch = useDispatch();
-  const { selectedBrands, selectedCategories, inStock } = useSelector(
-    (state: RootState) => state.dealsSlice
-  );
+  const { selectedBrands, selectedCategories, selectedSizes, inStock } =
+    useSelector((state: RootState) => state.dealsSlice);
 
   const [brands, setBrands] = useState<any[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
@@ -50,6 +66,13 @@ const DealsFilter = () => {
       ? selectedCategories.filter((c) => c !== lowerValue)
       : [...selectedCategories, lowerValue];
     dispatch(setSelectedCategories(newCats.slice(0, 5)));
+  };
+
+  const toggleSize = (size: string) => {
+    const newSizes = selectedSizes.includes(size)
+      ? selectedSizes.filter((s) => s !== size)
+      : [...selectedSizes, size];
+    dispatch(setSelectedSizes(newSizes));
   };
 
   const FilterSection = ({ title, items, selectedItems, onToggle }: any) => (
@@ -111,6 +134,31 @@ const DealsFilter = () => {
           color="default"
           size="small"
         />
+      </div>
+
+      {/* Sizes */}
+      <div className="py-6 border-t border-gray-100">
+        <h3 className="text-sm font-bold uppercase tracking-wide mb-4">
+          Sizes
+        </h3>
+        <div className="flex flex-wrap gap-2">
+          {AVAILABLE_SIZES.map((size) => {
+            const isSelected = selectedSizes.includes(size);
+            return (
+              <button
+                key={size}
+                onClick={() => toggleSize(size)}
+                className={`w-10 h-10 border-2 text-xs font-bold transition-all ${
+                  isSelected
+                    ? "bg-black border-black text-white"
+                    : "bg-white border-gray-200 text-gray-600 hover:border-black"
+                }`}
+              >
+                {size}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       <FilterSection

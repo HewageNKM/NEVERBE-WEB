@@ -75,6 +75,66 @@ export const getProducts = async (
   }
 };
 
+// ====================== Products By Gender ======================
+export const getProductsByGender = async (
+  gender: string,
+  page: number = 1,
+  size: number = 20,
+  filterSize?: string,
+  inStock?: boolean
+): Promise<{ total: number; dataList: Product[] }> => {
+  try {
+    console.log(
+      `[ProductService] getProductsByGender → Gender: ${gender}, Page: ${page}, Size: ${size}`
+    );
+    let query: FirebaseFirestore.Query = adminFirestore
+      .collection("products")
+      .where("isDeleted", "==", false)
+      .where("status", "==", true)
+      .where("listing", "==", true)
+      .where("gender", "array-contains", gender.toLowerCase());
+
+    if (filterSize) {
+      query = query.where("availableSizes", "array-contains", filterSize);
+      console.log(`[ProductService] Filtering by size: ${filterSize}`);
+    }
+
+    if (typeof inStock === "boolean") {
+      query = query.where("inStock", "==", inStock);
+    }
+
+    const offset = (page - 1) * size;
+    const total = (await query.get()).size;
+    console.log(`[ProductService] Total matching products by gender: ${total}`);
+
+    query = query.offset(offset).limit(size);
+    const snapshot = await query.get();
+
+    const products = snapshot.docs
+      .map((doc) => {
+        const product = {
+          ...(doc.data() as Product),
+          createdAt: null,
+          updatedAt: null,
+        };
+        const filteredVariants = (product.variants || []).filter(
+          (variant: ProductVariant) =>
+            variant.status === true && variant.isDeleted === false
+        );
+        return sanitizeProduct({ ...product, variants: filteredVariants });
+      })
+      .filter((p) => (p.variants?.length ?? 0) > 0);
+
+    console.log(
+      `[ProductService] Products by gender fetched: ${products.length}`
+    );
+    return { total, dataList: products };
+  } catch (error) {
+    console.error("[ProductService] getProductsByGender error:", error);
+    throw error;
+  }
+};
+
 // ====================== New Arrivals ======================
 export const getNewArrivals = async (
   page: number = 1,

@@ -8,12 +8,16 @@ interface ProductsSlice {
   showFilter: boolean;
   selectedCategories: string[];
   selectedBrands: string[];
+  selectedSizes: string[];
+  selectedGender: string;
   selectedSort: string;
   inStock: boolean;
 }
 
 const initialState: ProductsSlice = {
   selectedBrands: [],
+  selectedSizes: [],
+  selectedGender: "",
   page: 1,
   size: 12,
   selectedCategories: [],
@@ -37,9 +41,17 @@ const productsSlice = createSlice({
     setSelectedBrand: (state, action) => {
       state.selectedBrands = action.payload;
     },
+    setSelectedSizes: (state, action) => {
+      state.selectedSizes = action.payload;
+    },
+    setSelectedGender: (state, action) => {
+      state.selectedGender = action.payload;
+    },
     resetFilter: (state) => {
       state.selectedBrands = [];
       state.selectedCategories = [];
+      state.selectedSizes = [];
+      state.selectedGender = "";
     },
     setInStock: (state, action) => {
       state.inStock = action.payload;
@@ -68,6 +80,8 @@ export const {
   resetFilter,
   setProducts,
   setSelectedBrand,
+  setSelectedSizes,
+  setSelectedGender,
   setPage,
   setSize,
   setInStock,

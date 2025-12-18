@@ -6,13 +6,30 @@ import {
   resetFilter,
   setInStock,
   setSelectedBrands,
+  setSelectedSizes,
 } from "@/redux/categorySlice/categorySlice";
 import Switch from "@mui/material/Switch";
 import { IoCheckbox, IoSquareOutline } from "react-icons/io5";
 
+// Common shoe sizes
+const AVAILABLE_SIZES = [
+  "36",
+  "37",
+  "38",
+  "39",
+  "40",
+  "41",
+  "42",
+  "43",
+  "44",
+  "45",
+  "46",
+  "47",
+];
+
 const CollectionFilter = () => {
   const dispatch: AppDispatch = useDispatch();
-  const { selectedBrands, inStock } = useSelector(
+  const { selectedBrands, selectedSizes, inStock } = useSelector(
     (state: RootState) => state.categorySlice
   );
 
@@ -41,6 +58,13 @@ const CollectionFilter = () => {
     if (newBrands.length <= 5) dispatch(setSelectedBrands(newBrands));
   };
 
+  const toggleSize = (size: string) => {
+    const newSizes = selectedSizes.includes(size)
+      ? selectedSizes.filter((s) => s !== size)
+      : [...selectedSizes, size];
+    dispatch(setSelectedSizes(newSizes));
+  };
+
   return (
     <aside className="hidden lg:block w-64 pr-8 sticky top-24 h-fit max-h-[85vh] overflow-y-auto hide-scrollbar">
       {/* Header */}
@@ -63,6 +87,31 @@ const CollectionFilter = () => {
           color="default"
           size="small"
         />
+      </div>
+
+      {/* Sizes */}
+      <div className="py-6 border-b border-gray-100">
+        <h3 className="text-sm font-bold uppercase tracking-wide mb-4">
+          Sizes
+        </h3>
+        <div className="flex flex-wrap gap-2">
+          {AVAILABLE_SIZES.map((size) => {
+            const isSelected = selectedSizes.includes(size);
+            return (
+              <button
+                key={size}
+                onClick={() => toggleSize(size)}
+                className={`w-10 h-10 border-2 text-xs font-bold transition-all ${
+                  isSelected
+                    ? "bg-black border-black text-white"
+                    : "bg-white border-gray-200 text-gray-600 hover:border-black"
+                }`}
+              >
+                {size}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       {/* Brands List */}

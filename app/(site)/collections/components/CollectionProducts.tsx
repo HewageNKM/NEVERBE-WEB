@@ -45,6 +45,7 @@ const CollectionProducts = ({
     selectedSort,
     inStock,
     selectedBrands,
+    selectedSizes,
     showFilter,
   } = useSelector((state: RootState) => state.categorySlice);
 
@@ -74,6 +75,9 @@ const CollectionProducts = ({
         });
         if (inStock) params.append("inStock", "true");
         selectedBrands.forEach((t) => params.append("tag", t));
+        if (selectedSizes.length > 0) {
+          params.append("sizes", selectedSizes.join(","));
+        }
 
         let endpoint = "/api/v1/products";
 
@@ -116,6 +120,7 @@ const CollectionProducts = ({
     page,
     size,
     selectedBrands,
+    selectedSizes,
     inStock,
     selectedSort,
     collectionType,

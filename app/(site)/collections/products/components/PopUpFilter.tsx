@@ -8,22 +8,37 @@ import {
   setInStock,
   setSelectedBrand,
   setSelectedCategories,
+  setSelectedSizes,
   toggleFilter,
 } from "@/redux/productsSlice/productsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
 import { Switch } from "@mui/material";
 
+// Common shoe sizes
+const AVAILABLE_SIZES = [
+  "36",
+  "37",
+  "38",
+  "39",
+  "40",
+  "41",
+  "42",
+  "43",
+  "44",
+  "45",
+  "46",
+  "47",
+];
+
 const PopUpFilter = () => {
   const dispatch: AppDispatch = useDispatch();
-  const { selectedBrands, selectedCategories, inStock } = useSelector(
-    (state: RootState) => state.productsSlice
-  );
+  const { selectedBrands, selectedCategories, selectedSizes, inStock } =
+    useSelector((state: RootState) => state.productsSlice);
 
   const [brands, setBrands] = useState<any[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
 
-  // Fetch logic same as desktop
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -46,6 +61,13 @@ const PopUpFilter = () => {
       ? list.filter((i) => i !== lower)
       : [...list, lower];
     dispatch(action(newList.slice(0, 5)));
+  };
+
+  const toggleSize = (size: string) => {
+    const newSizes = selectedSizes.includes(size)
+      ? selectedSizes.filter((s) => s !== size)
+      : [...selectedSizes, size];
+    dispatch(setSelectedSizes(newSizes));
   };
 
   const FilterGroup = ({ title, items, selected, onToggle }: any) => (
@@ -101,6 +123,29 @@ const PopUpFilter = () => {
               onChange={(e) => dispatch(setInStock(e.target.checked))}
               color="default"
             />
+          </div>
+
+          {/* Sizes */}
+          <div className="mb-8 pb-8 border-b border-gray-100">
+            <h3 className="font-bold text-lg mb-4">Sizes</h3>
+            <div className="flex flex-wrap gap-2">
+              {AVAILABLE_SIZES.map((size) => {
+                const isActive = selectedSizes.includes(size);
+                return (
+                  <button
+                    key={size}
+                    onClick={() => toggleSize(size)}
+                    className={`w-12 h-12 border-2 text-sm font-bold transition-all ${
+                      isActive
+                        ? "bg-black text-white border-black"
+                        : "bg-white text-gray-600 border-gray-300 hover:border-black"
+                    }`}
+                  >
+                    {size}
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
           <FilterGroup

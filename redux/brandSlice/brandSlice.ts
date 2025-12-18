@@ -6,6 +6,7 @@ interface BrandSlice {
   showFilter: boolean;
   selectedSort: string;
   selectedCategories: string[];
+  selectedSizes: string[];
   inStock: boolean;
   page: number;
   size: number;
@@ -18,6 +19,7 @@ const initialState: BrandSlice = {
   inStock: false,
   showFilter: false,
   selectedCategories: [],
+  selectedSizes: [],
   selectedSort: "NO SELCT",
 };
 
@@ -36,6 +38,11 @@ const brandSlice = createSlice({
     },
     resetFilter: (state) => {
       state.selectedSort = "";
+      state.selectedCategories = [];
+      state.selectedSizes = [];
+    },
+    setSelectedSizes: (state, action) => {
+      state.selectedSizes = action.payload;
     },
     setInStock: (state, action) => {
       state.inStock = action.payload;
@@ -60,6 +67,7 @@ export const {
   setPage,
   setInStock,
   setSelectedCategories,
+  setSelectedSizes,
 } = brandSlice.actions;
 
 export default brandSlice.reducer;

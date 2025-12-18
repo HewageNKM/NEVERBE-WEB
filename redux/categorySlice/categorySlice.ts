@@ -4,7 +4,8 @@ import { Product } from "@/interfaces/Product";
 
 export interface CategoryFilterState {
   showFilter: boolean;
-  selectedBrands: string[]; // ✅ brand filter
+  selectedBrands: string[]; // brand filter
+  selectedSizes: string[]; // size filter
   inStock: boolean;
   products: Product[];
   page: number;
@@ -15,6 +16,7 @@ export interface CategoryFilterState {
 const initialState: CategoryFilterState = {
   showFilter: false,
   selectedBrands: [],
+  selectedSizes: [],
   inStock: false,
   products: [],
   page: 1,
@@ -31,6 +33,9 @@ export const categorySlice = createSlice({
     },
     setSelectedBrands: (state, action: PayloadAction<string[]>) => {
       state.selectedBrands = action.payload;
+    },
+    setSelectedSizes: (state, action: PayloadAction<string[]>) => {
+      state.selectedSizes = action.payload;
     },
     setInStock: (state, action: PayloadAction<boolean>) => {
       state.inStock = action.payload;
@@ -49,6 +54,7 @@ export const categorySlice = createSlice({
     },
     resetFilter: (state) => {
       state.selectedBrands = [];
+      state.selectedSizes = [];
       state.inStock = false;
       state.page = 1;
       state.size = 20;
@@ -60,6 +66,7 @@ export const categorySlice = createSlice({
 export const {
   toggleFilter,
   setSelectedBrands,
+  setSelectedSizes,
   setInStock,
   setProducts,
   setPage,
