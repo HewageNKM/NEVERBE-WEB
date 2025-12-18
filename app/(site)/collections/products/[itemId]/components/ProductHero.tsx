@@ -115,7 +115,7 @@ const ProductHero = ({ item }: { item: Product }) => {
       price: item.sellingPrice,
       bPrice: 0, // Set server-side in OrderService
       name: item.name,
-      image: selectedVariant.images[0]?.url || item.thumbnail.url,
+      thumbnail: selectedVariant.images[0]?.url || item.thumbnail.url,
       discount:
         Math.round((item.sellingPrice * (item.discount / 100)) / 10) * 10 * qty,
       itemType: "product",

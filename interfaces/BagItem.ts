@@ -6,26 +6,8 @@ export * from "./Promotion";
 export * from "./Coupon";
 export * from "./ComboProduct";
 
-export interface BagItem {
-  itemId: string;
-  variantId: string;
-  size: string;
-  quantity: number;
-  price: number;
-  bPrice: number; // Buying price for profit calculation
-  name: string;
-  image: string;
-  discount: number;
-  itemType: string;
-  maxQuantity: number;
-  variantName?: string;
+export * from "./index"; // Re-export everything from index, or just BagItem if circular deps worry.
+// Better: Just re-export BagItem from index.
 
-  // Product targeting fields for promotions
-  category?: string;
-  brand?: string;
-
-  // Combo-specific properties
-  comboId?: string;
-  comboName?: string;
-  isComboItem?: boolean;
-}
+import { BagItem as GlobalBagItem } from "./index";
+export type BagItem = GlobalBagItem;

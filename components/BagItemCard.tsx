@@ -27,7 +27,7 @@ const BagItemCard = ({
       <div className="flex gap-3 py-2 group">
         <div className="relative w-14 h-14 bg-[#f6f6f6] shrink-0 border border-gray-100">
           <Image
-            src={item.image || ""}
+            src={item.thumbnail || ""}
             alt={item.name}
             fill
             className="object-cover mix-blend-multiply"
@@ -77,7 +77,7 @@ const BagItemCard = ({
       {/* Image Container */}
       <div className="relative w-20 h-20 bg-[#f6f6f6] shrink-0">
         <Image
-          src={item.image || ""}
+          src={item.thumbnail || ""}
           alt={item.name}
           fill
           className="object-cover mix-blend-multiply"

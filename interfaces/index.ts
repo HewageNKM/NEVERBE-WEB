@@ -92,17 +92,20 @@ export interface Variant {
   sizes: Size[];
 }
 
-export interface OrderItem {
+export interface BaseItem {
   itemId: string;
   variantId: string;
-  name: string;
-  variantName: string;
   size: string;
   quantity: number;
   price: number;
-  bPrice: number;
-  discount?: number;
+  bPrice: number; // Buying price
+  name: string;
   thumbnail: string;
+  discount?: number; // Made optional as it was varying
+}
+
+export interface OrderItem extends BaseItem {
+  variantName: string;
 }
 
 export interface FooterLink {
@@ -169,17 +172,13 @@ export interface Customer {
 }
 
 // Re-export BagItem with full properties
-export interface BagItem {
-  itemId: string;
-  variantId: string;
-  size: string;
-  quantity: number;
-  price: number;
-  bPrice: number; // Buying price for profit tracking
-  name: string;
-  image: string;
-  thumbnail?: string;
-  discount: number;
+// Re-export BagItem with full properties
+export interface BagItem extends BaseItem {
+  discount: number; // Override to be required if it was strictly required before, or keep optional. In BagItem.ts it was required.
+  image?: string; // KEEPING AS OPTIONAL DEPRECATED FOR NOW TO PREVENT BREAKING IMMEDIATELY, OR REMOVE? Plan said remove.
+  // Actually, plan says remove `image` and use `thumbnail`.
+  // Let's remove `image` and strict type `thumbnail`.
+
   itemType: string;
   maxQuantity: number;
   variantName?: string;

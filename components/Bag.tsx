@@ -63,7 +63,7 @@ const BundleGroupCard = ({
             {/* Thumbnail */}
             <div className="relative w-16 h-16 bg-[#f6f6f6] shrink-0">
               <Image
-                src={item.image || ""}
+                src={item.thumbnail || ""}
                 alt={item.name}
                 fill
                 className="object-cover mix-blend-multiply"
@@ -125,7 +125,7 @@ const SingleItemCard = ({
       {/* Image */}
       <div className="relative w-20 h-20 bg-[#f6f6f6] shrink-0">
         <Image
-          src={item.image || ""}
+          src={item.thumbnail || ""}
           alt={item.name}
           fill
           className="object-cover mix-blend-multiply"

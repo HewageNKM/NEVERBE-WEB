@@ -54,7 +54,7 @@ const BundleCard = ({ bundle }: { bundle: BundleGroup }) => {
           <div key={idx} className="flex gap-2 p-2">
             <div className="relative w-10 h-10 bg-[#f6f6f6] shrink-0">
               <Image
-                src={item.image || ""}
+                src={item.thumbnail || ""}
                 alt={item.name}
                 fill
                 className="object-cover mix-blend-multiply"

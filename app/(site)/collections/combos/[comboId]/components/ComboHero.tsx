@@ -324,7 +324,8 @@ const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
         price: slot.product.sellingPrice,
         bPrice: 0, // Set server-side in OrderService
         name: slot.product.name,
-        image: variant?.images?.[0]?.url || slot.product.thumbnail?.url || "",
+        thumbnail:
+          variant?.images?.[0]?.url || slot.product.thumbnail?.url || "",
         discount: Math.round(slotDiscount),
         itemType: "combo",
         maxQuantity: 10,
