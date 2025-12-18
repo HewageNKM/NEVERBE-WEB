@@ -24,6 +24,7 @@ const DealsProducts = ({ items }: { items: Product[] }) => {
     size,
     selectedBrands,
     selectedCategories,
+    selectedSizes,
     inStock,
     selectedSort,
   } = useSelector((state: RootState) => state.dealsSlice);
@@ -52,6 +53,9 @@ const DealsProducts = ({ items }: { items: Product[] }) => {
         });
         selectedBrands.forEach((b) => params.append("tag", b));
         selectedCategories.forEach((c) => params.append("tag", c));
+        if (selectedSizes.length > 0) {
+          params.append("sizes", selectedSizes.join(","));
+        }
 
         const res = await fetch(`/api/v1/products/deals?${params}`);
         const data = await res.json();
@@ -72,7 +76,15 @@ const DealsProducts = ({ items }: { items: Product[] }) => {
       }
     };
     fetchDeals();
-  }, [page, size, selectedBrands, selectedCategories, inStock, selectedSort]);
+  }, [
+    page,
+    size,
+    selectedBrands,
+    selectedCategories,
+    selectedSizes,
+    inStock,
+    selectedSort,
+  ]);
 
   // Outside Click
   useEffect(() => {
