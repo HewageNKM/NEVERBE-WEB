@@ -118,13 +118,11 @@ const ItemCard = ({
             </button>
           </div>
 
-          {/* Quick View Button */}
-
           {/* DETAILS */}
           <Link href={`/collections/products/${item?.id}`} className="block">
             <div className="flex flex-col gap-1 px-1">
               <div className="flex justify-between items-start">
-                <h3 className="text-base font-semibold text-black leading-tight group-hover:text-gray-600 transition-colors line-clamp-2">
+                <h3 className="text-base font-semibold text-black leading-tight group-hover:underline transition-all line-clamp-2">
                   {item.name}
                 </h3>
               </div>
@@ -139,7 +137,7 @@ const ItemCard = ({
                     item.discount > 0 || activePromo
                       ? "text-red-600"
                       : "text-black"
-                  } font-bold text-lg`}
+                  } font-bold text-base md:text-lg`}
                 >
                   Rs. {discountedPrice.toLocaleString()}
                 </span>

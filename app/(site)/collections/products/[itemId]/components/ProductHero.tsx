@@ -505,7 +505,7 @@ const ProductHero = ({ item }: { item: Product }) => {
             <button
               onClick={buyNow}
               disabled={!selectedSize || outOfStocks || isLimitReached}
-              className="w-full py-4 border border-gray-300 text-black font-bold uppercase tracking-widest hover:border-black transition-all"
+              className="w-full py-4 border border-black text-black font-bold uppercase tracking-widest hover:bg-black hover:text-white transition-all"
             >
               Buy It Now
             </button>
