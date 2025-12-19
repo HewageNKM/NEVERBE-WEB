@@ -36,7 +36,6 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
   const [sizeStock, setSizeStock] = useState<Record<string, number>>({});
   const [stockLoading, setStockLoading] = useState(false);
 
-  // Reset on product change
   useEffect(() => {
     if (product) {
       const defaultVariant = product.variants?.[0] || null;
@@ -47,7 +46,6 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
     }
   }, [product]);
 
-  // Preload stock for variant
   useEffect(() => {
     if (
       !product ||
@@ -82,7 +80,6 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
     selectedVariant?.variantId
   );
 
-  // Price calculation
   let finalPrice = product.sellingPrice;
   if (product.discount > 0) {
     finalPrice =
@@ -140,58 +137,51 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-100 flex items-end md:items-center justify-center p-0 md:p-6 lg:p-12">
           {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            className="absolute inset-0 bg-white/80 backdrop-blur-md"
           />
 
-          {/* Modal */}
+          {/* Modal Container */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="relative bg-white w-full max-w-4xl max-h-[90vh] rounded-xl shadow-2xl overflow-hidden"
+            initial={{ y: "100%", opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: "100%", opacity: 0 }}
+            transition={{ type: "spring", damping: 30, stiffness: 300 }}
+            className="relative overflow-y-auto bg-white w-full max-w-6xl h-[92vh] md:h-auto md:max-h-[90vh] shadow-[0_-10px_40px_rgba(0,0,0,0.1)] md:shadow-[0_24px_54px_rgba(0,0,0,0.15)] overflow-hidden rounded-t-[2rem] md:rounded-none"
           >
             {/* Close Button */}
             <button
               onClick={onClose}
-              className="absolute top-4 right-4 z-10 p-2 bg-white rounded-full shadow-lg hover:bg-gray-100 transition-colors"
+              className="absolute top-5 right-5 z-50 p-2 bg-white/50 backdrop-blur-md md:bg-transparent rounded-full hover:bg-gray-100 transition-all"
             >
-              <IoClose size={24} />
+              <IoClose size={26} className="text-black" />
             </button>
 
-            <div className="flex flex-col md:flex-row max-h-[90vh] overflow-y-auto">
-              {/* Left: Image */}
-              <div className="md:w-1/2 relative">
-                <div className="aspect-square bg-[#f6f6f6] relative">
+            <div className="flex flex-col md:flex-row h-full overflow-y-auto no-scrollbar">
+              {/* LEFT: VISUALS SECTION */}
+              <div className="w-full md:w-1/2 flex flex-col bg-[#f6f6f6] shrink-0">
+                <div className="relative aspect-square flex items-center justify-center p-6 md:p-12">
                   <Image
                     src={
                       selectedVariant?.images?.[0]?.url || product.thumbnail.url
                     }
                     alt={product.name}
-                    fill
-                    className="object-cover mix-blend-multiply"
+                    width={800}
+                    height={800}
+                    className="w-full h-full object-contain mix-blend-multiply transition-transform duration-500 md:hover:scale-105"
+                    priority
                   />
-                  {product.discount > 0 && (
-                    <span className="absolute top-4 left-4 bg-white text-black text-xs font-bold px-3 py-1 rounded-md shadow">
-                      -{product.discount}%
-                    </span>
-                  )}
-                  {activePromo && (
-                    <span className="absolute top-4 right-4 bg-black text-white text-[10px] font-bold px-2 py-1 rounded-md uppercase">
-                      {activePromo.type === "BOGO" ? "BOGO" : "Promo"}
-                    </span>
-                  )}
                 </div>
 
-                {/* Variant Thumbnails */}
+                {/* Variant Swatches */}
                 {product.variants.length > 1 && (
-                  <div className="flex gap-2 p-4 bg-gray-50">
+                  <div className="px-6 pb-6 md:pb-10 flex gap-4 overflow-x-auto no-scrollbar justify-start md:justify-center">
                     {product.variants.map((v) => (
                       <button
                         key={v.variantId}
@@ -199,168 +189,145 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
                           setSelectedVariant(v);
                           setSelectedSize("");
                         }}
-                        className={`w-14 h-14 bg-white rounded-lg overflow-hidden border-2 transition-all ${
+                        className={`relative w-14 h-14 md:w-16 md:h-16 shrink-0 bg-white transition-all rounded-[4px] p-1 ${
                           selectedVariant?.variantId === v.variantId
-                            ? "border-black"
-                            : "border-transparent hover:border-gray-300"
+                            ? "border-black border-[1.5px] scale-105 z-10 shadow-sm"
+                            : "border-gray-100 hover:border-gray-300 opacity-70 hover:opacity-100"
                         }`}
                       >
-                        <Image
-                          src={v.images[0]?.url || ""}
-                          alt={v.variantName}
-                          width={56}
-                          height={56}
-                          className="object-cover"
-                        />
+                        <div className="relative w-full h-full">
+                          <Image
+                            src={v.images[0]?.url || ""}
+                            alt={v.variantName}
+                            fill
+                            className="object-contain mix-blend-multiply"
+                          />
+                        </div>
                       </button>
                     ))}
                   </div>
                 )}
               </div>
 
-              {/* Right: Details */}
-              <div className="md:w-1/2 p-6 flex flex-col gap-4">
-                {/* Header */}
-                <div>
-                  <p className="text-gray-500 text-sm capitalize">
+              {/* RIGHT: DETAILS SECTION */}
+              <div className="w-full md:w-1/2 p-6 md:p-10 lg:p-14 flex flex-col bg-white">
+                <div className="mb-6">
+                  <p className="text-[#707072] text-[14px] md:text-[15px] font-normal capitalize mb-1">
                     {product.brand?.replace("-", " ")}
                   </p>
-                  <h2 className="text-2xl font-black uppercase tracking-tight">
+                  <h2 className="text-[20px] md:text-[24px] font-medium text-[#111] leading-tight tracking-tight">
                     {product.name}
                   </h2>
                 </div>
 
-                {/* Price */}
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 mb-8">
                   <span
-                    className={`text-2xl font-bold ${
+                    className={`text-[18px] md:text-[20px] font-medium ${
                       product.discount > 0 || activePromo
-                        ? "text-red-600"
+                        ? "text-[#b22222]"
                         : "text-black"
                     }`}
                   >
                     Rs. {finalPrice.toLocaleString()}
                   </span>
                   {(product.discount > 0 || activePromo) && (
-                    <span className="text-gray-400 line-through">
+                    <span className="text-[#707072] text-[15px] md:text-[16px] line-through decoration-[0.5px]">
                       Rs. {product.marketPrice.toLocaleString()}
                     </span>
                   )}
                 </div>
 
-                {/* Color/Variant */}
-                {selectedVariant && (
-                  <p className="text-sm text-gray-600">
-                    Color:{" "}
-                    <span className="font-medium">
-                      {selectedVariant.variantName}
-                    </span>
-                  </p>
-                )}
-
-                {/* Size Selection */}
-                <div>
-                  <p className="text-sm font-bold uppercase mb-2">
+                {/* Size Grid */}
+                <div className="mb-8">
+                  <p className="text-[16px] font-medium mb-4 text-[#111]">
                     Select Size
                   </p>
-                  <div className="grid grid-cols-4 gap-2">
+                  <div className="grid grid-cols-3 gap-2">
                     {selectedVariant?.sizes.map((size) => {
                       const stockQty = sizeStock[size];
                       const isOOS = stockQty !== undefined && stockQty <= 0;
-                      const isLoading = stockLoading && stockQty === undefined;
-
                       return (
                         <button
                           key={size}
-                          onClick={() => !isOOS && setSelectedSize(size)}
-                          disabled={isOOS || isLoading}
-                          className={`py-2.5 rounded-md text-sm font-bold border transition-all relative ${
+                          disabled={isOOS || stockLoading}
+                          onClick={() => setSelectedSize(size)}
+                          className={`h-11 md:h-12 border rounded-[4px] text-[13px] md:text-[14px] transition-all flex items-center justify-center ${
                             selectedSize === size
-                              ? "border-black bg-black text-white"
+                              ? "border-black border-[1.5px] bg-black text-white"
                               : isOOS
-                              ? "border-gray-100 bg-gray-50 text-gray-300 cursor-not-allowed line-through"
+                              ? "bg-[#f7f7f7] border-transparent text-[#ccc] cursor-not-allowed"
                               : "border-gray-200 text-black hover:border-black"
                           }`}
                         >
-                          {isLoading ? "..." : size}
-                          {isOOS && (
-                            <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full" />
-                          )}
+                          {size}
                         </button>
                       );
                     })}
                   </div>
-                  {!selectedSize && (
-                    <p className="text-red-500 text-xs mt-2">
-                      * Please select a size
-                    </p>
+                </div>
+
+                {/* Quantity */}
+                <div className="flex items-center justify-between mb-8">
+                  <div className="flex items-center gap-4">
+                    <span className="text-[14px] font-medium text-[#111]">
+                      Quantity
+                    </span>
+                    <div className="flex items-center border border-gray-200 rounded-full px-3 py-1">
+                      <button
+                        onClick={() => setQty((p) => Math.max(1, p - 1))}
+                        className="p-1 disabled:opacity-20"
+                        disabled={qty <= 1}
+                      >
+                        <IoRemove size={16} />
+                      </button>
+                      <span className="w-8 text-center text-[14px] font-medium">
+                        {qty}
+                      </span>
+                      <button
+                        onClick={() =>
+                          setQty((p) =>
+                            Math.min(availableStock - bagQty || 10, p + 1)
+                          )
+                        }
+                        className="p-1 disabled:opacity-20"
+                        disabled={qty >= availableStock - bagQty || qty >= 10}
+                      >
+                        <IoAdd size={16} />
+                      </button>
+                    </div>
+                  </div>
+                  {selectedSize && !stockLoading && (
+                    <span
+                      className={`text-[12px] font-medium uppercase tracking-tight ${
+                        availableStock < 5 ? "text-[#b22222]" : "text-green-700"
+                      }`}
+                    >
+                      {availableStock < 5
+                        ? `Only ${availableStock} Left!`
+                        : "In Stock"}
+                    </span>
                   )}
                 </div>
 
-                {/* Stock Status */}
-                {selectedSize && !stockLoading && (
-                  <div className="text-xs font-bold uppercase">
-                    {availableStock > 0 ? (
-                      <span
-                        className={
-                          availableStock < 5 ? "text-red-600" : "text-green-600"
-                        }
-                      >
-                        {availableStock < 5
-                          ? `Only ${availableStock} Left!`
-                          : `${availableStock} In Stock`}
-                      </span>
-                    ) : (
-                      <span className="text-red-600">Out of Stock</span>
-                    )}
-                  </div>
-                )}
-
-                {/* Quantity */}
-                <div className="flex items-center gap-4">
-                  <span className="text-sm font-bold uppercase">Qty</span>
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => setQty((p) => Math.max(1, p - 1))}
-                      disabled={qty <= 1}
-                      className="w-8 h-8 flex items-center justify-center border border-gray-200 rounded-md hover:border-black disabled:opacity-40"
-                    >
-                      <IoRemove size={14} />
-                    </button>
-                    <span className="w-8 text-center font-bold">{qty}</span>
-                    <button
-                      onClick={() =>
-                        setQty((p) =>
-                          Math.min(availableStock - bagQty || 10, p + 1)
-                        )
-                      }
-                      disabled={qty >= availableStock - bagQty || qty >= 10}
-                      className="w-8 h-8 flex items-center justify-center border border-gray-200 rounded-md hover:border-black disabled:opacity-40"
-                    >
-                      <IoAdd size={14} />
-                    </button>
-                  </div>
-                </div>
-
                 {/* Actions */}
-                <div className="mt-auto pt-4 space-y-3">
+                <div className="mt-auto space-y-3 pb-8 md:pb-0">
                   <button
                     onClick={handleAddToBag}
                     disabled={!selectedSize || isOutOfStock || isLimitReached}
-                    className="w-full py-4 bg-black text-white font-bold uppercase tracking-widest hover:bg-gray-800 disabled:bg-gray-300 disabled:cursor-not-allowed transition-all"
+                    className="w-full py-4 md:py-5 bg-black text-white rounded-full font-medium text-[15px] md:text-[16px] transition-all active:scale-[0.98] disabled:bg-[#f5f5f5] disabled:text-[#707072]"
                   >
-                    {isLimitReached
+                    {isOutOfStock
+                      ? "Sold Out"
+                      : isLimitReached
                       ? "Limit Reached"
-                      : isOutOfStock
-                      ? "Out of Stock"
                       : "Add to Bag"}
                   </button>
                   <Link
                     href={`/collections/products/${product.id}`}
                     onClick={onClose}
-                    className="block w-full py-3 text-center border border-gray-300 text-sm font-bold uppercase tracking-wide hover:border-black transition-all"
+                    className="flex items-center justify-center w-full py-3 md:py-4 border border-gray-200 rounded-full font-medium text-[15px] md:text-[16px] hover:border-black transition-all"
                   >
-                    View Full Details
+                    View Product Details
                   </Link>
                 </div>
               </div>

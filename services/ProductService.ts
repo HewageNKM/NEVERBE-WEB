@@ -135,7 +135,13 @@ export const getHotProducts = async () => {
     .map(([itemId]) => itemId);
 
   if (sortedItemIds.length === 0) return [];
-  return productRepository.findByIds(sortedItemIds);
+
+  const products = await productRepository.findByIds(sortedItemIds);
+
+  // Filter out unlisted, inactive, or deleted products to prevent "leaking"
+  return products.filter(
+    (p) => p.listing === true && p.status === true && !p.isDeleted
+  );
 };
 
 // ====================== Deals Products (Complex Business Logic) ======================

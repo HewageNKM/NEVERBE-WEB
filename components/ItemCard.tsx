@@ -5,7 +5,6 @@ import Link from "next/link";
 import { IoEyeOutline } from "react-icons/io5";
 import { KOKOLogo } from "@/assets/images";
 import { Product } from "@/interfaces/Product";
-
 import { usePromotionsContext } from "@/components/PromotionsProvider";
 import { useQuickView } from "@/components/QuickViewProvider";
 
@@ -28,16 +27,13 @@ const ItemCard = ({
 
   const activePromo = getPromotionForProduct(item.id);
 
+  // Price Calculation Logic
   let finalPrice = item.sellingPrice;
-  let originalPrice = item.marketPrice;
-
   if (item.discount > 0) {
     finalPrice =
       Math.round(
         (item.sellingPrice - (item.sellingPrice * item.discount) / 100) / 10
       ) * 10;
-  } else {
-    finalPrice = Math.round(item.sellingPrice);
   }
 
   if (activePromo) {
@@ -54,122 +50,122 @@ const ItemCard = ({
   }
 
   const discountedPrice = finalPrice;
+  const hasDiscount = item.discount > 0 || activePromo;
 
   return (
-    <>
-      <article className="group w-full flex flex-col gap-2">
-        <div className="block relative">
-          {/* IMAGE CONTAINER */}
-          <div className="relative aspect-square w-full bg-[#f6f6f6] rounded-xl overflow-hidden mb-2">
-            <Link
-              href={`/collections/products/${item?.id}`}
-              className="block w-full h-full"
-            >
-              <Image
-                width={600}
-                height={600}
-                src={item.thumbnail.url}
-                alt={item.name}
-                className="w-full h-full object-cover mix-blend-multiply transition-transform duration-500 group-hover:scale-105"
-                priority={priority}
-              />
+    <article className="group relative flex flex-col w-full bg-white">
+      {/* IMAGE CONTAINER */}
+      <div className="relative aspect-[4/5] w-full overflow-hidden bg-[#f6f6f6]">
+        <Link
+          href={`/collections/products/${item?.id}`}
+          className="cursor-pointer"
+        >
+          <Image
+            width={600}
+            height={750}
+            src={item.thumbnail.url}
+            alt={item.name}
+            className="h-full w-full object-cover transition-opacity duration-500 group-hover:opacity-90"
+            priority={priority}
+          />
+        </Link>
 
-              {/* Badges */}
-              <div className="absolute top-3 left-3 flex flex-col gap-1 items-start">
-                {item.discount > 0 && !activePromo && (
-                  <span className="bg-white text-black text-xs font-bold px-2 py-1 rounded-md shadow-sm">
-                    -{item.discount}%
-                  </span>
-                )}
+        {/* Nike-Style Badges (Top Left) */}
+        <div className="absolute top-3 left-3 flex flex-col gap-1">
+          {activePromo ? (
+            <span className="text-orange-700 text-[13px] font-medium uppercase tracking-tight">
+              {activePromo.type === "BOGO" ? "Buy 1 Get 1" : "Special Offer"}
+            </span>
+          ) : item.discount > 0 ? (
+            <span className="text-orange-700 text-[13px] font-medium">
+              {item.discount}% Off
+            </span>
+          ) : (
+            <span className="text-black text-[13px] font-medium">Just In</span>
+          )}
+        </div>
 
-                {activePromo && (
-                  <span className="bg-black text-white text-[10px] font-bold px-2 py-1 rounded-md shadow-sm uppercase tracking-wide animate-pulse">
-                    {activePromo.type === "BOGO"
-                      ? "Buy 1 Get 1"
-                      : activePromo.type === "PERCENTAGE"
-                      ? `${activePromo.actions?.[0]?.value}% Off`
-                      : activePromo.type === "FREE_SHIPPING"
-                      ? "Free Ship"
-                      : "Promo"}
-                  </span>
-                )}
-              </div>
+        {/* Sold Out Overlay */}
+        {outOfStocks && (
+          <div className="absolute inset-0 bg-white/40 flex items-center justify-center backdrop-blur-[2px]">
+            <span className="bg-white px-4 py-2 text-xs font-bold uppercase tracking-widest text-black shadow-sm">
+              Sold Out
+            </span>
+          </div>
+        )}
 
-              {outOfStocks && (
-                <div className="absolute inset-0 bg-white/60 flex items-center justify-center">
-                  <span className="bg-black text-white px-3 py-1 text-xs font-bold uppercase rounded-full">
-                    Sold Out
-                  </span>
-                </div>
-              )}
-            </Link>
+        {/* Quick View - Desktop Overlay (Nike style uses a slide-up or simple reveal) */}
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            openQuickView(item);
+          }}
+          className="absolute bottom-0 left-0 w-full bg-white py-4 text-sm font-medium transition-transform translate-y-full group-hover:translate-y-0 duration-300 hidden lg:block border-t border-gray-100"
+        >
+          Quick Look
+        </button>
 
-            {/* Quick View Button */}
-            <button
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                openQuickView(item);
-              }}
-              className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-white/95 backdrop-blur-sm text-black px-4 py-2 text-xs font-bold uppercase tracking-wide rounded-full shadow-lg opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-all duration-300 hover:bg-black hover:text-white flex items-center gap-2 z-20"
-            >
-              <IoEyeOutline size={16} />
-              Quick View
-            </button>
+        {/* Quick View - Mobile (Icon) */}
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            openQuickView(item);
+          }}
+          className="absolute bottom-3 right-3 lg:hidden w-9 h-9 bg-white rounded-full shadow-md flex items-center justify-center text-black active:scale-90 transition-transform"
+        >
+          <IoEyeOutline size={18} />
+        </button>
+      </div>
+
+      {/* DETAILS AREA */}
+      <div className="flex flex-col pt-3 pb-6 px-1">
+        <Link href={`/collections/products/${item?.id}`}>
+          <div className="flex flex-col gap-0.5">
+            <h3 className="text-[16px] font-medium text-[#111] leading-tight tracking-tight">
+              {item.name}
+            </h3>
+            <p className="text-[15px] text-[#707072] font-normal leading-relaxed capitalize">
+              {item.category?.replace("-", " ") || "Men's Shoes"}
+            </p>
           </div>
 
-          {/* DETAILS */}
-          <Link href={`/collections/products/${item?.id}`} className="block">
-            <div className="flex flex-col gap-1 px-1">
-              <div className="flex justify-between items-start">
-                <h3 className="text-base font-semibold text-black leading-tight group-hover:underline transition-all line-clamp-2">
-                  {item.name}
-                </h3>
-              </div>
-
-              <p className="text-gray-500 text-sm capitalize">
-                {item.category?.replace("-", " ") || "Men's Shoes"}
-              </p>
-
-              <div className="mt-2 flex items-center gap-2">
-                <span
-                  className={`${
-                    item.discount > 0 || activePromo
-                      ? "text-red-600"
-                      : "text-black"
-                  } font-bold text-base md:text-lg`}
-                >
-                  Rs. {discountedPrice.toLocaleString()}
+          <div className="mt-2 flex flex-col gap-1">
+            <div className="flex items-center gap-2">
+              <span
+                className={`text-[16px] font-medium ${
+                  hasDiscount ? "text-[#b22222]" : "text-black"
+                }`}
+              >
+                Rs. {discountedPrice.toLocaleString()}
+              </span>
+              {hasDiscount && (
+                <span className="text-[#707072] text-[15px] line-through decoration-[0.5px]">
+                  Rs.{" "}
+                  {item.marketPrice > item.sellingPrice
+                    ? item.marketPrice.toLocaleString()
+                    : item.sellingPrice.toLocaleString()}
                 </span>
-                {(item.discount > 0 || activePromo) && (
-                  <span className="text-gray-400 text-sm line-through decoration-1">
-                    Rs.{" "}
-                    {item.marketPrice > item.sellingPrice
-                      ? item.marketPrice.toLocaleString()
-                      : item.sellingPrice.toLocaleString()}
-                  </span>
-                )}
-              </div>
+              )}
+            </div>
 
-              {/* KOKO Text */}
-              <div className="flex items-center gap-1 text-[10px] text-gray-500">
-                <span>or 3 installments with</span>
-                <div className="w-8 h-3 relative opacity-60">
-                  <Image
-                    src={KOKOLogo}
-                    alt="KOKO"
-                    fill
-                    className="object-contain"
-                  />
-                </div>
+            {/* KOKO Installments - Minimalist style */}
+            <div className="flex items-center gap-1.5 mt-1">
+              <span className="text-[12px] text-[#707072]">
+                3 installments with
+              </span>
+              <div className="w-8 h-3 relative grayscale opacity-80 group-hover:grayscale-0 transition-all">
+                <Image
+                  src={KOKOLogo}
+                  alt="KOKO"
+                  fill
+                  className="object-contain"
+                />
               </div>
             </div>
-          </Link>
-        </div>
-      </article>
-
-      {/* Quick View Modal */}
-    </>
+          </div>
+        </Link>
+      </div>
+    </article>
   );
 };
 

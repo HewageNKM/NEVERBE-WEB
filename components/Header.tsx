@@ -9,7 +9,7 @@ import {
   IoMenuOutline,
   IoSearchOutline,
   IoCloseOutline,
-  IoPersonOutline,
+  IoHeartOutline,
 } from "react-icons/io5";
 import Link from "next/link";
 import Image from "next/image";
@@ -21,7 +21,6 @@ import SearchDialog from "@/components/SearchDialog";
 import { ProductVariant } from "@/interfaces/ProductVariant";
 import { NavigationItem } from "@/services/WebsiteService";
 
-// Default navigation items as fallback
 const DEFAULT_NAV_ITEMS: NavigationItem[] = [
   { title: "New Arrivals", link: "/collections/new-arrivals" },
   { title: "Men", link: "/collections/products?gender=men" },
@@ -39,13 +38,9 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
   const bagItems = useSelector((state: RootState) => state.bag.bag);
   const user = useSelector((state: RootState) => state.authSlice.user);
   const dispatch: AppDispatch = useDispatch();
-  const [scrolled, setScrolled] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
-  // Use dynamic nav if available, otherwise fallback to defaults
   let navItems = mainNav.length > 0 ? mainNav : DEFAULT_NAV_ITEMS;
-
-  // Manual override: Ensure Offers is present if not in dynamic list (temporary fix until DB updated)
   if (!navItems.some((item) => item.link === "/collections/offers")) {
     navItems = [...navItems, { title: "Offers", link: "/collections/offers" }];
   }
@@ -60,13 +55,11 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
   const onSearch = async (evt: React.ChangeEvent<HTMLInputElement>) => {
     const query = evt.target.value;
     setSearch(query);
-
     if (query.trim().length < 3) {
       setItems([]);
       setShowSearchResult(false);
       return;
     }
-
     setIsSearching(true);
     try {
       const searchResults = await searchClient.search({
@@ -75,17 +68,7 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
         ],
       });
       let filteredResults = searchResults.results[0].hits.filter(
-        (item: any) =>
-          item.status === true &&
-          item.listing === true &&
-          item.isDeleted == false
-      );
-      filteredResults = filteredResults.filter(
-        (item: any) =>
-          !item.variants.some(
-            (variant: ProductVariant) =>
-              variant.isDeleted === true && variant.status === false
-          )
+        (item: any) => item.status && item.listing && !item.isDeleted
       );
       setItems(filteredResults);
       setShowSearchResult(true);
@@ -96,139 +79,168 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
     }
   };
 
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 50);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
   return (
-    <>
-      <header
-        className={`sticky top-0 left-0 w-full z-40 transition-all duration-300 bg-white shadow-sm`}
-      >
+    <div className="w-full bg-white z-50">
+      {/* 1. NIKE UTILITY TOP BAR (The Pre-Header) */}
+      <div className="hidden lg:flex bg-[#f5f5f5] px-12 py-1.5 justify-between items-center text-[12px] font-medium text-black">
+        <div className="flex gap-4">
+          <Link href="/contact" className="hover:opacity-70">
+            Help
+          </Link>
+          <span className="text-gray-300">|</span>
+          <Link href="/account/register" className="hover:opacity-70">
+            Join Us
+          </Link>
+        </div>
+        <div className="flex gap-4">
+          <Link
+            href={user ? "/account" : "/account/login"}
+            className="hover:opacity-70"
+          >
+            Hi, {user ? user.displayName?.split(" ")[0] : "Sign In"}
+          </Link>
+        </div>
+      </div>
+
+      <header className="sticky top-0 w-full bg-white transition-all duration-300 border-b lg:border-none border-gray-100">
         <SeasonalPromo season={season} />
 
-        <div className="max-w-[1440px] mx-auto px-4 md:px-8 flex justify-between items-center py-2">
-          {/* LOGO */}
-          <Link href="/" className="z-50">
-            {/* Dynamic Logo color based on scroll if needed, but black works for Nike style */}
+        <div className="max-w-[1440px] mx-auto px-4 lg:px-12 flex justify-between items-center h-[60px] lg:h-[72px]">
+          {/* LOGO - Left aligned like Nike */}
+          <Link href="/" className="shrink-0">
             <Image
               src={Logo}
               alt="NEVERBE"
-              width={100}
-              height={40}
-              className={`object-contain transition-all mix-blend-multiply`}
+              width={70}
+              height={30}
+              className="object-contain mix-blend-multiply transition-transform hover:scale-105"
             />
           </Link>
 
-          {/* DESKTOP NAV */}
+          {/* DESKTOP NAV - Centered */}
           <nav className="hidden lg:block absolute left-1/2 -translate-x-1/2">
-            <ul
-              className={`flex gap-8 font-bold uppercase text-sm tracking-wide text-black`}
-            >
+            <ul className="flex gap-6 text-[16px] font-medium text-black">
               {navItems.map((item) => (
                 <li key={item.title}>
-                  <Link href={item.link} className="relative group">
+                  <Link
+                    href={item.link}
+                    className="hover:border-b-2 border-black pb-[24px] transition-all"
+                  >
                     {item.title}
-                    <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-black transition-all group-hover:w-full"></span>
                   </Link>
                 </li>
               ))}
             </ul>
           </nav>
 
-          {/* ICONS */}
-          <div className={`flex items-center gap-4 text-black`}>
-            {/* Search Trigger */}
-            <button
-              onClick={() => setIsSearchOpen(true)}
-              className="p-2 hover:bg-gray-100 rounded-full transition"
-            >
-              <IoSearchOutline size={24} />
-            </button>
+          {/* ICONS & SEARCH BAR */}
+          <div className="flex items-center gap-2 lg:gap-4">
+            {/* Desktop Nike-style Integrated Search Bar */}
+            <div className="hidden lg:flex items-center bg-[#f5f5f5] rounded-full px-4 py-2 hover:bg-[#e5e5e5] transition-colors group">
+              <IoSearchOutline
+                size={20}
+                className="text-black group-hover:scale-110 transition-transform"
+              />
+              <input
+                onClick={() => setIsSearchOpen(true)}
+                placeholder="Search"
+                className="bg-transparent border-none outline-none pl-3 text-sm w-32 focus:w-48 transition-all duration-300"
+                readOnly
+              />
+            </div>
 
-            {/* Account Icon */}
-            <Link
-              href={user ? "/account" : "/account/login"}
-              className="p-2 hover:bg-gray-100 rounded-full transition"
-            >
-              {user ? (
-                <div className="w-6 h-6 bg-black text-white rounded-full flex items-center justify-center text-xs font-bold">
-                  {user.displayName
-                    ? user.displayName.charAt(0).toUpperCase()
-                    : "U"}
-                </div>
-              ) : (
-                <IoPersonOutline size={24} />
-              )}
-            </Link>
+            {/* Icons */}
+            <div className="flex items-center">
+              <Link
+                href="/account/wishlist"
+                className="p-2 hover:bg-gray-100 rounded-full transition lg:block hidden"
+              >
+                <IoHeartOutline size={26} />
+              </Link>
 
-            {/* Bag */}
-            <button
-              onClick={() => dispatch(showBag())}
-              className="relative p-2 hover:bg-gray-100 rounded-full transition"
-            >
-              <IoBagHandleOutline size={24} />
-              {bagItems.length > 0 && (
-                <span className="absolute top-0 right-0 h-4 w-4 bg-black text-white text-[10px] flex items-center justify-center rounded-full">
-                  {bagItems.length}
-                </span>
-              )}
-            </button>
+              <button
+                onClick={() => dispatch(showBag())}
+                className="relative p-2 hover:bg-gray-100 rounded-full transition"
+              >
+                <IoBagHandleOutline size={26} />
+                {bagItems.length > 0 && (
+                  <span className="absolute bottom-2 right-2 h-4 w-4 bg-black text-white text-[9px] flex items-center justify-center rounded-full font-bold">
+                    {bagItems.length}
+                  </span>
+                )}
+              </button>
 
-            {/* Mobile Menu */}
-            <button
-              onClick={() => dispatch(toggleMenu(true))}
-              className="lg:hidden p-2"
-            >
-              <IoMenuOutline size={28} />
-            </button>
+              <button
+                onClick={() => dispatch(toggleMenu(true))}
+                className="lg:hidden p-2 hover:bg-gray-100 rounded-full"
+              >
+                <IoMenuOutline size={28} />
+              </button>
+            </div>
           </div>
         </div>
 
-        {/* FULL SCREEN SEARCH OVERLAY (Modern Nike Style) */}
+        {/* FULL SCREEN SEARCH OVERLAY (The Nike "Expansion") */}
         <AnimatePresence>
           {isSearchOpen && (
             <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="absolute top-0 left-0 w-full bg-white z-50 p-6 shadow-xl"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-white z-[100] p-4 lg:p-12 overflow-y-auto"
             >
-              <div className="max-w-4xl mx-auto relative">
-                <div className="flex items-center border-b-2 border-gray-100 pb-2">
-                  <div className="mr-4 relative w-6 h-6 shrink-0">
-                    {isSearching ? (
-                      <div className="w-6 h-6 border-2 border-gray-400 border-t-black rounded-full animate-spin" />
-                    ) : (
-                      <IoSearchOutline size={24} className="text-gray-400" />
-                    )}
-                  </div>
-                  <input
-                    autoFocus
-                    placeholder="Search for products..."
-                    className="w-full text-xl font-bold outline-none placeholder:text-gray-300"
-                    onChange={onSearch}
-                    value={search}
+              <div className="max-w-[1440px] mx-auto">
+                <div className="flex justify-between items-center mb-10">
+                  <Image
+                    src={Logo}
+                    alt="NEVERBE"
+                    width={60}
+                    height={20}
+                    className="mix-blend-multiply"
                   />
-                  <button onClick={() => setIsSearchOpen(false)}>
-                    <IoCloseOutline
-                      size={24}
-                      className="text-gray-500 hover:text-black"
-                    />
+
+                  <div className="flex-1 max-w-2xl mx-auto px-4">
+                    <div className="flex items-center bg-[#f5f5f5] rounded-full px-6 py-3 w-full">
+                      <IoSearchOutline
+                        size={24}
+                        className="text-gray-400 mr-4"
+                      />
+                      <input
+                        autoFocus
+                        placeholder="Search for products..."
+                        className="w-full bg-transparent text-lg border-none outline-none font-medium"
+                        onChange={onSearch}
+                        value={search}
+                      />
+                      {isSearching && (
+                        <div className="w-5 h-5 border-2 border-t-black rounded-full animate-spin" />
+                      )}
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => {
+                      setIsSearchOpen(false);
+                      setSearch("");
+                    }}
+                    className="p-2 bg-[#f5f5f5] rounded-full hover:bg-gray-200"
+                  >
+                    <IoCloseOutline size={28} />
                   </button>
                 </div>
-                {/* Search Results */}
+
+                {/* Search Results Grid - Simple and clean */}
                 {showSearchResult && items.length > 0 && (
-                  <div className="absolute left-0 right-0 top-[60px] z-50">
+                  <div className="mt-8">
+                    <p className="text-[#707072] text-sm mb-6">
+                      Search Results ({items.length})
+                    </p>
                     <SearchDialog
-                      containerStyle="max-h-[70vh] shadow-2xl rounded-b-2xl border-x border-b border-gray-200"
+                      containerStyle="shadow-none border-none grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4"
                       results={items}
                       onClick={() => {
                         setIsSearchOpen(false);
                         setSearch("");
-                        setShowSearchResult(false);
                       }}
                     />
                   </div>
@@ -238,7 +250,8 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
           )}
         </AnimatePresence>
       </header>
-    </>
+    </div>
   );
 };
+
 export default Header;
