@@ -1,40 +1,14 @@
+import { couponRepository } from "@/repositories/CouponRepository";
+import { comboRepository } from "@/repositories/ComboRepository";
+import { promotionRepository } from "@/repositories/PromotionRepository";
 import { adminFirestore } from "@/firebase/firebaseAdmin";
-import {
-  Coupon,
-  Promotion,
-  CouponUsage,
-  ProductVariantTarget,
-} from "@/interfaces/BagItem";
-import { FieldValue, Timestamp } from "firebase-admin/firestore";
-
-const PROMOTIONS_COLLECTION = "promotions";
-const COUPONS_COLLECTION = "coupons";
-const COUPON_USAGE_COLLECTION = "coupon_usage";
+import { Coupon, Promotion, ProductVariantTarget } from "@/interfaces/BagItem";
+import { Timestamp } from "firebase-admin/firestore";
 
 /**
- * Serialize Firestore Timestamp to ISO string for client components
+ * PromotionService - Business logic for promotions, coupons, and combos
+ * Data access delegated to repository layer
  */
-const serializeTimestamp = (val: any): string | null => {
-  if (!val) return null;
-  if (typeof val.toDate === "function") {
-    return val.toDate().toISOString();
-  }
-  if (val instanceof Date) {
-    return val.toISOString();
-  }
-  return val;
-};
-
-/**
- * Serialize all timestamp fields in an object
- */
-const serializeCombo = (combo: any) => ({
-  ...combo,
-  startDate: serializeTimestamp(combo.startDate),
-  endDate: serializeTimestamp(combo.endDate),
-  createdAt: serializeTimestamp(combo.createdAt),
-  updatedAt: serializeTimestamp(combo.updatedAt),
-});
 
 interface CartItem {
   itemId: string;
@@ -43,138 +17,29 @@ interface CartItem {
   price: number;
 }
 
-/**
- * Check if cart items are eligible based on variant-level targeting.
- * Returns true if at least one cart item matches the targeting rules.
- */
-const checkVariantEligibility = (
-  cartItems: CartItem[],
-  targets: ProductVariantTarget[]
-): boolean => {
-  if (!targets || targets.length === 0) {
-    return true; // No variant restrictions, all products allowed
-  }
+// ====================== Simple Delegations ======================
 
-  for (const target of targets) {
-    const matchingCartItems = cartItems.filter(
-      (item) => item.itemId === target.productId
-    );
+export const getCouponByCode = (code: string) =>
+  couponRepository.findByCode(code);
+export const getActivePromotions = () => promotionRepository.findActive();
+export const getActiveCoupons = () => couponRepository.findActivePublic();
+export const getActiveCombos = () => comboRepository.findActive();
+export const getComboById = (id: string) => comboRepository.findById(id);
+export const getActiveCombosWithProducts = () =>
+  comboRepository.findActiveWithThumbnails();
+export const getPaginatedCombos = (page: number = 1, pageSize: number = 6) =>
+  comboRepository.findPaginated(page, pageSize);
 
-    if (matchingCartItems.length === 0) {
-      continue; // This target product is not in cart
-    }
+export const validateComboSelection = (
+  combo: any,
+  selections: { productId: string; variantId: string; size: string }[]
+) => comboRepository.validateSelection(combo, selections);
 
-    // Check variant mode
-    if (target.variantMode === "ALL_VARIANTS") {
-      return true; // Any variant of this product qualifies
-    }
-
-    if (target.variantMode === "SPECIFIC_VARIANTS" && target.variantIds) {
-      // Check if any cart item has a matching variant
-      const hasMatchingVariant = matchingCartItems.some(
-        (item) => item.variantId && target.variantIds!.includes(item.variantId)
-      );
-      if (hasMatchingVariant) {
-        return true;
-      }
-    }
-  }
-
-  return false; // No matching products/variants found
-};
+// ====================== Business Logic ======================
 
 /**
- * Get cart items that match the variant-level targeting rules.
- * Used to calculate discount amount only on eligible items.
+ * Validate coupon against cart - complex business logic stays in service
  */
-const getEligibleCartItems = (
-  cartItems: CartItem[],
-  targets: ProductVariantTarget[]
-): CartItem[] => {
-  if (!targets || targets.length === 0) {
-    return cartItems; // No restrictions, all items eligible
-  }
-
-  return cartItems.filter((item) => {
-    for (const target of targets) {
-      if (item.itemId !== target.productId) continue;
-
-      if (target.variantMode === "ALL_VARIANTS") {
-        return true;
-      }
-
-      if (target.variantMode === "SPECIFIC_VARIANTS" && target.variantIds) {
-        return item.variantId && target.variantIds.includes(item.variantId);
-      }
-    }
-    return false;
-  });
-};
-
-export const getCouponByCode = async (code: string): Promise<Coupon | null> => {
-  try {
-    const snapshot = await adminFirestore
-      .collection(COUPONS_COLLECTION)
-      .where("code", "==", code)
-      .where("isDeleted", "!=", true)
-      .limit(1)
-      .get();
-    if (snapshot.empty) return null;
-    const doc = snapshot.docs[0];
-    return {
-      id: doc.id,
-      ...doc.data(),
-      createdAt: serializeTimestamp(doc.data().createdAt),
-      updatedAt: serializeTimestamp(doc.data().updatedAt),
-      startDate: serializeTimestamp(doc.data().startDate),
-      endDate: serializeTimestamp(doc.data().endDate),
-    } as Coupon;
-  } catch (error) {
-    console.error("Error getting coupon:", error);
-    return null;
-  }
-};
-
-/**
- * Helper to check how many times a user used a coupon.
- * Matches backend implementation for per-user limit validation.
- */
-const getUserCouponUsageCount = async (
-  couponId: string,
-  userId: string
-): Promise<number> => {
-  try {
-    const snapshot = await adminFirestore
-      .collection(COUPON_USAGE_COLLECTION)
-      .where("couponId", "==", couponId)
-      .where("userId", "==", userId)
-      .count()
-      .get();
-    return snapshot.data().count;
-  } catch (error) {
-    console.error("Error getting coupon usage count:", error);
-    return 0;
-  }
-};
-
-/**
- * Helper to check if this is the user's first order
- */
-const isFirstOrder = async (userId: string): Promise<boolean> => {
-  try {
-    const ordersSnapshot = await adminFirestore
-      .collection("orders")
-      .where("userId", "==", userId)
-      .where("status", "!=", "CANCELLED")
-      .limit(1)
-      .get();
-    return ordersSnapshot.empty;
-  } catch (error) {
-    console.error("Error checking first order:", error);
-    return false;
-  }
-};
-
 export const validateCoupon = async (
   code: string,
   userId: string | null,
@@ -193,7 +58,7 @@ export const validateCoupon = async (
     message: string;
   }[];
 }> => {
-  const coupon = await getCouponByCode(code);
+  const coupon = await couponRepository.findByCode(code);
 
   if (!coupon) {
     return { valid: false, discount: 0, message: "Invalid coupon code" };
@@ -239,9 +104,12 @@ export const validateCoupon = async (
     }
   }
 
-  // 5. Per User Limit (check usage history)
+  // 5. Per User Limit
   if (userId && coupon.perUserLimit) {
-    const usageCount = await getUserCouponUsageCount(coupon.id, userId);
+    const usageCount = await couponRepository.getUserUsageCount(
+      coupon.id,
+      userId
+    );
     if (usageCount >= coupon.perUserLimit) {
       return {
         valid: false,
@@ -260,7 +128,7 @@ export const validateCoupon = async (
         message: "Please sign in to use this coupon",
       };
     }
-    const isFirst = await isFirstOrder(userId);
+    const isFirst = await couponRepository.isFirstOrder(userId);
     if (!isFirst) {
       return {
         valid: false,
@@ -294,12 +162,12 @@ export const validateCoupon = async (
     }
   }
 
-  // 9a. Variant-Level Products Check (new)
+  // 9a. Variant-Level Products Check
   if (
     coupon.applicableProductVariants &&
     coupon.applicableProductVariants.length > 0
   ) {
-    const variantEligible = checkVariantEligibility(
+    const variantEligible = couponRepository.checkVariantEligibility(
       cartItems,
       coupon.applicableProductVariants
     );
@@ -313,7 +181,7 @@ export const validateCoupon = async (
     }
   }
 
-  // 9b. Applicable Products Check (legacy - product-level only)
+  // 9b. Applicable Products Check (legacy)
   if (
     coupon.applicableProducts &&
     coupon.applicableProducts.length > 0 &&
@@ -334,11 +202,10 @@ export const validateCoupon = async (
 
   // 10. Applicable Categories Check
   if (coupon.applicableCategories && coupon.applicableCategories.length > 0) {
-    // Get product details to check categories
     const productIds = cartItems.map((item) => item.itemId);
     const productsSnapshot = await adminFirestore
       .collection("products")
-      .where("__name__", "in", productIds.slice(0, 10)) // Firestore 'in' limit is 10
+      .where("__name__", "in", productIds.slice(0, 10))
       .get();
 
     const productCategories = productsSnapshot.docs.map(
@@ -376,16 +243,14 @@ export const validateCoupon = async (
   if (coupon.discountType === "FIXED") {
     discountAmount = coupon.discountValue;
   } else if (coupon.discountType === "PERCENTAGE") {
-    // If applicable products are specified, only apply discount to those
     let applicableTotal = cartTotal;
     let eligibleItems = cartItems;
 
-    // If variant-level targeting is specified, use that first
     if (
       coupon.applicableProductVariants &&
       coupon.applicableProductVariants.length > 0
     ) {
-      eligibleItems = getEligibleCartItems(
+      eligibleItems = couponRepository.getEligibleCartItems(
         cartItems,
         coupon.applicableProductVariants
       );
@@ -393,9 +258,7 @@ export const validateCoupon = async (
         (sum, item) => sum + item.price * item.quantity,
         0
       );
-    }
-    // Fallback to legacy product-level targeting
-    else if (
+    } else if (
       coupon.applicableProducts &&
       coupon.applicableProducts.length > 0
     ) {
@@ -408,7 +271,6 @@ export const validateCoupon = async (
       );
     }
 
-    // Exclude excluded products from discount calculation
     if (coupon.excludedProducts && coupon.excludedProducts.length > 0) {
       const excludedTotal = eligibleItems
         .filter((item) => coupon.excludedProducts!.includes(item.itemId))
@@ -421,10 +283,10 @@ export const validateCoupon = async (
       discountAmount = coupon.maxDiscount;
     }
   } else if (coupon.discountType === "FREE_SHIPPING") {
-    discountAmount = 0; // Handled as flag - shipping discount applied separately
+    discountAmount = 0;
   }
 
-  // Build condition feedback for real-time customer hints
+  // Build condition feedback
   const totalQuantity = cartItems.reduce((sum, item) => sum + item.quantity, 0);
   const conditionFeedback: {
     type: string;
@@ -434,7 +296,6 @@ export const validateCoupon = async (
     message: string;
   }[] = [];
 
-  // Min order amount feedback
   if (coupon.minOrderAmount) {
     const met = cartTotal >= coupon.minOrderAmount;
     conditionFeedback.push({
@@ -450,7 +311,6 @@ export const validateCoupon = async (
     });
   }
 
-  // Min quantity feedback
   if (coupon.minQuantity) {
     const met = totalQuantity >= coupon.minQuantity;
     conditionFeedback.push({
@@ -466,16 +326,14 @@ export const validateCoupon = async (
     });
   }
 
-  // First order only feedback
   if (coupon.firstOrderOnly) {
     conditionFeedback.push({
       type: "FIRST_ORDER_ONLY",
-      met: true, // Already passed validation if we got here
+      met: true,
       message: "✓ First order only coupon",
     });
   }
 
-  // Applicable products/categories hint
   if (coupon.applicableProducts && coupon.applicableProducts.length > 0) {
     conditionFeedback.push({
       type: "APPLICABLE_PRODUCTS",
@@ -494,7 +352,6 @@ export const validateCoupon = async (
     });
   }
 
-  // Excluded products warning
   if (coupon.excludedProducts && coupon.excludedProducts.length > 0) {
     const hasExcluded = cartItems.some((item) =>
       coupon.excludedProducts!.includes(item.itemId)
@@ -508,7 +365,6 @@ export const validateCoupon = async (
     }
   }
 
-  // Free shipping indicator
   if (coupon.discountType === "FREE_SHIPPING") {
     conditionFeedback.push({
       type: "FREE_SHIPPING",
@@ -518,325 +374,4 @@ export const validateCoupon = async (
   }
 
   return { valid: true, discount: discountAmount, coupon, conditionFeedback };
-};
-
-/**
- * Get all active promotions
- */
-export const getActivePromotions = async () => {
-  try {
-    const now = new Date();
-    const snapshot = await adminFirestore
-      .collection(PROMOTIONS_COLLECTION)
-      .where("isActive", "==", true)
-      .where("isDeleted", "!=", true)
-      .where("endDate", ">=", now)
-      .where("startDate", "<=", now)
-      .get();
-
-    const promotions = snapshot.docs
-      .map((doc) => {
-        const data = doc.data();
-        return {
-          id: doc.id,
-          ...data,
-          startDate: serializeTimestamp(data.startDate),
-          endDate: serializeTimestamp(data.endDate),
-          createdAt: serializeTimestamp(data.createdAt),
-          updatedAt: serializeTimestamp(data.updatedAt),
-        };
-      })
-      .filter((promo: any) => {
-        // Filter by date range
-        const startDate = promo.startDate ? new Date(promo.startDate) : null;
-        const endDate = promo.endDate ? new Date(promo.endDate) : null;
-
-        if (startDate && now < startDate) return false;
-        if (endDate && now > endDate) return false;
-
-        return true;
-      });
-
-    return promotions;
-  } catch (e) {
-    console.error("Error fetching promotions", e);
-    return [];
-  }
-};
-
-/**
- * Get all active public coupons
- */
-export const getActiveCoupons = async () => {
-  try {
-    const now = new Date();
-    const snapshot = await adminFirestore
-      .collection(COUPONS_COLLECTION)
-      .where("isActive", "==", true)
-      .where("isDeleted", "!=", true)
-      .where("endDate", ">=", now)
-      .where("startDate", "<=", now)
-      .get();
-
-    const coupons = snapshot.docs
-      .map((doc) => {
-        const data = doc.data();
-        return {
-          id: doc.id,
-          ...data,
-          createdAt: serializeTimestamp(doc.data().createdAt),
-          updatedAt: serializeTimestamp(doc.data().updatedAt),
-          startDate: serializeTimestamp(doc.data().startDate),
-          endDate: serializeTimestamp(doc.data().endDate),
-        } as Coupon;
-      })
-      .filter((coupon) => {
-        // Filter by date range
-        const startDate = coupon.startDate
-          ? new Date(coupon.startDate as string)
-          : null;
-        const endDate = coupon.endDate
-          ? new Date(coupon.endDate as string)
-          : null;
-
-        if (startDate && now < startDate) return false;
-        if (endDate && now > endDate) return false;
-
-        // Filter out private coupons (restricted to specific users)
-        if (coupon.restrictedToUsers && coupon.restrictedToUsers.length > 0) {
-          return false;
-        }
-
-        return true;
-      });
-
-    return coupons;
-  } catch (e) {
-    console.error("Error fetching coupons", e);
-    return [];
-  }
-};
-
-export const getActiveCombos = async () => {
-  try {
-    const snapshot = await adminFirestore
-      .collection("combo_products")
-      .where("isActive", "==", true)
-      .where("isDeleted", "!=", true)
-      .get();
-    return snapshot.docs.map((doc) =>
-      serializeCombo({ id: doc.id, ...doc.data() })
-    );
-  } catch (e) {
-    console.error("Error fetching combos", e);
-    return [];
-  }
-};
-
-/**
- * Get a single combo by ID with populated product details
- */
-export const getComboById = async (id: string) => {
-  try {
-    const doc = await adminFirestore.collection("combo_products").doc(id).get();
-
-    if (!doc.exists) return null;
-
-    const combo = { id: doc.id, ...doc.data() } as any;
-
-    // Skip soft-deleted combos
-    if (combo.isDeleted) return null;
-
-    // Populate product details for each combo item
-    const populatedItems = await Promise.all(
-      (combo.items || []).map(async (item: any) => {
-        try {
-          const productDoc = await adminFirestore
-            .collection("products")
-            .doc(item.productId)
-            .get();
-
-          if (!productDoc.exists) {
-            return { ...item, product: null };
-          }
-
-          const productData = productDoc.data();
-
-          // Find specific variant if variantId is provided
-          let variant = null;
-          if (item.variantId && productData?.variants) {
-            variant = productData.variants.find(
-              (v: any) => v.variantId === item.variantId
-            );
-          }
-
-          return {
-            ...item,
-            product: {
-              id: productDoc.id,
-              name: productData?.name,
-              thumbnail: productData?.thumbnail,
-              sellingPrice: productData?.sellingPrice,
-              marketPrice: productData?.marketPrice,
-              discount: productData?.discount || 0,
-              variants: productData?.variants || [],
-            },
-            variant,
-          };
-        } catch (err) {
-          console.error(`Error fetching product ${item.productId}:`, err);
-          return { ...item, product: null };
-        }
-      })
-    );
-
-    return serializeCombo({
-      ...combo,
-      items: populatedItems,
-    });
-  } catch (e) {
-    console.error("Error fetching combo by ID:", e);
-    return null;
-  }
-};
-
-/**
- * Get all active combos with populated product details (for listing page)
- */
-export const getActiveCombosWithProducts = async () => {
-  try {
-    const combos = await getActiveCombos();
-
-    const populatedCombos = await Promise.all(
-      combos.map(async (combo: any) => {
-        // Just get first product thumbnail for listing card
-        const firstItem = combo.items?.[0];
-        if (!firstItem) return combo;
-
-        try {
-          const productDoc = await adminFirestore
-            .collection("products")
-            .doc(firstItem.productId)
-            .get();
-
-          if (!productDoc.exists) return combo;
-
-          const productData = productDoc.data();
-          return {
-            ...combo,
-            previewThumbnail:
-              combo.thumbnail?.url || productData?.thumbnail?.url,
-          };
-        } catch {
-          return combo;
-        }
-      })
-    );
-
-    return populatedCombos;
-  } catch (e) {
-    console.error("Error fetching combos with products", e);
-    return [];
-  }
-};
-
-/**
- * Get paginated active combos with product details
- */
-export const getPaginatedCombos = async (
-  page: number = 1,
-  pageSize: number = 6
-): Promise<{ combos: any[]; total: number; totalPages: number }> => {
-  try {
-    // Get all active combos first (for accurate count)
-    const allCombosSnapshot = await adminFirestore
-      .collection("combo_products")
-      .where("status", "==", "ACTIVE")
-      .where("isDeleted", "!=", true)
-      .get();
-
-    const total = allCombosSnapshot.size;
-    const totalPages = Math.ceil(total / pageSize);
-
-    // Get paginated slice
-    const offset = (page - 1) * pageSize;
-    const paginatedDocs = allCombosSnapshot.docs.slice(
-      offset,
-      offset + pageSize
-    );
-
-    const combos = paginatedDocs.map((doc) =>
-      serializeCombo({ id: doc.id, ...doc.data() })
-    );
-
-    // Populate with product thumbnails
-    const populatedCombos = await Promise.all(
-      combos.map(async (combo: any) => {
-        const firstItem = combo.items?.[0];
-        if (!firstItem) return combo;
-
-        try {
-          const productDoc = await adminFirestore
-            .collection("products")
-            .doc(firstItem.productId)
-            .get();
-
-          if (!productDoc.exists) return combo;
-
-          const productData = productDoc.data();
-          return {
-            ...combo,
-            previewThumbnail:
-              combo.thumbnail?.url || productData?.thumbnail?.url,
-          };
-        } catch {
-          return combo;
-        }
-      })
-    );
-
-    return {
-      combos: populatedCombos,
-      total,
-      totalPages,
-    };
-  } catch (e) {
-    console.error("Error fetching paginated combos", e);
-    return { combos: [], total: 0, totalPages: 0 };
-  }
-};
-
-/**
- * Validate combo items selection for add to cart
- */
-export const validateComboSelection = (
-  combo: any,
-  selections: { productId: string; variantId: string; size: string }[]
-) => {
-  const requiredItems = combo.items?.filter((item: any) => item.required) || [];
-
-  // Check all required items have a selection
-  for (const required of requiredItems) {
-    const hasSelection = selections.some(
-      (s) => s.productId === required.productId
-    );
-    if (!hasSelection) {
-      return {
-        valid: false,
-        message: `Please select options for all required items`,
-      };
-    }
-  }
-
-  // Check all selections have size
-  for (const selection of selections) {
-    if (!selection.size) {
-      return {
-        valid: false,
-        message: `Please select a size for all items`,
-      };
-    }
-  }
-
-  return { valid: true };
 };

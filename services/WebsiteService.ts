@@ -1,4 +1,9 @@
-import { adminFirestore } from "@/firebase/firebaseAdmin";
+import { otherRepository } from "@/repositories/OtherRepository";
+
+/**
+ * WebsiteService - Thin wrapper over OtherRepository
+ * Delegates data access to repository layer
+ */
 
 // ============ NAVIGATION CONFIG ============
 
@@ -9,7 +14,7 @@ export interface NavigationItem {
 }
 
 export interface SocialMediaItem {
-  name: string; // e.g., "facebook", "instagram", "tiktok"
+  name: string;
   url: string;
 }
 
@@ -19,28 +24,5 @@ export interface NavigationConfig {
   socialLinks?: SocialMediaItem[];
 }
 
-const CONFIG_COLLECTION = "site_config";
-const NAV_DOC = "navigation";
-
-/**
- * Fetch dynamic navigation configuration
- */
-export const getNavigationConfig = async (): Promise<NavigationConfig> => {
-  try {
-    console.log("[WebsiteService] Fetching navigation config");
-    const doc = await adminFirestore
-      .collection(CONFIG_COLLECTION)
-      .doc(NAV_DOC)
-      .get();
-
-    if (!doc.exists) {
-      console.warn("[WebsiteService] No navigation config found, using empty");
-      return { mainNav: [], footerNav: [] };
-    }
-
-    return doc.data() as NavigationConfig;
-  } catch (error) {
-    console.error("[WebsiteService] Failed to fetch navigation:", error);
-    return { mainNav: [], footerNav: [] };
-  }
-};
+export const getNavigationConfig = (): Promise<NavigationConfig> =>
+  otherRepository.getNavigationConfig();

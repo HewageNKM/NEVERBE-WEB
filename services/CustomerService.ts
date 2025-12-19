@@ -1,5 +1,10 @@
-import { adminFirestore } from "@/firebase/firebaseAdmin";
+import { otherRepository } from "@/repositories/OtherRepository";
 import { encryptData, decryptData } from "@/services/EncryptionService";
+
+/**
+ * CustomerService - Thin wrapper over OtherRepository
+ * Delegates data access to repository layer
+ */
 
 interface AddressData {
   type: "Shipping" | "Billing";
@@ -9,48 +14,8 @@ interface AddressData {
   isDefault?: boolean;
 }
 
-export const getUserAddresses = async (uid: string) => {
-  // Note: Standardizing on 'users' collection as per requirement to avoid 'customers' collection
-  const addressesRef = adminFirestore
-    .collection("users")
-    .doc(uid)
-    .collection("addresses");
+export const getUserAddresses = async (uid: string) =>
+  otherRepository.getUserAddresses(uid, decryptData);
 
-  const snapshot = await addressesRef.get();
-
-  return snapshot.docs.map((doc) => {
-    const data = doc.data();
-    return {
-      id: doc.id,
-      type: doc.id,
-      ...data,
-      // Decrypt
-      address: decryptData(data.address, uid),
-      city: decryptData(data.city, uid),
-      phone: decryptData(data.phone, uid),
-    };
-  });
-};
-
-export const saveUserAddress = async (uid: string, data: AddressData) => {
-  const { type, address, city, phone, isDefault } = data;
-
-  const docRef = adminFirestore
-    .collection("users")
-    .doc(uid)
-    .collection("addresses")
-    .doc(type); // ID is 'Shipping' or 'Billing' based on type
-
-  const dataToSave = {
-    type,
-    // Encrypt
-    address: encryptData(address, uid),
-    city: encryptData(city, uid),
-    phone: encryptData(phone, uid),
-    default: !!isDefault,
-    updatedAt: new Date().toISOString(),
-  };
-
-  await docRef.set(dataToSave, { merge: true });
-  return { success: true, message: "Address saved." };
-};
+export const saveUserAddress = async (uid: string, data: AddressData) =>
+  otherRepository.saveUserAddress(uid, data.type, data, encryptData);

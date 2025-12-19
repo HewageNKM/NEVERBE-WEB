@@ -142,6 +142,85 @@ export class OtherRepository extends BaseRepository<any> {
       updatedAt: null,
     }));
   }
+
+  /**
+   * Get navigation configuration
+   */
+  async getNavigationConfig(): Promise<{
+    mainNav: any[];
+    footerNav: any[];
+    socialLinks?: any[];
+  }> {
+    const doc = await this.collection.firestore
+      .collection("site_config")
+      .doc("navigation")
+      .get();
+
+    if (!doc.exists) {
+      return { mainNav: [], footerNav: [] };
+    }
+
+    return doc.data() as any;
+  }
+
+  /**
+   * Get user addresses
+   */
+  async getUserAddresses(
+    uid: string,
+    decryptFn: (data: string, key: string) => string
+  ): Promise<any[]> {
+    const snapshot = await this.collection.firestore
+      .collection("users")
+      .doc(uid)
+      .collection("addresses")
+      .get();
+
+    return snapshot.docs.map((doc) => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        type: doc.id,
+        ...data,
+        address: decryptFn(data.address, uid),
+        city: decryptFn(data.city, uid),
+        phone: decryptFn(data.phone, uid),
+      };
+    });
+  }
+
+  /**
+   * Save user address
+   */
+  async saveUserAddress(
+    uid: string,
+    type: string,
+    data: {
+      address: string;
+      city: string;
+      phone: string;
+      isDefault?: boolean;
+    },
+    encryptFn: (data: string, key: string) => string
+  ): Promise<{ success: boolean; message: string }> {
+    const docRef = this.collection.firestore
+      .collection("users")
+      .doc(uid)
+      .collection("addresses")
+      .doc(type);
+
+    const dataToSave = {
+      type,
+      address: encryptFn(data.address, uid),
+      city: encryptFn(data.city, uid),
+      phone: encryptFn(data.phone, uid),
+      default: !!data.isDefault,
+      updatedAt: new Date().toISOString(),
+    };
+
+    await docRef.set(dataToSave, { merge: true });
+    return { success: true, message: "Address saved." };
+  }
 }
 
 // Singleton instance
