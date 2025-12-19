@@ -1,13 +1,16 @@
-export * from "./Product";
-export * from "./ProductVariant";
-export * from "./InventoryItem";
-export * from "./Img";
-export * from "./Promotion";
-export * from "./Coupon";
-export * from "./ComboProduct";
+import { BaseItem } from "./BaseItem";
 
-export * from "./index"; // Re-export everything from index, or just BagItem if circular deps worry.
-// Better: Just re-export BagItem from index.
+/**
+ * BagItem represents an item in the shopping bag/cart
+ */
+export interface BagItem extends BaseItem {
+  discount: number;
+  itemType: string;
+  maxQuantity: number;
+  variantName?: string;
 
-import { BagItem as GlobalBagItem } from "./index";
-export type BagItem = GlobalBagItem;
+  // Combo-specific properties
+  comboId?: string;
+  comboName?: string;
+  isComboItem?: boolean;
+}
