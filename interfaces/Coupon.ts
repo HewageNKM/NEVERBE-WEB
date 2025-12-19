@@ -30,7 +30,7 @@ export interface Coupon {
   startDate: Timestamp | string;
   endDate: Timestamp | string; // Optional for never expire?
 
-  status: "ACTIVE" | "INACTIVE" | "EXPIRED";
+  isActive: boolean;
 
   // User Restrictions
   restrictedToUsers?: string[]; // Specific user IDs
