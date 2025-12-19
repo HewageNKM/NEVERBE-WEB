@@ -44,9 +44,10 @@ const ProductHero = ({ item }: { item: Product }) => {
   const [selectedSize, setSelectedSize] = useState<string>("");
   const [qty, setQty] = useState(1); // Start at 1 for better UX
   const [availableStock, setAvailableStock] = useState<number>(0);
+  const [sizeStock, setSizeStock] = useState<Record<string, number>>({}); // Stock per size
+  const [stockLoading, setStockLoading] = useState(false);
   const [outOfStocks, setOutOfStocks] = useState(false);
   const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER;
-  const [stockLoading, setStockLoading] = useState(false);
   const [showSizeGuide, setShowSizeGuide] = useState(false);
 
   // Calculate quantity already in bag
@@ -74,25 +75,43 @@ const ProductHero = ({ item }: { item: Product }) => {
     }
   }, [item]);
 
-  // --- Stock Logic ---
-  const getAvailableStockFor = async (size: string) => {
+  // --- Stock Logic: Batch preload all sizes for variant (SINGLE API call) ---
+  const preloadStockForVariant = async (variantId: string, sizes: string[]) => {
+    setStockLoading(true);
     try {
-      setStockLoading(true);
+      // Single API call for all sizes
       const res = await fetch(
-        `/api/v1/inventory?productId=${item.id}&variantId=${selectedVariant.variantId}&size=${size}`
+        `/api/v1/inventory/batch?productId=${
+          item.id
+        }&variantId=${variantId}&sizes=${sizes.join(",")}`
       );
       const data = await res.json();
-      setAvailableStock(data.quantity || 0);
+      setSizeStock(data.stock || {});
     } catch (error) {
-      setAvailableStock(0);
+      console.error("Failed to preload stock:", error);
+      // Fallback: set all sizes to 0
+      const fallback: Record<string, number> = {};
+      sizes.forEach((s) => (fallback[s] = 0));
+      setSizeStock(fallback);
     } finally {
       setStockLoading(false);
     }
   };
 
+  // Preload stock when variant changes
   useEffect(() => {
-    if (selectedSize) getAvailableStockFor(selectedSize);
-  }, [selectedSize, selectedVariant]);
+    if (selectedVariant.variantId && selectedVariant.sizes?.length) {
+      preloadStockForVariant(selectedVariant.variantId, selectedVariant.sizes);
+      setSelectedSize(""); // Reset size selection
+    }
+  }, [selectedVariant.variantId]);
+
+  // Update available stock when size changes
+  useEffect(() => {
+    if (selectedSize && sizeStock[selectedSize] !== undefined) {
+      setAvailableStock(sizeStock[selectedSize]);
+    }
+  }, [selectedSize, sizeStock]);
 
   useEffect(() => {
     setOutOfStocks(selectedSize !== "" && !stockLoading && availableStock <= 0);
@@ -364,19 +383,31 @@ const ProductHero = ({ item }: { item: Product }) => {
               </button>
             </div>
             <div className="grid grid-cols-4 gap-2">
-              {selectedVariant.sizes.map((size) => (
-                <button
-                  key={size}
-                  onClick={() => setSelectedSize(size)}
-                  className={`py-3 rounded-md text-sm font-bold border transition-all ${
-                    selectedSize === size
-                      ? "border-black bg-black text-white"
-                      : "border-gray-200 text-black hover:border-black"
-                  }`}
-                >
-                  {size}
-                </button>
-              ))}
+              {selectedVariant.sizes.map((size) => {
+                const stockQty = sizeStock[size];
+                const isOutOfStock = stockQty !== undefined && stockQty <= 0;
+                const isLoading = stockLoading && stockQty === undefined;
+
+                return (
+                  <button
+                    key={size}
+                    onClick={() => !isOutOfStock && setSelectedSize(size)}
+                    disabled={isOutOfStock || isLoading}
+                    className={`py-3 rounded-md text-sm font-bold border transition-all relative ${
+                      selectedSize === size
+                        ? "border-black bg-black text-white"
+                        : isOutOfStock
+                        ? "border-gray-100 bg-gray-50 text-gray-300 cursor-not-allowed line-through"
+                        : "border-gray-200 text-black hover:border-black"
+                    }`}
+                  >
+                    {isLoading ? "..." : size}
+                    {isOutOfStock && (
+                      <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full" />
+                    )}
+                  </button>
+                );
+              })}
             </div>
             {!selectedSize && (
               <p className="text-red-500 text-xs mt-2 font-medium">

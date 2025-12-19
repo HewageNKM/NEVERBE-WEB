@@ -57,6 +57,36 @@ export const getProductStock = async (
   );
 };
 
+// ====================== Batch Stock (Single Call for All Sizes) ======================
+export const getBatchProductStock = async (
+  productId: string,
+  variantId: string,
+  sizes: string[]
+): Promise<Record<string, number>> => {
+  const settings = await otherRepository.getSettings();
+  if (!settings?.stockId)
+    throw new Error("onlineStockId not found in ERP settings");
+
+  // Fetch all sizes in parallel at repository level
+  const results = await Promise.all(
+    sizes.map(async (size) => ({
+      size,
+      quantity: await productRepository.getStock(
+        productId,
+        variantId,
+        size,
+        settings.stockId
+      ),
+    }))
+  );
+
+  const stockMap: Record<string, number> = {};
+  results.forEach(({ size, quantity }) => {
+    stockMap[size] = quantity;
+  });
+  return stockMap;
+};
+
 // ====================== Sitemap ======================
 export const getProductsForSitemap = async () => {
   const products = await productRepository.findAllForSitemap();

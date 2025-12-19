@@ -6,13 +6,13 @@ import { RootState } from "@/redux/store";
 import { applyPromotions, removePromotion } from "@/redux/bagSlice/bagSlice";
 import { BagItem } from "@/interfaces/BagItem";
 import { calculateTotal, calculateTotalDiscount } from "@/util";
-
-// Interface for product variant targeting
-interface ProductVariantTarget {
-  productId: string;
-  variantMode: "ALL_VARIANTS" | "SPECIFIC_VARIANTS";
-  variantIds?: string[];
-}
+import { ProductVariantTarget } from "@/interfaces/Promotion";
+import {
+  checkPromotionEligibility,
+  calculatePromotionProgress,
+  getEligibleCartItems,
+  CartItem,
+} from "@/utils/promotionUtils";
 
 export interface ActivePromotion {
   id: string;

@@ -7,18 +7,20 @@ import React, {
   useState,
   useCallback,
 } from "react";
-import { ActivePromotion as HookActivePromotion } from "@/hooks/usePromotions";
+import { Promotion, ProductVariantTarget } from "@/interfaces/Promotion";
+import {
+  isPromotionDateValid,
+  checkVariantEligibility,
+} from "@/utils/promotionUtils";
 
-// Define the shape of the raw promotion data from API
-export interface ActivePromotion
-  extends Omit<HookActivePromotion, "isEligible" | "message"> {
-  startDate?: string;
-  endDate?: string;
-  status?: string;
-  conditions?: any[];
-  actions?: any[];
-  bannerUrl?: string; // New field for Unified Promotion Model
-  isEligible?: boolean; // Optional here as we calculate it differently
+// Active promotion for context consumers
+export interface ActivePromotion extends Partial<Promotion> {
+  id: string;
+  name: string;
+  description: string;
+  type: Promotion["type"];
+  bannerUrl?: string;
+  isEligible?: boolean;
   message?: string;
 }
 
@@ -66,45 +68,31 @@ export const PromotionsProvider = ({
     fetchPromotions();
   }, []);
 
-  // Helper: Match a product to the best available promotion
+  // Match a product to the best available promotion
   const getPromotionForProduct = useCallback(
     (productId: string, variantId?: string): ActivePromotion | null => {
-      // Find all promotions that target this product
       const matches = promotions.filter((promo) => {
         // 1. Check Date Validity
-        const now = new Date();
-        if (promo.startDate && new Date(promo.startDate as any) > now)
-          return false;
-        if (promo.endDate && new Date(promo.endDate as any) < now) return false;
+        const dateCheck = isPromotionDateValid(promo.startDate, promo.endDate);
+        if (!dateCheck.valid) return false;
 
         // 2. Check Exclusions
         if (promo.excludedProducts?.includes(productId)) return false;
 
-        // 3. Check Variant Targeting (Highest Priority)
+        // 3. Check Variant Targeting (using shared utility)
         if (
           promo.applicableProductVariants &&
           promo.applicableProductVariants.length > 0
         ) {
-          // Check if this specific product+variant is targeted
-          const updatedVariantsTargeting = promo.applicableProductVariants.find(
-            (t: any) => t.productId === productId
+          const mockCartItem = [
+            { itemId: productId, variantId, quantity: 1, price: 0 },
+          ];
+          const variantMatch = checkVariantEligibility(
+            mockCartItem,
+            promo.applicableProductVariants as ProductVariantTarget[]
           );
-          if (!updatedVariantsTargeting) return false; // This promo targets VARIANTS, but not THIS product's variants
-
-          if (updatedVariantsTargeting.variantMode === "ALL_VARIANTS")
-            return true;
-          if (
-            updatedVariantsTargeting.variantMode === "SPECIFIC_VARIANTS" &&
-            variantId
-          ) {
-            return (
-              updatedVariantsTargeting.variantIds?.includes(variantId) || false
-            );
-          }
-          // If no variantId provided, but checking generic product eligibility, we can say "maybe"
-          // but usually ItemCard only has product ID. We'll return match if ANY variant is compatible?
-          // For now, assume stringent check if variantId is provided.
-          return false;
+          if (!variantMatch) return false;
+          return true;
         }
 
         // 4. Check Product Targeting
@@ -112,24 +100,20 @@ export const PromotionsProvider = ({
           if (promo.applicableProducts.includes(productId)) return true;
         }
 
-        // 5. Check "Specific Product" conditions (Condition-based targeting)
+        // 5. Check SPECIFIC_PRODUCT conditions
         if (promo.conditions && promo.conditions.length > 0) {
-          const hasSpecificProductCondition = promo.conditions.some(
+          const hasSpecificProduct = promo.conditions.some(
             (c: any) =>
               c.type === "SPECIFIC_PRODUCT" &&
               (c.value === productId || c.productIds?.includes(productId))
           );
-          if (hasSpecificProductCondition) return true;
+          if (hasSpecificProduct) return true;
         }
-
-        // 6. Check Categories/Brands (if we had access to product metadata here)
-        // Note: We don't have the full product object here, so we can't check category/brand easily
-        // unless passed in. We'll skip this for now or rely on specific product targeting.
 
         return false;
       });
 
-      // Return the highest priority match
+      // Return highest priority match
       return (
         matches.sort(
           (a: any, b: any) => (b.priority || 0) - (a.priority || 0)
