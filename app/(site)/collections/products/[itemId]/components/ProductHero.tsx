@@ -2,12 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import {
-  IoAdd,
-  IoRemove,
-  IoHeartOutline,
-  IoChevronDown,
-} from "react-icons/io5";
+import { IoHeartOutline, IoHeart } from "react-icons/io5";
 import { FaWhatsapp, FaTruckFast, FaArrowRotateLeft } from "react-icons/fa6";
 import { motion, AnimatePresence } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,6 +10,11 @@ import { useRouter } from "next/navigation";
 
 import { AppDispatch, RootState } from "@/redux/store";
 import { addToBag } from "@/redux/bagSlice/bagSlice";
+import {
+  toggleWishlist,
+  hydrateWishlist,
+  WishlistItem,
+} from "@/redux/wishlistSlice/wishlistSlice";
 import { Product } from "@/interfaces/Product";
 import { ProductVariant } from "@/interfaces/ProductVariant";
 import { KOKOLogo } from "@/assets/images";
@@ -26,7 +26,13 @@ const ProductHero = ({ item }: { item: Product }) => {
   const router = useRouter();
   const dispatch: AppDispatch = useDispatch();
   const bagItems = useSelector((state: RootState) => state.bag.bag);
+  const wishlistItems = useSelector((state: RootState) => state.wishlist.items);
   const { getPromotionForProduct } = usePromotionsContext();
+
+  // Hydrate wishlist from localStorage on mount
+  useEffect(() => {
+    dispatch(hydrateWishlist());
+  }, [dispatch]);
 
   const [selectedImage, setSelectedImage] = useState(item.thumbnail);
   const [selectedVariant, setSelectedVariant] = useState<ProductVariant>(
@@ -80,6 +86,23 @@ const ProductHero = ({ item }: { item: Product }) => {
     )?.quantity || 0;
   const isLimitReached =
     selectedSize !== "" && availableStock > 0 && bagQty + qty > availableStock;
+
+  // Check if current variant is in wishlist
+  const isInWishlist = wishlistItems.some(
+    (w) => w.productId === item.id && w.variantId === selectedVariant.variantId
+  );
+
+  const handleToggleWishlist = () => {
+    const wishlistItem: WishlistItem = {
+      productId: item.id,
+      variantId: selectedVariant.variantId,
+      name: item.name,
+      thumbnail: selectedVariant.images[0]?.url || item.thumbnail.url,
+      price: item.sellingPrice,
+      addedAt: new Date().toISOString(),
+    };
+    dispatch(toggleWishlist(wishlistItem));
+  };
 
   const handleAddToBag = () => {
     if (!selectedSize) return;
@@ -273,17 +296,40 @@ const ProductHero = ({ item }: { item: Product }) => {
               currentAmount={(qty + bagQty) * item.sellingPrice}
             />
 
-            <button
-              onClick={handleAddToBag}
-              disabled={!selectedSize || availableStock === 0 || isLimitReached}
-              className="w-full py-5 bg-black text-white rounded-full font-bold uppercase tracking-widest text-xs hover:bg-zinc-800 transition-all disabled:bg-gray-100 disabled:text-gray-400"
-            >
-              {isLimitReached
-                ? "Limit Reached"
-                : availableStock === 0 && selectedSize
-                ? "Out of Stock"
-                : "Add to Bag"}
-            </button>
+            <div className="flex gap-3">
+              <button
+                onClick={handleAddToBag}
+                disabled={
+                  !selectedSize || availableStock === 0 || isLimitReached
+                }
+                className="flex-1 py-5 bg-black text-white rounded-full font-bold uppercase tracking-widest text-xs hover:bg-zinc-800 transition-all disabled:bg-gray-100 disabled:text-gray-400"
+              >
+                {isLimitReached
+                  ? "Limit Reached"
+                  : availableStock === 0 && selectedSize
+                  ? "Out of Stock"
+                  : "Add to Bag"}
+              </button>
+
+              {/* Wishlist Toggle */}
+              <button
+                onClick={handleToggleWishlist}
+                className={`w-16 h-16 rounded-full border-2 flex items-center justify-center transition-all ${
+                  isInWishlist
+                    ? "bg-black border-black text-white"
+                    : "bg-white border-gray-200 text-black hover:border-black"
+                }`}
+                aria-label={
+                  isInWishlist ? "Remove from wishlist" : "Add to wishlist"
+                }
+              >
+                {isInWishlist ? (
+                  <IoHeart size={24} />
+                ) : (
+                  <IoHeartOutline size={24} />
+                )}
+              </button>
+            </div>
 
             {/* Koko Installment Offer */}
             <div className="flex items-center justify-center gap-2 p-3 bg-zinc-50 rounded-xl">

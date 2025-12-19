@@ -22,10 +22,10 @@ const BrandCard: React.FC<BrandCardProps> = ({ brand, url, image }) => {
             height={250}
             src={image}
             alt={`${brand} Logo`}
-            className="object-contain w-[12rem] h-[8rem] transition-all duration-500 lg:group-hover:opacity-90"
+            className="object-contain w-48 h-32 transition-all duration-500 lg:group-hover:opacity-90"
           />
         ) : (
-          <div className="w-[12rem] h-[8rem] flex items-center justify-center text-gray-400 text-sm">
+          <div className="w-48 h-32 flex items-center justify-center text-gray-400 text-sm">
             {brand}
           </div>
         )}
