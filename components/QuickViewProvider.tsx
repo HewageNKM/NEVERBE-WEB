@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useState, useCallback } from "react";
 import { Product } from "@/interfaces/Product";
 import QuickViewModal from "@/components/QuickViewModal";
+import { useRecentlyViewed } from "@/components/RecentlyViewedProvider";
 
 interface QuickViewContextType {
   openQuickView: (product: Product) => void;
@@ -25,10 +26,16 @@ export const QuickViewProvider: React.FC<{ children: React.ReactNode }> = ({
   const [isOpen, setIsOpen] = useState(false);
   const [product, setProduct] = useState<Product | null>(null);
 
-  const openQuickView = useCallback((product: Product) => {
-    setProduct(product);
-    setIsOpen(true);
-  }, []);
+  const { addToRecentlyViewed } = useRecentlyViewed();
+
+  const openQuickView = useCallback(
+    (product: Product) => {
+      setProduct(product);
+      setIsOpen(true);
+      addToRecentlyViewed(product);
+    },
+    [addToRecentlyViewed]
+  );
 
   const closeQuickView = useCallback(() => {
     setIsOpen(false);

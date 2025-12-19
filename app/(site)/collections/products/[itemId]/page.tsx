@@ -6,6 +6,7 @@ import { getProductById, getSimilarItems } from "@/services/ProductService";
 import type { Metadata } from "next";
 import { Product } from "@/interfaces/Product";
 import ProductFAQ from "./components/ProductFAQ";
+import RecentlyViewedTracker from "./components/RecentlyViewedTracker";
 
 const getProduct = cache(async (id: string): Promise<Product | null> => {
   try {
@@ -109,6 +110,7 @@ const Page = async (context: { params: Promise<{ itemId: string }> }) => {
       <ProductHero item={item} />
       <ProductFAQ />
       <SimilarProducts items={similarItems || []} />
+      <RecentlyViewedTracker product={item} />
     </main>
   );
 };
