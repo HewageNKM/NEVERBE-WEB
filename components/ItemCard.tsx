@@ -111,7 +111,7 @@ const ItemCard = ({
                 e.stopPropagation();
                 openQuickView(item);
               }}
-              className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-white/95 backdrop-blur-sm text-black px-4 py-2 text-xs font-bold uppercase tracking-wide rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-black hover:text-white flex items-center gap-2 z-20"
+              className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-white/95 backdrop-blur-sm text-black px-4 py-2 text-xs font-bold uppercase tracking-wide rounded-full shadow-lg opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-all duration-300 hover:bg-black hover:text-white flex items-center gap-2 z-20"
             >
               <IoEyeOutline size={16} />
               Quick View
