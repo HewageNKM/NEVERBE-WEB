@@ -2,10 +2,12 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { IoEyeOutline } from "react-icons/io5";
 import { KOKOLogo } from "@/assets/images";
 import { Product } from "@/interfaces/Product";
 
 import { usePromotionsContext } from "@/components/PromotionsProvider";
+import { useQuickView } from "@/components/QuickViewProvider";
 
 const ItemCard = ({
   item,
@@ -15,6 +17,7 @@ const ItemCard = ({
   priority?: boolean;
 }) => {
   const [outOfStocks, setOutOfStocks] = useState(false);
+  const { openQuickView } = useQuickView();
   const { getPromotionForProduct } = usePromotionsContext();
 
   useEffect(() => {
@@ -26,14 +29,8 @@ const ItemCard = ({
   const activePromo = getPromotionForProduct(item.id);
 
   let finalPrice = item.sellingPrice;
-  let originalPrice = item.marketPrice; // Usually MSRP
+  let originalPrice = item.marketPrice;
 
-  // 1. Apply Standard Discount first (if no promo overrides or if promo stacks - assuming promo overrides for display simplicity or applying on top?)
-  // The User request says "apply promotion values to retail price".
-  // Usually Application Logic: Market Price -> Standard Discount -> Selling Price.
-  // Promo applies to Selling Price.
-
-  // Base calculation from standard discount
   if (item.discount > 0) {
     finalPrice =
       Math.round(
@@ -43,12 +40,9 @@ const ItemCard = ({
     finalPrice = Math.round(item.sellingPrice);
   }
 
-  // 2. Apply Active Promotion (Visual Override)
   if (activePromo) {
     if (activePromo.type === "PERCENTAGE" && activePromo.actions?.[0]?.value) {
       const discountVal = activePromo.actions[0].value;
-      // Apply off the current finalPrice (stacking) or original?
-      // Usually users want to see the final price they pay.
       finalPrice =
         Math.round((finalPrice * (100 - discountVal)) / 100 / 10) * 10;
     } else if (
@@ -59,104 +53,125 @@ const ItemCard = ({
     }
   }
 
-  const displayedDiscountedPrice = finalPrice;
-  // We keep the variable name consistent with usage below or refactor usage.
-  // The existing code uses `discountedPrice`. Let's map to that.
-  const discountedPrice = displayedDiscountedPrice;
+  const discountedPrice = finalPrice;
 
   return (
-    <article className="group w-full flex flex-col gap-2">
-      <Link
-        href={`/collections/products/${item?.id}`}
-        className="block relative"
-      >
-        {/* IMAGE CONTAINER - The "Nike" Gray Box */}
-        <div className="relative aspect-square w-full bg-[#f6f6f6] rounded-xl overflow-hidden mb-2">
-          <Image
-            width={600}
-            height={600}
-            src={item.thumbnail.url}
-            alt={item.name}
-            className="w-full h-full object-cover mix-blend-multiply transition-transform duration-500 group-hover:scale-105"
-            priority={priority}
-          />
-
-          {/* Badges */}
-          <div className="absolute top-3 left-3 flex flex-col gap-1 items-start">
-            {item.discount > 0 && !activePromo && (
-              <span className="bg-white text-black text-xs font-bold px-2 py-1 rounded-md shadow-sm">
-                -{item.discount}%
-              </span>
-            )}
-
-            {/* Promotion Badge */}
-            {activePromo && (
-              <span className="bg-black text-white text-[10px] font-bold px-2 py-1 rounded-md shadow-sm uppercase tracking-wide animate-pulse">
-                {activePromo.type === "BOGO"
-                  ? "Buy 1 Get 1"
-                  : activePromo.type === "PERCENTAGE"
-                  ? `${activePromo.actions?.[0]?.value}% Off`
-                  : activePromo.type === "FREE_SHIPPING"
-                  ? "Free Ship"
-                  : "Promo"}
-              </span>
-            )}
-          </div>
-
-          {outOfStocks && (
-            <div className="absolute inset-0 bg-white/60 flex items-center justify-center">
-              <span className="bg-black text-white px-3 py-1 text-xs font-bold uppercase rounded-full">
-                Sold Out
-              </span>
-            </div>
-          )}
-        </div>
-
-        {/* DETAILS */}
-        <div className="flex flex-col gap-1 px-1">
-          <div className="flex justify-between items-start">
-            <h3 className="text-base font-semibold text-black leading-tight group-hover:text-gray-600 transition-colors line-clamp-2">
-              {item.name}
-            </h3>
-          </div>
-
-          <p className="text-gray-500 text-sm capitalize">
-            {item.category?.replace("-", " ") || "Men's Shoes"}
-          </p>
-
-          <div className="mt-2 flex items-center gap-2">
-            <span
-              className={`${
-                item.discount > 0 || activePromo ? "text-red-600" : "text-black"
-              } font-bold text-lg`}
+    <>
+      <article className="group w-full flex flex-col gap-2">
+        <div className="block relative">
+          {/* IMAGE CONTAINER */}
+          <div className="relative aspect-square w-full bg-[#f6f6f6] rounded-xl overflow-hidden mb-2">
+            <Link
+              href={`/collections/products/${item?.id}`}
+              className="block w-full h-full"
             >
-              Rs. {discountedPrice.toLocaleString()}
-            </span>
-            {(item.discount > 0 || activePromo) && (
-              <span className="text-gray-400 text-sm line-through decoration-1">
-                Rs.{" "}
-                {item.marketPrice > item.sellingPrice
-                  ? item.marketPrice.toLocaleString()
-                  : item.sellingPrice.toLocaleString()}
-              </span>
-            )}
+              <Image
+                width={600}
+                height={600}
+                src={item.thumbnail.url}
+                alt={item.name}
+                className="w-full h-full object-cover mix-blend-multiply transition-transform duration-500 group-hover:scale-105"
+                priority={priority}
+              />
+
+              {/* Badges */}
+              <div className="absolute top-3 left-3 flex flex-col gap-1 items-start">
+                {item.discount > 0 && !activePromo && (
+                  <span className="bg-white text-black text-xs font-bold px-2 py-1 rounded-md shadow-sm">
+                    -{item.discount}%
+                  </span>
+                )}
+
+                {activePromo && (
+                  <span className="bg-black text-white text-[10px] font-bold px-2 py-1 rounded-md shadow-sm uppercase tracking-wide animate-pulse">
+                    {activePromo.type === "BOGO"
+                      ? "Buy 1 Get 1"
+                      : activePromo.type === "PERCENTAGE"
+                      ? `${activePromo.actions?.[0]?.value}% Off`
+                      : activePromo.type === "FREE_SHIPPING"
+                      ? "Free Ship"
+                      : "Promo"}
+                  </span>
+                )}
+              </div>
+
+              {outOfStocks && (
+                <div className="absolute inset-0 bg-white/60 flex items-center justify-center">
+                  <span className="bg-black text-white px-3 py-1 text-xs font-bold uppercase rounded-full">
+                    Sold Out
+                  </span>
+                </div>
+              )}
+            </Link>
+
+            {/* Quick View Button */}
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                openQuickView(item);
+              }}
+              className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-white/95 backdrop-blur-sm text-black px-4 py-2 text-xs font-bold uppercase tracking-wide rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-black hover:text-white flex items-center gap-2 z-20"
+            >
+              <IoEyeOutline size={16} />
+              Quick View
+            </button>
           </div>
 
-          {/* Optional KOKO Text - Small and discrete */}
-          <div className="flex items-center gap-1 text-[10px] text-gray-500">
-            <span>or 3 installments with</span>
-            <div className="w-8 h-3 relative opacity-60">
-              <Image
-                src={KOKOLogo}
-                alt="KOKO"
-                fill
-                className="object-contain"
-              />
+          {/* Quick View Button */}
+
+          {/* DETAILS */}
+          <Link href={`/collections/products/${item?.id}`} className="block">
+            <div className="flex flex-col gap-1 px-1">
+              <div className="flex justify-between items-start">
+                <h3 className="text-base font-semibold text-black leading-tight group-hover:text-gray-600 transition-colors line-clamp-2">
+                  {item.name}
+                </h3>
+              </div>
+
+              <p className="text-gray-500 text-sm capitalize">
+                {item.category?.replace("-", " ") || "Men's Shoes"}
+              </p>
+
+              <div className="mt-2 flex items-center gap-2">
+                <span
+                  className={`${
+                    item.discount > 0 || activePromo
+                      ? "text-red-600"
+                      : "text-black"
+                  } font-bold text-lg`}
+                >
+                  Rs. {discountedPrice.toLocaleString()}
+                </span>
+                {(item.discount > 0 || activePromo) && (
+                  <span className="text-gray-400 text-sm line-through decoration-1">
+                    Rs.{" "}
+                    {item.marketPrice > item.sellingPrice
+                      ? item.marketPrice.toLocaleString()
+                      : item.sellingPrice.toLocaleString()}
+                  </span>
+                )}
+              </div>
+
+              {/* KOKO Text */}
+              <div className="flex items-center gap-1 text-[10px] text-gray-500">
+                <span>or 3 installments with</span>
+                <div className="w-8 h-3 relative opacity-60">
+                  <Image
+                    src={KOKOLogo}
+                    alt="KOKO"
+                    fill
+                    className="object-contain"
+                  />
+                </div>
+              </div>
             </div>
-          </div>
+          </Link>
         </div>
-      </Link>
-    </article>
+      </article>
+
+      {/* Quick View Modal */}
+    </>
   );
 };
 
