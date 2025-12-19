@@ -12,55 +12,48 @@ const SimilarProducts = ({ items }: { items: Product[] }) => {
   const prevRef = useRef<HTMLButtonElement>(null);
   const nextRef = useRef<HTMLButtonElement>(null);
 
-  const handleInit = (swiper: SwiperType) => {
-    if (
-      swiper.params.navigation &&
-      typeof swiper.params.navigation !== "boolean"
-    ) {
-      swiper.params.navigation.prevEl = prevRef.current;
-      swiper.params.navigation.nextEl = nextRef.current;
-      swiper.navigation.init();
-      swiper.navigation.update();
-    }
-  };
-
   if (items.length === 0) return null;
 
   return (
-    <section className="w-full max-w-[1440px] mx-auto py-16 border-t border-gray-100">
-      <div className="flex justify-between items-end mb-8 px-2">
-        <h2 className="text-xl md:text-2xl font-black uppercase tracking-tighter">
+    <section className="w-full max-w-[1920px] mx-auto py-20 px-4 md:px-12">
+      <div className="flex justify-between items-end mb-10">
+        <h2 className="text-[24px] font-medium text-[#111] tracking-tight">
           You Might Also Like
         </h2>
 
-        {/* Minimal Nav Buttons */}
         <div className="flex gap-2">
           <button
             ref={prevRef}
-            className="p-2 rounded-full border border-gray-300 hover:border-black hover:bg-black hover:text-white transition-all disabled:opacity-30"
+            className="w-10 h-10 rounded-full bg-[#f5f5f5] flex items-center justify-center hover:bg-[#e5e5e5] transition-all"
           >
-            <IoChevronBack size={18} />
+            <IoChevronBack size={20} />
           </button>
           <button
             ref={nextRef}
-            className="p-2 rounded-full border border-gray-300 hover:border-black hover:bg-black hover:text-white transition-all disabled:opacity-30"
+            className="w-10 h-10 rounded-full bg-[#f5f5f5] flex items-center justify-center hover:bg-[#e5e5e5] transition-all"
           >
-            <IoChevronForward size={18} />
+            <IoChevronForward size={20} />
           </button>
         </div>
       </div>
 
       <Swiper
         modules={[Navigation]}
-        onInit={handleInit}
-        spaceBetween={20}
-        slidesPerView={1.5}
-        breakpoints={{
-          640: { slidesPerView: 2.2 },
-          1024: { slidesPerView: 4.2 },
+        onInit={(s) => {
+          if (s.params.navigation && typeof s.params.navigation !== "boolean") {
+            s.params.navigation.prevEl = prevRef.current;
+            s.params.navigation.nextEl = nextRef.current;
+            s.navigation.init();
+            s.navigation.update();
+          }
         }}
-        loop={items.length > 4}
-        className="!pb-10"
+        spaceBetween={16}
+        slidesPerView={1.3}
+        breakpoints={{
+          768: { slidesPerView: 3.2 },
+          1280: { slidesPerView: 4.2 },
+        }}
+        className="overflow-visible!"
       >
         {items.map((item) => (
           <SwiperSlide key={item.id}>

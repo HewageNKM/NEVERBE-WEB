@@ -1,23 +1,19 @@
 "use client";
 import React from "react";
 import ToggleSwitch from "@/components/ToggleSwitch";
-import { IoCheckbox, IoSquareOutline } from "react-icons/io5";
 import { useFilterData } from "@/hooks/useFilterData";
 import { AVAILABLE_SIZES } from "@/constants/filters";
 
 interface FilterPanelProps {
-  // Current filter state
   selectedBrands: string[];
   selectedCategories: string[];
   selectedSizes: string[];
   inStock: boolean;
-  // Callbacks
   onBrandToggle: (brand: string) => void;
   onCategoryToggle: (category: string) => void;
   onSizeToggle: (size: string) => void;
   onInStockChange: (value: boolean) => void;
   onReset: () => void;
-  // Options
   showCategories?: boolean;
   title?: string;
 }
@@ -33,9 +29,11 @@ const FilterSection = ({
   selectedItems: string[];
   onToggle: (label: string) => void;
 }) => (
-  <div className="py-6 border-t border-gray-100">
-    <h3 className="text-sm font-bold uppercase tracking-wide mb-4">{title}</h3>
-    <div className="flex flex-col gap-2">
+  <div className="py-8 border-t border-gray-100">
+    <h3 className="text-[16px] font-medium text-[#111] tracking-tight mb-5">
+      {title}
+    </h3>
+    <div className="flex flex-col gap-4">
       {items.map((item, idx) => {
         const isSelected = selectedItems.includes(item.label?.toLowerCase());
         return (
@@ -44,20 +42,22 @@ const FilterSection = ({
             onClick={() => onToggle(item.label)}
             className="flex items-center gap-3 group text-left"
           >
+            {/* Minimalist Checkbox Indicator */}
             <div
-              className={`text-lg transition-colors ${
+              className={`w-5 h-5 border rounded-[4px] flex items-center justify-center transition-all duration-200 ${
                 isSelected
-                  ? "text-black"
-                  : "text-gray-300 group-hover:text-gray-400"
+                  ? "bg-black border-black"
+                  : "bg-white border-gray-300 group-hover:border-black"
               }`}
             >
-              {isSelected ? <IoCheckbox /> : <IoSquareOutline />}
+              {isSelected && <div className="w-2 h-2 bg-white rounded-full" />}
             </div>
+
             <span
-              className={`text-sm font-medium transition-colors ${
+              className={`text-[16px] transition-colors ${
                 isSelected
-                  ? "text-black"
-                  : "text-gray-500 group-hover:text-black"
+                  ? "text-[#111] font-medium"
+                  : "text-[#111] font-normal group-hover:text-[#707072]"
               }`}
             >
               {item.label}
@@ -85,21 +85,25 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
   const { brands, categories } = useFilterData(showCategories);
 
   return (
-    <aside className="hidden lg:block w-64 pr-8 sticky top-24 h-fit max-h-[85vh] overflow-y-auto hide-scrollbar">
+    <aside className="hidden lg:block w-[260px] pr-10 sticky top-24 h-fit max-h-[85vh] overflow-y-auto no-scrollbar">
       {/* Header */}
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-black uppercase tracking-tight">{title}</h2>
+      <div className="flex justify-between items-end mb-8">
+        <h2 className="text-[20px] font-medium text-[#111] tracking-tight">
+          {title}
+        </h2>
         <button
           onClick={onReset}
-          className="text-xs font-bold underline text-gray-400 hover:text-black"
+          className="text-[14px] font-normal text-[#707072] hover:text-black transition-colors"
         >
           Clear All
         </button>
       </div>
 
-      {/* In Stock */}
-      <div className="flex justify-between items-center pb-6">
-        <span className="text-sm font-bold uppercase">In Stock Only</span>
+      {/* In Stock Utility */}
+      <div className="flex justify-between items-center pb-8">
+        <span className="text-[16px] font-normal text-[#111]">
+          In Stock Only
+        </span>
         <ToggleSwitch
           checked={inStock}
           onChange={onInStockChange}
@@ -107,22 +111,22 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
         />
       </div>
 
-      {/* Sizes */}
-      <div className="py-6 border-t border-gray-100">
-        <h3 className="text-sm font-bold uppercase tracking-wide mb-4">
-          Sizes
+      {/* Nike Style Size Grid (1:1 Ratio Squares) */}
+      <div className="py-8 border-t border-gray-100">
+        <h3 className="text-[16px] font-medium text-[#111] tracking-tight mb-5">
+          Select Size
         </h3>
-        <div className="flex flex-wrap gap-2">
+        <div className="grid grid-cols-3 gap-2">
           {AVAILABLE_SIZES.map((size) => {
             const isSelected = selectedSizes.includes(size);
             return (
               <button
                 key={size}
                 onClick={() => onSizeToggle(size)}
-                className={`w-10 h-10 border-2 text-xs font-bold transition-all ${
+                className={`aspect-square flex items-center justify-center border rounded-[4px] text-[14px] transition-all ${
                   isSelected
-                    ? "bg-black border-black text-white"
-                    : "bg-white border-gray-200 text-gray-600 hover:border-black"
+                    ? "bg-black border-black text-white font-medium"
+                    : "bg-white border-gray-200 text-[#111] hover:border-black"
                 }`}
               >
                 {size}
@@ -134,7 +138,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
 
       {showCategories && (
         <FilterSection
-          title="Categories"
+          title="Shop by Category"
           items={categories}
           selectedItems={selectedCategories}
           onToggle={onCategoryToggle}
@@ -147,6 +151,9 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
         selectedItems={selectedBrands}
         onToggle={onBrandToggle}
       />
+
+      {/* Visual Spacer for the bottom of the sticky aside */}
+      <div className="h-20" />
     </aside>
   );
 };

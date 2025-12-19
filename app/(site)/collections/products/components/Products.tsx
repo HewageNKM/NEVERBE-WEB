@@ -1,8 +1,8 @@
 "use client";
 import React, { useEffect, useState, useRef, useCallback } from "react";
-import { useSearchParams, useRouter, usePathname } from "next/navigation";
+import { useSearchParams, usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import Pagination from "@/components/Pagination";
+import Pagination from "@/components/Pagination"; // Ensure this matches the Nike style below
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
 import ItemCard from "@/components/ItemCard";
@@ -26,7 +26,6 @@ import { Product } from "@/interfaces/Product";
 
 const Products = ({ items }: { items: Product[] }) => {
   const dispatch: AppDispatch = useDispatch();
-  const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
@@ -45,10 +44,12 @@ const Products = ({ items }: { items: Product[] }) => {
   const [openSort, setOpenSort] = useState(false);
   const sortRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [totalProduct, setTotalProduct] = useState(0);
+
+  // FIX: Initialize with items.length so pagination shows up immediately
+  const [totalProduct, setTotalProduct] = useState(items?.length || 0);
   const [isInitialized, setIsInitialized] = useState(false);
 
-  // --- Initialize from URL params on mount ---
+  // --- Initializing from URL ---
   useEffect(() => {
     const gender = searchParams.get("gender") || "";
     const category = searchParams.get("category") || "";
@@ -65,20 +66,25 @@ const Products = ({ items }: { items: Product[] }) => {
     dispatch(setInStock(stock));
     dispatch(setPage(pageNum));
 
-    // Map URL sort to redux sort
     if (sort === "low") dispatch(setSelectedSort("LOW TO HIGH"));
     else if (sort === "high") dispatch(setSelectedSort("HIGH TO LOW"));
     else if (sort === "new") dispatch(setSelectedSort("NEW ARRIVALS"));
 
     setIsInitialized(true);
-  }, []); // Only run once on mount
+  }, [dispatch, searchParams]);
 
-  // --- Update URL when filters change ---
+  // --- Sync Redux with props and update total count ---
+  useEffect(() => {
+    dispatch(setProducts(items));
+    if (items?.length > 0 && totalProduct === 0) {
+      setTotalProduct(items.length);
+    }
+  }, [dispatch, items, totalProduct]);
+
+  // --- URL Management ---
   const updateURL = useCallback(() => {
     if (!isInitialized) return;
-
     const params = new URLSearchParams();
-
     if (selectedGender) params.set("gender", selectedGender);
     if (selectedCategories.length > 0)
       params.set("category", selectedCategories[0]);
@@ -87,15 +93,12 @@ const Products = ({ items }: { items: Product[] }) => {
     if (inStock) params.set("inStock", "true");
     if (page > 1) params.set("page", page.toString());
 
-    // Map redux sort to URL sort
     if (selectedSort === "LOW TO HIGH") params.set("sort", "low");
     else if (selectedSort === "HIGH TO LOW") params.set("sort", "high");
     else if (selectedSort === "NEW ARRIVALS") params.set("sort", "new");
 
     const queryString = params.toString();
     const newUrl = queryString ? `${pathname}?${queryString}` : pathname;
-
-    // Update URL without navigation
     window.history.replaceState({}, "", newUrl);
   }, [
     isInitialized,
@@ -113,12 +116,7 @@ const Products = ({ items }: { items: Product[] }) => {
     updateURL();
   }, [updateURL]);
 
-  // --- Initial Set ---
-  useEffect(() => {
-    dispatch(setProducts(items));
-  }, [dispatch, items]);
-
-  // --- Fetch Logic ---
+  // --- Fetch Data on Filter Change ---
   useEffect(() => {
     if (!isInitialized) return;
 
@@ -129,20 +127,16 @@ const Products = ({ items }: { items: Product[] }) => {
           page: page.toString(),
           size: size.toString(),
         });
-
         if (inStock) params.append("inStock", "true");
         if (selectedGender) params.append("gender", selectedGender);
         if (selectedSizes.length > 0)
           params.append("sizes", selectedSizes.join(","));
-
-        // Add category and brand as tags
         selectedBrands.forEach((b) => params.append("tag", b));
         selectedCategories.forEach((c) => params.append("tag", c));
 
         const res = await fetch(`/api/v1/products?${params}`);
         const data = await res.json();
 
-        // Client-side Sort
         let sorted = [...(data.dataList || [])];
         if (selectedSort === "LOW TO HIGH")
           sorted.sort((a, b) => a.sellingPrice - b.sellingPrice);
@@ -150,7 +144,7 @@ const Products = ({ items }: { items: Product[] }) => {
           sorted.sort((a, b) => b.sellingPrice - a.sellingPrice);
 
         dispatch(setProducts(sorted));
-        setTotalProduct(data.total || 0);
+        setTotalProduct(data.total || sorted.length); // Fallback to list length
       } catch (e) {
         console.error(e);
       } finally {
@@ -171,7 +165,6 @@ const Products = ({ items }: { items: Product[] }) => {
     isInitialized,
   ]);
 
-  // Close Sort Dropdown
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
       if (sortRef.current && !sortRef.current.contains(e.target as Node))
@@ -182,86 +175,101 @@ const Products = ({ items }: { items: Product[] }) => {
   }, []);
 
   return (
-    <section className="w-full max-w-[1440px] mx-auto px-4 md:px-8 pb-20 flex gap-12">
-      {/* Desktop Sidebar */}
-      <ProductsFilter />
+    <section className="w-full max-w-[1920px] mx-auto px-4 md:px-12 pb-20 flex gap-0 bg-white">
+      {/* 1. DESKTOP SIDEBAR */}
+      <aside className="hidden lg:block w-[260px] shrink-0 pt-8 pr-8">
+        <ProductsFilter />
+      </aside>
 
       <div className="flex-1 w-full">
-        {/* --- Toolbar --- */}
-        <div className="sticky top-[60px] md:top-20 z-30 bg-white/95 backdrop-blur-md py-4 mb-6 border-b border-gray-100 flex justify-between items-center">
-          {/* Mobile Filter Trigger */}
-          <button
-            onClick={() => dispatch(toggleFilter())}
-            className="lg:hidden flex items-center gap-2 text-sm font-bold uppercase tracking-wide border border-gray-300 rounded-full px-4 py-2 hover:border-black transition-colors"
-          >
-            <IoOptionsOutline size={18} /> Filters
-          </button>
+        {/* 2. STICKY TOOLBAR */}
+        <div className="bg-white/90 backdrop-blur-md py-6 flex justify-between items-center">
+          <h2 className="text-[20px] font-medium text-[#111] tracking-tight">
+            All Shoes ({totalProduct})
+          </h2>
 
-          <p className="hidden lg:block text-gray-400 text-sm font-medium">
-            Showing {products.length} Results
-          </p>
-
-          {/* Sort Dropdown */}
-          <div className="relative" ref={sortRef}>
+          <div className="flex items-center gap-6">
             <button
-              onClick={() => setOpenSort(!openSort)}
-              className="flex items-center gap-1 text-sm font-bold uppercase hover:text-gray-600 transition-colors"
+              onClick={() => dispatch(toggleFilter())}
+              className="lg:hidden flex items-center gap-2 text-[16px] text-[#111]"
             >
-              Sort By <IoChevronDownOutline />
+              Filters <IoOptionsOutline size={20} />
             </button>
-            <AnimatePresence>
-              {openSort && (
-                <motion.ul
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 10 }}
-                  className="absolute right-0 mt-2 w-48 bg-white border border-gray-100 shadow-xl z-50 py-2 rounded-sm"
-                >
-                  {sortingOptions.map((opt, i) => (
-                    <li
-                      key={i}
-                      onClick={() => {
-                        dispatch(setSelectedSort(opt.value));
-                        setOpenSort(false);
-                      }}
-                      className={`px-4 py-2 text-xs font-bold uppercase tracking-wide cursor-pointer hover:bg-gray-50 ${
-                        selectedSort === opt.value
-                          ? "text-black bg-gray-50"
-                          : "text-gray-500"
-                      }`}
-                    >
-                      {opt.name}
-                    </li>
-                  ))}
-                </motion.ul>
-              )}
-            </AnimatePresence>
+
+            <div className="relative" ref={sortRef}>
+              <button
+                onClick={() => setOpenSort(!openSort)}
+                className="flex items-center gap-2 text-[16px] text-[#111] hover:text-[#707072] transition-colors"
+              >
+                Sort By{" "}
+                <IoChevronDownOutline
+                  size={14}
+                  className={`transition-transform ${
+                    openSort ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
+              <AnimatePresence>
+                {openSort && (
+                  <motion.ul
+                    initial={{ opacity: 0, y: 5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 5 }}
+                    className="absolute right-0 mt-4 w-[200px] bg-white border border-[#e5e5e5] shadow-xl z-50 py-4"
+                  >
+                    {sortingOptions.map((opt, i) => (
+                      <li
+                        key={i}
+                        onClick={() => {
+                          dispatch(setSelectedSort(opt.value));
+                          setOpenSort(false);
+                        }}
+                        className={`px-6 py-2 text-[14px] cursor-pointer text-right transition-colors ${
+                          selectedSort === opt.value
+                            ? "text-[#111] font-medium"
+                            : "text-[#707072] hover:text-[#111]"
+                        }`}
+                      >
+                        {opt.name}
+                      </li>
+                    ))}
+                  </motion.ul>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
         </div>
 
-        {/* --- Product Grid --- */}
+        {/* 3. PRODUCT GRID */}
         {isLoading ? (
-          <div className="h-[50vh] relative">
+          <div className="h-[60vh] relative">
             <ComponentLoader />
           </div>
         ) : products.length === 0 ? (
-          <EmptyState heading="No Products Found" />
+          <div className="pt-20">
+            <EmptyState heading="No Products Found" />
+          </div>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-10 md:gap-x-6 md:gap-y-12">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-12">
             {products.map((item) => (
               <ItemCard key={item.id} item={item} />
             ))}
           </div>
         )}
 
-        {/* --- Pagination --- */}
-        <div className="flex justify-center mt-16">
-          <Pagination
-            count={Math.ceil(totalProduct / size)}
-            page={page}
-            onChange={(v) => dispatch(setPage(v))}
-          />
-        </div>
+        {/* 4. PAGINATION SECTION */}
+        {totalProduct > size && (
+          <div className="flex justify-center mt-24 border-t border-gray-100 pt-12">
+            <Pagination
+              count={Math.ceil(totalProduct / size)}
+              page={page}
+              onChange={(v) => {
+                dispatch(setPage(v));
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+            />
+          </div>
+        )}
       </div>
     </section>
   );

@@ -10,7 +10,8 @@ interface PaginationProps {
 }
 
 /**
- * Custom Pagination component - replaces MUI Pagination
+ * Nike-Inspired Pagination Component
+ * Focuses on minimalist circular buttons and bold contrast.
  */
 const Pagination: React.FC<PaginationProps> = ({
   count,
@@ -20,7 +21,6 @@ const Pagination: React.FC<PaginationProps> = ({
 }) => {
   if (count <= 1) return null;
 
-  // Generate page numbers to show
   const getPageNumbers = () => {
     const pages: (number | "...")[] = [];
     const leftSibling = Math.max(page - siblingCount, 1);
@@ -30,21 +30,18 @@ const Pagination: React.FC<PaginationProps> = ({
     const showRightDots = rightSibling < count - 1;
 
     if (!showLeftDots && showRightDots) {
-      // Show first few pages
       for (let i = 1; i <= Math.min(3 + siblingCount * 2, count - 1); i++) {
         pages.push(i);
       }
       pages.push("...");
       pages.push(count);
     } else if (showLeftDots && !showRightDots) {
-      // Show last few pages
       pages.push(1);
       pages.push("...");
       for (let i = Math.max(count - 2 - siblingCount * 2, 2); i <= count; i++) {
         pages.push(i);
       }
     } else if (showLeftDots && showRightDots) {
-      // Show middle pages
       pages.push(1);
       pages.push("...");
       for (let i = leftSibling; i <= rightSibling; i++) {
@@ -53,7 +50,6 @@ const Pagination: React.FC<PaginationProps> = ({
       pages.push("...");
       pages.push(count);
     } else {
-      // Show all pages
       for (let i = 1; i <= count; i++) {
         pages.push(i);
       }
@@ -66,7 +62,7 @@ const Pagination: React.FC<PaginationProps> = ({
 
   return (
     <nav
-      className="flex items-center justify-center gap-1"
+      className="flex items-center justify-center gap-2 py-10"
       aria-label="Pagination"
     >
       {/* Previous Button */}
@@ -74,11 +70,11 @@ const Pagination: React.FC<PaginationProps> = ({
         onClick={() => page > 1 && onChange(page - 1)}
         disabled={page === 1}
         className={`
-          p-2 rounded-lg transition-colors
+          group flex items-center justify-center w-12 h-12 rounded-full border transition-all duration-300
           ${
             page === 1
-              ? "text-gray-300 cursor-not-allowed"
-              : "text-gray-600 hover:bg-gray-100 hover:text-black"
+              ? "border-zinc-100 text-zinc-300 cursor-not-allowed"
+              : "border-zinc-200 text-black hover:border-black hover:bg-black hover:text-white"
           }
         `}
         aria-label="Previous page"
@@ -87,40 +83,42 @@ const Pagination: React.FC<PaginationProps> = ({
       </button>
 
       {/* Page Numbers */}
-      {pages.map((p, idx) =>
-        p === "..." ? (
-          <span key={`dots-${idx}`} className="px-2 text-gray-400">
-            ...
-          </span>
-        ) : (
-          <button
-            key={p}
-            onClick={() => onChange(p)}
-            className={`
-              min-w-[40px] h-10 rounded-lg text-sm font-medium transition-colors
-              ${
-                p === page
-                  ? "bg-black text-white"
-                  : "text-gray-600 hover:bg-gray-100 hover:text-black"
-              }
-            `}
-            aria-current={p === page ? "page" : undefined}
-          >
-            {p}
-          </button>
-        )
-      )}
+      <div className="flex items-center gap-1 mx-2">
+        {pages.map((p, idx) =>
+          p === "..." ? (
+            <span key={`dots-${idx}`} className="px-3 text-zinc-400 font-bold">
+              ···
+            </span>
+          ) : (
+            <button
+              key={p}
+              onClick={() => onChange(p)}
+              className={`
+                w-12 h-12 rounded-full text-sm font-bold transition-all duration-200 tabular-nums
+                ${
+                  p === page
+                    ? "bg-black text-white shadow-lg"
+                    : "text-zinc-500 hover:text-black hover:bg-zinc-100"
+                }
+              `}
+              aria-current={p === page ? "page" : undefined}
+            >
+              {p}
+            </button>
+          )
+        )}
+      </div>
 
       {/* Next Button */}
       <button
         onClick={() => page < count && onChange(page + 1)}
         disabled={page === count}
         className={`
-          p-2 rounded-lg transition-colors
+          group flex items-center justify-center w-12 h-12 rounded-full border transition-all duration-300
           ${
             page === count
-              ? "text-gray-300 cursor-not-allowed"
-              : "text-gray-600 hover:bg-gray-100 hover:text-black"
+              ? "border-zinc-100 text-zinc-300 cursor-not-allowed"
+              : "border-zinc-200 text-black hover:border-black hover:bg-black hover:text-white"
           }
         `}
         aria-label="Next page"

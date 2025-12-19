@@ -17,27 +17,21 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({
   const { getPromotionForProduct } = usePromotionsContext();
   const activePromo = getPromotionForProduct(item.id);
 
-  let finalPrice = item.sellingPrice;
-  // 1. Apply Standard Discount (match ItemCard logic)
-  if (item.discount > 0) {
-    finalPrice =
-      Math.round(
-        (item.sellingPrice - (item.sellingPrice * item.discount) / 100) / 10
-      ) * 10;
-  } else {
-    finalPrice = Math.round(item.sellingPrice);
-  }
+  // Price Calculation (Preserved Logic)
+  let finalPrice =
+    item.discount > 0
+      ? Math.round(
+          (item.sellingPrice - (item.sellingPrice * item.discount) / 100) / 10
+        ) * 10
+      : Math.round(item.sellingPrice);
 
-  // 2. Apply Active Promotion
-  if (activePromo) {
-    if (activePromo.type === "PERCENTAGE" && activePromo.actions?.[0]?.value) {
-      const discountVal = activePromo.actions[0].value;
+  if (activePromo?.actions?.[0]?.value) {
+    if (activePromo.type === "PERCENTAGE") {
       finalPrice =
-        Math.round((finalPrice * (100 - discountVal)) / 100 / 10) * 10;
-    } else if (
-      activePromo.type === "FIXED" &&
-      activePromo.actions?.[0]?.value
-    ) {
+        Math.round(
+          (finalPrice * (100 - activePromo.actions[0].value)) / 100 / 10
+        ) * 10;
+    } else if (activePromo.type === "FIXED") {
       finalPrice = Math.max(0, finalPrice - activePromo.actions[0].value);
     }
   }
@@ -46,66 +40,46 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({
     <Link
       href={`/collections/products/${item.id}`}
       onClick={onClick}
-      className="group flex items-start gap-4 p-4 hover:bg-gray-50 transition-colors cursor-pointer w-full"
+      className="group flex items-center gap-5 p-5 hover:bg-[#f5f5f5] transition-all cursor-pointer w-full"
     >
-      {/* Product Image - Nike Style Gray Box */}
-      <div className="relative w-16 h-16 bg-[#f6f6f6] rounded-md overflow-hidden shrink-0">
+      {/* Precision Image Box */}
+      <div className="relative w-20 h-20 bg-[#f6f6f6] rounded-sm overflow-hidden shrink-0">
         <Image
           src={item.thumbnail.url}
           alt={item.name}
           width={100}
           height={100}
-          className="object-cover w-full h-full mix-blend-multiply group-hover:scale-105 transition-transform duration-500"
+          className="object-cover w-full h-full mix-blend-multiply transition-transform duration-700 group-hover:scale-110"
         />
-        {/* Badges Container */}
-        <div className="absolute top-1 left-1 flex flex-col gap-1 items-start">
-          {item.discount > 0 && !activePromo && (
-            <span className="bg-white text-black text-[8px] font-bold px-1.5 py-0.5 shadow-sm">
-              -{item.discount}%
-            </span>
-          )}
-
+        <div className="absolute top-2 left-2 flex flex-col gap-1">
           {activePromo && (
-            <span className="bg-black text-white text-[7px] font-bold px-1.5 py-0.5 shadow-sm uppercase tracking-wide animate-pulse">
-              {activePromo.type === "BOGO"
-                ? "BOGO"
-                : activePromo.type === "PERCENTAGE"
-                ? `${activePromo.actions?.[0]?.value}% Off`
-                : activePromo.type === "FREE_SHIPPING"
-                ? "Free Ship"
-                : "Promo"}
+            <span className="bg-[#111] text-white text-[9px] font-bold px-1.5 py-0.5 tracking-widest uppercase">
+              {activePromo.type === "BOGO" ? "BOGO" : "Promo"}
             </span>
           )}
         </div>
       </div>
 
-      {/* Product Info */}
-      <div className="flex-1 min-w-0 flex flex-col gap-0.5">
-        <h2 className="font-bold text-black text-sm uppercase tracking-tight truncate leading-none mt-1">
+      <div className="flex-1 min-w-0">
+        <h2 className="text-[15px] font-medium text-[#111] tracking-tight leading-tight group-hover:underline">
           {item.name}
         </h2>
-
-        {/* Subtitle / Category Tag */}
-        <p className="text-[10px] text-gray-500 font-medium capitalize truncate">
-          {item.tags && item.tags.length > 0 ? item.tags[0] : "Men's Footwear"}
+        <p className="text-[13px] text-[#707072] font-normal mt-0.5">
+          {item.tags?.[0] || "Footwear"}
         </p>
-
-        {/* Price Row */}
-        <div className="flex items-center gap-2 mt-1.5">
+        <div className="flex items-center gap-2 mt-2">
           <span
-            className={`${
-              item.discount > 0 || activePromo ? "text-red-600" : "text-black"
-            } font-bold text-sm`}
+            className={`text-[15px] font-medium ${
+              item.discount > 0 || activePromo
+                ? "text-[#b22222]"
+                : "text-[#111]"
+            }`}
           >
             Rs. {finalPrice.toLocaleString()}
           </span>
-
           {(item.discount > 0 || activePromo) && (
-            <span className="text-gray-400 text-xs line-through decoration-1">
-              Rs.{" "}
-              {item.marketPrice > item.sellingPrice
-                ? item.marketPrice.toLocaleString()
-                : item.sellingPrice.toLocaleString()}
+            <span className="text-[13px] text-[#707072] line-through">
+              Rs. {item.sellingPrice.toLocaleString()}
             </span>
           )}
         </div>
@@ -113,5 +87,4 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({
     </Link>
   );
 };
-
 export default SearchResultCard;

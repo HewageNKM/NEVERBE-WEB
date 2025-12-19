@@ -12,11 +12,11 @@ import { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Offers & Rewards | NEVERBE",
   description:
-    "Explore exclusive deals, active promotions, and discount coupons for your next pair of kicks.",
+    "Explore exclusive deals, active promotions, and discount coupons.",
   openGraph: {
     title: "Offers & Rewards | NEVERBE",
     description:
-      "Explore exclusive deals, active promotions, and discount coupons for your next pair of kicks.",
+      "Explore exclusive deals, active promotions, and discount coupons.",
     url: "https://neverbe.lk/collections/offers",
     type: "website",
     siteName: "NEVERBE",
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
         url: "https://neverbe.lk/deals-og.jpg",
         width: 1200,
         height: 630,
-        alt: "NEVERBE Offers & Rewards",
+        alt: "NEVERBE Offers",
       },
     ],
   },
@@ -39,21 +39,18 @@ const OffersPage = async () => {
     getActiveCoupons(),
   ]);
 
-  // Filter promotions that have banners to show in the gallery
   const bannerPromotions = promotions.filter(
     (p: any) => p.bannerUrl && p.status === "ACTIVE"
   );
 
-  // Fetch discounted products for the grid
   let dealsList: any[] = [];
   try {
-    const dealsResult = await getDealsProducts(1, 20);
+    const dealsResult = await getDealsProducts(1, 30); // Increased count for full grid
     dealsList = dealsResult?.dataList || [];
   } catch (e) {
     console.error("Error fetching deal items:", e);
   }
 
-  /* ✅ Structured Data for Offers */
   const offersSchema = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
@@ -70,19 +67,13 @@ const OffersPage = async () => {
         item: {
           "@type": "Product",
           name: product?.name,
-          image: product?.thumbnail?.url || "https://neverbe.lk/logo-og.png",
-          description: product?.description || "Discounted footwear.",
+          image: product?.thumbnail?.url,
           url: `https://neverbe.lk/collections/products/${product?.id}`,
-          brand: {
-            "@type": "Brand",
-            name: "NEVERBE",
-          },
           offers: {
             "@type": "Offer",
             priceCurrency: "LKR",
-            price: product?.sellingPrice || product?.price || "0.00",
+            price: product?.sellingPrice || "0.00",
             availability: "https://schema.org/InStock",
-            itemCondition: "https://schema.org/NewCondition",
           },
         },
       })),
@@ -90,58 +81,53 @@ const OffersPage = async () => {
   };
 
   return (
-    <main className="w-full min-h-screen bg-white pt-8">
+    <main className="w-full min-h-screen bg-white">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(offersSchema) }}
       />
-      {/* Header */}
-      <div className="w-full max-w-[1440px] mx-auto px-4 md:px-8 mb-8 text-left">
-        <h1 className="text-3xl md:text-5xl font-black uppercase tracking-tighter mb-4">
-          Offers & Rewards
+
+      {/* 1. NIKE STYLE HEADER */}
+      <div className="w-full max-w-[1920px] mx-auto px-4 md:px-12 py-12 md:py-20 text-left">
+        <h1 className="text-[28px] md:text-[42px] font-medium tracking-tight text-[#111] leading-none mb-4">
+          Member Rewards & Offers
         </h1>
-        <p className="text-gray-500 max-w-xl text-sm md:text-base">
-          Get the most out of your shopping with our latest campaigns, exclusive
-          coupons, and markdown deals.
+        <p className="text-[#707072] max-w-xl text-[16px] md:text-[18px] font-normal">
+          Unlock exclusive campaigns, seasonal coupons, and the best markdown
+          deals on premium footwear.
         </p>
       </div>
 
-      <div className="w-full max-w-[1440px] mx-auto px-4 md:px-8 space-y-20 pb-20">
-        {/* Active Campaigns Section */}
+      <div className="w-full max-w-[1920px] mx-auto px-4 md:px-12 space-y-24 pb-20">
+        {/* 2. ACTIVE CAMPAIGNS (Nike-style high-quality banners) */}
         {bannerPromotions.length > 0 && (
           <section>
-            <div className="flex items-center gap-4 mb-8">
-              <h2 className="text-2xl font-black uppercase tracking-tighter">
+            <div className="mb-10">
+              <h2 className="text-[20px] font-medium text-[#111] tracking-tight">
                 Active Campaigns
               </h2>
-              <div className="h-px bg-gray-200 flex-1"></div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {bannerPromotions.map((promo: any) => (
                 <div
                   key={promo.id}
-                  className="group block relative aspect-video bg-gray-100 overflow-hidden rounded-lg cursor-pointer"
+                  className="group block relative aspect-[4/5] bg-[#f5f5f5] overflow-hidden cursor-pointer"
                 >
                   <Image
                     src={promo.bannerUrl}
                     alt={promo.name}
                     fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    className="object-cover transition-transform duration-1000 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-90" />
-                  <div className="absolute bottom-0 left-0 p-6 w-full">
-                    <h3 className="text-white text-xl font-black uppercase tracking-tight mb-2">
+                  <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
+                  <div className="absolute bottom-10 left-10 right-10">
+                    <h3 className="text-white text-[24px] font-medium tracking-tight mb-2">
                       {promo.name}
                     </h3>
-                    {promo.bannerDescription && (
-                      <p className="text-white/80 text-sm font-medium line-clamp-2 mb-4">
-                        {promo.bannerDescription}
-                      </p>
-                    )}
-                    <span className="inline-block px-4 py-2 bg-white text-black text-xs font-bold uppercase tracking-widest rounded hover:bg-gray-200 transition-colors">
-                      Shop Offer
-                    </span>
+                    <button className="px-6 py-2 bg-white text-black text-[15px] font-medium rounded-full hover:bg-[#e5e5e5] transition-all">
+                      Shop Now
+                    </button>
                   </div>
                 </div>
               ))}
@@ -149,17 +135,16 @@ const OffersPage = async () => {
           </section>
         )}
 
-        {/* Coupons Section */}
+        {/* 3. COUPONS SECTION (Clean grid, no dividers) */}
         {coupons.length > 0 && (
           <section>
-            <div className="flex items-center gap-4 mb-8">
-              <h2 className="text-2xl font-black uppercase tracking-tighter">
-                Available Coupons
+            <div className="mb-10">
+              <h2 className="text-[20px] font-medium text-[#111] tracking-tight">
+                Your Available Coupons
               </h2>
-              <div className="h-px bg-gray-200 flex-1"></div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {coupons.map((coupon) => (
                 <CouponCard key={coupon.id} coupon={coupon} />
               ))}
@@ -167,29 +152,75 @@ const OffersPage = async () => {
           </section>
         )}
 
-        {/* Markdown Deals Grid */}
-        <section className="pt-8 border-t border-gray-100">
-          <div className="mb-8">
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-              <div>
-                <h2 className="text-3xl font-black uppercase tracking-tighter">
-                  Shop Markdown Deals
-                </h2>
-                <p className="text-gray-500 font-medium text-sm mt-1">
-                  Limited time offers on premium footwear.
-                </p>
-              </div>
-              <Link
-                href="/collections/combos"
-                className="text-sm font-bold uppercase tracking-widest underline hover:text-gray-600"
-              >
-                View Bundles & Combos →
-              </Link>
+        {/* 4. MARKDOWN DEALS (Utilizes the previously redesigned DealsProducts) */}
+        <section className="pt-16 border-t border-gray-100">
+          <div className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
+            <div>
+              <h2 className="text-[24px] md:text-[32px] font-medium text-[#111] tracking-tight leading-none">
+                Shop Markdown Deals
+              </h2>
+              <p className="text-[#707072] text-[16px] mt-2">
+                Highest performance footwear at our best prices.
+              </p>
             </div>
+            <Link
+              href="/collections/combos"
+              className="text-[16px] font-medium text-[#111] underline underline-offset-4 hover:opacity-70 transition-all"
+            >
+              View Bundles & Combos
+            </Link>
           </div>
+
+          {/* Ensure DealsProducts matches the Collection Page redesign with the sticky toolbar */}
           <DealsProducts items={dealsList} />
         </section>
       </div>
+
+      {/* PREMIUM BRAND STORY FOOTER */}
+      <section className="bg-[#f5f5f5] py-16 mt-0">
+        <div className="max-w-[1440px] mx-auto px-8 lg:px-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 lg:gap-24">
+            <div className="max-w-sm">
+              <h2 className="text-[16px] font-medium text-[#111] mb-6">
+                Member Benefits
+              </h2>
+              <p className="text-[14px] text-[#707072] leading-relaxed mb-4">
+                Unlock exclusive deals and early access to new drops. Sign up
+                for NEVERBE membership to get the best prices on premium
+                footwear in Sri Lanka.
+              </p>
+            </div>
+
+            <div className="max-w-sm">
+              <h3 className="text-[16px] font-medium text-[#111] mb-6">
+                Ways to Save
+              </h3>
+              <ul className="text-[14px] text-[#707072] space-y-3 font-medium">
+                <li className="hover:text-black cursor-pointer transition-colors">
+                  Seasonal Markdown Deals
+                </li>
+                <li className="hover:text-black cursor-pointer transition-colors">
+                  Exclusive Coupon Codes
+                </li>
+                <li className="hover:text-black cursor-pointer transition-colors">
+                  Bundle & Save Combos
+                </li>
+              </ul>
+            </div>
+
+            <div className="max-w-sm">
+              <h3 className="text-[16px] font-medium text-[#111] mb-6">
+                Price Match Promise
+              </h3>
+              <p className="text-[14px] text-[#707072] leading-relaxed">
+                We offer the best prices on 7A quality footwear. If you find a
+                better price elsewhere, let us know and we&apos;ll do our best
+                to match it.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
     </main>
   );
 };

@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { getPaginatedCombos } from "@/services/PromotionService";
 import { seoKeywords } from "@/constants";
-import CombosHeader from "./components/CombosHeader";
+
 import CombosGrid from "./components/CombosGrid";
 import EmptyState from "@/components/EmptyState";
 
@@ -96,15 +96,23 @@ const CombosPage = async ({
   };
 
   return (
-    <main className="w-full relative mt-4 lg:mt-8 mb-10 min-h-screen bg-white">
+    <main className="w-full min-h-screen bg-white">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(combosSchema) }}
       />
 
-      <CombosHeader />
+      {/* 1. NIKE STYLE HEADER */}
+      <div className="w-full max-w-[1920px] mx-auto px-4 md:px-12 py-12 md:py-20 text-left">
+        <h1 className="text-[28px] md:text-[42px] font-medium tracking-tight text-[#111] leading-none mb-4">
+          Bundle Deals
+        </h1>
+        <p className="text-[#707072] max-w-xl text-[16px] md:text-[18px] font-normal">
+          BOGO Offers & Exclusive Combo Packs. Save more when you buy together.
+        </p>
+      </div>
 
-      <div className="w-full max-w-[1440px] mx-auto px-4 md:px-8">
+      <div className="w-full max-w-[1920px] mx-auto px-4 md:px-12 pb-20">
         {combos.length > 0 ? (
           <CombosGrid
             combos={combos}
@@ -112,38 +120,58 @@ const CombosPage = async ({
             totalPages={totalPages}
           />
         ) : (
-          <EmptyState
-            heading="No bundle deals active right now."
-            subHeading="Check back later for new combo offers."
-          />
+          <div className="pt-20">
+            <EmptyState
+              heading="No bundle deals active right now."
+              subHeading="Check back later for new combo offers."
+            />
+          </div>
         )}
       </div>
 
-      {/* SEO Footer */}
-      <section className="max-w-[1440px] mx-auto px-4 py-12 border-t border-gray-100 mt-12">
-        <article className="grid md:grid-cols-2 gap-8 text-xs text-gray-400 leading-relaxed text-justify md:text-left">
-          <div>
-            <h2 className="text-black font-bold uppercase tracking-wide mb-2">
-              Bundle Deals & Combo Offers
-            </h2>
-            <p>
-              NEVERBE offers exclusive combo deals and bundle offers on premium
-              footwear. Save more when you buy together with our BOGO deals,
-              multi-buy discounts, and curated bundle packs. All combos include
-              island-wide delivery.
-            </p>
+      {/* SEO Footer / Brand Story */}
+      <section className="bg-[#f5f5f5] py-16 mt-0">
+        <div className="max-w-[1440px] mx-auto px-8 lg:px-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 lg:gap-24">
+            <div className="max-w-sm">
+              <h2 className="text-[16px] font-medium text-[#111] mb-6">
+                Stack & Save
+              </h2>
+              <p className="text-[14px] text-[#707072] leading-relaxed mb-4">
+                Our bundle deals are designed to give you maximum value. Whether
+                it&apos;s a BOGO (Buy One Get One) offer or a multi-buy
+                discount, you always get premium quality for less.
+              </p>
+            </div>
+
+            <div className="max-w-sm">
+              <h3 className="text-[16px] font-medium text-[#111] mb-6">
+                Popular Bundles
+              </h3>
+              <ul className="text-[14px] text-[#707072] space-y-3 font-medium">
+                <li className="hover:text-black cursor-pointer transition-colors">
+                  Buy 2 Pairs, Get 15% Off
+                </li>
+                <li className="hover:text-black cursor-pointer transition-colors">
+                  Essential Socks Packs
+                </li>
+                <li className="hover:text-black cursor-pointer transition-colors">
+                  Complete Gym Kits
+                </li>
+              </ul>
+            </div>
+
+            <div className="max-w-sm">
+              <h3 className="text-[16px] font-medium text-[#111] mb-6">
+                Limited Time Offers
+              </h3>
+              <p className="text-[14px] text-[#707072] leading-relaxed">
+                Most bundle deals are available for a limited time only. Grab
+                your favorites before the campaign ends.
+              </p>
+            </div>
           </div>
-          <div>
-            <h3 className="text-black font-bold uppercase tracking-wide mb-2">
-              Why Shop Combos?
-            </h3>
-            <ul className="list-disc pl-4 space-y-1">
-              <li>Buy One Get One Free offers</li>
-              <li>Multi-Buy discounts on select items</li>
-              <li>Curated bundle packs for maximum savings</li>
-            </ul>
-          </div>
-        </article>
+        </div>
       </section>
     </main>
   );

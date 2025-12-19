@@ -36,82 +36,74 @@ const ComboCard: React.FC<ComboCardProps> = ({ combo }) => {
   };
 
   const typeStyles = getTypeStyles();
+  const hasSavings = savings > 0;
 
   return (
     <Link
       href={`/collections/combos/${combo.id}`}
-      className="group block bg-white border border-gray-100 rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300"
+      className="group block bg-transparent"
     >
       {/* Image Container */}
-      <div className="relative aspect-square bg-[#f6f6f6] overflow-hidden">
+      <div className="relative aspect-[4/5] bg-[#f5f5f5] overflow-hidden mb-4">
         {combo.previewThumbnail || combo.thumbnail?.url ? (
           <Image
             src={combo.previewThumbnail || combo.thumbnail?.url || ""}
             alt={combo.name}
             fill
-            className="object-cover mix-blend-multiply group-hover:scale-105 transition-transform duration-500"
+            className="object-cover mix-blend-multiply group-hover:scale-105 transition-transform duration-700"
             sizes="(max-width: 768px) 100vw, 33vw"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-gray-300">
-            <span className="text-6xl">📦</span>
+            <span className="text-4xl">📦</span>
           </div>
         )}
 
-        {/* Type Badge */}
-        <div
-          className={`absolute top-3 left-3 ${typeStyles.bg} text-white text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-sm`}
-        >
-          {typeStyles.label}
-        </div>
+        {/* Badges - Top Left */}
+        <div className="absolute top-4 left-4 flex flex-col gap-2">
+          {/* Type Badge */}
+          <div
+            className={`${typeStyles.bg} text-white text-[11px] font-medium px-3 py-1`}
+          >
+            {typeStyles.label}
+          </div>
 
-        {/* Savings Badge */}
-        <div className="absolute top-3 right-3 bg-black text-white text-xs font-bold px-3 py-1.5 rounded-sm">
-          Save {savingsPercent}%
+          {/* Savings Badge */}
+          {hasSavings && (
+            <div className="bg-[#111] text-white text-[11px] font-medium px-3 py-1">
+              Save {savingsPercent}%
+            </div>
+          )}
         </div>
       </div>
 
       {/* Content */}
-      <div className="p-5">
-        <h3 className="font-bold text-lg uppercase tracking-tight line-clamp-2 group-hover:underline">
-          {combo.name}
-        </h3>
-
-        {combo.description && (
-          <p className="text-gray-500 text-sm mt-1 line-clamp-2">
-            {combo.description}
+      <div className="flex justify-between items-start gap-4">
+        <div className="flex-1">
+          <h3 className="text-[16px] font-medium text-[#111] leading-tight mb-1 group-hover:text-[#707072] transition-colors">
+            {combo.name}
+          </h3>
+          <p className="text-[14px] text-[#707072] mb-2 line-clamp-1">
+            {combo.items?.length || 0} Piece Bundle
           </p>
-        )}
 
-        {/* Items Count */}
-        <div className="text-[11px] text-gray-400 uppercase tracking-wide mt-2">
-          {combo.items?.length || 0} items included
+          {combo.type === "BOGO" && (
+            <p className="text-[14px] text-[#111] font-medium mt-1">
+              Buy {combo.buyQuantity}, Get {combo.getQuantity} Free
+            </p>
+          )}
         </div>
 
-        {/* Pricing */}
-        <div className="flex items-end justify-between mt-4 pt-4 border-t border-gray-100">
-          <div>
-            <span className="text-xl font-black">
-              Rs. {combo.comboPrice.toLocaleString()}
-            </span>
-            <span className="text-sm text-gray-400 line-through ml-2">
+        <div className="text-right">
+          <div className="text-[16px] font-medium text-[#111]">
+            Rs. {combo.comboPrice.toLocaleString()}
+          </div>
+          {hasSavings && (
+            <div className="text-[14px] text-[#707072] line-through">
               Rs. {combo.originalPrice.toLocaleString()}
-            </span>
-          </div>
-          <div className="text-green-600 font-bold text-sm">
-            Save Rs. {savings.toLocaleString()}
-          </div>
+            </div>
+          )}
         </div>
-
-        {/* BOGO specific info */}
-        {combo.type === "BOGO" && combo.buyQuantity && combo.getQuantity && (
-          <div className="mt-3 text-sm text-green-600 font-bold">
-            Buy {combo.buyQuantity}, Get {combo.getQuantity}{" "}
-            {combo.getDiscount === 100
-              ? "FREE"
-              : `at ${combo.getDiscount}% off`}
-          </div>
-        )}
       </div>
     </Link>
   );

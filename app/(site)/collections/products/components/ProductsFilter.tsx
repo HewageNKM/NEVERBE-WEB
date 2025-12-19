@@ -16,41 +16,37 @@ const ProductsFilter = () => {
   const { selectedBrands, selectedCategories, selectedSizes, inStock } =
     useSelector((state: RootState) => state.productsSlice);
 
-  const toggleBrand = (value: string) => {
-    const lowerValue = value.toLowerCase();
-    const newBrands = selectedBrands.includes(lowerValue)
-      ? selectedBrands.filter((b) => b !== lowerValue)
-      : [...selectedBrands, lowerValue];
-    dispatch(setSelectedBrand(newBrands.slice(0, 5)));
-  };
-
-  const toggleCategory = (value: string) => {
-    const lowerValue = value.toLowerCase();
-    const newCats = selectedCategories.includes(lowerValue)
-      ? selectedCategories.filter((c) => c !== lowerValue)
-      : [...selectedCategories, lowerValue];
-    dispatch(setSelectedCategories(newCats.slice(0, 5)));
-  };
-
-  const toggleSize = (size: string) => {
-    const newSizes = selectedSizes.includes(size)
-      ? selectedSizes.filter((s) => s !== size)
-      : [...selectedSizes, size];
-    dispatch(setSelectedSizes(newSizes));
+  const toggleSelection = (list: string[], item: string, action: any) => {
+    const lower = item.toLowerCase();
+    const newList = list.includes(lower)
+      ? list.filter((i) => i !== lower)
+      : [...list, lower];
+    dispatch(action(newList.slice(0, 5)));
   };
 
   return (
-    <FilterPanel
-      selectedBrands={selectedBrands}
-      selectedCategories={selectedCategories}
-      selectedSizes={selectedSizes}
-      inStock={inStock}
-      onBrandToggle={toggleBrand}
-      onCategoryToggle={toggleCategory}
-      onSizeToggle={toggleSize}
-      onInStockChange={(val) => dispatch(setInStock(val))}
-      onReset={() => dispatch(resetFilter())}
-    />
+    <aside className="w-full">
+      <FilterPanel
+        selectedBrands={selectedBrands}
+        selectedCategories={selectedCategories}
+        selectedSizes={selectedSizes}
+        inStock={inStock}
+        onBrandToggle={(v) =>
+          toggleSelection(selectedBrands, v, setSelectedBrand)
+        }
+        onCategoryToggle={(v) =>
+          toggleSelection(selectedCategories, v, setSelectedCategories)
+        }
+        onSizeToggle={(size) => {
+          const newSizes = selectedSizes.includes(size)
+            ? selectedSizes.filter((s) => s !== size)
+            : [...selectedSizes, size];
+          dispatch(setSelectedSizes(newSizes));
+        }}
+        onInStockChange={(val) => dispatch(setInStock(val))}
+        onReset={() => dispatch(resetFilter())}
+      />
+    </aside>
   );
 };
 

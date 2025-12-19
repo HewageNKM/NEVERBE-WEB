@@ -3,69 +3,96 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const loadingMessages = [
-  "LACING UP THE PIXELS...",
-  "SEARCHING FOR THE PERFECT FIT...",
-  "POLISHING THE LEATHER...",
-  "LOOKING FOR THE OTHER SOCK...",
-  "TYING UP LOOSE ENDS...",
-  "RUNNING TO THE SERVER...",
-  "BREAKING IN THE NEW CODE...",
-  "SOLE SEARCHING...",
-  "CHECKING THE TREAD DEPTH...",
+  "LACING UP THE PIXELS",
+  "SEARCHING FOR THE PERFECT FIT",
+  "POLISHING THE LEATHER",
+  "PREPARING YOUR GEAR",
+  "TYING UP LOOSE ENDS",
+  "RUNNING TO THE SERVER",
+  "BREAKING IN THE NEW CODE",
+  "SOLE SEARCHING",
+  "CHECKING THE TREAD DEPTH",
 ];
 
 /**
- * PageLoader - Full-page loading animation with rotating messages
- * Used by Next.js loading.tsx files across routes
+ * PageLoader - Nike Aesthetic Redesign
+ * Focuses on high-precision lines, medium weights, and snappy transitions.
  */
 const PageLoader = () => {
-  const dots = Array.from({ length: 3 });
   const [currentMsgIndex, setCurrentMsgIndex] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentMsgIndex((prev) => (prev + 1) % loadingMessages.length);
-    }, 2000);
+    }, 2200);
 
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <main className="fixed inset-0 z-100 flex flex-col items-center justify-center bg-white gap-6">
-      {/* Dots Animation */}
-      <div className="flex items-center gap-3">
-        {dots.map((_, index) => (
-          <motion.div
-            key={index}
-            className="h-3 w-3 rounded-full bg-black"
-            animate={{
-              scale: [1, 1.5, 1],
-              opacity: [0.3, 1, 0.3],
-            }}
-            transition={{
-              duration: 1,
-              ease: "easeInOut",
-              repeat: Infinity,
-              delay: index * 0.2,
-            }}
-          />
-        ))}
+    <main className="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-white transition-colors duration-500">
+      {/* 1. HIGH-PRECISION TECHNICAL SPINNER */}
+      <div className="relative flex items-center justify-center mb-10">
+        {/* Outer subtle ring */}
+        <div className="w-16 h-16 rounded-full border-[1px] border-gray-100" />
+
+        {/* Active high-speed spinner */}
+        <motion.div
+          className="absolute w-16 h-16 rounded-full border-[1.5px] border-[#111] border-t-transparent"
+          animate={{ rotate: 360 }}
+          transition={{
+            duration: 0.6,
+            ease: "linear",
+            repeat: Infinity,
+          }}
+        />
+
+        {/* Inner subtle pulse */}
+        <motion.div
+          className="absolute w-12 h-12 rounded-full bg-[#f5f5f5]"
+          animate={{ scale: [0.95, 1.05, 0.95] }}
+          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+        />
       </div>
 
-      {/* Text Animation */}
-      <div className="h-6 relative flex items-center justify-center w-full px-4">
+      {/* 2. SOPHISTICATED TYPOGRAPHY */}
+      <div className="h-8 relative flex items-center justify-center w-full max-w-xs">
         <AnimatePresence mode="wait">
-          <motion.p
+          <motion.div
             key={currentMsgIndex}
-            initial={{ opacity: 0, y: 5 }}
+            initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -5 }}
-            transition={{ duration: 0.3 }}
-            className="text-black text-xs md:text-sm font-bold uppercase tracking-[0.2em] absolute text-center"
+            exit={{ opacity: 0, y: -8 }}
+            transition={{
+              duration: 0.4,
+              ease: [0.22, 1, 0.36, 1], // Custom Nike-style cubic bezier
+            }}
+            className="absolute flex flex-col items-center gap-1"
           >
-            {loadingMessages[currentMsgIndex]}
-          </motion.p>
+            <p className="text-[#111] text-[13px] font-medium uppercase tracking-[0.25em] text-center">
+              {loadingMessages[currentMsgIndex]}
+            </p>
+
+            {/* Minimalist progress indicator */}
+            <div className="flex gap-1.5 mt-2">
+              {loadingMessages.map((_, i) => (
+                <div
+                  key={i}
+                  className={`h-[2px] transition-all duration-500 ${
+                    i === currentMsgIndex ? "w-4 bg-[#111]" : "w-1 bg-gray-200"
+                  }`}
+                />
+              ))}
+            </div>
+          </motion.div>
         </AnimatePresence>
+      </div>
+
+      {/* 3. BRAND LOGO MARK (Optional) */}
+      <div className="absolute bottom-12 opacity-10 grayscale">
+        <p className="text-[10px] font-bold tracking-[0.4em] uppercase">
+          Neverbe Inc.
+        </p>
       </div>
     </main>
   );

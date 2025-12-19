@@ -15,10 +15,8 @@ import { toggleMenu } from "@/redux/headerSlice/headerSlice";
 import { getAlgoliaClient } from "@/util";
 import SearchDialog from "@/components/SearchDialog";
 import { ProductVariant } from "@/interfaces/ProductVariant";
-
 import { NavigationItem } from "@/services/WebsiteService";
 
-// Default fallback if no dynamic nav
 const DEFAULT_LINKS: NavigationItem[] = [
   { title: "Home", link: "/" },
   { title: "Bundles", link: "/collections/combos" },
@@ -36,24 +34,20 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
   const [categories, setCategories] = useState<any[]>([]);
   const [openSection, setOpenSection] = useState<string | null>(null);
 
-  // Use dynamic nav or default
-  // Ensure "Home" is first if not present
   let displayLinks = mainNav.length > 0 ? mainNav : DEFAULT_LINKS;
   if (!displayLinks.some((l) => l.link === "/")) {
     displayLinks = [{ title: "Home", link: "/" }, ...displayLinks];
   }
 
-  // --- SEARCH LOGIC (Kept identical for functionality) ---
+  // --- SEARCH LOGIC (Functionality Maintained) ---
   const onSearch = async (evt: React.ChangeEvent<HTMLInputElement>) => {
     const query = evt.target.value;
     setSearch(query);
-
     if (query.trim().length < 3) {
       setItems([]);
       setShowSearchResult(false);
       return;
     }
-
     setIsSearching(true);
     try {
       const searchResults = await searchClient.search({
@@ -71,8 +65,7 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
       filteredResults = filteredResults.filter(
         (item: any) =>
           !item.variants.some(
-            (variant: ProductVariant) =>
-              variant.isDeleted === true && variant.status === false
+            (v: ProductVariant) => v.isDeleted === true && v.status === false
           )
       );
       setItems(filteredResults);
@@ -84,7 +77,6 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
     }
   };
 
-  // --- DATA FETCHING ---
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -107,61 +99,60 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-60 flex justify-end">
-      {/* Dark Overlay */}
+    <div className="fixed inset-0 z-[100] flex justify-end">
+      {/* 1. NIKE AIRY BACKDROP */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         onClick={handleOverlayClick}
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        className="absolute inset-0 bg-white/80 backdrop-blur-md"
       />
 
-      {/* Drawer Container */}
+      {/* 2. DRAWER CONTAINER */}
       <motion.div
         initial={{ x: "100%" }}
         animate={{ x: 0 }}
         exit={{ x: "100%" }}
-        transition={{ type: "tween", duration: 0.3, ease: "easeOut" }}
-        className="relative w-full max-w-md h-full bg-white text-black flex flex-col shadow-2xl"
+        transition={{ type: "spring", damping: 25, stiffness: 200 }}
+        className="relative w-full max-w-[380px] h-full bg-white text-[#111] flex flex-col shadow-[0_0_40px_rgba(0,0,0,0.05)]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-5 border-b border-gray-100">
-          <span className="font-black text-xl uppercase tracking-tighter">
+        <div className="flex items-center justify-between px-8 py-6">
+          <span className="font-medium text-[20px] tracking-tight text-[#111]">
             Menu
           </span>
           <button
             onClick={() => dispatch(toggleMenu(false))}
-            className="p-2 -mr-2 text-black hover:bg-gray-100 rounded-full transition-colors"
+            className="p-2 -mr-2 text-[#111] hover:bg-gray-100 rounded-full transition-all"
           >
-            <IoCloseOutline size={28} />
+            <IoCloseOutline size={30} />
           </button>
         </div>
 
-        {/* Search Bar */}
-        <div className="px-6 py-4">
+        {/* 3. SEARCH BAR (Nike Pill Style) */}
+        <div className="px-8 py-2 mb-6">
           <div className="relative group">
             <input
               type="text"
               value={search}
               onChange={onSearch}
-              placeholder="Search products..."
-              className="w-full bg-gray-100 text-black px-5 py-3 pl-12 rounded-full font-medium focus:outline-none focus:ring-2 focus:ring-black transition-all placeholder:text-gray-400"
+              placeholder="Search"
+              className="w-full bg-[#f5f5f5] text-[#111] px-5 py-3 pl-12 rounded-full text-[16px] font-normal focus:outline-none transition-all placeholder:text-[#707072]"
             />
-            <div className="absolute top-1/2 -translate-y-1/2 left-4 text-gray-400">
+            <div className="absolute top-1/2 -translate-y-1/2 left-4 text-[#111]">
               {isSearching ? (
-                <div className="w-5 h-5 border-2 border-gray-400 border-t-black rounded-full animate-spin" />
+                <div className="w-5 h-5 border-[1.5px] border-gray-200 border-t-black rounded-full animate-spin" />
               ) : (
                 <IoSearchOutline size={22} />
               )}
             </div>
           </div>
-          {/* Search Results Dropdown */}
           {showSearchResult && items.length > 0 && (
             <div className="absolute left-0 right-0 top-[140px] z-50 px-4">
               <SearchDialog
-                containerStyle="max-h-[60vh] shadow-2xl rounded-2xl border border-gray-200"
+                containerStyle="max-h-[60vh] shadow-2xl rounded-none border border-gray-100"
                 results={items}
                 onClick={() => {
                   setShowSearchResult(false);
@@ -173,37 +164,40 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
           )}
         </div>
 
-        {/* Navigation Links */}
-        <nav className="flex-1 overflow-y-auto px-6 py-2 space-y-1">
-          {/* Primary Links */}
+        {/* 4. NAVIGATION LINKS (Sophisticated Hierarchy) */}
+        <nav className="flex-1 overflow-y-auto px-8 space-y-2 no-scrollbar">
           {displayLinks.map((link) => (
             <Link
               key={link.title}
               href={link.link}
               onClick={() => dispatch(toggleMenu(false))}
-              className={`flex items-center justify-between py-4 border-b border-gray-100 group text-black`}
+              className="flex items-center justify-between py-4 group"
             >
-              <span className="text-2xl font-black uppercase tracking-tight group-hover:pl-2 transition-all">
+              <span className="text-[24px] font-medium tracking-tight text-[#111] transition-transform group-hover:translate-x-1">
                 {link.title}
               </span>
-              <IoChevronForward className="text-gray-300 group-hover:text-black transition-colors" />
+              <IoChevronForward
+                size={20}
+                className="text-gray-200 group-hover:text-[#111]"
+              />
             </Link>
           ))}
 
-          {/* Collapsible: Categories */}
-          <div className="border-b border-gray-100">
+          {/* Categories Section */}
+          <div className="pt-2">
             <button
               onClick={() => toggleSection("categories")}
-              className="w-full flex justify-between items-center py-4 text-black group"
+              className="w-full flex justify-between items-center py-4 text-[#111]"
             >
-              <span className="text-2xl font-black uppercase tracking-tight group-hover:pl-2 transition-all">
+              <span className="text-[24px] font-medium tracking-tight">
                 Categories
               </span>
-              {openSection === "categories" ? (
-                <IoChevronUpOutline size={20} />
-              ) : (
-                <IoChevronDownOutline size={20} />
-              )}
+              <IoChevronDownOutline
+                className={`transition-transform duration-300 ${
+                  openSection === "categories" ? "rotate-180" : ""
+                }`}
+                size={20}
+              />
             </button>
             <AnimatePresence>
               {openSection === "categories" && (
@@ -213,14 +207,14 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
                   exit={{ height: 0, opacity: 0 }}
                   className="overflow-hidden"
                 >
-                  <div className="flex flex-col pb-4 pl-2 space-y-3">
+                  <div className="flex flex-col pb-6 space-y-4">
                     {categories.map((cat) => (
                       <Link
                         key={cat.id}
                         href={`/collections/products?category=${encodeURIComponent(
                           cat.label
                         )}`}
-                        className="text-lg font-medium text-gray-500 hover:text-black transition-colors"
+                        className="text-[16px] text-[#707072] hover:text-[#111] transition-colors"
                         onClick={() => dispatch(toggleMenu(false))}
                       >
                         {cat.label}
@@ -232,20 +226,21 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
             </AnimatePresence>
           </div>
 
-          {/* Collapsible: Brands */}
-          <div className="border-b border-gray-100">
+          {/* Brands Section */}
+          <div>
             <button
               onClick={() => toggleSection("brands")}
-              className="w-full flex justify-between items-center py-4 text-black group"
+              className="w-full flex justify-between items-center py-4 text-[#111]"
             >
-              <span className="text-2xl font-black uppercase tracking-tight group-hover:pl-2 transition-all">
+              <span className="text-[24px] font-medium tracking-tight">
                 Brands
               </span>
-              {openSection === "brands" ? (
-                <IoChevronUpOutline size={20} />
-              ) : (
-                <IoChevronDownOutline size={20} />
-              )}
+              <IoChevronDownOutline
+                className={`transition-transform duration-300 ${
+                  openSection === "brands" ? "rotate-180" : ""
+                }`}
+                size={20}
+              />
             </button>
             <AnimatePresence>
               {openSection === "brands" && (
@@ -255,14 +250,14 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
                   exit={{ height: 0, opacity: 0 }}
                   className="overflow-hidden"
                 >
-                  <div className="flex flex-col pb-4 pl-2 space-y-3">
+                  <div className="flex flex-col pb-6 space-y-4">
                     {brands.map((brand) => (
                       <Link
                         key={brand.id}
                         href={`/collections/products?brand=${encodeURIComponent(
                           brand.label
                         )}`}
-                        className="text-lg font-medium text-gray-500 hover:text-black transition-colors"
+                        className="text-[16px] text-[#707072] hover:text-[#111] transition-colors"
                         onClick={() => dispatch(toggleMenu(false))}
                       >
                         {brand.label}
@@ -275,25 +270,29 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
           </div>
         </nav>
 
-        {/* Footer */}
-        <div className="p-6 bg-gray-50 border-t border-gray-100">
-          <div className="flex gap-4 justify-center mb-4">
-            <Link
-              href="/contact"
-              className="text-sm font-bold text-gray-500 uppercase hover:text-black"
-            >
-              Contact Us
-            </Link>
-            <Link
-              href="/contact"
-              className="text-sm font-bold text-gray-500 uppercase hover:text-black"
-            >
-              Help
-            </Link>
+        {/* 5. FOOTER (Nike Utility Style) */}
+        <div className="p-8 bg-white border-t border-gray-50 mt-auto">
+          <div className="flex flex-col gap-6">
+            <div className="flex gap-6">
+              <Link
+                href="/contact"
+                className="text-[14px] font-medium text-[#111]"
+                onClick={() => dispatch(toggleMenu(false))}
+              >
+                Contact Us
+              </Link>
+              <Link
+                href="/contact"
+                className="text-[14px] font-medium text-[#111]"
+                onClick={() => dispatch(toggleMenu(false))}
+              >
+                Help
+              </Link>
+            </div>
+            <p className="text-[11px] text-[#707072] font-medium uppercase tracking-widest">
+              &copy; {new Date().getFullYear()} NEVERBE, INC.
+            </p>
           </div>
-          <p className="text-xs text-center text-gray-400 font-medium">
-            &copy; {new Date().getFullYear()} NEVERBE. All Rights Reserved.
-          </p>
         </div>
       </motion.div>
     </div>

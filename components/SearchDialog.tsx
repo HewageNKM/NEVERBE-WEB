@@ -24,46 +24,38 @@ const SearchDialog: React.FC<SearchDialogProps> = ({
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: 10 }}
-        transition={{ duration: 0.2, ease: "easeOut" }}
-        className={`w-full bg-white text-black shadow-2xl border border-gray-100 rounded-lg overflow-hidden flex flex-col ${
-          containerStyle
-            ? containerStyle
-            : "absolute top-14 right-0 lg:w-[600px] z-50"
+        transition={{ type: "spring", damping: 25, stiffness: 200 }}
+        className={`w-full bg-white text-[#111] shadow-[0_20px_40px_rgba(0,0,0,0.1)] border border-gray-100 overflow-hidden flex flex-col ${
+          containerStyle || "absolute top-14 right-0 lg:w-[600px] z-50"
         }`}
         style={{ maxHeight }}
       >
-        {/* Results List */}
         {results.length > 0 ? (
-          <ul className="flex flex-col overflow-y-auto">
+          <ul className="flex flex-col overflow-y-auto no-scrollbar">
             {results.map((result, index) => (
               <motion.li
                 key={result.id || index}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ duration: 0.2, delay: index * 0.05 }}
-                className="border-b border-gray-100 last:border-none"
+                transition={{ delay: index * 0.03 }}
+                className="border-b border-gray-50 last:border-none"
               >
                 <SearchResultCard item={result} onClick={onClick} />
               </motion.li>
             ))}
           </ul>
         ) : (
-          /* Empty State */
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="flex flex-col items-center justify-center py-12 px-6 text-center"
-          >
-            <div className="bg-gray-50 p-4 rounded-full mb-4">
-              <IoSearchOutline className="text-2xl text-gray-400" />
+          <div className="flex flex-col items-center justify-center py-16 px-6 text-center">
+            <div className="bg-[#f5f5f5] p-5 rounded-full mb-4">
+              <IoSearchOutline className="text-[#111]" size={24} />
             </div>
-            <p className="text-xs font-bold uppercase tracking-widest text-gray-500">
+            <p className="text-[16px] font-medium text-[#111] tracking-tight">
               No results found
             </p>
-            <p className="text-[10px] text-gray-400 mt-1">
-              Try adjusting your search terms
+            <p className="text-[14px] text-[#707072] mt-1">
+              Try adjusting your search for a better fit.
             </p>
-          </motion.div>
+          </div>
         )}
       </motion.div>
     </AnimatePresence>

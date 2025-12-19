@@ -1,18 +1,17 @@
 "use client";
 
-import React, { useRef, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import {
   IoAdd,
   IoRemove,
   IoHeartOutline,
-  IoShareSocialOutline,
+  IoChevronDown,
 } from "react-icons/io5";
-import { FaWhatsapp } from "react-icons/fa6";
+import { FaWhatsapp, FaTruckFast, FaArrowRotateLeft } from "react-icons/fa6";
 import { motion, AnimatePresence } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 
 import { AppDispatch, RootState } from "@/redux/store";
 import { addToBag } from "@/redux/bagSlice/bagSlice";
@@ -31,26 +30,47 @@ const ProductHero = ({ item }: { item: Product }) => {
 
   const [selectedImage, setSelectedImage] = useState(item.thumbnail);
   const [selectedVariant, setSelectedVariant] = useState<ProductVariant>(
-    item.variants[0] || {
-      id: "",
-      variantId: "",
-      variantName: "",
-      images: [],
-      sizes: [],
-      status: true,
-    }
+    item.variants[0]
   );
-
   const [selectedSize, setSelectedSize] = useState<string>("");
-  const [qty, setQty] = useState(1); // Start at 1 for better UX
-  const [availableStock, setAvailableStock] = useState<number>(0);
-  const [sizeStock, setSizeStock] = useState<Record<string, number>>({}); // Stock per size
+  const [qty, setQty] = useState(1);
+  const [sizeStock, setSizeStock] = useState<Record<string, number>>({});
   const [stockLoading, setStockLoading] = useState(false);
-  const [outOfStocks, setOutOfStocks] = useState(false);
-  const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER;
   const [showSizeGuide, setShowSizeGuide] = useState(false);
 
-  // Calculate quantity already in bag
+  // Get current active promotion
+  const activePromo = getPromotionForProduct(
+    item.id,
+    selectedVariant.variantId
+  );
+
+  useEffect(() => {
+    if (selectedVariant.images?.length) {
+      setSelectedImage(selectedVariant.images[0]);
+    }
+  }, [selectedVariant]);
+
+  useEffect(() => {
+    const fetchStock = async () => {
+      setStockLoading(true);
+      try {
+        const res = await fetch(
+          `/api/v1/inventory/batch?productId=${item.id}&variantId=${
+            selectedVariant.variantId
+          }&sizes=${selectedVariant.sizes.join(",")}`
+        );
+        const data = await res.json();
+        setSizeStock(data.stock || {});
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setStockLoading(false);
+      }
+    };
+    fetchStock();
+  }, [selectedVariant.variantId, item.id]);
+
+  const availableStock = selectedSize ? sizeStock[selectedSize] ?? 0 : 0;
   const bagQty =
     bagItems.find(
       (b) =>
@@ -58,113 +78,31 @@ const ProductHero = ({ item }: { item: Product }) => {
         b.variantId === selectedVariant.variantId &&
         b.size === selectedSize
     )?.quantity || 0;
-
   const isLimitReached =
-    selectedSize !== "" &&
-    !stockLoading &&
-    availableStock > 0 &&
-    bagQty + qty > availableStock;
+    selectedSize !== "" && availableStock > 0 && bagQty + qty > availableStock;
 
-  // --- Init Logic ---
-  useEffect(() => {
-    if (item.variants?.length) {
-      const defaultVariant = item.variants[0];
-      setSelectedVariant(defaultVariant);
-      setSelectedImage(defaultVariant.images[0] || item.thumbnail);
-      // Don't auto-select size, let user choose (Nike style)
-    }
-  }, [item]);
-
-  // --- Stock Logic: Batch preload all sizes for variant (SINGLE API call) ---
-  const preloadStockForVariant = async (variantId: string, sizes: string[]) => {
-    setStockLoading(true);
-    try {
-      // Single API call for all sizes
-      const res = await fetch(
-        `/api/v1/inventory/batch?productId=${
-          item.id
-        }&variantId=${variantId}&sizes=${sizes.join(",")}`
-      );
-      const data = await res.json();
-      setSizeStock(data.stock || {});
-    } catch (error) {
-      console.error("Failed to preload stock:", error);
-      // Fallback: set all sizes to 0
-      const fallback: Record<string, number> = {};
-      sizes.forEach((s) => (fallback[s] = 0));
-      setSizeStock(fallback);
-    } finally {
-      setStockLoading(false);
-    }
-  };
-
-  // Preload stock when variant changes
-  useEffect(() => {
-    if (selectedVariant.variantId && selectedVariant.sizes?.length) {
-      preloadStockForVariant(selectedVariant.variantId, selectedVariant.sizes);
-      setSelectedSize(""); // Reset size selection
-    }
-  }, [selectedVariant.variantId]);
-
-  // Update available stock when size changes
-  useEffect(() => {
-    if (selectedSize && sizeStock[selectedSize] !== undefined) {
-      setAvailableStock(sizeStock[selectedSize]);
-    }
-  }, [selectedSize, sizeStock]);
-
-  useEffect(() => {
-    setOutOfStocks(selectedSize !== "" && !stockLoading && availableStock <= 0);
-  }, [availableStock, selectedSize, stockLoading]);
-
-  // --- Bag Actions ---
   const handleAddToBag = () => {
-    if (!selectedSize) return alert("Please select a size");
-    if (outOfStocks) return;
-    if (isLimitReached)
-      return alert(
-        `Limit reached! You already have ${bagQty} in bag and stock is ${availableStock}`
-      );
-
-    const bagItem = {
-      itemId: item.id,
-      variantId: selectedVariant.variantId,
-      size: selectedSize,
-      quantity: qty,
-      price: item.sellingPrice,
-      bPrice: 0, // Set server-side in OrderService
-      name: item.name,
-      thumbnail: selectedVariant.images[0]?.url || item.thumbnail.url,
-      discount:
-        Math.round((item.sellingPrice * (item.discount / 100)) / 10) * 10 * qty,
-      itemType: "product",
-      maxQuantity: 10,
-      variantName: selectedVariant.variantName,
-      category: item.category || "",
-      brand: item.brand || "",
-    };
-    dispatch(addToBag(bagItem));
-    // Optional: open bag drawer here
+    if (!selectedSize) return;
+    dispatch(
+      addToBag({
+        itemId: item.id,
+        variantId: selectedVariant.variantId,
+        size: selectedSize,
+        quantity: qty,
+        price: item.sellingPrice,
+        name: item.name,
+        thumbnail: selectedVariant.images[0]?.url || item.thumbnail.url,
+        itemType: "product",
+        variantName: selectedVariant.variantName,
+      } as any)
+    );
   };
-
-  const buyNow = () => {
-    handleAddToBag();
-    router.push("/checkout");
-  };
-
-  const discountedPrice =
-    Math.round(
-      (item.discount > 0
-        ? item.sellingPrice - (item.sellingPrice * item.discount) / 100
-        : item.sellingPrice) / 10
-    ) * 10;
 
   return (
-    <section className="w-full max-w-[1440px] mx-auto flex flex-col lg:flex-row gap-8 lg:gap-16 pt-4 pb-12">
-      {/* --- LEFT COLUMN: IMAGES (Scrollable) --- */}
-      <div className="flex-1 lg:w-[60%] flex flex-col gap-4">
-        {/* Main Image View - Sticky on Mobile, Static on Desktop Grid */}
-        <div className="relative w-full aspect-square bg-[#f6f6f6] rounded-xl overflow-hidden cursor-zoom-in group">
+    <section className="max-w-[1440px] mx-auto px-4 md:px-10 py-6 flex flex-col lg:flex-row gap-10 lg:gap-16">
+      {/* --- LEFT COLUMN: IMAGES --- */}
+      <div className="flex-1 lg:w-3/5 flex flex-col gap-4">
+        <div className="relative aspect-square bg-[#f6f6f6] rounded-sm overflow-hidden group">
           <AnimatePresence mode="wait">
             <motion.div
               key={selectedImage.url}
@@ -179,355 +117,192 @@ const ProductHero = ({ item }: { item: Product }) => {
                 alt={item.name}
                 fill
                 priority
-                className="object-cover mix-blend-multiply group-hover:scale-105 transition-transform duration-700"
-                sizes="(max-width: 768px) 100vw, 60vw"
+                className="object-cover mix-blend-multiply"
               />
             </motion.div>
           </AnimatePresence>
 
+          {/* Discount Badge */}
           {item.discount > 0 && (
-            <div className="absolute top-4 left-4 bg-white px-3 py-1 font-bold text-xs shadow-sm rounded-md">
-              -{item.discount}%
+            <div className="absolute top-4 left-4 bg-black text-white px-3 py-1 font-bold text-[10px] tracking-widest uppercase">
+              {item.discount}% Off
             </div>
           )}
         </div>
 
-        {/* Thumbnail Grid (If variant has multiple images) */}
-        {selectedVariant.images.length > 1 && (
-          <div className="grid grid-cols-4 gap-2">
-            {selectedVariant.images.map((img, idx) => (
-              <button
-                key={idx}
-                onMouseEnter={() => setSelectedImage(img)}
-                onClick={() => setSelectedImage(img)}
-                className={`relative aspect-square bg-[#f6f6f6] rounded-lg overflow-hidden border-2 transition-all ${
-                  selectedImage.url === img.url
-                    ? "border-black"
-                    : "border-transparent"
-                }`}
-              >
-                <Image
-                  src={img.url}
-                  alt=""
-                  fill
-                  className="object-cover mix-blend-multiply"
-                />
-              </button>
-            ))}
-          </div>
-        )}
-
-        {/* Description (Desktop Position) */}
-        <div className="hidden lg:block mt-8">
-          <h3 className="font-bold uppercase tracking-wide text-sm border-b border-gray-200 pb-2 mb-4">
-            Description
-          </h3>
-          <p className="text-gray-600 leading-relaxed text-sm whitespace-pre-line">
-            {item.description ||
-              "Designed for comfort and style, these sneakers feature premium materials and a modern silhouette perfect for everyday wear."}
-          </p>
+        <div className="grid grid-cols-6 gap-2">
+          {selectedVariant.images.map((img, idx) => (
+            <button
+              key={idx}
+              onMouseEnter={() => setSelectedImage(img)}
+              className={`relative aspect-square bg-[#f6f6f6] rounded-sm overflow-hidden border-2 transition-all ${
+                selectedImage.url === img.url
+                  ? "border-black"
+                  : "border-transparent opacity-70"
+              }`}
+            >
+              <Image
+                src={img.url}
+                alt=""
+                fill
+                className="object-cover mix-blend-multiply"
+              />
+            </button>
+          ))}
         </div>
       </div>
 
-      {/* --- RIGHT COLUMN: DETAILS (Sticky) --- */}
-      <div className="lg:w-[40%] relative">
-        <div className="sticky top-24 flex flex-col gap-6">
-          {/* Header */}
-          <div>
-            <h2 className="text-black font-medium text-lg capitalize mb-1">
-              {item.brand?.replace("-", " ")}
+      {/* --- RIGHT COLUMN: DETAILS --- */}
+      <div className="lg:w-2/5 relative">
+        <div className="lg:sticky lg:top-24 flex flex-col gap-6">
+          {/* Promotion Header Banner */}
+          {activePromo && (
+            <div className="bg-red-50 border-l-4 border-red-600 p-3">
+              <p className="text-red-700 text-xs font-black uppercase tracking-widest animate-pulse">
+                {activePromo.name || "Special Offer Applied"}
+              </p>
+              <p className="text-[10px] text-red-600 mt-1 uppercase font-bold">
+                Limited time only. While stocks last.
+              </p>
+            </div>
+          )}
+
+          <header>
+            <h2 className="text-sm font-bold uppercase tracking-widest text-orange-600 mb-1">
+              {activePromo ? "Promotion Active" : item.brand?.replace("-", " ")}
             </h2>
-            <h1 className="text-3xl md:text-5xl font-black uppercase tracking-tight leading-none text-black mb-4">
+            <h1 className="text-4xl lg:text-5xl font-black uppercase tracking-tighter leading-[0.9] mb-4">
               {item.name}
             </h1>
-
-            {/* Price & Promo Section */}
-            <div className="flex flex-col gap-2">
-              {(() => {
-                const activePromo = getPromotionForProduct(
-                  item.id,
-                  selectedVariant.variantId
-                );
-
-                // Calculate final price logic locally for display
-                let finalPrice = item.sellingPrice;
-                if (item.discount > 0) {
-                  finalPrice =
-                    Math.round(
-                      (item.sellingPrice -
-                        (item.sellingPrice * item.discount) / 100) /
-                        10
-                    ) * 10;
-                }
-
-                if (activePromo) {
-                  if (
-                    activePromo.type === "PERCENTAGE" &&
-                    activePromo.actions?.[0]?.value
-                  ) {
-                    const discountVal = activePromo.actions[0].value;
-                    finalPrice =
-                      Math.round(
-                        (finalPrice * (100 - discountVal)) / 100 / 10
-                      ) * 10;
-                  } else if (
-                    activePromo.type === "FIXED" &&
-                    activePromo.actions?.[0]?.value
-                  ) {
-                    finalPrice = Math.max(
-                      0,
-                      finalPrice - activePromo.actions[0].value
-                    );
-                  }
-                }
-
-                return (
-                  <>
-                    <div className="flex items-center gap-4">
-                      <span
-                        className={`${
-                          item.discount > 0 || activePromo
-                            ? "text-red-600"
-                            : "text-black"
-                        } text-xl font-bold`}
-                      >
-                        Rs. {finalPrice.toLocaleString()}
-                      </span>
-                      {/* Only show standard discount if NO active promo to avoid confusion */}
-                      {item.discount > 0 && !activePromo && (
-                        <span className="text-gray-400 line-through text-base">
-                          Rs. {item.marketPrice.toLocaleString()}
-                        </span>
-                      )}
-                    </div>
-
-                    {/* Active Promotion Display */}
-                    {activePromo && (
-                      <div className="bg-black text-white text-xs font-bold px-3 py-2 uppercase tracking-wide rounded-sm inline-block self-start animate-pulse">
-                        {activePromo.type === "BOGO"
-                          ? "Buy 1 Get 1 Free"
-                          : activePromo.name || "Special Offer Applied"}
-                      </div>
-                    )}
-                  </>
-                );
-              })()}
+            <div className="flex items-baseline gap-3">
+              <span className="text-2xl font-bold">
+                Rs. {item.sellingPrice.toLocaleString()}
+              </span>
+              {item.discount > 0 && (
+                <span className="text-gray-400 line-through text-sm">
+                  Rs. {item.marketPrice.toLocaleString()}
+                </span>
+              )}
             </div>
 
-            {/* KOKO */}
-            <div className="flex items-center gap-2 mt-2 opacity-60">
-              <span className="text-[10px] uppercase font-bold text-gray-500">
-                Pay in 3 with
-              </span>
-              <Image src={KOKOLogo} alt="Koko" width={40} height={15} />
+            {/* Value Props Ticker */}
+            <div className="flex gap-4 mt-6 border-y border-gray-100 py-3">
+              <div className="flex items-center gap-2">
+                <FaTruckFast className="text-gray-400" size={14} />
+                <span className="text-[10px] font-bold uppercase text-gray-500">
+                  Standard Shipping 2-3 Days
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <FaArrowRotateLeft className="text-gray-400" size={14} />
+                <span className="text-[10px] font-bold uppercase text-gray-500">
+                  Size Exchange
+                </span>
+              </div>
+            </div>
+          </header>
+
+          {/* Color & Size Selection (Existing Logic) */}
+          <div>
+            <h3 className="text-xs font-bold uppercase mb-3 text-gray-400">
+              Select Color
+            </h3>
+            <div className="flex flex-wrap gap-2">
+              {item.variants.map((v) => (
+                <button
+                  key={v.variantId}
+                  onClick={() => {
+                    setSelectedVariant(v);
+                    setSelectedSize("");
+                  }}
+                  className={`w-12 h-12 bg-[#f6f6f6] rounded-md overflow-hidden border-2 transition-all ${
+                    selectedVariant.variantId === v.variantId
+                      ? "border-black"
+                      : "border-transparent opacity-60"
+                  }`}
+                >
+                  <Image
+                    src={v.images[0].url}
+                    alt={v.variantName}
+                    width={48}
+                    height={48}
+                    className="object-cover mix-blend-multiply"
+                  />
+                </button>
+              ))}
             </div>
           </div>
 
-          {/* Colors */}
           <div>
-            <div className="flex justify-between items-center mb-2">
-              <span className="text-sm font-bold uppercase">Select Color</span>
-              <span className="text-sm text-gray-500 capitalize">
-                {selectedVariant.variantName}
-              </span>
-            </div>
-            <div className="flex flex-wrap gap-3">
-              {item.variants.map((v) => {
-                const isPromoEligible = !!getPromotionForProduct(
-                  item.id,
-                  v.variantId
-                );
-                return (
-                  <button
-                    key={v.variantId}
-                    onClick={() => {
-                      setSelectedVariant(v);
-                      setSelectedImage(v.images[0]);
-                      setSelectedSize("");
-                    }}
-                    className={`h-20 w-20 bg-[#f6f6f6] rounded-md overflow-hidden border-2 transition-all relative ${
-                      selectedVariant.variantId === v.variantId
-                        ? "border-black"
-                        : "border-transparent hover:border-gray-300"
-                    }`}
-                  >
-                    <div className="relative w-full h-full">
-                      <Image
-                        src={v.images[0].url}
-                        alt={v.variantName}
-                        fill
-                        className="object-cover mix-blend-multiply"
-                      />
-                    </div>
-                    {isPromoEligible && (
-                      <div
-                        className="absolute top-1 right-1 w-2.5 h-2.5 bg-red-600 rounded-full border border-white z-10"
-                        title="Promotion Available"
-                      />
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Sizes */}
-          <div>
-            <div className="flex justify-between items-center mb-2">
-              <span className="text-sm font-bold uppercase">Select Size</span>
+            <div className="flex justify-between items-center mb-3">
+              <h3 className="text-xs font-bold uppercase text-gray-400">
+                Select Size
+              </h3>
               <button
                 onClick={() => setShowSizeGuide(true)}
-                className="text-xs text-gray-400 underline hover:text-black"
+                className="text-xs text-gray-500 underline"
               >
                 Size Guide
               </button>
             </div>
-            <div className="grid grid-cols-4 gap-2">
-              {selectedVariant.sizes.map((size) => {
-                const stockQty = sizeStock[size];
-                const isOutOfStock = stockQty !== undefined && stockQty <= 0;
-                const isLoading = stockLoading && stockQty === undefined;
-
-                return (
-                  <button
-                    key={size}
-                    onClick={() => !isOutOfStock && setSelectedSize(size)}
-                    disabled={isOutOfStock || isLoading}
-                    className={`py-3 rounded-md text-sm font-bold border transition-all relative ${
-                      selectedSize === size
-                        ? "border-black bg-black text-white"
-                        : isOutOfStock
-                        ? "border-gray-100 bg-gray-50 text-gray-300 cursor-not-allowed line-through"
-                        : "border-gray-200 text-black hover:border-black"
-                    }`}
-                  >
-                    {isLoading ? "..." : size}
-                    {isOutOfStock && (
-                      <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full" />
-                    )}
-                  </button>
-                );
-              })}
+            <div className="grid grid-cols-3 gap-2">
+              {selectedVariant.sizes.map((size) => (
+                <button
+                  key={size}
+                  disabled={sizeStock[size] === 0}
+                  onClick={() => setSelectedSize(size)}
+                  className={`py-4 text-xs font-bold border rounded-md transition-all ${
+                    selectedSize === size
+                      ? "bg-black text-white border-black"
+                      : sizeStock[size] === 0
+                      ? "bg-gray-50 text-gray-300 line-through border-gray-100"
+                      : "bg-white hover:border-black"
+                  }`}
+                >
+                  {size}
+                </button>
+              ))}
             </div>
-            {!selectedSize && (
-              <p className="text-red-500 text-xs mt-2 font-medium">
-                * Please select a size
-              </p>
-            )}
-
-            {/* Stock Indicator */}
-            {selectedSize && (
-              <div className="mt-2 text-xs font-bold uppercase tracking-wide">
-                {stockLoading ? (
-                  <span className="text-gray-400">Checking Stock...</span>
-                ) : availableStock > 0 ? (
-                  isLimitReached ? (
-                    <span className="text-yellow-600">
-                      Limit Reached ({bagQty} in bag)
-                    </span>
-                  ) : availableStock < 5 ? (
-                    <span className="text-red-600 animate-pulse">
-                      Only {availableStock} Left!
-                    </span>
-                  ) : (
-                    <span className="text-green-600">
-                      {availableStock} In Stock
-                    </span>
-                  )
-                ) : (
-                  <span className="text-red-600">Out of Stock</span>
-                )}
-              </div>
-            )}
           </div>
-
-          {/* Quantity Selector */}
-          <div>
-            <span className="text-sm font-bold uppercase block mb-2">
-              Quantity
-            </span>
-            <div className="flex items-center gap-4">
-              <button
-                onClick={() => setQty((prev) => Math.max(1, prev - 1))}
-                disabled={qty <= 1}
-                className="w-10 h-10 flex items-center justify-center border border-gray-200 rounded-md text-lg font-bold hover:border-black transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-              >
-                <IoRemove size={18} />
-              </button>
-              <span className="text-lg font-bold w-8 text-center">{qty}</span>
-              <button
-                onClick={() =>
-                  setQty((prev) =>
-                    Math.min(availableStock - bagQty || 10, prev + 1)
-                  )
-                }
-                disabled={
-                  qty >= availableStock - bagQty ||
-                  qty >= 10 ||
-                  availableStock === 0
-                }
-                className="w-10 h-10 flex items-center justify-center border border-gray-200 rounded-md text-lg font-bold hover:border-black transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-              >
-                <IoAdd size={18} />
-              </button>
-            </div>
-            {bagQty > 0 && selectedSize && (
-              <p className="text-xs text-gray-500 mt-1">
-                You have {bagQty} in your bag.
-              </p>
-            )}
-          </div>
-
-          {/* Upsell Nudge */}
-          <UpsellNudge
-            activePromo={getPromotionForProduct(
-              item.id,
-              selectedVariant.variantId
-            )}
-            currentQty={qty + bagQty}
-            currentAmount={(qty + bagQty) * item.sellingPrice}
-          />
 
           {/* Actions */}
-          <div className="space-y-3 pt-4 border-t border-gray-100">
+          <div className="flex flex-col gap-4 mt-4">
+            <UpsellNudge
+              activePromo={activePromo}
+              currentQty={qty + bagQty}
+              currentAmount={(qty + bagQty) * item.sellingPrice}
+            />
+
             <button
               onClick={handleAddToBag}
-              disabled={!selectedSize || outOfStocks || isLimitReached}
-              className="w-full py-4 bg-black text-white font-bold uppercase tracking-widest hover:bg-gray-800 disabled:bg-gray-300 disabled:cursor-not-allowed transition-all"
+              disabled={!selectedSize || availableStock === 0 || isLimitReached}
+              className="w-full py-5 bg-black text-white rounded-full font-bold uppercase tracking-widest text-xs hover:bg-zinc-800 transition-all disabled:bg-gray-100 disabled:text-gray-400"
             >
               {isLimitReached
                 ? "Limit Reached"
-                : outOfStocks
+                : availableStock === 0 && selectedSize
                 ? "Out of Stock"
                 : "Add to Bag"}
             </button>
 
-            <button
-              onClick={buyNow}
-              disabled={!selectedSize || outOfStocks || isLimitReached}
-              className="w-full py-4 border border-black text-black font-bold uppercase tracking-widest hover:bg-black hover:text-white transition-all"
-            >
-              Buy It Now
-            </button>
-
-            {/* Secondary Actions */}
-            <div className="flex gap-2 justify-center mt-2">
-              <a
-                href={`https://wa.me/${WHATSAPP_NUMBER}?text=Hi, I'm interested in ${item.name}`}
-                target="_blank"
-                className="flex items-center gap-2 text-xs font-bold uppercase text-gray-500 hover:text-green-600 py-2"
-              >
-                <FaWhatsapp size={16} /> WhatsApp Inquiry
-              </a>
+            {/* Koko Installment Offer */}
+            <div className="flex items-center justify-center gap-2 p-3 bg-zinc-50 rounded-xl">
+              <span className="text-[10px] font-bold text-gray-500 uppercase">
+                Or 3 Interest-Free payments of Rs.{" "}
+                {(item.sellingPrice / 3).toFixed(0)} with
+              </span>
+              <Image src={KOKOLogo} alt="Koko" width={35} height={12} />
             </div>
           </div>
 
-          {/* Mobile Description (Visible only on mobile) */}
-          <div className="block lg:hidden mt-6 border-t border-gray-100 pt-6">
-            <h3 className="font-bold uppercase tracking-wide text-sm mb-2">
-              Description
-            </h3>
-            <p className="text-gray-600 text-sm">{item.description}</p>
+          {/* WhatsApp / Secondary */}
+          <div className="flex justify-center border-t border-gray-100 pt-6">
+            <a
+              href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER}`}
+              className="flex items-center gap-2 text-[10px] font-black uppercase text-gray-400 hover:text-green-600"
+            >
+              <FaWhatsapp size={16} /> Chat with a specialist
+            </a>
           </div>
         </div>
       </div>

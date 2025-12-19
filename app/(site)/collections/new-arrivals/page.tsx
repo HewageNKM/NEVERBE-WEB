@@ -29,13 +29,14 @@ const NewArrivalsPage = async () => {
   const { total, dataList } = await getNewArrivals(1, 20);
 
   return (
-    <main className="w-full min-h-screen bg-white pt-8">
-      <div className="w-full max-w-[1440px] mx-auto px-4 md:px-8 mb-8 text-left">
-        <h1 className="text-3xl md:text-5xl font-black uppercase tracking-tighter mb-4">
+    <main className="w-full min-h-screen bg-white">
+      {/* 1. NIKE STYLE HEADER */}
+      <div className="w-full max-w-[1920px] mx-auto px-4 md:px-12 py-12 md:py-20 text-left">
+        <h1 className="text-[28px] md:text-[42px] font-medium tracking-tight text-[#111] leading-none mb-4">
           New Arrivals
         </h1>
-        <p className="text-gray-500 max-w-xl text-sm md:text-base">
-          Fresh drops. The latest styles added to our collection.
+        <p className="text-[#707072] max-w-xl text-[16px] md:text-[18px] font-normal">
+          The latest heat. Fresh styles just added to the collection.
         </p>
       </div>
 
@@ -82,8 +83,53 @@ const NewArrivalsPage = async () => {
       <CollectionProducts
         initialItems={dataList}
         collectionType="new-arrivals"
+        tagName="New Arrivals"
         total={total}
       />
+
+      {/* PREMIUM BRAND STORY FOOTER */}
+      <section className="bg-[#f5f5f5] py-16 mt-0">
+        <div className="max-w-[1440px] mx-auto px-8 lg:px-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 lg:gap-24">
+            <div className="max-w-sm">
+              <h2 className="text-[16px] font-medium text-[#111] mb-6">
+                Fresh Drops Weekly
+              </h2>
+              <p className="text-[14px] text-[#707072] leading-relaxed mb-4">
+                Stay with the trend. We update our collection with the latest
+                releases from top global sneaker culture. 7A quality guaranteed.
+              </p>
+            </div>
+
+            <div className="max-w-sm">
+              <h3 className="text-[16px] font-medium text-[#111] mb-6">
+                Trending Now
+              </h3>
+              <ul className="text-[14px] text-[#707072] space-y-3 font-medium">
+                <li className="hover:text-black cursor-pointer transition-colors">
+                  Retro High Tops
+                </li>
+                <li className="hover:text-black cursor-pointer transition-colors">
+                  Chunky Dad Shoes
+                </li>
+                <li className="hover:text-black cursor-pointer transition-colors">
+                  Minimalist Slides
+                </li>
+              </ul>
+            </div>
+
+            <div className="max-w-sm">
+              <h3 className="text-[16px] font-medium text-[#111] mb-6">
+                Limited Stock
+              </h3>
+              <p className="text-[14px] text-[#707072] leading-relaxed">
+                Most new arrivals are limited runs. If you see your size, grab
+                it before it&apos;s gone. Free returns on all new drops.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
     </main>
   );
 };

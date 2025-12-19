@@ -34,6 +34,8 @@ const PopUpFilter = () => {
 
   return (
     <PopUpFilterPanel
+      // Ensure these props are styled inside the component with:
+      // Nike Gray: #707072, Heading Size: text-[18px] Medium
       selectedBrands={selectedBrands}
       selectedCategories={selectedCategories}
       selectedSizes={selectedSizes}

@@ -8,31 +8,37 @@ import { User, ArrowRight } from "lucide-react";
 const AnonymousConversionBanner: React.FC = () => {
   const user = useSelector((state: RootState) => state.authSlice.user);
 
+  // Only show for anonymous/guest users
   if (user && !user.isAnonymous) return null;
 
   return (
-    <div className="bg-neutral-900 text-white px-4 py-3 flex items-center justify-center animate-fadeIn relative">
-      <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-6">
+    <div className="bg-[#f5f5f5] text-[#111] px-4 py-3 md:py-2.5 border-b border-gray-100 flex items-center justify-center animate-fadeIn transition-all">
+      <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-6 max-w-[1440px] w-full justify-center">
+        {/* Guest Message */}
         <div className="flex items-center gap-2">
-          <User size={16} className="text-gray-400" />
-          <p>
+          <User size={14} className="text-[#111]" />
+          <p className="text-[13px] md:text-[14px] font-medium tracking-tight">
             Shopping as a guest?{" "}
-            <span className="text-gray-400">Save your order or log in.</span>
+            <span className="text-[#707072] font-normal">
+              Join us to save your orders and favorites.
+            </span>
           </p>
         </div>
+
+        {/* Action Links */}
         <div className="flex items-center gap-4">
           <Link
             href="/account/register?redirect=/checkout"
-            className="flex items-center gap-1 font-bold uppercase tracking-wider text-xs border-b border-white pb-0.5 hover:text-gray-300 hover:border-gray-300 transition-colors"
+            className="flex items-center gap-1 text-[13px] md:text-[14px] font-medium underline underline-offset-4 hover:opacity-70 transition-opacity"
           >
-            Sign Up <ArrowRight size={12} />
+            Join Us
           </Link>
-          <span className="text-gray-600 text-xs">|</span>
+          <span className="text-gray-300 text-xs">|</span>
           <Link
             href="/account/login?redirect=/checkout"
-            className="font-bold uppercase tracking-wider text-xs text-gray-400 hover:text-white transition-colors"
+            className="text-[13px] md:text-[14px] font-medium hover:opacity-70 transition-opacity"
           >
-            Log In
+            Sign In
           </Link>
         </div>
       </div>

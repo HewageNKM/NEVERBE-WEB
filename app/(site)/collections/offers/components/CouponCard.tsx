@@ -1,10 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import { Coupon } from "@/interfaces/BagItem";
-// Icons can be imported from tabler-icons-react or similar if available, using simple text/svg for now if not sure about library
 import { motion } from "framer-motion";
 import CountdownTimer from "@/components/CountdownTimer";
+import { Coupon } from "@/interfaces/Coupon";
 
 interface Props {
   coupon: Coupon;
@@ -21,37 +20,36 @@ const CouponCard: React.FC<Props> = ({ coupon }) => {
 
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.95 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      className="relative flex flex-col md:flex-row bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow group"
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      className="relative flex flex-col md:flex-row bg-white border border-gray-100 hover:border-gray-200 transition-all group overflow-hidden"
     >
-      {/* Left Decoration / Discount Value */}
-      <div className="bg-black text-white p-6 flex flex-col items-center justify-center w-full md:w-auto md:min-w-[120px] text-center border-b md:border-b-0 md:border-r border-dashed border-gray-600 relative">
-        <div className="text-3xl font-black tracking-tighter">
+      {/* Visual Header / Discount */}
+      <div className="bg-[#f5f5f5] p-8 flex flex-col items-start justify-center md:min-w-[160px]">
+        <div className="text-[32px] font-medium tracking-tight text-[#111] leading-none">
           {coupon.discountType === "PERCENTAGE"
             ? `${coupon.discountValue}%`
             : coupon.discountType === "FIXED"
-            ? `Rs.${coupon.discountValue}`
+            ? `Rs.${coupon.discountValue.toLocaleString()}`
             : "FREE"}
         </div>
-        <div className="text-[10px] font-bold uppercase tracking-widest mt-1 opacity-80">
+        <div className="text-[14px] font-medium text-[#707072] mt-1">
           {coupon.discountType === "FREE_SHIPPING" ? "Shipping" : "OFF"}
         </div>
-
-        {/* Semi-circle cutouts simulates perforated ticket */}
-        <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 md:top-1/2 md:-right-3 md:left-auto md:translate-x-0 md:-translate-y-1/2 w-6 h-6 bg-white rounded-full"></div>
       </div>
 
-      {/* Right Content */}
-      <div className="flex-1 p-6 flex flex-col justify-between">
+      {/* Content Section */}
+      <div className="flex-1 p-8 flex flex-col justify-between">
         <div>
-          <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
-            <span className="inline-block px-2 py-1 bg-gray-100 text-[10px] font-bold uppercase tracking-wider text-gray-600 rounded">
+          <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
+            <span className="bg-[#111] text-white text-[11px] font-bold px-3 py-1 rounded-full uppercase tracking-widest">
               {coupon.code.toUpperCase()}
             </span>
             {coupon.endDate && (
-              <div className="text-[10px] text-red-500 font-bold uppercase flex items-center gap-1 whitespace-nowrap">
-                <span>Expires: </span>
+              <div className="text-[12px] text-[#b22222] font-medium flex items-center gap-1">
+                <span className="w-1.5 h-1.5 bg-[#b22222] rounded-full animate-pulse" />
+                <span>Ends In: </span>
                 <CountdownTimer
                   targetDate={
                     typeof coupon.endDate === "string"
@@ -61,35 +59,39 @@ const CouponCard: React.FC<Props> = ({ coupon }) => {
                       : new Date(coupon.endDate as any).toISOString()
                   }
                   labels={false}
-                  className="text-red-500"
+                  className="font-bold"
                 />
               </div>
             )}
           </div>
-          <p className="text-sm text-gray-500 leading-snug">
-            {coupon.description || "Apply this coupon at checkout to save."}
-          </p>
 
-          {/* Conditions */}
-          <div className="mt-3 text-xs text-gray-400 space-y-1">
+          <h3 className="text-[18px] font-medium text-[#111] mb-2 tracking-tight">
+            {coupon.description || "Exclusive Member Offer"}
+          </h3>
+
+          <div className="space-y-1">
             {!!coupon.minOrderAmount && coupon.minOrderAmount > 0 && (
-              <div>
-                • Min Order: Rs. {coupon.minOrderAmount.toLocaleString()}
-              </div>
+              <p className="text-[13px] text-[#707072]">
+                Min. Order: Rs. {coupon.minOrderAmount.toLocaleString()}
+              </p>
             )}
-            {coupon.firstOrderOnly && <div>• Verified First Order Only</div>}
+            {coupon.firstOrderOnly && (
+              <p className="text-[13px] text-[#707072]">
+                Verified First Order Only
+              </p>
+            )}
           </div>
         </div>
 
         <button
           onClick={handleCopy}
-          className={`mt-4 w-full py-2.5 px-4 text-xs font-bold uppercase tracking-widest transition-colors rounded ${
+          className={`mt-6 w-full md:w-fit px-10 py-3 rounded-full text-[14px] font-medium transition-all active:scale-[0.98] ${
             copied
-              ? "bg-green-600 text-white"
-              : "bg-black text-white hover:bg-gray-800"
+              ? "bg-[#111] text-white opacity-80"
+              : "bg-[#111] text-white hover:opacity-70"
           }`}
         >
-          {copied ? "Copied!" : "Copy Code"}
+          {copied ? "Code Copied" : "Copy Code"}
         </button>
       </div>
     </motion.div>

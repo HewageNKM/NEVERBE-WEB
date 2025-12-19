@@ -10,7 +10,6 @@ import {
 } from "react-icons/io5";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import useCoupon from "@/hooks/useCoupon";
-
 import confetti from "canvas-confetti";
 
 interface CouponInputProps {
@@ -31,19 +30,18 @@ const CouponInput: React.FC<CouponInputProps> = ({
     hasComboItems,
   } = useCoupon({ autoValidate: false, debounceMs: 600 });
 
-  // Confetti Effect
+  // Confetti Effect (Nike style monochrome)
   useEffect(() => {
     if (couponState.isApplied) {
       confetti({
         particleCount: 100,
         spread: 70,
         origin: { y: 0.6 },
-        colors: ["#000000", "#ffffff"], // Black and White confetti
+        colors: ["#111111", "#707072", "#ffffff"],
       });
     }
   }, [couponState.isApplied]);
 
-  // Notify parent of discount changes
   useEffect(() => {
     if (onDiscountChange) {
       onDiscountChange(couponState.discount);
@@ -53,20 +51,20 @@ const CouponInput: React.FC<CouponInputProps> = ({
   const getMessageIcon = () => {
     switch (couponState.messageType) {
       case "success":
-        return <IoCheckmarkCircle className="text-green-500" size={16} />;
+        return <IoCheckmarkCircle className="text-green-600" size={16} />;
       case "error":
-        return <IoCloseCircle className="text-red-500" size={16} />;
+        return <IoCloseCircle className="text-[#b22222]" size={16} />;
       case "info":
         return couponState.isValidating ? (
           <AiOutlineLoading3Quarters
-            className="text-gray-400 animate-spin"
+            className="text-[#707072] animate-spin"
             size={14}
           />
         ) : (
-          <IoInformationCircle className="text-blue-500" size={16} />
+          <IoInformationCircle className="text-blue-600" size={16} />
         );
       case "restricted":
-        return <IoLockClosed className="text-amber-500" size={16} />;
+        return <IoLockClosed className="text-[#d97706]" size={16} />;
       default:
         return null;
     }
@@ -75,31 +73,31 @@ const CouponInput: React.FC<CouponInputProps> = ({
   const getMessageColor = () => {
     switch (couponState.messageType) {
       case "success":
-        return "text-green-600";
+        return "text-green-700";
       case "error":
-        return "text-red-500";
+        return "text-[#b22222]";
       case "info":
-        return "text-gray-500";
+        return "text-[#707072]";
       case "restricted":
-        return "text-amber-600";
+        return "text-[#d97706]";
       default:
-        return "text-gray-500";
+        return "text-[#707072]";
     }
   };
 
   return (
     <div className={`${className}`}>
-      {/* Blocked State Message */}
+      {/* Blocked State Message - Nike Style Utility Alert */}
       {isBlocked && hasComboItems && (
         <motion.div
-          initial={{ opacity: 0, y: -5 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-3 p-3 bg-amber-50 border border-amber-200 rounded-sm flex items-center gap-2"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="mb-4 p-4 bg-[#f5f5f5] flex items-start gap-3"
         >
-          <IoLockClosed className="text-amber-600 shrink-0" size={18} />
-          <p className="text-xs font-medium text-amber-800">
-            Coupons cannot be combined with combo deals. Remove combo items to
-            use a coupon.
+          <IoLockClosed className="text-[#111] shrink-0 mt-0.5" size={18} />
+          <p className="text-[13px] font-normal text-[#111] leading-relaxed">
+            Promotions are currently disabled. Remove combo items from your bag
+            to apply a coupon.
           </p>
         </motion.div>
       )}
@@ -111,45 +109,34 @@ const CouponInput: React.FC<CouponInputProps> = ({
             type="text"
             value={couponState.code}
             onChange={(e) => setCode(e.target.value)}
-            placeholder={isBlocked ? "Coupons disabled" : "Enter coupon code"}
+            placeholder={isBlocked ? "Promotions locked" : "Promo Code"}
             disabled={couponState.isApplied || isBlocked}
-            className={`w-full h-11 px-4 bg-white border rounded-sm text-sm uppercase font-medium
-              placeholder:normal-case placeholder:text-gray-400
-              focus:outline-none focus:ring-1 transition-all
+            className={`w-full h-12 px-4 bg-white border rounded-[4px] text-[15px] font-normal transition-all
+              placeholder:text-[#707072] focus:outline-none
               ${
                 isBlocked
-                  ? "bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed"
+                  ? "bg-[#f5f5f5] border-transparent text-[#707072] cursor-not-allowed"
                   : couponState.isApplied
-                  ? "bg-green-50 border-green-300 text-green-700"
+                  ? "bg-white border-green-600 text-green-700 font-medium"
                   : couponState.messageType === "error"
-                  ? "border-red-300 focus:ring-red-500 focus:border-red-500"
-                  : couponState.messageType === "restricted"
-                  ? "bg-amber-50 border-amber-300 text-amber-800 focus:ring-amber-500 focus:border-amber-500"
-                  : "border-gray-300 focus:ring-black focus:border-black"
+                  ? "border-[#b22222] focus:border-[#b22222]"
+                  : "border-gray-200 focus:border-black"
               }
-              disabled:cursor-not-allowed
             `}
           />
 
-          {/* Status Icon inside input */}
           {couponState.code && !isBlocked && (
             <div className="absolute right-3 top-1/2 -translate-y-1/2">
               {getMessageIcon()}
             </div>
           )}
-          {isBlocked && (
-            <div className="absolute right-3 top-1/2 -translate-y-1/2">
-              <IoLockClosed className="text-gray-400" size={16} />
-            </div>
-          )}
         </div>
 
-        {/* Action Button */}
+        {/* Action Button - Nike Style Pill */}
         {couponState.isApplied ? (
           <button
             onClick={removeCouponFromCart}
-            className="px-4 h-11 bg-gray-100 text-gray-700 text-xs font-bold uppercase tracking-wide 
-              hover:bg-gray-200 transition-colors rounded-sm min-w-[80px]"
+            className="px-6 h-12 bg-white border border-gray-200 text-[#111] text-[14px] font-medium rounded-full hover:border-black transition-all"
           >
             Remove
           </button>
@@ -159,11 +146,7 @@ const CouponInput: React.FC<CouponInputProps> = ({
             disabled={
               !couponState.code || couponState.isValidating || isBlocked
             }
-            className={`px-4 h-11 text-xs font-bold uppercase tracking-wide 
-              transition-all rounded-sm min-w-[80px]
-              bg-black text-white hover:bg-gray-800
-              disabled:bg-gray-300 disabled:cursor-not-allowed
-            `}
+            className="px-8 h-12 bg-[#111] text-white text-[14px] font-medium rounded-full hover:opacity-70 disabled:bg-[#f5f5f5] disabled:text-[#707072] disabled:cursor-not-allowed transition-all"
           >
             {couponState.isValidating ? "..." : "Apply"}
           </button>
@@ -174,50 +157,38 @@ const CouponInput: React.FC<CouponInputProps> = ({
       <AnimatePresence mode="wait">
         {couponState.message && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.2 }}
-            className="overflow-hidden"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className={`flex items-center gap-2 mt-3 text-[13px] font-medium ${getMessageColor()}`}
           >
-            <div
-              className={`flex items-center gap-1.5 mt-2 text-xs font-medium ${getMessageColor()}`}
-            >
-              {getMessageIcon()}
-              <span>{couponState.message}</span>
-            </div>
+            {getMessageIcon()}
+            <span>{couponState.message}</span>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Real-time Condition Feedback */}
+      {/* Real-time Condition Feedback - Technical Progress UI */}
       <AnimatePresence>
         {couponState.conditionFeedback &&
           couponState.conditionFeedback.length > 0 && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              className="mt-3 space-y-2"
-            >
+            <div className="mt-4 space-y-2">
               {couponState.conditionFeedback.map((condition, index) => (
                 <motion.div
                   key={condition.type}
-                  initial={{ opacity: 0, x: -10 }}
+                  initial={{ opacity: 0, x: -5 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.05 }}
-                  className={`flex items-center gap-2 text-[11px] font-medium px-3 py-2 rounded-sm ${
+                  className={`flex items-center justify-between gap-4 text-[12px] font-normal px-4 py-3 border rounded-[4px] ${
                     condition.met
-                      ? "bg-green-50 text-green-700 border border-green-200"
-                      : "bg-amber-50 text-amber-700 border border-amber-200"
+                      ? "bg-white border-green-100 text-green-700"
+                      : "bg-white border-gray-100 text-[#111]"
                   }`}
                 >
-                  <span>{condition.message}</span>
-                  {/* Progress bar for min amount/quantity */}
+                  <span className="flex-1">{condition.message}</span>
                   {!condition.met &&
                     condition.current !== undefined &&
                     condition.required !== undefined && (
-                      <div className="flex-1 h-1.5 bg-gray-200 rounded-full overflow-hidden ml-2">
+                      <div className="w-24 h-[2px] bg-gray-100 overflow-hidden">
                         <motion.div
                           initial={{ width: 0 }}
                           animate={{
@@ -226,73 +197,47 @@ const CouponInput: React.FC<CouponInputProps> = ({
                               100
                             )}%`,
                           }}
-                          transition={{ duration: 0.5 }}
-                          className="h-full bg-amber-500 rounded-full"
+                          className="h-full bg-black"
                         />
                       </div>
                     )}
+                  {condition.met && (
+                    <IoCheckmarkCircle size={14} className="text-green-600" />
+                  )}
                 </motion.div>
               ))}
-            </motion.div>
+            </div>
           )}
       </AnimatePresence>
 
-      {/* Coupon Details (when valid) */}
+      {/* Applied / Valid Details - Nike Summary Look */}
       <AnimatePresence>
-        {couponState.couponDetails &&
-          couponState.messageType === "success" &&
-          !couponState.isApplied && (
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className="mt-3 p-3 bg-green-50 border border-green-200 rounded-sm"
-            >
-              <div className="flex justify-between items-center">
-                <div>
-                  <p className="text-xs font-bold text-green-800 uppercase">
-                    {couponState.couponDetails.name ||
-                      couponState.couponDetails.code}
-                  </p>
-                  {couponState.couponDetails.description && (
-                    <p className="text-[11px] text-green-600 mt-0.5">
-                      {couponState.couponDetails.description}
-                    </p>
-                  )}
-                </div>
-                <div className="text-right">
-                  <p className="text-lg font-black text-green-700">
-                    -Rs. {couponState.discount.toLocaleString()}
-                  </p>
-                </div>
-              </div>
-            </motion.div>
-          )}
-      </AnimatePresence>
-
-      {/* Applied Badge */}
-      {couponState.isApplied && (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="mt-3 p-3 bg-green-50 border border-green-300 rounded-sm"
-        >
-          <div className="flex justify-between items-center">
-            <div className="flex items-center gap-2">
-              <IoCheckmarkCircle className="text-green-600" size={20} />
+        {(couponState.isApplied ||
+          (couponState.couponDetails &&
+            couponState.messageType === "success")) && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mt-6 pt-6 border-t border-gray-100"
+          >
+            <div className="flex justify-between items-start">
               <div>
-                <p className="text-xs font-bold text-green-800 uppercase tracking-wide">
-                  Coupon Applied
+                <p className="text-[14px] font-medium text-[#111] uppercase tracking-tight">
+                  {couponState.isApplied ? "Promo Applied" : "Code Eligible"}
                 </p>
-                <p className="text-[10px] text-green-600">{couponState.code}</p>
+                <p className="text-[13px] text-[#707072] mt-0.5">
+                  {couponState.code}
+                </p>
+              </div>
+              <div className="text-right">
+                <p className="text-[18px] font-medium text-green-700">
+                  -Rs. {couponState.discount.toLocaleString()}
+                </p>
               </div>
             </div>
-            <p className="text-xl font-black text-green-700">
-              -Rs. {couponState.discount.toLocaleString()}
-            </p>
-          </div>
-        </motion.div>
-      )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

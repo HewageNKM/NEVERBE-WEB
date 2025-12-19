@@ -8,23 +8,20 @@ import { useFilterData } from "@/hooks/useFilterData";
 import { AVAILABLE_SIZES } from "@/constants/filters";
 
 interface PopUpFilterPanelProps {
-  // Current filter state
   selectedBrands: string[];
   selectedCategories: string[];
   selectedSizes: string[];
   inStock: boolean;
-  // Callbacks
   onBrandToggle: (brand: string) => void;
   onCategoryToggle: (category: string) => void;
   onSizeToggle: (size: string) => void;
   onInStockChange: (value: boolean) => void;
   onReset: () => void;
   onClose: () => void;
-  // Options
   showCategories?: boolean;
 }
 
-const FilterGroup = ({
+const FilterList = ({
   title,
   items,
   selected,
@@ -35,22 +32,34 @@ const FilterGroup = ({
   selected: string[];
   onToggle: (label: string) => void;
 }) => (
-  <div className="mb-8">
-    <h3 className="font-bold text-lg mb-4">{title}</h3>
-    <div className="flex flex-wrap gap-2">
+  <div className="py-8 border-t border-gray-100">
+    <h3 className="text-[18px] font-medium text-[#111] tracking-tight mb-6">
+      {title}
+    </h3>
+    <div className="flex flex-col gap-5">
       {items.map((item, i) => {
         const isActive = selected.includes(item.label?.toLowerCase());
         return (
           <button
             key={i}
             onClick={() => onToggle(item.label)}
-            className={`px-4 py-2 rounded-full text-sm font-medium border transition-all ${
-              isActive
-                ? "bg-black text-white border-black"
-                : "bg-white text-gray-700 border-gray-300 hover:border-gray-800"
-            }`}
+            className="flex items-center gap-4 group text-left"
           >
-            {item.label}
+            {/* Minimalist Nike Checkbox */}
+            <div
+              className={`w-6 h-6 border rounded-[4px] flex items-center justify-center transition-all ${
+                isActive ? "bg-black border-black" : "border-gray-300"
+              }`}
+            >
+              {isActive && <div className="w-2 h-2 bg-white rounded-full" />}
+            </div>
+            <span
+              className={`text-[16px] ${
+                isActive ? "text-[#111] font-medium" : "text-[#111]"
+              }`}
+            >
+              {item.label}
+            </span>
           </button>
         );
       })}
@@ -74,46 +83,54 @@ const PopUpFilterPanel: React.FC<PopUpFilterPanelProps> = ({
   const { brands, categories } = useFilterData(showCategories);
 
   return (
-    <DropShadow containerStyle="flex justify-end">
+    <DropShadow variant="light" containerStyle="flex justify-end">
       <motion.aside
         initial={{ x: "100%" }}
         animate={{ x: 0 }}
         exit={{ x: "100%" }}
-        transition={{ type: "tween", duration: 0.3 }}
-        className="bg-white w-full md:w-[400px] h-full overflow-y-auto relative flex flex-col"
+        transition={{ type: "spring", damping: 25, stiffness: 200 }}
+        className="bg-white w-full max-w-[440px] h-full shadow-2xl relative flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
-        <div className="sticky top-0 bg-white z-10 px-6 py-5 border-b border-gray-100 flex justify-between items-center">
-          <h2 className="text-xl font-black uppercase tracking-tight">
-            Filter
+        {/* HEADER: High-end minimalist */}
+        <div className="px-8 py-6 flex justify-between items-center bg-white z-20">
+          <h2 className="text-[20px] font-medium text-[#111] tracking-tight">
+            Filters
           </h2>
-          <button onClick={onClose}>
-            <IoCloseOutline size={28} />
+          <button
+            onClick={onClose}
+            className="p-2 -mr-2 hover:bg-gray-100 rounded-full transition-colors"
+          >
+            <IoCloseOutline size={30} />
           </button>
         </div>
 
-        {/* Body */}
-        <div className="flex-1 p-6">
-          <div className="flex justify-between items-center mb-8 pb-8 border-b border-gray-100">
-            <span className="font-bold text-lg">In Stock Only</span>
+        {/* BODY: Expansive vertical whitespace */}
+        <div className="flex-1 overflow-y-auto px-8 no-scrollbar">
+          {/* In Stock Utility */}
+          <div className="flex justify-between items-center py-8 border-t border-gray-100">
+            <span className="text-[16px] font-normal text-[#111]">
+              In Stock Only
+            </span>
             <ToggleSwitch checked={inStock} onChange={onInStockChange} />
           </div>
 
-          {/* Sizes */}
-          <div className="mb-8 pb-8 border-b border-gray-100">
-            <h3 className="font-bold text-lg mb-4">Sizes</h3>
-            <div className="flex flex-wrap gap-2">
+          {/* SIZES: 3-Column Nike Grid */}
+          <div className="py-8 border-t border-gray-100">
+            <h3 className="text-[18px] font-medium text-[#111] tracking-tight mb-6">
+              Select Size
+            </h3>
+            <div className="grid grid-cols-3 gap-2">
               {AVAILABLE_SIZES.map((size) => {
                 const isActive = selectedSizes.includes(size);
                 return (
                   <button
                     key={size}
                     onClick={() => onSizeToggle(size)}
-                    className={`w-12 h-12 border-2 text-sm font-bold transition-all ${
+                    className={`aspect-square flex items-center justify-center border rounded-[4px] text-[14px] transition-all ${
                       isActive
-                        ? "bg-black text-white border-black"
-                        : "bg-white text-gray-600 border-gray-300 hover:border-black"
+                        ? "bg-black text-white border-black font-medium"
+                        : "bg-white text-[#111] border-gray-200"
                     }`}
                   >
                     {size}
@@ -124,33 +141,36 @@ const PopUpFilterPanel: React.FC<PopUpFilterPanelProps> = ({
           </div>
 
           {showCategories && (
-            <FilterGroup
-              title="Categories"
+            <FilterList
+              title="Shop by Category"
               items={categories}
               selected={selectedCategories}
               onToggle={onCategoryToggle}
             />
           )}
 
-          <FilterGroup
+          <FilterList
             title="Brands"
             items={brands}
             selected={selectedBrands}
             onToggle={onBrandToggle}
           />
+
+          {/* Bottom spacer for sticky footer padding */}
+          <div className="h-10" />
         </div>
 
-        {/* Footer Actions */}
-        <div className="p-6 border-t border-gray-100 bg-gray-50 flex gap-4">
+        {/* FOOTER ACTIONS: Pill-shaped high-contrast buttons */}
+        <div className="p-8 border-t border-gray-100 bg-white flex gap-3">
           <button
             onClick={onReset}
-            className="flex-1 py-3 text-sm font-bold uppercase border border-gray-300 rounded-full hover:bg-white transition"
+            className="flex-1 py-4 text-[15px] font-medium border border-gray-200 rounded-full hover:border-black transition-all"
           >
-            Reset
+            Clear All
           </button>
           <button
             onClick={onClose}
-            className="flex-1 py-3 text-sm font-bold uppercase bg-black text-white rounded-full hover:bg-gray-800 transition"
+            className="flex-1 py-4 text-[15px] font-medium bg-black text-white rounded-full hover:opacity-70 transition-all active:scale-[0.98]"
           >
             Apply
           </button>

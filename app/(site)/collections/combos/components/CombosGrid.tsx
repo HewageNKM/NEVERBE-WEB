@@ -49,7 +49,7 @@ const CombosGrid: React.FC<CombosGridProps> = ({
   return (
     <>
       {/* Combo Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-12">
         {combos.map((combo: any) => (
           <ComboCard key={combo.id} combo={combo} />
         ))}
@@ -57,20 +57,20 @@ const CombosGrid: React.FC<CombosGridProps> = ({
 
       {/* Pagination Controls */}
       {totalPages > 1 && (
-        <div className="flex flex-col items-center mt-12 pt-8 border-t border-gray-100">
-          <div className="flex items-center gap-2">
+        <div className="flex flex-col items-center mt-20 pt-12 border-t border-gray-100">
+          <div className="flex items-center gap-4">
             {/* Previous Button */}
             <button
               onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1} // Client-side check, mostly visual
-              className="flex items-center gap-1 px-4 py-2 border text-sm font-bold uppercase tracking-wider transition-colors disabled:opacity-30 disabled:cursor-not-allowed border-gray-300 hover:border-black"
+              disabled={currentPage === 1}
+              className="flex items-center gap-2 px-6 py-2 text-[14px] font-medium text-[#111] hover:text-[#707072] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
             >
-              <IoChevronBack size={16} />
-              Prev
+              <IoChevronBack size={18} />
+              Previous
             </button>
 
             {/* Page Numbers */}
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-2">
               {getPageNumbers().map((page, idx) => {
                 if (page === "...") {
                   return (
@@ -87,10 +87,10 @@ const CombosGrid: React.FC<CombosGridProps> = ({
                   <button
                     key={pageNum}
                     onClick={() => handlePageChange(pageNum)}
-                    className={`w-10 h-10 flex items-center justify-center text-sm font-bold transition-colors ${
+                    className={`min-w-[32px] h-8 flex items-center justify-center text-[14px] font-medium rounded-sm transition-colors ${
                       currentPage === pageNum
-                        ? "bg-black text-white"
-                        : "border border-gray-300 hover:border-black"
+                        ? "bg-[#111] text-white"
+                        : "bg-transparent text-[#707072] hover:text-[#111]"
                     }`}
                   >
                     {pageNum}
@@ -103,17 +103,12 @@ const CombosGrid: React.FC<CombosGridProps> = ({
             <button
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
-              className="flex items-center gap-1 px-4 py-2 border text-sm font-bold uppercase tracking-wider transition-colors disabled:opacity-30 disabled:cursor-not-allowed border-gray-300 hover:border-black"
+              className="flex items-center gap-2 px-6 py-2 text-[14px] font-medium text-[#111] hover:text-[#707072] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
             >
               Next
-              <IoChevronForward size={16} />
+              <IoChevronForward size={18} />
             </button>
           </div>
-
-          {/* Page Info */}
-          <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mt-4">
-            Page {currentPage} of {totalPages}
-          </p>
         </div>
       )}
     </>
