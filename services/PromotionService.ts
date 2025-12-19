@@ -528,8 +528,10 @@ export const getActivePromotions = async () => {
     const now = new Date();
     const snapshot = await adminFirestore
       .collection(PROMOTIONS_COLLECTION)
-      .where("status", "==", "ACTIVE")
+      .where("isActive", "==", true)
       .where("isDeleted", "!=", true)
+      .where("endDate", ">=", now)
+      .where("startDate", "<=", now)
       .get();
 
     const promotions = snapshot.docs
@@ -570,8 +572,10 @@ export const getActiveCoupons = async () => {
     const now = new Date();
     const snapshot = await adminFirestore
       .collection(COUPONS_COLLECTION)
-      .where("status", "==", "ACTIVE")
+      .where("isActive", "==", true)
       .where("isDeleted", "!=", true)
+      .where("endDate", ">=", now)
+      .where("startDate", "<=", now)
       .get();
 
     const coupons = snapshot.docs
@@ -617,7 +621,7 @@ export const getActiveCombos = async () => {
   try {
     const snapshot = await adminFirestore
       .collection("combo_products")
-      .where("status", "==", "ACTIVE")
+      .where("isActive", "==", true)
       .where("isDeleted", "!=", true)
       .get();
     return snapshot.docs.map((doc) =>
