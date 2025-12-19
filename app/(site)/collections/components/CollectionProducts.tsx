@@ -4,7 +4,7 @@ import ItemCard from "@/components/ItemCard";
 import EmptyState from "@/components/EmptyState";
 import ComponentLoader from "@/components/ComponentLoader";
 import CollectionFilter from "./CollectionFilter";
-import Pagination from "@mui/material/Pagination";
+import Pagination from "@/components/Pagination";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
 import { IoChevronDownOutline, IoOptionsOutline } from "react-icons/io5";
@@ -221,17 +221,9 @@ const CollectionProducts = ({
         {/* --- Pagination --- */}
         <div className="flex justify-center mt-16">
           <Pagination
-            shape="rounded"
             page={page}
             count={Math.ceil(totalProducts / size) || 1}
-            onChange={(event, value) => dispatch(setPage(value))}
-            sx={{
-              "& .MuiPaginationItem-root": {
-                fontFamily: "var(--font-display)",
-                fontWeight: "bold",
-                "&.Mui-selected": { backgroundColor: "black", color: "white" },
-              },
-            }}
+            onChange={(value) => dispatch(setPage(value))}
           />
         </div>
       </div>

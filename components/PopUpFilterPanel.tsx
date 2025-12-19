@@ -2,7 +2,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { IoCloseOutline } from "react-icons/io5";
-import { Switch } from "@mui/material";
+import ToggleSwitch from "@/components/ToggleSwitch";
 import DropShadow from "@/components/DropShadow";
 import { useFilterData } from "@/hooks/useFilterData";
 import { AVAILABLE_SIZES } from "@/constants/filters";
@@ -97,11 +97,7 @@ const PopUpFilterPanel: React.FC<PopUpFilterPanelProps> = ({
         <div className="flex-1 p-6">
           <div className="flex justify-between items-center mb-8 pb-8 border-b border-gray-100">
             <span className="font-bold text-lg">In Stock Only</span>
-            <Switch
-              checked={inStock}
-              onChange={(e) => onInStockChange(e.target.checked)}
-              color="default"
-            />
+            <ToggleSwitch checked={inStock} onChange={onInStockChange} />
           </div>
 
           {/* Sizes */}

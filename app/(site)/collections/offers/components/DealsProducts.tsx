@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import Pagination from "@mui/material/Pagination";
+import Pagination from "@/components/Pagination";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
 import ItemCard from "@/components/ItemCard";
@@ -174,16 +174,7 @@ const DealsProducts = ({ items }: { items: Product[] }) => {
           <Pagination
             count={Math.ceil(totalProducts / size)}
             page={page}
-            shape="rounded"
-            size="large"
-            onChange={(e, v) => dispatch(setPage(v))}
-            sx={{
-              "& .MuiPaginationItem-root": {
-                fontFamily: "var(--font-display)",
-                fontWeight: "bold",
-                "&.Mui-selected": { backgroundColor: "black", color: "white" },
-              },
-            }}
+            onChange={(v) => dispatch(setPage(v))}
           />
         </div>
       </div>

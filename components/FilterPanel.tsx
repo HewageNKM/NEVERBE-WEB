@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Switch } from "@mui/material";
+import ToggleSwitch from "@/components/ToggleSwitch";
 import { IoCheckbox, IoSquareOutline } from "react-icons/io5";
 import { useFilterData } from "@/hooks/useFilterData";
 import { AVAILABLE_SIZES } from "@/constants/filters";
@@ -100,10 +100,9 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
       {/* In Stock */}
       <div className="flex justify-between items-center pb-6">
         <span className="text-sm font-bold uppercase">In Stock Only</span>
-        <Switch
+        <ToggleSwitch
           checked={inStock}
-          onChange={(e) => onInStockChange(e.target.checked)}
-          color="default"
+          onChange={onInStockChange}
           size="small"
         />
       </div>
