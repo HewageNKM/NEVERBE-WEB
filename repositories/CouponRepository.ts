@@ -55,7 +55,7 @@ export class CouponRepository extends BaseRepository<Coupon> {
   async findByCode(code: string): Promise<Coupon | null> {
     const snapshot = await this.collection
       .where("code", "==", code)
-      .where("isDeleted", "!=", true)
+      .where("isDeleted", "==", false)
       .limit(1)
       .get();
 
@@ -71,7 +71,7 @@ export class CouponRepository extends BaseRepository<Coupon> {
 
     const snapshot = await this.collection
       .where("isActive", "==", true)
-      .where("isDeleted", "!=", true)
+      .where("isDeleted", "==", false)
       .where("endDate", ">=", now)
       .where("startDate", "<=", now)
       .get();
@@ -108,7 +108,6 @@ export class CouponRepository extends BaseRepository<Coupon> {
     const snapshot = await this.collection.firestore
       .collection("orders")
       .where("userId", "==", userId)
-      .where("status", "!=", "CANCELLED")
       .limit(1)
       .get();
 

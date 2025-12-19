@@ -2,8 +2,8 @@ import { couponRepository } from "@/repositories/CouponRepository";
 import { comboRepository } from "@/repositories/ComboRepository";
 import { promotionRepository } from "@/repositories/PromotionRepository";
 import { adminFirestore } from "@/firebase/firebaseAdmin";
-import { Coupon, Promotion, ProductVariantTarget } from "@/interfaces/BagItem";
 import { Timestamp } from "firebase-admin/firestore";
+import { Coupon } from "@/interfaces/Coupon";
 
 /**
  * PromotionService - Business logic for promotions, coupons, and combos
@@ -65,7 +65,7 @@ export const validateCoupon = async (
   }
 
   // 1. Status Check
-  if (coupon.status !== "ACTIVE") {
+  if (!coupon.isActive) {
     return { valid: false, discount: 0, message: "Coupon is not active" };
   }
 

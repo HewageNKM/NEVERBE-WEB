@@ -334,6 +334,7 @@ export const useCoupon = (options: UseCouponOptions = {}): UseCouponReturn => {
       message: "Coupon removed",
       messageType: "info",
       couponDetails: null,
+      conditionFeedback: null,
       isRestricted: false,
       restrictionReason: null,
     }));

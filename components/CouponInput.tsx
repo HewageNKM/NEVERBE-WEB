@@ -29,7 +29,7 @@ const CouponInput: React.FC<CouponInputProps> = ({
     removeCouponFromCart,
     isBlocked,
     hasComboItems,
-  } = useCoupon({ autoValidate: true, debounceMs: 600 });
+  } = useCoupon({ autoValidate: false, debounceMs: 600 });
 
   // Confetti Effect
   useEffect(() => {
