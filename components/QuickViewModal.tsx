@@ -13,6 +13,7 @@ import { Product } from "@/interfaces/Product";
 import { ProductVariant } from "@/interfaces/ProductVariant";
 import { usePromotionsContext } from "@/components/PromotionsProvider";
 import { calculateFinalPrice } from "@/utils/pricing";
+import SizeGrid from "@/components/SizeGrid";
 
 interface QuickViewModalProps {
   isOpen: boolean;
@@ -230,28 +231,13 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
                   <p className="text-[16px] font-medium mb-4 text-[#111]">
                     Select Size
                   </p>
-                  <div className="grid grid-cols-3 gap-2">
-                    {selectedVariant?.sizes.map((size) => {
-                      const stockQty = sizeStock[size];
-                      const isOOS = stockQty !== undefined && stockQty <= 0;
-                      return (
-                        <button
-                          key={size}
-                          disabled={isOOS || stockLoading}
-                          onClick={() => setSelectedSize(size)}
-                          className={`h-11 md:h-12 border rounded-[4px] text-[13px] md:text-[14px] transition-all flex items-center justify-center ${
-                            selectedSize === size
-                              ? "border-black border-[1.5px] bg-black text-white"
-                              : isOOS
-                              ? "bg-[#f7f7f7] border-transparent text-[#ccc] cursor-not-allowed"
-                              : "border-gray-200 text-black hover:border-black"
-                          }`}
-                        >
-                          {size}
-                        </button>
-                      );
-                    })}
-                  </div>
+                  <SizeGrid
+                    sizes={selectedVariant?.sizes || []}
+                    selectedSize={selectedSize}
+                    onSelectSize={setSelectedSize}
+                    stockMap={sizeStock}
+                    stockLoading={stockLoading}
+                  />
                 </div>
 
                 {/* Quantity */}

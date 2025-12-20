@@ -638,7 +638,7 @@ const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
 
               {/* Size Grid */}
               {activeVariant?.sizes && activeVariant.sizes.length > 0 ? (
-                <div className="grid grid-cols-4 gap-2">
+                <div className="grid grid-cols-3 gap-2">
                   {activeVariant.sizes.map((size) => {
                     const stockInfo = getStockForSize(
                       activeSlot.slotId,
@@ -656,15 +656,15 @@ const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
                         }
                         disabled={isOutOfStock || stockInfo.loading}
                         className={`
-                                        py-3 text-sm font-bold uppercase transition-all relative border
-                                        ${
-                                          isSelected
-                                            ? "bg-black text-white border-black"
-                                            : isOutOfStock
-                                            ? "bg-gray-100 text-gray-300 border-transparent cursor-not-allowed line-through"
-                                            : "bg-white text-black border-gray-200 hover:border-black"
-                                        }
-                                    `}
+                          py-3.5 text-xs font-bold border rounded-md transition-all flex items-center justify-center
+                          ${
+                            isSelected
+                              ? "bg-black text-white border-black"
+                              : isOutOfStock
+                              ? "bg-gray-50 text-gray-300 line-through border-gray-100 cursor-not-allowed"
+                              : "bg-white text-black border-gray-200 hover:border-black"
+                          }
+                        `}
                       >
                         {stockInfo.loading ? "..." : size}
                       </button>

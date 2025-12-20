@@ -24,6 +24,7 @@ import UpsellNudge from "./UpsellNudge";
 import StockBadge from "@/components/StockBadge";
 import ShareButtons from "@/components/ShareButtons";
 import FloatingAddToBag from "@/components/FloatingAddToBag";
+import SizeGrid from "@/components/SizeGrid";
 
 const ProductHero = ({ item }: { item: Product }) => {
   const router = useRouter();
@@ -276,24 +277,13 @@ const ProductHero = ({ item }: { item: Product }) => {
                 Size Guide
               </button>
             </div>
-            <div className="grid grid-cols-3 gap-2">
-              {selectedVariant.sizes.map((size) => (
-                <button
-                  key={size}
-                  disabled={sizeStock[size] === 0}
-                  onClick={() => setSelectedSize(size)}
-                  className={`py-4 text-xs font-bold border rounded-md transition-all ${
-                    selectedSize === size
-                      ? "bg-black text-white border-black"
-                      : sizeStock[size] === 0
-                      ? "bg-gray-50 text-gray-300 line-through border-gray-100"
-                      : "bg-white hover:border-black"
-                  }`}
-                >
-                  {size}
-                </button>
-              ))}
-            </div>
+            <SizeGrid
+              sizes={selectedVariant.sizes}
+              selectedSize={selectedSize}
+              onSelectSize={setSelectedSize}
+              stockMap={sizeStock}
+              stockLoading={stockLoading}
+            />
           </div>
 
           {/* Actions */}

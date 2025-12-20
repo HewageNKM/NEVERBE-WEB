@@ -23,12 +23,12 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items, className = "" }) => {
   return (
     <nav
       aria-label="Breadcrumb"
-      className={`flex items-center gap-2 text-sm text-[#707072] ${className}`}
+      className={`flex items-center gap-1 md:gap-2 text-xs md:text-sm text-[#707072] overflow-x-auto ${className}`}
     >
       {/* Home icon */}
       <Link
         href="/"
-        className="hover:text-[#111] transition-colors flex items-center"
+        className="hover:text-[#111] transition-colors flex items-center min-h-[44px] min-w-[44px] justify-center touch-manipulation shrink-0"
         aria-label="Home"
       >
         <IoHomeOutline size={16} />
@@ -36,16 +36,16 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items, className = "" }) => {
 
       {items.map((item, index) => (
         <React.Fragment key={index}>
-          <IoChevronForward size={12} className="text-gray-300" />
+          <IoChevronForward size={12} className="text-gray-300 shrink-0" />
           {item.href && index < items.length - 1 ? (
             <Link
               href={item.href}
-              className="hover:text-[#111] transition-colors capitalize"
+              className="hover:text-[#111] transition-colors capitalize min-h-[44px] flex items-center px-1 touch-manipulation whitespace-nowrap"
             >
               {item.label}
             </Link>
           ) : (
-            <span className="text-[#111] font-medium capitalize truncate max-w-[200px]">
+            <span className="text-[#111] font-medium capitalize truncate max-w-[150px] md:max-w-[200px] min-h-[44px] flex items-center">
               {item.label}
             </span>
           )}

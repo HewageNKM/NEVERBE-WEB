@@ -3,6 +3,7 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getComboById } from "@/services/PromotionService";
 import ComboHero from "./components/ComboHero";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 // Cache the fetch to dedupe requests
 const getCombo = cache(async (id: string) => {
@@ -75,6 +76,12 @@ const ComboDetailPage = async (context: {
     },
   };
 
+  // Build breadcrumb items
+  const breadcrumbItems = [
+    { label: "Combos", href: "/collections/combos" },
+    { label: combo.name },
+  ];
+
   return (
     <main className="w-full relative bg-white text-black">
       <script
@@ -84,6 +91,10 @@ const ComboDetailPage = async (context: {
 
       {/* Container with Nike-style spacing */}
       <div className="max-w-[1440px] mx-auto pt-[100px] md:pt-[140px] px-6 md:px-12 pb-20">
+        {/* Breadcrumbs Navigation */}
+        <div className="pb-4">
+          <Breadcrumbs items={breadcrumbItems} />
+        </div>
         <ComboHero combo={combo} />
       </div>
     </main>
