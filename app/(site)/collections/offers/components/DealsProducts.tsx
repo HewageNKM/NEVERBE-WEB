@@ -83,7 +83,7 @@ const DealsProducts = ({ items }: { items: Product[] }) => {
 
       <div className="flex-1 w-full">
         {/* 2. Sticky Toolbar: Nike Pro Look */}
-        <div className="sticky top-0 z-30 bg-white/90 backdrop-blur-md py-6 flex justify-between items-center">
+        <div className="bg-white/90 backdrop-blur-md py-6 flex justify-between items-center">
           <h2 className="text-[20px] font-medium text-[#111] tracking-tight">
             Special Offers ({totalProducts})
           </h2>

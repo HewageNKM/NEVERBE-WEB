@@ -112,7 +112,7 @@ const OffersPage = async () => {
               {bannerPromotions.map((promo: any) => (
                 <div
                   key={promo.id}
-                  className="group block relative aspect-[4/5] bg-[#f5f5f5] overflow-hidden cursor-pointer"
+                  className="group block relative aspect-4/5 bg-[#f5f5f5] overflow-hidden cursor-pointer"
                 >
                   <Image
                     src={promo.bannerUrl}
