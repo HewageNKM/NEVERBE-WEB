@@ -40,6 +40,32 @@ html {
   scrollbar-gutter: stable;
 }
 
+/* Custom scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1a1a1a;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #97e13e 0%, #7cab3d 100%);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #a8f04f 0%, #8dc63f 100%);
+}
+
+/* Firefox scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #97e13e #1a1a1a;
+}
+
 /* Hides the recaptcha badge */
 .grecaptcha-badge {
   visibility: hidden;
