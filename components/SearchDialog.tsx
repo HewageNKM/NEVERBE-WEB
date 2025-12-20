@@ -18,6 +18,9 @@ const SearchDialog: React.FC<SearchDialogProps> = ({
   containerStyle,
   maxHeight = "60vh",
 }) => {
+  // Detect if we're in grid mode (desktop search overlay)
+  const isGridMode = containerStyle?.includes("grid");
+
   return (
     <AnimatePresence>
       <motion.div
@@ -25,25 +28,51 @@ const SearchDialog: React.FC<SearchDialogProps> = ({
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: 10 }}
         transition={{ type: "spring", damping: 25, stiffness: 200 }}
-        className={`w-full bg-white text-[#111] shadow-[0_20px_40px_rgba(0,0,0,0.1)] border border-gray-100 overflow-hidden flex flex-col ${
-          containerStyle || "absolute top-14 right-0 lg:w-[600px] z-50"
+        className={`w-full bg-white text-[#111] overflow-hidden flex flex-col ${
+          containerStyle ||
+          "shadow-[0_20px_40px_rgba(0,0,0,0.1)] border border-gray-100 absolute top-14 right-0 lg:w-[600px] z-50"
         }`}
-        style={{ maxHeight }}
+        style={{ maxHeight: isGridMode ? undefined : maxHeight }}
       >
         {results.length > 0 ? (
-          <ul className="flex flex-col overflow-y-auto no-scrollbar">
-            {results.map((result, index) => (
-              <motion.li
-                key={result.id || index}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: index * 0.03 }}
-                className="border-b border-gray-50 last:border-none"
-              >
-                <SearchResultCard item={result} onClick={onClick} />
-              </motion.li>
-            ))}
-          </ul>
+          isGridMode ? (
+            // Grid layout - render cards directly
+            <>
+              {results.map((result, index) => (
+                <motion.div
+                  key={result.id || index}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.02 }}
+                >
+                  <SearchResultCard
+                    item={result}
+                    onClick={onClick}
+                    variant="card"
+                  />
+                </motion.div>
+              ))}
+            </>
+          ) : (
+            // List layout - vertical scrollable list
+            <ul className="flex flex-col overflow-y-auto no-scrollbar">
+              {results.map((result, index) => (
+                <motion.li
+                  key={result.id || index}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: index * 0.03 }}
+                  className="border-b border-gray-50 last:border-none"
+                >
+                  <SearchResultCard
+                    item={result}
+                    onClick={onClick}
+                    variant="list"
+                  />
+                </motion.li>
+              ))}
+            </ul>
+          )
         ) : (
           <div className="flex flex-col items-center justify-center py-16 px-6 text-center">
             <div className="bg-[#f5f5f5] p-5 rounded-full mb-4">

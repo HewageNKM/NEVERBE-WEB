@@ -8,11 +8,13 @@ import { usePromotionsContext } from "@/components/PromotionsProvider";
 interface SearchResultCardProps {
   item: Product;
   onClick: () => void;
+  variant?: "list" | "card"; // 'list' for mobile menu, 'card' for desktop grid
 }
 
 const SearchResultCard: React.FC<SearchResultCardProps> = ({
   item,
   onClick,
+  variant = "list",
 }) => {
   const { getPromotionForProduct } = usePromotionsContext();
   const activePromo = getPromotionForProduct(item.id);
@@ -36,6 +38,66 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({
     }
   }
 
+  const hasDiscount = item.discount > 0 || activePromo;
+
+  // Grid / Card layout for desktop search
+  if (variant === "card") {
+    return (
+      <Link
+        href={`/collections/products/${item.id}`}
+        onClick={onClick}
+        className="group flex flex-col bg-white hover:bg-[#fafafa] transition-all cursor-pointer"
+      >
+        {/* Product Image */}
+        <div className="relative aspect-square bg-[#f6f6f6] overflow-hidden">
+          <Image
+            src={item.thumbnail.url}
+            alt={item.name}
+            fill
+            className="object-cover mix-blend-multiply transition-transform duration-500 group-hover:scale-105"
+          />
+          {/* Promo Badge */}
+          {activePromo && (
+            <span className="absolute top-2 left-2 bg-[#111] text-white text-[9px] font-bold px-1.5 py-0.5 tracking-widest uppercase">
+              {activePromo.type === "BOGO" ? "BOGO" : "Promo"}
+            </span>
+          )}
+          {/* Discount Badge */}
+          {item.discount > 0 && !activePromo && (
+            <span className="absolute top-2 left-2 bg-[#b22222] text-white text-[9px] font-bold px-1.5 py-0.5 tracking-widest uppercase">
+              -{item.discount}%
+            </span>
+          )}
+        </div>
+
+        {/* Product Info */}
+        <div className="p-3">
+          <h3 className="text-[13px] font-medium text-[#111] leading-tight line-clamp-2 group-hover:underline">
+            {item.name}
+          </h3>
+          <p className="text-[11px] text-[#707072] mt-1 capitalize">
+            {item.tags?.[0] || "Footwear"}
+          </p>
+          <div className="flex items-center gap-2 mt-2 flex-wrap">
+            <span
+              className={`text-[13px] font-medium ${
+                hasDiscount ? "text-[#b22222]" : "text-[#111]"
+              }`}
+            >
+              Rs. {finalPrice.toLocaleString()}
+            </span>
+            {hasDiscount && (
+              <span className="text-[11px] text-[#707072] line-through">
+                Rs. {item.sellingPrice.toLocaleString()}
+              </span>
+            )}
+          </div>
+        </div>
+      </Link>
+    );
+  }
+
+  // List layout for mobile menu search
   return (
     <Link
       href={`/collections/products/${item.id}`}
@@ -70,14 +132,12 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({
         <div className="flex items-center gap-2 mt-2">
           <span
             className={`text-[15px] font-medium ${
-              item.discount > 0 || activePromo
-                ? "text-[#b22222]"
-                : "text-[#111]"
+              hasDiscount ? "text-[#b22222]" : "text-[#111]"
             }`}
           >
             Rs. {finalPrice.toLocaleString()}
           </span>
-          {(item.discount > 0 || activePromo) && (
+          {hasDiscount && (
             <span className="text-[13px] text-[#707072] line-through">
               Rs. {item.sellingPrice.toLocaleString()}
             </span>
