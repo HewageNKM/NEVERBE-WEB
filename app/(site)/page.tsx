@@ -5,6 +5,7 @@ import WhyUs from "@/app/(site)/components/WhyUs";
 import PopularProducts from "@/app/(site)/components/PopularProducts";
 import BrandsSlider from "./components/BrandsSlider";
 import PromotionalAds from "./components/PromotionalAds";
+import CustomerReviews from "./components/CustomerReviews";
 
 import { getHotProducts, getRecentItems } from "@/services/ProductService";
 import { getSliders } from "@/services/SlideService";
@@ -164,6 +165,9 @@ const Page = async () => {
 
         {/* A large visual break for Brands */}
         {brands.length > 0 && <BrandsSlider items={brands} />}
+
+        {/* Customer Reviews Section */}
+        <CustomerReviews />
 
         <WhyUs />
         <SEOContent />
