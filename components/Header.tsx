@@ -135,25 +135,19 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
 
           {/* ICONS & SEARCH BAR */}
           <div className="flex items-center gap-2 lg:gap-4">
-            {/* Desktop Nike-style Integrated Search Bar */}
-            <div className="hidden lg:flex items-center bg-[#f5f5f5] rounded-full px-4 py-2 hover:bg-[#e5e5e5] transition-colors group">
-              <IoSearchOutline
-                size={20}
-                className="text-black group-hover:scale-110 transition-transform"
-              />
-              <input
-                onClick={() => setIsSearchOpen(true)}
-                placeholder="Search"
-                className="bg-transparent border-none outline-none pl-3 text-sm w-32 focus:w-48 transition-all duration-300"
-                readOnly
-              />
-            </div>
+            {/* Desktop Search Icon */}
+            <button
+              onClick={() => setIsSearchOpen(true)}
+              className="hidden lg:flex p-2 hover:bg-gray-100 rounded-full transition"
+            >
+              <IoSearchOutline size={26} />
+            </button>
 
             {/* Icons */}
             <div className="flex items-center">
               <Link
                 href="/account/wishlist"
-                className="p-2 hover:bg-gray-100 rounded-full transition lg:block hidden"
+                className="p-2 hover:bg-gray-100 rounded-full transition"
               >
                 <IoHeartOutline size={26} />
               </Link>
