@@ -12,6 +12,7 @@ import { addToBag } from "@/redux/bagSlice/bagSlice";
 import { Product } from "@/interfaces/Product";
 import { ProductVariant } from "@/interfaces/ProductVariant";
 import { usePromotionsContext } from "@/components/PromotionsProvider";
+import { calculateFinalPrice } from "@/utils/pricing";
 
 interface QuickViewModalProps {
   isOpen: boolean;
@@ -80,21 +81,8 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
     selectedVariant?.variantId
   );
 
-  let finalPrice = product.sellingPrice;
-  if (product.discount > 0) {
-    finalPrice =
-      Math.round(
-        (product.sellingPrice -
-          (product.sellingPrice * product.discount) / 100) /
-          10
-      ) * 10;
-  }
-  if (activePromo?.type === "PERCENTAGE" && activePromo.actions?.[0]?.value) {
-    finalPrice =
-      Math.round(
-        (finalPrice * (100 - activePromo.actions[0].value)) / 100 / 10
-      ) * 10;
-  }
+  // Use shared pricing utility
+  const finalPrice = calculateFinalPrice(product, activePromo);
 
   const availableStock = sizeStock[selectedSize] || 0;
   const bagQty =

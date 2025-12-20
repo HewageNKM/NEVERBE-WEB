@@ -21,7 +21,7 @@ import {
   calculateSubTotal,
   calculateTotal,
   calculateTotalDiscount,
-} from "@/util";
+} from "@/utils/bagCalculations";
 import { BagItem } from "@/interfaces/BagItem";
 import Image from "next/image";
 import usePromotions from "@/hooks/usePromotions";

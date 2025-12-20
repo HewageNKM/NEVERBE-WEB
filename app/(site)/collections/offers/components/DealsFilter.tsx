@@ -9,34 +9,22 @@ import {
 } from "@/redux/dealsSlice/dealsSlice";
 import { AppDispatch, RootState } from "@/redux/store";
 import FilterPanel from "@/components/FilterPanel";
+import { useFilterToggles } from "@/hooks/useFilterToggles";
 
 const DealsFilter = () => {
   const dispatch: AppDispatch = useDispatch();
   const { selectedBrands, selectedCategories, selectedSizes, inStock } =
     useSelector((state: RootState) => state.dealsSlice);
 
-  const toggleBrand = (value: string) => {
-    const lowerValue = value.toLowerCase();
-    const newBrands = selectedBrands.includes(lowerValue)
-      ? selectedBrands.filter((b) => b !== lowerValue)
-      : [...selectedBrands, lowerValue];
-    dispatch(setSelectedBrand(newBrands.slice(0, 5)));
-  };
-
-  const toggleCategory = (value: string) => {
-    const lowerValue = value.toLowerCase();
-    const newCats = selectedCategories.includes(lowerValue)
-      ? selectedCategories.filter((c) => c !== lowerValue)
-      : [...selectedCategories, lowerValue];
-    dispatch(setSelectedCategories(newCats.slice(0, 5)));
-  };
-
-  const toggleSize = (size: string) => {
-    const newSizes = selectedSizes.includes(size)
-      ? selectedSizes.filter((s) => s !== size)
-      : [...selectedSizes, size];
-    dispatch(setSelectedSizes(newSizes));
-  };
+  // Use shared filter toggle hooks
+  const { toggleBrand, toggleCategory, toggleSize } = useFilterToggles(
+    selectedBrands,
+    selectedCategories,
+    selectedSizes,
+    setSelectedBrand,
+    setSelectedCategories,
+    setSelectedSizes
+  );
 
   return (
     <FilterPanel

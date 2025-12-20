@@ -1,33 +1,9 @@
 "use client";
-import ItemCard from "@/components/ItemCard";
-import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
+import ProductSlider from "@/components/ProductSlider";
+import { Product } from "@/interfaces/Product";
 
-const PopularProducts = ({ hotItems }: { hotItems: any[] }) => {
-  return (
-    <section className="w-full max-w-[1440px] mx-auto px-4 md:px-8">
-      <div className="flex justify-between items-end mb-8">
-        <h2 className="text-2xl md:text-3xl font-black uppercase tracking-tight">
-          Popular Right Now
-        </h2>
-      </div>
-
-      <Swiper
-        spaceBetween={20}
-        slidesPerView={1.5} // Shows part of next slide to encourage scroll
-        breakpoints={{
-          640: { slidesPerView: 2.2 },
-          1024: { slidesPerView: 4.2 },
-        }}
-        className="!pb-10"
-      >
-        {hotItems.map((item, index) => (
-          <SwiperSlide key={item.id}>
-            <ItemCard item={item} priority={index < 4} />
-          </SwiperSlide>
-        ))}
-      </Swiper>
-    </section>
-  );
+const PopularProducts = ({ hotItems }: { hotItems: Product[] }) => {
+  return <ProductSlider title="Popular Right Now" items={hotItems} />;
 };
+
 export default PopularProducts;

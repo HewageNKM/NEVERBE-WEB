@@ -4,6 +4,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { Product } from "@/interfaces/Product";
 import { usePromotionsContext } from "@/components/PromotionsProvider";
+import {
+  calculateFinalPrice,
+  hasDiscount as checkHasDiscount,
+} from "@/utils/pricing";
 
 interface SearchResultCardProps {
   item: Product;
@@ -19,26 +23,9 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({
   const { getPromotionForProduct } = usePromotionsContext();
   const activePromo = getPromotionForProduct(item.id);
 
-  // Price Calculation (Preserved Logic)
-  let finalPrice =
-    item.discount > 0
-      ? Math.round(
-          (item.sellingPrice - (item.sellingPrice * item.discount) / 100) / 10
-        ) * 10
-      : Math.round(item.sellingPrice);
-
-  if (activePromo?.actions?.[0]?.value) {
-    if (activePromo.type === "PERCENTAGE") {
-      finalPrice =
-        Math.round(
-          (finalPrice * (100 - activePromo.actions[0].value)) / 100 / 10
-        ) * 10;
-    } else if (activePromo.type === "FIXED") {
-      finalPrice = Math.max(0, finalPrice - activePromo.actions[0].value);
-    }
-  }
-
-  const hasDiscount = item.discount > 0 || activePromo;
+  // Use shared pricing utilities
+  const finalPrice = calculateFinalPrice(item, activePromo);
+  const hasDiscount = checkHasDiscount(item, activePromo);
 
   // Grid / Card layout for desktop search
   if (variant === "card") {

@@ -13,7 +13,7 @@ import {
   calculateTotalDiscount,
   calculateTransactionFeeCharge,
   generateOrderId,
-} from "@/util";
+} from "@/utils/bagCalculations";
 import BillingDetails from "./BillingDetails";
 import ShippingDetails from "./ShippingDetails";
 import PaymentDetails from "@/app/(site)/checkout/components/PaymentDetails";

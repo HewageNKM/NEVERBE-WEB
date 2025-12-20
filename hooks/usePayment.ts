@@ -25,7 +25,7 @@ import {
   calculateTotalDiscount,
   calculateTransactionFeeCharge,
   generateOrderId,
-} from "@/util";
+} from "@/utils/bagCalculations";
 
 // Payment method IDs
 const PAYMENT_METHOD_IDS = {

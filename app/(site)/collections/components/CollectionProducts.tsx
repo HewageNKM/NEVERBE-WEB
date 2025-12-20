@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import ItemCard from "@/components/ItemCard";
 import EmptyState from "@/components/EmptyState";
 import ComponentLoader from "@/components/ComponentLoader";
@@ -7,17 +7,18 @@ import CollectionFilter from "./CollectionFilter";
 import Pagination from "@/components/Pagination";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
-import { IoChevronDownOutline, IoOptionsOutline } from "react-icons/io5";
+import { IoOptionsOutline } from "react-icons/io5";
 import {
   setProducts,
   setPage,
   setSelectedSort,
   toggleFilter,
 } from "@/redux/categorySlice/categorySlice";
-import { sortingOptions } from "@/constants";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import { Product } from "@/interfaces/Product";
 import CollectionPopUpFilter from "./CollectionPopUpFilter";
+import { sortProductsByPrice } from "@/utils/formatting";
+import SortDropdown from "@/components/SortDropdown";
 
 // Mapping for dynamic endpoint construction
 interface CollectionProductsProps {
@@ -49,8 +50,6 @@ const CollectionProducts = ({
     showFilter,
   } = useSelector((state: RootState) => state.categorySlice);
 
-  const [openSort, setOpenSort] = useState(false);
-  const sortRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [totalProducts, setTotalProducts] = useState(total);
 
@@ -96,12 +95,8 @@ const CollectionProducts = ({
         const res = await fetch(`${endpoint}?${params}`);
         const data = await res.json();
 
-        // Client Sort fallback
-        let sorted = [...(data.dataList || [])];
-        if (selectedSort === "LOW TO HIGH")
-          sorted.sort((a, b) => a.sellingPrice - b.sellingPrice);
-        if (selectedSort === "HIGH TO LOW")
-          sorted.sort((a, b) => b.sellingPrice - a.sellingPrice);
+        // Use shared sorting utility
+        const sorted = sortProductsByPrice(data.dataList || [], selectedSort);
 
         dispatch(setProducts(sorted));
         setTotalProducts(data.total);
@@ -129,16 +124,6 @@ const CollectionProducts = ({
     brandName,
     dispatch,
   ]);
-
-  // Close Sort
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (sortRef.current && !sortRef.current.contains(e.target as Node))
-        setOpenSort(false);
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
 
   return (
     <section className="w-full max-w-[1920px] mx-auto px-4 md:px-12 pb-20 flex gap-0 bg-white">
@@ -168,47 +153,10 @@ const CollectionProducts = ({
               Filters <IoOptionsOutline size={20} />
             </button>
 
-            <div className="relative" ref={sortRef}>
-              <button
-                onClick={() => setOpenSort(!openSort)}
-                className="flex items-center gap-2 text-[16px] text-[#111] hover:text-[#707072] transition-colors"
-              >
-                Sort By{" "}
-                <IoChevronDownOutline
-                  size={14}
-                  className={`transition-transform ${
-                    openSort ? "rotate-180" : ""
-                  }`}
-                />
-              </button>
-              <AnimatePresence>
-                {openSort && (
-                  <motion.ul
-                    initial={{ opacity: 0, y: 5 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 5 }}
-                    className="absolute right-0 mt-4 w-[200px] bg-white border border-[#e5e5e5] shadow-xl z-50 py-4 rounded-none"
-                  >
-                    {sortingOptions.map((opt, i) => (
-                      <li
-                        key={i}
-                        onClick={() => {
-                          dispatch(setSelectedSort(opt.value));
-                          setOpenSort(false);
-                        }}
-                        className={`px-6 py-2 text-[14px] cursor-pointer text-right transition-colors ${
-                          selectedSort === opt.value
-                            ? "text-[#111] font-medium"
-                            : "text-[#707072] hover:text-[#111]"
-                        }`}
-                      >
-                        {opt.name}
-                      </li>
-                    ))}
-                  </motion.ul>
-                )}
-              </AnimatePresence>
-            </div>
+            <SortDropdown
+              value={selectedSort}
+              onChange={(val) => dispatch(setSelectedSort(val))}
+            />
           </div>
         </div>
 

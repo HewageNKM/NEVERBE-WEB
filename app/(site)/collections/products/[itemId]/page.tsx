@@ -7,6 +7,7 @@ import type { Metadata } from "next";
 import { Product } from "@/interfaces/Product";
 import ProductFAQ from "./components/ProductFAQ";
 import RecentlyViewedTracker from "./components/RecentlyViewedTracker";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 const getProduct = cache(async (id: string): Promise<Product | null> => {
   try {
@@ -101,12 +102,28 @@ const Page = async (context: { params: Promise<{ itemId: string }> }) => {
     },
   };
 
+  // Build breadcrumb items
+  const breadcrumbItems = [
+    { label: "Products", href: "/collections/products" },
+    {
+      label: item.category || "Footwear",
+      href: `/collections/products?category=${encodeURIComponent(
+        item.category || ""
+      )}`,
+    },
+    { label: item.name },
+  ];
+
   return (
     <main className="w-full relative mt-[80px] md:mt-[100px] min-h-screen px-4 md:px-8 bg-white text-black">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
       />
+      {/* Breadcrumbs Navigation */}
+      <div className="max-w-[1440px] mx-auto pt-4 pb-2">
+        <Breadcrumbs items={breadcrumbItems} />
+      </div>
       <ProductHero item={item} />
       <ProductFAQ />
       <SimilarProducts items={similarItems || []} />

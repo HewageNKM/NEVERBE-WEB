@@ -10,6 +10,7 @@ import {
 } from "@/redux/categorySlice/categorySlice";
 import { AppDispatch, RootState } from "@/redux/store";
 import PopUpFilterPanel from "@/components/PopUpFilterPanel";
+import { useFilterToggles } from "@/hooks/useFilterToggles";
 
 const CollectionPopUpFilter = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -17,20 +18,15 @@ const CollectionPopUpFilter = () => {
     (state: RootState) => state.categorySlice
   );
 
-  const toggleBrand = (brand: string) => {
-    const lower = brand.toLowerCase();
-    const newBrands = selectedBrands.includes(lower)
-      ? selectedBrands.filter((b) => b !== lower)
-      : [...selectedBrands, lower];
-    if (newBrands.length <= 5) dispatch(setSelectedBrands(newBrands));
-  };
-
-  const toggleSize = (size: string) => {
-    const newSizes = selectedSizes.includes(size)
-      ? selectedSizes.filter((s) => s !== size)
-      : [...selectedSizes, size];
-    dispatch(setSelectedSizes(newSizes));
-  };
+  // Use shared filter toggle hooks
+  const { toggleBrand, toggleSize } = useFilterToggles(
+    selectedBrands,
+    [], // No categories for collection filter
+    selectedSizes,
+    setSelectedBrands,
+    () => {}, // No category action
+    setSelectedSizes
+  );
 
   return (
     <PopUpFilterPanel

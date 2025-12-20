@@ -21,6 +21,9 @@ import { KOKOLogo } from "@/assets/images";
 import SizeGuideDialog from "@/components/SizeGuideDialog";
 import { usePromotionsContext } from "@/components/PromotionsProvider";
 import UpsellNudge from "./UpsellNudge";
+import StockBadge from "@/components/StockBadge";
+import ShareButtons from "@/components/ShareButtons";
+import FloatingAddToBag from "@/components/FloatingAddToBag";
 
 const ProductHero = ({ item }: { item: Product }) => {
   const router = useRouter();
@@ -206,6 +209,11 @@ const ProductHero = ({ item }: { item: Product }) => {
                   Rs. {item.marketPrice.toLocaleString()}
                 </span>
               )}
+
+              {/* Stock Urgency Badge */}
+              {selectedSize && (
+                <StockBadge stockCount={availableStock} className="mt-2" />
+              )}
             </div>
 
             {/* Value Props Ticker */}
@@ -341,11 +349,23 @@ const ProductHero = ({ item }: { item: Product }) => {
             </div>
           </div>
 
-          {/* WhatsApp / Secondary */}
-          <div className="flex justify-center border-t border-gray-100 pt-6">
+          {/* Share & Help Section */}
+          <div className="flex flex-col gap-4 border-t border-gray-100 pt-6">
+            {/* Social Share Buttons */}
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-bold uppercase text-gray-400">
+                Share
+              </span>
+              <ShareButtons
+                title={item.name}
+                url={`/collections/products/${item.id}`}
+              />
+            </div>
+
+            {/* WhatsApp Specialist */}
             <a
               href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER}`}
-              className="flex items-center gap-2 text-[10px] font-black uppercase text-gray-400 hover:text-green-600"
+              className="flex items-center justify-center gap-2 text-[10px] font-black uppercase text-gray-400 hover:text-green-600"
             >
               <FaWhatsapp size={16} /> Chat with a specialist
             </a>
@@ -355,6 +375,15 @@ const ProductHero = ({ item }: { item: Product }) => {
       <SizeGuideDialog
         isOpen={showSizeGuide}
         onClose={() => setShowSizeGuide(false)}
+      />
+
+      {/* Floating Add to Bag - Mobile/Tablet */}
+      <FloatingAddToBag
+        productName={item.name}
+        price={item.sellingPrice}
+        selectedSize={selectedSize}
+        canAddToBag={!!selectedSize && (sizeStock[selectedSize] ?? 0) > 0}
+        onAddToBag={handleAddToBag}
       />
     </section>
   );

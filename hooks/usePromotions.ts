@@ -5,7 +5,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { applyPromotions, removePromotion } from "@/redux/bagSlice/bagSlice";
 import { BagItem } from "@/interfaces/BagItem";
-import { calculateTotal, calculateTotalDiscount } from "@/util";
+import {
+  calculateTotal,
+  calculateTotalDiscount,
+} from "@/utils/bagCalculations";
 import { ProductVariantTarget } from "@/interfaces/Promotion";
 import {
   checkPromotionEligibility,

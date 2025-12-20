@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
 import { showBag } from "@/redux/bagSlice/bagSlice";
@@ -16,10 +16,9 @@ import Image from "next/image";
 import { Logo } from "@/assets/images";
 import { AnimatePresence, motion } from "framer-motion";
 import SeasonalPromo from "@/app/(site)/components/SeasonalPromo";
-import { getAlgoliaClient } from "@/util";
 import SearchDialog from "@/components/SearchDialog";
-import { ProductVariant } from "@/interfaces/ProductVariant";
 import { NavigationItem } from "@/services/WebsiteService";
+import { useAlgoliaSearch } from "@/hooks/useAlgoliaSearch";
 
 const DEFAULT_NAV_ITEMS: NavigationItem[] = [
   { title: "New Arrivals", link: "/collections/new-arrivals" },
@@ -45,38 +44,18 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
     navItems = [...navItems, { title: "Offers", link: "/collections/offers" }];
   }
 
-  // --- SEARCH LOGIC ---
-  const searchClient = getAlgoliaClient();
-  const [search, setSearch] = useState("");
-  const [items, setItems] = useState([]);
-  const [isSearching, setIsSearching] = useState(false);
-  const [showSearchResult, setShowSearchResult] = useState(false);
+  // Use consolidated Algolia search hook
+  const {
+    query: search,
+    results: items,
+    isSearching,
+    showResults: showSearchResult,
+    search: performSearch,
+    clearSearch,
+  } = useAlgoliaSearch();
 
-  const onSearch = async (evt: React.ChangeEvent<HTMLInputElement>) => {
-    const query = evt.target.value;
-    setSearch(query);
-    if (query.trim().length < 3) {
-      setItems([]);
-      setShowSearchResult(false);
-      return;
-    }
-    setIsSearching(true);
-    try {
-      const searchResults = await searchClient.search({
-        requests: [
-          { indexName: "products_index", query: query.trim(), hitsPerPage: 30 },
-        ],
-      });
-      let filteredResults = searchResults.results[0].hits.filter(
-        (item: any) => item.status && item.listing && !item.isDeleted
-      );
-      setItems(filteredResults);
-      setShowSearchResult(true);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setIsSearching(false);
-    }
+  const onSearch = (evt: React.ChangeEvent<HTMLInputElement>) => {
+    performSearch(evt.target.value);
   };
 
   return (
@@ -181,7 +160,7 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-white z-[100] p-4 lg:p-12 overflow-y-auto"
+              className="fixed inset-0 bg-white z-100 p-4 lg:p-12 overflow-y-auto"
             >
               <div className="max-w-[1440px] mx-auto">
                 <div className="flex justify-between items-center mb-10">
@@ -215,7 +194,7 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
                   <button
                     onClick={() => {
                       setIsSearchOpen(false);
-                      setSearch("");
+                      clearSearch();
                     }}
                     className="p-2 bg-[#f5f5f5] rounded-full hover:bg-gray-200"
                   >
@@ -234,7 +213,7 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
                       results={items}
                       onClick={() => {
                         setIsSearchOpen(false);
-                        setSearch("");
+                        clearSearch();
                       }}
                     />
                   </div>

@@ -13,7 +13,7 @@ import {
   calculateSubTotal,
   calculateTotal,
   calculateTotalDiscount,
-} from "@/util";
+} from "@/utils/bagCalculations";
 import { PaymentMethod } from "@/interfaces";
 import { BagItem } from "@/interfaces/BagItem";
 import PaymentOptions from "./PaymentOptions";

@@ -1,21 +1,20 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   IoSearchOutline,
   IoCloseOutline,
   IoChevronDownOutline,
-  IoChevronUpOutline,
   IoChevronForward,
 } from "react-icons/io5";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";
 import { toggleMenu } from "@/redux/headerSlice/headerSlice";
-import { getAlgoliaClient } from "@/util";
 import SearchDialog from "@/components/SearchDialog";
-import { ProductVariant } from "@/interfaces/ProductVariant";
 import { NavigationItem } from "@/services/WebsiteService";
+import { useAlgoliaSearch } from "@/hooks/useAlgoliaSearch";
+import { useFilterData } from "@/hooks/useFilterData";
 
 const DEFAULT_LINKS: NavigationItem[] = [
   { title: "Home", link: "/" },
@@ -25,73 +24,29 @@ const DEFAULT_LINKS: NavigationItem[] = [
 
 const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
   const dispatch: AppDispatch = useDispatch();
-  const searchClient = getAlgoliaClient();
-  const [search, setSearch] = useState("");
-  const [items, setItems] = useState([]);
-  const [isSearching, setIsSearching] = useState(false);
-  const [showSearchResult, setShowSearchResult] = useState(false);
-  const [brands, setBrands] = useState<any[]>([]);
-  const [categories, setCategories] = useState<any[]>([]);
   const [openSection, setOpenSection] = useState<string | null>(null);
+
+  // Use consolidated hooks for search and filter data
+  const {
+    query: search,
+    results: items,
+    isSearching,
+    showResults: showSearchResult,
+    search: performSearch,
+    clearSearch,
+  } = useAlgoliaSearch();
+
+  // Use shared filter data hook instead of duplicate fetch
+  const { brands, categories } = useFilterData(true);
+
+  const onSearch = (evt: React.ChangeEvent<HTMLInputElement>) => {
+    performSearch(evt.target.value);
+  };
 
   let displayLinks = mainNav.length > 0 ? mainNav : DEFAULT_LINKS;
   if (!displayLinks.some((l) => l.link === "/")) {
     displayLinks = [{ title: "Home", link: "/" }, ...displayLinks];
   }
-
-  // --- SEARCH LOGIC (Functionality Maintained) ---
-  const onSearch = async (evt: React.ChangeEvent<HTMLInputElement>) => {
-    const query = evt.target.value;
-    setSearch(query);
-    if (query.trim().length < 3) {
-      setItems([]);
-      setShowSearchResult(false);
-      return;
-    }
-    setIsSearching(true);
-    try {
-      const searchResults = await searchClient.search({
-        requests: [
-          { indexName: "products_index", query: query.trim(), hitsPerPage: 30 },
-        ],
-      });
-      // @ts-ignore
-      let filteredResults = searchResults.results[0].hits.filter(
-        (item: any) =>
-          item.status === true &&
-          item.listing === true &&
-          item.isDeleted == false
-      );
-      filteredResults = filteredResults.filter(
-        (item: any) =>
-          !item.variants.some(
-            (v: ProductVariant) => v.isDeleted === true && v.status === false
-          )
-      );
-      setItems(filteredResults);
-      setShowSearchResult(true);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setIsSearching(false);
-    }
-  };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [bRes, cRes] = await Promise.all([
-          fetch(`/api/v1/brands/dropdown`),
-          fetch(`/api/v1/categories/dropdown`),
-        ]);
-        setBrands(await bRes.json());
-        setCategories(await cRes.json());
-      } catch (e) {
-        console.error("Menu data fetch error", e);
-      }
-    };
-    fetchData();
-  }, []);
 
   const handleOverlayClick = () => dispatch(toggleMenu(false));
   const toggleSection = (section: string) => {
@@ -155,8 +110,7 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
                 containerStyle="max-h-[60vh] shadow-2xl rounded-none border border-gray-100"
                 results={items}
                 onClick={() => {
-                  setShowSearchResult(false);
-                  setSearch("");
+                  clearSearch();
                   dispatch(toggleMenu(false));
                 }}
               />

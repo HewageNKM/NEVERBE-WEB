@@ -7,6 +7,10 @@ import { KOKOLogo } from "@/assets/images";
 import { Product } from "@/interfaces/Product";
 import { usePromotionsContext } from "@/components/PromotionsProvider";
 import { useQuickView } from "@/components/QuickViewProvider";
+import {
+  calculateFinalPrice,
+  hasDiscount as checkHasDiscount,
+} from "@/utils/pricing";
 
 const ItemCard = ({
   item,
@@ -27,35 +31,14 @@ const ItemCard = ({
 
   const activePromo = getPromotionForProduct(item.id);
 
-  // Price Calculation Logic
-  let finalPrice = item.sellingPrice;
-  if (item.discount > 0) {
-    finalPrice =
-      Math.round(
-        (item.sellingPrice - (item.sellingPrice * item.discount) / 100) / 10
-      ) * 10;
-  }
-
-  if (activePromo) {
-    if (activePromo.type === "PERCENTAGE" && activePromo.actions?.[0]?.value) {
-      const discountVal = activePromo.actions[0].value;
-      finalPrice =
-        Math.round((finalPrice * (100 - discountVal)) / 100 / 10) * 10;
-    } else if (
-      activePromo.type === "FIXED" &&
-      activePromo.actions?.[0]?.value
-    ) {
-      finalPrice = Math.max(0, finalPrice - activePromo.actions[0].value);
-    }
-  }
-
-  const discountedPrice = finalPrice;
-  const hasDiscount = item.discount > 0 || activePromo;
+  // Use shared pricing utilities
+  const discountedPrice = calculateFinalPrice(item, activePromo);
+  const hasDiscount = checkHasDiscount(item, activePromo);
 
   return (
     <article className="group relative flex flex-col w-full bg-white">
       {/* IMAGE CONTAINER */}
-      <div className="relative aspect-[4/5] w-full overflow-hidden bg-[#f6f6f6]">
+      <div className="relative aspect-4/5 w-full overflow-hidden bg-[#f6f6f6]">
         <Link
           href={`/collections/products/${item?.id}`}
           className="cursor-pointer"

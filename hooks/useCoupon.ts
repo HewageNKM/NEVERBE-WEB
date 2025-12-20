@@ -5,7 +5,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { applyCoupon, removeCoupon } from "@/redux/bagSlice/bagSlice";
 import { RootState } from "@/redux/store";
 import { BagItem } from "@/interfaces/BagItem";
-import { calculateTotal, calculateTotalDiscount } from "@/util";
+import {
+  calculateTotal,
+  calculateTotalDiscount,
+} from "@/utils/bagCalculations";
 
 interface CouponValidationResult {
   valid: boolean;
