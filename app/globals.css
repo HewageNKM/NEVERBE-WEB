@@ -40,32 +40,36 @@ html {
   scrollbar-gutter: stable;
 }
 
-/* Custom scrollbar styling */
+/* Custom scrollbar styling - Nike Style */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 10px; /* Slightly wider to allow for the "floating" padding effect */
+  height: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #1a1a1a;
-  border-radius: 4px;
+  background: transparent; /* Nike usually keeps the track invisible */
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #97e13e 0%, #7cab3d 100%);
-  border-radius: 4px;
+  background-color: #333333; /* Dark grey/black pill */
+  border-radius: 20px;
+  /* THE SECRET: Use a transparent border to create "padding" around the thumb */
+  border: 3px solid transparent;
+  background-clip: content-box;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, #a8f04f 0%, #8dc63f 100%);
+  background-color: #000000; /* Darkens on hover */
 }
 
-/* Firefox scrollbar */
-* {
-  scrollbar-width: thin;
-  scrollbar-color: #97e13e #1a1a1a;
+/* Firefox scrollbar (Modern Standard) */
+@supports (scrollbar-width: thin) {
+  * {
+    scrollbar-width: thin;
+    /* Format: [Thumb Color] [Track Color] */
+    scrollbar-color: #333333 transparent;
+  }
 }
-
 /* Hides the recaptcha badge */
 .grecaptcha-badge {
   visibility: hidden;
