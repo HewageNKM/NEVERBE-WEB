@@ -200,9 +200,27 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
 
               {/* RIGHT: DETAILS SECTION */}
               <div className="w-full md:w-1/2 p-6 md:p-10 lg:p-14 flex flex-col bg-white">
+                {/* Promotion Header Banner */}
+                {activePromo && (
+                  <div className="bg-red-50 border-l-4 border-red-600 p-3 mb-6 -mx-6 md:-mx-10 lg:-mx-14 px-6 md:px-10 lg:px-14">
+                    <p className="text-red-700 text-xs font-black uppercase tracking-widest animate-pulse">
+                      {activePromo.name || "Special Offer Applied"}
+                    </p>
+                    <p className="text-[10px] text-red-600 mt-1 uppercase font-bold">
+                      Limited time only. While stocks last.
+                    </p>
+                  </div>
+                )}
+
                 <div className="mb-6">
                   <p className="text-[#707072] text-[14px] md:text-[15px] font-normal capitalize mb-1">
-                    {product.brand?.replace("-", " ")}
+                    {activePromo ? (
+                      <span className="text-orange-600 font-bold uppercase tracking-widest">
+                        Promotion Active
+                      </span>
+                    ) : (
+                      product.brand?.replace("-", " ")
+                    )}
                   </p>
                   <h2 className="text-[20px] md:text-[24px] font-medium text-[#111] leading-tight tracking-tight">
                     {product.name}
