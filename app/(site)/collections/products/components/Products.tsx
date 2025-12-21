@@ -161,7 +161,7 @@ const Products = ({ items }: { items: Product[] }) => {
   ]);
 
   return (
-    <section className="w-full max-w-[1920px] mx-auto px-4 md:px-12 pb-20 flex gap-0 bg-white">
+    <section className="w-full max-w-[1920px] mx-auto px-4 md:px-8 pb-20 flex gap-0 bg-white">
       {/* 1. DESKTOP SIDEBAR */}
       <aside className="hidden lg:block w-[260px] shrink-0 pt-8 pr-8">
         <ProductsFilter />

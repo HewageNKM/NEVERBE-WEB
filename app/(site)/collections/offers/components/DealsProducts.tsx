@@ -75,7 +75,7 @@ const DealsProducts = ({ items }: { items: Product[] }) => {
   ]);
 
   return (
-    <section className="w-full max-w-[1920px] mx-auto px-4 md:px-12 pb-20 flex gap-0">
+    <section className="w-full max-w-[1920px] mx-auto px-4 md:px-8 pb-20 flex gap-0 bg-white">
       {/* 1. Sidebar - Borderless Desktop Filter */}
       <aside className="hidden lg:block w-[260px] shrink-0 pt-8 pr-8">
         <DealsFilter />

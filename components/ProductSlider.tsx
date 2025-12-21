@@ -95,7 +95,7 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
           640: { slidesPerView: 2.2 },
           1024: { slidesPerView: 4.2 },
         }}
-        className="!pb-10"
+        className="pb-10!"
       >
         {items.map((item, index) => (
           <SwiperSlide key={item.id}>

@@ -33,7 +33,7 @@ const WhyUs = () => {
 
   return (
     <section className="w-full border-t border-gray-100 bg-white py-12">
-      <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
+      <div className="max-w-[1440px] mx-auto px-4 md:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
           {benefits.map((item, index) => (
             <div key={index} className="flex flex-col items-start gap-3 group">

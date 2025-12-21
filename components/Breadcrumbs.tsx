@@ -23,7 +23,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items, className = "" }) => {
   return (
     <nav
       aria-label="Breadcrumb"
-      className={`flex items-center gap-1 md:gap-2 text-xs md:text-sm text-[#707072] overflow-x-auto ${className}`}
+      className={`flex items-center gap-1 md:gap-2 text-xs md:text-sm text-[#707072] overflow-x-auto hide-scrollbar max-w-full ${className}`}
     >
       {/* Home icon */}
       <Link
@@ -40,12 +40,12 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items, className = "" }) => {
           {item.href && index < items.length - 1 ? (
             <Link
               href={item.href}
-              className="hover:text-[#111] transition-colors capitalize min-h-[44px] flex items-center px-1 touch-manipulation whitespace-nowrap"
+              className="hover:text-[#111] transition-colors capitalize min-h-[44px] flex items-center px-1 touch-manipulation shrink-0 truncate max-w-[120px] md:max-w-none"
             >
               {item.label}
             </Link>
           ) : (
-            <span className="text-[#111] font-medium capitalize truncate max-w-[150px] md:max-w-[200px] min-h-[44px] flex items-center">
+            <span className="text-[#111] font-medium capitalize truncate max-w-[120px] sm:max-w-[180px] md:max-w-[250px] min-h-[44px] flex items-center">
               {item.label}
             </span>
           )}
