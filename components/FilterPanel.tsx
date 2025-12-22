@@ -30,7 +30,7 @@ const FilterSection = ({
   onToggle: (label: string) => void;
 }) => (
   <div className="py-8 border-t border-default">
-    <h3 className="text-[16px] font-medium text-primary tracking-tight mb-5">
+    <h3 className="text-md font-medium text-primary tracking-tight mb-5">
       {title}
     </h3>
     <div className="flex flex-col gap-4">
@@ -56,7 +56,7 @@ const FilterSection = ({
             </div>
 
             <span
-              className={`text-[16px] transition-colors ${
+              className={`text-md transition-colors ${
                 isSelected
                   ? "text-primary font-medium"
                   : "text-primary font-normal group-hover:text-secondary"
@@ -103,9 +103,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
 
       {/* In Stock Utility */}
       <div className="flex justify-between items-center pb-8">
-        <span className="text-[16px] font-normal text-primary">
-          In Stock Only
-        </span>
+        <span className="text-md font-normal text-primary">In Stock Only</span>
         <ToggleSwitch
           checked={inStock}
           onChange={onInStockChange}
@@ -115,7 +113,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
 
       {/* Nike Style Size Grid (1:1 Ratio Squares) */}
       <div className="py-8 border-t border-default">
-        <h3 className="text-[16px] font-medium text-primary tracking-tight mb-5">
+        <h3 className="text-md font-medium text-primary tracking-tight mb-5">
           Select Size
         </h3>
         <div className="grid grid-cols-3 gap-2">
