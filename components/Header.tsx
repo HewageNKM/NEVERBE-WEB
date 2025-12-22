@@ -61,7 +61,7 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
   return (
     <div className="w-full bg-white z-50">
       {/* 1. NIKE UTILITY TOP BAR (The Pre-Header) */}
-      <div className="hidden lg:flex bg-[#f5f5f5] px-12 py-1.5 justify-between items-center text-[12px] font-medium text-black">
+      <div className="hidden lg:flex bg-surface-2 px-12 py-1.5 justify-between items-center text-[12px] font-medium text-black">
         <div className="flex gap-4">
           <Link href="/contact" className="hover:opacity-70">
             Help
@@ -173,7 +173,7 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
                   />
 
                   <div className="flex-1 max-w-2xl mx-auto px-4">
-                    <div className="flex items-center bg-[#f5f5f5] rounded-full px-6 py-3 w-full">
+                    <div className="flex items-center bg-surface-2 rounded-full px-6 py-3 w-full">
                       <IoSearchOutline
                         size={24}
                         className="text-gray-400 mr-4"
@@ -196,7 +196,7 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
                       setIsSearchOpen(false);
                       clearSearch();
                     }}
-                    className="p-2 bg-[#f5f5f5] rounded-full hover:bg-gray-200"
+                    className="p-2 bg-surface-2 rounded-full hover:bg-gray-200"
                   >
                     <IoCloseOutline size={28} />
                   </button>
@@ -205,7 +205,7 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
                 {/* Search Results Grid - Simple and clean */}
                 {showSearchResult && items.length > 0 && (
                   <div className="mt-8">
-                    <p className="text-[#707072] text-sm mb-6">
+                    <p className="text-secondary text-sm mb-6">
                       Search Results ({items.length})
                     </p>
                     <SearchDialog

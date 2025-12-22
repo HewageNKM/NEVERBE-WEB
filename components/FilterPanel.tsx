@@ -29,8 +29,8 @@ const FilterSection = ({
   selectedItems: string[];
   onToggle: (label: string) => void;
 }) => (
-  <div className="py-8 border-t border-gray-100">
-    <h3 className="text-[16px] font-medium text-[#111] tracking-tight mb-5">
+  <div className="py-8 border-t border-default">
+    <h3 className="text-[16px] font-medium text-primary tracking-tight mb-5">
       {title}
     </h3>
     <div className="flex flex-col gap-4">
@@ -46,18 +46,20 @@ const FilterSection = ({
             <div
               className={`w-5 h-5 border rounded-[4px] flex items-center justify-center transition-all duration-200 ${
                 isSelected
-                  ? "bg-black border-black"
-                  : "bg-white border-gray-300 group-hover:border-black"
+                  ? "bg-dark border-dark"
+                  : "bg-surface border-gray-300 group-hover:border-dark"
               }`}
             >
-              {isSelected && <div className="w-2 h-2 bg-white rounded-full" />}
+              {isSelected && (
+                <div className="w-2 h-2 bg-surface rounded-full" />
+              )}
             </div>
 
             <span
               className={`text-[16px] transition-colors ${
                 isSelected
-                  ? "text-[#111] font-medium"
-                  : "text-[#111] font-normal group-hover:text-[#707072]"
+                  ? "text-primary font-medium"
+                  : "text-primary font-normal group-hover:text-secondary"
               }`}
             >
               {item.label}
@@ -88,12 +90,12 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
     <aside className="hidden lg:block w-[260px] pr-10 sticky top-24 h-fit max-h-[85vh] overflow-y-auto no-scrollbar">
       {/* Header */}
       <div className="flex justify-between items-end mb-8">
-        <h2 className="text-[20px] font-medium text-[#111] tracking-tight">
+        <h2 className="text-[20px] font-medium text-primary tracking-tight">
           {title}
         </h2>
         <button
           onClick={onReset}
-          className="text-[14px] font-normal text-[#707072] hover:text-black transition-colors"
+          className="text-[14px] font-normal text-secondary hover:text-primary transition-colors"
         >
           Clear All
         </button>
@@ -101,7 +103,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
 
       {/* In Stock Utility */}
       <div className="flex justify-between items-center pb-8">
-        <span className="text-[16px] font-normal text-[#111]">
+        <span className="text-[16px] font-normal text-primary">
           In Stock Only
         </span>
         <ToggleSwitch
@@ -112,8 +114,8 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
       </div>
 
       {/* Nike Style Size Grid (1:1 Ratio Squares) */}
-      <div className="py-8 border-t border-gray-100">
-        <h3 className="text-[16px] font-medium text-[#111] tracking-tight mb-5">
+      <div className="py-8 border-t border-default">
+        <h3 className="text-[16px] font-medium text-primary tracking-tight mb-5">
           Select Size
         </h3>
         <div className="grid grid-cols-3 gap-2">
@@ -125,8 +127,8 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
                 onClick={() => onSizeToggle(size)}
                 className={`aspect-square flex items-center justify-center border rounded-[4px] text-[14px] transition-all ${
                   isSelected
-                    ? "bg-black border-black text-white font-medium"
-                    : "bg-white border-gray-200 text-[#111] hover:border-black"
+                    ? "bg-dark border-dark text-inverse font-medium"
+                    : "bg-surface border-gray-200 text-primary hover:border-dark"
                 }`}
               >
                 {size}

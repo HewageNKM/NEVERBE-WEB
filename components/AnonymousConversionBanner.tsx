@@ -12,14 +12,14 @@ const AnonymousConversionBanner: React.FC = () => {
   if (user && !user.isAnonymous) return null;
 
   return (
-    <div className="bg-[#f5f5f5] text-[#111] px-4 py-3 md:py-2.5 border-b border-gray-100 flex items-center justify-center animate-fadeIn transition-all">
+    <div className="bg-surface-2 text-primary px-4 py-3 md:py-2.5 border-b border-gray-100 flex items-center justify-center animate-fadeIn transition-all">
       <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-6 max-w-[1440px] w-full justify-center">
         {/* Guest Message */}
         <div className="flex items-center gap-2">
-          <User size={14} className="text-[#111]" />
+          <User size={14} className="text-primary" />
           <p className="text-[13px] md:text-[14px] font-medium tracking-tight">
             Shopping as a guest?{" "}
-            <span className="text-[#707072] font-normal">
+            <span className="text-secondary font-normal">
               Join us to save your orders and favorites.
             </span>
           </p>

@@ -49,7 +49,7 @@ const PageLoader = () => {
 
         {/* Inner subtle pulse */}
         <motion.div
-          className="absolute w-12 h-12 rounded-full bg-[#f5f5f5]"
+          className="absolute w-12 h-12 rounded-full bg-surface-2"
           animate={{ scale: [0.95, 1.05, 0.95] }}
           transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
         />
@@ -69,7 +69,7 @@ const PageLoader = () => {
             }}
             className="absolute flex flex-col items-center gap-1"
           >
-            <p className="text-[#111] text-[13px] font-medium uppercase tracking-[0.25em] text-center">
+            <p className="text-primary text-[13px] font-medium uppercase tracking-[0.25em] text-center">
               {loadingMessages[currentMsgIndex]}
             </p>
 
@@ -79,7 +79,7 @@ const PageLoader = () => {
                 <div
                   key={i}
                   className={`h-[2px] transition-all duration-500 ${
-                    i === currentMsgIndex ? "w-4 bg-[#111]" : "w-1 bg-gray-200"
+                    i === currentMsgIndex ? "w-4 bg-dark" : "w-1 bg-gray-200"
                   }`}
                 />
               ))}

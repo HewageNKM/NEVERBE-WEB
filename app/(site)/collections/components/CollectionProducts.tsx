@@ -138,7 +138,7 @@ const CollectionProducts = ({
       <div className="flex-1 w-full">
         {/* 2. STICKY TOOLBAR */}
         <div className="sticky top-0 z-30 bg-white/90 backdrop-blur-md py-6 flex justify-between items-center transition-all">
-          <h2 className="text-[20px] font-medium text-[#111] tracking-tight">
+          <h2 className="text-[20px] font-medium text-primary tracking-tight">
             {tagName || categoryName || brandName || "All Products"} (
             {products?.length || 0})
           </h2>
@@ -146,7 +146,7 @@ const CollectionProducts = ({
           <div className="flex items-center gap-6">
             <button
               onClick={() => dispatch(toggleFilter())}
-              className="lg:hidden flex items-center gap-2 text-[16px] text-[#111]"
+              className="lg:hidden flex items-center gap-2 text-[16px] text-primary"
               aria-label="Open Filters"
             >
               <IoOptionsOutline size={22} />

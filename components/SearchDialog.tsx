@@ -28,7 +28,7 @@ const SearchDialog: React.FC<SearchDialogProps> = ({
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: 10 }}
         transition={{ type: "spring", damping: 25, stiffness: 200 }}
-        className={`w-full bg-white text-[#111] overflow-hidden flex flex-col ${
+        className={`w-full bg-white text-primary overflow-hidden flex flex-col ${
           containerStyle ||
           "shadow-[0_20px_40px_rgba(0,0,0,0.1)] border border-gray-100 absolute top-14 right-0 lg:w-[600px] z-50"
         }`}
@@ -75,13 +75,13 @@ const SearchDialog: React.FC<SearchDialogProps> = ({
           )
         ) : (
           <div className="flex flex-col items-center justify-center py-16 px-6 text-center">
-            <div className="bg-[#f5f5f5] p-5 rounded-full mb-4">
-              <IoSearchOutline className="text-[#111]" size={24} />
+            <div className="bg-surface-2 p-5 rounded-full mb-4">
+              <IoSearchOutline className="text-primary" size={24} />
             </div>
-            <p className="text-[16px] font-medium text-[#111] tracking-tight">
+            <p className="text-[16px] font-medium text-primary tracking-tight">
               No results found
             </p>
-            <p className="text-[14px] text-[#707072] mt-1">
+            <p className="text-[14px] text-secondary mt-1">
               Try adjusting your search for a better fit.
             </p>
           </div>

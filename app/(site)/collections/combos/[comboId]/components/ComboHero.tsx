@@ -372,7 +372,7 @@ const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
       {/* --- LEFT: VISUALS --- */}
       <div className="flex-1 lg:w-[60%] flex flex-col gap-6">
         {/* Main Image Container */}
-        <div className="relative w-full aspect-square bg-[#f6f6f6] border border-transparent hover:border-gray-200 transition-colors">
+        <div className="relative w-full aspect-square bg-surface-2 border border-transparent hover:border-gray-200 transition-colors">
           <AnimatePresence mode="wait">
             <motion.div
               key={
@@ -435,7 +435,7 @@ const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
                 key={slot.slotId}
                 onClick={() => setActiveSlotIndex(idx)}
                 className={`
-                  relative aspect-square bg-[#f6f6f6] border-2 transition-all
+                  relative aspect-square bg-surface-2 border-2 transition-all
                   ${
                     isActive
                       ? "border-black"

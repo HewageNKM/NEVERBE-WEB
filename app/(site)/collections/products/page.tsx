@@ -94,10 +94,10 @@ const Page = async () => {
 
       {/* 1. NIKE STYLE HEADER */}
       <div className="w-full max-w-[1920px] mx-auto px-4 md:px-12 py-12 md:py-20 text-left">
-        <h1 className="text-[28px] md:text-[42px] font-medium tracking-tight text-[#111] leading-none mb-4">
+        <h1 className="text-[28px] md:text-[42px] font-medium tracking-tight text-primary leading-none mb-4">
           Products
         </h1>
-        <p className="text-[#707072] max-w-xl text-[16px] md:text-[18px] font-normal">
+        <p className="text-secondary max-w-xl text-[16px] md:text-[18px] font-normal">
           Browse our complete collection. Sneakers, slides, and more for every
           style.
         </p>
@@ -111,14 +111,14 @@ const Page = async () => {
       </div>
 
       {/* 3. PREMIUM BRAND STORY FOOTER */}
-      <section className="bg-[#f5f5f5] py-16 mt-20">
+      <section className="bg-surface-2 py-16 mt-20">
         <div className="max-w-[1440px] mx-auto px-8 lg:px-12">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 lg:gap-24">
             <div className="max-w-sm">
-              <h2 className="text-[16px] font-medium text-[#111] mb-6">
+              <h2 className="text-[16px] font-medium text-primary mb-6">
                 Premium Footwear in Sri Lanka
               </h2>
-              <p className="text-[14px] text-[#707072] leading-relaxed mb-4">
+              <p className="text-[14px] text-secondary leading-relaxed mb-4">
                 NEVERBE offers an extensive range of footwear designed to meet
                 every lifestyle need. From high-performance sports shoes to
                 stylish casual sneakers, we provide the best shoe prices in Sri
@@ -127,10 +127,10 @@ const Page = async () => {
             </div>
 
             <div className="max-w-sm">
-              <h3 className="text-[16px] font-medium text-[#111] mb-6">
+              <h3 className="text-[16px] font-medium text-primary mb-6">
                 Popular Collections
               </h3>
-              <ul className="text-[14px] text-[#707072] space-y-3 font-medium">
+              <ul className="text-[14px] text-secondary space-y-3 font-medium">
                 <li className="hover:text-black cursor-pointer transition-colors">
                   Men&apos;s Lifestyle Sneakers
                 </li>
@@ -147,10 +147,10 @@ const Page = async () => {
             </div>
 
             <div className="max-w-sm">
-              <h3 className="text-[16px] font-medium text-[#111] mb-6">
+              <h3 className="text-[16px] font-medium text-primary mb-6">
                 Quality Guaranteed
               </h3>
-              <p className="text-[14px] text-[#707072] leading-relaxed">
+              <p className="text-[14px] text-secondary leading-relaxed">
                 We accept size exchanges within 7 days. Every product is checked
                 for quality (7A Grade) to ensure you get the durability and
                 comfort you deserve.

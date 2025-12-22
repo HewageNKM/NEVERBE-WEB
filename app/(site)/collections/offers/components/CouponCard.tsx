@@ -23,18 +23,18 @@ const CouponCard: React.FC<Props> = ({ coupon }) => {
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      className="relative flex flex-col md:flex-row bg-white border border-gray-100 hover:border-gray-200 transition-all group"
+      className="relative flex flex-col md:flex-row bg-surface border border-default hover:border-strong transition-all group"
     >
       {/* Visual Header / Discount */}
-      <div className="bg-[#f5f5f5] p-8 flex flex-col items-start justify-center md:min-w-[160px]">
-        <div className="text-[32px] font-medium tracking-tight text-[#111] leading-none">
+      <div className="bg-surface-2 p-8 flex flex-col items-start justify-center md:min-w-[160px]">
+        <div className="text-[32px] font-medium tracking-tight text-primary leading-none">
           {coupon.discountType === "PERCENTAGE"
             ? `${coupon.discountValue}%`
             : coupon.discountType === "FIXED"
             ? `Rs.${coupon.discountValue.toLocaleString()}`
             : "FREE"}
         </div>
-        <div className="text-[14px] font-medium text-[#707072] mt-1">
+        <div className="text-[14px] font-medium text-secondary mt-1">
           {coupon.discountType === "FREE_SHIPPING" ? "Shipping" : "OFF"}
         </div>
       </div>
@@ -44,13 +44,13 @@ const CouponCard: React.FC<Props> = ({ coupon }) => {
         <div>
           <div className="flex flex-col gap-3 mb-4">
             <div className="flex flex-wrap items-center gap-3">
-              <span className="bg-[#111] text-white text-[11px] font-bold px-3 py-1 rounded-full uppercase tracking-widest">
+              <span className="bg-dark text-inverse text-[11px] font-bold px-3 py-1 rounded-full uppercase tracking-widest">
                 {coupon.code.toUpperCase()}
               </span>
             </div>
             {coupon.endDate && (
-              <div className="text-[12px] text-[#b22222] font-medium flex items-center gap-1">
-                <span className="w-1.5 h-1.5 bg-[#b22222] rounded-full animate-pulse" />
+              <div className="text-[12px] text-error font-medium flex items-center gap-1">
+                <span className="w-1.5 h-1.5 bg-error rounded-full animate-pulse" />
                 <span>Ends In: </span>
                 <CountdownTimer
                   targetDate={
@@ -68,18 +68,18 @@ const CouponCard: React.FC<Props> = ({ coupon }) => {
             )}
           </div>
 
-          <h3 className="text-[18px] font-medium text-[#111] mb-2 tracking-tight">
+          <h3 className="text-[18px] font-medium text-primary mb-2 tracking-tight">
             {coupon.description || "Exclusive Member Offer"}
           </h3>
 
           <div className="space-y-1">
             {!!coupon.minOrderAmount && coupon.minOrderAmount > 0 && (
-              <p className="text-[13px] text-[#707072]">
+              <p className="text-[13px] text-secondary">
                 Min. Order: Rs. {coupon.minOrderAmount.toLocaleString()}
               </p>
             )}
             {coupon.firstOrderOnly && (
-              <p className="text-[13px] text-[#707072]">
+              <p className="text-[13px] text-secondary">
                 Verified First Order Only
               </p>
             )}
@@ -90,8 +90,8 @@ const CouponCard: React.FC<Props> = ({ coupon }) => {
           onClick={handleCopy}
           className={`mt-6 w-full md:w-fit px-10 py-3 rounded-full text-[14px] font-medium transition-all active:scale-[0.98] ${
             copied
-              ? "bg-[#111] text-white opacity-80"
-              : "bg-[#111] text-white hover:opacity-70"
+              ? "bg-dark text-inverse opacity-80"
+              : "bg-dark text-inverse hover:opacity-70"
           }`}
         >
           {copied ? "Code Copied" : "Copy Code"}

@@ -60,7 +60,7 @@ const AboutUsClient = () => {
       </section>
 
       {/* 3. WHY US (Grid System) */}
-      <section className="w-full bg-[#f6f6f6] px-4 md:px-8 py-20">
+      <section className="w-full bg-surface-2 px-4 md:px-8 py-20">
         <div className="max-w-[1440px] mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12">
             {[

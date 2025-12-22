@@ -33,10 +33,10 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({
       <Link
         href={`/collections/products/${item.id}`}
         onClick={onClick}
-        className="group flex flex-col bg-white hover:bg-[#fafafa] transition-all cursor-pointer"
+        className="group flex flex-col bg-white hover:bg-surface-3 transition-all cursor-pointer"
       >
         {/* Product Image */}
-        <div className="relative aspect-square bg-[#f6f6f6] overflow-hidden">
+        <div className="relative aspect-square bg-surface-2 overflow-hidden">
           <Image
             src={item.thumbnail.url}
             alt={item.name}
@@ -45,13 +45,13 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({
           />
           {/* Promo Badge */}
           {activePromo && (
-            <span className="absolute top-2 left-2 bg-[#111] text-white text-[9px] font-bold px-1.5 py-0.5 tracking-widest uppercase">
+            <span className="absolute top-2 left-2 bg-dark text-white text-[9px] font-bold px-1.5 py-0.5 tracking-widest uppercase">
               {activePromo.type === "BOGO" ? "BOGO" : "Promo"}
             </span>
           )}
           {/* Discount Badge */}
           {item.discount > 0 && !activePromo && (
-            <span className="absolute top-2 left-2 bg-[#b22222] text-white text-[9px] font-bold px-1.5 py-0.5 tracking-widest uppercase">
+            <span className="absolute top-2 left-2 bg-error text-white text-[9px] font-bold px-1.5 py-0.5 tracking-widest uppercase">
               -{item.discount}%
             </span>
           )}
@@ -59,22 +59,22 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({
 
         {/* Product Info */}
         <div className="p-3">
-          <h3 className="text-[13px] font-medium text-[#111] leading-tight line-clamp-2 group-hover:underline">
+          <h3 className="text-[13px] font-medium text-primary leading-tight line-clamp-2 group-hover:underline">
             {item.name}
           </h3>
-          <p className="text-[11px] text-[#707072] mt-1 capitalize">
+          <p className="text-[11px] text-secondary mt-1 capitalize">
             {item.tags?.[0] || "Footwear"}
           </p>
           <div className="flex items-center gap-2 mt-2 flex-wrap">
             <span
               className={`text-[13px] font-medium ${
-                hasDiscount ? "text-[#b22222]" : "text-[#111]"
+                hasDiscount ? "text-error" : "text-primary"
               }`}
             >
               Rs. {finalPrice.toLocaleString()}
             </span>
             {hasDiscount && (
-              <span className="text-[11px] text-[#707072] line-through">
+              <span className="text-[11px] text-secondary line-through">
                 Rs. {item.sellingPrice.toLocaleString()}
               </span>
             )}
@@ -89,10 +89,10 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({
     <Link
       href={`/collections/products/${item.id}`}
       onClick={onClick}
-      className="group flex items-center gap-5 p-5 hover:bg-[#f5f5f5] transition-all cursor-pointer w-full"
+      className="group flex items-center gap-5 p-5 hover:bg-surface-2 transition-all cursor-pointer w-full"
     >
       {/* Precision Image Box */}
-      <div className="relative w-20 h-20 bg-[#f6f6f6] rounded-sm overflow-hidden shrink-0">
+      <div className="relative w-20 h-20 bg-surface-2 rounded-sm overflow-hidden shrink-0">
         <Image
           src={item.thumbnail.url}
           alt={item.name}
@@ -102,7 +102,7 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({
         />
         <div className="absolute top-2 left-2 flex flex-col gap-1">
           {activePromo && (
-            <span className="bg-[#111] text-white text-[9px] font-bold px-1.5 py-0.5 tracking-widest uppercase">
+            <span className="bg-dark text-white text-[9px] font-bold px-1.5 py-0.5 tracking-widest uppercase">
               {activePromo.type === "BOGO" ? "BOGO" : "Promo"}
             </span>
           )}
@@ -110,22 +110,22 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({
       </div>
 
       <div className="flex-1 min-w-0">
-        <h2 className="text-[15px] font-medium text-[#111] tracking-tight leading-tight group-hover:underline">
+        <h2 className="text-[15px] font-medium text-primary tracking-tight leading-tight group-hover:underline">
           {item.name}
         </h2>
-        <p className="text-[13px] text-[#707072] font-normal mt-0.5">
+        <p className="text-[13px] text-secondary font-normal mt-0.5">
           {item.tags?.[0] || "Footwear"}
         </p>
         <div className="flex items-center gap-2 mt-2">
           <span
             className={`text-[15px] font-medium ${
-              hasDiscount ? "text-[#b22222]" : "text-[#111]"
+              hasDiscount ? "text-error" : "text-primary"
             }`}
           >
             Rs. {finalPrice.toLocaleString()}
           </span>
           {hasDiscount && (
-            <span className="text-[13px] text-[#707072] line-through">
+            <span className="text-[13px] text-secondary line-through">
               Rs. {item.sellingPrice.toLocaleString()}
             </span>
           )}

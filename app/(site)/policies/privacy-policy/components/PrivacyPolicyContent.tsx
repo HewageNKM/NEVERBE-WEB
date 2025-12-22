@@ -45,7 +45,7 @@ const PrivacyPolicyContent = () => {
               Object.entries(value).map(([subKey, subValue]) => (
                 <div
                   key={subKey}
-                  className="mt-4 p-4 bg-[#f6f6f6] border border-gray-200"
+                  className="mt-4 p-4 bg-surface-2 border border-gray-200"
                 >
                   {typeof subValue === "string" && (
                     <p className="mb-2">{subValue}</p>

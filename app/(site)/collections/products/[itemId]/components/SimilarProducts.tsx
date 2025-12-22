@@ -17,20 +17,20 @@ const SimilarProducts = ({ items }: { items: Product[] }) => {
   return (
     <section className="w-full max-w-[1920px] mx-auto py-20 px-4 md:px-12">
       <div className="flex justify-between items-end mb-10">
-        <h2 className="text-[24px] font-medium text-[#111] tracking-tight">
+        <h2 className="text-[24px] font-medium text-primary tracking-tight">
           You Might Also Like
         </h2>
 
         <div className="flex gap-2">
           <button
             ref={prevRef}
-            className="w-10 h-10 rounded-full bg-[#f5f5f5] flex items-center justify-center hover:bg-[#e5e5e5] transition-all"
+            className="w-10 h-10 rounded-full bg-surface-2 flex items-center justify-center hover:bg-gray-200 transition-all"
           >
             <IoChevronBack size={20} />
           </button>
           <button
             ref={nextRef}
-            className="w-10 h-10 rounded-full bg-[#f5f5f5] flex items-center justify-center hover:bg-[#e5e5e5] transition-all"
+            className="w-10 h-10 rounded-full bg-surface-2 flex items-center justify-center hover:bg-gray-200 transition-all"
           >
             <IoChevronForward size={20} />
           </button>

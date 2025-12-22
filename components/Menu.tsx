@@ -70,17 +70,17 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
         animate={{ x: 0 }}
         exit={{ x: "100%" }}
         transition={{ type: "spring", damping: 25, stiffness: 200 }}
-        className="relative w-full max-w-[380px] h-full bg-white text-[#111] flex flex-col shadow-[0_0_40px_rgba(0,0,0,0.05)]"
+        className="relative w-full max-w-[380px] h-full bg-white text-primary flex flex-col shadow-[0_0_40px_rgba(0,0,0,0.05)]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
         <div className="flex items-center justify-between px-8 py-6">
-          <span className="font-medium text-[20px] tracking-tight text-[#111]">
+          <span className="font-medium text-[20px] tracking-tight text-primary">
             Menu
           </span>
           <button
             onClick={() => dispatch(toggleMenu(false))}
-            className="p-2 -mr-2 text-[#111] hover:bg-gray-100 rounded-full transition-all"
+            className="p-2 -mr-2 text-primary hover:bg-gray-100 rounded-full transition-all"
           >
             <IoCloseOutline size={30} />
           </button>
@@ -94,9 +94,9 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
               value={search}
               onChange={onSearch}
               placeholder="Search"
-              className="w-full bg-[#f5f5f5] text-[#111] px-5 py-3 pl-12 rounded-full text-[16px] font-normal focus:outline-none transition-all placeholder:text-[#707072]"
+              className="w-full bg-surface-2 text-primary px-5 py-3 pl-12 rounded-full text-[16px] font-normal focus:outline-none transition-all placeholder:text-secondary"
             />
-            <div className="absolute top-1/2 -translate-y-1/2 left-4 text-[#111]">
+            <div className="absolute top-1/2 -translate-y-1/2 left-4 text-primary">
               {isSearching ? (
                 <div className="w-5 h-5 border-[1.5px] border-gray-200 border-t-black rounded-full animate-spin" />
               ) : (
@@ -127,12 +127,12 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
               onClick={() => dispatch(toggleMenu(false))}
               className="flex items-center justify-between py-4 group"
             >
-              <span className="text-[24px] font-medium tracking-tight text-[#111] transition-transform group-hover:translate-x-1">
+              <span className="text-[24px] font-medium tracking-tight text-primary transition-transform group-hover:translate-x-1">
                 {link.title}
               </span>
               <IoChevronForward
                 size={20}
-                className="text-gray-200 group-hover:text-[#111]"
+                className="text-gray-200 group-hover:text-primary"
               />
             </Link>
           ))}
@@ -141,7 +141,7 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
           <div className="pt-2">
             <button
               onClick={() => toggleSection("categories")}
-              className="w-full flex justify-between items-center py-4 text-[#111]"
+              className="w-full flex justify-between items-center py-4 text-primary"
             >
               <span className="text-[24px] font-medium tracking-tight">
                 Categories
@@ -168,7 +168,7 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
                         href={`/collections/products?category=${encodeURIComponent(
                           cat.label
                         )}`}
-                        className="text-[16px] text-[#707072] hover:text-[#111] transition-colors"
+                        className="text-[16px] text-secondary hover:text-primary transition-colors"
                         onClick={() => dispatch(toggleMenu(false))}
                       >
                         {cat.label}
@@ -184,7 +184,7 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
           <div>
             <button
               onClick={() => toggleSection("brands")}
-              className="w-full flex justify-between items-center py-4 text-[#111]"
+              className="w-full flex justify-between items-center py-4 text-primary"
             >
               <span className="text-[24px] font-medium tracking-tight">
                 Brands
@@ -211,7 +211,7 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
                         href={`/collections/products?brand=${encodeURIComponent(
                           brand.label
                         )}`}
-                        className="text-[16px] text-[#707072] hover:text-[#111] transition-colors"
+                        className="text-[16px] text-secondary hover:text-primary transition-colors"
                         onClick={() => dispatch(toggleMenu(false))}
                       >
                         {brand.label}
@@ -230,20 +230,20 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
             <div className="flex gap-6">
               <Link
                 href="/contact"
-                className="text-[14px] font-medium text-[#111]"
+                className="text-[14px] font-medium text-primary"
                 onClick={() => dispatch(toggleMenu(false))}
               >
                 Contact Us
               </Link>
               <Link
                 href="/contact"
-                className="text-[14px] font-medium text-[#111]"
+                className="text-[14px] font-medium text-primary"
                 onClick={() => dispatch(toggleMenu(false))}
               >
                 Help
               </Link>
             </div>
-            <p className="text-[11px] text-[#707072] font-medium uppercase tracking-widest">
+            <p className="text-[11px] text-secondary font-medium uppercase tracking-widest">
               &copy; {new Date().getFullYear()} NEVERBE, INC.
             </p>
           </div>

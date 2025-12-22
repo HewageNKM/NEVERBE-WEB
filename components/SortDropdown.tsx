@@ -37,7 +37,7 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
     <div className={`relative ${className}`} ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 text-[16px] text-[#111] hover:text-[#707072] transition-colors"
+        className="flex items-center gap-2 text-[16px] text-primary hover:text-secondary transition-colors"
       >
         <TbArrowsSort size={20} />
         <span className="md:hidden">Sort</span>
@@ -53,7 +53,7 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
             initial={{ opacity: 0, y: 5 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 5 }}
-            className="absolute right-0 mt-4 w-[200px] bg-white border border-[#e5e5e5] shadow-xl z-[100] py-4 rounded-none"
+            className="absolute right-0 mt-4 w-[200px] bg-surface border border-default shadow-xl z-[100] py-4 rounded-none"
           >
             {sortingOptions.map((opt, i) => (
               <li
@@ -61,8 +61,8 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
                 onClick={() => handleSelect(opt.value)}
                 className={`px-6 py-2 text-[14px] cursor-pointer text-right transition-colors ${
                   value === opt.value
-                    ? "text-[#111] font-medium"
-                    : "text-[#707072] hover:text-[#111]"
+                    ? "text-primary font-medium"
+                    : "text-secondary hover:text-primary"
                 }`}
               >
                 {opt.name}

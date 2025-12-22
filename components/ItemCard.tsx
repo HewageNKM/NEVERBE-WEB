@@ -36,9 +36,9 @@ const ItemCard = ({
   const hasDiscount = checkHasDiscount(item, activePromo);
 
   return (
-    <article className="group relative flex flex-col w-full bg-white">
+    <article className="group relative flex flex-col w-full bg-surface">
       {/* IMAGE CONTAINER */}
-      <div className="relative aspect-4/5 w-full overflow-hidden bg-[#f6f6f6]">
+      <div className="relative aspect-4/5 w-full overflow-hidden bg-surface-2">
         <Link
           href={`/collections/products/${item?.id}`}
           className="cursor-pointer"
@@ -64,14 +64,16 @@ const ItemCard = ({
               {item.discount}% Off
             </span>
           ) : (
-            <span className="text-black text-[13px] font-medium">Just In</span>
+            <span className="text-primary text-[13px] font-medium">
+              Just In
+            </span>
           )}
         </div>
 
         {/* Sold Out Overlay */}
         {outOfStocks && (
-          <div className="absolute inset-0 bg-white/40 flex items-center justify-center backdrop-blur-[2px]">
-            <span className="bg-white px-4 py-2 text-xs font-bold uppercase tracking-widest text-black shadow-sm">
+          <div className="absolute inset-0 bg-surface/40 flex items-center justify-center backdrop-blur-[2px]">
+            <span className="bg-surface px-4 py-2 text-xs font-bold uppercase tracking-widest text-primary shadow-sm">
               Sold Out
             </span>
           </div>
@@ -83,7 +85,7 @@ const ItemCard = ({
             e.preventDefault();
             openQuickView(item);
           }}
-          className="absolute bottom-0 left-0 w-full bg-white py-4 text-sm font-medium transition-transform translate-y-full group-hover:translate-y-0 duration-300 hidden lg:block border-t border-gray-100"
+          className="absolute bottom-0 left-0 w-full bg-surface py-4 text-sm font-medium transition-transform translate-y-full group-hover:translate-y-0 duration-300 hidden lg:block border-t border-default"
         >
           Quick Look
         </button>
@@ -94,7 +96,7 @@ const ItemCard = ({
             e.preventDefault();
             openQuickView(item);
           }}
-          className="absolute bottom-3 right-3 lg:hidden w-9 h-9 bg-white rounded-full shadow-md flex items-center justify-center text-black active:scale-90 transition-transform"
+          className="absolute bottom-3 right-3 lg:hidden w-9 h-9 bg-surface rounded-full shadow-md flex items-center justify-center text-primary active:scale-90 transition-transform"
         >
           <IoEyeOutline size={18} />
         </button>
@@ -104,10 +106,10 @@ const ItemCard = ({
       <div className="flex flex-col pt-3 pb-6 px-1">
         <Link href={`/collections/products/${item?.id}`}>
           <div className="flex flex-col gap-0.5">
-            <h3 className="text-[16px] font-medium text-[#111] leading-tight tracking-tight">
+            <h3 className="text-[16px] font-medium text-primary leading-tight tracking-tight">
               {item.name}
             </h3>
-            <p className="text-[15px] text-[#707072] font-normal leading-relaxed capitalize">
+            <p className="text-[15px] text-secondary font-normal leading-relaxed capitalize">
               {item.category?.replace("-", " ") || "Men's Shoes"}
             </p>
           </div>
@@ -116,13 +118,13 @@ const ItemCard = ({
             <div className="flex items-center gap-2">
               <span
                 className={`text-[16px] font-medium ${
-                  hasDiscount ? "text-[#b22222]" : "text-black"
+                  hasDiscount ? "text-error" : "text-primary"
                 }`}
               >
                 Rs. {discountedPrice.toLocaleString()}
               </span>
               {hasDiscount && (
-                <span className="text-[#707072] text-[15px] line-through decoration-[0.5px]">
+                <span className="text-secondary text-[15px] line-through decoration-[0.5px]">
                   Rs.{" "}
                   {item.marketPrice > item.sellingPrice
                     ? item.marketPrice.toLocaleString()
@@ -133,7 +135,7 @@ const ItemCard = ({
 
             {/* KOKO Installments - Minimalist style */}
             <div className="flex items-center gap-1.5 mt-1">
-              <span className="text-[12px] text-[#707072]">
+              <span className="text-[12px] text-secondary">
                 3 installments with
               </span>
               <div className="w-8 h-3 relative grayscale opacity-80 group-hover:grayscale-0 transition-all">

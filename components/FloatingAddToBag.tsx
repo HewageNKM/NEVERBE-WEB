@@ -47,10 +47,10 @@ const FloatingAddToBag: React.FC<FloatingAddToBagProps> = ({
           <div className="max-w-lg mx-auto flex items-center justify-between gap-4">
             {/* Product Info */}
             <div className="flex-1 min-w-0">
-              <p className="text-[14px] font-medium text-[#111] truncate">
+              <p className="text-[14px] font-medium text-primary truncate">
                 {productName}
               </p>
-              <p className="text-[13px] text-[#707072]">
+              <p className="text-[13px] text-secondary">
                 Rs. {price.toLocaleString()}
                 {selectedSize && ` • Size: ${selectedSize}`}
               </p>
@@ -60,7 +60,7 @@ const FloatingAddToBag: React.FC<FloatingAddToBagProps> = ({
             <button
               onClick={onAddToBag}
               disabled={!canAddToBag}
-              className="flex items-center gap-2 px-6 py-3 bg-[#111] text-white text-[14px] font-medium rounded-full disabled:bg-gray-300 disabled:text-gray-500 transition-all active:scale-95"
+              className="flex items-center gap-2 px-6 py-3 bg-dark text-white text-[14px] font-medium rounded-full disabled:bg-gray-300 disabled:text-gray-500 transition-all active:scale-95"
             >
               <IoBagAdd size={18} />
               <span className="hidden sm:inline">Add to Bag</span>

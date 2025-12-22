@@ -25,7 +25,7 @@ const BagItemCard = ({
     // Compact version for checkout summary
     return (
       <div className="flex gap-3 py-2 group">
-        <div className="relative w-14 h-14 bg-[#f6f6f6] shrink-0 border border-gray-100">
+        <div className="relative w-14 h-14 bg-surface-2 shrink-0 border border-gray-100">
           <Image
             src={item.thumbnail || ""}
             alt={item.name}
@@ -75,7 +75,7 @@ const BagItemCard = ({
   return (
     <div className="flex gap-4 w-full">
       {/* Image Container */}
-      <div className="relative w-20 h-20 bg-[#f6f6f6] shrink-0">
+      <div className="relative w-20 h-20 bg-surface-2 shrink-0">
         <Image
           src={item.thumbnail || ""}
           alt={item.name}

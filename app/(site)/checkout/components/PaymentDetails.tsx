@@ -52,7 +52,7 @@ const BundleCard = ({ bundle }: { bundle: BundleGroup }) => {
       <div className="divide-y divide-gray-100">
         {bundle.items.map((item, idx) => (
           <div key={idx} className="flex gap-2 p-2">
-            <div className="relative w-10 h-10 bg-[#f6f6f6] shrink-0">
+            <div className="relative w-10 h-10 bg-surface-2 shrink-0">
               <Image
                 src={item.thumbnail || ""}
                 alt={item.name}

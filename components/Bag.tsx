@@ -61,7 +61,7 @@ const BundleGroupCard = ({
         {bundle.items.map((item, idx) => (
           <div key={idx} className="flex gap-3 p-3">
             {/* Thumbnail */}
-            <div className="relative w-16 h-16 bg-[#f6f6f6] shrink-0">
+            <div className="relative w-16 h-16 bg-surface-2 shrink-0">
               <Image
                 src={item.thumbnail || ""}
                 alt={item.name}
@@ -123,7 +123,7 @@ const SingleItemCard = ({
   return (
     <div className="flex gap-4 w-full">
       {/* Image */}
-      <div className="relative w-20 h-20 bg-[#f6f6f6] shrink-0">
+      <div className="relative w-20 h-20 bg-surface-2 shrink-0">
         <Image
           src={item.thumbnail || ""}
           alt={item.name}

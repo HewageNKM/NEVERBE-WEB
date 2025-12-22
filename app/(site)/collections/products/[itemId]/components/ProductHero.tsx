@@ -129,7 +129,7 @@ const ProductHero = ({ item }: { item: Product }) => {
     <section className="max-w-[1440px] mx-auto px-4 md:px-10 py-6 flex flex-col lg:flex-row gap-10 lg:gap-16">
       {/* --- LEFT COLUMN: IMAGES --- */}
       <div className="flex-1 lg:w-3/5 flex flex-col gap-4">
-        <div className="relative aspect-square bg-[#f6f6f6] rounded-sm overflow-hidden group">
+        <div className="relative aspect-square bg-surface-2 rounded-sm overflow-hidden group">
           <AnimatePresence mode="wait">
             <motion.div
               key={selectedImage.url}
@@ -162,7 +162,7 @@ const ProductHero = ({ item }: { item: Product }) => {
             <button
               key={idx}
               onMouseEnter={() => setSelectedImage(img)}
-              className={`relative aspect-square bg-[#f6f6f6] rounded-sm overflow-hidden border-2 transition-all ${
+              className={`relative aspect-square bg-surface-2 rounded-sm overflow-hidden border-2 transition-all ${
                 selectedImage.url === img.url
                   ? "border-black"
                   : "border-transparent opacity-70"
@@ -247,7 +247,7 @@ const ProductHero = ({ item }: { item: Product }) => {
                     setSelectedVariant(v);
                     setSelectedSize("");
                   }}
-                  className={`w-12 h-12 bg-[#f6f6f6] rounded-md overflow-hidden border-2 transition-all ${
+                  className={`w-12 h-12 bg-surface-2 rounded-md overflow-hidden border-2 transition-all ${
                     selectedVariant.variantId === v.variantId
                       ? "border-black"
                       : "border-transparent opacity-60"

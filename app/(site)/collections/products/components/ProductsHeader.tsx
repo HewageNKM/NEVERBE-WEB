@@ -6,11 +6,11 @@ const ProductsHeader = () => {
     <section className="w-full px-4 md:px-12 py-8 md:py-16 bg-white flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
       <div className="flex flex-col items-start max-w-[1920px]">
         {/* Nike uses Medium weight for a premium, athletic look */}
-        <h1 className="text-[28px] md:text-[42px] font-medium tracking-tight text-[#111] leading-none">
+        <h1 className="text-[28px] md:text-[42px] font-medium tracking-tight text-primary leading-none">
           All Products
         </h1>
         <div className="flex items-center gap-4 mt-3">
-          <p className="text-[16px] text-[#707072] font-normal">
+          <p className="text-[16px] text-secondary font-normal">
             High-Performance Footwear & Lifestyle Apparel
           </p>
         </div>

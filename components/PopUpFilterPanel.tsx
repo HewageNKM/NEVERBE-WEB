@@ -32,8 +32,8 @@ const FilterList = ({
   selected: string[];
   onToggle: (label: string) => void;
 }) => (
-  <div className="py-8 border-t border-gray-100">
-    <h3 className="text-[18px] font-medium text-[#111] tracking-tight mb-6">
+  <div className="py-8 border-t border-default">
+    <h3 className="text-[18px] font-medium text-primary tracking-tight mb-6">
       {title}
     </h3>
     <div className="flex flex-col gap-5">
@@ -48,14 +48,14 @@ const FilterList = ({
             {/* Minimalist Nike Checkbox */}
             <div
               className={`w-6 h-6 border rounded-[4px] flex items-center justify-center transition-all ${
-                isActive ? "bg-black border-black" : "border-gray-300"
+                isActive ? "bg-dark border-dark" : "border-gray-300"
               }`}
             >
-              {isActive && <div className="w-2 h-2 bg-white rounded-full" />}
+              {isActive && <div className="w-2 h-2 bg-surface rounded-full" />}
             </div>
             <span
               className={`text-[16px] ${
-                isActive ? "text-[#111] font-medium" : "text-[#111]"
+                isActive ? "text-primary font-medium" : "text-primary"
               }`}
             >
               {item.label}
@@ -89,17 +89,17 @@ const PopUpFilterPanel: React.FC<PopUpFilterPanelProps> = ({
         animate={{ x: 0 }}
         exit={{ x: "100%" }}
         transition={{ type: "spring", damping: 25, stiffness: 200 }}
-        className="bg-white w-full max-w-[440px] h-full shadow-2xl relative flex flex-col"
+        className="bg-surface w-full max-w-[440px] h-full shadow-2xl relative flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
         {/* HEADER: High-end minimalist */}
-        <div className="px-8 py-6 flex justify-between items-center bg-white z-20">
-          <h2 className="text-[20px] font-medium text-[#111] tracking-tight">
+        <div className="px-8 py-6 flex justify-between items-center bg-surface z-20">
+          <h2 className="text-[20px] font-medium text-primary tracking-tight">
             Filters
           </h2>
           <button
             onClick={onClose}
-            className="p-2 -mr-2 hover:bg-gray-100 rounded-full transition-colors"
+            className="p-2 -mr-2 hover:bg-surface-2 rounded-full transition-colors"
           >
             <IoCloseOutline size={30} />
           </button>
@@ -108,16 +108,16 @@ const PopUpFilterPanel: React.FC<PopUpFilterPanelProps> = ({
         {/* BODY: Expansive vertical whitespace */}
         <div className="flex-1 overflow-y-auto px-8 no-scrollbar">
           {/* In Stock Utility */}
-          <div className="flex justify-between items-center py-8 border-t border-gray-100">
-            <span className="text-[16px] font-normal text-[#111]">
+          <div className="flex justify-between items-center py-8 border-t border-default">
+            <span className="text-[16px] font-normal text-primary">
               In Stock Only
             </span>
             <ToggleSwitch checked={inStock} onChange={onInStockChange} />
           </div>
 
           {/* SIZES: 3-Column Nike Grid */}
-          <div className="py-8 border-t border-gray-100">
-            <h3 className="text-[18px] font-medium text-[#111] tracking-tight mb-6">
+          <div className="py-8 border-t border-default">
+            <h3 className="text-[18px] font-medium text-primary tracking-tight mb-6">
               Select Size
             </h3>
             <div className="grid grid-cols-3 gap-2">
@@ -129,8 +129,8 @@ const PopUpFilterPanel: React.FC<PopUpFilterPanelProps> = ({
                     onClick={() => onSizeToggle(size)}
                     className={`aspect-square flex items-center justify-center border rounded-[4px] text-[14px] transition-all ${
                       isActive
-                        ? "bg-black text-white border-black font-medium"
-                        : "bg-white text-[#111] border-gray-200"
+                        ? "bg-dark text-inverse border-dark font-medium"
+                        : "bg-surface text-primary border-gray-200"
                     }`}
                   >
                     {size}
@@ -161,16 +161,16 @@ const PopUpFilterPanel: React.FC<PopUpFilterPanelProps> = ({
         </div>
 
         {/* FOOTER ACTIONS: Pill-shaped high-contrast buttons */}
-        <div className="p-8 border-t border-gray-100 bg-white flex gap-3">
+        <div className="p-8 border-t border-default bg-surface flex gap-3">
           <button
             onClick={onReset}
-            className="flex-1 py-4 text-[15px] font-medium border border-gray-200 rounded-full hover:border-black transition-all"
+            className="flex-1 py-4 text-[15px] font-medium border border-gray-200 rounded-full hover:border-dark transition-all"
           >
             Clear All
           </button>
           <button
             onClick={onClose}
-            className="flex-1 py-4 text-[15px] font-medium bg-black text-white rounded-full hover:opacity-70 transition-all active:scale-[0.98]"
+            className="flex-1 py-4 text-[15px] font-medium bg-dark text-inverse rounded-full hover:opacity-70 transition-all active:scale-[0.98]"
           >
             Apply
           </button>

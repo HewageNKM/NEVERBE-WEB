@@ -48,7 +48,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
         }));
 
   return (
-    <footer id="footer" className="w-full bg-[#111] text-white pt-12 pb-6">
+    <footer id="footer" className="w-full bg-dark text-white pt-12 pb-6">
       <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
         {/* --- Primary Navigation Grid --- */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-4 mb-12">
@@ -74,7 +74,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                 className="group flex items-start gap-3"
               >
                 <GoLocation size={16} className="mt-1 text-white" />
-                <p className="text-[12px] text-[#707072] font-medium uppercase leading-tight group-hover:text-white transition-colors">
+                <p className="text-[12px] text-secondary font-medium uppercase leading-tight group-hover:text-white transition-colors">
                   {address.address}
                 </p>
               </Link>
@@ -91,7 +91,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                 <li key={idx}>
                   <Link
                     href={link.link}
-                    className="text-[12px] text-[#707072] hover:text-white transition-colors font-medium"
+                    className="text-[12px] text-secondary hover:text-white transition-colors font-medium"
                   >
                     {link.title}
                   </Link>
@@ -111,11 +111,11 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                   <Link
                     href={info.link}
                     target="_blank"
-                    className="flex items-center gap-3 text-[12px] text-[#707072] hover:text-white transition-colors group"
+                    className="flex items-center gap-3 text-[12px] text-secondary hover:text-white transition-colors group"
                   >
                     <info.icon
                       size={16}
-                      className="text-[#707072] group-hover:text-white"
+                      className="text-secondary group-hover:text-white"
                     />
                     <span className="font-medium">{info.content}</span>
                   </Link>
@@ -135,7 +135,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                   key={idx}
                   href={media.url}
                   target="_blank"
-                  className="bg-[#707072] hover:bg-white text-[#111] p-2 rounded-full transition-all duration-300"
+                  className="bg-secondary hover:bg-white text-primary p-2 rounded-full transition-all duration-300"
                 >
                   <media.Icon size={18} />
                 </Link>
@@ -145,10 +145,10 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
         </div>
 
         {/* --- Bottom Legal & Credits Row --- */}
-        <div className="pt-6 border-t border-[#222] flex flex-col lg:flex-row justify-between items-center gap-8">
+        <div className="pt-6 border-t border-zinc-800 flex flex-col lg:flex-row justify-between items-center gap-8">
           <div className="flex flex-col md:flex-row gap-4 md:gap-6 items-center">
             {/* Nike Style Utility Footer Links */}
-            <div className="flex items-center gap-4 text-[11px] text-[#707072] font-medium">
+            <div className="flex items-center gap-4 text-[11px] text-secondary font-medium">
               <p className="text-white">
                 © {new Date().getFullYear()} NEVERBE, Inc.
               </p>
@@ -184,7 +184,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
             </Link>
 
             {/* Dev Credit - Minimalist */}
-            <p className="text-[10px] text-[#707072] uppercase font-bold tracking-widest">
+            <p className="text-[10px] text-secondary uppercase font-bold tracking-widest">
               Built By{" "}
               <Link
                 href="https://github.com/HewageNKM"

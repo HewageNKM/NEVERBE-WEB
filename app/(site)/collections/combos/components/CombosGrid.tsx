@@ -63,7 +63,7 @@ const CombosGrid: React.FC<CombosGridProps> = ({
             <button
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1}
-              className="flex items-center gap-2 px-6 py-2 text-[14px] font-medium text-[#111] hover:text-[#707072] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+              className="flex items-center gap-2 px-6 py-2 text-[14px] font-medium text-primary hover:text-secondary disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
             >
               <IoChevronBack size={18} />
               Previous
@@ -89,8 +89,8 @@ const CombosGrid: React.FC<CombosGridProps> = ({
                     onClick={() => handlePageChange(pageNum)}
                     className={`min-w-[32px] h-8 flex items-center justify-center text-[14px] font-medium rounded-sm transition-colors ${
                       currentPage === pageNum
-                        ? "bg-[#111] text-white"
-                        : "bg-transparent text-[#707072] hover:text-[#111]"
+                        ? "bg-dark text-white"
+                        : "bg-transparent text-secondary hover:text-primary"
                     }`}
                   >
                     {pageNum}
@@ -103,7 +103,7 @@ const CombosGrid: React.FC<CombosGridProps> = ({
             <button
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
-              className="flex items-center gap-2 px-6 py-2 text-[14px] font-medium text-[#111] hover:text-[#707072] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+              className="flex items-center gap-2 px-6 py-2 text-[14px] font-medium text-primary hover:text-secondary disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
             >
               Next
               <IoChevronForward size={18} />

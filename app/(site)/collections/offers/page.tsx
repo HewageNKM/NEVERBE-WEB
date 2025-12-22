@@ -89,10 +89,10 @@ const OffersPage = async () => {
 
       {/* 1. NIKE STYLE HEADER */}
       <div className="w-full max-w-[1920px] mx-auto px-4 md:px-12 py-12 md:py-20 text-left">
-        <h1 className="text-[28px] md:text-[42px] font-medium tracking-tight text-[#111] leading-none mb-4">
+        <h1 className="text-[28px] md:text-[42px] font-medium tracking-tight text-primary leading-none mb-4">
           Member Rewards & Offers
         </h1>
-        <p className="text-[#707072] max-w-xl text-[16px] md:text-[18px] font-normal">
+        <p className="text-secondary max-w-xl text-[16px] md:text-[18px] font-normal">
           Unlock exclusive campaigns, seasonal coupons, and the best markdown
           deals on premium footwear.
         </p>
@@ -103,7 +103,7 @@ const OffersPage = async () => {
         {bannerPromotions.length > 0 && (
           <section>
             <div className="mb-10">
-              <h2 className="text-[20px] font-medium text-[#111] tracking-tight">
+              <h2 className="text-[20px] font-medium text-primary tracking-tight">
                 Active Campaigns
               </h2>
             </div>
@@ -112,7 +112,7 @@ const OffersPage = async () => {
               {bannerPromotions.map((promo: any) => (
                 <div
                   key={promo.id}
-                  className="group block relative aspect-4/5 bg-[#f5f5f5] overflow-hidden cursor-pointer"
+                  className="group block relative aspect-4/5 bg-surface-2 overflow-hidden cursor-pointer"
                 >
                   <Image
                     src={promo.bannerUrl}
@@ -125,7 +125,7 @@ const OffersPage = async () => {
                     <h3 className="text-white text-[24px] font-medium tracking-tight mb-2">
                       {promo.name}
                     </h3>
-                    <button className="px-6 py-2 bg-white text-black text-[15px] font-medium rounded-full hover:bg-[#e5e5e5] transition-all">
+                    <button className="px-6 py-2 bg-white text-black text-[15px] font-medium rounded-full hover:bg-gray-200 transition-all">
                       Shop Now
                     </button>
                   </div>
@@ -139,7 +139,7 @@ const OffersPage = async () => {
         {coupons.length > 0 && (
           <section>
             <div className="mb-10">
-              <h2 className="text-[20px] font-medium text-[#111] tracking-tight">
+              <h2 className="text-[20px] font-medium text-primary tracking-tight">
                 Your Available Coupons
               </h2>
             </div>
@@ -156,16 +156,16 @@ const OffersPage = async () => {
         <section className="pt-16 border-t border-gray-100">
           <div className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div>
-              <h2 className="text-[24px] md:text-[32px] font-medium text-[#111] tracking-tight leading-none">
+              <h2 className="text-[24px] md:text-[32px] font-medium text-primary tracking-tight leading-none">
                 Shop Markdown Deals
               </h2>
-              <p className="text-[#707072] text-[16px] mt-2">
+              <p className="text-secondary text-[16px] mt-2">
                 Highest performance footwear at our best prices.
               </p>
             </div>
             <Link
               href="/collections/combos"
-              className="text-[16px] font-medium text-[#111] underline underline-offset-4 hover:opacity-70 transition-all"
+              className="text-[16px] font-medium text-primary underline underline-offset-4 hover:opacity-70 transition-all"
             >
               View Bundles & Combos
             </Link>
@@ -177,14 +177,14 @@ const OffersPage = async () => {
       </div>
 
       {/* PREMIUM BRAND STORY FOOTER */}
-      <section className="bg-[#f5f5f5] py-16 mt-0">
+      <section className="bg-surface-2 py-16 mt-0">
         <div className="max-w-[1440px] mx-auto px-8 lg:px-12">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 lg:gap-24">
             <div className="max-w-sm">
-              <h2 className="text-[16px] font-medium text-[#111] mb-6">
+              <h2 className="text-[16px] font-medium text-primary mb-6">
                 Member Benefits
               </h2>
-              <p className="text-[14px] text-[#707072] leading-relaxed mb-4">
+              <p className="text-[14px] text-secondary leading-relaxed mb-4">
                 Unlock exclusive deals and early access to new drops. Sign up
                 for NEVERBE membership to get the best prices on premium
                 footwear in Sri Lanka.
@@ -192,10 +192,10 @@ const OffersPage = async () => {
             </div>
 
             <div className="max-w-sm">
-              <h3 className="text-[16px] font-medium text-[#111] mb-6">
+              <h3 className="text-[16px] font-medium text-primary mb-6">
                 Ways to Save
               </h3>
-              <ul className="text-[14px] text-[#707072] space-y-3 font-medium">
+              <ul className="text-[14px] text-secondary space-y-3 font-medium">
                 <li className="hover:text-black cursor-pointer transition-colors">
                   Seasonal Markdown Deals
                 </li>
@@ -209,10 +209,10 @@ const OffersPage = async () => {
             </div>
 
             <div className="max-w-sm">
-              <h3 className="text-[16px] font-medium text-[#111] mb-6">
+              <h3 className="text-[16px] font-medium text-primary mb-6">
                 Price Match Promise
               </h3>
-              <p className="text-[14px] text-[#707072] leading-relaxed">
+              <p className="text-[14px] text-secondary leading-relaxed">
                 We offer the best prices on 7A quality footwear. If you find a
                 better price elsewhere, let us know and we&apos;ll do our best
                 to match it.

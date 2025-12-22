@@ -122,7 +122,7 @@ const DealsProducts = ({ items }: { items: Product[] }) => {
           <div className="flex items-center gap-4">
             <button
               onClick={() => dispatch(toggleFilter())}
-              className="lg:hidden flex items-center gap-2 text-[16px] text-[#111]"
+              className="lg:hidden flex items-center gap-2 text-[16px] text-primary"
               aria-label="Open Filters"
             >
               <IoOptionsOutline size={22} />

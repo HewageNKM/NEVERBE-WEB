@@ -154,7 +154,7 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
 
             <div className="flex flex-col md:flex-row h-full overflow-y-auto no-scrollbar">
               {/* LEFT: VISUALS SECTION */}
-              <div className="w-full md:w-1/2 flex flex-col bg-[#f6f6f6] shrink-0">
+              <div className="w-full md:w-1/2 flex flex-col bg-surface-2 shrink-0">
                 <div className="relative aspect-square flex items-center justify-center p-6 md:p-12">
                   <Image
                     src={
@@ -213,7 +213,7 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
                 )}
 
                 <div className="mb-6">
-                  <p className="text-[#707072] text-[14px] md:text-[15px] font-normal capitalize mb-1">
+                  <p className="text-secondary text-[14px] md:text-[15px] font-normal capitalize mb-1">
                     {activePromo ? (
                       <span className="text-orange-600 font-bold uppercase tracking-widest">
                         Promotion Active
@@ -222,7 +222,7 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
                       product.brand?.replace("-", " ")
                     )}
                   </p>
-                  <h2 className="text-[20px] md:text-[24px] font-medium text-[#111] leading-tight tracking-tight">
+                  <h2 className="text-[20px] md:text-[24px] font-medium text-primary leading-tight tracking-tight">
                     {product.name}
                   </h2>
                 </div>
@@ -231,14 +231,14 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
                   <span
                     className={`text-[18px] md:text-[20px] font-medium ${
                       product.discount > 0 || activePromo
-                        ? "text-[#b22222]"
+                        ? "text-error"
                         : "text-black"
                     }`}
                   >
                     Rs. {finalPrice.toLocaleString()}
                   </span>
                   {(product.discount > 0 || activePromo) && (
-                    <span className="text-[#707072] text-[15px] md:text-[16px] line-through decoration-[0.5px]">
+                    <span className="text-secondary text-[15px] md:text-[16px] line-through decoration-[0.5px]">
                       Rs. {product.marketPrice.toLocaleString()}
                     </span>
                   )}
@@ -246,7 +246,7 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
 
                 {/* Size Grid */}
                 <div className="mb-8">
-                  <p className="text-[16px] font-medium mb-4 text-[#111]">
+                  <p className="text-[16px] font-medium mb-4 text-primary">
                     Select Size
                   </p>
                   <SizeGrid
@@ -261,7 +261,7 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
                 {/* Quantity */}
                 <div className="flex items-center justify-between mb-8">
                   <div className="flex items-center gap-4">
-                    <span className="text-[14px] font-medium text-[#111]">
+                    <span className="text-[14px] font-medium text-primary">
                       Quantity
                     </span>
                     <div className="flex items-center border border-gray-200 rounded-full px-3 py-1">
@@ -291,7 +291,7 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
                   {selectedSize && !stockLoading && (
                     <span
                       className={`text-[12px] font-medium uppercase tracking-tight ${
-                        availableStock < 5 ? "text-[#b22222]" : "text-green-700"
+                        availableStock < 5 ? "text-error" : "text-green-700"
                       }`}
                     >
                       {availableStock < 5
@@ -306,7 +306,7 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
                   <button
                     onClick={handleAddToBag}
                     disabled={!selectedSize || isOutOfStock || isLimitReached}
-                    className="w-full py-4 md:py-5 bg-black text-white rounded-full font-medium text-[15px] md:text-[16px] transition-all active:scale-[0.98] disabled:bg-[#f5f5f5] disabled:text-[#707072]"
+                    className="w-full py-4 md:py-5 bg-black text-white rounded-full font-medium text-[15px] md:text-[16px] transition-all active:scale-[0.98] disabled:bg-surface-2 disabled:text-secondary"
                   >
                     {isOutOfStock
                       ? "Sold Out"
