@@ -55,7 +55,7 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
             initial={{ opacity: 0, y: 5 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 5 }}
-            className="absolute right-0 mt-4 w-[200px] bg-white border border-[#e5e5e5] shadow-xl z-50 py-4 rounded-none"
+            className="absolute right-0 mt-4 w-[200px] bg-white border border-[#e5e5e5] shadow-xl z-[100] py-4 rounded-none"
           >
             {sortingOptions.map((opt, i) => (
               <li
