@@ -28,19 +28,17 @@ const ProductsFilter = () => {
   );
 
   return (
-    <aside className="w-full">
-      <FilterPanel
-        selectedBrands={selectedBrands}
-        selectedCategories={selectedCategories}
-        selectedSizes={selectedSizes}
-        inStock={inStock}
-        onBrandToggle={toggleBrand}
-        onCategoryToggle={toggleCategory}
-        onSizeToggle={toggleSize}
-        onInStockChange={(val) => dispatch(setInStock(val))}
-        onReset={() => dispatch(resetFilter())}
-      />
-    </aside>
+    <FilterPanel
+      selectedBrands={selectedBrands}
+      selectedCategories={selectedCategories}
+      selectedSizes={selectedSizes}
+      inStock={inStock}
+      onBrandToggle={toggleBrand}
+      onCategoryToggle={toggleCategory}
+      onSizeToggle={toggleSize}
+      onInStockChange={(val) => dispatch(setInStock(val))}
+      onReset={() => dispatch(resetFilter())}
+    />
   );
 };
 

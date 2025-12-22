@@ -9,6 +9,7 @@ import EmptyState from "@/components/EmptyState";
 import ComponentLoader from "@/components/ComponentLoader";
 import ProductsFilter from "./ProductsFilter";
 import { IoOptionsOutline } from "react-icons/io5";
+import { AnimatePresence } from "framer-motion";
 import {
   setPage,
   setProducts,
@@ -19,10 +20,13 @@ import {
   setSelectedSizes,
   setInStock,
   toggleFilter,
+  resetFilter,
 } from "@/redux/productsSlice/productsSlice";
 import { Product } from "@/interfaces/Product";
 import { sortProductsByPrice } from "@/utils/formatting";
 import SortDropdown from "@/components/SortDropdown";
+import PopUpFilterPanel from "@/components/PopUpFilterPanel";
+import { useFilterToggles } from "@/hooks/useFilterToggles";
 
 const Products = ({ items }: { items: Product[] }) => {
   const dispatch: AppDispatch = useDispatch();
@@ -39,13 +43,22 @@ const Products = ({ items }: { items: Product[] }) => {
     selectedGender,
     inStock,
     selectedSort,
+    showFilter,
   } = useSelector((state: RootState) => state.productsSlice);
 
   const [isLoading, setIsLoading] = useState(false);
-
-  // FIX: Initialize with items.length so pagination shows up immediately
   const [totalProduct, setTotalProduct] = useState(items?.length || 0);
   const [isInitialized, setIsInitialized] = useState(false);
+
+  // Use shared filter toggle hooks
+  const { toggleBrand, toggleCategory, toggleSize } = useFilterToggles(
+    selectedBrands,
+    selectedCategories,
+    selectedSizes,
+    setSelectedBrand,
+    setSelectedCategories,
+    setSelectedSizes
+  );
 
   // --- Initializing from URL ---
   useEffect(() => {
@@ -139,7 +152,7 @@ const Products = ({ items }: { items: Product[] }) => {
         const sorted = sortProductsByPrice(data.dataList || [], selectedSort);
 
         dispatch(setProducts(sorted));
-        setTotalProduct(data.total || sorted.length); // Fallback to list length
+        setTotalProduct(data.total || sorted.length);
       } catch (e) {
         console.error(e);
       } finally {
@@ -162,27 +175,49 @@ const Products = ({ items }: { items: Product[] }) => {
 
   return (
     <section className="w-full max-w-[1920px] mx-auto px-4 md:px-8 pb-20 flex gap-0 bg-white">
-      {/* 1. DESKTOP SIDEBAR */}
-      <aside className="hidden lg:block w-[260px] shrink-0 pt-8 pr-8">
-        <ProductsFilter />
-      </aside>
+      {/* 1. DESKTOP SIDEBAR - FilterPanel provides its own sticky aside */}
+      <ProductsFilter />
+
+      {/* Mobile Filter Drawer */}
+      <AnimatePresence>
+        {showFilter && (
+          <PopUpFilterPanel
+            selectedBrands={selectedBrands}
+            selectedCategories={selectedCategories}
+            selectedSizes={selectedSizes}
+            inStock={inStock}
+            onBrandToggle={toggleBrand}
+            onCategoryToggle={toggleCategory}
+            onSizeToggle={toggleSize}
+            onInStockChange={(val) => dispatch(setInStock(val))}
+            onReset={() => dispatch(resetFilter())}
+            onClose={() => dispatch(toggleFilter())}
+          />
+        )}
+      </AnimatePresence>
 
       <div className="flex-1 w-full">
         {/* 2. STICKY TOOLBAR */}
         <div className="relative z-20 bg-white/90 backdrop-blur-md py-6 flex justify-between items-center">
-          <button
-            onClick={() => dispatch(toggleFilter())}
-            className="lg:hidden flex items-center gap-2 text-[16px] text-[#111]"
-            aria-label="Open Filters"
-          >
-            <IoOptionsOutline size={22} />
-          </button>
+          <h2 className="text-[20px] font-medium text-[#111] tracking-tight">
+            All Products ({totalProduct})
+          </h2>
 
-          <SortDropdown
-            value={selectedSort}
-            onChange={(val) => dispatch(setSelectedSort(val))}
-            className="ml-auto"
-          />
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => dispatch(toggleFilter())}
+              className="lg:hidden flex items-center gap-2 text-[16px] text-[#111]"
+              aria-label="Open Filters"
+            >
+              <IoOptionsOutline size={22} />
+              <span>Filter</span>
+            </button>
+
+            <SortDropdown
+              value={selectedSort}
+              onChange={(val) => dispatch(setSelectedSort(val))}
+            />
+          </div>
         </div>
 
         {/* 3. PRODUCT GRID */}
@@ -202,7 +237,7 @@ const Products = ({ items }: { items: Product[] }) => {
           </div>
         )}
 
-        {/* 4. PAGINATION SECTION */}
+        {/* 4. PAGINATION */}
         {totalProduct > size && (
           <div className="flex justify-center mt-24 border-t border-gray-100 pt-12">
             <Pagination

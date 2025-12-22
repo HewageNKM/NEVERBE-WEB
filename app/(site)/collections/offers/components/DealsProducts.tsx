@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import Pagination from "@/components/Pagination";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
@@ -7,10 +7,23 @@ import ItemCard from "@/components/ItemCard";
 import EmptyState from "@/components/EmptyState";
 import ComponentLoader from "@/components/ComponentLoader";
 import DealsFilter from "./DealsFilter";
-import { setPage, setSelectedSort } from "@/redux/dealsSlice/dealsSlice";
+import { IoOptionsOutline } from "react-icons/io5";
+import { AnimatePresence } from "framer-motion";
+import {
+  setPage,
+  setSelectedSort,
+  toggleFilter,
+  setSelectedBrand,
+  setSelectedCategories,
+  setSelectedSizes,
+  setInStock,
+  resetFilter,
+} from "@/redux/dealsSlice/dealsSlice";
 import { Product } from "@/interfaces/Product";
 import { sortProductsByPrice } from "@/utils/formatting";
 import SortDropdown from "@/components/SortDropdown";
+import PopUpFilterPanel from "@/components/PopUpFilterPanel";
+import { useFilterToggles } from "@/hooks/useFilterToggles";
 
 const DealsProducts = ({ items }: { items: Product[] }) => {
   const dispatch: AppDispatch = useDispatch();
@@ -22,13 +35,24 @@ const DealsProducts = ({ items }: { items: Product[] }) => {
     selectedSizes,
     inStock,
     selectedSort,
+    showFilter,
   } = useSelector((state: RootState) => state.dealsSlice);
 
   const [isLoading, setIsLoading] = useState(false);
   const [products, setProducts] = useState<Product[]>(items);
   const [totalProducts, setTotalProducts] = useState(items.length);
 
-  // Fetch Logic (preserved, visual updates only)
+  // Use shared filter toggle hooks
+  const { toggleBrand, toggleCategory, toggleSize } = useFilterToggles(
+    selectedBrands,
+    selectedCategories,
+    selectedSizes,
+    setSelectedBrand,
+    setSelectedCategories,
+    setSelectedSizes
+  );
+
+  // Fetch Logic
   useEffect(() => {
     const fetchDeals = async () => {
       setIsLoading(true);
@@ -71,25 +95,52 @@ const DealsProducts = ({ items }: { items: Product[] }) => {
 
   return (
     <section className="w-full max-w-[1920px] mx-auto px-4 md:px-8 pb-20 flex gap-0 bg-white">
-      {/* 1. Sidebar - Borderless Desktop Filter */}
-      <aside className="hidden lg:block w-[260px] shrink-0 pt-8 pr-8">
-        <DealsFilter />
-      </aside>
+      {/* 1. DESKTOP SIDEBAR - FilterPanel provides its own sticky aside */}
+      <DealsFilter />
+
+      {/* Mobile Filter Drawer */}
+      <AnimatePresence>
+        {showFilter && (
+          <PopUpFilterPanel
+            selectedBrands={selectedBrands}
+            selectedCategories={selectedCategories}
+            selectedSizes={selectedSizes}
+            inStock={inStock}
+            onBrandToggle={toggleBrand}
+            onCategoryToggle={toggleCategory}
+            onSizeToggle={toggleSize}
+            onInStockChange={(val) => dispatch(setInStock(val))}
+            onReset={() => dispatch(resetFilter())}
+            onClose={() => dispatch(toggleFilter())}
+          />
+        )}
+      </AnimatePresence>
 
       <div className="flex-1 w-full">
-        {/* 2. Sticky Toolbar: Nike Pro Look */}
+        {/* 2. Sticky Toolbar */}
         <div className="relative z-20 bg-white/90 backdrop-blur-md py-6 flex justify-between items-center">
           <h2 className="text-[20px] font-medium text-[#111] tracking-tight">
             Special Offers ({totalProducts})
           </h2>
 
-          <SortDropdown
-            value={selectedSort}
-            onChange={(val) => dispatch(setSelectedSort(val))}
-          />
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => dispatch(toggleFilter())}
+              className="lg:hidden flex items-center gap-2 text-[16px] text-[#111]"
+              aria-label="Open Filters"
+            >
+              <IoOptionsOutline size={22} />
+              <span>Filter</span>
+            </button>
+
+            <SortDropdown
+              value={selectedSort}
+              onChange={(val) => dispatch(setSelectedSort(val))}
+            />
+          </div>
         </div>
 
-        {/* 3. Product Grid: Borderless & Breathable */}
+        {/* 3. Product Grid */}
         {isLoading ? (
           <div className="h-[60vh] relative">
             <ComponentLoader />
@@ -106,7 +157,7 @@ const DealsProducts = ({ items }: { items: Product[] }) => {
           </div>
         )}
 
-        {/* 4. Nike Style Pagination Wrapper */}
+        {/* 4. Pagination */}
         <div className="flex justify-center mt-24 border-t border-gray-100 pt-12">
           <Pagination
             count={Math.ceil(totalProducts / size)}
