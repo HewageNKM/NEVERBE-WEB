@@ -92,8 +92,9 @@ const DealsProducts = ({ items }: { items: Product[] }) => {
             <button
               onClick={() => dispatch(toggleFilter())}
               className="lg:hidden flex items-center gap-2 text-[16px] text-[#111]"
+              aria-label="Open Filters"
             >
-              Filters <IoOptionsOutline size={20} />
+              <IoOptionsOutline size={22} />
             </button>
 
             <SortDropdown

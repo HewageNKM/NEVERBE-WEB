@@ -170,16 +170,13 @@ const Products = ({ items }: { items: Product[] }) => {
       <div className="flex-1 w-full">
         {/* 2. STICKY TOOLBAR */}
         <div className="bg-white/90 backdrop-blur-md py-6 flex justify-between items-center">
-          <h2 className="text-[20px] font-medium text-[#111] tracking-tight">
-            All Shoes ({totalProduct})
-          </h2>
-
           <div className="flex items-center gap-6">
             <button
               onClick={() => dispatch(toggleFilter())}
               className="lg:hidden flex items-center gap-2 text-[16px] text-[#111]"
+              aria-label="Open Filters"
             >
-              Filters <IoOptionsOutline size={20} />
+              <IoOptionsOutline size={22} />
             </button>
 
             <SortDropdown

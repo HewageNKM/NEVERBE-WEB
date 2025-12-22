@@ -95,7 +95,7 @@ const Page = async () => {
       {/* 1. NIKE STYLE HEADER */}
       <div className="w-full max-w-[1920px] mx-auto px-4 md:px-12 py-12 md:py-20 text-left">
         <h1 className="text-[28px] md:text-[42px] font-medium tracking-tight text-[#111] leading-none mb-4">
-          All Shoes
+          Products
         </h1>
         <p className="text-[#707072] max-w-xl text-[16px] md:text-[18px] font-normal">
           Browse our complete collection. Sneakers, slides, and more for every

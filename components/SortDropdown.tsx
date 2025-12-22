@@ -2,6 +2,7 @@
 import React, { useState, useRef, useCallback } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { IoChevronDownOutline } from "react-icons/io5";
+import { TbArrowsSort } from "react-icons/tb";
 import { useClickOutside } from "@/hooks/useClickOutside";
 import { sortingOptions } from "@/constants";
 
@@ -38,10 +39,14 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center gap-2 text-[16px] text-[#111] hover:text-[#707072] transition-colors"
       >
-        Sort By{" "}
+        {/* Icon only on mobile, text on md+ */}
+        <TbArrowsSort size={20} className="md:hidden" />
+        <span className="hidden md:inline">Sort By</span>
         <IoChevronDownOutline
           size={14}
-          className={`transition-transform ${isOpen ? "rotate-180" : ""}`}
+          className={`hidden md:inline transition-transform ${
+            isOpen ? "rotate-180" : ""
+          }`}
         />
       </button>
       <AnimatePresence>
