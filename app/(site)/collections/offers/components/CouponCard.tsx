@@ -23,7 +23,7 @@ const CouponCard: React.FC<Props> = ({ coupon }) => {
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      className="relative flex flex-col md:flex-row bg-white border border-gray-100 hover:border-gray-200 transition-all group overflow-hidden"
+      className="relative flex flex-col md:flex-row bg-white border border-gray-100 hover:border-gray-200 transition-all group"
     >
       {/* Visual Header / Discount */}
       <div className="bg-[#f5f5f5] p-8 flex flex-col items-start justify-center md:min-w-[160px]">
@@ -42,10 +42,12 @@ const CouponCard: React.FC<Props> = ({ coupon }) => {
       {/* Content Section */}
       <div className="flex-1 p-8 flex flex-col justify-between">
         <div>
-          <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
-            <span className="bg-[#111] text-white text-[11px] font-bold px-3 py-1 rounded-full uppercase tracking-widest">
-              {coupon.code.toUpperCase()}
-            </span>
+          <div className="flex flex-col gap-3 mb-4">
+            <div className="flex flex-wrap items-center gap-3">
+              <span className="bg-[#111] text-white text-[11px] font-bold px-3 py-1 rounded-full uppercase tracking-widest">
+                {coupon.code.toUpperCase()}
+              </span>
+            </div>
             {coupon.endDate && (
               <div className="text-[12px] text-[#b22222] font-medium flex items-center gap-1">
                 <span className="w-1.5 h-1.5 bg-[#b22222] rounded-full animate-pulse" />
@@ -59,6 +61,7 @@ const CouponCard: React.FC<Props> = ({ coupon }) => {
                       : new Date(coupon.endDate as any).toISOString()
                   }
                   labels={false}
+                  compact={true}
                   className="font-bold"
                 />
               </div>

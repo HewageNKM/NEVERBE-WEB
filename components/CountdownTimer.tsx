@@ -1,13 +1,14 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { formatDuration, intervalToDuration } from "date-fns";
+import { intervalToDuration } from "date-fns";
 
 interface Props {
   targetDate: string; // ISO String
   onExpire?: () => void;
   className?: string;
   labels?: boolean;
+  compact?: boolean; // Simple inline text format for tight spaces
 }
 
 const CountdownTimer: React.FC<Props> = ({
@@ -15,6 +16,7 @@ const CountdownTimer: React.FC<Props> = ({
   onExpire,
   className = "",
   labels = true,
+  compact = false,
 }) => {
   const [timeLeft, setTimeLeft] = useState<Duration | null>(null);
   const [isExpired, setIsExpired] = useState(false);
@@ -43,6 +45,17 @@ const CountdownTimer: React.FC<Props> = ({
   if (isExpired || !timeLeft) return null;
 
   const { days, hours, minutes, seconds } = timeLeft;
+
+  // Compact inline format for tight spaces
+  if (compact) {
+    const parts: string[] = [];
+    if (Number(days) > 0) parts.push(`${days}d`);
+    parts.push(`${String(hours || 0).padStart(2, "0")}h`);
+    parts.push(`${String(minutes || 0).padStart(2, "0")}m`);
+    parts.push(`${String(seconds || 0).padStart(2, "0")}s`);
+
+    return <span className={className}>{parts.join(" ")}</span>;
+  }
 
   const TimeBlock = ({
     value,

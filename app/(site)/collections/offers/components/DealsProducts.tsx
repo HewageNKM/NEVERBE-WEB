@@ -118,11 +118,7 @@ const DealsProducts = ({ items }: { items: Product[] }) => {
 
       <div className="flex-1 w-full">
         {/* 2. Sticky Toolbar */}
-        <div className="relative z-20 bg-white/90 backdrop-blur-md py-6 flex justify-between items-center">
-          <h2 className="text-[20px] font-medium text-[#111] tracking-tight">
-            Special Offers ({totalProducts})
-          </h2>
-
+        <div className="relative z-20 bg-white/90 backdrop-blur-md py-6 flex justify-end items-center">
           <div className="flex items-center gap-4">
             <button
               onClick={() => dispatch(toggleFilter())}
