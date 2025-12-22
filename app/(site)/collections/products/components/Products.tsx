@@ -169,21 +169,20 @@ const Products = ({ items }: { items: Product[] }) => {
 
       <div className="flex-1 w-full">
         {/* 2. STICKY TOOLBAR */}
-        <div className="bg-white/90 backdrop-blur-md py-6 flex justify-between items-center">
-          <div className="flex items-center gap-6">
-            <button
-              onClick={() => dispatch(toggleFilter())}
-              className="lg:hidden flex items-center gap-2 text-[16px] text-[#111]"
-              aria-label="Open Filters"
-            >
-              <IoOptionsOutline size={22} />
-            </button>
+        <div className="relative z-20 bg-white/90 backdrop-blur-md py-6 flex justify-between items-center">
+          <button
+            onClick={() => dispatch(toggleFilter())}
+            className="lg:hidden flex items-center gap-2 text-[16px] text-[#111]"
+            aria-label="Open Filters"
+          >
+            <IoOptionsOutline size={22} />
+          </button>
 
-            <SortDropdown
-              value={selectedSort}
-              onChange={(val) => dispatch(setSelectedSort(val))}
-            />
-          </div>
+          <SortDropdown
+            value={selectedSort}
+            onChange={(val) => dispatch(setSelectedSort(val))}
+            className="ml-auto"
+          />
         </div>
 
         {/* 3. PRODUCT GRID */}

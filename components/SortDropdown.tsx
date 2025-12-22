@@ -39,14 +39,12 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center gap-2 text-[16px] text-[#111] hover:text-[#707072] transition-colors"
       >
-        {/* Icon only on mobile, text on md+ */}
-        <TbArrowsSort size={20} className="md:hidden" />
+        <TbArrowsSort size={20} />
+        <span className="md:hidden">Sort</span>
         <span className="hidden md:inline">Sort By</span>
         <IoChevronDownOutline
           size={14}
-          className={`hidden md:inline transition-transform ${
-            isOpen ? "rotate-180" : ""
-          }`}
+          className={`transition-transform ${isOpen ? "rotate-180" : ""}`}
         />
       </button>
       <AnimatePresence>

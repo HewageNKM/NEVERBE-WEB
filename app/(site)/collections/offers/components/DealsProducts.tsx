@@ -7,12 +7,7 @@ import ItemCard from "@/components/ItemCard";
 import EmptyState from "@/components/EmptyState";
 import ComponentLoader from "@/components/ComponentLoader";
 import DealsFilter from "./DealsFilter";
-import { IoOptionsOutline } from "react-icons/io5";
-import {
-  setPage,
-  setSelectedSort,
-  toggleFilter,
-} from "@/redux/dealsSlice/dealsSlice";
+import { setPage, setSelectedSort } from "@/redux/dealsSlice/dealsSlice";
 import { Product } from "@/interfaces/Product";
 import { sortProductsByPrice } from "@/utils/formatting";
 import SortDropdown from "@/components/SortDropdown";
@@ -83,25 +78,15 @@ const DealsProducts = ({ items }: { items: Product[] }) => {
 
       <div className="flex-1 w-full">
         {/* 2. Sticky Toolbar: Nike Pro Look */}
-        <div className="bg-white/90 backdrop-blur-md py-6 flex justify-between items-center">
+        <div className="relative z-20 bg-white/90 backdrop-blur-md py-6 flex justify-between items-center">
           <h2 className="text-[20px] font-medium text-[#111] tracking-tight">
             Special Offers ({totalProducts})
           </h2>
 
-          <div className="flex items-center gap-6">
-            <button
-              onClick={() => dispatch(toggleFilter())}
-              className="lg:hidden flex items-center gap-2 text-[16px] text-[#111]"
-              aria-label="Open Filters"
-            >
-              <IoOptionsOutline size={22} />
-            </button>
-
-            <SortDropdown
-              value={selectedSort}
-              onChange={(val) => dispatch(setSelectedSort(val))}
-            />
-          </div>
+          <SortDropdown
+            value={selectedSort}
+            onChange={(val) => dispatch(setSelectedSort(val))}
+          />
         </div>
 
         {/* 3. Product Grid: Borderless & Breathable */}
