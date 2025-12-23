@@ -1,39 +1,52 @@
 "use client";
 
 /**
- * PageLoader - NEVERBE Performance Redesign
- * Full-page premium loading experience with brand identity.
+ * PageLoader - NEVERBE Premium Glass Theme
+ * Full-page loading with liquid glass 3-dot animation.
  */
 const PageLoader = () => {
   return (
-    <main className="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-dark">
-      {/* Pulsating Logo Container */}
-      <div className="relative flex items-center justify-center mb-8">
-        {/* Outer Ring Pulse */}
-        <div className="absolute w-24 h-24 rounded-full border border-accent/30 animate-ping" />
-
-        {/* Inner Ring */}
-        <div className="absolute w-20 h-20 rounded-full border-2 border-accent/50 animate-pulse" />
-
-        {/* Center Circle with Brand */}
-        <div className="w-16 h-16 rounded-full bg-accent/10 flex items-center justify-center">
-          <span className="text-2xl font-display font-black text-accent">
-            N
-          </span>
+    <main className="fixed inset-0 z-200 flex flex-col items-center justify-center bg-surface">
+      {/* Liquid Glass Container */}
+      <div
+        className="backdrop-blur-xl bg-white/60 rounded-3xl px-10 py-8 flex flex-col items-center"
+        style={{
+          boxShadow: `
+            0 8px 32px rgba(151, 225, 62, 0.15),
+            0 4px 16px rgba(0, 0, 0, 0.08),
+            inset 0 1px 1px rgba(255, 255, 255, 0.8)
+          `,
+        }}
+      >
+        {/* 3-Dot Animation */}
+        <div className="flex gap-3 mb-6">
+          <div
+            className="w-3 h-3 rounded-full bg-accent animate-bounce"
+            style={{
+              animationDelay: "0ms",
+              boxShadow: "0 4px 12px rgba(151, 225, 62, 0.4)",
+            }}
+          />
+          <div
+            className="w-3 h-3 rounded-full bg-accent animate-bounce"
+            style={{
+              animationDelay: "150ms",
+              boxShadow: "0 4px 12px rgba(151, 225, 62, 0.4)",
+            }}
+          />
+          <div
+            className="w-3 h-3 rounded-full bg-accent animate-bounce"
+            style={{
+              animationDelay: "300ms",
+              boxShadow: "0 4px 12px rgba(151, 225, 62, 0.4)",
+            }}
+          />
         </div>
-      </div>
 
-      {/* Brand Name */}
-      <p className="text-sm font-display font-black uppercase tracking-[0.3em] text-accent mb-4">
-        NEVERBE
-      </p>
-
-      {/* Loading Bar */}
-      <div className="w-32 h-0.5 bg-surface-3 rounded-full overflow-hidden">
-        <div
-          className="h-full w-full bg-linear-to-r from-accent via-primary to-accent animate-shimmer"
-          style={{ backgroundSize: "200% 100%" }}
-        />
+        {/* Brand Name */}
+        <p className="text-xs font-display font-black uppercase tracking-[0.3em] text-primary">
+          NEVERBE
+        </p>
       </div>
     </main>
   );

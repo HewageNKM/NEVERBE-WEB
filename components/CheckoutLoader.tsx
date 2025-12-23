@@ -2,25 +2,28 @@
 import React from "react";
 
 /**
- * CheckoutLoader - Full-page loading overlay for checkout processing
- * Premium experience with progress messaging for order processing.
+ * CheckoutLoader - Full-page Liquid Glass Loader
+ * Premium white theme with 3-dot animation and processing message.
  */
 const CheckoutLoader = () => {
   return (
-    <div className="fixed inset-0 z-300 flex flex-col items-center justify-center bg-dark">
-      {/* Animated Rings */}
-      <div className="relative flex items-center justify-center mb-10">
-        {/* Outer spinning ring */}
+    <div className="fixed inset-0 z-300 flex flex-col items-center justify-center bg-surface/95 backdrop-blur-sm">
+      {/* Liquid Glass Card */}
+      <div
+        className="backdrop-blur-xl bg-white/80 rounded-3xl px-12 py-10 flex flex-col items-center max-w-sm mx-4"
+        style={{
+          boxShadow: `
+            0 16px 48px rgba(151, 225, 62, 0.18),
+            0 8px 24px rgba(0, 0, 0, 0.08),
+            inset 0 2px 2px rgba(255, 255, 255, 0.9)
+          `,
+        }}
+      >
+        {/* Cart Icon */}
         <div
-          className="absolute w-28 h-28 rounded-full border-2 border-accent/20 border-t-accent animate-spin"
-          style={{ animationDuration: "1.5s" }}
-        />
-
-        {/* Middle pulsing ring */}
-        <div className="absolute w-20 h-20 rounded-full border border-accent/40 animate-pulse" />
-
-        {/* Center icon */}
-        <div className="w-14 h-14 rounded-full bg-accent/10 flex items-center justify-center">
+          className="w-14 h-14 rounded-full bg-accent/10 flex items-center justify-center mb-6"
+          style={{ boxShadow: "0 4px 16px rgba(151, 225, 62, 0.2)" }}
+        >
           <svg
             className="w-7 h-7 text-accent"
             fill="none"
@@ -35,29 +38,44 @@ const CheckoutLoader = () => {
             />
           </svg>
         </div>
+
+        {/* Processing Message */}
+        <h2 className="text-lg font-display font-black uppercase tracking-widest text-primary mb-2">
+          Processing
+        </h2>
+
+        <p className="text-xs text-muted text-center mb-6">
+          Please wait while we secure your order
+        </p>
+
+        {/* 3-Dot Animation */}
+        <div className="flex gap-2.5">
+          <div
+            className="w-3 h-3 rounded-full bg-accent animate-bounce"
+            style={{
+              animationDelay: "0ms",
+              boxShadow: "0 4px 12px rgba(151, 225, 62, 0.4)",
+            }}
+          />
+          <div
+            className="w-3 h-3 rounded-full bg-accent animate-bounce"
+            style={{
+              animationDelay: "150ms",
+              boxShadow: "0 4px 12px rgba(151, 225, 62, 0.4)",
+            }}
+          />
+          <div
+            className="w-3 h-3 rounded-full bg-accent animate-bounce"
+            style={{
+              animationDelay: "300ms",
+              boxShadow: "0 4px 12px rgba(151, 225, 62, 0.4)",
+            }}
+          />
+        </div>
       </div>
 
-      {/* Brand Identity */}
-      <p className="text-xs font-display font-black uppercase tracking-[0.4em] text-accent/80 mb-6">
-        NEVERBE
-      </p>
-
-      {/* Processing Message */}
-      <h2 className="text-xl font-display font-black uppercase tracking-widest text-inverse mb-3">
-        Processing Order
-      </h2>
-
-      <p className="text-sm text-muted text-center max-w-xs mb-8">
-        Please wait while we secure your order. Do not close this page.
-      </p>
-
-      {/* Progress Bar */}
-      <div className="w-48 h-1 bg-surface-3 rounded-full overflow-hidden">
-        <div
-          className="h-full bg-linear-to-r from-accent via-primary to-accent animate-shimmer rounded-full"
-          style={{ backgroundSize: "200% 100%" }}
-        />
-      </div>
+      {/* Bottom Warning Text */}
+      <p className="mt-6 text-xs text-muted">Do not close this page</p>
     </div>
   );
 };
