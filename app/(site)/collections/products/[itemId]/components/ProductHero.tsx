@@ -25,6 +25,11 @@ import StockBadge from "@/components/StockBadge";
 import ShareButtons from "@/components/ShareButtons";
 import FloatingAddToBag from "@/components/FloatingAddToBag";
 import SizeGrid from "@/components/SizeGrid";
+import {
+  calculateFinalPrice,
+  hasDiscount as checkHasDiscount,
+  getOriginalPrice,
+} from "@/utils/pricing";
 
 const ProductHero = ({ item }: { item: Product }) => {
   const router = useRouter();
@@ -53,6 +58,14 @@ const ProductHero = ({ item }: { item: Product }) => {
     item.id,
     selectedVariant.variantId
   );
+
+  // Calculate final price (promotion takes priority over product-level discount)
+  const finalPrice = calculateFinalPrice(item, activePromo);
+  const originalPrice = getOriginalPrice(item);
+  const hasActiveDiscount = checkHasDiscount(item, activePromo);
+
+  // Calculate discount amount for bag (per unit, rounded to nearest 10)
+  const discountPerUnit = originalPrice - finalPrice;
 
   useEffect(() => {
     if (selectedVariant.images?.length) {
@@ -116,11 +129,15 @@ const ProductHero = ({ item }: { item: Product }) => {
         variantId: selectedVariant.variantId,
         size: selectedSize,
         quantity: qty,
-        price: item.sellingPrice,
+        price: finalPrice,
         name: item.name,
         thumbnail: selectedVariant.images[0]?.url || item.thumbnail.url,
         itemType: "product",
         variantName: selectedVariant.variantName,
+        discount: discountPerUnit * qty,
+        maxQuantity: 10,
+        category: item.category || "",
+        brand: item.brand || "",
       } as any)
     );
   };
@@ -201,13 +218,18 @@ const ProductHero = ({ item }: { item: Product }) => {
             <h1 className="text-4xl lg:text-5xl font-black uppercase tracking-tighter leading-[0.9] mb-4">
               {item.name}
             </h1>
-            <div className="flex items-baseline gap-3">
+            <div className="flex items-baseline gap-3 flex-wrap">
               <span className="text-2xl font-bold">
-                Rs. {item.sellingPrice.toLocaleString()}
+                Rs. {finalPrice.toLocaleString()}
               </span>
-              {item.discount > 0 && (
+              {hasActiveDiscount && (
                 <span className="text-gray-400 line-through text-sm">
-                  Rs. {item.marketPrice.toLocaleString()}
+                  Rs. {originalPrice.toLocaleString()}
+                </span>
+              )}
+              {hasActiveDiscount && (
+                <span className="bg-red-600 text-white text-[10px] font-bold px-2 py-0.5 uppercase tracking-wider">
+                  Save Rs. {discountPerUnit.toLocaleString()}
                 </span>
               )}
 
@@ -332,8 +354,8 @@ const ProductHero = ({ item }: { item: Product }) => {
             {/* Koko Installment Offer */}
             <div className="flex items-center justify-center gap-2 p-3 bg-zinc-50 rounded-xl">
               <span className="text-[10px] font-bold text-gray-500 uppercase">
-                Or 3 Interest-Free payments of Rs.{" "}
-                {(item.sellingPrice / 3).toFixed(0)} with
+                Or 3 Interest-Free payments of Rs. {(finalPrice / 3).toFixed(0)}{" "}
+                with
               </span>
               <Image src={KOKOLogo} alt="Koko" width={35} height={12} />
             </div>
@@ -370,7 +392,7 @@ const ProductHero = ({ item }: { item: Product }) => {
       {/* Floating Add to Bag - Mobile/Tablet */}
       <FloatingAddToBag
         productName={item.name}
-        price={item.sellingPrice}
+        price={finalPrice}
         selectedSize={selectedSize}
         canAddToBag={!!selectedSize && (sizeStock[selectedSize] ?? 0) > 0}
         onAddToBag={handleAddToBag}
