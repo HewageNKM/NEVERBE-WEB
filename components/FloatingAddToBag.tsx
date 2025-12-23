@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { IoBagAdd } from "react-icons/io5";
+import { IoBagAdd, IoAddOutline, IoRemoveOutline } from "react-icons/io5";
 
 interface FloatingAddToBagProps {
   productName: string;
@@ -9,6 +9,9 @@ interface FloatingAddToBagProps {
   selectedSize: string;
   canAddToBag: boolean;
   onAddToBag: () => void;
+  qty?: number;
+  onQtyChange?: (qty: number) => void;
+  maxQty?: number;
 }
 
 /**
@@ -21,6 +24,9 @@ const FloatingAddToBag: React.FC<FloatingAddToBagProps> = ({
   selectedSize,
   canAddToBag,
   onAddToBag,
+  qty = 1,
+  onQtyChange,
+  maxQty = 10,
 }) => {
   const [isVisible, setIsVisible] = useState(false);
 
@@ -62,6 +68,29 @@ const FloatingAddToBag: React.FC<FloatingAddToBagProps> = ({
                 )}
               </div>
             </div>
+
+            {/* Quantity Selector */}
+            {onQtyChange && (
+              <div className="flex items-center border border-default rounded-full overflow-hidden">
+                <button
+                  onClick={() => onQtyChange(Math.max(1, qty - 1))}
+                  disabled={qty <= 1}
+                  className="w-8 h-8 flex items-center justify-center text-primary hover:bg-surface-2 disabled:text-muted disabled:cursor-not-allowed"
+                >
+                  <IoRemoveOutline size={16} />
+                </button>
+                <span className="w-6 text-center font-display font-black text-sm text-primary">
+                  {qty}
+                </span>
+                <button
+                  onClick={() => onQtyChange(Math.min(maxQty, qty + 1))}
+                  disabled={qty >= maxQty}
+                  className="w-8 h-8 flex items-center justify-center text-primary hover:bg-surface-2 disabled:text-muted disabled:cursor-not-allowed"
+                >
+                  <IoAddOutline size={16} />
+                </button>
+              </div>
+            )}
 
             {/* Branded Add to Bag Button */}
             <button

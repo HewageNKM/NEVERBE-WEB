@@ -25,11 +25,13 @@ import StockBadge from "@/components/StockBadge";
 import ShareButtons from "@/components/ShareButtons";
 import FloatingAddToBag from "@/components/FloatingAddToBag";
 import SizeGrid from "@/components/SizeGrid";
+import toast from "react-hot-toast";
 import {
   calculateFinalPrice,
   hasDiscount as checkHasDiscount,
   getOriginalPrice,
 } from "@/utils/pricing";
+import { IoAddOutline, IoRemoveOutline } from "react-icons/io5";
 
 const ProductHero = ({ item }: { item: Product }) => {
   const router = useRouter();
@@ -140,6 +142,8 @@ const ProductHero = ({ item }: { item: Product }) => {
         brand: item.brand || "",
       } as any)
     );
+    toast.success(`Added ${qty} item${qty > 1 ? "s" : ""} to bag`);
+    setQty(1); // Reset quantity after adding
   };
 
   return (
@@ -316,6 +320,39 @@ const ProductHero = ({ item }: { item: Product }) => {
               currentAmount={(qty + bagQty) * item.sellingPrice}
             />
 
+            {/* Quantity Selector */}
+            <div className="flex items-center gap-4">
+              <span className="text-xs font-bold uppercase text-muted">
+                Qty
+              </span>
+              <div className="flex items-center border border-default rounded-full overflow-hidden">
+                <button
+                  onClick={() => setQty(Math.max(1, qty - 1))}
+                  disabled={qty <= 1}
+                  className="w-10 h-10 flex items-center justify-center text-primary hover:bg-surface-2 transition-colors disabled:text-muted disabled:cursor-not-allowed"
+                >
+                  <IoRemoveOutline size={18} />
+                </button>
+                <span className="w-10 text-center font-display font-black text-primary">
+                  {qty}
+                </span>
+                <button
+                  onClick={() => setQty(Math.min(10, qty + 1))}
+                  disabled={
+                    qty >= 10 || (selectedSize && qty >= availableStock)
+                  }
+                  className="w-10 h-10 flex items-center justify-center text-primary hover:bg-surface-2 transition-colors disabled:text-muted disabled:cursor-not-allowed"
+                >
+                  <IoAddOutline size={18} />
+                </button>
+              </div>
+              {selectedSize && availableStock > 0 && (
+                <span className="text-[10px] text-muted font-bold uppercase">
+                  {availableStock} available
+                </span>
+              )}
+            </div>
+
             <div className="flex gap-3">
               <button
                 onClick={handleAddToBag}
@@ -396,6 +433,9 @@ const ProductHero = ({ item }: { item: Product }) => {
         selectedSize={selectedSize}
         canAddToBag={!!selectedSize && (sizeStock[selectedSize] ?? 0) > 0}
         onAddToBag={handleAddToBag}
+        qty={qty}
+        onQtyChange={setQty}
+        maxQty={Math.min(10, availableStock || 10)}
       />
     </section>
   );

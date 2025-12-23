@@ -75,7 +75,7 @@ const ReviewCard = ({ review }: { review: (typeof reviews)[0] }) => {
         <div className="flex items-center gap-3">
           {/* Performance Avatar - Accent Gradient */}
           <div className="relative">
-            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#97e13e] to-[#6db82a] flex items-center justify-center text-dark font-display font-black text-sm shadow-[0_0_15px_rgba(151,225,62,0.4)]">
+            <div className="w-12 h-12 rounded-full bg-linear-to-br from-[#97e13e] to-[#6db82a] flex items-center justify-center text-dark font-display font-black text-sm shadow-[0_0_15px_rgba(151,225,62,0.4)]">
               {initials}
             </div>
             {/* Verified Badge */}
@@ -207,7 +207,7 @@ const CustomerReviews = () => {
           1024: { slidesPerView: 3 },
           1280: { slidesPerView: 4 },
         }}
-        className="!pb-4"
+        className="pb-4!"
       >
         {reviews.map((review) => (
           <SwiperSlide key={review.id}>
