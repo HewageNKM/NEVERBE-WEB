@@ -104,6 +104,12 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
 
   const handleAddToBag = () => {
     if (!selectedSize || !selectedVariant) return;
+
+    // Calculate discount based on sellingPrice (matches backend OrderService validation)
+    // Backend calculates: itemsTotal = sum(sellingPrice * quantity)
+    // Then subtracts: itemDiscounts = sum(item.discount)
+    const discountAmount = (product.sellingPrice - finalPrice) * qty;
+
     dispatch(
       addToBag({
         itemId: product.id,
@@ -114,7 +120,7 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
         bPrice: 0,
         name: product.name,
         thumbnail: selectedVariant.images[0]?.url || product.thumbnail.url,
-        discount: discountPerUnit * qty,
+        discount: discountAmount,
         itemType: "product",
         maxQuantity: 10,
         variantName: selectedVariant.variantName,

@@ -125,6 +125,12 @@ const ProductHero = ({ item }: { item: Product }) => {
 
   const handleAddToBag = () => {
     if (!selectedSize) return;
+
+    // Calculate discount based on sellingPrice (matches backend OrderService validation)
+    // Backend calculates: itemsTotal = sum(sellingPrice * quantity)
+    // Then subtracts: itemDiscounts = sum(item.discount)
+    const discountAmount = (item.sellingPrice - finalPrice) * qty;
+
     dispatch(
       addToBag({
         itemId: item.id,
@@ -136,7 +142,7 @@ const ProductHero = ({ item }: { item: Product }) => {
         thumbnail: selectedVariant.images[0]?.url || item.thumbnail.url,
         itemType: "product",
         variantName: selectedVariant.variantName,
-        discount: discountPerUnit * qty,
+        discount: discountAmount,
         maxQuantity: 10,
         category: item.category || "",
         brand: item.brand || "",
@@ -339,7 +345,7 @@ const ProductHero = ({ item }: { item: Product }) => {
                 <button
                   onClick={() => setQty(Math.min(10, qty + 1))}
                   disabled={
-                    qty >= 10 || (selectedSize && qty >= availableStock)
+                    qty >= 10 || (!!selectedSize && qty >= availableStock)
                   }
                   className="w-10 h-10 flex items-center justify-center text-primary hover:bg-surface-2 transition-colors disabled:text-muted disabled:cursor-not-allowed"
                 >
