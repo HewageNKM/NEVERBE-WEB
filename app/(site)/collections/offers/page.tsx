@@ -40,7 +40,7 @@ const OffersPage = async () => {
   ]);
 
   const bannerPromotions = promotions.filter(
-    (p: any) => p.bannerUrl && p.status === "ACTIVE"
+    (p: any) => p.bannerUrl && p.isActive
   );
 
   let dealsList: any[] = [];

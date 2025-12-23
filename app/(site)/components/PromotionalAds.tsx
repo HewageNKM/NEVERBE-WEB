@@ -4,7 +4,6 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import type { Promotion } from "@/services/WebsiteService"; // Keeping type if needed but not from service logic? Actually no, local usage.
 
 import { usePromotionsContext } from "@/components/PromotionsProvider";
 
@@ -13,7 +12,7 @@ const PromotionalAds: React.FC = () => {
 
   // Map system promotions to UI format
   const allPromotions = systemPromotions
-    .filter((p) => p.bannerUrl && p.status === "ACTIVE")
+    .filter((p) => p.bannerUrl && p.isActive)
     .map((p) => ({
       id: p.id,
       title: p.name, // Or add bannerTitle specifically

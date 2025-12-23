@@ -39,6 +39,8 @@ export interface ActivePromotion {
   progress?: number; // 0-100 for min amount progress
   remaining?: number; // Amount remaining to qualify
   isFreeShipping?: boolean; // Flag for free shipping promotions
+  isActive?: boolean; // Whether promotion is active
+  bannerUrl?: string; // Banner image URL
 }
 
 interface UsePromotionsReturn {
@@ -142,6 +144,8 @@ export const usePromotions = (): UsePromotionsReturn => {
               isFreeShipping:
                 promo.type === "FREE_SHIPPING" ||
                 promo.actions?.[0]?.type === "FREE_SHIPPING",
+              isActive: promo.isActive,
+              bannerUrl: promo.bannerUrl,
             };
           })
           // Sort by priority (high to low) to match backend behavior
@@ -344,51 +348,85 @@ export const usePromotions = (): UsePromotionsReturn => {
       return { eligible: true, restricted: false };
     }
 
-    // Collect all SPECIFIC_PRODUCT values into one array for easier checking
+    // Separate SPECIFIC_PRODUCT conditions from other conditions
+    // SPECIFIC_PRODUCT: Cart needs to have ANY of the specified products (variant-aware)
+    // Other conditions (MIN_AMOUNT, MIN_QUANTITY, CATEGORY): ALL must be met
+    const productConditions = promo.conditions.filter(
+      (c: any) => c.type === "SPECIFIC_PRODUCT"
+    );
+    const otherConditions = promo.conditions.filter(
+      (c: any) => c.type !== "SPECIFIC_PRODUCT"
+    );
+
+    // Collect all product IDs for MIN_QUANTITY calculation
     const specificProductIds: string[] = [];
-    promo.conditions.forEach((condition: any) => {
-      if (condition.type === "SPECIFIC_PRODUCT") {
-        if (condition.value) specificProductIds.push(condition.value);
-        if (condition.productIds)
-          specificProductIds.push(...condition.productIds);
-      }
+    productConditions.forEach((condition: any) => {
+      if (condition.value) specificProductIds.push(condition.value);
+      if (condition.productIds)
+        specificProductIds.push(...condition.productIds);
     });
 
-    const conditionsMet = promo.conditions.every((condition: any) => {
+    // Check SPECIFIC_PRODUCT conditions: ANY product from any condition must match
+    if (productConditions.length > 0) {
+      const hasAnyMatchingProduct = productConditions.some((condition: any) => {
+        if (
+          condition.variantMode === "SPECIFIC_VARIANTS" &&
+          condition.variantIds
+        ) {
+          // Must match both product AND specific variant
+          return items.some(
+            (item) =>
+              item.itemId === condition.value &&
+              item.variantId &&
+              condition.variantIds.includes(item.variantId)
+          );
+        }
+        // ALL_VARIANTS or no restriction - just check product ID
+        return items.some((item) => item.itemId === condition.value);
+      });
+
+      if (!hasAnyMatchingProduct) {
+        return {
+          eligible: false,
+          restricted: true,
+          reason: "Requires specific products not in your cart",
+        };
+      }
+    }
+
+    // Check other conditions (MIN_AMOUNT, MIN_QUANTITY, CATEGORY) - ALL must be met
+    const otherConditionsMet = otherConditions.every((condition: any) => {
       switch (condition.type) {
         case "MIN_AMOUNT":
           return total >= Number(condition.value);
         case "MIN_QUANTITY":
-          // If there are specific products, count only those
-          const applicableItems =
-            specificProductIds.length > 0
-              ? items.filter((item) => specificProductIds.includes(item.itemId))
-              : items;
-          const totalQty = applicableItems.reduce(
-            (sum, item) => sum + item.quantity,
-            0
-          );
-          return totalQty >= Number(condition.value);
-        case "SPECIFIC_PRODUCT":
-          // Check variant restrictions within the condition
-          if (
-            condition.variantMode === "SPECIFIC_VARIANTS" &&
-            condition.variantIds
-          ) {
-            return items.some(
-              (item) =>
-                specificProductIds.includes(item.itemId) &&
-                item.variantId &&
-                condition.variantIds.includes(item.variantId)
+          // Count only items that match specific product+variant conditions
+          let eligibleQty = 0;
+
+          if (productConditions.length > 0) {
+            // Filter items by product AND variant (when specified)
+            const eligibleItems = items.filter((item) => {
+              return productConditions.some((pc: any) => {
+                if (item.itemId !== pc.value) return false;
+
+                if (pc.variantMode === "SPECIFIC_VARIANTS" && pc.variantIds) {
+                  return (
+                    item.variantId && pc.variantIds.includes(item.variantId)
+                  );
+                }
+                return true; // ALL_VARIANTS or no variant restriction
+              });
+            });
+            eligibleQty = eligibleItems.reduce(
+              (sum, item) => sum + item.quantity,
+              0
             );
+          } else {
+            // No specific products - count all items
+            eligibleQty = items.reduce((sum, item) => sum + item.quantity, 0);
           }
-          // Check if any cart item matches any of the collected specific product IDs
-          if (specificProductIds.length > 0) {
-            return items.some((item) =>
-              specificProductIds.includes(item.itemId)
-            );
-          }
-          return true;
+
+          return eligibleQty >= Number(condition.value);
         case "CATEGORY":
           return items.some(
             (item) =>
@@ -396,18 +434,14 @@ export const usePromotions = (): UsePromotionsReturn => {
               promo.applicableCategories?.includes((item as any).category)
           );
         case "CUSTOMER_TAG":
-          // Customer tag validation would require user data - skip for now
-          // This should be validated server-side when processing order
-          console.log(
-            "CUSTOMER_TAG condition present - will be validated server-side"
-          );
-          return true; // Allow eligibility, final check done server-side
+          console.log("CUSTOMER_TAG condition - validated server-side");
+          return true;
         default:
           return true;
       }
     });
 
-    return { eligible: conditionsMet, restricted: false };
+    return { eligible: otherConditionsMet, restricted: false };
   };
 
   // Calculate progress towards promotion conditions
@@ -416,59 +450,59 @@ export const usePromotions = (): UsePromotionsReturn => {
     total: number,
     items: BagItem[]
   ): { progress: number; remaining: number } => {
-    // Build list of applicable product IDs from SPECIFIC_PRODUCT conditions
-    const applicableProductIds: string[] = [];
-    if (promo.conditions && promo.conditions.length > 0) {
-      promo.conditions.forEach((condition: any) => {
-        if (condition.type === "SPECIFIC_PRODUCT") {
-          if (condition.value) applicableProductIds.push(condition.value);
-          if (condition.productIds)
-            applicableProductIds.push(...condition.productIds);
+    // Get SPECIFIC_PRODUCT conditions
+    const productConditions =
+      promo.conditions?.filter((c: any) => c.type === "SPECIFIC_PRODUCT") || [];
+
+    // If no specific products, check MIN_AMOUNT
+    if (productConditions.length === 0) {
+      const minAmount = promo.conditions?.find(
+        (c: any) => c.type === "MIN_AMOUNT"
+      )?.value;
+      if (!minAmount) return { progress: 100, remaining: 0 };
+      const progress = Math.min(Math.round((total / minAmount) * 100), 100);
+      return { progress, remaining: Math.max(minAmount - total, 0) };
+    }
+
+    // Filter items by product+variant conditions
+    const eligibleItems = items.filter((item) => {
+      return productConditions.some((pc: any) => {
+        if (item.itemId !== pc.value) return false;
+
+        if (pc.variantMode === "SPECIFIC_VARIANTS" && pc.variantIds) {
+          return item.variantId && pc.variantIds.includes(item.variantId);
         }
+        return true; // ALL_VARIANTS or no variant restriction
       });
+    });
+
+    // No eligible items - no progress
+    if (eligibleItems.length === 0) {
+      const minQty =
+        promo.conditions?.find((c: any) => c.type === "MIN_QUANTITY")?.value ||
+        1;
+      return { progress: 0, remaining: Number(minQty) };
     }
 
-    // If promotion has specific products, check if cart has any
-    if (applicableProductIds.length > 0) {
-      const applicableItems = items.filter((item) =>
-        applicableProductIds.includes(item.itemId)
+    // Check MIN_QUANTITY for eligible items
+    const minQtyCondition = promo.conditions?.find(
+      (c: any) => c.type === "MIN_QUANTITY"
+    );
+    if (minQtyCondition) {
+      const requiredQty = Number(minQtyCondition.value);
+      const eligibleQty = eligibleItems.reduce(
+        (sum, item) => sum + item.quantity,
+        0
       );
-
-      // No applicable products in cart - no progress
-      if (applicableItems.length === 0) {
-        return { progress: 0, remaining: 0 };
-      }
-
-      // Check MIN_QUANTITY for applicable items
-      const minQtyCondition = promo.conditions?.find(
-        (c: any) => c.type === "MIN_QUANTITY"
+      const progress = Math.min(
+        Math.round((eligibleQty / requiredQty) * 100),
+        100
       );
-      if (minQtyCondition) {
-        const requiredQty = Number(minQtyCondition.value);
-        const applicableQty = applicableItems.reduce(
-          (sum, item) => sum + item.quantity,
-          0
-        );
-        const progress = Math.min(
-          Math.round((applicableQty / requiredQty) * 100),
-          100
-        );
-        const remaining = Math.max(requiredQty - applicableQty, 0);
-        return { progress, remaining };
-      }
+      const remaining = Math.max(requiredQty - eligibleQty, 0);
+      return { progress, remaining };
     }
 
-    // Fallback to MIN_AMOUNT check
-    const minAmount = promo.conditions?.find(
-      (c: any) => c.type === "MIN_AMOUNT"
-    )?.value;
-
-    if (!minAmount) return { progress: 100, remaining: 0 };
-
-    const progress = Math.min(Math.round((total / minAmount) * 100), 100);
-    const remaining = Math.max(minAmount - total, 0);
-
-    return { progress, remaining };
+    return { progress: 100, remaining: 0 };
   };
 
   // Calculate potential savings
@@ -498,42 +532,41 @@ export const usePromotions = (): UsePromotionsReturn => {
       return calculateDiscountAmount(action, eligibleTotal, eligibleItems);
     }
 
-    // PRIORITY 2: Product-level targeting
-    // Build list of applicable product IDs from multiple sources:
-    // 1. promo.applicableProducts (direct targeting)
-    // 2. SPECIFIC_PRODUCT conditions (condition-based targeting)
-    const applicableProductIds: string[] = [];
+    // PRIORITY 2: Product-level targeting from conditions
+    // Extract SPECIFIC_PRODUCT conditions with variant info
+    const productConditions =
+      promo.conditions?.filter((c: any) => c.type === "SPECIFIC_PRODUCT") || [];
 
-    // Add from applicableProducts field
-    if (promo.applicableProducts && promo.applicableProducts.length > 0) {
-      applicableProductIds.push(...promo.applicableProducts);
-    }
+    if (productConditions.length > 0) {
+      // Filter items that match ANY of the product conditions (with variant awareness)
+      const eligibleItems = items.filter((item) => {
+        return productConditions.some((condition: any) => {
+          if (item.itemId !== condition.value) return false;
 
-    // Add from SPECIFIC_PRODUCT conditions
-    if (promo.conditions && promo.conditions.length > 0) {
-      promo.conditions.forEach((condition: any) => {
-        if (condition.type === "SPECIFIC_PRODUCT") {
-          if (condition.value) applicableProductIds.push(condition.value);
-          if (condition.productIds)
-            applicableProductIds.push(...condition.productIds);
-        }
+          // Check variant restriction if specified
+          if (
+            condition.variantMode === "SPECIFIC_VARIANTS" &&
+            condition.variantIds
+          ) {
+            return (
+              item.variantId && condition.variantIds.includes(item.variantId)
+            );
+          }
+          // ALL_VARIANTS or no restriction - product match is enough
+          return true;
+        });
       });
-    }
 
-    // Calculate applicable total
-    let applicableTotal = total;
-    let eligibleItems = items;
-
-    // If we have specific products, only count those
-    if (applicableProductIds.length > 0) {
-      eligibleItems = items.filter((item) =>
-        applicableProductIds.includes(item.itemId)
-      );
-      applicableTotal = eligibleItems.reduce(
+      const eligibleTotal = eligibleItems.reduce(
         (sum, item) => sum + item.price * item.quantity,
         0
       );
+      return calculateDiscountAmount(action, eligibleTotal, eligibleItems);
     }
+
+    // No specific product conditions - apply to entire cart
+    let applicableTotal = total;
+    let eligibleItems = items;
 
     // Exclude excluded products from calculation
     if (promo.excludedProducts && promo.excludedProducts.length > 0) {
