@@ -143,7 +143,7 @@ const ProductHero = ({ item }: { item: Product }) => {
   };
 
   return (
-    <section className="max-w-[1440px] mx-auto px-4 md:px-10 py-6 flex flex-col lg:flex-row gap-10 lg:gap-16">
+    <section className="max-w-content mx-auto px-4 md:px-10 py-6 flex flex-col lg:flex-row gap-10 lg:gap-16">
       {/* --- LEFT COLUMN: IMAGES --- */}
       <div className="flex-1 lg:w-3/5 flex flex-col gap-4">
         <div className="relative aspect-square bg-surface-2 rounded-sm overflow-hidden group">
@@ -166,9 +166,9 @@ const ProductHero = ({ item }: { item: Product }) => {
             </motion.div>
           </AnimatePresence>
 
-          {/* Discount Badge */}
+          {/* Discount Badge - Branded */}
           {item.discount > 0 && (
-            <div className="absolute top-4 left-4 bg-black text-white px-3 py-1 font-bold text-[10px] tracking-widest uppercase">
+            <div className="absolute top-4 left-4 bg-accent text-dark px-4 py-2 font-display font-black text-xs uppercase italic tracking-tighter shadow-custom">
               {item.discount}% Off
             </div>
           )}
@@ -199,36 +199,36 @@ const ProductHero = ({ item }: { item: Product }) => {
       {/* --- RIGHT COLUMN: DETAILS --- */}
       <div className="lg:w-2/5 relative">
         <div className="lg:sticky lg:top-24 flex flex-col gap-6">
-          {/* Promotion Header Banner */}
+          {/* Promotion Header Banner - NEVERBE Style */}
           {activePromo && (
-            <div className="bg-red-50 border-l-4 border-red-600 p-3">
-              <p className="text-red-700 text-xs font-black uppercase tracking-widest animate-pulse">
-                {activePromo.name || "Special Offer Applied"}
+            <div className="bg-accent text-dark p-4 flex items-center gap-3 shadow-custom">
+              <p className="text-sm font-display font-black uppercase italic tracking-tighter">
+                {activePromo.name || "Special Performance Offer"}
               </p>
-              <p className="text-[10px] text-red-600 mt-1 uppercase font-bold">
-                Limited time only. While stocks last.
-              </p>
+              <span className="text-[9px] font-bold uppercase tracking-widest opacity-70">
+                Limited Time
+              </span>
             </div>
           )}
 
           <header>
-            <h2 className="text-sm font-bold uppercase tracking-widest text-orange-600 mb-1">
-              {activePromo ? "Promotion Active" : item.brand?.replace("-", " ")}
+            <h2 className="text-xs font-black uppercase tracking-[0.2em] text-accent mb-2 italic">
+              {activePromo ? "Promo Active" : item.brand?.replace("-", " ")}
             </h2>
-            <h1 className="text-4xl lg:text-5xl font-black uppercase tracking-tighter leading-[0.9] mb-4">
+            <h1 className="text-4xl lg:text-5xl font-display font-black uppercase italic tracking-tighter leading-[0.9] mb-4 text-primary">
               {item.name}
             </h1>
-            <div className="flex items-baseline gap-3 flex-wrap">
-              <span className="text-2xl font-bold">
+            <div className="flex items-baseline gap-4 flex-wrap">
+              <span className="text-3xl font-display font-black italic tracking-tighter text-primary">
                 Rs. {finalPrice.toLocaleString()}
               </span>
               {hasActiveDiscount && (
-                <span className="text-muted line-through text-sm">
+                <span className="text-muted line-through text-base decoration-border-dark">
                   Rs. {originalPrice.toLocaleString()}
                 </span>
               )}
               {hasActiveDiscount && (
-                <span className="bg-error text-inverse text-[10px] font-bold px-2 py-0.5 uppercase tracking-wider">
+                <span className="bg-success text-dark text-[10px] font-black px-3 py-1 uppercase tracking-widest italic shadow-custom">
                   Save Rs. {discountPerUnit.toLocaleString()}
                 </span>
               )}
@@ -322,12 +322,12 @@ const ProductHero = ({ item }: { item: Product }) => {
                 disabled={
                   !selectedSize || availableStock === 0 || isLimitReached
                 }
-                className="flex-1 py-5 bg-dark text-inverse rounded-full font-bold uppercase tracking-widest text-xs hover:opacity-90 transition-all disabled:bg-surface-2 disabled:text-muted"
+                className="flex-1 py-5 bg-dark text-inverse rounded-full font-display font-black uppercase tracking-widest text-xs hover:bg-accent hover:text-dark transition-all shadow-custom hover:shadow-hover active:scale-95 disabled:bg-surface-3 disabled:text-muted disabled:shadow-none disabled:cursor-not-allowed"
               >
                 {isLimitReached
-                  ? "Limit Reached"
+                  ? "Inventory Maxed"
                   : availableStock === 0 && selectedSize
-                  ? "Out of Stock"
+                  ? "Sold Out"
                   : "Add to Bag"}
               </button>
 

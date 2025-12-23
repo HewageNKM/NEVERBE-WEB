@@ -3,14 +3,14 @@ import React from "react";
 
 const ProductsHeader = () => {
   return (
-    <section className="w-full px-4 md:px-12 py-8 md:py-16 bg-white flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+    <section className="w-full px-4 md:px-12 py-8 md:py-16 bg-surface flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
       <div className="flex flex-col items-start max-w-[1920px]">
-        {/* Nike uses Medium weight for a premium, athletic look */}
-        <h1 className="text-[28px] md:text-[42px] font-medium tracking-tight text-primary leading-none">
+        {/* NEVERBE Performance Style Header */}
+        <h1 className="text-3xl md:text-5xl font-display font-black uppercase italic tracking-tighter text-primary leading-none">
           All Products
         </h1>
         <div className="flex items-center gap-4 mt-3">
-          <p className="text-[16px] text-secondary font-normal">
+          <p className="text-sm text-muted font-medium uppercase tracking-wider">
             High-Performance Footwear & Lifestyle Apparel
           </p>
         </div>
@@ -18,7 +18,7 @@ const ProductsHeader = () => {
 
       <a
         href="/collections/combos"
-        className="group flex items-center gap-2 px-8 py-4 bg-black text-white rounded-full font-medium text-[15px] transition-all hover:opacity-70 active:scale-[0.98]"
+        className="group flex items-center gap-2 px-8 py-4 bg-dark text-inverse rounded-full font-display font-black uppercase text-xs tracking-widest transition-all hover:bg-accent hover:text-dark active:scale-[0.98] shadow-custom hover:shadow-hover"
       >
         <span>Shop Bundle Deals</span>
         <svg

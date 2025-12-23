@@ -9,33 +9,27 @@ interface ComboCardProps {
   combo: ComboProduct & { previewThumbnail?: string };
 }
 
+/**
+ * ComboCard - NEVERBE Performance Style
+ * Bundle cards with branded badges and dynamic pricing display.
+ */
 const ComboCard: React.FC<ComboCardProps> = ({ combo }) => {
   const savings = combo.originalPrice - combo.comboPrice;
   const savingsPercent = Math.round((savings / combo.originalPrice) * 100);
 
-  // Get combo type label and color
-  const getTypeStyles = () => {
+  // Get combo type label - using brand accent for all badges
+  const getTypeLabel = () => {
     switch (combo.type) {
       case "BOGO":
-        return {
-          label: "Buy & Get Free",
-          bg: "bg-green-500",
-        };
+        return "Buy & Get Free";
       case "MULTI_BUY":
-        return {
-          label: `Buy ${combo.buyQuantity} Save More`,
-          bg: "bg-blue-500",
-        };
+        return `Buy ${combo.buyQuantity} Save More`;
       case "BUNDLE":
       default:
-        return {
-          label: "Bundle Deal",
-          bg: "bg-orange-500",
-        };
+        return "Bundle Deal";
     }
   };
 
-  const typeStyles = getTypeStyles();
   const hasSavings = savings > 0;
 
   return (
@@ -44,7 +38,7 @@ const ComboCard: React.FC<ComboCardProps> = ({ combo }) => {
       className="group block bg-transparent"
     >
       {/* Image Container */}
-      <div className="relative aspect-[4/5] bg-surface-2 overflow-hidden mb-4">
+      <div className="relative aspect-4/5 bg-surface-2 overflow-hidden mb-4">
         {combo.previewThumbnail || combo.thumbnail?.url ? (
           <Image
             src={combo.previewThumbnail || combo.thumbnail?.url || ""}
@@ -54,23 +48,21 @@ const ComboCard: React.FC<ComboCardProps> = ({ combo }) => {
             sizes="(max-width: 768px) 100vw, 33vw"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-gray-300">
+          <div className="w-full h-full flex items-center justify-center text-muted">
             <span className="text-4xl">📦</span>
           </div>
         )}
 
-        {/* Badges - Top Left */}
+        {/* Badges - Top Left - Using brand accent */}
         <div className="absolute top-4 left-4 flex flex-col gap-2">
           {/* Type Badge */}
-          <div
-            className={`${typeStyles.bg} text-white text-[11px] font-medium px-3 py-1`}
-          >
-            {typeStyles.label}
+          <div className="bg-accent text-dark text-[10px] font-display font-black uppercase italic tracking-tighter px-3 py-1.5 shadow-custom">
+            {getTypeLabel()}
           </div>
 
           {/* Savings Badge */}
           {hasSavings && (
-            <div className="bg-dark text-white text-[11px] font-medium px-3 py-1">
+            <div className="bg-dark text-accent text-[10px] font-black uppercase tracking-widest px-3 py-1.5 shadow-custom">
               Save {savingsPercent}%
             </div>
           )}
@@ -80,26 +72,26 @@ const ComboCard: React.FC<ComboCardProps> = ({ combo }) => {
       {/* Content */}
       <div className="flex justify-between items-start gap-4">
         <div className="flex-1">
-          <h3 className="text-[16px] font-medium text-primary leading-tight mb-1 group-hover:text-secondary transition-colors">
+          <h3 className="text-base font-display font-bold text-primary leading-tight mb-1 group-hover:text-accent transition-colors uppercase tracking-tight">
             {combo.name}
           </h3>
-          <p className="text-[14px] text-secondary mb-2 line-clamp-1">
+          <p className="text-sm text-muted font-medium mb-2">
             {combo.items?.length || 0} Piece Bundle
           </p>
 
           {combo.type === "BOGO" && (
-            <p className="text-[14px] text-primary font-medium mt-1">
+            <p className="text-sm text-accent font-black uppercase tracking-tight italic">
               Buy {combo.buyQuantity}, Get {combo.getQuantity} Free
             </p>
           )}
         </div>
 
         <div className="text-right">
-          <div className="text-[16px] font-medium text-primary">
+          <div className="text-md font-display font-black text-primary italic tracking-tighter">
             Rs. {combo.comboPrice.toLocaleString()}
           </div>
           {hasSavings && (
-            <div className="text-[14px] text-secondary line-through">
+            <div className="text-sm text-muted line-through decoration-border-dark">
               Rs. {combo.originalPrice.toLocaleString()}
             </div>
           )}

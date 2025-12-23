@@ -25,12 +25,12 @@ const PromotionalAds: React.FC = () => {
   if (!allPromotions || allPromotions.length === 0) return null;
 
   return (
-    <section className="w-full py-12 px-4 md:px-8 max-w-[1440px] mx-auto">
+    <section className="w-full py-12 md:py-16 px-4 md:px-8 max-w-content mx-auto">
       <div className="mb-8">
-        <h2 className="text-2xl md:text-3xl font-black uppercase tracking-tighter">
+        <h2 className="text-3xl md:text-4xl font-display font-black uppercase italic tracking-tighter text-primary">
           Featured Offers
         </h2>
-        <p className="text-sm text-gray-500 mt-1 font-medium uppercase tracking-wide">
+        <p className="text-sm text-muted mt-2 font-medium uppercase tracking-wide">
           Exclusive deals just for you
         </p>
       </div>
@@ -53,7 +53,7 @@ const PromotionalAds: React.FC = () => {
           >
             <Link
               href={promo.link}
-              className="group relative block overflow-hidden bg-gray-100 aspect-video md:aspect-2/1"
+              className="group relative block overflow-hidden bg-surface-2 aspect-video md:aspect-2/1 rounded-2xl shadow-custom hover:shadow-hover transition-all"
             >
               <Image
                 src={promo.url}
@@ -66,10 +66,10 @@ const PromotionalAds: React.FC = () => {
               <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent" />
               {/* Title */}
               <div className="absolute bottom-0 left-0 right-0 p-6">
-                <h3 className="text-white text-xl md:text-2xl font-black uppercase tracking-tight">
+                <h3 className="text-inverse text-xl md:text-2xl font-display font-black uppercase italic tracking-tight">
                   {promo.title}
                 </h3>
-                <span className="inline-flex items-center gap-2 mt-2 text-white/80 text-sm font-bold uppercase tracking-wide group-hover:text-white transition-colors">
+                <span className="inline-flex items-center gap-2 mt-2 text-inverse/80 text-xs font-black uppercase tracking-widest group-hover:text-accent transition-colors">
                   Shop Now
                   <svg
                     className="w-4 h-4 transform group-hover:translate-x-1 transition-transform"

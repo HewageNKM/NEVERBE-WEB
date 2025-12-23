@@ -15,20 +15,20 @@ const TrendingBundles: React.FC<TrendingBundlesProps> = ({ bundles }) => {
   if (!bundles || bundles.length === 0) return null;
 
   return (
-    <section className="w-full max-w-[1440px] mx-auto px-4 md:px-8 py-10">
+    <section className="w-full max-w-content mx-auto px-4 md:px-8 py-10 md:py-16">
       <div className="flex justify-between items-end mb-8">
         <div>
-          <h2 className="text-2xl md:text-3xl font-black uppercase tracking-tight">
+          <h2 className="text-3xl md:text-4xl font-display font-black uppercase italic tracking-tighter text-primary">
             Trending Bundles
           </h2>
-          <p className="text-sm text-gray-500 mt-1 max-w-md">
+          <p className="text-sm text-muted mt-2 max-w-md">
             Save big with our exclusive combo deals. Buy more, pay less.
           </p>
         </div>
 
         <Link
           href="/collections/combos"
-          className="hidden md:flex items-center gap-1 text-sm font-bold uppercase tracking-wider hover:underline"
+          className="hidden md:flex items-center gap-2 text-xs font-black uppercase tracking-widest text-primary hover:text-accent transition-colors border-b-2 border-transparent hover:border-accent pb-1"
         >
           View All <IoArrowForward />
         </Link>
@@ -54,12 +54,12 @@ const TrendingBundles: React.FC<TrendingBundlesProps> = ({ bundles }) => {
         <SwiperSlide className="md:hidden">
           <Link
             href="/collections/combos"
-            className="flex flex-col items-center justify-center h-full min-h-[300px] bg-gray-50 border border-gray-100 rounded-lg"
+            className="flex flex-col items-center justify-center h-full min-h-[300px] bg-surface-2 border border-default rounded-2xl hover:border-accent transition-all"
           >
-            <span className="w-12 h-12 rounded-full bg-black text-white flex items-center justify-center mb-4">
+            <span className="w-14 h-14 rounded-full bg-accent text-dark flex items-center justify-center mb-4 shadow-custom">
               <IoArrowForward size={24} />
             </span>
-            <span className="font-bold uppercase tracking-widest">
+            <span className="font-display font-black uppercase tracking-widest text-sm text-primary">
               View All Bundles
             </span>
           </Link>

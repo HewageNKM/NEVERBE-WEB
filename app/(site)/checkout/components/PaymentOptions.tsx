@@ -34,36 +34,36 @@ const PaymentOptions: React.FC<PaymentOptionsProps> = ({
             key={option.paymentId}
             onClick={() => handleSelect(option)}
             className={`
-              relative group cursor-pointer border p-4 transition-all duration-200 ease-out
+              relative group cursor-pointer border p-4 transition-all duration-300 rounded-xl
               ${
                 isSelected
-                  ? "bg-black border-black text-white shadow-lg scale-[1.01]"
-                  : "bg-white border-gray-300 text-black hover:border-black"
+                  ? "bg-dark border-dark text-inverse shadow-custom scale-[1.01]"
+                  : "bg-surface border-default text-primary hover:border-accent hover:shadow-sm"
               }
             `}
           >
             <div className="flex items-start gap-4">
-              {/* Industrial "Radio" Square */}
+              {/* NEVERBE Style Radio Button */}
               <div
                 className={`
-                  flex items-center justify-center h-5 w-5 shrink-0 border transition-colors
+                  flex items-center justify-center h-5 w-5 shrink-0 border-2 rounded-full transition-all
                   ${
                     isSelected
-                      ? "border-white bg-white text-black"
-                      : "border-gray-400 group-hover:border-black bg-transparent"
+                      ? "border-accent bg-accent text-dark"
+                      : "border-default group-hover:border-accent bg-transparent"
                   }
                 `}
               >
                 {isSelected && (
-                  <IoCheckmark size={14} className="stroke-[3px]" />
+                  <IoCheckmark size={12} className="stroke-[3px]" />
                 )}
               </div>
 
               <div className="flex-1">
                 <div className="flex justify-between items-center w-full">
                   <p
-                    className={`text-sm font-black uppercase tracking-wider ${
-                      isSelected ? "text-white" : "text-black"
+                    className={`text-sm font-display font-black uppercase tracking-wider ${
+                      isSelected ? "text-inverse" : "text-primary"
                     }`}
                   >
                     {option.name}
@@ -73,11 +73,11 @@ const PaymentOptions: React.FC<PaymentOptionsProps> = ({
                   {option.fee > 0 ? (
                     <span
                       className={`
-                        text-[10px] font-bold px-1.5 py-0.5 border uppercase tracking-widest
+                        text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest
                         ${
                           isSelected
-                            ? "border-white text-white"
-                            : "border-black text-black bg-gray-100"
+                            ? "bg-accent text-dark"
+                            : "bg-surface-3 text-primary"
                         }
                       `}
                     >
@@ -86,8 +86,8 @@ const PaymentOptions: React.FC<PaymentOptionsProps> = ({
                   ) : (
                     <span
                       className={`
-                        text-[10px] font-bold uppercase tracking-widest opacity-60
-                        ${isSelected ? "text-gray-300" : "text-gray-400"}
+                        text-[10px] font-black uppercase tracking-widest
+                        ${isSelected ? "text-inverse/60" : "text-muted"}
                        `}
                     >
                       No Fee
@@ -99,7 +99,7 @@ const PaymentOptions: React.FC<PaymentOptionsProps> = ({
                   <p
                     className={`
                       text-[10px] font-medium uppercase tracking-wide mt-1.5
-                      ${isSelected ? "text-gray-300" : "text-gray-500"}
+                      ${isSelected ? "text-inverse/60" : "text-muted"}
                     `}
                   >
                     {option.description}
@@ -110,10 +110,7 @@ const PaymentOptions: React.FC<PaymentOptionsProps> = ({
 
             {/* Corner Accent for Selected State */}
             {isSelected && (
-              <div className="absolute top-0 right-0 w-3 h-3 border-t border-r border-white opacity-50" />
-            )}
-            {isSelected && (
-              <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-white opacity-50" />
+              <div className="absolute top-0 right-0 w-4 h-4 bg-accent rounded-bl-xl" />
             )}
           </div>
         );

@@ -19,13 +19,13 @@ const Hero = ({ slides }: { slides: Slide[] }) => {
             transition={{ delay: 0.5 }}
             className="text-center space-y-4 pointer-events-auto"
           >
-            <h1 className="text-4xl md:text-7xl font-black uppercase text-white tracking-tighter drop-shadow-lg italic">
+            <h1 className="text-4xl md:text-7xl font-display font-black uppercase text-inverse tracking-tighter drop-shadow-lg italic">
               Just Dropped
             </h1>
             <div className="flex gap-4 justify-center">
               <Link
                 href="/collections/products"
-                className="bg-white text-black px-8 py-3 rounded-full font-bold uppercase tracking-wide hover:bg-gray-200 transition-colors"
+                className="bg-accent text-dark px-10 py-4 rounded-full font-display font-black uppercase tracking-widest text-xs hover:bg-inverse hover:text-dark transition-all shadow-hover active:scale-95"
               >
                 Shop Now
               </Link>

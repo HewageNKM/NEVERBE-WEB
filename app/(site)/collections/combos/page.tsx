@@ -96,23 +96,23 @@ const CombosPage = async ({
   };
 
   return (
-    <main className="w-full min-h-screen bg-white">
+    <main className="w-full min-h-screen bg-surface">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(combosSchema) }}
       />
 
-      {/* 1. NIKE STYLE HEADER */}
-      <div className="w-full max-w-[1920px] mx-auto px-4 md:px-12 py-12 md:py-20 text-left">
-        <h1 className="text-[28px] md:text-[42px] font-medium tracking-tight text-primary leading-none mb-4">
+      {/* NEVERBE Performance Header */}
+      <div className="w-full max-w-content mx-auto px-4 md:px-12 py-12 md:py-20 text-left">
+        <h1 className="text-3xl md:text-5xl font-display font-black uppercase italic tracking-tighter text-primary leading-none mb-4">
           Bundle Deals
         </h1>
-        <p className="text-secondary max-w-xl text-[16px] md:text-[18px] font-normal">
+        <p className="text-muted max-w-xl text-sm md:text-base font-medium uppercase tracking-wide">
           BOGO Offers & Exclusive Combo Packs. Save more when you buy together.
         </p>
       </div>
 
-      <div className="w-full max-w-[1920px] mx-auto px-4 md:px-12 pb-20">
+      <div className="w-full max-w-content mx-auto px-4 md:px-12 pb-20">
         {combos.length > 0 ? (
           <CombosGrid
             combos={combos}
@@ -131,13 +131,13 @@ const CombosPage = async ({
 
       {/* SEO Footer / Brand Story */}
       <section className="bg-surface-2 py-16 mt-0">
-        <div className="max-w-[1440px] mx-auto px-8 lg:px-12">
+        <div className="max-w-content mx-auto px-8 lg:px-12">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 lg:gap-24">
             <div className="max-w-sm">
-              <h2 className="text-[16px] font-medium text-primary mb-6">
+              <h2 className="text-sm font-display font-black uppercase tracking-tight text-primary mb-6">
                 Stack & Save
               </h2>
-              <p className="text-[14px] text-secondary leading-relaxed mb-4">
+              <p className="text-sm text-muted leading-relaxed mb-4">
                 Our bundle deals are designed to give you maximum value. Whether
                 it&apos;s a BOGO (Buy One Get One) offer or a multi-buy
                 discount, you always get premium quality for less.
@@ -145,27 +145,27 @@ const CombosPage = async ({
             </div>
 
             <div className="max-w-sm">
-              <h3 className="text-[16px] font-medium text-primary mb-6">
+              <h3 className="text-sm font-display font-black uppercase tracking-tight text-primary mb-6">
                 Popular Bundles
               </h3>
-              <ul className="text-[14px] text-secondary space-y-3 font-medium">
-                <li className="hover:text-black cursor-pointer transition-colors">
+              <ul className="text-sm text-muted space-y-3 font-medium">
+                <li className="hover:text-accent cursor-pointer transition-colors">
                   Buy 2 Pairs, Get 15% Off
                 </li>
-                <li className="hover:text-black cursor-pointer transition-colors">
+                <li className="hover:text-accent cursor-pointer transition-colors">
                   Essential Socks Packs
                 </li>
-                <li className="hover:text-black cursor-pointer transition-colors">
+                <li className="hover:text-accent cursor-pointer transition-colors">
                   Complete Gym Kits
                 </li>
               </ul>
             </div>
 
             <div className="max-w-sm">
-              <h3 className="text-[16px] font-medium text-primary mb-6">
+              <h3 className="text-sm font-display font-black uppercase tracking-tight text-primary mb-6">
                 Limited Time Offers
               </h3>
-              <p className="text-[14px] text-secondary leading-relaxed">
+              <p className="text-sm text-muted leading-relaxed">
                 Most bundle deals are available for a limited time only. Grab
                 your favorites before the campaign ends.
               </p>

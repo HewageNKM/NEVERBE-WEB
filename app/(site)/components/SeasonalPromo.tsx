@@ -50,7 +50,7 @@ const SeasonalPromo = ({
 
   return (
     <div className={`w-full ${bgClass} relative z-50`}>
-      <div className="max-w-[1440px] mx-auto px-4">
+      <div className="max-w-content mx-auto px-4">
         <Swiper
           modules={[Autoplay, EffectFade]}
           effect="fade"
@@ -62,7 +62,7 @@ const SeasonalPromo = ({
             disableOnInteraction: false,
           }}
           loop={true}
-          className="h-9" // Fixed height for stability
+          className="h-9"
         >
           {offers.map((offer, index) => (
             <SwiperSlide
@@ -73,7 +73,7 @@ const SeasonalPromo = ({
                 href={offer.link}
                 className="flex items-center justify-center h-full w-full"
               >
-                <p className="text-[10px] md:text-xs font-bold uppercase tracking-[0.15em] hover:underline hover:text-gray-200 transition-colors cursor-pointer text-center">
+                <p className="text-[10px] md:text-xs font-black uppercase tracking-[0.2em] hover:underline hover:text-accent transition-colors cursor-pointer text-center italic">
                   {offer.text}
                 </p>
               </Link>

@@ -5,7 +5,12 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import type { Swiper as SwiperType } from "swiper";
 import "swiper/css";
-import { IoChevronBack, IoChevronForward, IoStar } from "react-icons/io5";
+import {
+  IoChevronBack,
+  IoChevronForward,
+  IoStar,
+  IoSparkles,
+} from "react-icons/io5";
 import { FcGoogle } from "react-icons/fc";
 
 // Static testimonial data - can be replaced with API data later
@@ -54,6 +59,7 @@ const reviews = [
   },
 ];
 
+// NEVERBE Performance Review Card
 const ReviewCard = ({ review }: { review: (typeof reviews)[0] }) => {
   // Generate initials from name
   const initials = review.name
@@ -63,37 +69,69 @@ const ReviewCard = ({ review }: { review: (typeof reviews)[0] }) => {
     .toUpperCase();
 
   return (
-    <div className="bg-white border border-gray-100 rounded-xl p-6 h-full flex flex-col shadow-sm hover:shadow-md transition-shadow duration-300">
+    <div className="group bg-surface border border-default rounded-2xl p-6 h-full flex flex-col shadow-custom hover:shadow-hover hover:border-accent transition-all duration-500 hover:-translate-y-1">
       {/* Header with Avatar and Google badge */}
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center gap-3">
-          {/* Avatar with initials */}
-          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white font-bold text-sm">
-            {initials}
+          {/* Performance Avatar - Accent Gradient */}
+          <div className="relative">
+            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#97e13e] to-[#6db82a] flex items-center justify-center text-dark font-display font-black text-sm shadow-[0_0_15px_rgba(151,225,62,0.4)]">
+              {initials}
+            </div>
+            {/* Verified Badge */}
+            {review.rating === 5 && (
+              <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-dark rounded-full flex items-center justify-center">
+                <IoSparkles size={10} className="text-accent" />
+              </div>
+            )}
           </div>
           <div>
-            <p className="font-bold text-sm">{review.name}</p>
-            <p className="text-xs text-gray-400">{review.date}</p>
+            <p className="font-display font-black text-sm uppercase tracking-tight text-primary group-hover:text-accent transition-colors">
+              {review.name}
+            </p>
+            <p className="text-[10px] text-muted uppercase tracking-widest font-bold">
+              {review.date}
+            </p>
           </div>
         </div>
-        <FcGoogle size={20} />
+        {/* Google Badge */}
+        <div className="p-1.5 bg-surface-2 rounded-lg group-hover:bg-accent/10 transition-colors">
+          <FcGoogle size={18} />
+        </div>
       </div>
 
-      {/* Star Rating */}
-      <div className="flex gap-0.5 mb-3">
+      {/* Star Rating - Performance Style */}
+      <div className="flex gap-1 mb-4">
         {[...Array(5)].map((_, i) => (
-          <IoStar
+          <div
             key={i}
-            size={16}
-            className={i < review.rating ? "text-yellow-400" : "text-gray-200"}
-          />
+            className={`p-0.5 rounded ${
+              i < review.rating ? "text-accent" : "text-surface-3"
+            }`}
+          >
+            <IoStar
+              size={14}
+              className={
+                i < review.rating
+                  ? "drop-shadow-[0_0_4px_rgba(151,225,62,0.6)]"
+                  : ""
+              }
+            />
+          </div>
         ))}
       </div>
 
       {/* Review Text */}
-      <p className="text-sm text-gray-600 leading-relaxed flex-1">
+      <p className="text-sm text-secondary leading-relaxed flex-1 italic">
         "{review.text}"
       </p>
+
+      {/* Bottom Accent Line */}
+      <div className="mt-4 pt-4 border-t border-default">
+        <span className="text-[9px] font-black uppercase tracking-widest text-muted group-hover:text-accent transition-colors">
+          Verified Purchase
+        </span>
+      </div>
     </div>
   );
 };
@@ -102,43 +140,56 @@ const CustomerReviews = () => {
   const swiperRef = useRef<SwiperType | null>(null);
 
   return (
-    <section className="w-full max-w-[1440px] mx-auto px-4 md:px-8 py-16">
+    <section className="w-full max-w-content mx-auto px-4 md:px-8 py-16 md:py-24">
       {/* Header with Google Rating Badge */}
-      <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-4 mb-10">
+      <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-6 mb-12">
         <div>
-          <div className="flex items-center gap-3 mb-2">
-            <FcGoogle size={28} />
-            <div className="flex items-center gap-1">
-              {[...Array(5)].map((_, i) => (
-                <IoStar key={i} size={18} className="text-yellow-400" />
-              ))}
+          {/* Rating Summary - Performance Style */}
+          <div className="flex items-center gap-4 mb-4">
+            <div className="flex items-center gap-2 px-4 py-2 bg-surface-2 rounded-full border border-default">
+              <FcGoogle size={24} />
+              <div className="flex items-center gap-0.5">
+                {[...Array(5)].map((_, i) => (
+                  <IoStar
+                    key={i}
+                    size={14}
+                    className="text-accent drop-shadow-[0_0_4px_rgba(151,225,62,0.4)]"
+                  />
+                ))}
+              </div>
+              <span className="text-lg font-display font-black italic text-primary">
+                4.9
+              </span>
             </div>
-            <span className="text-lg font-bold">4.9</span>
-            <span className="text-sm text-gray-400">based on 200+ reviews</span>
+            <span className="text-xs text-muted font-bold uppercase tracking-wider">
+              200+ Reviews
+            </span>
           </div>
-          <h2 className="text-2xl md:text-3xl font-black uppercase tracking-tight">
-            What Our Customers Say
+
+          {/* Title - NEVERBE Performance Style */}
+          <h2 className="text-3xl md:text-4xl font-display font-black uppercase italic tracking-tighter text-primary mb-2">
+            Athletes Trust Us
           </h2>
-          <p className="text-sm text-gray-500 mt-1 max-w-md">
-            Real reviews from real customers across Sri Lanka
+          <p className="text-sm text-muted font-medium max-w-md">
+            Real performance reviews from real Sri Lankan athletes
           </p>
         </div>
 
-        {/* Navigation Arrows - Hidden on mobile */}
-        <div className="hidden md:flex items-center gap-2">
+        {/* Navigation Arrows - NEVERBE Style */}
+        <div className="hidden md:flex items-center gap-3">
           <button
             onClick={() => swiperRef.current?.slidePrev()}
-            className="w-10 h-10 rounded-full border-2 border-gray-200 flex items-center justify-center hover:border-black hover:bg-black hover:text-white transition-all"
+            className="w-12 h-12 rounded-full border-2 border-default bg-surface flex items-center justify-center text-primary hover:border-accent hover:bg-dark hover:text-accent transition-all duration-300 shadow-custom hover:shadow-hover"
             aria-label="Previous review"
           >
-            <IoChevronBack size={18} />
+            <IoChevronBack size={20} />
           </button>
           <button
             onClick={() => swiperRef.current?.slideNext()}
-            className="w-10 h-10 rounded-full border-2 border-gray-200 flex items-center justify-center hover:border-black hover:bg-black hover:text-white transition-all"
+            className="w-12 h-12 rounded-full border-2 border-default bg-surface flex items-center justify-center text-primary hover:border-accent hover:bg-dark hover:text-accent transition-all duration-300 shadow-custom hover:shadow-hover"
             aria-label="Next review"
           >
-            <IoChevronForward size={18} />
+            <IoChevronForward size={20} />
           </button>
         </div>
       </div>
@@ -165,16 +216,19 @@ const CustomerReviews = () => {
         ))}
       </Swiper>
 
-      {/* Google Reviews CTA */}
-      <div className="flex justify-center mt-8">
+      {/* Google Reviews CTA - Performance Style */}
+      <div className="flex justify-center mt-12">
         <a
           href="https://g.page/r/neverbe/review"
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 px-6 py-3 bg-gray-50 hover:bg-gray-100 rounded-full text-sm font-bold uppercase tracking-wider transition-colors"
+          className="group inline-flex items-center gap-3 px-8 py-4 bg-dark text-inverse rounded-full font-display font-black uppercase tracking-widest text-xs hover:bg-accent hover:text-dark transition-all duration-300 shadow-custom hover:shadow-hover hover:-translate-y-1"
         >
           <FcGoogle size={20} />
-          Leave us a review on Google
+          <span>Rate Your Performance</span>
+          <div className="w-6 h-6 bg-accent text-dark rounded-full flex items-center justify-center group-hover:bg-dark group-hover:text-accent transition-colors">
+            <IoChevronForward size={14} />
+          </div>
         </a>
       </div>
     </section>

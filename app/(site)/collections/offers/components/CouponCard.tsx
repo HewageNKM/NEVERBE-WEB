@@ -9,6 +9,10 @@ interface Props {
   coupon: Coupon;
 }
 
+/**
+ * CouponCard - NEVERBE Performance Style
+ * Promotional coupon cards with branded styling and copy interaction.
+ */
 const CouponCard: React.FC<Props> = ({ coupon }) => {
   const [copied, setCopied] = useState(false);
 
@@ -23,18 +27,18 @@ const CouponCard: React.FC<Props> = ({ coupon }) => {
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      className="relative flex flex-col md:flex-row bg-surface border border-default hover:border-strong transition-all group"
+      className="relative flex flex-col md:flex-row bg-surface border border-default hover:border-accent transition-all group shadow-custom hover:shadow-hover"
     >
       {/* Visual Header / Discount */}
-      <div className="bg-surface-2 p-8 flex flex-col items-start justify-center md:min-w-[160px]">
-        <div className="text-[32px] font-medium tracking-tight text-primary leading-none">
+      <div className="bg-surface-2 p-8 flex flex-col items-start justify-center md:min-w-[180px]">
+        <div className="text-4xl font-display font-black tracking-tighter text-primary italic leading-none">
           {coupon.discountType === "PERCENTAGE"
             ? `${coupon.discountValue}%`
             : coupon.discountType === "FIXED"
             ? `Rs.${coupon.discountValue.toLocaleString()}`
             : "FREE"}
         </div>
-        <div className="text-[14px] font-medium text-secondary mt-1">
+        <div className="text-base font-bold text-muted uppercase tracking-widest mt-2">
           {coupon.discountType === "FREE_SHIPPING" ? "Shipping" : "OFF"}
         </div>
       </div>
@@ -44,12 +48,12 @@ const CouponCard: React.FC<Props> = ({ coupon }) => {
         <div>
           <div className="flex flex-col gap-3 mb-4">
             <div className="flex flex-wrap items-center gap-3">
-              <span className="bg-dark text-inverse text-[11px] font-bold px-3 py-1 rounded-full uppercase tracking-widest">
+              <span className="bg-accent text-dark text-[11px] font-display font-black italic px-4 py-1.5 rounded-full uppercase tracking-tighter shadow-custom">
                 {coupon.code.toUpperCase()}
               </span>
             </div>
             {coupon.endDate && (
-              <div className="text-[12px] text-error font-medium flex items-center gap-1">
+              <div className="text-xs text-error font-black flex items-center gap-2 uppercase tracking-widest">
                 <span className="w-1.5 h-1.5 bg-error rounded-full animate-pulse" />
                 <span>Ends In: </span>
                 <CountdownTimer
@@ -62,24 +66,23 @@ const CouponCard: React.FC<Props> = ({ coupon }) => {
                   }
                   labels={false}
                   compact={true}
-                  className="font-bold"
                 />
               </div>
             )}
           </div>
 
-          <h3 className="text-[18px] font-medium text-primary mb-2 tracking-tight">
+          <h3 className="text-xl font-display font-black text-primary mb-3 uppercase italic tracking-tighter">
             {coupon.description || "Exclusive Member Offer"}
           </h3>
 
           <div className="space-y-1">
             {!!coupon.minOrderAmount && coupon.minOrderAmount > 0 && (
-              <p className="text-[13px] text-secondary">
+              <p className="text-sm text-muted font-bold uppercase tracking-wider">
                 Min. Order: Rs. {coupon.minOrderAmount.toLocaleString()}
               </p>
             )}
             {coupon.firstOrderOnly && (
-              <p className="text-[13px] text-secondary">
+              <p className="text-sm text-muted font-bold uppercase tracking-wider">
                 Verified First Order Only
               </p>
             )}
@@ -88,13 +91,13 @@ const CouponCard: React.FC<Props> = ({ coupon }) => {
 
         <button
           onClick={handleCopy}
-          className={`mt-6 w-full md:w-fit px-10 py-3 rounded-full text-[14px] font-medium transition-all active:scale-[0.98] ${
+          className={`mt-6 w-full md:w-fit px-10 py-4 rounded-full text-xs font-black uppercase tracking-widest transition-all active:scale-95 ${
             copied
-              ? "bg-dark text-inverse opacity-80"
-              : "bg-dark text-inverse hover:opacity-70"
+              ? "bg-success text-dark shadow-custom"
+              : "bg-dark text-inverse hover:bg-accent hover:text-dark shadow-custom hover:shadow-hover"
           }`}
         >
-          {copied ? "Code Copied" : "Copy Code"}
+          {copied ? "Protocol Copied ✓" : "Copy Code"}
         </button>
       </div>
     </motion.div>

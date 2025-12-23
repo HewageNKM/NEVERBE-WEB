@@ -32,19 +32,19 @@ const WhyUs = () => {
   ];
 
   return (
-    <section className="w-full border-t border-gray-100 bg-white py-12">
-      <div className="max-w-[1440px] mx-auto px-4 md:px-8">
+    <section className="w-full border-t border-default bg-surface py-12 md:py-16">
+      <div className="max-w-content mx-auto px-4 md:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
           {benefits.map((item, index) => (
             <div key={index} className="flex flex-col items-start gap-3 group">
-              <div className="p-3 rounded-full bg-gray-50 text-black group-hover:bg-black group-hover:text-white transition-colors duration-300">
+              <div className="p-3 rounded-full bg-surface-2 text-primary group-hover:bg-accent group-hover:text-dark transition-all duration-300 shadow-sm group-hover:shadow-custom">
                 <item.icon size={24} />
               </div>
               <div>
-                <h3 className="font-bold uppercase text-sm tracking-wide mb-1">
+                <h3 className="font-display font-black uppercase text-sm tracking-tight mb-1 text-primary group-hover:text-accent transition-colors">
                   {item.title}
                 </h3>
-                <p className="text-sm text-gray-500 font-medium">{item.desc}</p>
+                <p className="text-sm text-muted font-medium">{item.desc}</p>
               </div>
             </div>
           ))}

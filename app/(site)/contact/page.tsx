@@ -92,7 +92,7 @@ const ContactPage = () => {
   ];
 
   return (
-    <div className="min-h-screen mt-8 lg:mt-12 flex flex-col items-center px-4 sm:px-6 lg:px-12">
+    <div className="min-h-screen mt-8 lg:mt-12 flex flex-col items-center px-4 sm:px-6 lg:px-12 bg-surface">
       {/* Structured Data JSON-LD */}
       <script
         type="application/ld+json"
@@ -101,12 +101,12 @@ const ContactPage = () => {
 
       {/* --- Header Section --- */}
       <header className="text-center mb-12">
-        <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 font-display">
+        <h1 className="text-4xl sm:text-5xl font-display font-black uppercase italic tracking-tighter text-primary">
           Contact Us
         </h1>
-        <p className="text-gray-600 mt-3 text-lg max-w-2xl mx-auto">
-          We’d love to hear from you. Whether you have a question, feedback, or
-          just want to say hello — we’re here to help!
+        <p className="text-muted mt-4 text-base max-w-2xl mx-auto">
+          We'd love to hear from you. Whether you have a question, feedback, or
+          just want to say hello — we're here to help!
         </p>
       </header>
 

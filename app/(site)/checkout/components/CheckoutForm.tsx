@@ -213,7 +213,7 @@ const CheckoutForm = () => {
     <>
       <form
         onSubmit={handlePaymentSubmit}
-        className="flex flex-col lg:flex-row w-full gap-8 lg:gap-16 px-4 md:px-8 py-8"
+        className="flex flex-col lg:flex-row w-full gap-8 lg:gap-16 px-4 md:px-8 py-8 bg-surface"
       >
         {/* --- LEFT COLUMN: FORMS (Scrollable) --- */}
         <div className="w-full lg:w-[60%] flex flex-col gap-10">
@@ -246,24 +246,24 @@ const CheckoutForm = () => {
         </div>
       </form>
 
-      {/* --- OTP MODAL (Using Hook State) --- */}
+      {/* --- OTP MODAL - NEVERBE Performance Style --- */}
       {otpState.showModal && otpState.pendingOrder && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex justify-center items-center z-50 p-4">
-          <div className="relative bg-white p-8 w-full max-w-sm border border-gray-200 shadow-2xl">
+        <div className="fixed inset-0 bg-surface/80 backdrop-blur-xl flex justify-center items-center z-50 p-4">
+          <div className="relative bg-surface p-8 w-full max-w-sm border border-default rounded-2xl shadow-hover">
             <button
               onClick={() => {
                 closeOTPModal();
                 setOtp("");
               }}
-              className="absolute top-4 right-4 text-black hover:scale-110 transition"
+              className="absolute top-4 right-4 text-primary hover:text-accent hover:scale-110 transition-all"
             >
               <FiX size={24} />
             </button>
 
-            <h2 className="text-xl font-black uppercase tracking-tight mb-2 text-center">
+            <h2 className="text-xl font-display font-black uppercase italic tracking-tighter mb-2 text-center text-primary">
               Verify Number
             </h2>
-            <p className="text-center text-sm text-gray-500 mb-6 font-medium">
+            <p className="text-center text-sm text-muted mb-6 font-medium">
               Enter the code sent to {otpState.pendingOrder.customer.phone}
             </p>
 
@@ -274,14 +274,14 @@ const CheckoutForm = () => {
                 disabled={otpState.isVerifying}
                 onChange={(e) => setOtp(e.target.value)}
                 placeholder="000000"
-                className="w-full h-14 text-center text-2xl tracking-[0.5em] font-bold border-2 border-gray-200 focus:border-black outline-none transition-colors"
+                className="w-full h-14 text-center text-2xl tracking-[0.5em] font-display font-black border-2 border-default bg-surface-2 rounded-xl focus:border-accent outline-none transition-colors text-primary"
                 maxLength={6}
               />
               <button
                 type="button"
                 onClick={() => handleOTPVerification(otp)}
                 disabled={otpState.isVerifying}
-                className="w-full py-4 bg-black text-white font-bold uppercase tracking-widest hover:bg-gray-800 disabled:bg-gray-400 transition"
+                className="w-full py-4 bg-dark text-inverse rounded-full font-display font-black uppercase tracking-widest text-xs hover:bg-accent hover:text-dark transition-all shadow-custom hover:shadow-hover active:scale-95 disabled:bg-surface-3 disabled:text-muted disabled:shadow-none"
               >
                 {otpState.isVerifying ? "Processing..." : "Confirm Order"}
               </button>
@@ -292,7 +292,7 @@ const CheckoutForm = () => {
                   handleResendOTP(otpState.pendingOrder!.customer.phone)
                 }
                 disabled={otpState.isResending || otpState.cooldown > 0}
-                className="text-xs font-bold uppercase tracking-wide text-gray-400 hover:text-black transition"
+                className="text-xs font-black uppercase tracking-widest text-muted hover:text-accent transition-all"
               >
                 {otpState.cooldown > 0
                   ? `Resend in ${otpState.cooldown}s`

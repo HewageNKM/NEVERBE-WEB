@@ -81,29 +81,29 @@ const OffersPage = async () => {
   };
 
   return (
-    <main className="w-full min-h-screen bg-white">
+    <main className="w-full min-h-screen bg-surface">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(offersSchema) }}
       />
 
-      {/* 1. NIKE STYLE HEADER */}
-      <div className="w-full max-w-[1920px] mx-auto px-4 md:px-12 py-12 md:py-20 text-left">
-        <h1 className="text-[28px] md:text-[42px] font-medium tracking-tight text-primary leading-none mb-4">
+      {/* NEVERBE Performance Header */}
+      <div className="w-full max-w-content mx-auto px-4 md:px-12 py-12 md:py-20 text-left">
+        <h1 className="text-3xl md:text-5xl font-display font-black uppercase italic tracking-tighter text-primary leading-none mb-4">
           Member Rewards & Offers
         </h1>
-        <p className="text-secondary max-w-xl text-[16px] md:text-[18px] font-normal">
+        <p className="text-muted max-w-xl text-sm md:text-base font-medium uppercase tracking-wide">
           Unlock exclusive campaigns, seasonal coupons, and the best markdown
           deals on premium footwear.
         </p>
       </div>
 
-      <div className="w-full max-w-[1920px] mx-auto px-4 md:px-12 space-y-24 pb-20">
-        {/* 2. ACTIVE CAMPAIGNS (Nike-style high-quality banners) */}
+      <div className="w-full max-w-content mx-auto px-4 md:px-12 space-y-24 pb-20">
+        {/* Active Campaigns */}
         {bannerPromotions.length > 0 && (
           <section>
             <div className="mb-10">
-              <h2 className="text-[20px] font-medium text-primary tracking-tight">
+              <h2 className="text-lg font-display font-black uppercase tracking-tight text-primary">
                 Active Campaigns
               </h2>
             </div>
@@ -112,7 +112,7 @@ const OffersPage = async () => {
               {bannerPromotions.map((promo: any) => (
                 <div
                   key={promo.id}
-                  className="group block relative aspect-4/5 bg-surface-2 overflow-hidden cursor-pointer"
+                  className="group block relative aspect-4/5 bg-surface-2 overflow-hidden cursor-pointer rounded-2xl shadow-custom hover:shadow-hover transition-all"
                 >
                   <Image
                     src={promo.bannerUrl}
@@ -122,10 +122,10 @@ const OffersPage = async () => {
                   />
                   <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
                   <div className="absolute bottom-10 left-10 right-10">
-                    <h3 className="text-white text-[24px] font-medium tracking-tight mb-2">
+                    <h3 className="text-inverse text-xl font-display font-black uppercase italic tracking-tight mb-3">
                       {promo.name}
                     </h3>
-                    <button className="px-6 py-2 bg-white text-black text-[15px] font-medium rounded-full hover:bg-gray-200 transition-all">
+                    <button className="px-6 py-3 bg-surface text-primary text-xs font-display font-black uppercase tracking-widest rounded-full hover:bg-accent hover:text-dark transition-all shadow-custom">
                       Shop Now
                     </button>
                   </div>
@@ -135,11 +135,11 @@ const OffersPage = async () => {
           </section>
         )}
 
-        {/* 3. COUPONS SECTION (Clean grid, no dividers) */}
+        {/* Coupons Section */}
         {coupons.length > 0 && (
           <section>
             <div className="mb-10">
-              <h2 className="text-[20px] font-medium text-primary tracking-tight">
+              <h2 className="text-lg font-display font-black uppercase tracking-tight text-primary">
                 Your Available Coupons
               </h2>
             </div>
@@ -152,39 +152,38 @@ const OffersPage = async () => {
           </section>
         )}
 
-        {/* 4. MARKDOWN DEALS (Utilizes the previously redesigned DealsProducts) */}
-        <section className="pt-16 border-t border-gray-100">
+        {/* Markdown Deals */}
+        <section className="pt-16 border-t border-default">
           <div className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div>
-              <h2 className="text-[24px] md:text-[32px] font-medium text-primary tracking-tight leading-none">
+              <h2 className="text-2xl md:text-4xl font-display font-black uppercase italic tracking-tighter text-primary leading-none">
                 Shop Markdown Deals
               </h2>
-              <p className="text-secondary text-[16px] mt-2">
+              <p className="text-muted text-sm mt-3 uppercase tracking-wide">
                 Highest performance footwear at our best prices.
               </p>
             </div>
             <Link
               href="/collections/combos"
-              className="text-[16px] font-medium text-primary underline underline-offset-4 hover:opacity-70 transition-all"
+              className="text-xs font-black uppercase tracking-widest text-primary hover:text-accent transition-colors border-b-2 border-transparent hover:border-accent pb-1"
             >
               View Bundles & Combos
             </Link>
           </div>
 
-          {/* Ensure DealsProducts matches the Collection Page redesign with the sticky toolbar */}
           <DealsProducts items={dealsList} />
         </section>
       </div>
 
-      {/* PREMIUM BRAND STORY FOOTER */}
+      {/* SEO Footer */}
       <section className="bg-surface-2 py-16 mt-0">
-        <div className="max-w-[1440px] mx-auto px-8 lg:px-12">
+        <div className="max-w-content mx-auto px-8 lg:px-12">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 lg:gap-24">
             <div className="max-w-sm">
-              <h2 className="text-[16px] font-medium text-primary mb-6">
+              <h2 className="text-sm font-display font-black uppercase tracking-tight text-primary mb-6">
                 Member Benefits
               </h2>
-              <p className="text-[14px] text-secondary leading-relaxed mb-4">
+              <p className="text-sm text-muted leading-relaxed mb-4">
                 Unlock exclusive deals and early access to new drops. Sign up
                 for NEVERBE membership to get the best prices on premium
                 footwear in Sri Lanka.
@@ -192,27 +191,27 @@ const OffersPage = async () => {
             </div>
 
             <div className="max-w-sm">
-              <h3 className="text-[16px] font-medium text-primary mb-6">
+              <h3 className="text-sm font-display font-black uppercase tracking-tight text-primary mb-6">
                 Ways to Save
               </h3>
-              <ul className="text-[14px] text-secondary space-y-3 font-medium">
-                <li className="hover:text-black cursor-pointer transition-colors">
+              <ul className="text-sm text-muted space-y-3 font-medium">
+                <li className="hover:text-accent cursor-pointer transition-colors">
                   Seasonal Markdown Deals
                 </li>
-                <li className="hover:text-black cursor-pointer transition-colors">
+                <li className="hover:text-accent cursor-pointer transition-colors">
                   Exclusive Coupon Codes
                 </li>
-                <li className="hover:text-black cursor-pointer transition-colors">
+                <li className="hover:text-accent cursor-pointer transition-colors">
                   Bundle & Save Combos
                 </li>
               </ul>
             </div>
 
             <div className="max-w-sm">
-              <h3 className="text-[16px] font-medium text-primary mb-6">
+              <h3 className="text-sm font-display font-black uppercase tracking-tight text-primary mb-6">
                 Price Match Promise
               </h3>
-              <p className="text-[14px] text-secondary leading-relaxed">
+              <p className="text-sm text-muted leading-relaxed">
                 We offer the best prices on 7A quality footwear. If you find a
                 better price elsewhere, let us know and we&apos;ll do our best
                 to match it.
