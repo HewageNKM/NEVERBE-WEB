@@ -137,7 +137,7 @@ const CollectionProducts = ({
 
       <div className="flex-1 w-full">
         {/* Icon-only Toolbar */}
-        <div className="sticky top-0 z-30 bg-surface/90 backdrop-blur-md py-4 flex justify-end items-center gap-2 transition-all">
+        <div className="sticky top-0 z-30 bg-surface/90 backdrop-blur-md py-4 flex justify-between lg:justify-end items-center gap-2 transition-all">
           <button
             onClick={() => dispatch(toggleFilter())}
             className="w-10 h-10 flex items-center justify-center bg-surface-2 border border-default rounded-full hover:border-accent text-primary hover:text-accent transition-all"

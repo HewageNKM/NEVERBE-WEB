@@ -118,7 +118,7 @@ const DealsProducts = ({ items }: { items: Product[] }) => {
 
       <div className="flex-1 w-full">
         {/* Icon-only Toolbar */}
-        <div className="relative z-20 bg-surface/90 backdrop-blur-md py-4 flex justify-end items-center gap-2">
+        <div className="relative z-20 bg-surface/90 backdrop-blur-md py-4 flex justify-between lg:justify-end items-center gap-2">
           <button
             onClick={() => dispatch(toggleFilter())}
             className="w-10 h-10 flex items-center justify-center bg-surface-2 border border-default rounded-full hover:border-accent text-primary hover:text-accent transition-all"
