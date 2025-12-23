@@ -17,7 +17,7 @@ import {
 import BillingDetails from "./BillingDetails";
 import ShippingDetails from "./ShippingDetails";
 import PaymentDetails from "@/app/(site)/checkout/components/PaymentDetails";
-import ComponentLoader from "@/components/ComponentLoader";
+import CheckoutLoader from "@/components/CheckoutLoader";
 import toast from "react-hot-toast";
 import { Order, Customer } from "@/interfaces";
 import { auth } from "@/firebase/firebaseClient";
@@ -305,7 +305,7 @@ const CheckoutForm = () => {
         </div>
       )}
 
-      {isProcessing && <ComponentLoader />}
+      {isProcessing && <CheckoutLoader />}
     </>
   );
 };
