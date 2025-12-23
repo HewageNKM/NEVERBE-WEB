@@ -13,11 +13,7 @@ import { Logo } from "@/assets/images";
 import toast from "react-hot-toast";
 import ComponentLoader from "@/components/ComponentLoader";
 import { motion } from "framer-motion";
-import {
-  IoFlashOutline,
-  IoArrowBackOutline,
-  IoLockClosedOutline,
-} from "react-icons/io5";
+import { IoChevronBackOutline, IoArrowForward } from "react-icons/io5";
 
 const AuthPage = () => {
   const router = useRouter();
@@ -25,10 +21,7 @@ const AuthPage = () => {
   const redirectUrl = searchParams.get("redirect") || "/account";
   const [loading, setLoading] = useState(false);
 
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
+  const [formData, setFormData] = useState({ email: "", password: "" });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -39,10 +32,10 @@ const AuthPage = () => {
     const provider = new GoogleAuthProvider();
     try {
       await signInWithPopup(auth, provider);
-      toast.success("BLUEPRINT SYNCED");
+      toast.success("Welcome back to NEVERBE");
       router.push(redirectUrl);
     } catch (err: any) {
-      toast.error("GOOGLE AUTH FAILED.");
+      toast.error("Google sign-in failed.");
     } finally {
       setLoading(false);
     }
@@ -53,178 +46,144 @@ const AuthPage = () => {
     setLoading(true);
     try {
       await signInWithEmailAndPassword(auth, formData.email, formData.password);
-      toast.success("AUTHENTICATION SUCCESSFUL");
+      toast.success("Signed in successfully");
       router.push(redirectUrl);
     } catch (err: any) {
-      let msg = "PROTOCOL ERROR. TRY AGAIN.";
-      if (
-        err.code === "auth/wrong-password" ||
-        err.code === "auth/invalid-credential"
-      )
-        msg = "INVALID CREDENTIALS.";
-      else if (err.code === "auth/user-not-found")
-        msg = "ID NOT FOUND IN DATABASE.";
-      toast.error(msg);
+      toast.error("Invalid email or password.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-dark text-inverse flex flex-col items-center justify-center px-6 selection:bg-accent selection:text-dark relative overflow-hidden">
-      {/* Background Technical Grid */}
-      <div
-        className="fixed inset-0 opacity-[0.03] pointer-events-none"
-        style={{
-          backgroundImage:
-            "linear-gradient(#97e13e 1px, transparent 1px), linear-gradient(90deg, #97e13e 1px, transparent 1px)",
-          backgroundSize: "60px 60px",
-        }}
-      />
-
+    <div className="min-h-screen bg-white text-black flex flex-col items-center justify-center px-6 selection:bg-accent/30 relative">
       {loading && <ComponentLoader />}
 
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md relative z-10"
+        className="w-full max-w-[400px] flex flex-col"
       >
-        <div className="mb-12 text-center flex flex-col items-center">
-          <Link
-            href="/"
-            className="group mb-8 block transition-transform hover:scale-110"
-          >
-            <Image
-              src={Logo}
-              width={120}
-              height={45}
-              alt="NEVERBE"
-              className="invert brightness-200"
-            />
+        {/* Branding */}
+        <div className="mb-12 flex flex-col items-center text-center">
+          <Link href="/" className="mb-8 transition-opacity hover:opacity-70">
+            <Image src={Logo} width={130} height={50} alt="NEVERBE" priority />
           </Link>
-
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-accent/10 border border-accent/20 rounded-full mb-4">
-            <IoLockClosedOutline className="text-accent animate-pulse" />
-            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-accent italic">
-              Security Protocol
-            </span>
-          </div>
-
-          <h1 className="text-4xl md:text-5xl font-display font-black uppercase italic tracking-tighter mb-4">
-            Member Login
+          <h1 className="text-3xl font-display font-black uppercase tracking-tighter mb-3">
+            Sign In
           </h1>
-          <p className="text-muted text-sm max-w-xs font-medium leading-relaxed">
-            Synchronize your profile to access your performance history and
-            saved gear.
+          <p className="text-zinc-500 text-sm font-medium">
+            Enter your details to access your gear and orders.
           </p>
         </div>
 
-        <div className="w-full space-y-8">
-          <form onSubmit={handleAuth} className="space-y-5">
-            <div className="space-y-4">
+        {/* Auth Form */}
+        <form onSubmit={handleAuth} className="space-y-4">
+          <div className="space-y-3">
+            <div className="group">
               <input
                 name="email"
                 type="email"
-                placeholder="Member Email"
+                placeholder="Email Address"
                 required
-                className="w-full bg-surface-2 p-4 text-sm font-bold border border-white/5 focus:border-accent outline-none rounded-sm placeholder-muted transition-all shadow-inner"
+                className="w-full bg-zinc-50 p-4 text-sm font-bold border border-zinc-200 focus:border-black focus:bg-white outline-none rounded-2xl transition-all placeholder:text-zinc-400"
                 onChange={handleChange}
               />
-
+            </div>
+            <div className="group">
               <input
                 name="password"
                 type="password"
-                placeholder="Security Key"
+                placeholder="Password"
                 required
-                className="w-full bg-surface-2 p-4 text-sm font-bold border border-white/5 focus:border-accent outline-none rounded-sm placeholder-muted transition-all shadow-inner"
+                className="w-full bg-zinc-50 p-4 text-sm font-bold border border-zinc-200 focus:border-black focus:bg-white outline-none rounded-2xl transition-all placeholder:text-zinc-400"
                 onChange={handleChange}
               />
             </div>
+          </div>
 
-            <div className="flex justify-end">
-              <button
-                type="button"
-                className="text-[10px] font-black uppercase tracking-widest text-muted hover:text-accent transition-colors underline underline-offset-8"
-              >
-                Reset Key?
-              </button>
-            </div>
-
-            <p className="text-[10px] text-muted text-center uppercase font-black tracking-widest leading-relaxed px-4 opacity-60">
-              Accessing the NEVERBE Lab implies consent to all security
-              protocols.
-            </p>
-
+          <div className="flex justify-end pr-2">
             <button
-              type="submit"
-              disabled={loading}
-              className="group w-full bg-accent text-dark font-display font-black uppercase italic tracking-widest py-5 rounded-full shadow-custom hover:shadow-hover hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50"
+              type="button"
+              className="text-[11px] font-bold uppercase tracking-widest text-zinc-400 hover:text-black transition-colors"
             >
-              {loading ? "Syncing..." : "Initialize Session"}
+              Forgot Password?
             </button>
-          </form>
-
-          {/* --- Divider --- */}
-          <div className="flex items-center gap-6 my-10">
-            <div className="h-px bg-white/5 flex-1"></div>
-            <span className="text-[10px] font-black text-muted tracking-widest">
-              OR FAST SYNC
-            </span>
-            <div className="h-px bg-white/5 flex-1"></div>
           </div>
 
-          {/* --- Google Button --- */}
           <button
-            onClick={handleGoogleLogin}
-            type="button"
-            className="w-full bg-white text-dark flex items-center justify-center gap-4 py-4 rounded-full font-black uppercase text-xs tracking-[0.2em] shadow-lg hover:bg-accent transition-all duration-300 active:scale-95"
+            type="submit"
+            disabled={loading}
+            className="group w-full bg-black text-white py-5 rounded-full font-display font-black uppercase tracking-widest text-xs flex items-center justify-center gap-3 transition-all hover:bg-zinc-800 active:scale-[0.98] disabled:opacity-50 shadow-lg shadow-black/5"
           >
-            <svg className="w-5 h-5" viewBox="0 0 24 24">
-              <path
-                d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                fill="#4285F4"
-              />
-              <path
-                d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                fill="#34A853"
-              />
-              <path
-                d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.84z"
-                fill="#FBBC05"
-              />
-              <path
-                d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-                fill="#EA4335"
-              />
-            </svg>
-            Google Identity
+            {loading ? "Signing In..." : "Log In"}
+            <IoArrowForward
+              size={18}
+              className="group-hover:translate-x-1 transition-transform"
+            />
           </button>
+        </form>
 
-          {/* Registration Link */}
-          <div className="text-center mt-10">
-            <p className="text-muted text-xs font-bold uppercase tracking-wide">
-              New to the Lab?{" "}
-              <Link
-                href={`/account/register${
-                  redirectUrl !== "/account" ? `?redirect=${redirectUrl}` : ""
-                }`}
-                className="text-accent font-black italic underline underline-offset-8 hover:text-inverse transition-colors ml-1"
-              >
-                Create Blueprint.
-              </Link>
-            </p>
-          </div>
+        {/* --- Divider --- */}
+        <div className="flex items-center gap-4 my-10">
+          <div className="h-px bg-zinc-100 flex-1"></div>
+          <span className="text-[10px] font-black text-zinc-300 tracking-widest uppercase">
+            Or
+          </span>
+          <div className="h-px bg-zinc-100 flex-1"></div>
+        </div>
+
+        {/* --- Google Button: THE BRAND ACCENT --- */}
+        <button
+          onClick={handleGoogleLogin}
+          type="button"
+          className="w-full bg-[#97e13e] text-black flex items-center justify-center gap-4 py-4 rounded-full font-black uppercase text-xs tracking-widest shadow-xl shadow-[#97e13e]/20 hover:scale-[1.02] transition-all active:scale-95"
+        >
+          <svg className="w-5 h-5" viewBox="0 0 24 24">
+            <path
+              d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+              fill="black"
+            />
+            <path
+              d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+              fill="black"
+            />
+            <path
+              d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.84z"
+              fill="black"
+            />
+            <path
+              d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+              fill="black"
+            />
+          </svg>
+          Sign in with Google
+        </button>
+
+        {/* Footer Toggle */}
+        <div className="text-center mt-12">
+          <p className="text-zinc-500 text-xs font-bold uppercase tracking-wide">
+            Don&apos;t have an account?{" "}
+            <Link
+              href={`/account/register${
+                redirectUrl !== "/account" ? `?redirect=${redirectUrl}` : ""
+              }`}
+              className="text-black font-black underline underline-offset-8 decoration-accent decoration-4 hover:decoration-black transition-all ml-1"
+            >
+              Join Us.
+            </Link>
+          </p>
         </div>
       </motion.div>
 
-      {/* Footer Return */}
-      <div className="mt-16 relative z-10">
+      {/* Clean Return Link */}
+      <div className="mt-16">
         <Link
           href="/"
-          className="group flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.3em] text-muted hover:text-accent transition-all"
+          className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-zinc-400 hover:text-black transition-all"
         >
-          <IoArrowBackOutline className="group-hover:-translate-x-1 transition-transform" />
-          Terminal Exit
+          <IoChevronBackOutline size={14} />
+          Return to Store
         </Link>
       </div>
     </div>

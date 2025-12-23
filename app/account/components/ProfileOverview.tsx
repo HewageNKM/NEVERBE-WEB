@@ -9,8 +9,13 @@ import {
   IoChevronForward,
 } from "react-icons/io5";
 
+interface UserProfile {
+  name?: string;
+  memberSince?: string | Date;
+}
+
 interface ProfileOverviewProps {
-  user: any;
+  user: UserProfile;
   setActiveTab: (tab: string) => void;
   ordersCount: number;
 }
@@ -20,13 +25,15 @@ const ProfileOverview: React.FC<ProfileOverviewProps> = ({
   setActiveTab,
   ordersCount,
 }) => {
-  // Format the creation date to match the technical log style
-  const memberDate = user.memberSince
-    ? new Date(user.memberSince).toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "long",
-      })
-    : "RECENT INITIALIZATION";
+  // Format the creation date to match the original style
+  const memberDate = React.useMemo(() => {
+    return user?.memberSince
+      ? new Date(user.memberSince).toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "long",
+        })
+      : "RECENT INITIALIZATION";
+  }, [user?.memberSince]);
 
   return (
     <div className="space-y-12 md:space-y-16 animate-fade">
@@ -36,7 +43,7 @@ const ProfileOverview: React.FC<ProfileOverviewProps> = ({
           <span className="text-[10px] font-black uppercase tracking-[0.3em] text-accent italic">
             Identity Protocol
           </span>
-          <h2 className="text-3xl md:text-5xl font-display font-black uppercase italic tracking-tighter text-inverse">
+          <h2 className="text-3xl md:text-5xl font-display font-black uppercase italic tracking-tighter text-inverse leading-none">
             Member Blueprint
           </h2>
           <div className="flex items-center gap-2 mt-4 text-muted">
