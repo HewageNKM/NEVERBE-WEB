@@ -6,13 +6,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { IoCheckmark, IoChevronForward } from "react-icons/io5";
-import { FaWhatsapp } from "react-icons/fa6";
+import { FaWhatsapp, FaTruckFast, FaArrowRotateLeft } from "react-icons/fa6";
 import toast from "react-hot-toast";
 
 import { AppDispatch, RootState } from "@/redux/store";
 import { addMultipleToBag } from "@/redux/bagSlice/bagSlice";
 import { ComboProduct, ComboItem } from "@/interfaces/ComboProduct";
 import { BagItem, VariantMode } from "@/interfaces/BagItem";
+import SizeGrid from "@/components/SizeGrid";
 
 // --- Types ---
 interface PopulatedComboItem extends ComboItem {
@@ -53,7 +54,6 @@ interface ComboSlot {
   required: boolean;
   isFreeUnit: boolean;
   label: string;
-  // Variant restrictions from combo item
   variantMode: VariantMode;
   variantIds?: string[];
 }
@@ -75,7 +75,6 @@ const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
   const bagItems = useSelector((state: RootState) => state.bag.bag);
   const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER;
 
-  // Helper to get bag quantity
   const getBagQty = (productId: string, variantId: string, size: string) => {
     return (
       bagItems.find(
@@ -140,7 +139,6 @@ const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
     const initialSelections: Record<string, SlotSelection> = {};
     slots.forEach((slot) => {
       if (slot.product) {
-        // Get allowed variants based on variantMode
         const allowedVariants =
           slot.variantMode === "SPECIFIC_VARIANTS" && slot.variantIds?.length
             ? slot.product.variants.filter((v) =>
@@ -211,11 +209,7 @@ const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
     const loading = stockLoading[key];
     const isOutOfStock = quantity !== undefined && quantity <= 0;
 
-    return {
-      quantity,
-      loading,
-      isOutOfStock,
-    };
+    return { quantity, loading, isOutOfStock };
   };
 
   const getStockForSlot = (slotId: string) => {
@@ -273,7 +267,6 @@ const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
       return;
     }
 
-    // Validate Stock Limits again strictly
     for (const slot of slots) {
       if (!slot.product) continue;
       const selection = selections[slot.slotId];
@@ -281,7 +274,7 @@ const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
         toast.error(`Please select a size for ${slot.label}`);
         return;
       }
-      if (!selection?.isValid) continue; // Skip optional if not selected
+      if (!selection?.isValid) continue;
 
       const stockKey = `${slot.slotId}-${selection.variantId}-${selection.size}`;
       const stockQty = stockStatus[stockKey];
@@ -293,7 +286,7 @@ const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
 
       if (stockQty !== undefined && bagQty + 1 > stockQty) {
         toast.error(
-          `Cannot add bundle: Item "${slot.product.name}" (${selection.size}) limit reached. Stock: ${stockQty}, In Bag: ${bagQty}`
+          `Cannot add bundle: "${slot.product.name}" (${selection.size}) limit reached.`
         );
         return;
       }
@@ -306,7 +299,7 @@ const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
       if (!slot.product) return;
       const selection = selections[slot.slotId];
       if (!selection?.isValid && slot.required) return;
-      if (!selection.isValid) return; // Fix for optional skipping
+      if (!selection.isValid) return;
 
       const variant = slot.product.variants.find(
         (v) => v.variantId === selection.variantId
@@ -322,7 +315,7 @@ const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
         size: selection.size,
         quantity: 1,
         price: slot.product.sellingPrice,
-        bPrice: 0, // Set server-side in OrderService
+        bPrice: 0,
         name: slot.product.name,
         thumbnail:
           variant?.images?.[0]?.url || slot.product.thumbnail?.url || "",
@@ -344,7 +337,7 @@ const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
     router.push("/checkout");
   };
 
-  const calculatePricing = () => {
+  const pricing = useMemo(() => {
     if (combo.type === "BOGO" && combo.buyQuantity && combo.getQuantity) {
       return {
         label: `Buy ${combo.buyQuantity}, Get ${combo.getQuantity} ${
@@ -353,13 +346,9 @@ const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
         savings: combo.savings,
       };
     }
-    return {
-      label: "Bundle Price",
-      savings: combo.savings,
-    };
-  };
+    return { label: "Bundle Price", savings: combo.savings };
+  }, [combo]);
 
-  const pricing = calculatePricing();
   const activeSlot = slots[activeSlotIndex];
   const activeProduct = activeSlot?.product;
   const activeSelection = selections[activeSlot?.slotId];
@@ -367,12 +356,33 @@ const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
     (v) => v.variantId === activeSelection?.variantId
   );
 
+  // Build sizeStock map for SizeGrid compatibility
+  const activeSizeStock = useMemo(() => {
+    if (!activeSlot || !activeSelection?.variantId || !activeVariant?.sizes)
+      return {};
+    const map: Record<string, number> = {};
+    activeVariant.sizes.forEach((size) => {
+      const key = `${activeSlot.slotId}-${activeSelection.variantId}-${size}`;
+      map[size] = stockStatus[key] ?? -1; // -1 means loading
+    });
+    return map;
+  }, [activeSlot, activeSelection, activeVariant, stockStatus]);
+
+  const isStockLoading = useMemo(() => {
+    if (!activeSlot || !activeSelection?.variantId || !activeVariant?.sizes)
+      return false;
+    return activeVariant.sizes.some((size) => {
+      const key = `${activeSlot.slotId}-${activeSelection.variantId}-${size}`;
+      return stockLoading[key];
+    });
+  }, [activeSlot, activeSelection, activeVariant, stockLoading]);
+
   return (
-    <section className="w-full max-w-[1440px] mx-auto flex flex-col lg:flex-row gap-8 lg:gap-16 pb-12">
+    <section className="max-w-content mx-auto px-4 md:px-10 py-6 flex flex-col lg:flex-row gap-10 lg:gap-16">
       {/* --- LEFT: VISUALS --- */}
-      <div className="flex-1 lg:w-[60%] flex flex-col gap-6">
-        {/* Main Image Container */}
-        <div className="relative w-full aspect-square bg-surface-2 border border-transparent hover:border-gray-200 transition-colors">
+      <div className="flex-1 lg:w-3/5 flex flex-col gap-4">
+        {/* Main Image */}
+        <div className="relative aspect-square bg-surface-2 rounded-sm overflow-hidden group">
           <AnimatePresence mode="wait">
             <motion.div
               key={
@@ -381,7 +391,6 @@ const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
               className="w-full h-full"
             >
               {activeProduct?.thumbnail?.url ||
@@ -405,25 +414,25 @@ const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
             </motion.div>
           </AnimatePresence>
 
-          {/* Industrial Tags */}
+          {/* Tags */}
           <div className="absolute top-0 left-0 flex flex-col">
-            <span className="bg-black text-white px-4 py-2 text-[10px] font-black uppercase tracking-widest">
+            <span className="bg-dark text-inverse px-4 py-2 text-[10px] font-black uppercase tracking-widest">
               {combo.type === "BOGO" ? "Buy 1 Get 1" : "Bundle Deal"}
             </span>
           </div>
 
-          <div className="absolute top-0 right-0 bg-green-600 text-white px-4 py-2 text-[10px] font-black uppercase tracking-widest">
+          <div className="absolute top-0 right-0 bg-success text-dark px-4 py-2 text-[10px] font-black uppercase tracking-widest">
             Save Rs. {combo.savings.toLocaleString()}
           </div>
 
           {activeSlot?.isFreeUnit && (
-            <div className="absolute bottom-0 left-0 bg-green-600 text-white px-4 py-2 text-[10px] font-black uppercase tracking-widest animate-pulse">
-              Free Item Included
+            <div className="absolute bottom-0 left-0 bg-accent text-dark px-4 py-2 text-[10px] font-black uppercase tracking-widest animate-pulse">
+              Free Item
             </div>
           )}
         </div>
 
-        {/* Slot Thumbnails Grid */}
+        {/* Slot Thumbnails */}
         <div className="grid grid-cols-4 gap-2">
           {slots.map((slot, idx) => {
             const isActive = idx === activeSlotIndex;
@@ -434,17 +443,11 @@ const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
               <button
                 key={slot.slotId}
                 onClick={() => setActiveSlotIndex(idx)}
-                className={`
-                  relative aspect-square bg-surface-2 border-2 transition-all
-                  ${
-                    isActive
-                      ? "border-black"
-                      : "border-transparent hover:border-gray-300"
-                  }
-                  ${
-                    slot.isFreeUnit ? "ring-2 ring-green-500 ring-offset-2" : ""
-                  }
-                `}
+                className={`relative aspect-square bg-surface-2 border-2 rounded-sm transition-all ${
+                  isActive
+                    ? "border-dark"
+                    : "border-transparent hover:border-border-primary"
+                } ${slot.isFreeUnit ? "ring-2 ring-accent ring-offset-2" : ""}`}
               >
                 {slot.product?.thumbnail?.url && (
                   <Image
@@ -455,30 +458,26 @@ const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
                   />
                 )}
 
-                {/* Number Badge */}
                 {combo.items.length > 1 && (
-                  <div className="absolute top-0 left-0 bg-black text-white text-[9px] font-bold px-1.5 py-0.5">
+                  <div className="absolute top-0 left-0 bg-dark text-inverse text-[9px] font-bold px-1.5 py-0.5">
                     #{idx + 1}
                   </div>
                 )}
 
-                {/* Free Badge */}
                 {slot.isFreeUnit && (
-                  <div className="absolute bottom-0 left-0 right-0 bg-green-600 text-white text-[8px] font-bold uppercase text-center py-0.5">
+                  <div className="absolute bottom-0 left-0 right-0 bg-accent text-dark text-[8px] font-bold uppercase text-center py-0.5">
                     Free
                   </div>
                 )}
 
-                {/* Selected Indicator */}
                 {hasSize && (
-                  <div className="absolute top-0 right-0 bg-green-500 text-white p-0.5">
+                  <div className="absolute top-0 right-0 bg-success text-inverse p-0.5">
                     <IoCheckmark size={12} />
                   </div>
                 )}
 
-                {/* Missing/Required Indicator */}
                 {slot.required && !hasSize && !isActive && (
-                  <div className="absolute top-0 right-0 bg-red-500 w-2 h-2" />
+                  <div className="absolute top-0 right-0 bg-error w-2 h-2" />
                 )}
               </button>
             );
@@ -486,8 +485,8 @@ const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
         </div>
 
         {/* Desktop List View */}
-        <div className="hidden lg:block border-t border-gray-200 pt-6">
-          <h3 className="font-black uppercase tracking-widest text-xs mb-4">
+        <div className="hidden lg:block border-t border-default pt-6">
+          <h3 className="font-black uppercase tracking-widest text-xs text-primary mb-4">
             Configuration ({slots.length} Items)
           </h3>
           <div className="space-y-1">
@@ -495,13 +494,13 @@ const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
               <div
                 key={slot.slotId}
                 onClick={() => setActiveSlotIndex(idx)}
-                className={`flex items-center gap-4 p-3 border cursor-pointer transition-colors ${
+                className={`flex items-center gap-4 p-3 border cursor-pointer transition-colors rounded-sm ${
                   idx === activeSlotIndex
-                    ? "bg-black text-white border-black"
-                    : "bg-white text-black border-gray-100 hover:border-gray-300"
+                    ? "bg-dark text-inverse border-dark"
+                    : "bg-surface text-primary border-default hover:border-border-dark"
                 }`}
               >
-                <div className="w-10 h-10 relative bg-white border border-gray-200">
+                <div className="w-10 h-10 relative bg-surface border border-default rounded-sm overflow-hidden">
                   {slot.product?.thumbnail?.url && (
                     <Image
                       src={slot.product.thumbnail.url}
@@ -517,16 +516,14 @@ const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
                       {slot.label}
                     </span>
                     {slot.isFreeUnit && (
-                      <span className="text-[9px] bg-green-500 text-white px-1 font-bold uppercase">
+                      <span className="text-[9px] bg-accent text-dark px-1 font-bold uppercase">
                         Free
                       </span>
                     )}
                   </div>
                   <p
                     className={`text-[10px] uppercase font-medium ${
-                      idx === activeSlotIndex
-                        ? "text-gray-400"
-                        : "text-gray-500"
+                      idx === activeSlotIndex ? "text-muted" : "text-muted"
                     }`}
                   >
                     {selections[slot.slotId]?.isValid
@@ -535,7 +532,7 @@ const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
                   </p>
                 </div>
                 {selections[slot.slotId]?.isValid && (
-                  <IoCheckmark className="text-green-500" />
+                  <IoCheckmark className="text-success" />
                 )}
               </div>
             ))}
@@ -544,60 +541,75 @@ const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
       </div>
 
       {/* --- RIGHT: ACTIONS --- */}
-      <div className="lg:w-[40%] relative">
-        <div className="sticky top-24 flex flex-col gap-8">
-          {/* Header Info */}
-          <div>
+      <div className="lg:w-2/5 relative">
+        <div className="sticky top-24 flex flex-col gap-6">
+          {/* Header */}
+          <header>
             <div className="flex items-center gap-2 mb-2">
-              <span className="text-[10px] font-bold tracking-widest bg-black text-white px-2 py-0.5 uppercase">
+              <span className="text-[10px] font-bold tracking-widest bg-dark text-inverse px-2 py-0.5 uppercase">
                 {pricing.label}
               </span>
             </div>
 
-            <h1 className="text-4xl md:text-5xl font-black uppercase tracking-tighter italic leading-[0.9] text-black">
+            <h1 className="text-4xl md:text-5xl font-display font-black uppercase italic tracking-tighter text-primary leading-[0.9]">
               {combo.name}
             </h1>
 
             {combo.description && (
-              <p className="text-gray-600 font-medium text-xs mt-4 uppercase tracking-wide leading-relaxed">
+              <p className="text-muted font-medium text-sm mt-4 uppercase tracking-wide leading-relaxed">
                 {combo.description}
               </p>
             )}
 
-            <div className="flex items-baseline gap-3 mt-6 pb-6 border-b border-black">
-              <span className="text-4xl font-black tracking-tight text-black">
+            <div className="flex flex-wrap items-baseline gap-3 mt-6">
+              <span className="text-4xl font-display font-black tracking-tighter text-primary">
                 Rs. {combo.comboPrice.toLocaleString()}
               </span>
-              <span className="text-xl font-bold text-gray-400 line-through">
+              <span className="text-xl font-bold text-muted line-through">
                 Rs. {combo.originalPrice.toLocaleString()}
               </span>
-              <span className="text-sm font-bold text-green-600 uppercase tracking-wide">
+              <span className="bg-success text-dark text-[10px] font-black px-3 py-1 uppercase tracking-widest italic">
                 Save Rs. {pricing.savings.toLocaleString()}
               </span>
             </div>
-          </div>
+
+            {/* Value Props */}
+            <div className="flex gap-4 mt-6 border-y border-default py-3">
+              <div className="flex items-center gap-2">
+                <FaTruckFast className="text-muted" size={14} />
+                <span className="text-[10px] font-bold uppercase text-secondary">
+                  Standard Shipping 2-3 Days
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <FaArrowRotateLeft className="text-muted" size={14} />
+                <span className="text-[10px] font-bold uppercase text-secondary">
+                  Size Exchange
+                </span>
+              </div>
+            </div>
+          </header>
 
           {/* Active Slot Controller */}
           {activeSlot && activeProduct && (
             <div
-              className={`border p-5 ${
+              className={`border p-5 rounded-sm ${
                 activeSlot.isFreeUnit
-                  ? "border-green-500 bg-green-50/20"
-                  : "border-black bg-white"
+                  ? "border-accent bg-accent/5"
+                  : "border-default bg-surface"
               }`}
             >
               <div className="flex justify-between items-start mb-4">
                 <div>
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400 block mb-1">
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-muted block mb-1">
                     Selection {activeSlotIndex + 1} of {slots.length}
                   </span>
-                  <h3 className="text-sm font-black uppercase tracking-wide">
+                  <h3 className="text-sm font-black uppercase tracking-wide text-primary">
                     {activeProduct.name}
                   </h3>
                 </div>
-                {/* Variant Color Swatches */}
+                {/* Variant Swatches */}
                 {(() => {
-                  // Filter variants based on restriction
                   const allowedVariants =
                     activeSlot.variantMode === "SPECIFIC_VARIANTS" &&
                     activeSlot.variantIds?.length
@@ -616,17 +628,17 @@ const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
                           onClick={() =>
                             handleVariantSelect(activeSlot.slotId, v.variantId)
                           }
-                          className={`w-8 h-8 border-2 ${
+                          className={`w-10 h-10 border-2 rounded-sm overflow-hidden ${
                             activeSelection?.variantId === v.variantId
-                              ? "border-black"
-                              : "border-gray-200"
+                              ? "border-dark"
+                              : "border-default"
                           }`}
                         >
                           <Image
                             src={v.images?.[0]?.url || ""}
                             alt=""
-                            width={32}
-                            height={32}
+                            width={40}
+                            height={40}
                             className="w-full h-full object-cover"
                           />
                         </button>
@@ -638,41 +650,17 @@ const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
 
               {/* Size Grid */}
               {activeVariant?.sizes && activeVariant.sizes.length > 0 ? (
-                <div className="grid grid-cols-3 gap-2">
-                  {activeVariant.sizes.map((size) => {
-                    const stockInfo = getStockForSize(
-                      activeSlot.slotId,
-                      activeSelection?.variantId || "",
-                      size
-                    );
-                    const isSelected = activeSelection?.size === size;
-                    const isOutOfStock = stockInfo.isOutOfStock;
-
-                    return (
-                      <button
-                        key={size}
-                        onClick={() =>
-                          handleSizeSelect(activeSlot.slotId, size)
-                        }
-                        disabled={isOutOfStock || stockInfo.loading}
-                        className={`
-                          py-3.5 text-xs font-bold border rounded-md transition-all flex items-center justify-center
-                          ${
-                            isSelected
-                              ? "bg-black text-white border-black"
-                              : isOutOfStock
-                              ? "bg-gray-50 text-gray-300 line-through border-gray-100 cursor-not-allowed"
-                              : "bg-white text-black border-gray-200 hover:border-black"
-                          }
-                        `}
-                      >
-                        {stockInfo.loading ? "..." : size}
-                      </button>
-                    );
-                  })}
-                </div>
+                <SizeGrid
+                  sizes={activeVariant.sizes}
+                  selectedSize={activeSelection?.size || ""}
+                  onSelectSize={(size) =>
+                    handleSizeSelect(activeSlot.slotId, size)
+                  }
+                  stockMap={activeSizeStock}
+                  stockLoading={isStockLoading}
+                />
               ) : (
-                <p className="text-xs text-red-500 font-bold uppercase">
+                <p className="text-xs text-error font-bold uppercase">
                   Please select a color
                 </p>
               )}
@@ -690,18 +678,18 @@ const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
 
                     if (stock?.quantity !== undefined) {
                       if (stock.quantity <= 0)
-                        return <span className="text-red-600">Sold Out</span>;
+                        return <span className="text-error">Sold Out</span>;
 
                       if (bagQty + 1 > stock.quantity) {
                         return (
-                          <span className="text-yellow-600">
+                          <span className="text-warning">
                             Limit Reached ({bagQty} in bag)
                           </span>
                         );
                       }
 
                       return (
-                        <span className="text-green-600">
+                        <span className="text-success">
                           {stock.quantity} In Stock
                         </span>
                       );
@@ -716,7 +704,7 @@ const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
                 activeSelection?.isValid && (
                   <button
                     onClick={() => setActiveSlotIndex(activeSlotIndex + 1)}
-                    className="w-full mt-4 flex items-center justify-center gap-2 py-3 bg-gray-100 hover:bg-black hover:text-white text-black text-xs font-bold uppercase tracking-widest transition-colors"
+                    className="w-full mt-4 flex items-center justify-center gap-2 py-3 bg-surface-2 hover:bg-dark hover:text-inverse text-primary text-xs font-bold uppercase tracking-widest rounded-full transition-colors"
                   >
                     Next Item <IoChevronForward />
                   </button>
@@ -725,9 +713,9 @@ const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
           )}
 
           {/* Progress Bar */}
-          <div className="w-full bg-gray-100 h-1">
+          <div className="w-full bg-surface-2 h-1 rounded-full overflow-hidden">
             <div
-              className="bg-black h-1 transition-all duration-300"
+              className="bg-accent h-1 transition-all duration-300"
               style={{
                 width: `${
                   (slots.filter((s) => selections[s.slotId]?.isValid).length /
@@ -739,11 +727,11 @@ const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
           </div>
 
           {/* Main Actions */}
-          <div className="space-y-3 pt-2">
+          <div className="space-y-3">
             <button
               onClick={handleAddToBag}
               disabled={!allSelectionsValid}
-              className="w-full py-5 bg-black text-white text-sm font-black uppercase tracking-widest disabled:bg-gray-300 disabled:cursor-not-allowed transition-all shadow-xl hover:shadow-2xl hover:-translate-y-1 active:translate-y-0"
+              className="w-full py-5 bg-dark text-inverse rounded-full font-display font-black uppercase tracking-widest text-xs hover:bg-accent hover:text-dark transition-all active:scale-95 disabled:bg-surface-3 disabled:text-muted disabled:cursor-not-allowed"
             >
               {allSelectionsValid ? "Add Bundle to Bag" : "Complete Selection"}
             </button>
@@ -751,7 +739,7 @@ const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
             <button
               onClick={handleBuyNow}
               disabled={!allSelectionsValid}
-              className="w-full py-5 border-2 border-black text-black text-sm font-black uppercase tracking-widest hover:bg-black hover:text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full py-5 border-2 border-dark text-primary rounded-full font-display font-black uppercase tracking-widest text-xs hover:bg-dark hover:text-inverse transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Buy Now
             </button>
@@ -760,7 +748,7 @@ const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
               <a
                 href={`https://wa.me/${WHATSAPP_NUMBER}?text=Help with ${combo.name}`}
                 target="_blank"
-                className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-gray-400 hover:text-green-600 transition-colors"
+                className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-muted hover:text-success transition-colors"
               >
                 <FaWhatsapp size={14} /> Need sizing help? Chat with us
               </a>
