@@ -126,7 +126,7 @@ const CollectionProducts = ({
   ]);
 
   return (
-    <section className="w-full max-w-[1920px] mx-auto px-4 md:px-12 pb-20 flex gap-0 bg-white">
+    <section className="w-full max-w-content mx-auto px-4 md:px-12 pb-20 flex gap-0 bg-surface">
       {/* 1. DESKTOP SIDEBAR - FilterPanel provides its own sticky aside */}
       <CollectionFilter />
 
@@ -136,27 +136,20 @@ const CollectionProducts = ({
       </AnimatePresence>
 
       <div className="flex-1 w-full">
-        {/* 2. STICKY TOOLBAR */}
-        <div className="sticky top-0 z-30 bg-white/90 backdrop-blur-md py-6 flex justify-between items-center transition-all">
-          <h2 className="text-[20px] font-medium text-primary tracking-tight">
-            {tagName || categoryName || brandName || "All Products"} (
-            {products?.length || 0})
-          </h2>
+        {/* Icon-only Toolbar */}
+        <div className="sticky top-0 z-30 bg-surface/90 backdrop-blur-md py-4 flex justify-end items-center gap-2 transition-all">
+          <button
+            onClick={() => dispatch(toggleFilter())}
+            className="w-10 h-10 flex items-center justify-center bg-surface-2 border border-default rounded-full hover:border-accent text-primary hover:text-accent transition-all"
+            aria-label="Open Filters"
+          >
+            <IoOptionsOutline size={18} />
+          </button>
 
-          <div className="flex items-center gap-6">
-            <button
-              onClick={() => dispatch(toggleFilter())}
-              className="lg:hidden flex items-center gap-2 text-[16px] text-primary"
-              aria-label="Open Filters"
-            >
-              <IoOptionsOutline size={22} />
-            </button>
-
-            <SortDropdown
-              value={selectedSort}
-              onChange={(val) => dispatch(setSelectedSort(val))}
-            />
-          </div>
+          <SortDropdown
+            value={selectedSort}
+            onChange={(val) => dispatch(setSelectedSort(val))}
+          />
         </div>
 
         {/* 3. PRODUCT GRID */}
@@ -176,9 +169,9 @@ const CollectionProducts = ({
           </div>
         )}
 
-        {/* 4. PAGINATION */}
+        {/* Pagination */}
         {totalProducts > size && (
-          <div className="flex justify-center mt-24 border-t border-gray-100 pt-12">
+          <div className="flex justify-center mt-24 border-t border-default pt-12">
             <Pagination
               page={page}
               count={Math.ceil(totalProducts / size) || 1}

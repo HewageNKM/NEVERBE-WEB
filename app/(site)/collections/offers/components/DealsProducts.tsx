@@ -94,7 +94,7 @@ const DealsProducts = ({ items }: { items: Product[] }) => {
   ]);
 
   return (
-    <section className="w-full max-w-[1920px] mx-auto px-4 md:px-8 pb-20 flex gap-0 bg-white">
+    <section className="w-full max-w-content mx-auto px-4 md:px-8 pb-20 flex gap-0 bg-surface">
       {/* 1. DESKTOP SIDEBAR - FilterPanel provides its own sticky aside */}
       <DealsFilter />
 
@@ -117,23 +117,20 @@ const DealsProducts = ({ items }: { items: Product[] }) => {
       </AnimatePresence>
 
       <div className="flex-1 w-full">
-        {/* 2. Sticky Toolbar */}
-        <div className="relative z-20 bg-white/90 backdrop-blur-md py-6 flex justify-end items-center">
-          <div className="flex items-center gap-4">
-            <button
-              onClick={() => dispatch(toggleFilter())}
-              className="lg:hidden flex items-center gap-2 text-[16px] text-primary"
-              aria-label="Open Filters"
-            >
-              <IoOptionsOutline size={22} />
-              <span>Filter</span>
-            </button>
+        {/* Icon-only Toolbar */}
+        <div className="relative z-20 bg-surface/90 backdrop-blur-md py-4 flex justify-end items-center gap-2">
+          <button
+            onClick={() => dispatch(toggleFilter())}
+            className="w-10 h-10 flex items-center justify-center bg-surface-2 border border-default rounded-full hover:border-accent text-primary hover:text-accent transition-all"
+            aria-label="Open Filters"
+          >
+            <IoOptionsOutline size={18} />
+          </button>
 
-            <SortDropdown
-              value={selectedSort}
-              onChange={(val) => dispatch(setSelectedSort(val))}
-            />
-          </div>
+          <SortDropdown
+            value={selectedSort}
+            onChange={(val) => dispatch(setSelectedSort(val))}
+          />
         </div>
 
         {/* 3. Product Grid */}
@@ -153,8 +150,8 @@ const DealsProducts = ({ items }: { items: Product[] }) => {
           </div>
         )}
 
-        {/* 4. Pagination */}
-        <div className="flex justify-center mt-24 border-t border-gray-100 pt-12">
+        {/* Pagination */}
+        <div className="flex justify-center mt-24 border-t border-default pt-12">
           <Pagination
             count={Math.ceil(totalProducts / size)}
             page={page}

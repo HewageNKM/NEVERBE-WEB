@@ -197,27 +197,20 @@ const Products = ({ items }: { items: Product[] }) => {
       </AnimatePresence>
 
       <div className="flex-1 w-full">
-        {/* Sticky Toolbar */}
-        <div className="relative z-20 bg-surface/90 backdrop-blur-md py-6 flex justify-between items-center">
-          <h2 className="text-lg font-display font-black uppercase tracking-tight text-primary">
-            All Products ({totalProduct})
-          </h2>
+        {/* Icon-only Toolbar */}
+        <div className="relative z-20 bg-surface/90 backdrop-blur-md py-4 flex justify-end items-center gap-2">
+          <button
+            onClick={() => dispatch(toggleFilter())}
+            className="w-10 h-10 flex items-center justify-center bg-surface-2 border border-default rounded-full hover:border-accent text-primary hover:text-accent transition-all"
+            aria-label="Open Filters"
+          >
+            <IoOptionsOutline size={18} />
+          </button>
 
-          <div className="flex items-center gap-4">
-            <button
-              onClick={() => dispatch(toggleFilter())}
-              className="lg:hidden flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-primary hover:text-accent transition-colors"
-              aria-label="Open Filters"
-            >
-              <IoOptionsOutline size={20} />
-              <span>Filter</span>
-            </button>
-
-            <SortDropdown
-              value={selectedSort}
-              onChange={(val) => dispatch(setSelectedSort(val))}
-            />
-          </div>
+          <SortDropdown
+            value={selectedSort}
+            onChange={(val) => dispatch(setSelectedSort(val))}
+          />
         </div>
 
         {/* 3. PRODUCT GRID */}

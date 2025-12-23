@@ -34,25 +34,16 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
 
   return (
     <div className={`relative ${className}`} ref={dropdownRef}>
-      {/* TRIGGER: Performance Utility Style */}
+      {/* Icon-only Sort Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="group flex items-center gap-2.5 px-4 py-2 bg-surface-2 border border-border-primary rounded-full hover:border-accent transition-all duration-300 shadow-sm"
+        className="group w-10 h-10 flex items-center justify-center bg-surface-2 border border-default rounded-full hover:border-accent transition-all duration-300"
+        aria-label="Sort options"
       >
         <TbArrowsSort
           size={18}
           className={`transition-colors ${
             isOpen ? "text-accent" : "text-primary group-hover:text-accent"
-          }`}
-        />
-        <span className="text-xs font-black uppercase tracking-[0.15em] text-primary">
-          <span className="md:hidden">Sort</span>
-          <span className="hidden md:inline">Sort By</span>
-        </span>
-        <IoChevronDownOutline
-          size={14}
-          className={`text-muted transition-transform duration-300 ${
-            isOpen ? "rotate-180 text-accent" : "group-hover:text-primary"
           }`}
         />
       </button>
