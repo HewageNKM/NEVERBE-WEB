@@ -15,24 +15,24 @@ const SimilarProducts = ({ items }: { items: Product[] }) => {
   if (items.length === 0) return null;
 
   return (
-    <section className="w-full max-w-[1920px] mx-auto py-20 px-4 md:px-12">
+    <section className="w-full max-w-content mx-auto py-20 px-4 md:px-12">
       <div className="flex justify-between items-end mb-10">
-        <h2 className="text-[24px] font-medium text-primary tracking-tight">
+        <h2 className="text-xl md:text-2xl font-display font-black uppercase italic tracking-tighter text-primary">
           You Might Also Like
         </h2>
 
         <div className="flex gap-2">
           <button
             ref={prevRef}
-            className="w-10 h-10 rounded-full bg-surface-2 flex items-center justify-center hover:bg-gray-200 transition-all"
+            className="w-10 h-10 rounded-full border border-default bg-surface flex items-center justify-center text-primary hover:border-accent hover:text-accent transition-all"
           >
-            <IoChevronBack size={20} />
+            <IoChevronBack size={18} />
           </button>
           <button
             ref={nextRef}
-            className="w-10 h-10 rounded-full bg-surface-2 flex items-center justify-center hover:bg-gray-200 transition-all"
+            className="w-10 h-10 rounded-full border border-default bg-surface flex items-center justify-center text-primary hover:border-accent hover:text-accent transition-all"
           >
-            <IoChevronForward size={20} />
+            <IoChevronForward size={18} />
           </button>
         </div>
       </div>

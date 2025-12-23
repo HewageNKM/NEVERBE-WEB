@@ -174,7 +174,7 @@ const Products = ({ items }: { items: Product[] }) => {
   ]);
 
   return (
-    <section className="w-full max-w-[1920px] mx-auto px-4 md:px-8 pb-20 flex gap-0 bg-white">
+    <section className="w-full max-w-content mx-auto px-4 md:px-8 pb-20 flex gap-0 bg-surface">
       {/* 1. DESKTOP SIDEBAR - FilterPanel provides its own sticky aside */}
       <ProductsFilter />
 
@@ -197,19 +197,19 @@ const Products = ({ items }: { items: Product[] }) => {
       </AnimatePresence>
 
       <div className="flex-1 w-full">
-        {/* 2. STICKY TOOLBAR */}
-        <div className="relative z-20 bg-white/90 backdrop-blur-md py-6 flex justify-between items-center">
-          <h2 className="text-[20px] font-medium text-primary tracking-tight">
+        {/* Sticky Toolbar */}
+        <div className="relative z-20 bg-surface/90 backdrop-blur-md py-6 flex justify-between items-center">
+          <h2 className="text-lg font-display font-black uppercase tracking-tight text-primary">
             All Products ({totalProduct})
           </h2>
 
           <div className="flex items-center gap-4">
             <button
               onClick={() => dispatch(toggleFilter())}
-              className="lg:hidden flex items-center gap-2 text-[16px] text-primary"
+              className="lg:hidden flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-primary hover:text-accent transition-colors"
               aria-label="Open Filters"
             >
-              <IoOptionsOutline size={22} />
+              <IoOptionsOutline size={20} />
               <span>Filter</span>
             </button>
 
@@ -237,9 +237,9 @@ const Products = ({ items }: { items: Product[] }) => {
           </div>
         )}
 
-        {/* 4. PAGINATION */}
+        {/* Pagination */}
         {totalProduct > size && (
-          <div className="flex justify-center mt-24 border-t border-gray-100 pt-12">
+          <div className="flex justify-center mt-24 border-t border-default pt-12">
             <Pagination
               count={Math.ceil(totalProduct / size)}
               page={page}

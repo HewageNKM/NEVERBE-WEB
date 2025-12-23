@@ -64,26 +64,34 @@ const UpsellNudge: React.FC<Props> = ({
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`p-3 rounded-lg border text-sm font-medium mb-4 ${
+      className={`p-4 rounded-xl border text-sm font-bold mb-4 ${
         isMet
-          ? "bg-green-50 border-green-200 text-green-800"
-          : "bg-gray-50 border-gray-200 text-gray-800"
+          ? "bg-accent/10 border-accent text-dark"
+          : "bg-surface-2 border-default text-primary"
       }`}
     >
       <div className="flex items-center gap-2 mb-2">
         {isMet ? (
-          <IoGiftOutline size={18} />
+          <IoGiftOutline size={18} className="text-accent" />
         ) : (
-          <IoAlertCircleOutline size={18} />
+          <IoAlertCircleOutline size={18} className="text-muted" />
         )}
-        <span>{message}</span>
+        <span
+          className={
+            isMet
+              ? "text-accent font-black uppercase italic tracking-tight"
+              : ""
+          }
+        >
+          {message}
+        </span>
       </div>
 
       {/* Progress Bar */}
       {!isMet && (
-        <div className="w-full h-1.5 bg-gray-200 rounded-full overflow-hidden">
+        <div className="w-full h-1.5 bg-surface-3 rounded-full overflow-hidden">
           <motion.div
-            className="h-full bg-black"
+            className="h-full bg-accent"
             initial={{ width: 0 }}
             animate={{ width: `${Math.min(100, progress)}%` }}
             transition={{ duration: 0.5 }}

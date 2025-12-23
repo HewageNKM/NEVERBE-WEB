@@ -43,65 +43,47 @@ const RecentlyViewedSection: React.FC<RecentlyViewedSectionProps> = ({
   if (displayItems.length === 0) return null;
 
   return (
-    <section className="w-full py-16 md:py-24 bg-surface-2 border-t border-default animate-fade">
-      <div className="w-full max-w-content mx-auto px-4 md:px-8">
-        {/* Header Area */}
-        <div className="flex items-end justify-between mb-10">
-          <div className="flex flex-col gap-2">
-            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-accent italic">
-              Your Blueprint
-            </span>
-            <h2 className="text-3xl md:text-4xl font-display font-black uppercase italic tracking-tighter text-primary">
-              Recently Viewed
-            </h2>
-          </div>
+    <section className="w-full max-w-content mx-auto py-20 px-4 md:px-12">
+      <div className="flex justify-between items-end mb-10">
+        <h2 className="text-xl md:text-2xl font-display font-black uppercase italic tracking-tighter text-primary">
+          Recently Viewed
+        </h2>
 
-          {/* Branded Navigation Arrows */}
-          <div className="flex gap-3">
-            <button
-              ref={prevRef}
-              className="group w-12 h-12 rounded-full border border-border-dark flex items-center justify-center text-primary hover:bg-accent hover:text-dark hover:border-accent transition-all duration-300 shadow-sm hover:shadow-hover disabled:opacity-20 disabled:cursor-not-allowed"
-              aria-label="Previous items"
-            >
-              <IoChevronBack
-                size={20}
-                className="transition-transform group-hover:-translate-x-0.5"
-              />
-            </button>
-            <button
-              ref={nextRef}
-              className="group w-12 h-12 rounded-full border border-border-dark flex items-center justify-center text-primary hover:bg-accent hover:text-dark hover:border-accent transition-all duration-300 shadow-sm hover:shadow-hover disabled:opacity-20 disabled:cursor-not-allowed"
-              aria-label="Next items"
-            >
-              <IoChevronForward
-                size={20}
-                className="transition-transform group-hover:translate-x-0.5"
-              />
-            </button>
-          </div>
+        <div className="flex gap-2">
+          <button
+            ref={prevRef}
+            className="w-10 h-10 rounded-full border border-default bg-surface flex items-center justify-center text-primary hover:border-accent hover:text-accent transition-all"
+            aria-label="Previous items"
+          >
+            <IoChevronBack size={18} />
+          </button>
+          <button
+            ref={nextRef}
+            className="w-10 h-10 rounded-full border border-default bg-surface flex items-center justify-center text-primary hover:border-accent hover:text-accent transition-all"
+            aria-label="Next items"
+          >
+            <IoChevronForward size={18} />
+          </button>
         </div>
-
-        {/* Swiper Container */}
-        <Swiper
-          modules={[Navigation]}
-          onInit={handleInit}
-          spaceBetween={24}
-          slidesPerView={1.3}
-          breakpoints={{
-            640: { slidesPerView: 2.3 },
-            1024: { slidesPerView: 4.2 },
-            1280: { slidesPerView: 5.2 },
-            1536: { slidesPerView: 6.2 }, // Higher density for the 1920px width
-          }}
-          className="!pb-12"
-        >
-          {displayItems.map((product) => (
-            <SwiperSlide key={product.id}>
-              <ItemCard item={product} />
-            </SwiperSlide>
-          ))}
-        </Swiper>
       </div>
+
+      <Swiper
+        modules={[Navigation]}
+        onInit={handleInit}
+        spaceBetween={16}
+        slidesPerView={1.3}
+        breakpoints={{
+          768: { slidesPerView: 3.2 },
+          1280: { slidesPerView: 4.2 },
+        }}
+        className="overflow-visible!"
+      >
+        {displayItems.map((product) => (
+          <SwiperSlide key={product.id}>
+            <ItemCard item={product} />
+          </SwiperSlide>
+        ))}
+      </Swiper>
     </section>
   );
 };
