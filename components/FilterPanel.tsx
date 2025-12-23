@@ -101,8 +101,8 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
         </button>
       </div>
 
-      {/* In Stock Toggle - Using Brand Surface */}
-      <div className="flex justify-between items-center pb-8 bg-surface-2 p-4 rounded-lg border border-default mb-4">
+      {/* In Stock Toggle */}
+      <div className="flex justify-between items-center py-6 border-b border-default">
         <span className="text-base font-bold text-primary uppercase tracking-tight">
           In Stock Only
         </span>

@@ -27,35 +27,32 @@ const CouponCard: React.FC<Props> = ({ coupon }) => {
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      className="relative flex flex-col md:flex-row bg-surface border border-default hover:border-accent transition-all group shadow-custom hover:shadow-hover"
+      className="relative flex bg-surface border border-default hover:border-accent transition-all group rounded-xl overflow-hidden"
     >
       {/* Visual Header / Discount */}
-      <div className="bg-surface-2 p-8 flex flex-col items-start justify-center md:min-w-[180px]">
-        <div className="text-4xl font-display font-black tracking-tighter text-primary italic leading-none">
+      <div className="bg-surface-2 p-4 sm:p-5 flex flex-col items-center justify-center min-w-[100px] sm:min-w-[120px]">
+        <div className="text-2xl sm:text-3xl font-display font-black tracking-tighter text-primary italic leading-none">
           {coupon.discountType === "PERCENTAGE"
             ? `${coupon.discountValue}%`
             : coupon.discountType === "FIXED"
             ? `Rs.${coupon.discountValue.toLocaleString()}`
             : "FREE"}
         </div>
-        <div className="text-base font-bold text-muted uppercase tracking-widest mt-2">
+        <div className="text-xs font-bold text-muted uppercase tracking-widest mt-1">
           {coupon.discountType === "FREE_SHIPPING" ? "Shipping" : "OFF"}
         </div>
       </div>
 
       {/* Content Section */}
-      <div className="flex-1 p-8 flex flex-col justify-between">
+      <div className="flex-1 p-4 sm:p-5 flex flex-col justify-between">
         <div>
-          <div className="flex flex-col gap-3 mb-4">
-            <div className="flex flex-wrap items-center gap-3">
-              <span className="bg-accent text-dark text-[11px] font-display font-black italic px-4 py-1.5 rounded-full uppercase tracking-tighter shadow-custom">
-                {coupon.code.toUpperCase()}
-              </span>
-            </div>
+          <div className="flex flex-wrap items-center gap-2 mb-2">
+            <span className="bg-accent text-dark text-[10px] font-display font-black italic px-3 py-1 rounded-full uppercase tracking-tight">
+              {coupon.code.toUpperCase()}
+            </span>
             {coupon.endDate && (
-              <div className="text-xs text-error font-black flex items-center gap-2 uppercase tracking-widest">
-                <span className="w-1.5 h-1.5 bg-error rounded-full animate-pulse" />
-                <span>Ends In: </span>
+              <div className="text-[10px] text-error font-bold flex items-center gap-1 uppercase tracking-wide">
+                <span className="w-1 h-1 bg-error rounded-full animate-pulse" />
                 <CountdownTimer
                   targetDate={
                     typeof coupon.endDate === "string"
@@ -71,33 +68,30 @@ const CouponCard: React.FC<Props> = ({ coupon }) => {
             )}
           </div>
 
-          <h3 className="text-xl font-display font-black text-primary mb-3 uppercase italic tracking-tighter">
+          <h3 className="text-sm sm:text-base font-display font-black text-primary uppercase italic tracking-tight line-clamp-2">
             {coupon.description || "Exclusive Member Offer"}
           </h3>
 
-          <div className="space-y-1">
-            {!!coupon.minOrderAmount && coupon.minOrderAmount > 0 && (
-              <p className="text-sm text-muted font-bold uppercase tracking-wider">
-                Min. Order: Rs. {coupon.minOrderAmount.toLocaleString()}
-              </p>
-            )}
-            {coupon.firstOrderOnly && (
-              <p className="text-sm text-muted font-bold uppercase tracking-wider">
-                Verified First Order Only
-              </p>
-            )}
-          </div>
+          {(!!coupon.minOrderAmount && coupon.minOrderAmount > 0) ||
+          coupon.firstOrderOnly ? (
+            <p className="text-[10px] text-muted font-bold uppercase tracking-wide mt-1">
+              {!!coupon.minOrderAmount &&
+                coupon.minOrderAmount > 0 &&
+                `Min. Rs.${coupon.minOrderAmount.toLocaleString()}`}
+              {coupon.firstOrderOnly && " • First Order"}
+            </p>
+          ) : null}
         </div>
 
         <button
           onClick={handleCopy}
-          className={`mt-6 w-full md:w-fit px-10 py-4 rounded-full text-xs font-black uppercase tracking-widest transition-all active:scale-95 ${
+          className={`mt-3 px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all active:scale-95 ${
             copied
-              ? "bg-success text-dark shadow-custom"
-              : "bg-dark text-inverse hover:bg-accent hover:text-dark shadow-custom hover:shadow-hover"
+              ? "bg-success text-dark"
+              : "bg-dark text-inverse hover:bg-accent hover:text-dark"
           }`}
         >
-          {copied ? "Protocol Copied ✓" : "Copy Code"}
+          {copied ? "Copied ✓" : "Copy"}
         </button>
       </div>
     </motion.div>
