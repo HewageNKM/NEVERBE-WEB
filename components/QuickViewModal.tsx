@@ -144,42 +144,42 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: "100%", opacity: 0 }}
             transition={{ type: "spring", damping: 30, stiffness: 300 }}
-            className="relative bg-surface w-full max-w-6xl h-[94vh] md:h-auto md:max-h-[90vh] shadow-hover overflow-hidden rounded-t-[2.5rem] md:rounded-2xl border-t border-default"
+            className="relative bg-surface w-full max-w-6xl h-[92vh] md:h-[85vh] shadow-hover overflow-hidden rounded-t-3xl md:rounded-2xl border-t md:border border-default"
           >
-            {/* Top Close Bar (Mobile) */}
-            <div className="md:hidden flex justify-center py-4">
-              <div className="w-12 h-1.5 bg-border-primary rounded-full" />
+            {/* Top Drag Handle (Mobile) */}
+            <div className="md:hidden flex justify-center py-3 sticky top-0 bg-surface z-40">
+              <div className="w-10 h-1 bg-border-dark rounded-full" />
             </div>
 
             {/* Desktop Close Button */}
             <button
               onClick={onClose}
-              className="absolute top-6 right-6 z-50 p-3 bg-surface-2 md:bg-dark text-primary md:text-inverse rounded-full hover:bg-accent hover:text-dark transition-all shadow-custom"
+              className="hidden md:flex absolute top-4 right-4 z-50 p-2.5 bg-dark text-inverse rounded-full hover:bg-accent hover:text-dark transition-all shadow-custom"
             >
-              <IoClose size={24} />
+              <IoClose size={20} />
             </button>
 
             <div className="flex flex-col md:flex-row h-full overflow-y-auto hide-scrollbar">
               {/* LEFT: VISUALS SECTION */}
-              <div className="w-full md:w-1/2 flex flex-col bg-surface-2 border-r border-default shrink-0">
-                <div className="relative aspect-square flex items-center justify-center p-8 md:p-16">
+              <div className="w-full md:w-1/2 flex flex-col bg-surface-2 md:border-r border-default shrink-0">
+                <div className="relative aspect-square md:aspect-auto md:min-h-[400px] md:flex-1 flex items-center justify-center p-4 sm:p-6 md:p-8 lg:p-12">
                   {/* Performance Glow behind product */}
-                  <div className="absolute inset-0 bg-accent/5 rounded-full blur-[120px] scale-75" />
+                  <div className="absolute inset-0 bg-accent/5 rounded-full blur-[100px] scale-50 md:scale-75" />
                   <Image
                     src={
                       selectedVariant?.images?.[0]?.url || product.thumbnail.url
                     }
                     alt={product.name}
-                    width={800}
-                    height={800}
-                    className="w-full h-full object-contain mix-blend-multiply relative z-10 transition-transform duration-700 md:hover:scale-110"
+                    width={600}
+                    height={600}
+                    className="w-full h-full max-h-[50vh] md:max-h-full object-contain mix-blend-multiply relative z-10 transition-transform duration-700"
                     priority
                   />
                 </div>
 
                 {/* Variant Swatches */}
                 {product.variants.length > 1 && (
-                  <div className="px-6 pb-8 md:pb-12 flex gap-4 overflow-x-auto hide-scrollbar justify-start md:justify-center">
+                  <div className="px-4 sm:px-6 py-4 md:py-6 flex gap-2 sm:gap-3 overflow-x-auto hide-scrollbar justify-start md:justify-center bg-surface-2 border-t border-default md:border-t-0">
                     {product.variants.map((v) => (
                       <button
                         key={v.variantId}
@@ -187,10 +187,10 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
                           setSelectedVariant(v);
                           setSelectedSize("");
                         }}
-                        className={`relative w-16 h-16 shrink-0 bg-surface transition-all rounded-lg p-1.5 ${
+                        className={`relative w-12 h-12 sm:w-14 sm:h-14 shrink-0 bg-surface transition-all rounded-lg p-1 ${
                           selectedVariant?.variantId === v.variantId
-                            ? "border-accent border-2 shadow-custom scale-110 z-10"
-                            : "border-border-primary hover:border-accent opacity-60 hover:opacity-100"
+                            ? "border-accent border-2 shadow-custom scale-105 z-10"
+                            : "border border-default hover:border-accent opacity-60 hover:opacity-100"
                         }`}
                       >
                         <div className="relative w-full h-full">
@@ -208,21 +208,21 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
               </div>
 
               {/* RIGHT: DETAILS SECTION */}
-              <div className="w-full md:w-1/2 p-8 md:p-12 lg:p-16 flex flex-col bg-surface">
+              <div className="w-full md:w-1/2 p-4 sm:p-6 md:p-10 lg:p-12 flex flex-col bg-surface">
                 {/* Branded Promotion Banner */}
                 <AnimatePresence>
                   {activePromo && (
                     <motion.div
                       initial={{ opacity: 0, x: 20 }}
                       animate={{ opacity: 1, x: 0 }}
-                      className="bg-accent text-dark p-4 mb-8 -mx-8 md:-mx-12 lg:-mx-16 px-8 md:px-12 lg:px-16 flex items-center gap-3 shadow-custom"
+                      className="bg-accent text-dark p-3 sm:p-4 mb-4 sm:mb-6 -mx-4 sm:-mx-6 md:-mx-10 lg:-mx-12 px-4 sm:px-6 md:px-10 lg:px-12 flex items-center gap-2 sm:gap-3 shadow-custom"
                     >
-                      <IoFlash className="animate-pulse" size={20} />
-                      <div className="flex-1">
-                        <p className="text-sm font-display font-black uppercase italic tracking-tighter">
+                      <IoFlash className="animate-pulse shrink-0" size={16} />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs sm:text-sm font-display font-black uppercase italic tracking-tighter truncate">
                           {activePromo.name || "Special Performance Offer"}
                         </p>
-                        <p className="text-[10px] font-bold uppercase tracking-[0.15em] opacity-80">
+                        <p className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider opacity-80 hidden sm:block">
                           Applied to this selection automatically
                         </p>
                       </div>
@@ -230,40 +230,40 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
                   )}
                 </AnimatePresence>
 
-                <div className="mb-8">
-                  <p className="text-accent text-xs font-black uppercase tracking-[0.2em] mb-2 italic">
+                <div className="mb-4 sm:mb-6">
+                  <p className="text-accent text-[10px] sm:text-xs font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] mb-1 sm:mb-2 italic">
                     {activePromo
                       ? "Vibrant Deal"
                       : product.brand?.replace("-", " ")}
                   </p>
-                  <h2 className="text-3xl md:text-4xl font-display font-black text-primary leading-tight uppercase italic tracking-tighter">
+                  <h2 className="text-xl sm:text-2xl md:text-3xl font-display font-black text-primary leading-tight uppercase italic tracking-tighter">
                     {product.name}
                   </h2>
                 </div>
 
                 {/* Performance Pricing Area */}
-                <div className="flex items-center gap-4 mb-10">
+                <div className="flex items-center gap-3 mb-6 sm:mb-8">
                   <span
-                    className={`text-3xl font-display font-black italic tracking-tighter ${
+                    className={`text-2xl sm:text-3xl font-display font-black italic tracking-tighter ${
                       hasActiveDiscount ? "text-success" : "text-primary"
                     }`}
                   >
                     Rs. {finalPrice.toLocaleString()}
                   </span>
                   {hasActiveDiscount && (
-                    <span className="text-muted text-lg line-through decoration-border-dark">
+                    <span className="text-muted text-sm sm:text-lg line-through decoration-border-dark">
                       Rs. {originalPrice.toLocaleString()}
                     </span>
                   )}
                 </div>
 
                 {/* Size Grid - Integrated with Brand Styling */}
-                <div className="mb-10">
-                  <div className="flex justify-between items-center mb-5">
-                    <p className="text-sm font-black uppercase tracking-widest text-primary">
+                <div className="mb-6 sm:mb-8">
+                  <div className="flex justify-between items-center mb-3 sm:mb-4">
+                    <p className="text-xs sm:text-sm font-black uppercase tracking-widest text-primary">
                       Select Size
                     </p>
-                    <button className="text-[10px] font-bold uppercase text-accent hover:text-primary transition-colors underline underline-offset-4">
+                    <button className="text-[9px] sm:text-[10px] font-bold uppercase text-accent hover:text-primary transition-colors underline underline-offset-4">
                       Size Guide
                     </button>
                   </div>
@@ -277,20 +277,20 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
                 </div>
 
                 {/* Quantity Selector */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-12">
-                  <div className="flex items-center gap-6">
-                    <span className="text-sm font-black uppercase tracking-widest text-primary">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-6 mb-6 sm:mb-8">
+                  <div className="flex items-center gap-4 sm:gap-6">
+                    <span className="text-xs sm:text-sm font-black uppercase tracking-widest text-primary">
                       Quantity
                     </span>
-                    <div className="flex items-center bg-surface-2 border border-border-primary rounded-full px-4 py-2">
+                    <div className="flex items-center bg-surface-2 border border-default rounded-full px-3 py-1.5 sm:px-4 sm:py-2">
                       <button
                         onClick={() => setQty((p) => Math.max(1, p - 1))}
                         className="p-1 hover:text-accent disabled:opacity-10 transition-colors"
                         disabled={qty <= 1}
                       >
-                        <IoRemove size={20} />
+                        <IoRemove size={18} />
                       </button>
-                      <span className="w-12 text-center text-base font-display font-black italic tracking-tighter">
+                      <span className="w-10 sm:w-12 text-center text-sm sm:text-base font-display font-black italic tracking-tighter">
                         {qty}
                       </span>
                       <button
@@ -302,7 +302,7 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
                         className="p-1 hover:text-accent disabled:opacity-10 transition-colors"
                         disabled={qty >= availableStock - bagQty || qty >= 10}
                       >
-                        <IoAdd size={20} />
+                        <IoAdd size={18} />
                       </button>
                     </div>
                   </div>
@@ -317,38 +317,38 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
                         }`}
                       />
                       <span
-                        className={`text-xs font-black uppercase tracking-tighter italic ${
+                        className={`text-[10px] sm:text-xs font-black uppercase tracking-tighter italic ${
                           availableStock < 5 ? "text-error" : "text-success"
                         }`}
                       >
                         {availableStock < 5
                           ? `Urgent: Only ${availableStock} Left`
-                          : "Available In Store"}
+                          : "In Stock"}
                       </span>
                     </div>
                   )}
                 </div>
 
                 {/* Action Performance Pills */}
-                <div className="mt-auto space-y-4 pb-8 md:pb-0">
+                <div className="mt-auto space-y-3 pb-6 sm:pb-4 md:pb-0">
                   <button
                     onClick={handleAddToBag}
                     disabled={!selectedSize || isOutOfStock || isLimitReached}
-                    className="group w-full py-5 bg-dark text-inverse rounded-full font-display font-black uppercase italic tracking-[0.15em] text-sm md:text-base transition-all hover:bg-accent hover:text-dark hover:shadow-hover active:scale-95 disabled:bg-surface-3 disabled:text-muted disabled:cursor-not-allowed"
+                    className="group w-full py-4 sm:py-5 bg-dark text-inverse rounded-full font-display font-black uppercase italic tracking-wider text-xs sm:text-sm transition-all hover:bg-accent hover:text-dark hover:shadow-hover active:scale-[0.98] disabled:bg-surface-3 disabled:text-muted disabled:cursor-not-allowed"
                   >
                     {isOutOfStock
                       ? "Sold Out"
                       : isLimitReached
                       ? "Inventory Maxed"
-                      : "Boost to Bag"}
+                      : "Add to Bag"}
                   </button>
 
                   <Link
                     href={`/collections/products/${product.id}`}
                     onClick={onClose}
-                    className="flex items-center justify-center w-full py-4 border-2 border-border-dark rounded-full font-black text-xs uppercase tracking-[0.2em] text-primary hover:bg-surface-2 hover:border-dark transition-all"
+                    className="flex items-center justify-center w-full py-3 sm:py-4 border-2 border-default rounded-full font-black text-[10px] sm:text-xs uppercase tracking-widest text-primary hover:bg-surface-2 hover:border-dark transition-all"
                   >
-                    View Product Blueprint
+                    View Full Details
                   </Link>
                 </div>
               </div>
