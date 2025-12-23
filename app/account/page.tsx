@@ -4,20 +4,10 @@ import { collection, getDocs, query, where } from "firebase/firestore";
 import { auth, db } from "@/firebase/firebaseClient";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import { setUser } from "@/redux/authSlice/authSlice";
 import Image from "next/image";
 import { Logo } from "@/assets/images";
 import Link from "next/link";
-import {
-  updatePassword,
-  updateProfile,
-  sendPasswordResetEmail,
-  reauthenticateWithCredential,
-  EmailAuthProvider,
-  GoogleAuthProvider,
-  linkWithPopup,
-  signInWithPopup,
-} from "firebase/auth";
+import { GoogleAuthProvider, linkWithPopup } from "firebase/auth";
 import { signOut } from "@firebase/auth";
 import { useRouter } from "next/navigation";
 import ComponentLoader from "@/components/ComponentLoader";
@@ -26,6 +16,11 @@ import OrdersView from "./components/OrdersView";
 import SavedAddresses from "./components/SavedAddresses";
 import AccountSettings from "./components/AccountSettings";
 import toast from "react-hot-toast";
+import {
+  IoLogOutOutline,
+  IoArrowBackOutline,
+  IoShieldCheckmarkOutline,
+} from "react-icons/io5";
 
 const Account = () => {
   const router = useRouter();
@@ -33,28 +28,24 @@ const Account = () => {
   const [orders, setOrders] = useState<any[]>([]);
   const [addresses, setAddresses] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [addingAddress, setAddingAddress] = useState(false);
   const { user } = useSelector((state: RootState) => state.authSlice);
   const dispatch = useDispatch();
 
-  // --- Data Fetching ---
   useEffect(() => {
     const fetchData = async () => {
       if (user?.uid) {
         try {
-          // Fetch Orders
           const ordersQuery = query(
             collection(db, "orders"),
             where("userId", "==", user.uid)
           );
           const ordersSnapshot = await getDocs(ordersQuery);
           const ordersData = ordersSnapshot.docs.map((doc) => ({
-            id: doc.id, // @ts-ignore
+            id: doc.id,
             ...doc.data(),
           }));
-          setOrders(ordersData); // @ts-ignore
+          setOrders(ordersData);
 
-          // Fetch Addresses via API
           const token = await auth.currentUser?.getIdToken();
           const res = await fetch("/api/v1/customers/addresses", {
             headers: { Authorization: `Bearer ${token}` },
@@ -69,24 +60,19 @@ const Account = () => {
           setLoading(false);
         }
       } else {
-        const timer = setTimeout(() => {
-          setLoading(false);
-        }, 2000);
+        const timer = setTimeout(() => setLoading(false), 2000);
         return () => clearTimeout(timer);
       }
     };
-
     fetchData();
   }, [user]);
 
-  // --- Auth Redirection ---
   useEffect(() => {
     if (!loading && !user) {
       router.push("/account/login");
     }
   }, [loading, user, router]);
 
-  // --- Handlers ---
   const handleLogout = async () => {
     try {
       await signOut(auth);
@@ -101,111 +87,148 @@ const Account = () => {
     if (auth.currentUser) {
       try {
         await linkWithPopup(auth.currentUser, provider);
-        toast.success("Account successfully linked with Google!");
+        toast.success("Blueprint Synced with Google!");
       } catch (error: any) {
-        if (error.code === "auth/credential-already-in-use") {
-          toast.error(
-            "This Google account is already in use. Please log out and sign in with Google."
-          );
-        } else {
-          toast.error("Failed to link account: " + error.message);
-        }
+        toast.error(
+          error.code === "auth/credential-already-in-use"
+            ? "This Google ID is already linked to another blueprint."
+            : "Sync failed: " + error.message
+        );
       }
     }
   };
 
-  // --- Main Layout ---
   return (
-    <div className="min-h-screen bg-white text-black font-sans selection:bg-gray-200">
-      <div className="max-w-[1440px] mx-auto px-4 md:px-8 py-6 md:py-10">
-        <div className="mb-10 md:hidden flex flex-col items-center text-center">
-          <Link href="/" className="relative mb-4 block w-24 h-24">
+    <div className="min-h-screen bg-dark text-inverse selection:bg-accent selection:text-dark overflow-x-hidden">
+      {/* Background Tech Grid */}
+      <div
+        className="fixed inset-0 opacity-[0.03] pointer-events-none"
+        style={{
+          backgroundImage:
+            "linear-gradient(#97e13e 1px, transparent 1px), linear-gradient(90deg, #97e13e 1px, transparent 1px)",
+          backgroundSize: "50px 50px",
+        }}
+      />
+
+      <div className="max-w-content mx-auto px-4 md:px-12 py-8 md:py-16 relative z-10">
+        {/* Mobile Branding */}
+        <div className="mb-12 md:hidden flex flex-col items-center">
+          <Link href="/" className="mb-6 block">
             <Image
               src={Logo}
               width={100}
-              height={100}
-              alt="NEVERBE Logo"
-              className="object-contain w-full h-full"
+              height={40}
+              alt="NEVERBE"
+              className="invert brightness-200"
             />
           </Link>
-          <h1 className="text-3xl font-bold uppercase tracking-tighter">
+          <div className="px-4 py-1 bg-accent text-dark text-[10px] font-black uppercase italic tracking-widest mb-2">
+            Control Center
+          </div>
+          <h1 className="text-4xl font-display font-black uppercase italic tracking-tighter">
             My Account
           </h1>
         </div>
 
-        <div className="flex flex-col gap-12">
-          {/* Header & Nav */}
-          <div className="sticky top-0 bg-white z-10 -mx-4 px-4 md:mx-0 md:px-0 border-b border-gray-100 pt-4 md:pt-8">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-4">
-              {/* Left: Logo/Title (Hidden on mobile as it's at top, shown on MD) */}
-              <div className="hidden md:flex items-center gap-6">
-                <Link href="/" className="relative w-24 h-12 block">
-                  <Image
-                    src={Logo}
-                    alt="NEVERBE Logo"
-                    fill
-                    className="object-contain object-left"
-                  />
-                </Link>
-                <div className="h-6 w-px bg-gray-200"></div>
-                <h1 className="text-xl font-medium uppercase tracking-tight">
-                  My Account
-                </h1>
-              </div>
-
-              {/* Right: Actions */}
-              <div className="flex items-center gap-6 self-end md:self-auto">
+        <div className="flex flex-col gap-8 md:gap-16">
+          {/* HEADER & NAV: Performance Bar */}
+          <div className="sticky top-0 bg-dark/90 backdrop-blur-2xl z-50 -mx-4 px-4 md:mx-0 md:px-0 border-b border-white/5 pt-4">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6">
+              {/* Desktop Title Block */}
+              <div className="hidden md:flex items-center gap-8">
                 <Link
                   href="/"
-                  className="text-sm font-medium text-gray-500 hover:text-black transition-colors"
+                  className="relative w-28 h-8 block hover:scale-105 transition-transform"
                 >
-                  Return to Store
+                  <Image
+                    src={Logo}
+                    alt="NEVERBE"
+                    fill
+                    className="object-contain object-left invert brightness-200"
+                  />
+                </Link>
+                <div className="h-10 w-[1px] bg-white/10 -skew-x-12" />
+                <div className="flex flex-col">
+                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-accent italic">
+                    Member Protocol
+                  </span>
+                  <h1 className="text-2xl font-display font-black uppercase italic tracking-tighter">
+                    Account Dashboard
+                  </h1>
+                </div>
+              </div>
+
+              {/* Utility Actions */}
+              <div className="flex items-center gap-8 self-end md:self-auto">
+                <Link
+                  href="/"
+                  className="group flex items-center gap-2 text-xs font-black uppercase tracking-widest text-muted hover:text-inverse transition-colors"
+                >
+                  <IoArrowBackOutline className="group-hover:-translate-x-1 transition-transform" />
+                  Store
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="text-sm font-medium text-gray-400 hover:text-red-600 transition-colors"
+                  className="group flex items-center gap-2 text-xs font-black uppercase tracking-widest text-muted hover:text-error transition-colors"
                 >
-                  Log Out
+                  <IoLogOutOutline
+                    size={18}
+                    className="group-hover:translate-x-1 transition-transform"
+                  />
+                  Term. Session
                 </button>
               </div>
             </div>
 
-            {/* Navigation Tabs */}
-            <nav className="flex items-center gap-8 overflow-x-auto no-scrollbar pb-1">
+            {/* Navigation Tabs: Skewed Performance Style */}
+            <nav className="flex items-center gap-4 md:gap-10 overflow-x-auto hide-scrollbar pb-1">
               {[
                 { id: "dashboard", label: "Profile" },
-                { id: "orders", label: "Orders" },
-                { id: "addresses", label: "Addresses" },
+                { id: "orders", label: "Order History" },
+                { id: "addresses", label: "Blueprints" },
                 {
                   id: "details",
-                  label: user?.isAnonymous ? "Sign In" : "Settings",
+                  label: user?.isAnonymous ? "Initialize Account" : "Security",
                 },
               ].map((item) => (
                 <button
                   key={item.id}
                   onClick={() => setActiveTab(item.id)}
-                  className={`whitespace-nowrap pb-3 text-lg transition-all border-b-2 ${
+                  className={`whitespace-nowrap pb-4 text-sm md:text-base font-display font-bold uppercase transition-all relative ${
                     activeTab === item.id
-                      ? "font-medium text-black border-black"
-                      : "text-gray-500 border-transparent hover:text-black"
+                      ? "text-accent italic font-black"
+                      : "text-muted hover:text-inverse"
                   }`}
                 >
                   {item.label}
+                  {activeTab === item.id && (
+                    <motion.div
+                      layoutId="accountTab"
+                      className="absolute bottom-0 left-0 right-0 h-1 bg-accent shadow-[0_0_15px_#97e13e]"
+                    />
+                  )}
                 </button>
               ))}
             </nav>
           </div>
 
-          {/* Main Content */}
-          <div className="min-h-[60vh] relative pt-4">
+          {/* MAIN CONTENT AREA */}
+          <main className="min-h-[50vh] animate-fade">
             {loading ? (
-              <ComponentLoader />
+              <div className="flex flex-col items-center justify-center h-64 gap-4">
+                <ComponentLoader />
+                <span className="text-[10px] font-black uppercase tracking-widest text-accent animate-pulse">
+                  Syncing Protocols...
+                </span>
+              </div>
             ) : !user ? (
-              <div className="flex items-center justify-center h-64">
-                <p>Please log in.</p>
+              <div className="flex items-center justify-center h-64 border-2 border-dashed border-white/5 rounded-2xl">
+                <p className="font-display font-black uppercase italic text-muted">
+                  Session Expired. Please Authenticate.
+                </p>
               </div>
             ) : (
-              <>
+              <div className="max-w-5xl">
                 {activeTab === "dashboard" && (
                   <ProfileOverview
                     user={user}
@@ -223,35 +246,24 @@ const Account = () => {
                 )}
                 {activeTab === "details" &&
                   (user.isAnonymous ? (
-                    <div className="flex flex-col items-center justify-start py-12 px-4 max-w-md mx-auto text-center animate-fadeIn">
-                      <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-6">
-                        <svg
-                          className="w-8 h-8 text-gray-400"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={1.5}
-                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                          />
-                        </svg>
+                    <div className="flex flex-col items-center justify-start py-12 px-6 max-w-xl mx-auto text-center bg-surface-2 rounded-3xl border border-white/5 shadow-hover">
+                      <div className="w-20 h-20 bg-accent text-dark rounded-full flex items-center justify-center mb-8 shadow-custom">
+                        <IoShieldCheckmarkOutline size={40} />
                       </div>
-                      <h2 className="text-2xl font-bold uppercase tracking-tight mb-3">
-                        Save Your Account
+                      <h2 className="text-3xl font-display font-black uppercase italic tracking-tighter mb-4 text-inverse">
+                        Finalize Your Member Blueprint
                       </h2>
-                      <p className="text-gray-500 mb-8 leading-relaxed">
-                        You are currently using a guest account. Connect with
-                        Google to save your order history and profile
-                        permanently.
+                      <p className="text-muted mb-10 font-medium leading-relaxed">
+                        You are currently using a guest protocol. Link your
+                        Google account to secure your performance data, order
+                        history, and saved blueprints permanently.
                       </p>
+
                       <button
                         onClick={handleGoogleLink}
-                        className="w-full border border-gray-300 flex items-center justify-center gap-3 py-3 hover:border-black transition-colors bg-white shadow-sm"
+                        className="group w-full bg-inverse text-dark flex items-center justify-center gap-4 py-5 rounded-full hover:bg-accent transition-all duration-300 shadow-custom active:scale-95"
                       >
-                        <svg className="w-5 h-5" viewBox="0 0 24 24">
+                        <svg className="w-6 h-6" viewBox="0 0 24 24">
                           <path
                             d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
                             fill="#4285F4"
@@ -269,17 +281,21 @@ const Account = () => {
                             fill="#EA4335"
                           />
                         </svg>
-                        <span className="text-sm font-medium text-gray-600">
-                          Continue with Google
+                        <span className="text-sm font-black uppercase tracking-[0.2em]">
+                          Sync with Google
                         </span>
                       </button>
+
+                      <p className="mt-8 text-[10px] font-black uppercase tracking-[0.3em] text-muted italic">
+                        Secured via NEVERBE Auth Protocol v2.5
+                      </p>
                     </div>
                   ) : (
                     <AccountSettings user={user} dispatch={dispatch} />
                   ))}
-              </>
+              </div>
             )}
-          </div>
+          </main>
         </div>
       </div>
     </div>

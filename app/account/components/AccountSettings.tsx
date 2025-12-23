@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from "react";
 import {
   updatePassword,
@@ -10,8 +11,21 @@ import toast from "react-hot-toast";
 import { auth } from "@/firebase/firebaseClient";
 import { useDispatch } from "react-redux";
 import { setUser } from "@/redux/authSlice/authSlice";
+import { motion } from "framer-motion";
+import {
+  IoShieldCheckmarkOutline,
+  IoPersonOutline,
+  IoKeyOutline,
+  IoFingerPrintOutline,
+  IoPulseOutline,
+} from "react-icons/io5";
 
 const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
+  // Logic for the visual "Serial Number" based on UID
+  const memberSerial = user?.uid
+    ? `NB-${user.uid.slice(0, 8).toUpperCase()}`
+    : "NB-PENDING";
+
   const ProfileForm = () => {
     const [isUpdating, setIsUpdating] = useState(false);
 
@@ -27,9 +41,15 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
           await updateProfile(auth.currentUser, {
             displayName: `${fName} ${lName}`.trim(),
           });
-
           await auth.currentUser.reload();
-          toast.success("Profile updated successfully!");
+          toast.success("BLUEPRINT SYNCED", {
+            style: {
+              background: "#1a1a1a",
+              color: "#97e13e",
+              fontSize: "12px",
+              fontWeight: "900",
+            },
+          });
 
           const updatedUser = {
             uid: auth.currentUser.uid,
@@ -45,32 +65,53 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
           dispatch(setUser(updatedUser));
         }
       } catch (err: any) {
-        toast.error("Error updating profile: " + err.message);
+        toast.error("SYNC ERROR: " + err.message);
       } finally {
         setIsUpdating(false);
       }
     };
 
     return (
-      <div className="h-full">
-        <div className="flex flex-col gap-6">
-          <h3 className="text-lg font-medium uppercase tracking-tight">
-            Account Details
-          </h3>
+      <div className="animate-fade">
+        <div className="flex flex-col gap-8">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-accent/10 rounded-lg">
+                <IoPersonOutline className="text-accent" size={20} />
+              </div>
+              <h3 className="text-xl font-display font-black uppercase italic tracking-tighter text-inverse">
+                Member Blueprint
+              </h3>
+            </div>
+            <div className="hidden md:block">
+              <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted">
+                Serial:{" "}
+              </span>
+              <span className="text-[9px] font-black uppercase tracking-[0.2em] text-accent italic">
+                {memberSerial}
+              </span>
+            </div>
+          </div>
+
           <form className="space-y-6" onSubmit={handleUpdate}>
-            <div className="flex flex-wrap justify-between gap-4">
-              <div className="space-y-1">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="group space-y-2">
+                <label className="text-[10px] font-black uppercase tracking-widest text-muted ml-1">
+                  First Name
+                </label>
                 <input
                   name="fName"
                   type="text"
                   defaultValue={
                     user.displayName ? user.displayName.split(" ")[0] : ""
                   }
-                  placeholder="First Name"
-                  className="w-full p-3 border border-gray-300 focus:border-black focus:ring-0 outline-none rounded-none placeholder-gray-500 transition-colors"
+                  className="w-full bg-surface-2 p-4 text-sm font-bold border border-white/5 focus:border-accent focus:shadow-hover outline-none rounded-sm transition-all text-inverse"
                 />
               </div>
-              <div className="space-y-1">
+              <div className="group space-y-2">
+                <label className="text-[10px] font-black uppercase tracking-widest text-muted ml-1">
+                  Last Name
+                </label>
                 <input
                   name="lName"
                   type="text"
@@ -79,26 +120,34 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
                       ? user.displayName.split(" ")[1]
                       : ""
                   }
-                  placeholder="Last Name"
-                  className="w-full p-3 border border-gray-300 focus:border-black focus:ring-0 outline-none rounded-none placeholder-gray-500 transition-colors"
+                  className="w-full bg-surface-2 p-4 text-sm font-bold border border-white/5 focus:border-accent focus:shadow-hover outline-none rounded-sm transition-all text-inverse"
                 />
               </div>
             </div>
-            <div className="space-y-1">
+            <div className="space-y-2">
+              <label className="text-[10px] font-black uppercase tracking-widest text-muted ml-1">
+                Verified Email
+              </label>
               <input
                 readOnly
                 type="email"
                 value={user.email}
-                className="w-full p-3 border border-gray-300 bg-gray-100 text-gray-500 cursor-not-allowed outline-none rounded-none"
+                className="w-full bg-surface-3 p-4 text-sm font-bold border border-white/5 text-muted/50 cursor-not-allowed outline-none rounded-sm italic"
               />
             </div>
-            <div className="flex justify-end">
+            <div className="flex justify-end pt-2">
               <button
                 type="submit"
                 disabled={isUpdating}
-                className="bg-black text-white px-8 py-3 text-sm font-bold uppercase tracking-wider hover:bg-gray-800 rounded-full transition-colors disabled:opacity-50"
+                className="group flex items-center gap-3 bg-accent text-dark px-10 py-4 text-xs font-black uppercase italic tracking-widest hover:shadow-hover rounded-full transition-all disabled:opacity-50 active:scale-95"
               >
-                {isUpdating ? "Saving..." : "Save Details"}
+                {isUpdating ? "Processing..." : "Sync Blueprint"}
+                <IoPulseOutline
+                  className={
+                    isUpdating ? "animate-spin" : "group-hover:animate-pulse"
+                  }
+                  size={16}
+                />
               </button>
             </div>
           </form>
@@ -118,20 +167,8 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
       const newPass = formData.get("newPass") as string;
       const confirmPass = formData.get("confirmPass") as string;
 
-      if (!currentPass) {
-        toast.error("Please enter your current password");
-        setIsUpdating(false);
-        return;
-      }
-
       if (newPass !== confirmPass) {
-        toast.error("Passwords do not match");
-        setIsUpdating(false);
-        return;
-      }
-
-      if (newPass.length < 6) {
-        toast.error("Password must be at least 6 characters");
+        toast.error("KEYS DO NOT MATCH");
         setIsUpdating(false);
         return;
       }
@@ -144,81 +181,83 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
           );
           await reauthenticateWithCredential(auth.currentUser, credential);
           await updatePassword(auth.currentUser, newPass);
-          toast.success("Password updated successfully!");
+          toast.success("SECURITY KEY RE-INITIALIZED");
           (e.target as HTMLFormElement).reset();
         }
       } catch (err: any) {
-        if (
-          err.code === "auth/invalid-credential" ||
-          err.code === "auth/wrong-password"
-        ) {
-          toast.error("Incorrect current password.");
-        } else {
-          toast.error("Error updating password: " + err.message);
-        }
+        toast.error(
+          "PROTOCOL REJECTION: " + err.message.split("/")[1]?.toUpperCase() ||
+            "ERROR"
+        );
       } finally {
         setIsUpdating(false);
       }
     };
 
-    const handleForgotPassword = async () => {
-      if (!user?.email) return;
-      try {
-        await sendPasswordResetEmail(auth, user.email);
-        toast.success(`Password reset link sent to ${user.email}`);
-      } catch (err: any) {
-        toast.error("Failed to send reset email: " + err.message);
-      }
-    };
-
     return (
-      <div className="h-full pt-8 lg:pt-0 border-t lg:border-t-0 border-gray-200 mt-8 lg:mt-0">
-        <div className="flex flex-col gap-6">
-          <div>
-            <h3 className="text-lg font-medium uppercase tracking-tight mb-4">
-              Security
-            </h3>
-            <p className="text-sm text-gray-500">
-              To ensure this is you, please enter your current password to make
-              changes.
-            </p>
+      <div className="h-full pt-12 lg:pt-0 border-t lg:border-t-0 border-white/5 lg:pl-12 animate-fade">
+        <div className="flex flex-col gap-8">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-accent/10 rounded-lg">
+                <IoKeyOutline className="text-accent" size={20} />
+              </div>
+              <h3 className="text-xl font-display font-black uppercase italic tracking-tighter text-inverse">
+                Security Keys
+              </h3>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-1.5 h-1.5 bg-success rounded-full animate-pulse shadow-[0_0_8px_#97e13e]" />
+              <span className="text-[9px] font-black uppercase tracking-widest text-success italic">
+                Encrypted
+              </span>
+            </div>
           </div>
+
           <form className="space-y-4" onSubmit={handleUpdate}>
             <input
               name="currentPass"
               type="password"
-              placeholder="Current Password"
+              placeholder="Current Entry Key"
               required
-              className="w-full p-3 border border-gray-300 focus:border-black focus:ring-0 outline-none rounded-none placeholder-gray-500"
+              className="w-full bg-surface-2 p-4 text-sm font-bold border border-white/5 focus:border-accent outline-none rounded-sm text-inverse placeholder:text-muted/30"
             />
-            <input
-              name="newPass"
-              type="password"
-              placeholder="New Password"
-              required
-              className="w-full p-3 border border-gray-300 focus:border-black focus:ring-0 outline-none rounded-none placeholder-gray-500"
-            />
-            <input
-              name="confirmPass"
-              type="password"
-              placeholder="Confirm New Password"
-              required
-              className="w-full p-3 border border-gray-300 focus:border-black focus:ring-0 outline-none rounded-none placeholder-gray-500"
-            />
-            <div className="flex justify-between items-center pt-2">
+            <div className="grid grid-cols-1 gap-4">
+              <input
+                name="newPass"
+                type="password"
+                placeholder="New Security Key"
+                required
+                className="w-full bg-surface-2 p-4 text-sm font-bold border border-white/5 focus:border-accent outline-none rounded-sm text-inverse placeholder:text-muted/30"
+              />
+              <input
+                name="confirmPass"
+                type="password"
+                placeholder="Confirm New Key"
+                required
+                className="w-full bg-surface-2 p-4 text-sm font-bold border border-white/5 focus:border-accent outline-none rounded-sm text-inverse placeholder:text-muted/30"
+              />
+            </div>
+
+            <div className="flex flex-col sm:flex-row justify-between items-center gap-6 pt-6">
               <button
                 type="button"
-                onClick={handleForgotPassword}
-                className="text-xs text-gray-500 underline underline-offset-4 hover:text-black"
+                className="text-[10px] font-black uppercase tracking-[0.2em] text-muted hover:text-accent underline underline-offset-8 decoration-white/10 hover:decoration-accent transition-all"
               >
-                Forgot Password?
+                Emergency Reset?
               </button>
               <button
                 type="submit"
                 disabled={isUpdating}
-                className="bg-black text-white px-8 py-3 text-sm font-bold uppercase tracking-wider hover:bg-gray-800 rounded-full transition-colors disabled:opacity-50"
+                className="w-full sm:w-auto bg-inverse text-dark px-10 py-4 text-xs font-black uppercase italic tracking-widest hover:bg-accent rounded-full transition-all disabled:opacity-50 active:scale-95 shadow-custom group"
               >
-                {isUpdating ? "Updating..." : "Update Password"}
+                <span className="flex items-center justify-center gap-2">
+                  {isUpdating ? "Securing..." : "Update Protocol"}
+                  <IoFingerPrintOutline
+                    className="group-hover:scale-110 transition-transform"
+                    size={16}
+                  />
+                </span>
               </button>
             </div>
           </form>
@@ -229,7 +268,7 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
 
   return (
     <div className="w-full">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:divide-x lg:divide-white/5">
         <ProfileForm />
         <PasswordForm />
       </div>

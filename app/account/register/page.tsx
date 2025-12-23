@@ -16,6 +16,8 @@ import Link from "next/link";
 import { Logo } from "@/assets/images";
 import toast from "react-hot-toast";
 import ComponentLoader from "@/components/ComponentLoader";
+import { motion } from "framer-motion";
+import { IoArrowBackOutline, IoFlashOutline } from "react-icons/io5";
 
 const RegisterPage = () => {
   const router = useRouter();
@@ -40,30 +42,25 @@ const RegisterPage = () => {
 
     try {
       if (auth.currentUser && auth.currentUser.isAnonymous) {
-        // Upgrade anonymous account
         try {
           await linkWithPopup(auth.currentUser, provider);
-          toast.success("Account upgraded successfully!");
+          toast.success("BLUEPRINT SYNCED SUCCESSFULLY!");
           router.push(redirectUrl);
           return;
         } catch (linkError: any) {
           if (linkError.code === "auth/credential-already-in-use") {
-            toast.error(
-              "This Google account is already in use. Please log in."
-            );
+            toast.error("ID ALREADY REGISTERED. PLEASE SIGN IN.");
           } else {
-            toast.error("Failed to link account: " + linkError.message);
+            toast.error("SYNC FAILED: " + linkError.message);
           }
           setLoading(false);
           return;
         }
       }
-
-      // Normal Sign Up/In with Google
       await signInWithPopup(auth, provider);
       router.push(redirectUrl);
     } catch (err: any) {
-      toast.error("Failed to sign up with Google.");
+      toast.error("GOOGLE AUTH FAILED.");
     } finally {
       setLoading(false);
     }
@@ -76,19 +73,16 @@ const RegisterPage = () => {
     try {
       const user = auth.currentUser;
       if (user && user.isAnonymous) {
-        // Upgrade anonymous account logic
         const credential = EmailAuthProvider.credential(
           formData.email,
           formData.password
         );
         await linkWithCredential(user, credential);
-
         await updateProfile(user, {
           displayName: `${formData.firstName} ${formData.lastName}`.trim(),
         });
-        toast.success("Account created and order history saved!");
+        toast.success("BLUEPRINT SECURED. HISTORY SAVED!");
       } else {
-        // Create new account
         const userCredential = await createUserWithEmailAndPassword(
           auth,
           formData.email,
@@ -97,19 +91,15 @@ const RegisterPage = () => {
         await updateProfile(userCredential.user, {
           displayName: `${formData.firstName} ${formData.lastName}`.trim(),
         });
-        toast.success("Account created successfully!");
+        toast.success("MEMBER INITIALIZED!");
       }
-
       router.push(redirectUrl);
     } catch (err: any) {
-      let msg = "An error occurred. Please try again.";
+      let msg = "PROTOCOL ERROR. TRY AGAIN.";
       if (err.code === "auth/email-already-in-use")
-        msg = "That email is already registered.";
+        msg = "EMAIL ALREADY IN DATABASE.";
       else if (err.code === "auth/weak-password")
-        msg = "Password should be at least 6 characters.";
-      else if (err.code === "auth/credential-already-in-use")
-        msg = "This email is already associated with an account.";
-
+        msg = "SECURITY KEY TOO WEAK (MIN 6).";
       toast.error(msg);
     } finally {
       setLoading(false);
@@ -117,28 +107,54 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white text-black flex flex-col items-center justify-center px-4 font-sans selection:bg-gray-200 relative">
-      {loading && <ComponentLoader />}
-      <div className="mb-8 text-center flex flex-col items-center">
-        <Link href="/" className="w-16 h-16 md:w-24 md:h-24 relative mb-4">
-          <Image
-            width={100}
-            height={100}
-            src={Logo}
-            alt="NEVERBE Logo"
-            className="w-full h-full object-contain hover:opacity-80 transition-opacity"
-          />
-        </Link>
-        <h1 className="text-3xl font-bold uppercase tracking-tighter mb-2">
-          Become A Member
-        </h1>
-        <p className="text-gray-500 text-sm max-w-xs mx-auto text-center leading-relaxed">
-          Create your profile to get access to the best products and
-          inspiration.
-        </p>
-      </div>
+    <div className="min-h-screen bg-dark text-inverse flex flex-col items-center justify-center px-6 selection:bg-accent selection:text-dark relative overflow-hidden">
+      {/* Background Performance Grid */}
+      <div
+        className="fixed inset-0 opacity-[0.03] pointer-events-none"
+        style={{
+          backgroundImage:
+            "linear-gradient(#97e13e 1px, transparent 1px), linear-gradient(90deg, #97e13e 1px, transparent 1px)",
+          backgroundSize: "60px 60px",
+        }}
+      />
 
-      <div className="w-full max-w-md space-y-6">
+      {loading && <ComponentLoader />}
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="w-full max-w-md relative z-10"
+      >
+        <div className="mb-12 text-center flex flex-col items-center">
+          <Link
+            href="/"
+            className="group mb-8 block transition-transform hover:scale-110"
+          >
+            <Image
+              src={Logo}
+              width={120}
+              height={45}
+              alt="NEVERBE"
+              className="invert brightness-200"
+            />
+          </Link>
+
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-accent/10 border border-accent/20 rounded-full mb-4">
+            <IoFlashOutline className="text-accent animate-pulse" />
+            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-accent italic">
+              Member Initialization
+            </span>
+          </div>
+
+          <h1 className="text-4xl md:text-5xl font-display font-black uppercase italic tracking-tighter mb-4">
+            Join the Lab
+          </h1>
+          <p className="text-muted text-sm max-w-xs font-medium leading-relaxed">
+            Initialize your member blueprint to unlock exclusive gear and
+            performance tracking.
+          </p>
+        </div>
+
         <form onSubmit={handleRegister} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <input
@@ -146,7 +162,7 @@ const RegisterPage = () => {
               type="text"
               placeholder="First Name"
               required
-              className="w-full p-3 border border-gray-300 focus:border-black outline-none rounded-none placeholder-gray-500 transition-colors"
+              className="w-full bg-surface-2 p-4 text-sm font-bold border border-white/5 focus:border-accent outline-none rounded-sm placeholder-muted transition-all"
               onChange={handleChange}
             />
             <input
@@ -154,7 +170,7 @@ const RegisterPage = () => {
               type="text"
               placeholder="Last Name"
               required
-              className="w-full p-3 border border-gray-300 focus:border-black outline-none rounded-none placeholder-gray-500 transition-colors"
+              className="w-full bg-surface-2 p-4 text-sm font-bold border border-white/5 focus:border-accent outline-none rounded-sm placeholder-muted transition-all"
               onChange={handleChange}
             />
           </div>
@@ -162,47 +178,48 @@ const RegisterPage = () => {
           <input
             name="email"
             type="email"
-            placeholder="Email address"
+            placeholder="Email Address"
             required
-            className="w-full p-3 border border-gray-300 focus:border-black outline-none rounded-none placeholder-gray-500 transition-colors"
+            className="w-full bg-surface-2 p-4 text-sm font-bold border border-white/5 focus:border-accent outline-none rounded-sm placeholder-muted transition-all"
             onChange={handleChange}
           />
 
           <input
             name="password"
             type="password"
-            placeholder="Password"
+            placeholder="Security Key (Password)"
             required
-            className="w-full p-3 border border-gray-300 focus:border-black outline-none rounded-none placeholder-gray-500 transition-colors"
+            className="w-full bg-surface-2 p-4 text-sm font-bold border border-white/5 focus:border-accent outline-none rounded-sm placeholder-muted transition-all"
             onChange={handleChange}
           />
 
-          <p className="text-xs text-gray-500 text-center leading-relaxed px-4">
-            By creating an account, you agree to our Privacy Policy and Terms of
-            Use.
+          <p className="text-[10px] text-muted text-center uppercase font-black tracking-widest leading-relaxed py-4 opacity-60">
+            By initializing, you accept our Privacy Protocol and Terms of Usage.
           </p>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-black text-white font-bold uppercase tracking-wider py-3 mt-4 hover:bg-gray-800 transition-colors disabled:opacity-50"
+            className="group w-full bg-accent text-dark font-display font-black uppercase italic tracking-widest py-5 rounded-full shadow-custom hover:shadow-hover hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50"
           >
-            {loading ? "Processing..." : "Join Us"}
+            {loading ? "Processing..." : "Secure Blueprint"}
           </button>
         </form>
 
         {/* --- Divider --- */}
-        <div className="flex items-center gap-4 my-6">
-          <div className="h-px bg-gray-300 flex-1"></div>
-          <span className="text-xs text-gray-500 font-medium">OR</span>
-          <div className="h-px bg-gray-300 flex-1"></div>
+        <div className="flex items-center gap-6 my-10">
+          <div className="h-[1px] bg-white/5 flex-1"></div>
+          <span className="text-[10px] font-black text-muted tracking-widest">
+            OR SYNC WITH
+          </span>
+          <div className="h-[1px] bg-white/5 flex-1"></div>
         </div>
 
         {/* --- Google Button --- */}
         <button
           onClick={handleGoogleRegister}
           type="button"
-          className="w-full border border-gray-300 flex items-center justify-center gap-3 py-3 hover:border-black transition-colors bg-white"
+          className="w-full bg-white text-dark flex items-center justify-center gap-4 py-4 rounded-full font-black uppercase text-xs tracking-[0.2em] shadow-lg hover:bg-accent transition-all duration-300 active:scale-95"
         >
           <svg className="w-5 h-5" viewBox="0 0 24 24">
             <path
@@ -222,33 +239,33 @@ const RegisterPage = () => {
               fill="#EA4335"
             />
           </svg>
-          <span className="text-sm font-medium text-gray-600">
-            Continue with Google
-          </span>
+          Google Identity
         </button>
 
         {/* Toggle Login Link */}
-        <div className="text-center pt-2">
-          <p className="text-gray-500 text-sm">
-            Already a member?{" "}
+        <div className="text-center mt-10">
+          <p className="text-muted text-xs font-bold uppercase tracking-wide">
+            Already in the Database?{" "}
             <Link
               href={`/account/login${
                 redirectUrl !== "/account" ? `?redirect=${redirectUrl}` : ""
               }`}
-              className="text-black font-medium underline underline-offset-4 hover:text-gray-600 ml-1"
+              className="text-accent font-black italic underline underline-offset-8 hover:text-inverse transition-colors ml-1"
             >
               Sign In.
             </Link>
           </p>
         </div>
-      </div>
+      </motion.div>
 
-      <div className="text-center mt-8">
+      {/* Back to Store */}
+      <div className="mt-16 relative z-10">
         <Link
           href="/"
-          className="text-xs text-gray-400 hover:text-black transition-colors uppercase tracking-widest border-b border-transparent hover:border-black pb-1"
+          className="group flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.3em] text-muted hover:text-accent transition-all"
         >
-          ← Return to Store
+          <IoArrowBackOutline className="group-hover:-translate-x-1 transition-transform" />
+          Terminal Exit
         </Link>
       </div>
     </div>

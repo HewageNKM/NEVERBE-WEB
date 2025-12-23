@@ -1,6 +1,16 @@
+"use client";
+
 import React from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Order } from "@/interfaces/BagItem";
-import { X, Download, Package, MapPin, CreditCard } from "lucide-react";
+import { 
+  IoClose, 
+  IoCloudDownloadOutline, 
+  IoCubeOutline, 
+  IoLocationOutline, 
+  IoCardOutline, 
+  IoFlashOutline 
+} from "react-icons/io5";
 import { toSafeLocaleString } from "@/services/UtilService";
 import Image from "next/image";
 import Invoice from "@/components/Invoice";
@@ -17,7 +27,6 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
   order,
   isOpen,
   onClose,
-  onDownloadInvoice,
 }) => {
   if (!isOpen || !order) return null;
 
@@ -33,315 +42,197 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
     discount,
   } = order;
 
-  // Calculate totals
-  const subtotal = items.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
-  );
-  const itemsDiscount = items.reduce(
-    (sum, item) => sum + (item.discount || 0),
-    0
-  );
+  // Calculation Logic
+  const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const itemsDiscount = items.reduce((sum, item) => sum + (item.discount || 0), 0);
   const totalDiscount = itemsDiscount + (discount || 0);
   const total = subtotal - totalDiscount + (shippingFee || 0) + (fee || 0);
 
-  // Safe date rendering
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-      <div
-        className="bg-white w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-sm shadow-xl animate-fadeIn"
-        role="dialog"
-        aria-modal="true"
-      >
-        {/* Header */}
-        <div className="sticky top-0 bg-white border-b border-gray-100 p-6 flex items-center justify-between z-10">
-          <div>
-            <h2 className="text-xl font-bold uppercase tracking-tight">
-              Order Details
-            </h2>
-            <p className="text-sm text-gray-500 mt-1">
-              #{orderId} • {toSafeLocaleString(createdAt)}
-            </p>
-          </div>
-          <button
-            onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-          >
-            <X size={24} />
-          </button>
-        </div>
+    <AnimatePresence>
+      <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+        {/* Technical Backdrop */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          onClick={onClose}
+          className="absolute inset-0 bg-dark/80 backdrop-blur-xl"
+        />
 
-        <div className="p-6 space-y-8">
-          {/* Status & Actions */}
-          <div className="flex flex-wrap items-center justify-between gap-4 bg-gray-50 p-4 rounded-sm border border-gray-100">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-black text-white rounded-full">
-                <Package size={20} />
-              </div>
-              <div>
-                <p className="text-xs font-bold uppercase tracking-wider text-gray-500">
-                  Status
-                </p>
-                <div className="flex items-center gap-2">
-                  <p className="font-semibold capitalize">{status}</p>
-                  <Link
-                    href={`/checkout/success/${orderId}`}
-                    className="text-xs underline text-black hover:text-black"
-                  >
-                    View Confirmation
-                  </Link>
+        {/* Modal Container */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.95, y: 20 }}
+          className="relative bg-surface w-full max-w-3xl max-h-[92vh] overflow-hidden rounded-[2.5rem] shadow-hover border border-white/10 flex flex-col"
+        >
+          {/* HEADER: Performance Spec Branding */}
+          <div className="sticky top-0 bg-surface/90 backdrop-blur-md border-b border-default p-6 md:p-8 flex items-center justify-between z-20">
+            <div>
+              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-accent italic">
+                Deployment Spec
+              </span>
+              <h2 className="text-2xl font-display font-black uppercase italic tracking-tighter text-inverse">
+                Order Intelligence
+              </h2>
+              <p className="text-[10px] text-muted font-bold mt-1 uppercase tracking-widest">
+                ID: #{orderId} • Logged: {toSafeLocaleString(createdAt)}
+              </p>
+            </div>
+            <button
+              onClick={onClose}
+              className="p-3 bg-surface-2 hover:bg-dark text-inverse transition-all rounded-full shadow-sm"
+            >
+              <IoClose size={24} />
+            </button>
+          </div>
+
+          <div className="p-6 md:p-8 overflow-y-auto hide-scrollbar space-y-10">
+            
+            {/* STATUS & QUICK ACTIONS */}
+            <div className="flex flex-wrap items-center justify-between gap-6 bg-surface-2 p-6 rounded-2xl border border-white/5 shadow-inner">
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-accent text-dark rounded-full shadow-custom animate-pulse">
+                  <IoCubeOutline size={22} />
+                </div>
+                <div>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-muted">Current Protocol</p>
+                  <div className="flex items-center gap-3">
+                    <p className="font-display font-black text-lg uppercase italic text-inverse">{status}</p>
+                    <Link
+                      href={`/checkout/success/${orderId}`}
+                      className="text-[10px] font-black uppercase tracking-widest text-accent underline underline-offset-4"
+                    >
+                      Audit Confirmation
+                    </Link>
+                  </div>
                 </div>
               </div>
-            </div>
-            <Invoice
-              order={order}
-              className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 hover:border-black hover:bg-gray-50 transition-all text-sm font-medium rounded-sm shadow-sm"
-              btnText={
-                <>
-                  <Download size={16} />
-                  Download Invoice
-                </>
-              }
-            />
-          </div>
-
-          {/* Items */}
-          <div>
-            <h3 className="text-sm font-bold uppercase tracking-wider text-gray-900 border-b pb-2 mb-4">
-              Items ({items.length})
-            </h3>
-            <div className="space-y-4">
-              {(() => {
-                // Group items: combo items by comboId, regular items separate
-                const comboGroups = new Map<string, typeof items>();
-                const regularItems: typeof items = [];
-
-                items.forEach((item) => {
-                  if (item.isComboItem && item.comboId) {
-                    if (!comboGroups.has(item.comboId)) {
-                      comboGroups.set(item.comboId, []);
-                    }
-                    comboGroups.get(item.comboId)!.push(item);
-                  } else {
-                    regularItems.push(item);
-                  }
-                });
-
-                return (
+              <Invoice
+                order={order}
+                className="flex items-center gap-2 px-6 py-3 bg-dark text-accent border border-accent/20 hover:bg-accent hover:text-dark transition-all text-xs font-black uppercase italic tracking-widest rounded-full shadow-custom"
+                btnText={
                   <>
-                    {/* Regular Items */}
-                    {regularItems.map((item, idx) => (
-                      <div key={`regular-${idx}`} className="flex gap-4 py-2">
-                        <div className="w-20 h-20 bg-gray-100 shrink-0 rounded-sm overflow-hidden">
-                          <Image
-                            width={80}
-                            height={80}
-                            src={
-                              item.thumbnail ||
-                              "https://placehold.co/100?text=Product"
-                            }
-                            alt={item.name}
-                            className="w-full h-full object-cover mix-blend-multiply"
-                          />
-                        </div>
-                        <div className="flex-1">
-                          <div className="flex justify-between items-start">
-                            <div>
-                              <h4 className="font-medium text-gray-900 line-clamp-2">
-                                {item.name}
-                              </h4>
-                              <p className="text-sm text-gray-500 mt-1">
-                                Size: {item.size}
-                              </p>
-                              <p className="text-sm text-gray-500">
-                                Qty: {item.quantity}
-                              </p>
-                            </div>
-                            <p className="font-medium">
-                              Rs. {item.price.toLocaleString()}
-                            </p>
+                    <IoCloudDownloadOutline size={16} />
+                    Export Invoice
+                  </>
+                }
+              />
+            </div>
+
+            {/* GEAR LOG (Items) */}
+            <div>
+              <div className="flex items-center gap-2 mb-6">
+                <IoFlashOutline className="text-accent" />
+                <h3 className="text-xs font-black uppercase tracking-widest text-inverse">
+                  Gear Deployment ({items.length} Units)
+                </h3>
+              </div>
+              
+              <div className="space-y-4">
+                {items.map((item, idx) => (
+                  <div key={idx} className="flex gap-5 p-4 bg-surface-2/50 rounded-2xl border border-white/5 group hover:border-accent/30 transition-colors">
+                    <div className="w-20 h-20 bg-surface-3 shrink-0 rounded-xl overflow-hidden border border-default p-1">
+                      <Image
+                        width={80}
+                        height={80}
+                        src={item.thumbnail || "https://placehold.co/100?text=GEAR"}
+                        alt={item.name}
+                        className="w-full h-full object-cover mix-blend-multiply group-hover:scale-110 transition-transform duration-500"
+                      />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex justify-between items-start gap-4">
+                        <div className="truncate">
+                          <h4 className="font-display font-black uppercase italic tracking-tighter text-inverse truncate">
+                            {item.name}
+                          </h4>
+                          <div className="flex gap-3 mt-1">
+                            <span className="text-[10px] font-black uppercase text-muted tracking-widest">Size: <span className="text-accent">{item.size}</span></span>
+                            <span className="text-[10px] font-black uppercase text-muted tracking-widest">Qty: <span className="text-inverse">{item.quantity}</span></span>
                           </div>
-                          {item.discount ? (
-                            <p className="text-right text-xs text-red-600 mt-1">
+                        </div>
+                        <div className="text-right">
+                          <p className="font-display font-black italic text-inverse">
+                            Rs. {item.price.toLocaleString()}
+                          </p>
+                          {item.discount > 0 && (
+                            <p className="text-[10px] font-black text-accent italic uppercase tracking-tighter">
                               - Rs. {item.discount.toLocaleString()}
                             </p>
-                          ) : null}
+                          )}
                         </div>
                       </div>
-                    ))}
-
-                    {/* Combo Groups */}
-                    {Array.from(comboGroups.entries()).map(
-                      ([comboId, comboItems]) => {
-                        const comboName =
-                          comboItems[0]?.comboName || "Combo Bundle";
-                        const comboDiscount = comboItems.reduce(
-                          (sum, i) => sum + (i.discount || 0),
-                          0
-                        );
-
-                        return (
-                          <div
-                            key={comboId}
-                            className="border border-gray-200 rounded-sm overflow-hidden"
-                          >
-                            {/* Combo Header */}
-                            <div className="bg-gray-50 px-4 py-3 flex items-center justify-between border-b border-gray-200">
-                              <div className="flex items-center gap-2">
-                                <span className="bg-black text-white text-xs font-bold px-2 py-1 rounded-sm uppercase">
-                                  Combo
-                                </span>
-                                <h4 className="font-bold text-gray-900">
-                                  {comboName}
-                                </h4>
-                              </div>
-                              {comboDiscount > 0 && (
-                                <span className="text-red-600 text-sm font-medium">
-                                  - Rs. {comboDiscount.toLocaleString()} saved
-                                </span>
-                              )}
-                            </div>
-
-                            {/* Combo Items */}
-                            <div className="divide-y divide-gray-100">
-                              {comboItems.map((item, idx) => (
-                                <div
-                                  key={`combo-${comboId}-${idx}`}
-                                  className="flex gap-4 p-4"
-                                >
-                                  <div className="w-16 h-16 bg-gray-100 shrink-0 rounded-sm overflow-hidden">
-                                    <Image
-                                      width={64}
-                                      height={64}
-                                      src={
-                                        item.thumbnail ||
-                                        "https://placehold.co/100?text=Product"
-                                      }
-                                      alt={item.name}
-                                      className="w-full h-full object-cover mix-blend-multiply"
-                                    />
-                                  </div>
-                                  <div className="flex-1">
-                                    <div className="flex justify-between items-start">
-                                      <div>
-                                        <h4 className="font-medium text-gray-900 text-sm">
-                                          {item.name}
-                                        </h4>
-                                        <p className="text-xs text-gray-500 mt-1">
-                                          Size: {item.size} • Qty:{" "}
-                                          {item.quantity}
-                                        </p>
-                                      </div>
-                                      <p className="text-sm text-gray-600">
-                                        Rs. {item.price.toLocaleString()}
-                                      </p>
-                                    </div>
-                                  </div>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        );
-                      }
-                    )}
-                  </>
-                );
-              })()}
-            </div>
-          </div>
-
-          {/* Details Grid */}
-          <div className="grid md:grid-cols-2 gap-8">
-            {/* Addresses */}
-            <div className="space-y-6">
-              <div>
-                <div className="flex items-center gap-2 mb-3">
-                  <MapPin size={18} className="text-gray-400" />
-                  <h3 className="text-sm font-bold uppercase tracking-wider text-gray-900">
-                    Billing Address
-                  </h3>
-                </div>
-                <address className="not-italic text-sm text-gray-600 leading-relaxed pl-7 border-l-2 border-gray-100">
-                  <p className="font-medium text-gray-900">{customer.name}</p>
-                  <p>{customer.address}</p>
-                  <p>
-                    {customer.city} {customer.zip && `, ${customer.zip}`}
-                  </p>
-                  <p>{customer.phone}</p>
-                </address>
-              </div>
-              <div>
-                <div className="flex items-center gap-2 mb-3">
-                  <MapPin size={18} className="text-gray-400" />
-                  <h3 className="text-sm font-bold uppercase tracking-wider text-gray-900">
-                    Shipping Address
-                  </h3>
-                </div>
-                <address className="not-italic text-sm text-gray-600 leading-relaxed pl-7 border-l-2 border-gray-100">
-                  <p className="font-medium text-gray-900">
-                    {customer.shippingName || customer.name}
-                  </p>
-                  <p>{customer.shippingAddress || customer.address}</p>
-                  <p>
-                    {customer.shippingCity || customer.city}{" "}
-                    {customer.shippingZip ||
-                      (customer.zip &&
-                        `, ${customer.shippingZip || customer.zip}`)}
-                  </p>
-                  <p>{customer.shippingPhone || customer.phone}</p>
-                </address>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
 
-            {/* Payment & Summary */}
-            <div className="space-y-6">
-              <div>
-                <div className="flex items-center gap-2 mb-3">
-                  <CreditCard size={18} className="text-gray-400" />
-                  <h3 className="text-sm font-bold uppercase tracking-wider text-gray-900">
-                    Payment Info
-                  </h3>
+            {/* LOGISTICS & FISCAL GRID */}
+            <div className="grid md:grid-cols-2 gap-8 pt-6 border-t border-white/5">
+              {/* Deployment Vectors (Addresses) */}
+              <div className="space-y-8">
+                <div>
+                  <div className="flex items-center gap-3 mb-4">
+                    <IoLocationOutline size={18} className="text-accent" />
+                    <h3 className="text-[10px] font-black uppercase tracking-widest text-inverse">Deployment Vector</h3>
+                  </div>
+                  <address className="not-italic text-sm text-muted font-medium leading-relaxed pl-7 border-l-2 border-accent/20">
+                    <p className="text-inverse font-bold uppercase">{customer.shippingName || customer.name}</p>
+                    <p className="mt-1">{customer.shippingAddress || customer.address}</p>
+                    <p>{customer.shippingCity || customer.city}</p>
+                    <p className="text-accent font-black italic tracking-tighter mt-2">{customer.shippingPhone || customer.phone}</p>
+                  </address>
                 </div>
-                <div className="pl-7">
-                  <p className="text-sm text-gray-600 capitalize">
-                    {paymentMethod}
-                  </p>
+
+                <div>
+                  <div className="flex items-center gap-3 mb-4">
+                    <IoCardOutline size={18} className="text-accent" />
+                    <h3 className="text-[10px] font-black uppercase tracking-widest text-inverse">Auth Protocol</h3>
+                  </div>
+                  <div className="pl-7 border-l-2 border-accent/20">
+                    <p className="text-sm text-muted font-bold uppercase tracking-widest">
+                      Method: <span className="text-inverse">{paymentMethod}</span>
+                    </p>
+                  </div>
                 </div>
               </div>
 
-              <div className="bg-gray-50 p-6 rounded-sm space-y-3 text-sm">
-                <div className="flex justify-between text-gray-600">
-                  <span>Subtotal</span>
-                  <span>Rs. {subtotal.toLocaleString()}</span>
-                </div>
-                {totalDiscount > 0 && (
-                  <div className="flex justify-between text-red-600">
-                    <span>Discount</span>
-                    <span>- Rs. {totalDiscount.toLocaleString()}</span>
+              {/* FISCAL SUMMARY */}
+              <div className="bg-surface-3 p-8 rounded-2xl border border-default flex flex-col justify-between">
+                <div className="space-y-3">
+                   <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-muted">
+                    <span>Base Subtotal</span>
+                    <span>Rs. {subtotal.toLocaleString()}</span>
                   </div>
-                )}
-                <div className="flex justify-between text-gray-600">
-                  <span>Shipping</span>
-                  <span>Rs. {(shippingFee || 0).toLocaleString()}</span>
-                </div>
-                {fee ? (
-                  <div className="flex justify-between text-gray-600">
-                    <span>Handling Fee</span>
-                    <span>Rs. {fee.toLocaleString()}</span>
+                  {totalDiscount > 0 && (
+                    <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-accent italic">
+                      <span>Blueprint Savings</span>
+                      <span>- Rs. {totalDiscount.toLocaleString()}</span>
+                    </div>
+                  )}
+                  <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-muted">
+                    <span>Logistics Fee</span>
+                    <span>Rs. {(shippingFee || 0).toLocaleString()}</span>
                   </div>
-                ) : null}
+                </div>
 
-                <div className="pt-3 mt-3 border-t border-gray-200 flex justify-between items-center font-bold text-lg">
-                  <span>Total</span>
-                  <span>Rs. {total.toLocaleString()}</span>
+                <div className="pt-6 mt-6 border-t border-white/10">
+                  <div className="flex justify-between items-end">
+                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted italic">Final Total</span>
+                    <span className="text-3xl font-display font-black italic text-accent tracking-tighter drop-shadow-[0_0_10px_rgba(151,225,62,0.3)]">
+                      Rs. {total.toLocaleString()}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </AnimatePresence>
   );
 };
 
