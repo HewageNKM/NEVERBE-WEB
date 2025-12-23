@@ -6,17 +6,13 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { IoClose, IoAdd, IoRemove, IoFlash } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
+import toast from "react-hot-toast";
 
 import { AppDispatch, RootState } from "@/redux/store";
 import { addToBag } from "@/redux/bagSlice/bagSlice";
 import { Product } from "@/interfaces/Product";
 import { ProductVariant } from "@/interfaces/ProductVariant";
 import { usePromotionsContext } from "@/components/PromotionsProvider";
-import {
-  calculateFinalPrice,
-  getOriginalPrice,
-  hasDiscount as checkHasDiscount,
-} from "@/utils/pricing";
 import SizeGrid from "@/components/SizeGrid";
 
 interface QuickViewModalProps {
@@ -81,14 +77,16 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
 
   if (!isOpen || !product) return null;
 
+  // Get promotion for display purposes only (banner)
   const activePromo = getPromotionForProduct(
     product.id,
     selectedVariant?.variantId
   );
-  const finalPrice = calculateFinalPrice(product, activePromo);
-  const originalPrice = getOriginalPrice(product);
-  const hasActiveDiscount = checkHasDiscount(product, activePromo);
-  const discountPerUnit = originalPrice - finalPrice;
+
+  // Use only product-level pricing (no promotion in calculations)
+  const finalPrice = product.sellingPrice;
+  const originalPrice = product.marketPrice;
+  const hasActiveDiscount = product.marketPrice > product.sellingPrice;
 
   const availableStock = sizeStock[selectedSize] || 0;
   const bagQty =
@@ -99,16 +97,11 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
         b.size === selectedSize
     )?.quantity || 0;
 
-  const isOutOfStock = selectedSize && availableStock <= 0;
-  const isLimitReached = selectedSize && bagQty + qty > availableStock;
+  const isOutOfStock = Boolean(selectedSize && availableStock <= 0);
+  const isLimitReached = Boolean(selectedSize && bagQty + qty > availableStock);
 
   const handleAddToBag = () => {
     if (!selectedSize || !selectedVariant) return;
-
-    // Calculate discount based on sellingPrice (matches backend OrderService validation)
-    // Backend calculates: itemsTotal = sum(sellingPrice * quantity)
-    // Then subtracts: itemDiscounts = sum(item.discount)
-    const discountAmount = (product.sellingPrice - finalPrice) * qty;
 
     dispatch(
       addToBag({
@@ -120,7 +113,7 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
         bPrice: 0,
         name: product.name,
         thumbnail: selectedVariant.images[0]?.url || product.thumbnail.url,
-        discount: discountAmount,
+        discount: 0, // No discount - marketPrice is just decoration
         itemType: "product",
         maxQuantity: 10,
         variantName: selectedVariant.variantName,
@@ -215,7 +208,7 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
 
               {/* RIGHT: DETAILS SECTION */}
               <div className="w-full md:w-1/2 p-4 sm:p-6 md:p-10 lg:p-12 flex flex-col bg-surface">
-                {/* Branded Promotion Banner */}
+                {/* Promotion Banner - Display Only */}
                 <AnimatePresence>
                   {activePromo && (
                     <motion.div
@@ -226,10 +219,10 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
                       <IoFlash className="animate-pulse shrink-0" size={16} />
                       <div className="flex-1 min-w-0">
                         <p className="text-xs sm:text-sm font-display font-black uppercase italic tracking-tighter truncate">
-                          {activePromo.name || "Special Performance Offer"}
+                          {activePromo.name || "Special Offer"}
                         </p>
                         <p className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider opacity-80 hidden sm:block">
-                          Applied to this selection automatically
+                          Limited Time Offer
                         </p>
                       </div>
                     </motion.div>
@@ -238,9 +231,7 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
 
                 <div className="mb-4 sm:mb-6">
                   <p className="text-accent text-[10px] sm:text-xs font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] mb-1 sm:mb-2 italic">
-                    {activePromo
-                      ? "Vibrant Deal"
-                      : product.brand?.replace("-", " ")}
+                    {product.brand?.replace("-", " ")}
                   </p>
                   <h2 className="text-xl sm:text-2xl md:text-3xl font-display font-black text-primary leading-tight uppercase italic tracking-tighter">
                     {product.name}

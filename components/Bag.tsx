@@ -360,7 +360,7 @@ const Bag = () => {
                 <div className="space-y-2">
                   {calculateTotalDiscount(bagItems) > 0 && (
                     <div className="flex justify-between text-success">
-                      <span className="font-medium">Bundle Savings</span>
+                      <span className="font-medium">Discount</span>
                       <span className="font-bold">
                         - Rs.{" "}
                         {calculateTotalDiscount(bagItems).toLocaleString()}

@@ -2,11 +2,17 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { IoHeartOutline, IoHeart } from "react-icons/io5";
+import {
+  IoHeartOutline,
+  IoHeart,
+  IoAddOutline,
+  IoRemoveOutline,
+} from "react-icons/io5";
 import { FaWhatsapp, FaTruckFast, FaArrowRotateLeft } from "react-icons/fa6";
 import { motion, AnimatePresence } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 import { AppDispatch, RootState } from "@/redux/store";
 import { addToBag } from "@/redux/bagSlice/bagSlice";
@@ -20,18 +26,10 @@ import { ProductVariant } from "@/interfaces/ProductVariant";
 import { KOKOLogo } from "@/assets/images";
 import SizeGuideDialog from "@/components/SizeGuideDialog";
 import { usePromotionsContext } from "@/components/PromotionsProvider";
-import UpsellNudge from "./UpsellNudge";
 import StockBadge from "@/components/StockBadge";
 import ShareButtons from "@/components/ShareButtons";
 import FloatingAddToBag from "@/components/FloatingAddToBag";
 import SizeGrid from "@/components/SizeGrid";
-import toast from "react-hot-toast";
-import {
-  calculateFinalPrice,
-  hasDiscount as checkHasDiscount,
-  getOriginalPrice,
-} from "@/utils/pricing";
-import { IoAddOutline, IoRemoveOutline } from "react-icons/io5";
 
 const ProductHero = ({ item }: { item: Product }) => {
   const router = useRouter();
@@ -55,19 +53,16 @@ const ProductHero = ({ item }: { item: Product }) => {
   const [stockLoading, setStockLoading] = useState(false);
   const [showSizeGuide, setShowSizeGuide] = useState(false);
 
-  // Get current active promotion
+  // Get promotion for display purposes only (banner)
   const activePromo = getPromotionForProduct(
     item.id,
     selectedVariant.variantId
   );
 
-  // Calculate final price (promotion takes priority over product-level discount)
-  const finalPrice = calculateFinalPrice(item, activePromo);
-  const originalPrice = getOriginalPrice(item);
-  const hasActiveDiscount = checkHasDiscount(item, activePromo);
-
-  // Calculate discount amount for bag (per unit, rounded to nearest 10)
-  const discountPerUnit = originalPrice - finalPrice;
+  // Use only product-level pricing (no promotion in calculations)
+  const finalPrice = item.sellingPrice;
+  const originalPrice = item.marketPrice;
+  const hasActiveDiscount = item.marketPrice > item.sellingPrice;
 
   useEffect(() => {
     if (selectedVariant.images?.length) {
@@ -126,11 +121,6 @@ const ProductHero = ({ item }: { item: Product }) => {
   const handleAddToBag = () => {
     if (!selectedSize) return;
 
-    // Calculate discount based on sellingPrice (matches backend OrderService validation)
-    // Backend calculates: itemsTotal = sum(sellingPrice * quantity)
-    // Then subtracts: itemDiscounts = sum(item.discount)
-    const discountAmount = (item.sellingPrice - finalPrice) * qty;
-
     dispatch(
       addToBag({
         itemId: item.id,
@@ -142,7 +132,7 @@ const ProductHero = ({ item }: { item: Product }) => {
         thumbnail: selectedVariant.images[0]?.url || item.thumbnail.url,
         itemType: "product",
         variantName: selectedVariant.variantName,
-        discount: discountAmount,
+        discount: 0, // No discount - marketPrice is just decoration
         maxQuantity: 10,
         category: item.category || "",
         brand: item.brand || "",
@@ -209,11 +199,11 @@ const ProductHero = ({ item }: { item: Product }) => {
       {/* --- RIGHT COLUMN: DETAILS --- */}
       <div className="lg:w-2/5 relative">
         <div className="lg:sticky lg:top-24 flex flex-col gap-6">
-          {/* Promotion Header Banner - NEVERBE Style */}
+          {/* Promotion Banner - Display Only */}
           {activePromo && (
             <div className="bg-accent text-dark p-4 flex items-center gap-3 shadow-custom">
               <p className="text-sm font-display font-black uppercase italic tracking-tighter">
-                {activePromo.name || "Special Performance Offer"}
+                {activePromo.name || "Special Offer"}
               </p>
               <span className="text-[9px] font-bold uppercase tracking-widest opacity-70">
                 Limited Time
@@ -223,7 +213,7 @@ const ProductHero = ({ item }: { item: Product }) => {
 
           <header>
             <h2 className="text-xs font-black uppercase tracking-[0.2em] text-accent mb-2 italic">
-              {activePromo ? "Promo Active" : item.brand?.replace("-", " ")}
+              {item.brand?.replace("-", " ")}
             </h2>
             <h1 className="text-4xl lg:text-5xl font-display font-black uppercase italic tracking-tighter leading-[0.9] mb-4 text-primary">
               {item.name}
@@ -239,7 +229,7 @@ const ProductHero = ({ item }: { item: Product }) => {
               )}
               {hasActiveDiscount && (
                 <span className="bg-success text-dark text-[10px] font-black px-3 py-1 uppercase tracking-widest italic shadow-custom">
-                  Save Rs. {discountPerUnit.toLocaleString()}
+                  Save Rs. {(originalPrice - finalPrice).toLocaleString()}
                 </span>
               )}
 
@@ -320,12 +310,6 @@ const ProductHero = ({ item }: { item: Product }) => {
 
           {/* Actions */}
           <div className="flex flex-col gap-4 mt-4">
-            <UpsellNudge
-              activePromo={activePromo}
-              currentQty={qty + bagQty}
-              currentAmount={(qty + bagQty) * item.sellingPrice}
-            />
-
             {/* Quantity Selector */}
             <div className="flex items-center gap-4">
               <span className="text-xs font-bold uppercase text-muted">
