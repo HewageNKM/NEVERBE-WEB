@@ -26,7 +26,6 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
   const dispatch: AppDispatch = useDispatch();
   const [openSection, setOpenSection] = useState<string | null>(null);
 
-  // Use consolidated hooks for search and filter data
   const {
     query: search,
     results: items,
@@ -36,7 +35,6 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
     clearSearch,
   } = useAlgoliaSearch();
 
-  // Use shared filter data hook instead of duplicate fetch
   const { brands, categories } = useFilterData(true);
 
   const onSearch = (evt: React.ChangeEvent<HTMLInputElement>) => {
@@ -55,59 +53,59 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
 
   return (
     <div className="fixed inset-0 z-[100] flex justify-end">
-      {/* 1. NIKE AIRY BACKDROP */}
+      {/* 1. Backdrop - Using Brand Blur */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         onClick={handleOverlayClick}
-        className="absolute inset-0 bg-white/80 backdrop-blur-md"
+        className="absolute inset-0 bg-surface/80 backdrop-blur-xl"
       />
 
-      {/* 2. DRAWER CONTAINER */}
+      {/* 2. Drawer Container */}
       <motion.div
         initial={{ x: "100%" }}
         animate={{ x: 0 }}
         exit={{ x: "100%" }}
         transition={{ type: "spring", damping: 25, stiffness: 200 }}
-        className="relative w-full max-w-[380px] h-full bg-white text-primary flex flex-col shadow-[0_0_40px_rgba(0,0,0,0.05)]"
+        className="relative w-full max-w-[360px] h-full bg-surface text-primary flex flex-col shadow-hover"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-8 py-6">
-          <span className="font-medium text-[20px] tracking-tight text-primary">
+        <div className="flex items-center justify-between px-8 py-6 border-b border-default">
+          <span className="font-display font-black text-2xl uppercase italic tracking-tighter text-primary">
             Menu
           </span>
           <button
             onClick={() => dispatch(toggleMenu(false))}
-            className="p-2 -mr-2 text-primary hover:bg-gray-100 rounded-full transition-all"
+            className="p-2 -mr-2 text-primary hover:bg-surface-2 rounded-full transition-all"
           >
-            <IoCloseOutline size={30} />
+            <IoCloseOutline size={32} />
           </button>
         </div>
 
-        {/* 3. SEARCH BAR (Nike Pill Style) */}
-        <div className="px-8 py-2 mb-6">
+        {/* 3. Search Bar - Branded focus state */}
+        <div className="px-6 py-6">
           <div className="relative group">
             <input
               type="text"
               value={search}
               onChange={onSearch}
-              placeholder="Search"
-              className="w-full bg-surface-2 text-primary px-5 py-3 pl-12 rounded-full text-[16px] font-normal focus:outline-none transition-all placeholder:text-secondary"
+              placeholder="Search gear..."
+              className="w-full bg-surface-2 text-primary px-6 py-4 pl-12 rounded-full text-base font-bold transition-all focus:outline-none focus:ring-2 focus:ring-accent/50 border border-transparent focus:border-accent placeholder:text-muted"
             />
-            <div className="absolute top-1/2 -translate-y-1/2 left-4 text-primary">
+            <div className="absolute top-1/2 -translate-y-1/2 left-5">
               {isSearching ? (
-                <div className="w-5 h-5 border-[1.5px] border-gray-200 border-t-black rounded-full animate-spin" />
+                <div className="w-5 h-5 border-2 border-accent border-t-transparent rounded-full animate-spin" />
               ) : (
-                <IoSearchOutline size={22} />
+                <IoSearchOutline size={22} className="text-primary" />
               )}
             </div>
           </div>
           {showSearchResult && items.length > 0 && (
-            <div className="absolute left-0 right-0 top-[140px] z-50 px-4">
+            <div className="absolute left-0 right-0 top-[160px] z-50 px-4 animate-fade">
               <SearchDialog
-                containerStyle="max-h-[60vh] shadow-2xl rounded-none border border-gray-100"
+                containerStyle="max-h-[60vh] shadow-hover border border-default rounded-2xl overflow-hidden"
                 results={items}
                 onClick={() => {
                   clearSearch();
@@ -118,132 +116,101 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
           )}
         </div>
 
-        {/* 4. NAVIGATION LINKS (Sophisticated Hierarchy) */}
-        <nav className="flex-1 overflow-y-auto px-8 space-y-2 no-scrollbar">
+        {/* 4. Navigation Links */}
+        <nav className="flex-1 overflow-y-auto px-8 space-y-1 hide-scrollbar">
           {displayLinks.map((link) => (
             <Link
               key={link.title}
               href={link.link}
               onClick={() => dispatch(toggleMenu(false))}
-              className="flex items-center justify-between py-4 group"
+              className="flex items-center justify-between py-4 group border-b border-default/50"
             >
-              <span className="text-[24px] font-medium tracking-tight text-primary transition-transform group-hover:translate-x-1">
+              <span className="text-3xl font-display font-black uppercase italic tracking-tighter text-primary transition-all group-hover:text-accent group-hover:translate-x-2">
                 {link.title}
               </span>
               <IoChevronForward
                 size={20}
-                className="text-gray-200 group-hover:text-primary"
+                className="text-muted group-hover:text-accent"
               />
             </Link>
           ))}
 
-          {/* Categories Section */}
-          <div className="pt-2">
-            <button
-              onClick={() => toggleSection("categories")}
-              className="w-full flex justify-between items-center py-4 text-primary"
-            >
-              <span className="text-[24px] font-medium tracking-tight">
-                Categories
-              </span>
-              <IoChevronDownOutline
-                className={`transition-transform duration-300 ${
-                  openSection === "categories" ? "rotate-180" : ""
-                }`}
-                size={20}
-              />
-            </button>
-            <AnimatePresence>
-              {openSection === "categories" && (
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: "auto", opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  className="overflow-hidden"
-                >
-                  <div className="flex flex-col pb-6 space-y-4">
-                    {categories.map((cat) => (
-                      <Link
-                        key={cat.id}
-                        href={`/collections/products?category=${encodeURIComponent(
-                          cat.label
-                        )}`}
-                        className="text-[16px] text-secondary hover:text-primary transition-colors"
-                        onClick={() => dispatch(toggleMenu(false))}
-                      >
-                        {cat.label}
-                      </Link>
-                    ))}
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-
-          {/* Brands Section */}
-          <div>
-            <button
-              onClick={() => toggleSection("brands")}
-              className="w-full flex justify-between items-center py-4 text-primary"
-            >
-              <span className="text-[24px] font-medium tracking-tight">
-                Brands
-              </span>
-              <IoChevronDownOutline
-                className={`transition-transform duration-300 ${
-                  openSection === "brands" ? "rotate-180" : ""
-                }`}
-                size={20}
-              />
-            </button>
-            <AnimatePresence>
-              {openSection === "brands" && (
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: "auto", opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  className="overflow-hidden"
-                >
-                  <div className="flex flex-col pb-6 space-y-4">
-                    {brands.map((brand) => (
-                      <Link
-                        key={brand.id}
-                        href={`/collections/products?brand=${encodeURIComponent(
-                          brand.label
-                        )}`}
-                        className="text-[16px] text-secondary hover:text-primary transition-colors"
-                        onClick={() => dispatch(toggleMenu(false))}
-                      >
-                        {brand.label}
-                      </Link>
-                    ))}
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
+          {/* Collapsible Sections */}
+          {[
+            {
+              id: "categories",
+              label: "Categories",
+              data: categories,
+              query: "category",
+            },
+            { id: "brands", label: "Brands", data: brands, query: "brand" },
+          ].map((section) => (
+            <div key={section.id} className="border-b border-default/50">
+              <button
+                onClick={() => toggleSection(section.id)}
+                className="w-full flex justify-between items-center py-5 text-primary group"
+              >
+                <span className="text-2xl font-display font-black uppercase italic tracking-tighter group-hover:text-accent transition-colors">
+                  {section.label}
+                </span>
+                <IoChevronDownOutline
+                  className={`transition-all duration-300 ${
+                    openSection === section.id
+                      ? "rotate-180 text-accent"
+                      : "text-muted"
+                  }`}
+                  size={20}
+                />
+              </button>
+              <AnimatePresence>
+                {openSection === section.id && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    className="overflow-hidden"
+                  >
+                    <div className="flex flex-col pb-6 space-y-4 pl-4 border-l-2 border-accent/30">
+                      {section.data.map((item) => (
+                        <Link
+                          key={item.id}
+                          href={`/collections/products?${
+                            section.query
+                          }=${encodeURIComponent(item.label)}`}
+                          className="text-base font-bold text-muted hover:text-accent hover:translate-x-1 transition-all uppercase tracking-tight"
+                          onClick={() => dispatch(toggleMenu(false))}
+                        >
+                          {item.label}
+                        </Link>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          ))}
         </nav>
 
-        {/* 5. FOOTER (Nike Utility Style) */}
-        <div className="p-8 bg-white border-t border-gray-50 mt-auto">
+        {/* 5. Footer - Utility Links */}
+        <div className="p-8 bg-surface-2 border-t border-default mt-auto">
           <div className="flex flex-col gap-6">
-            <div className="flex gap-6">
+            <div className="flex gap-8">
               <Link
                 href="/contact"
-                className="text-[14px] font-medium text-primary"
+                className="text-sm font-black uppercase tracking-widest text-primary hover:text-accent transition-colors"
                 onClick={() => dispatch(toggleMenu(false))}
               >
-                Contact Us
+                Contact
               </Link>
               <Link
                 href="/contact"
-                className="text-[14px] font-medium text-primary"
+                className="text-sm font-black uppercase tracking-widest text-primary hover:text-accent transition-colors"
                 onClick={() => dispatch(toggleMenu(false))}
               >
                 Help
               </Link>
             </div>
-            <p className="text-[11px] text-secondary font-medium uppercase tracking-widest">
+            <p className="text-[10px] text-muted font-black uppercase tracking-[0.2em]">
               &copy; {new Date().getFullYear()} NEVERBE, INC.
             </p>
           </div>

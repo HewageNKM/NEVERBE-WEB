@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { IoClose, IoAdd, IoRemove } from "react-icons/io5";
+import { IoClose, IoAdd, IoRemove, IoFlash } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 
 import { AppDispatch, RootState } from "@/redux/store";
@@ -12,7 +12,11 @@ import { addToBag } from "@/redux/bagSlice/bagSlice";
 import { Product } from "@/interfaces/Product";
 import { ProductVariant } from "@/interfaces/ProductVariant";
 import { usePromotionsContext } from "@/components/PromotionsProvider";
-import { calculateFinalPrice } from "@/utils/pricing";
+import {
+  calculateFinalPrice,
+  getOriginalPrice,
+  hasDiscount as checkHasDiscount,
+} from "@/utils/pricing";
 import SizeGrid from "@/components/SizeGrid";
 
 interface QuickViewModalProps {
@@ -81,9 +85,10 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
     product.id,
     selectedVariant?.variantId
   );
-
-  // Use shared pricing utility
   const finalPrice = calculateFinalPrice(product, activePromo);
+  const originalPrice = getOriginalPrice(product);
+  const hasActiveDiscount = checkHasDiscount(product, activePromo);
+  const discountPerUnit = originalPrice - finalPrice;
 
   const availableStock = sizeStock[selectedSize] || 0;
   const bagQty =
@@ -93,26 +98,23 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
         b.variantId === selectedVariant?.variantId &&
         b.size === selectedSize
     )?.quantity || 0;
+
   const isOutOfStock = selectedSize && availableStock <= 0;
   const isLimitReached = selectedSize && bagQty + qty > availableStock;
 
   const handleAddToBag = () => {
     if (!selectedSize || !selectedVariant) return;
-
     dispatch(
       addToBag({
         itemId: product.id,
         variantId: selectedVariant.variantId,
         size: selectedSize,
         quantity: qty,
-        price: product.sellingPrice,
+        price: finalPrice,
         bPrice: 0,
         name: product.name,
         thumbnail: selectedVariant.images[0]?.url || product.thumbnail.url,
-        discount:
-          Math.round((product.sellingPrice * (product.discount / 100)) / 10) *
-          10 *
-          qty,
+        discount: discountPerUnit * qty,
         itemType: "product",
         maxQuantity: 10,
         variantName: selectedVariant.variantName,
@@ -127,13 +129,13 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
     <AnimatePresence>
       {isOpen && (
         <div className="fixed inset-0 z-100 flex items-end md:items-center justify-center p-0 md:p-6 lg:p-12">
-          {/* Backdrop */}
+          {/* Backdrop with high-performance blur */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="absolute inset-0 bg-white/80 backdrop-blur-md"
+            className="absolute inset-0 bg-surface/80 backdrop-blur-xl"
           />
 
           {/* Modal Container */}
@@ -142,20 +144,27 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: "100%", opacity: 0 }}
             transition={{ type: "spring", damping: 30, stiffness: 300 }}
-            className="relative overflow-y-auto bg-white w-full max-w-6xl h-[92vh] md:h-auto md:max-h-[90vh] shadow-[0_-10px_40px_rgba(0,0,0,0.1)] md:shadow-[0_24px_54px_rgba(0,0,0,0.15)] overflow-hidden rounded-t-[2rem] md:rounded-none"
+            className="relative bg-surface w-full max-w-6xl h-[94vh] md:h-auto md:max-h-[90vh] shadow-hover overflow-hidden rounded-t-[2.5rem] md:rounded-2xl border-t border-default"
           >
-            {/* Close Button */}
+            {/* Top Close Bar (Mobile) */}
+            <div className="md:hidden flex justify-center py-4">
+              <div className="w-12 h-1.5 bg-border-primary rounded-full" />
+            </div>
+
+            {/* Desktop Close Button */}
             <button
               onClick={onClose}
-              className="absolute top-5 right-5 z-50 p-2 bg-white/50 backdrop-blur-md md:bg-transparent rounded-full hover:bg-gray-100 transition-all"
+              className="absolute top-6 right-6 z-50 p-3 bg-surface-2 md:bg-dark text-primary md:text-inverse rounded-full hover:bg-accent hover:text-dark transition-all shadow-custom"
             >
-              <IoClose size={26} className="text-black" />
+              <IoClose size={24} />
             </button>
 
-            <div className="flex flex-col md:flex-row h-full overflow-y-auto no-scrollbar">
+            <div className="flex flex-col md:flex-row h-full overflow-y-auto hide-scrollbar">
               {/* LEFT: VISUALS SECTION */}
-              <div className="w-full md:w-1/2 flex flex-col bg-surface-2 shrink-0">
-                <div className="relative aspect-square flex items-center justify-center p-6 md:p-12">
+              <div className="w-full md:w-1/2 flex flex-col bg-surface-2 border-r border-default shrink-0">
+                <div className="relative aspect-square flex items-center justify-center p-8 md:p-16">
+                  {/* Performance Glow behind product */}
+                  <div className="absolute inset-0 bg-accent/5 rounded-full blur-[120px] scale-75" />
                   <Image
                     src={
                       selectedVariant?.images?.[0]?.url || product.thumbnail.url
@@ -163,14 +172,14 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
                     alt={product.name}
                     width={800}
                     height={800}
-                    className="w-full h-full object-contain mix-blend-multiply transition-transform duration-500 md:hover:scale-105"
+                    className="w-full h-full object-contain mix-blend-multiply relative z-10 transition-transform duration-700 md:hover:scale-110"
                     priority
                   />
                 </div>
 
                 {/* Variant Swatches */}
                 {product.variants.length > 1 && (
-                  <div className="px-6 pb-6 md:pb-10 flex gap-4 overflow-x-auto no-scrollbar justify-start md:justify-center">
+                  <div className="px-6 pb-8 md:pb-12 flex gap-4 overflow-x-auto hide-scrollbar justify-start md:justify-center">
                     {product.variants.map((v) => (
                       <button
                         key={v.variantId}
@@ -178,10 +187,10 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
                           setSelectedVariant(v);
                           setSelectedSize("");
                         }}
-                        className={`relative w-14 h-14 md:w-16 md:h-16 shrink-0 bg-white transition-all rounded-[4px] p-1 ${
+                        className={`relative w-16 h-16 shrink-0 bg-surface transition-all rounded-lg p-1.5 ${
                           selectedVariant?.variantId === v.variantId
-                            ? "border-black border-[1.5px] scale-105 z-10 shadow-sm"
-                            : "border-gray-100 hover:border-gray-300 opacity-70 hover:opacity-100"
+                            ? "border-accent border-2 shadow-custom scale-110 z-10"
+                            : "border-border-primary hover:border-accent opacity-60 hover:opacity-100"
                         }`}
                       >
                         <div className="relative w-full h-full">
@@ -199,56 +208,65 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
               </div>
 
               {/* RIGHT: DETAILS SECTION */}
-              <div className="w-full md:w-1/2 p-6 md:p-10 lg:p-14 flex flex-col bg-white">
-                {/* Promotion Header Banner */}
-                {activePromo && (
-                  <div className="bg-red-50 border-l-4 border-red-600 p-3 mb-6 -mx-6 md:-mx-10 lg:-mx-14 px-6 md:px-10 lg:px-14">
-                    <p className="text-red-700 text-xs font-black uppercase tracking-widest animate-pulse">
-                      {activePromo.name || "Special Offer Applied"}
-                    </p>
-                    <p className="text-[10px] text-red-600 mt-1 uppercase font-bold">
-                      Limited time only. While stocks last.
-                    </p>
-                  </div>
-                )}
+              <div className="w-full md:w-1/2 p-8 md:p-12 lg:p-16 flex flex-col bg-surface">
+                {/* Branded Promotion Banner */}
+                <AnimatePresence>
+                  {activePromo && (
+                    <motion.div
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      className="bg-accent text-dark p-4 mb-8 -mx-8 md:-mx-12 lg:-mx-16 px-8 md:px-12 lg:px-16 flex items-center gap-3 shadow-custom"
+                    >
+                      <IoFlash className="animate-pulse" size={20} />
+                      <div className="flex-1">
+                        <p className="text-sm font-display font-black uppercase italic tracking-tighter">
+                          {activePromo.name || "Special Performance Offer"}
+                        </p>
+                        <p className="text-[10px] font-bold uppercase tracking-[0.15em] opacity-80">
+                          Applied to this selection automatically
+                        </p>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
 
-                <div className="mb-6">
-                  <p className="text-secondary text-[14px] md:text-[15px] font-normal capitalize mb-1">
-                    {activePromo ? (
-                      <span className="text-orange-600 font-bold uppercase tracking-widest">
-                        Promotion Active
-                      </span>
-                    ) : (
-                      product.brand?.replace("-", " ")
-                    )}
+                <div className="mb-8">
+                  <p className="text-accent text-xs font-black uppercase tracking-[0.2em] mb-2 italic">
+                    {activePromo
+                      ? "Vibrant Deal"
+                      : product.brand?.replace("-", " ")}
                   </p>
-                  <h2 className="text-[20px] md:text-[24px] font-medium text-primary leading-tight tracking-tight">
+                  <h2 className="text-3xl md:text-4xl font-display font-black text-primary leading-tight uppercase italic tracking-tighter">
                     {product.name}
                   </h2>
                 </div>
 
-                <div className="flex items-center gap-3 mb-8">
+                {/* Performance Pricing Area */}
+                <div className="flex items-center gap-4 mb-10">
                   <span
-                    className={`text-[18px] md:text-[20px] font-medium ${
-                      product.discount > 0 || activePromo
-                        ? "text-error"
-                        : "text-black"
+                    className={`text-3xl font-display font-black italic tracking-tighter ${
+                      hasActiveDiscount ? "text-success" : "text-primary"
                     }`}
                   >
                     Rs. {finalPrice.toLocaleString()}
                   </span>
-                  {(product.discount > 0 || activePromo) && (
-                    <span className="text-secondary text-[15px] md:text-[16px] line-through decoration-[0.5px]">
-                      Rs. {product.marketPrice.toLocaleString()}
+                  {hasActiveDiscount && (
+                    <span className="text-muted text-lg line-through decoration-border-dark">
+                      Rs. {originalPrice.toLocaleString()}
                     </span>
                   )}
                 </div>
 
-                {/* Size Grid */}
-                <div className="mb-8">
-                  <p className="text-[16px] font-medium mb-4 text-primary">
-                    Select Size
-                  </p>
+                {/* Size Grid - Integrated with Brand Styling */}
+                <div className="mb-10">
+                  <div className="flex justify-between items-center mb-5">
+                    <p className="text-sm font-black uppercase tracking-widest text-primary">
+                      Select Size
+                    </p>
+                    <button className="text-[10px] font-bold uppercase text-accent hover:text-primary transition-colors underline underline-offset-4">
+                      Size Guide
+                    </button>
+                  </div>
                   <SizeGrid
                     sizes={selectedVariant?.sizes || []}
                     selectedSize={selectedSize}
@@ -258,21 +276,21 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
                   />
                 </div>
 
-                {/* Quantity */}
-                <div className="flex items-center justify-between mb-8">
-                  <div className="flex items-center gap-4">
-                    <span className="text-[14px] font-medium text-primary">
+                {/* Quantity Selector */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-12">
+                  <div className="flex items-center gap-6">
+                    <span className="text-sm font-black uppercase tracking-widest text-primary">
                       Quantity
                     </span>
-                    <div className="flex items-center border border-gray-200 rounded-full px-3 py-1">
+                    <div className="flex items-center bg-surface-2 border border-border-primary rounded-full px-4 py-2">
                       <button
                         onClick={() => setQty((p) => Math.max(1, p - 1))}
-                        className="p-1 disabled:opacity-20"
+                        className="p-1 hover:text-accent disabled:opacity-10 transition-colors"
                         disabled={qty <= 1}
                       >
-                        <IoRemove size={16} />
+                        <IoRemove size={20} />
                       </button>
-                      <span className="w-8 text-center text-[14px] font-medium">
+                      <span className="w-12 text-center text-base font-display font-black italic tracking-tighter">
                         {qty}
                       </span>
                       <button
@@ -281,45 +299,56 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
                             Math.min(availableStock - bagQty || 10, p + 1)
                           )
                         }
-                        className="p-1 disabled:opacity-20"
+                        className="p-1 hover:text-accent disabled:opacity-10 transition-colors"
                         disabled={qty >= availableStock - bagQty || qty >= 10}
                       >
-                        <IoAdd size={16} />
+                        <IoAdd size={20} />
                       </button>
                     </div>
                   </div>
+
                   {selectedSize && !stockLoading && (
-                    <span
-                      className={`text-[12px] font-medium uppercase tracking-tight ${
-                        availableStock < 5 ? "text-error" : "text-green-700"
-                      }`}
-                    >
-                      {availableStock < 5
-                        ? `Only ${availableStock} Left!`
-                        : "In Stock"}
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <div
+                        className={`w-2 h-2 rounded-full ${
+                          availableStock < 5
+                            ? "bg-error animate-ping"
+                            : "bg-success"
+                        }`}
+                      />
+                      <span
+                        className={`text-xs font-black uppercase tracking-tighter italic ${
+                          availableStock < 5 ? "text-error" : "text-success"
+                        }`}
+                      >
+                        {availableStock < 5
+                          ? `Urgent: Only ${availableStock} Left`
+                          : "Available In Store"}
+                      </span>
+                    </div>
                   )}
                 </div>
 
-                {/* Actions */}
-                <div className="mt-auto space-y-3 pb-8 md:pb-0">
+                {/* Action Performance Pills */}
+                <div className="mt-auto space-y-4 pb-8 md:pb-0">
                   <button
                     onClick={handleAddToBag}
                     disabled={!selectedSize || isOutOfStock || isLimitReached}
-                    className="w-full py-4 md:py-5 bg-black text-white rounded-full font-medium text-[15px] md:text-[16px] transition-all active:scale-[0.98] disabled:bg-surface-2 disabled:text-secondary"
+                    className="group w-full py-5 bg-dark text-inverse rounded-full font-display font-black uppercase italic tracking-[0.15em] text-sm md:text-base transition-all hover:bg-accent hover:text-dark hover:shadow-hover active:scale-95 disabled:bg-surface-3 disabled:text-muted disabled:cursor-not-allowed"
                   >
                     {isOutOfStock
                       ? "Sold Out"
                       : isLimitReached
-                      ? "Limit Reached"
-                      : "Add to Bag"}
+                      ? "Inventory Maxed"
+                      : "Boost to Bag"}
                   </button>
+
                   <Link
                     href={`/collections/products/${product.id}`}
                     onClick={onClose}
-                    className="flex items-center justify-center w-full py-3 md:py-4 border border-gray-200 rounded-full font-medium text-[15px] md:text-[16px] hover:border-black transition-all"
+                    className="flex items-center justify-center w-full py-4 border-2 border-border-dark rounded-full font-black text-xs uppercase tracking-[0.2em] text-primary hover:bg-surface-2 hover:border-dark transition-all"
                   >
-                    View Product Details
+                    View Product Blueprint
                   </Link>
                 </div>
               </div>

@@ -12,8 +12,8 @@ interface FloatingAddToBagProps {
 }
 
 /**
- * Floating Add to Bag button that appears when scrolled past the main CTA
- * Shows on mobile and tablet for easy access
+ * Floating Add to Bag button - NEVERBE Theme
+ * Optimized for mobile "one-thumb" interactions.
  */
 const FloatingAddToBag: React.FC<FloatingAddToBagProps> = ({
   productName,
@@ -26,7 +26,7 @@ const FloatingAddToBag: React.FC<FloatingAddToBagProps> = ({
 
   useEffect(() => {
     const handleScroll = () => {
-      // Show after scrolling 400px (past the main product section)
+      // Logic: Show after scrolling past the main hero/CTA
       setIsVisible(window.scrollY > 400);
     };
 
@@ -38,31 +38,48 @@ const FloatingAddToBag: React.FC<FloatingAddToBagProps> = ({
     <AnimatePresence>
       {isVisible && (
         <motion.div
-          initial={{ y: 100, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          exit={{ y: 100, opacity: 0 }}
-          transition={{ type: "spring", stiffness: 300, damping: 30 }}
-          className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 shadow-2xl p-4 lg:hidden"
+          initial={{ y: 100 }}
+          animate={{ y: 0 }}
+          exit={{ y: 100 }}
+          transition={{ type: "spring", stiffness: 400, damping: 30 }}
+          // Added brand surface, border-default, and custom shadow logic
+          className="fixed bottom-0 left-0 right-0 z-50 bg-surface/90 backdrop-blur-md border-t border-default shadow-hover p-4 lg:hidden"
         >
           <div className="max-w-lg mx-auto flex items-center justify-between gap-4">
-            {/* Product Info */}
+            {/* Product Summary */}
             <div className="flex-1 min-w-0">
-              <p className="text-[14px] font-medium text-primary truncate">
+              <p className="text-base font-bold text-primary truncate uppercase tracking-tight">
                 {productName}
               </p>
-              <p className="text-[13px] text-secondary">
-                Rs. {price.toLocaleString()}
-                {selectedSize && ` • Size: ${selectedSize}`}
-              </p>
+              <div className="flex items-center gap-2">
+                <p className="text-md font-display font-black italic text-accent tracking-tighter">
+                  Rs. {price.toLocaleString()}
+                </p>
+                {selectedSize && (
+                  <span className="text-xs font-bold text-muted uppercase">
+                    • Size: {selectedSize}
+                  </span>
+                )}
+              </div>
             </div>
 
-            {/* Add to Bag Button */}
+            {/* Branded Add to Bag Button */}
             <button
               onClick={onAddToBag}
               disabled={!canAddToBag}
-              className="flex items-center gap-2 px-6 py-3 bg-dark text-white text-[14px] font-medium rounded-full disabled:bg-gray-300 disabled:text-gray-500 transition-all active:scale-95"
+              className={`
+                flex items-center gap-2 px-6 py-3 rounded-full transition-all active:scale-95 shadow-custom
+                ${
+                  canAddToBag
+                    ? "bg-dark text-inverse hover:bg-accent hover:text-primary font-black uppercase tracking-widest text-xs"
+                    : "bg-surface-3 text-muted cursor-not-allowed font-bold uppercase text-xs"
+                }
+              `}
             >
-              <IoBagAdd size={18} />
+              <IoBagAdd
+                size={20}
+                className={canAddToBag ? "text-accent" : ""}
+              />
               <span className="hidden sm:inline">Add to Bag</span>
               <span className="sm:hidden">Add</span>
             </button>

@@ -35,23 +35,23 @@ const PromotionBanner: React.FC<PromotionBannerProps> = ({
     totalPromotionDiscount,
   } = usePromotions();
 
-  // --- BLOCKED STATE (Combo Items) ---
+  // --- BLOCKED STATE (Combo Items - NEVERBE Alert Style) ---
   if (isBlocked && hasComboItems && variant === "inline") {
     return (
       <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className={`flex items-start gap-3 p-5 bg-surface-2 ${className}`}
+        initial={{ opacity: 0, x: -10 }}
+        animate={{ opacity: 1, x: 0 }}
+        className={`flex items-start gap-4 p-5 bg-surface-2 border-l-4 border-accent shadow-custom ${className}`}
       >
         <IoLockClosedOutline
           className="text-primary shrink-0 mt-0.5"
-          size={18}
+          size={20}
         />
         <div>
-          <p className="text-[14px] font-medium text-primary tracking-tight leading-none">
+          <p className="text-base font-display font-black uppercase italic tracking-tighter text-primary">
             Promotions Locked
           </p>
-          <p className="text-[13px] text-secondary mt-1.5 font-normal leading-relaxed">
+          <p className="text-sm text-secondary mt-1 font-medium leading-relaxed">
             Special offers cannot be combined with combo deals. Remove items to
             unlock.
           </p>
@@ -71,12 +71,12 @@ const PromotionBanner: React.FC<PromotionBannerProps> = ({
   const getIcon = (type: ActivePromotion["type"]) => {
     switch (type) {
       case "BOGO":
-        return <IoGiftOutline size={20} />;
+        return <IoGiftOutline size={22} className="text-accent" />;
       case "PERCENTAGE":
       case "FIXED":
-        return <IoFlashOutline size={20} />;
+        return <IoFlashOutline size={22} className="text-accent" />;
       default:
-        return <IoCheckmarkCircleOutline size={20} />;
+        return <IoCheckmarkCircleOutline size={22} className="text-accent" />;
     }
   };
 
@@ -91,35 +91,38 @@ const PromotionBanner: React.FC<PromotionBannerProps> = ({
     const hasStackedPromotions = displayPromotions.length > 1;
 
     return (
-      <div className={`space-y-6 ${className}`}>
+      <div className={`space-y-6 animate-fade ${className}`}>
         <AnimatePresence mode="wait">
           {displayPromotions.length > 0 && (
             <motion.div
-              initial={{ opacity: 0, y: 5 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0 }}
-              className="p-5 border border-gray-100 bg-white"
+              className="p-5 border border-default bg-surface shadow-sm relative overflow-hidden group"
             >
-              <div className="flex items-start gap-4">
-                <div className="text-primary pt-0.5">
+              {/* Subtle brand glow on card */}
+              <div className="absolute top-0 right-0 w-32 h-32 bg-accent/5 rounded-full blur-3xl -mr-16 -mt-16 group-hover:bg-accent/10 transition-all duration-700" />
+
+              <div className="flex items-start gap-4 relative z-10">
+                <div className="p-2 bg-surface-2 rounded-full shadow-inner">
                   {getIcon(displayPromotions[0].type)}
                 </div>
-                <div className="flex-1">
+                <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between gap-4">
                     <div className="min-w-0">
-                      <p className="text-[15px] font-medium text-primary tracking-tight">
+                      <p className="text-base font-display font-black uppercase italic tracking-tighter text-primary">
                         {hasStackedPromotions
                           ? `${displayPromotions.length} Offers Applied`
                           : displayPromotions[0].name}
                       </p>
-                      <p className="text-[13px] text-secondary mt-0.5">
+                      <p className="text-sm text-muted mt-1 font-medium tracking-tight truncate">
                         {hasStackedPromotions
                           ? displayPromotions.map((p) => p.name).join(" + ")
                           : displayPromotions[0].message}
                       </p>
                     </div>
                     {totalPromotionDiscount > 0 && (
-                      <p className="text-[16px] font-medium text-error whitespace-nowrap">
+                      <p className="text-xl font-display font-black italic text-success whitespace-nowrap tracking-tighter">
                         -Rs. {totalPromotionDiscount.toLocaleString()}
                       </p>
                     )}
@@ -135,37 +138,38 @@ const PromotionBanner: React.FC<PromotionBannerProps> = ({
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="p-5 bg-surface-2"
+            className="p-5 bg-surface-3 border border-default rounded-sm"
           >
             <div className="flex items-start justify-between gap-3 mb-4">
               <div className="flex items-start gap-3">
-                <IoAlertCircleOutline
-                  className="text-primary mt-0.5"
-                  size={20}
-                />
+                <div className="bg-dark p-1.5 rounded-full text-accent shadow-lg">
+                  <IoAlertCircleOutline size={20} />
+                </div>
                 <div>
-                  <p className="text-[14px] font-medium text-primary">
+                  <p className="text-base font-display font-black uppercase italic tracking-tighter text-primary">
                     Unlock Special Savings
                   </p>
-                  <p className="text-[13px] text-secondary mt-0.5 leading-relaxed">
+                  <p className="text-sm text-secondary mt-1 font-medium">
                     Spend{" "}
-                    <span className="text-black font-bold tracking-tight">
+                    <span className="text-dark font-black tracking-tighter italic">
                       Rs. {nearestPromo.remaining?.toLocaleString()}
                     </span>{" "}
                     more to get {nearestPromo.name}
                   </p>
                 </div>
               </div>
-              <span className="text-[11px] font-bold text-primary">
+              <span className="text-xs font-black italic text-accent bg-dark px-2 py-0.5 rounded shadow-custom">
                 {nearestPromo.progress}%
               </span>
             </div>
-            <div className="w-full h-[2px] bg-gray-200 overflow-hidden">
+
+            {/* Performance Progress Bar - Skewed Design */}
+            <div className="w-full h-2 bg-surface overflow-hidden rounded-full">
               <motion.div
                 initial={{ width: 0 }}
                 animate={{ width: `${nearestPromo.progress}%` }}
-                transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-                className="h-full bg-dark"
+                transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
+                className="h-full bg-accent shadow-[0_0_10px_#97e13e] -skew-x-12 origin-left scale-110"
               />
             </div>
           </motion.div>
@@ -174,24 +178,25 @@ const PromotionBanner: React.FC<PromotionBannerProps> = ({
     );
   }
 
-  // --- VARIANT: STICKY (Nike Pro Top Utility) ---
+  // --- VARIANT: STICKY (NEVERBE Performance Top Bar) ---
   if (variant === "sticky") {
     const promo = bestPromo || nearestPromo;
     if (!promo) return null;
 
     return (
       <motion.div
-        initial={{ y: -20 }}
+        initial={{ y: -50 }}
         animate={{ y: 0 }}
-        className="w-full bg-dark text-white py-2.5 px-4"
+        className="w-full bg-dark text-inverse py-3 px-4 border-b border-accent/20"
       >
-        <div className="max-w-[1440px] mx-auto flex items-center justify-center">
-          <p className="text-[12px] md:text-[13px] font-medium tracking-tight flex items-center gap-2">
+        <div className="max-w-content mx-auto flex items-center justify-center">
+          <p className="text-xs md:text-sm font-bold uppercase tracking-[0.2em] flex items-center gap-3">
+            <IoFlashOutline size={16} className="text-accent animate-pulse" />
             {promo.isEligible ? (
               <>
-                <span>{promo.message}</span>
+                <span className="italic">{promo.message}</span>
                 {promo.savings && (
-                  <span className="bg-white text-black px-2 py-0.5 font-bold">
+                  <span className="bg-accent text-dark px-3 py-0.5 font-black italic tracking-tighter ml-2 shadow-custom">
                     SAVE RS. {promo.savings.toLocaleString()}
                   </span>
                 )}
@@ -199,56 +204,67 @@ const PromotionBanner: React.FC<PromotionBannerProps> = ({
             ) : (
               <span>
                 Add Rs. {promo.remaining?.toLocaleString()} for{" "}
-                <span className="underline underline-offset-4">
+                <span className="text-accent font-black italic tracking-tighter underline underline-offset-4 decoration-accent/50">
                   {promo.name}
                 </span>
               </span>
             )}
+            <IoFlashOutline size={16} className="text-accent animate-pulse" />
           </p>
         </div>
       </motion.div>
     );
   }
 
-  // --- VARIANT: CARD (Gallery Display) ---
+  // --- VARIANT: CARD (Performance Gallery Style) ---
   if (variant === "card") {
     return (
-      <div className="grid gap-6">
+      <div className="grid gap-8">
         {eligiblePromotions.map((promo) => (
           <motion.div
             key={promo.id}
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="p-8 border border-gray-100 bg-white flex flex-col md:flex-row items-center gap-8 group"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            whileHover={{ y: -5 }}
+            className="p-8 border-2 border-default bg-surface flex flex-col md:flex-row items-center gap-10 group shadow-custom hover:shadow-hover hover:border-accent transition-all duration-500"
           >
-            <div className="w-20 h-20 bg-surface-2 rounded-full flex items-center justify-center text-primary shrink-0">
+            <div className="w-24 h-24 bg-surface-2 rounded-full flex items-center justify-center text-accent shrink-0 shadow-inner group-hover:scale-110 transition-transform duration-500">
               {getIcon(promo.type)}
             </div>
 
             <div className="flex-1 text-center md:text-left">
-              <div className="flex items-center justify-center md:justify-start gap-3 mb-1">
-                <span className="text-[10px] font-bold uppercase tracking-[0.2em] bg-dark text-white px-2 py-1">
-                  Active
+              <div className="flex flex-col md:flex-row items-center md:items-start gap-4 mb-4">
+                <span className="text-[10px] font-black uppercase tracking-[0.25em] bg-accent text-dark px-3 py-1 italic shadow-custom">
+                  Active Offer
                 </span>
-                <h3 className="text-[22px] font-medium text-primary tracking-tight">
+                <h3 className="text-3xl font-display font-black uppercase italic tracking-tighter text-primary">
                   {promo.name}
                 </h3>
               </div>
-              <p className="text-[15px] text-secondary mt-2 mb-4 leading-relaxed">
+              <p className="text-base text-muted font-medium leading-relaxed mb-6 max-w-xl">
                 {promo.description}
               </p>
               {promo.savings && (
-                <p className="text-[20px] font-bold text-error">
-                  Save Rs. {promo.savings.toLocaleString()}
-                </p>
+                <div className="inline-flex flex-col">
+                  <span className="text-xs font-black uppercase tracking-widest text-success mb-1">
+                    Your Benefit:
+                  </span>
+                  <p className="text-3xl font-display font-black italic text-success tracking-tighter">
+                    - Rs. {promo.savings.toLocaleString()}
+                  </p>
+                </div>
               )}
             </div>
 
             <Link
               href="/checkout"
-              className="px-10 py-4 bg-dark text-white rounded-full font-medium text-[15px] transition-all hover:opacity-70 active:scale-[0.98]"
+              className="group flex items-center justify-between px-10 py-5 bg-dark text-inverse rounded-full font-black text-sm uppercase tracking-widest transition-all hover:bg-accent hover:text-dark hover:shadow-hover active:scale-95 whitespace-nowrap"
             >
-              Apply to Order
+              Get Saving
+              <IoArrowForward
+                size={18}
+                className="ml-3 transition-transform group-hover:translate-x-2"
+              />
             </Link>
           </motion.div>
         ))}

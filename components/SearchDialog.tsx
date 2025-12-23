@@ -28,9 +28,9 @@ const SearchDialog: React.FC<SearchDialogProps> = ({
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: 10 }}
         transition={{ type: "spring", damping: 25, stiffness: 200 }}
-        className={`w-full bg-white text-primary overflow-hidden flex flex-col ${
+        className={`w-full bg-surface text-primary overflow-hidden flex flex-col ${
           containerStyle ||
-          "shadow-[0_20px_40px_rgba(0,0,0,0.1)] border border-gray-100 absolute top-14 right-0 lg:w-[600px] z-50"
+          "shadow-hover border border-default absolute top-14 right-0 lg:w-[600px] z-50"
         }`}
         style={{ maxHeight: isGridMode ? undefined : maxHeight }}
       >
@@ -54,15 +54,15 @@ const SearchDialog: React.FC<SearchDialogProps> = ({
               ))}
             </>
           ) : (
-            // List layout - vertical scrollable list
-            <ul className="flex flex-col overflow-y-auto no-scrollbar">
+            // List layout - vertical scrollable list with BRANDED SCROLLBAR
+            <ul className="flex flex-col overflow-y-auto hide-scrollbar">
               {results.map((result, index) => (
                 <motion.li
                   key={result.id || index}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: index * 0.03 }}
-                  className="border-b border-gray-50 last:border-none"
+                  className="border-b border-default last:border-none group"
                 >
                   <SearchResultCard
                     item={result}
@@ -74,16 +74,31 @@ const SearchDialog: React.FC<SearchDialogProps> = ({
             </ul>
           )
         ) : (
-          <div className="flex flex-col items-center justify-center py-16 px-6 text-center">
-            <div className="bg-surface-2 p-5 rounded-full mb-4">
-              <IoSearchOutline className="text-primary" size={24} />
+          /* --- EMPTY STATE: NEVERBE Performance Styling --- */
+          <div className="flex flex-col items-center justify-center py-20 px-6 text-center animate-fade">
+            <div className="bg-surface-3 p-6 rounded-full mb-6 relative group">
+              {/* Subtle green pulse behind the icon */}
+              <div className="absolute inset-0 bg-accent/20 rounded-full blur-xl group-hover:bg-accent/40 transition-all duration-500" />
+              <IoSearchOutline
+                className="text-accent relative z-10"
+                size={32}
+              />
             </div>
-            <p className="text-[16px] font-medium text-primary tracking-tight">
+
+            <h3 className="text-2xl font-display font-black uppercase italic tracking-tighter text-primary">
               No results found
+            </h3>
+
+            <p className="text-base text-muted mt-2 font-medium max-w-[240px] leading-snug">
+              Adjust your filters or search for a better fit.
             </p>
-            <p className="text-[14px] text-secondary mt-1">
-              Try adjusting your search for a better fit.
-            </p>
+
+            <button
+              onClick={onClick}
+              className="mt-8 text-xs font-black uppercase tracking-widest text-primary underline underline-offset-8 decoration-accent hover:decoration-primary transition-all"
+            >
+              Clear Search
+            </button>
           </div>
         )}
       </motion.div>

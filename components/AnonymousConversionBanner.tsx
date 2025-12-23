@@ -3,7 +3,7 @@ import React from "react";
 import Link from "next/link";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import { User, ArrowRight } from "lucide-react";
+import { User } from "lucide-react";
 
 const AnonymousConversionBanner: React.FC = () => {
   const user = useSelector((state: RootState) => state.authSlice.user);
@@ -12,12 +12,13 @@ const AnonymousConversionBanner: React.FC = () => {
   if (user && !user.isAnonymous) return null;
 
   return (
-    <div className="bg-surface-2 text-primary px-4 py-3 md:py-2.5 border-b border-gray-100 flex items-center justify-center animate-fadeIn transition-all">
-      <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-6 max-w-[1440px] w-full justify-center">
+    <div className="bg-surface-2 text-primary px-4 py-3 md:py-2.5 border-b border-default flex items-center justify-center animate-fade transition-all">
+      <div className="flex flex-col sm:row items-center gap-2 sm:gap-6 max-w-content w-full justify-center">
         {/* Guest Message */}
         <div className="flex items-center gap-2">
-          <User size={14} className="text-primary" />
-          <p className="text-[13px] md:text-[14px] font-medium tracking-tight">
+          {/* Using text-accent for the brand green icon */}
+          <User size={14} className="text-accent" />
+          <p className="text-base font-medium tracking-tight">
             Shopping as a guest?{" "}
             <span className="text-secondary font-normal">
               Join us to save your orders and favorites.
@@ -29,14 +30,14 @@ const AnonymousConversionBanner: React.FC = () => {
         <div className="flex items-center gap-4">
           <Link
             href="/account/register?redirect=/checkout"
-            className="flex items-center gap-1 text-[13px] md:text-[14px] font-medium underline underline-offset-4 hover:opacity-70 transition-opacity"
+            className="flex items-center gap-1 text-base font-bold text-accent underline underline-offset-4 hover:text-accent-hover transition-colors"
           >
             Join Us
           </Link>
-          <span className="text-gray-300 text-xs">|</span>
+          <span className="text-muted text-xs">|</span>
           <Link
             href="/account/login?redirect=/checkout"
-            className="text-[13px] md:text-[14px] font-medium hover:opacity-70 transition-opacity"
+            className="text-base font-medium text-secondary hover:text-primary transition-colors"
           >
             Sign In
           </Link>

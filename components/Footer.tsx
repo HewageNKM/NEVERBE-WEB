@@ -48,24 +48,27 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
         }));
 
   return (
-    <footer id="footer" className="w-full bg-dark text-white pt-12 pb-6">
-      <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
+    <footer id="footer" className="w-full bg-dark text-inverse pt-16 pb-8">
+      <div className="max-w-content mx-auto px-6 lg:px-12">
         {/* --- Primary Navigation Grid --- */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-4 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 mb-16">
           {/* Column 1: Brand & Key Utility */}
-          <div className="flex flex-col gap-6">
-            <Link href="/" className="inline-block">
+          <div className="flex flex-col gap-8">
+            <Link
+              href="/"
+              className="inline-block transition-transform hover:scale-105"
+            >
               <Image
                 src={Logo}
                 alt="NEVERBE"
-                width={110}
-                height={35}
+                width={120}
+                height={40}
                 className="object-contain invert brightness-200"
               />
             </Link>
 
             <div className="flex flex-col gap-4">
-              <h3 className="text-[14px] font-bold uppercase tracking-tight">
+              <h3 className="text-base font-display font-black uppercase tracking-widest text-inverse">
                 Store Location
               </h3>
               <Link
@@ -73,8 +76,8 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                 target="_blank"
                 className="group flex items-start gap-3"
               >
-                <GoLocation size={16} className="mt-1 text-white" />
-                <p className="text-[12px] text-secondary font-medium uppercase leading-tight group-hover:text-white transition-colors">
+                <GoLocation size={18} className="mt-0.5 text-accent" />
+                <p className="text-xs text-muted font-bold uppercase leading-snug group-hover:text-accent transition-colors">
                   {address.address}
                 </p>
               </Link>
@@ -82,16 +85,16 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
           </div>
 
           {/* Column 2: Information Lists */}
-          <div className="flex flex-col gap-4">
-            <h3 className="text-[14px] font-bold uppercase tracking-tight">
+          <div className="flex flex-col gap-6">
+            <h3 className="text-base font-display font-black uppercase tracking-widest text-inverse">
               Get Help
             </h3>
-            <ul className="flex flex-col gap-3">
+            <ul className="flex flex-col gap-4">
               {helpLinks.map((link, idx) => (
                 <li key={idx}>
                   <Link
                     href={link.link}
-                    className="text-[12px] text-secondary hover:text-white transition-colors font-medium"
+                    className="text-xs text-muted hover:text-accent transition-all font-bold uppercase tracking-wider"
                   >
                     {link.title}
                   </Link>
@@ -101,32 +104,34 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
           </div>
 
           {/* Column 3: Contact Utility */}
-          <div className="flex flex-col gap-4">
-            <h3 className="text-[14px] font-bold uppercase tracking-tight">
+          <div className="flex flex-col gap-6">
+            <h3 className="text-base font-display font-black uppercase tracking-widest text-inverse">
               Contact Us
             </h3>
-            <ul className="flex flex-col gap-3">
+            <ul className="flex flex-col gap-4">
               {contactInfo.map((info, idx) => (
                 <li key={idx}>
                   <Link
                     href={info.link}
                     target="_blank"
-                    className="flex items-center gap-3 text-[12px] text-secondary hover:text-white transition-colors group"
+                    className="flex items-center gap-3 text-xs text-muted hover:text-accent transition-all group"
                   >
                     <info.icon
-                      size={16}
-                      className="text-secondary group-hover:text-white"
+                      size={18}
+                      className="text-muted group-hover:text-accent"
                     />
-                    <span className="font-medium">{info.content}</span>
+                    <span className="font-bold uppercase tracking-wider">
+                      {info.content}
+                    </span>
                   </Link>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Column 4: Social Monochromatic Icons */}
-          <div className="flex flex-col gap-4 lg:items-end">
-            <h3 className="text-[14px] font-bold uppercase tracking-tight lg:hidden">
+          {/* Column 4: Social Icons */}
+          <div className="flex flex-col gap-6 lg:items-end">
+            <h3 className="text-base font-display font-black uppercase tracking-widest text-inverse lg:hidden">
               Follow Us
             </h3>
             <div className="flex gap-4">
@@ -135,9 +140,9 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                   key={idx}
                   href={media.url}
                   target="_blank"
-                  className="bg-secondary hover:bg-white text-primary p-2 rounded-full transition-all duration-300"
+                  className="bg-zinc-800 hover:bg-accent text-inverse hover:text-dark p-3 rounded-full transition-all duration-300 shadow-custom hover:shadow-hover"
                 >
-                  <media.Icon size={18} />
+                  <media.Icon size={20} />
                 </Link>
               ))}
             </div>
@@ -145,53 +150,52 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
         </div>
 
         {/* --- Bottom Legal & Credits Row --- */}
-        <div className="pt-6 border-t border-zinc-800 flex flex-col lg:flex-row justify-between items-center gap-8">
-          <div className="flex flex-col md:flex-row gap-4 md:gap-6 items-center">
-            {/* Nike Style Utility Footer Links */}
-            <div className="flex items-center gap-4 text-[11px] text-secondary font-medium">
-              <p className="text-white">
-                © {new Date().getFullYear()} NEVERBE, Inc.
+        <div className="pt-8 border-t border-dark/30 flex flex-col lg:flex-row justify-between items-center gap-8">
+          <div className="flex flex-col md:flex-row gap-6 items-center">
+            <div className="flex items-center gap-6 text-[10px] text-muted font-bold uppercase tracking-[0.15em]">
+              <p className="text-inverse italic">
+                © {new Date().getFullYear()} NEVERBE, INC.
               </p>
               <Link
                 href="/terms"
-                className="hover:text-white transition-colors"
+                className="hover:text-accent transition-colors"
               >
-                Terms of Use
+                Terms
               </Link>
               <Link
                 href="/privacy"
-                className="hover:text-white transition-colors"
+                className="hover:text-accent transition-colors"
               >
-                Privacy Policy
+                Privacy
               </Link>
             </div>
           </div>
 
-          <div className="flex items-center gap-6">
-            {/* Payment Partners */}
+          <div className="flex flex-col md:flex-row items-center gap-8">
+            {/* Payment Partners with subtle hover glow */}
             <Link
               href={payHere.payHereLink}
               target="_blank"
-              className="opacity-50 hover:opacity-100 grayscale hover:grayscale-0 transition-all"
+              className="opacity-40 hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-500"
             >
               <Image
                 src={payHere.longWhiteBanner}
-                width={200}
-                height={50}
+                width={180}
+                height={40}
                 alt="Secure Payments"
-                className="object-contain h-6 w-auto"
+                className="object-contain h-5 w-auto"
               />
             </Link>
 
-            {/* Dev Credit - Minimalist */}
-            <p className="text-[10px] text-secondary uppercase font-bold tracking-widest">
-              Built By{" "}
+            {/* Developer Credit */}
+            <p className="text-[9px] text-muted uppercase font-black tracking-[0.2em]">
+              Engineered By{" "}
               <Link
                 href="https://github.com/HewageNKM"
                 target="_blank"
-                className="text-white hover:opacity-70 transition-opacity"
+                className="text-inverse hover:text-accent transition-all"
               >
-                N. Malwenna
+                N. MALWENNA
               </Link>
             </p>
           </div>

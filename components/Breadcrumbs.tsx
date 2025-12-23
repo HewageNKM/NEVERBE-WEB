@@ -14,8 +14,8 @@ interface BreadcrumbsProps {
 }
 
 /**
- * Breadcrumb navigation component for improved UX
- * Shows path hierarchy and helps users understand their location
+ * Breadcrumb navigation component - NEVERBE Theme
+ * Uses brand tokens for typography and colors.
  */
 const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items, className = "" }) => {
   if (items.length === 0) return null;
@@ -23,12 +23,13 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items, className = "" }) => {
   return (
     <nav
       aria-label="Breadcrumb"
-      className={`flex items-center gap-1 md:gap-2 text-xs md:text-sm text-secondary overflow-x-auto hide-scrollbar max-w-full ${className}`}
+      // Added your custom 'hide-scrollbar' utility and brand spacing
+      className={`flex items-center gap-1 md:gap-2 text-base text-secondary overflow-x-auto hide-scrollbar max-w-full ${className}`}
     >
       {/* Home icon */}
       <Link
         href="/"
-        className="hover:text-primary transition-colors flex items-center min-h-[44px] min-w-[44px] justify-center touch-manipulation shrink-0"
+        className="hover:text-accent transition-colors flex items-center min-h-[44px] min-w-[32px] justify-center touch-manipulation shrink-0"
         aria-label="Home"
       >
         <IoHomeOutline size={16} />
@@ -36,16 +37,18 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items, className = "" }) => {
 
       {items.map((item, index) => (
         <React.Fragment key={index}>
-          <IoChevronForward size={12} className="text-gray-300 shrink-0" />
+          <IoChevronForward size={12} className="text-muted shrink-0" />
+
           {item.href && index < items.length - 1 ? (
             <Link
               href={item.href}
-              className="hover:text-primary transition-colors capitalize min-h-[44px] flex items-center px-1 touch-manipulation shrink-0 truncate max-w-[120px] md:max-w-none"
+              className="hover:text-accent-hover hover:underline transition-all capitalize min-h-[44px] flex items-center px-1 touch-manipulation shrink-0 truncate max-w-[120px] md:max-w-none"
             >
               {item.label}
             </Link>
           ) : (
-            <span className="text-primary font-medium capitalize truncate max-w-[120px] sm:max-w-[180px] md:max-w-[250px] min-h-[44px] flex items-center">
+            /* Active Page: Highlighted with primary color/weight */
+            <span className="text-primary font-bold capitalize truncate max-w-[120px] sm:max-w-[180px] md:max-w-[250px] min-h-[44px] flex items-center">
               {item.label}
             </span>
           )}

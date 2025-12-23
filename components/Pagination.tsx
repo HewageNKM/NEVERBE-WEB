@@ -10,8 +10,8 @@ interface PaginationProps {
 }
 
 /**
- * Nike-Inspired Pagination Component
- * Focuses on minimalist circular buttons and bold contrast.
+ * Pagination - NEVERBE Brand Style
+ * Focuses on circular precision, high-contrast states, and performance typography.
  */
 const Pagination: React.FC<PaginationProps> = ({
   count,
@@ -62,10 +62,10 @@ const Pagination: React.FC<PaginationProps> = ({
 
   return (
     <nav
-      className="flex items-center justify-center gap-2 py-10"
+      className="flex items-center justify-center gap-2 py-12 animate-fade"
       aria-label="Pagination"
     >
-      {/* Previous Button */}
+      {/* --- PREVIOUS BUTTON --- */}
       <button
         onClick={() => page > 1 && onChange(page - 1)}
         disabled={page === 1}
@@ -73,20 +73,26 @@ const Pagination: React.FC<PaginationProps> = ({
           group flex items-center justify-center w-12 h-12 rounded-full border transition-all duration-300
           ${
             page === 1
-              ? "border-zinc-100 text-zinc-300 cursor-not-allowed"
-              : "border-zinc-200 text-black hover:border-black hover:bg-black hover:text-white"
+              ? "border-border-primary text-muted opacity-40 cursor-not-allowed"
+              : "border-border-dark text-primary hover:bg-dark hover:text-inverse shadow-sm"
           }
         `}
         aria-label="Previous page"
       >
-        <IoChevronBack size={20} />
+        <IoChevronBack
+          size={20}
+          className="transition-transform group-hover:-translate-x-0.5"
+        />
       </button>
 
-      {/* Page Numbers */}
-      <div className="flex items-center gap-1 mx-2">
+      {/* --- PAGE NUMBERS --- */}
+      <div className="flex items-center gap-1.5 mx-4">
         {pages.map((p, idx) =>
           p === "..." ? (
-            <span key={`dots-${idx}`} className="px-3 text-zinc-400 font-bold">
+            <span
+              key={`dots-${idx}`}
+              className="px-3 text-muted font-black tracking-widest"
+            >
               ···
             </span>
           ) : (
@@ -94,11 +100,11 @@ const Pagination: React.FC<PaginationProps> = ({
               key={p}
               onClick={() => onChange(p)}
               className={`
-                w-12 h-12 rounded-full text-sm font-bold transition-all duration-200 tabular-nums
+                w-12 h-12 rounded-full text-base font-display transition-all duration-300 tabular-nums
                 ${
                   p === page
-                    ? "bg-black text-white shadow-lg"
-                    : "text-zinc-500 hover:text-black hover:bg-zinc-100"
+                    ? "bg-accent text-dark font-black italic tracking-tighter shadow-custom scale-110"
+                    : "text-muted font-bold hover:text-primary hover:bg-surface-2"
                 }
               `}
               aria-current={p === page ? "page" : undefined}
@@ -109,7 +115,7 @@ const Pagination: React.FC<PaginationProps> = ({
         )}
       </div>
 
-      {/* Next Button */}
+      {/* --- NEXT BUTTON --- */}
       <button
         onClick={() => page < count && onChange(page + 1)}
         disabled={page === count}
@@ -117,13 +123,16 @@ const Pagination: React.FC<PaginationProps> = ({
           group flex items-center justify-center w-12 h-12 rounded-full border transition-all duration-300
           ${
             page === count
-              ? "border-zinc-100 text-zinc-300 cursor-not-allowed"
-              : "border-zinc-200 text-black hover:border-black hover:bg-black hover:text-white"
+              ? "border-border-primary text-muted opacity-40 cursor-not-allowed"
+              : "border-border-dark text-primary hover:bg-dark hover:text-inverse shadow-sm"
           }
         `}
         aria-label="Next page"
       >
-        <IoChevronForward size={20} />
+        <IoChevronForward
+          size={20}
+          className="transition-transform group-hover:translate-x-0.5"
+        />
       </button>
     </nav>
   );

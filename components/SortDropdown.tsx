@@ -13,8 +13,8 @@ interface SortDropdownProps {
 }
 
 /**
- * Shared sorting dropdown component
- * Consolidates duplicate dropdown UI from Products, CollectionProducts, DealsProducts
+ * SortDropdown - NEVERBE Performance Style
+ * Features high-precision typography and brand-aligned selection states.
  */
 const SortDropdown: React.FC<SortDropdownProps> = ({
   value,
@@ -24,7 +24,6 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Use shared click-outside hook
   const closeDropdown = useCallback(() => setIsOpen(false), []);
   useClickOutside(dropdownRef, closeDropdown, isOpen);
 
@@ -35,39 +34,67 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
 
   return (
     <div className={`relative ${className}`} ref={dropdownRef}>
+      {/* TRIGGER: Performance Utility Style */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 text-[16px] text-primary hover:text-secondary transition-colors"
+        className="group flex items-center gap-2.5 px-4 py-2 bg-surface-2 border border-border-primary rounded-full hover:border-accent transition-all duration-300 shadow-sm"
       >
-        <TbArrowsSort size={20} />
-        <span className="md:hidden">Sort</span>
-        <span className="hidden md:inline">Sort By</span>
+        <TbArrowsSort
+          size={18}
+          className={`transition-colors ${
+            isOpen ? "text-accent" : "text-primary group-hover:text-accent"
+          }`}
+        />
+        <span className="text-xs font-black uppercase tracking-[0.15em] text-primary">
+          <span className="md:hidden">Sort</span>
+          <span className="hidden md:inline">Sort By</span>
+        </span>
         <IoChevronDownOutline
           size={14}
-          className={`transition-transform ${isOpen ? "rotate-180" : ""}`}
+          className={`text-muted transition-transform duration-300 ${
+            isOpen ? "rotate-180 text-accent" : "group-hover:text-primary"
+          }`}
         />
       </button>
+
+      {/* DROPDOWN MENU: Technical Spec Style */}
       <AnimatePresence>
         {isOpen && (
           <motion.ul
-            initial={{ opacity: 0, y: 5 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 5 }}
-            className="absolute right-0 mt-4 w-[200px] bg-surface border border-default shadow-xl z-[100] py-4 rounded-none"
+            initial={{ opacity: 0, y: 10, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 10, scale: 0.95 }}
+            transition={{ type: "spring", damping: 20, stiffness: 300 }}
+            className="absolute right-0 mt-3 w-[220px] bg-surface border border-default shadow-hover z-[100] py-2 rounded-xl overflow-hidden backdrop-blur-xl bg-surface/95"
           >
-            {sortingOptions.map((opt, i) => (
-              <li
-                key={i}
-                onClick={() => handleSelect(opt.value)}
-                className={`px-6 py-2 text-[14px] cursor-pointer text-right transition-colors ${
-                  value === opt.value
-                    ? "text-primary font-medium"
-                    : "text-secondary hover:text-primary"
-                }`}
-              >
-                {opt.name}
-              </li>
-            ))}
+            {sortingOptions.map((opt, i) => {
+              const isSelected = value === opt.value;
+              return (
+                <li
+                  key={i}
+                  onClick={() => handleSelect(opt.value)}
+                  className={`
+                    px-6 py-3 cursor-pointer text-right transition-all duration-200 flex items-center justify-end gap-3 group
+                    ${isSelected ? "bg-surface-2" : "hover:bg-surface-3"}
+                  `}
+                >
+                  <span
+                    className={`text-sm uppercase tracking-tight transition-colors ${
+                      isSelected
+                        ? "text-accent font-display font-black italic tracking-tighter"
+                        : "text-muted font-bold group-hover:text-primary"
+                    }`}
+                  >
+                    {opt.name}
+                  </span>
+
+                  {/* Performance indicator for active selection */}
+                  {isSelected && (
+                    <div className="w-1.5 h-1.5 bg-accent rounded-full shadow-[0_0_8px_#97e13e] animate-pulse" />
+                  )}
+                </li>
+              );
+            })}
           </motion.ul>
         )}
       </AnimatePresence>

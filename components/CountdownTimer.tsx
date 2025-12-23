@@ -8,7 +8,7 @@ interface Props {
   onExpire?: () => void;
   className?: string;
   labels?: boolean;
-  compact?: boolean; // Simple inline text format for tight spaces
+  compact?: boolean;
 }
 
 const CountdownTimer: React.FC<Props> = ({
@@ -46,7 +46,7 @@ const CountdownTimer: React.FC<Props> = ({
 
   const { days, hours, minutes, seconds } = timeLeft;
 
-  // Compact inline format for tight spaces
+  // Compact format: Bold and branded for high-urgency spots (e.g., Top Banners)
   if (compact) {
     const parts: string[] = [];
     if (Number(days) > 0) parts.push(`${days}d`);
@@ -54,7 +54,13 @@ const CountdownTimer: React.FC<Props> = ({
     parts.push(`${String(minutes || 0).padStart(2, "0")}m`);
     parts.push(`${String(seconds || 0).padStart(2, "0")}s`);
 
-    return <span className={className}>{parts.join(" ")}</span>;
+    return (
+      <span
+        className={`font-display font-black italic text-accent tracking-tighter ${className}`}
+      >
+        {parts.join(" ")}
+      </span>
+    );
   }
 
   const TimeBlock = ({
@@ -64,12 +70,13 @@ const CountdownTimer: React.FC<Props> = ({
     value: number | undefined;
     label: string;
   }) => (
-    <div className="flex flex-col items-center">
-      <span className="font-mono font-bold text-lg leading-none">
+    <div className="flex flex-col items-center min-w-[32px]">
+      {/* Numbers using Brand Display font for a premium look */}
+      <span className="font-display font-black text-xl md:text-2xl leading-none text-primary italic tracking-tighter">
         {String(value || 0).padStart(2, "0")}
       </span>
       {labels && (
-        <span className="text-[8px] uppercase tracking-wider text-gray-500">
+        <span className="text-[9px] uppercase font-bold tracking-[0.15em] text-muted mt-1">
           {label}
         </span>
       )}
@@ -77,17 +84,21 @@ const CountdownTimer: React.FC<Props> = ({
   );
 
   return (
-    <div className={`flex items-center gap-3 ${className}`}>
+    <div
+      className={`flex items-center gap-2 md:gap-3 animate-fade ${className}`}
+    >
       {Number(days) > 0 && (
         <>
           <TimeBlock value={days} label="Days" />
-          <span className="font-bold text-gray-300">:</span>
+          <span className="font-black text-lg md:text-xl text-accent pb-4">
+            :
+          </span>
         </>
       )}
       <TimeBlock value={hours} label="Hrs" />
-      <span className="font-bold text-gray-300">:</span>
+      <span className="font-black text-lg md:text-xl text-accent pb-4">:</span>
       <TimeBlock value={minutes} label="Mins" />
-      <span className="font-bold text-gray-300">:</span>
+      <span className="font-black text-lg md:text-xl text-accent pb-4">:</span>
       <TimeBlock value={seconds} label="Secs" />
     </div>
   );

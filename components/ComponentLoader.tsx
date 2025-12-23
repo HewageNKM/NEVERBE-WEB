@@ -1,18 +1,22 @@
 "use client";
 import React from "react";
 
+/**
+ * ComponentLoader - NEVERBE Brand Style
+ * Features a high-speed precision spinner with brand accent colors.
+ */
 const ComponentLoader = () => {
   return (
-    <div className="absolute inset-0 w-full h-full bg-white/60 backdrop-blur-[4px] flex items-center justify-center z-30 transition-all duration-300">
-      {/* NIKE STYLE LOADER: 
-          Uses a thinner stroke-width (1.5px) and a precise circular motion.
-          The 'border-t-transparent' creates the "gap" look seen in high-end athletic apps.
-      */}
+    <div className="absolute inset-0 w-full h-full bg-surface/60 backdrop-blur-[6px] flex items-center justify-center z-30 animate-fade">
       <div className="relative flex items-center justify-center">
-        <div className="w-10 h-10 rounded-full border-[1.5px] border-[#111] border-t-transparent animate-spin duration-500 ease-linear"></div>
+        {/* Main Brand Spinner */}
+        <div className="w-10 h-10 rounded-full border-[1.5px] border-accent border-t-transparent animate-spin [animation-duration:0.5s]"></div>
 
-        {/* Optional: Subtle pulse background to give it more depth */}
-        <div className="absolute w-10 h-10 rounded-full border border-gray-100 animate-ping opacity-20"></div>
+        {/* Outer Glow Ring (NEVERBE Green Pulse) */}
+        <div className="absolute w-12 h-12 rounded-full border-2 border-accent/20 animate-pulse"></div>
+
+        {/* Center Core */}
+        <div className="absolute w-1 h-1 bg-accent rounded-full"></div>
       </div>
     </div>
   );

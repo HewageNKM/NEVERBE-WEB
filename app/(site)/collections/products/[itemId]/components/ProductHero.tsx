@@ -181,7 +181,7 @@ const ProductHero = ({ item }: { item: Product }) => {
               onMouseEnter={() => setSelectedImage(img)}
               className={`relative aspect-square bg-surface-2 rounded-sm overflow-hidden border-2 transition-all ${
                 selectedImage.url === img.url
-                  ? "border-black"
+                  ? "border-dark"
                   : "border-transparent opacity-70"
               }`}
             >
@@ -223,12 +223,12 @@ const ProductHero = ({ item }: { item: Product }) => {
                 Rs. {finalPrice.toLocaleString()}
               </span>
               {hasActiveDiscount && (
-                <span className="text-gray-400 line-through text-sm">
+                <span className="text-muted line-through text-sm">
                   Rs. {originalPrice.toLocaleString()}
                 </span>
               )}
               {hasActiveDiscount && (
-                <span className="bg-red-600 text-white text-[10px] font-bold px-2 py-0.5 uppercase tracking-wider">
+                <span className="bg-error text-inverse text-[10px] font-bold px-2 py-0.5 uppercase tracking-wider">
                   Save Rs. {discountPerUnit.toLocaleString()}
                 </span>
               )}
@@ -240,16 +240,16 @@ const ProductHero = ({ item }: { item: Product }) => {
             </div>
 
             {/* Value Props Ticker */}
-            <div className="flex gap-4 mt-6 border-y border-gray-100 py-3">
+            <div className="flex gap-4 mt-6 border-y border-default py-3">
               <div className="flex items-center gap-2">
-                <FaTruckFast className="text-gray-400" size={14} />
-                <span className="text-[10px] font-bold uppercase text-gray-500">
+                <FaTruckFast className="text-muted" size={14} />
+                <span className="text-[10px] font-bold uppercase text-secondary">
                   Standard Shipping 2-3 Days
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <FaArrowRotateLeft className="text-gray-400" size={14} />
-                <span className="text-[10px] font-bold uppercase text-gray-500">
+                <FaArrowRotateLeft className="text-muted" size={14} />
+                <span className="text-[10px] font-bold uppercase text-secondary">
                   Size Exchange
                 </span>
               </div>
@@ -258,7 +258,7 @@ const ProductHero = ({ item }: { item: Product }) => {
 
           {/* Color & Size Selection (Existing Logic) */}
           <div>
-            <h3 className="text-xs font-bold uppercase mb-3 text-gray-400">
+            <h3 className="text-xs font-bold uppercase mb-3 text-muted">
               Select Color
             </h3>
             <div className="flex flex-wrap gap-2">
@@ -271,7 +271,7 @@ const ProductHero = ({ item }: { item: Product }) => {
                   }}
                   className={`w-12 h-12 bg-surface-2 rounded-md overflow-hidden border-2 transition-all ${
                     selectedVariant.variantId === v.variantId
-                      ? "border-black"
+                      ? "border-dark"
                       : "border-transparent opacity-60"
                   }`}
                 >
@@ -289,12 +289,12 @@ const ProductHero = ({ item }: { item: Product }) => {
 
           <div>
             <div className="flex justify-between items-center mb-3">
-              <h3 className="text-xs font-bold uppercase text-gray-400">
+              <h3 className="text-xs font-bold uppercase text-muted">
                 Select Size
               </h3>
               <button
                 onClick={() => setShowSizeGuide(true)}
-                className="text-xs text-gray-500 underline"
+                className="text-xs text-secondary underline"
               >
                 Size Guide
               </button>
@@ -322,7 +322,7 @@ const ProductHero = ({ item }: { item: Product }) => {
                 disabled={
                   !selectedSize || availableStock === 0 || isLimitReached
                 }
-                className="flex-1 py-5 bg-black text-white rounded-full font-bold uppercase tracking-widest text-xs hover:bg-zinc-800 transition-all disabled:bg-gray-100 disabled:text-gray-400"
+                className="flex-1 py-5 bg-dark text-inverse rounded-full font-bold uppercase tracking-widest text-xs hover:opacity-90 transition-all disabled:bg-surface-2 disabled:text-muted"
               >
                 {isLimitReached
                   ? "Limit Reached"
@@ -336,8 +336,8 @@ const ProductHero = ({ item }: { item: Product }) => {
                 onClick={handleToggleWishlist}
                 className={`w-16 h-16 rounded-full border-2 flex items-center justify-center transition-all ${
                   isInWishlist
-                    ? "bg-black border-black text-white"
-                    : "bg-white border-gray-200 text-black hover:border-black"
+                    ? "bg-dark border-dark text-inverse"
+                    : "bg-surface border-default text-primary hover:border-dark"
                 }`}
                 aria-label={
                   isInWishlist ? "Remove from wishlist" : "Add to wishlist"
@@ -352,8 +352,8 @@ const ProductHero = ({ item }: { item: Product }) => {
             </div>
 
             {/* Koko Installment Offer */}
-            <div className="flex items-center justify-center gap-2 p-3 bg-zinc-50 rounded-xl">
-              <span className="text-[10px] font-bold text-gray-500 uppercase">
+            <div className="flex items-center justify-center gap-2 p-3 bg-surface-2 rounded-xl">
+              <span className="text-[10px] font-bold text-secondary uppercase">
                 Or 3 Interest-Free payments of Rs. {(finalPrice / 3).toFixed(0)}{" "}
                 with
               </span>
@@ -362,10 +362,10 @@ const ProductHero = ({ item }: { item: Product }) => {
           </div>
 
           {/* Share & Help Section */}
-          <div className="flex flex-col gap-4 border-t border-gray-100 pt-6">
+          <div className="flex flex-col gap-4 border-t border-default pt-6">
             {/* Social Share Buttons */}
             <div className="flex items-center justify-between">
-              <span className="text-[10px] font-bold uppercase text-gray-400">
+              <span className="text-[10px] font-bold uppercase text-muted">
                 Share
               </span>
               <ShareButtons
@@ -377,7 +377,7 @@ const ProductHero = ({ item }: { item: Product }) => {
             {/* WhatsApp Specialist */}
             <a
               href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER}`}
-              className="flex items-center justify-center gap-2 text-[10px] font-black uppercase text-gray-400 hover:text-green-600"
+              className="flex items-center justify-center gap-2 text-[10px] font-black uppercase text-muted hover:text-success"
             >
               <FaWhatsapp size={16} /> Chat with a specialist
             </a>

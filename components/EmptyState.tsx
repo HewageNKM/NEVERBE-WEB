@@ -16,33 +16,34 @@ const EmptyState = ({
   onAction,
 }: EmptyStateProps) => {
   return (
-    <div className="flex w-full justify-center items-center py-24 px-6">
+    <div className="flex w-full justify-center items-center py-24 px-6 animate-fade">
       <div className="flex flex-col items-center text-center max-w-md">
-        {/* Minimal Icon - Clean & Light */}
-        <div className="mb-6 p-6 bg-gray-50 rounded-full">
+        {/* Icon Wrapper - Brand Surface with Accent Glow */}
+        <div className="mb-8 p-8 bg-surface-2 rounded-full relative group">
+          <div className="absolute inset-0 bg-accent/10 rounded-full blur-xl group-hover:bg-accent/20 transition-all duration-500" />
           <IoBagHandleOutline
-            size={48}
-            className="text-gray-300"
-            strokeWidth={1.5}
+            size={56}
+            className="text-accent relative z-10"
+            strokeWidth={1.2}
           />
         </div>
 
-        {/* Heading - Uppercase & Bold */}
-        <h2 className="text-xl md:text-2xl font-black uppercase tracking-tight text-black mb-3">
+        {/* Heading - Performance Display Style */}
+        <h2 className="text-3xl md:text-4xl font-display font-black uppercase italic tracking-tighter text-primary mb-4">
           {heading}
         </h2>
 
-        {/* Subheading - Professional Tone */}
-        <p className="text-gray-500 text-sm md:text-base font-medium leading-relaxed mb-8 max-w-xs mx-auto">
+        {/* Subheading - High Contrast Secondary */}
+        <p className="text-secondary text-base md:text-md font-medium leading-relaxed mb-10 max-w-xs mx-auto">
           {subHeading ||
             "We couldn't find any items matching your criteria. Try clearing your filters or check back later."}
         </p>
 
-        {/* Action Button - Solid Black Pill */}
+        {/* Action Button - NEVERBE Dark to Accent Transition */}
         {actionLabel && onAction && (
           <button
             onClick={onAction}
-            className="px-8 py-3 bg-black text-white text-xs md:text-sm font-bold uppercase tracking-widest rounded-full hover:bg-gray-800 hover:scale-105 transition-all duration-300 shadow-lg"
+            className="px-10 py-4 bg-dark text-inverse text-xs md:text-sm font-bold uppercase tracking-[0.2em] rounded-full hover:bg-accent hover:text-primary hover:-translate-y-1 transition-all duration-300 shadow-custom hover:shadow-hover active:scale-95"
           >
             {actionLabel}
           </button>

@@ -55,86 +55,96 @@ const SizeGuideDialog: React.FC<SizeGuideDialogProps> = ({
 }) => {
   const [activeTab, setActiveTab] = useState<"men" | "women" | "kids">("men");
 
-  if (!isOpen) return null;
-
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
-          {/* Backdrop */}
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          {/* Backdrop with High-End Blur */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+            className="absolute inset-0 bg-surface/80 backdrop-blur-xl"
           />
 
-          {/* Dialog */}
+          {/* Dialog Container */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            initial={{ opacity: 0, scale: 0.9, y: 30 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="relative bg-white w-[90%] md:w-full max-w-2xl max-h-[85vh] rounded-xl shadow-2xl overflow-hidden flex flex-col"
+            exit={{ opacity: 0, scale: 0.9, y: 30 }}
+            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+            className="relative bg-surface w-full max-w-2xl max-h-[85vh] rounded-2xl shadow-hover border border-default overflow-hidden flex flex-col"
           >
-            {/* Header */}
-            <div className="flex justify-between items-center p-4 md:p-6 border-b border-gray-100 shrink-0">
-              <h2 className="text-lg md:text-xl font-bold uppercase tracking-tight">
-                Size Guide
-              </h2>
+            {/* Header: Performance Style */}
+            <div className="flex justify-between items-center p-6 md:px-8 border-b border-default shrink-0">
+              <div className="flex flex-col">
+                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-accent italic">
+                  Blueprint
+                </span>
+                <h2 className="text-2xl md:text-3xl font-display font-black uppercase italic tracking-tighter text-primary">
+                  Size Guide
+                </h2>
+              </div>
               <button
                 onClick={onClose}
-                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                className="p-3 bg-surface-2 text-primary hover:bg-dark hover:text-inverse transition-all rounded-full shadow-sm"
               >
                 <IoClose size={24} />
               </button>
             </div>
 
-            {/* Content */}
-            <div className="p-4 md:p-6 overflow-y-auto">
-              <p className="text-sm text-gray-500 mb-6">
-                Use this chart to find your perfect fit. If you vary between
-                sizes, we recall ordering the next size up.
+            {/* Content Container */}
+            <div className="p-6 md:p-8 overflow-y-auto hide-scrollbar">
+              <p className="text-base text-muted mb-8 font-medium leading-relaxed">
+                Ensure the perfect fit for your high-performance gear. If you
+                are between sizes, we recommend ordering the next size up for
+                optimal comfort.
               </p>
 
-              {/* Tabs */}
-              <div className="flex gap-4 mb-6 border-b border-gray-100">
+              {/* Performance Tabs */}
+              <div className="flex gap-6 mb-8 border-b border-default">
                 {(["men", "women", "kids"] as const).map((tab) => (
                   <button
                     key={tab}
                     onClick={() => setActiveTab(tab)}
-                    className={`pb-2 text-sm font-bold uppercase tracking-wide transition-colors relative ${
+                    className={`pb-4 text-sm font-black uppercase tracking-widest transition-all relative ${
                       activeTab === tab
-                        ? "text-black"
-                        : "text-gray-400 hover:text-gray-600"
+                        ? "text-accent italic"
+                        : "text-muted hover:text-primary"
                     }`}
                   >
                     {tab}
                     {activeTab === tab && (
                       <motion.div
-                        layoutId="tab"
-                        className="absolute bottom-0 left-0 right-0 h-0.5 bg-black"
+                        layoutId="activeTabGuide"
+                        className="absolute bottom-0 left-0 right-0 h-1 bg-accent shadow-[0_0_10px_#97e13e]"
                       />
                     )}
                   </button>
                 ))}
               </div>
 
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm text-left whitespace-nowrap md:whitespace-normal">
-                  <thead className="bg-gray-50 text-xs uppercase font-bold text-gray-700">
+              {/* Data Table: Technical Spec Look */}
+              <div className="overflow-x-auto rounded-xl border border-default">
+                <table className="w-full text-sm text-left whitespace-nowrap">
+                  <thead className="bg-dark text-accent">
                     <tr>
-                      <th className="px-3 py-2 md:px-6 md:py-3 rounded-tl-lg">
-                        US Match
+                      <th className="px-6 py-4 font-display font-black uppercase italic tracking-tighter">
+                        US Size
                       </th>
-                      <th className="px-3 py-2 md:px-6 md:py-3">UK Match</th>
-                      <th className="px-3 py-2 md:px-6 md:py-3">EU Match</th>
-                      <th className="px-3 py-2 md:px-6 md:py-3 rounded-tr-lg">
+                      <th className="px-6 py-4 font-display font-black uppercase italic tracking-tighter border-l border-white/10">
+                        UK Size
+                      </th>
+                      <th className="px-6 py-4 font-display font-black uppercase italic tracking-tighter border-l border-white/10">
+                        EU Size
+                      </th>
+                      <th className="px-6 py-4 font-display font-black uppercase italic tracking-tighter border-l border-white/10">
                         CM Length
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-100">
+                  <tbody className="divide-y divide-default bg-surface">
                     {(activeTab === "men"
                       ? menSizes
                       : activeTab === "women"
@@ -143,18 +153,18 @@ const SizeGuideDialog: React.FC<SizeGuideDialogProps> = ({
                     ).map((row, idx) => (
                       <tr
                         key={idx}
-                        className="hover:bg-gray-50 transition-colors"
+                        className="hover:bg-surface-2 transition-colors group"
                       >
-                        <td className="px-3 py-2 md:px-6 md:py-4 font-bold">
+                        <td className="px-6 py-4 font-black text-primary text-base italic tracking-tighter group-hover:text-accent transition-colors">
                           {row.us}
                         </td>
-                        <td className="px-3 py-2 md:px-6 md:py-4 text-gray-600">
+                        <td className="px-6 py-4 text-muted font-bold border-l border-default">
                           {row.uk}
                         </td>
-                        <td className="px-3 py-2 md:px-6 md:py-4 text-gray-600">
+                        <td className="px-6 py-4 text-muted font-bold border-l border-default">
                           {row.eu}
                         </td>
-                        <td className="px-3 py-2 md:px-6 md:py-4 text-gray-600">
+                        <td className="px-6 py-4 text-muted font-bold border-l border-default">
                           {row.cm}
                         </td>
                       </tr>
@@ -163,9 +173,13 @@ const SizeGuideDialog: React.FC<SizeGuideDialogProps> = ({
                 </table>
               </div>
 
-              <div className="mt-6 text-xs text-gray-400">
-                * Sizes may vary slightly by manufacturer. This is a general
-                guide.
+              {/* Disclaimer */}
+              <div className="mt-8 flex items-center gap-3 p-4 bg-surface-2 rounded-lg border border-default">
+                <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+                <p className="text-[11px] text-muted font-bold uppercase tracking-widest">
+                  Note: Technical specifications may vary slightly by
+                  manufacturer.
+                </p>
               </div>
             </div>
           </motion.div>

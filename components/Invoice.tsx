@@ -3,16 +3,14 @@
 import React, { useState } from "react";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
-import { Order } from "@/interfaces/BagItem";
 import { Logo } from "@/assets/images";
 import toast from "react-hot-toast";
-import { Timestamp } from "firebase/firestore";
-import { format } from "date-fns";
+import { Order } from "@/interfaces/Order";
 
 interface InvoiceProps {
   order: Order;
-  className?: string; // Allow custom styling
-  btnText?: React.ReactNode; // Allow custom button text/icon
+  className?: string;
+  btnText?: React.ReactNode;
   onDownloadStart?: () => void;
   onDownloadEnd?: () => void;
 }
@@ -26,6 +24,10 @@ const Invoice: React.FC<InvoiceProps> = ({
 }) => {
   const [loading, setLoading] = useState(false);
 
+  // NEVERBE Brand Colors in RGB
+  const BRAND_GREEN = [151, 225, 62]; // #97e13e
+  const BRAND_DARK = [26, 26, 26]; // #1a1a1a
+
   const generateInvoice = async () => {
     if (loading) return;
 
@@ -36,32 +38,33 @@ const Invoice: React.FC<InvoiceProps> = ({
       const doc = new jsPDF();
 
       // --- Logo & Header ---
-      const imgWidth = 25;
-      const imgHeight = 25;
+      const imgWidth = 22;
+      const imgHeight = 22;
       const centerX = 105;
 
-      // Logo (No Background)
+      // Logo
       doc.addImage(
         Logo.src,
         "PNG",
         centerX - imgWidth / 2,
-        30 - imgHeight / 2,
+        25 - imgHeight / 2,
         imgWidth,
         imgHeight
       );
 
-      // Title
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(20);
-      doc.text("INVOICE", 105, 60, { align: "center" });
+      // Title - Performance Italic look via Helvetica-BoldOblique
+      doc.setFont("helvetica", "bolditalic");
+      doc.setFontSize(24);
+      doc.setTextColor(...BRAND_DARK);
+      doc.text("INVOICE", 105, 55, { align: "center" });
 
       // --- Details Section ---
-      let yPos = 80;
+      let yPos = 75;
 
       // Company Info
       doc.setFontSize(10);
       doc.setFont("helvetica", "bold");
-      doc.text("NEVERBE", 20, yPos);
+      doc.text("NEVERBE CLOTHING", 20, yPos);
       doc.setFont("helvetica", "normal");
       doc.setTextColor(100);
       doc.text("330/4/10 New Kandy Road", 20, yPos + 5);
@@ -69,201 +72,187 @@ const Invoice: React.FC<InvoiceProps> = ({
       doc.text("support@neverbe.lk", 20, yPos + 15);
 
       // Order Info
-      doc.setTextColor(0);
+      doc.setTextColor(...BRAND_DARK);
       doc.setFont("helvetica", "bold");
-      doc.text("Order Details", 140, yPos);
+      doc.text("Order Summary", 140, yPos);
       doc.setFont("helvetica", "normal");
       doc.setTextColor(100);
-      doc.text(`ID: #${order.orderId}`, 140, yPos + 5);
+      doc.text(`ID: #${order.orderId.toUpperCase()}`, 140, yPos + 5);
       doc.text(`Date: ${order.createdAt}`, 140, yPos + 10);
-      doc.text(`Payment: ${order.paymentMethod}`, 140, yPos + 15);
+      doc.text(`Payment: ${order.paymentMethod.toUpperCase()}`, 140, yPos + 15);
 
       yPos += 25;
 
       // --- Addresses ---
       const { customer } = order;
 
-      // Billing Address
-      doc.setTextColor(0);
+      // Customer Layout
+      doc.setTextColor(...BRAND_DARK);
       doc.setFont("helvetica", "bold");
-      doc.text("Billing Address", 20, yPos);
+      doc.text("Deliver To:", 20, yPos);
       doc.setFont("helvetica", "normal");
       doc.setTextColor(100);
-      doc.text(customer.name, 20, yPos + 5);
-      doc.text(customer.address, 20, yPos + 10);
+      doc.text(customer.shippingName || customer.name, 20, yPos + 5);
+      doc.text(customer.shippingAddress || customer.address, 20, yPos + 10);
       doc.text(
-        `${customer.city}${customer.zip ? `, ${customer.zip}` : ""}`,
+        `${customer.shippingCity || customer.city} ${
+          customer.shippingZip || ""
+        }`,
         20,
         yPos + 15
       );
-      doc.text(customer.phone, 20, yPos + 20);
-
-      // Shipping Address
-      doc.setTextColor(0);
-      doc.setFont("helvetica", "bold");
-      doc.text("Shipping Address", 140, yPos);
-      doc.setFont("helvetica", "normal");
-      doc.setTextColor(100);
-      doc.text(customer.shippingName || customer.name, 140, yPos + 5);
-      doc.text(customer.shippingAddress || customer.address, 140, yPos + 10);
-      doc.text(
-        `${customer.shippingCity || customer.city}${
-          customer.shippingZip || customer.zip
-            ? `, ${customer.shippingZip || customer.zip}`
-            : ""
-        }`,
-        140,
-        yPos + 15
-      );
-      doc.text(customer.shippingPhone || customer.phone, 140, yPos + 20);
+      doc.text(customer.shippingPhone || customer.phone, 20, yPos + 20);
 
       // Divider
       yPos += 30;
-      doc.setDrawColor(230);
+      doc.setDrawColor(...BRAND_GREEN);
+      doc.setLineWidth(0.5);
       doc.line(20, yPos, 190, yPos);
 
       // --- Item Table ---
-      // Group items: combo items grouped by comboId, regular items separate
+      const itemData: (string | number)[][] = [];
+
+      // ... (Grouping logic remains the same as your source) ...
       const comboGroups = new Map<string, typeof order.items>();
       const regularItems: typeof order.items = [];
-
       order.items.forEach((item) => {
         if (item.isComboItem && item.comboId) {
-          if (!comboGroups.has(item.comboId)) {
-            comboGroups.set(item.comboId, []);
-          }
+          if (!comboGroups.has(item.comboId)) comboGroups.set(item.comboId, []);
           comboGroups.get(item.comboId)!.push(item);
         } else {
           regularItems.push(item);
         }
       });
 
-      // Build table data with combo grouping
-      const itemData: (string | number)[][] = [];
-
-      // Add regular items first
       regularItems.forEach((item) => {
         itemData.push([
-          item.name,
+          item.name.toUpperCase(),
           item.size || "-",
           item.quantity,
           `Rs. ${item.price.toLocaleString()}`,
           `Rs. ${(item.discount || 0).toLocaleString()}`,
-          `Rs. ${(item.price * item.quantity).toLocaleString()}`,
+          `Rs. ${(
+            item.price * item.quantity -
+            (item.discount || 0)
+          ).toLocaleString()}`,
         ]);
       });
 
-      // Add combo groups
       comboGroups.forEach((items, comboId) => {
         const comboName = items[0]?.comboName || "Combo Bundle";
-        const comboTotal = items.reduce(
-          (sum, i) => sum + i.price * i.quantity,
-          0
-        );
         const comboDiscount = items.reduce(
           (sum, i) => sum + (i.discount || 0),
           0
         );
-
-        // Add combo header row
         itemData.push([
-          `[COMBO] ${comboName}`,
+          `[BUNDLE] ${comboName.toUpperCase()}`,
           "",
           "",
           "",
           `- Rs. ${comboDiscount.toLocaleString()}`,
           "",
         ]);
-
-        // Add each item in the combo (indented)
         items.forEach((item) => {
           itemData.push([
-            `    └ ${item.name}`,
+            `  > ${item.name}`,
             item.size || "-",
             item.quantity,
             `Rs. ${item.price.toLocaleString()}`,
             "",
-            `Rs. ${(item.price * item.quantity).toLocaleString()}`,
+            "",
           ]);
         });
       });
 
       autoTable(doc, {
         startY: yPos + 10,
-        head: [["Item", "Size", "Qty", "Price", "Discount", "Total"]],
+        head: [
+          ["ITEM DESCRIPTION", "SIZE", "QTY", "UNIT PRICE", "SAVINGS", "TOTAL"],
+        ],
         body: itemData,
-        theme: "plain",
-        headStyles: { fillColor: [0, 0, 0], textColor: 255, fontStyle: "bold" },
-        styles: { fontSize: 10, cellPadding: 3 },
+        theme: "striped",
+        headStyles: {
+          fillColor: BRAND_GREEN,
+          textColor: BRAND_DARK,
+          fontStyle: "bold",
+          fontSize: 9,
+        },
+        styles: { fontSize: 9, cellPadding: 4, font: "helvetica" },
+        columnStyles: {
+          5: { halign: "right", fontStyle: "bold" },
+        },
         didParseCell: (data: any) => {
-          // Style combo header rows differently
           if (
             data.section === "body" &&
-            data.row.raw &&
-            data.row.raw[0]?.toString().startsWith("[COMBO]")
+            data.row.raw[0]?.toString().startsWith("[BUNDLE]")
           ) {
+            data.cell.styles.fillColor = [240, 250, 230];
             data.cell.styles.fontStyle = "bold";
-            data.cell.styles.fillColor = [245, 245, 245];
-          }
-          // Style combo items (indented) with lighter text
-          if (
-            data.section === "body" &&
-            data.row.raw &&
-            data.row.raw[0]?.toString().startsWith("    └")
-          ) {
-            data.cell.styles.textColor = [80, 80, 80];
           }
         },
       });
 
-      // --- Totals ---
+      // --- Totals Section ---
       const subtotal = order.items.reduce(
         (sum, i) => sum + i.price * i.quantity,
         0
       );
-      const itemsDiscount = order.items.reduce(
-        (sum, i) => sum + (i.discount || 0),
-        0
-      );
-      // Total discount might also include a global order discount if applicable,
-      // ensuring we capture everything.
-      const totalDiscount = itemsDiscount + (order.discount || 0);
-
+      const totalDiscount =
+        order.items.reduce((sum, i) => sum + (i.discount || 0), 0) +
+        (order.discount || 0);
       const grandTotal =
         subtotal - totalDiscount + (order.shippingFee || 0) + (order.fee || 0);
 
-      let finalY = (doc as any).lastAutoTable.finalY + 10;
+      let finalY = (doc as any).lastAutoTable.finalY + 15;
 
-      doc.setFontSize(10);
-      doc.setTextColor(0);
+      const drawTotalLine = (
+        label: string,
+        value: string,
+        isBold = false,
+        isGreen = false
+      ) => {
+        if (isGreen) doc.setTextColor(...BRAND_GREEN);
+        else doc.setTextColor(...BRAND_DARK);
 
-      const drawTotalLine = (label: string, value: string, isBold = false) => {
         doc.setFont("helvetica", isBold ? "bold" : "normal");
-        doc.text(label, 140, finalY);
+        doc.setFontSize(isBold ? 12 : 10);
+        doc.text(label, 130, finalY);
         doc.text(value, 190, finalY, { align: "right" });
-        finalY += 6;
+        finalY += 7;
       };
 
       drawTotalLine("Subtotal:", `Rs. ${subtotal.toLocaleString()}`);
       if (totalDiscount > 0)
-        drawTotalLine("Discount:", `- Rs. ${totalDiscount.toLocaleString()}`);
+        drawTotalLine(
+          "Discount Applied:",
+          `- Rs. ${totalDiscount.toLocaleString()}`,
+          false,
+          true
+        );
       drawTotalLine(
-        "Shipping:",
-        `Rs. ${(order.shippingFee || 0).toLocaleString()}`
+        "Shipping Fee:",
+        order.shippingFee === 0
+          ? "FREE"
+          : `Rs. ${order.shippingFee.toLocaleString()}`
       );
-      if (order.fee)
-        drawTotalLine("Handling Fee:", `Rs. ${order.fee.toLocaleString()}`);
 
-      finalY += 2;
-      doc.setFontSize(12);
-      drawTotalLine("Grand Total:", `Rs. ${grandTotal.toLocaleString()}`, true);
+      finalY += 3;
+      doc.setDrawColor(...BRAND_DARK);
+      doc.line(130, finalY - 5, 190, finalY - 5);
+      drawTotalLine("GRAND TOTAL:", `Rs. ${grandTotal.toLocaleString()}`, true);
 
-      // Save
-      doc.save(`NEVERBE_Invoice_${order.orderId}.pdf`);
-      toast.success("Invoice downloaded successfully.");
+      // --- Footer ---
+      doc.setFontSize(8);
+      doc.setTextColor(150);
+      doc.text("Thank you for shopping with NEVERBE. Stay Vibrant.", 105, 285, {
+        align: "center",
+      });
+
+      doc.save(`NEVERBE_INV_${order.orderId.toUpperCase()}.pdf`);
+      toast.success("Invoice Downloaded");
     } catch (error) {
       console.error("PDF Error:", error);
-      toast.error("Failed to download invoice.");
+      toast.error("Download failed");
     } finally {
       setLoading(false);
       if (onDownloadEnd) onDownloadEnd();
@@ -271,8 +260,27 @@ const Invoice: React.FC<InvoiceProps> = ({
   };
 
   return (
-    <button onClick={generateInvoice} disabled={loading} className={className}>
-      {loading ? "Downloading..." : btnText}
+    <button
+      onClick={generateInvoice}
+      disabled={loading}
+      className={`
+        group flex items-center justify-center gap-2 px-8 py-3 
+        bg-dark text-inverse rounded-full 
+        font-display font-black uppercase italic tracking-widest text-xs
+        hover:bg-accent hover:text-dark transition-all duration-300
+        disabled:bg-surface-3 disabled:text-muted disabled:cursor-not-allowed
+        shadow-custom hover:shadow-hover active:scale-95
+        ${className}
+      `}
+    >
+      {loading ? (
+        <span className="flex items-center gap-2">
+          <div className="w-3 h-3 border-2 border-t-transparent border-accent rounded-full animate-spin" />
+          Processing...
+        </span>
+      ) : (
+        btnText
+      )}
     </button>
   );
 };

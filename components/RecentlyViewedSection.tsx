@@ -10,9 +10,13 @@ import { IoChevronBack, IoChevronForward } from "react-icons/io5";
 import "swiper/css";
 
 interface RecentlyViewedSectionProps {
-  currentProductId?: string; // To exclude the currently viewing product from the list if needed
+  currentProductId?: string;
 }
 
+/**
+ * RecentlyViewedSection - NEVERBE Brand Style
+ * A technical, clean history slider with brand-aligned typography and motion.
+ */
 const RecentlyViewedSection: React.FC<RecentlyViewedSectionProps> = ({
   currentProductId,
 }) => {
@@ -32,10 +36,6 @@ const RecentlyViewedSection: React.FC<RecentlyViewedSectionProps> = ({
     }
   };
 
-  // Filter out the current product if passed (optional, often better to show it in history too, but common to hide)
-  // Let's keep it simply showing everything or filtering current if desired.
-  // Standard pattern: usually you want to see history even if it includes current, OR filter it.
-  // Let's filter it out if provided, so we don't duplicate the main hero product immediately below it.
   const displayItems = currentProductId
     ? recentlyViewed.filter((p) => p.id !== currentProductId)
     : recentlyViewed;
@@ -43,41 +43,57 @@ const RecentlyViewedSection: React.FC<RecentlyViewedSectionProps> = ({
   if (displayItems.length === 0) return null;
 
   return (
-    <section className="w-full py-12 md:py-16 bg-white border-t border-gray-100">
-      <div className="w-full max-w-[1440px] mx-auto px-4 md:px-8">
-        <div className="flex items-center justify-between mb-8">
-          <h2 className="text-2xl md:text-3xl font-black uppercase tracking-tight">
-            Recently Viewed
-          </h2>
+    <section className="w-full py-16 md:py-24 bg-surface-2 border-t border-default animate-fade">
+      <div className="w-full max-w-content mx-auto px-4 md:px-8">
+        {/* Header Area */}
+        <div className="flex items-end justify-between mb-10">
+          <div className="flex flex-col gap-2">
+            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-accent italic">
+              Your Blueprint
+            </span>
+            <h2 className="text-3xl md:text-4xl font-display font-black uppercase italic tracking-tighter text-primary">
+              Recently Viewed
+            </h2>
+          </div>
 
-          {/* Minimal Nav Buttons */}
-          <div className="flex gap-2">
+          {/* Branded Navigation Arrows */}
+          <div className="flex gap-3">
             <button
               ref={prevRef}
-              className="p-2 rounded-full border border-gray-300 hover:border-black hover:bg-black hover:text-white transition-all disabled:opacity-30"
+              className="group w-12 h-12 rounded-full border border-border-dark flex items-center justify-center text-primary hover:bg-accent hover:text-dark hover:border-accent transition-all duration-300 shadow-sm hover:shadow-hover disabled:opacity-20 disabled:cursor-not-allowed"
+              aria-label="Previous items"
             >
-              <IoChevronBack size={18} />
+              <IoChevronBack
+                size={20}
+                className="transition-transform group-hover:-translate-x-0.5"
+              />
             </button>
             <button
               ref={nextRef}
-              className="p-2 rounded-full border border-gray-300 hover:border-black hover:bg-black hover:text-white transition-all disabled:opacity-30"
+              className="group w-12 h-12 rounded-full border border-border-dark flex items-center justify-center text-primary hover:bg-accent hover:text-dark hover:border-accent transition-all duration-300 shadow-sm hover:shadow-hover disabled:opacity-20 disabled:cursor-not-allowed"
+              aria-label="Next items"
             >
-              <IoChevronForward size={18} />
+              <IoChevronForward
+                size={20}
+                className="transition-transform group-hover:translate-x-0.5"
+              />
             </button>
           </div>
         </div>
 
+        {/* Swiper Container */}
         <Swiper
           modules={[Navigation]}
           onInit={handleInit}
-          spaceBetween={20}
-          slidesPerView={1.5}
+          spaceBetween={24}
+          slidesPerView={1.3}
           breakpoints={{
-            640: { slidesPerView: 2.2 },
+            640: { slidesPerView: 2.3 },
             1024: { slidesPerView: 4.2 },
             1280: { slidesPerView: 5.2 },
+            1536: { slidesPerView: 6.2 }, // Higher density for the 1920px width
           }}
-          className="!pb-10"
+          className="!pb-12"
         >
           {displayItems.map((product) => (
             <SwiperSlide key={product.id}>

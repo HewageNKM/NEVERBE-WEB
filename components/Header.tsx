@@ -44,7 +44,6 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
     navItems = [...navItems, { title: "Offers", link: "/collections/offers" }];
   }
 
-  // Use consolidated Algolia search hook
   const {
     query: search,
     results: items,
@@ -59,134 +58,137 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
   };
 
   return (
-    <div className="w-full bg-white z-50">
-      {/* 1. NIKE UTILITY TOP BAR (The Pre-Header) */}
-      <div className="hidden lg:flex bg-surface-2 px-12 py-1.5 justify-between items-center text-[12px] font-medium text-black">
-        <div className="flex gap-4">
-          <Link href="/contact" className="hover:opacity-70">
+    <div className="w-full bg-surface z-50">
+      {/* 1. UTILITY TOP BAR - NEVERBE Style */}
+      <div className="hidden lg:flex bg-surface-2 px-12 py-2 justify-between items-center text-xs font-bold uppercase tracking-widest text-secondary border-b border-default">
+        <div className="flex gap-6">
+          <Link href="/contact" className="hover:text-accent transition-colors">
             Help
           </Link>
-          <span className="text-gray-300">|</span>
-          <Link href="/account/register" className="hover:opacity-70">
+          <span className="text-border-primary">|</span>
+          <Link
+            href="/account/register"
+            className="hover:text-accent transition-colors text-primary"
+          >
             Join Us
           </Link>
         </div>
         <div className="flex gap-4">
           <Link
             href={user ? "/account" : "/account/login"}
-            className="hover:opacity-70"
+            className="hover:text-accent transition-colors flex items-center gap-1"
           >
-            Hi, {user ? user.displayName?.split(" ")[0] : "Sign In"}
+            Hi,{" "}
+            <span className="text-primary font-black italic">
+              {user ? user.displayName?.split(" ")[0] : "Sign In"}
+            </span>
           </Link>
         </div>
       </div>
 
-      <header className="sticky top-0 w-full bg-white transition-all duration-300 border-b lg:border-none border-gray-100">
+      <header className="sticky top-0 w-full bg-surface transition-all duration-300 border-b border-default lg:border-none">
         <SeasonalPromo season={season} />
 
-        <div className="max-w-[1440px] mx-auto px-4 lg:px-12 flex justify-between items-center h-[60px] lg:h-[72px]">
-          {/* LOGO - Left aligned like Nike */}
+        <div className="max-w-content mx-auto px-4 lg:px-12 flex justify-between items-center h-[64px] lg:h-[80px]">
+          {/* LOGO */}
           <Link href="/" className="shrink-0">
             <Image
               src={Logo}
               alt="NEVERBE"
-              width={70}
-              height={30}
-              className="object-contain mix-blend-multiply transition-transform hover:scale-105"
+              width={85}
+              height={35}
+              className="object-contain mix-blend-multiply transition-transform hover:scale-110 active:scale-95 duration-300"
             />
           </Link>
 
-          {/* DESKTOP NAV - Centered */}
+          {/* DESKTOP NAV - Performance Centering */}
           <nav className="hidden lg:block absolute left-1/2 -translate-x-1/2">
-            <ul className="flex gap-6 text-[16px] font-medium text-black">
+            <ul className="flex gap-8 text-base font-bold uppercase tracking-tighter">
               {navItems.map((item) => (
                 <li key={item.title}>
                   <Link
                     href={item.link}
-                    className="hover:border-b-2 border-black pb-[24px] transition-all"
+                    className="relative pb-2 hover:text-accent transition-colors group"
                   >
                     {item.title}
+                    <span className="absolute bottom-0 left-0 w-0 h-[3px] bg-accent transition-all duration-300 group-hover:w-full" />
                   </Link>
                 </li>
               ))}
             </ul>
           </nav>
 
-          {/* ICONS & SEARCH BAR */}
-          <div className="flex items-center gap-2 lg:gap-4">
-            {/* Desktop Search Icon */}
+          {/* ICONS & SEARCH */}
+          <div className="flex items-center gap-1 lg:gap-3">
             <button
               onClick={() => setIsSearchOpen(true)}
-              className="hidden lg:flex p-2 hover:bg-gray-100 rounded-full transition"
+              className="p-2.5 hover:bg-surface-2 rounded-full transition-colors group"
             >
-              <IoSearchOutline size={26} />
+              <IoSearchOutline size={24} className="group-hover:text-accent" />
             </button>
 
-            {/* Icons */}
-            <div className="flex items-center">
-              <Link
-                href="/account/wishlist"
-                className="p-2 hover:bg-gray-100 rounded-full transition"
-              >
-                <IoHeartOutline size={26} />
-              </Link>
+            <Link
+              href="/account/wishlist"
+              className="p-2.5 hover:bg-surface-2 rounded-full transition-colors group"
+            >
+              <IoHeartOutline size={24} className="group-hover:text-accent" />
+            </Link>
 
-              <button
-                onClick={() => dispatch(showBag())}
-                className="relative p-2 hover:bg-gray-100 rounded-full transition"
-              >
-                <IoBagHandleOutline size={26} />
-                {bagItems.length > 0 && (
-                  <span className="absolute bottom-2 right-2 h-4 w-4 bg-black text-white text-[9px] flex items-center justify-center rounded-full font-bold">
-                    {bagItems.length}
-                  </span>
-                )}
-              </button>
+            <button
+              onClick={() => dispatch(showBag())}
+              className="relative p-2.5 hover:bg-surface-2 rounded-full transition-colors group"
+            >
+              <IoBagHandleOutline
+                size={24}
+                className="group-hover:text-accent"
+              />
+              {bagItems.length > 0 && (
+                <span className="absolute top-2 right-2 h-4.5 w-4.5 bg-accent text-dark text-[10px] flex items-center justify-center rounded-full font-black shadow-custom">
+                  {bagItems.length}
+                </span>
+              )}
+            </button>
 
-              <button
-                onClick={() => dispatch(toggleMenu(true))}
-                className="lg:hidden p-2 hover:bg-gray-100 rounded-full"
-              >
-                <IoMenuOutline size={28} />
-              </button>
-            </div>
+            <button
+              onClick={() => dispatch(toggleMenu(true))}
+              className="lg:hidden p-2.5 hover:bg-surface-2 rounded-full"
+            >
+              <IoMenuOutline size={28} />
+            </button>
           </div>
         </div>
 
-        {/* FULL SCREEN SEARCH OVERLAY (The Nike "Expansion") */}
+        {/* FULL SCREEN SEARCH OVERLAY */}
         <AnimatePresence>
           {isSearchOpen && (
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-white z-100 p-4 lg:p-12 overflow-y-auto"
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="fixed inset-0 bg-surface z-[100] p-4 lg:p-12 overflow-y-auto"
             >
-              <div className="max-w-[1440px] mx-auto">
-                <div className="flex justify-between items-center mb-10">
+              <div className="max-w-content mx-auto">
+                <div className="flex justify-between items-center mb-12">
                   <Image
                     src={Logo}
                     alt="NEVERBE"
-                    width={60}
-                    height={20}
+                    width={80}
+                    height={30}
                     className="mix-blend-multiply"
                   />
 
                   <div className="flex-1 max-w-2xl mx-auto px-4">
-                    <div className="flex items-center bg-surface-2 rounded-full px-6 py-3 w-full">
-                      <IoSearchOutline
-                        size={24}
-                        className="text-gray-400 mr-4"
-                      />
+                    <div className="flex items-center bg-surface-2 border border-default rounded-full px-6 py-4 w-full focus-within:border-accent transition-all shadow-custom">
+                      <IoSearchOutline size={24} className="text-accent mr-4" />
                       <input
                         autoFocus
-                        placeholder="Search for products..."
-                        className="w-full bg-transparent text-lg border-none outline-none font-medium"
+                        placeholder="Search for premium gear..."
+                        className="w-full bg-transparent text-xl border-none outline-none font-display font-black italic tracking-tight placeholder:text-muted"
                         onChange={onSearch}
                         value={search}
                       />
                       {isSearching && (
-                        <div className="w-5 h-5 border-2 border-t-black rounded-full animate-spin" />
+                        <div className="w-5 h-5 border-2 border-accent border-t-transparent rounded-full animate-spin" />
                       )}
                     </div>
                   </div>
@@ -196,26 +198,35 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
                       setIsSearchOpen(false);
                       clearSearch();
                     }}
-                    className="p-2 bg-surface-2 rounded-full hover:bg-gray-200"
+                    className="p-3 bg-surface-2 rounded-full hover:bg-dark hover:text-inverse transition-all"
                   >
                     <IoCloseOutline size={28} />
                   </button>
                 </div>
 
-                {/* Search Results Grid - Simple and clean */}
-                {showSearchResult && items.length > 0 && (
-                  <div className="mt-8">
-                    <p className="text-secondary text-sm mb-6">
-                      Search Results ({items.length})
+                {/* Results Section */}
+                {showSearchResult && (
+                  <div className="animate-fade">
+                    <p className="text-xs font-black uppercase tracking-[0.2em] text-muted mb-8 border-b border-default pb-4">
+                      Results{" "}
+                      <span className="text-accent">({items.length})</span>
                     </p>
-                    <SearchDialog
-                      containerStyle="shadow-none border-none grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4"
-                      results={items}
-                      onClick={() => {
-                        setIsSearchOpen(false);
-                        clearSearch();
-                      }}
-                    />
+                    {items.length > 0 ? (
+                      <SearchDialog
+                        containerStyle="shadow-none border-none grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6"
+                        results={items}
+                        onClick={() => {
+                          setIsSearchOpen(false);
+                          clearSearch();
+                        }}
+                      />
+                    ) : (
+                      <div className="py-20 text-center">
+                        <p className="text-2xl font-display font-black italic text-muted uppercase">
+                          No matches found
+                        </p>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>

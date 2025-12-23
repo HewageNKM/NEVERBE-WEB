@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const loadingMessages = [
@@ -15,8 +15,8 @@ const loadingMessages = [
 ];
 
 /**
- * PageLoader - Nike Aesthetic Redesign
- * Focuses on high-precision lines, medium weights, and snappy transitions.
+ * PageLoader - NEVERBE Performance Redesign
+ * High-precision motion, Vibrant Green accents, and performance typography.
  */
 const PageLoader = () => {
   const [currentMsgIndex, setCurrentMsgIndex] = useState(0);
@@ -24,62 +24,75 @@ const PageLoader = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentMsgIndex((prev) => (prev + 1) % loadingMessages.length);
-    }, 2200);
+    }, 2000);
 
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <main className="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-white transition-colors duration-500">
-      {/* 1. HIGH-PRECISION TECHNICAL SPINNER */}
-      <div className="relative flex items-center justify-center mb-10">
-        {/* Outer subtle ring */}
-        <div className="w-16 h-16 rounded-full border-[1px] border-gray-100" />
+    <main className="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-surface transition-colors duration-500">
+      {/* 1. TECHNICAL PERFORMANCE SPINNER */}
+      <div className="relative flex items-center justify-center mb-12">
+        {/* Outer subtle brand ring */}
+        <div className="w-20 h-20 rounded-full border-[1px] border-border-primary" />
 
-        {/* Active high-speed spinner */}
+        {/* High-speed brand spinner */}
         <motion.div
-          className="absolute w-16 h-16 rounded-full border-[1.5px] border-[#111] border-t-transparent"
+          className="absolute w-20 h-20 rounded-full border-[2px] border-accent border-t-transparent shadow-[0_0_15px_rgba(151,225,62,0.3)]"
           animate={{ rotate: 360 }}
           transition={{
-            duration: 0.6,
+            duration: 0.5,
             ease: "linear",
             repeat: Infinity,
           }}
         />
 
-        {/* Inner subtle pulse */}
+        {/* Inner Counter-rotating ring */}
         <motion.div
-          className="absolute w-12 h-12 rounded-full bg-surface-2"
-          animate={{ scale: [0.95, 1.05, 0.95] }}
-          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute w-14 h-14 rounded-full border-[1px] border-dark border-b-transparent opacity-20"
+          animate={{ rotate: -360 }}
+          transition={{
+            duration: 1.5,
+            ease: "linear",
+            repeat: Infinity,
+          }}
+        />
+
+        {/* Center performance dot */}
+        <motion.div
+          className="absolute w-2 h-2 rounded-full bg-accent shadow-[0_0_10px_#97e13e]"
+          animate={{ opacity: [0.4, 1, 0.4] }}
+          transition={{ duration: 1, repeat: Infinity }}
         />
       </div>
 
-      {/* 2. SOPHISTICATED TYPOGRAPHY */}
-      <div className="h-8 relative flex items-center justify-center w-full max-w-xs">
+      {/* 2. BRANDED TYPOGRAPHY & PROGRESS */}
+      <div className="h-16 relative flex items-center justify-center w-full max-w-sm">
         <AnimatePresence mode="wait">
           <motion.div
             key={currentMsgIndex}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
+            initial={{ opacity: 0, scale: 0.95, y: 10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 1.05, y: -10 }}
             transition={{
               duration: 0.4,
-              ease: [0.22, 1, 0.36, 1], // Custom Nike-style cubic bezier
+              ease: [0.22, 1, 0.36, 1], // Nike-style snappy cubic bezier
             }}
-            className="absolute flex flex-col items-center gap-1"
+            className="absolute flex flex-col items-center gap-4"
           >
-            <p className="text-primary text-[13px] font-medium uppercase tracking-[0.25em] text-center">
+            <p className="text-primary font-display font-black text-lg md:text-xl uppercase italic tracking-tighter text-center">
               {loadingMessages[currentMsgIndex]}
             </p>
 
-            {/* Minimalist progress indicator */}
-            <div className="flex gap-1.5 mt-2">
+            {/* Performance Progress Indicator (Skewed Bars) */}
+            <div className="flex gap-1">
               {loadingMessages.map((_, i) => (
                 <div
                   key={i}
-                  className={`h-[2px] transition-all duration-500 ${
-                    i === currentMsgIndex ? "w-4 bg-dark" : "w-1 bg-gray-200"
+                  className={`h-1.5 transition-all duration-500 rounded-sm -skew-x-12 ${
+                    i === currentMsgIndex
+                      ? "w-8 bg-accent shadow-[0_0_8px_rgba(151,225,62,0.6)]"
+                      : "w-2 bg-surface-3"
                   }`}
                 />
               ))}
@@ -88,11 +101,12 @@ const PageLoader = () => {
         </AnimatePresence>
       </div>
 
-      {/* 3. BRAND LOGO MARK (Optional) */}
-      <div className="absolute bottom-12 opacity-10 grayscale">
-        <p className="text-[10px] font-bold tracking-[0.4em] uppercase">
-          Neverbe Inc.
+      {/* 3. FOOTER SIGNATURE */}
+      <div className="absolute bottom-12 flex flex-col items-center gap-2">
+        <p className="text-[10px] font-black tracking-[0.4em] uppercase text-muted italic">
+          Neverbe Performance Gear
         </p>
+        <div className="w-12 h-px bg-accent/30" />
       </div>
     </main>
   );

@@ -29,8 +29,8 @@ const FilterSection = ({
   selectedItems: string[];
   onToggle: (label: string) => void;
 }) => (
-  <div className="py-8 border-t border-default">
-    <h3 className="text-md font-medium text-primary tracking-tight mb-5">
+  <div className="py-8 border-t border-default animate-fade">
+    <h3 className="text-md font-display font-black uppercase italic tracking-tighter text-primary mb-6">
       {title}
     </h3>
     <div className="flex flex-col gap-4">
@@ -42,24 +42,24 @@ const FilterSection = ({
             onClick={() => onToggle(item.label)}
             className="flex items-center gap-3 group text-left"
           >
-            {/* Minimalist Checkbox Indicator */}
+            {/* BRANDED CHECKBOX: Accent green on selection */}
             <div
-              className={`w-5 h-5 border rounded-[4px] flex items-center justify-center transition-all duration-200 ${
+              className={`w-5 h-5 border rounded-[4px] flex items-center justify-center transition-all duration-300 ${
                 isSelected
-                  ? "bg-dark border-dark"
-                  : "bg-surface border-gray-300 group-hover:border-dark"
+                  ? "bg-accent border-accent shadow-custom"
+                  : "bg-surface border-border-secondary group-hover:border-accent"
               }`}
             >
               {isSelected && (
-                <div className="w-2 h-2 bg-surface rounded-full" />
+                <div className="w-2 h-2 bg-dark rounded-full animate-pulse" />
               )}
             </div>
 
             <span
-              className={`text-md transition-colors ${
+              className={`text-base tracking-tight transition-colors ${
                 isSelected
-                  ? "text-primary font-medium"
-                  : "text-primary font-normal group-hover:text-secondary"
+                  ? "text-primary font-bold"
+                  : "text-secondary font-medium group-hover:text-primary"
               }`}
             >
               {item.label}
@@ -87,23 +87,25 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
   const { brands, categories } = useFilterData(showCategories);
 
   return (
-    <aside className="hidden lg:block w-[260px] pr-10 sticky top-24 h-fit max-h-[85vh] overflow-y-auto no-scrollbar">
+    <aside className="hidden lg:block w-[280px] pr-10 sticky top-24 h-fit max-h-[85vh] overflow-y-auto hide-scrollbar">
       {/* Header */}
       <div className="flex justify-between items-end mb-8">
-        <h2 className="text-[20px] font-medium text-primary tracking-tight">
+        <h2 className="text-2xl font-display font-black uppercase italic tracking-tighter text-primary">
           {title}
         </h2>
         <button
           onClick={onReset}
-          className="text-[14px] font-normal text-secondary hover:text-primary transition-colors"
+          className="text-xs font-bold uppercase tracking-widest text-muted hover:text-accent transition-colors underline underline-offset-4"
         >
           Clear All
         </button>
       </div>
 
-      {/* In Stock Utility */}
-      <div className="flex justify-between items-center pb-8">
-        <span className="text-md font-normal text-primary">In Stock Only</span>
+      {/* In Stock Toggle - Using Brand Surface */}
+      <div className="flex justify-between items-center pb-8 bg-surface-2 p-4 rounded-lg border border-default mb-4">
+        <span className="text-base font-bold text-primary uppercase tracking-tight">
+          In Stock Only
+        </span>
         <ToggleSwitch
           checked={inStock}
           onChange={onInStockChange}
@@ -111,9 +113,9 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
         />
       </div>
 
-      {/* Nike Style Size Grid (1:1 Ratio Squares) */}
+      {/* Select Size Grid */}
       <div className="py-8 border-t border-default">
-        <h3 className="text-md font-medium text-primary tracking-tight mb-5">
+        <h3 className="text-md font-display font-black uppercase italic tracking-tighter text-primary mb-6">
           Select Size
         </h3>
         <div className="grid grid-cols-3 gap-2">
@@ -123,10 +125,10 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
               <button
                 key={size}
                 onClick={() => onSizeToggle(size)}
-                className={`aspect-square flex items-center justify-center border rounded-[4px] text-[14px] transition-all ${
+                className={`aspect-square flex items-center justify-center border rounded-[4px] text-base transition-all duration-300 ${
                   isSelected
-                    ? "bg-dark border-dark text-inverse font-medium"
-                    : "bg-surface border-gray-200 text-primary hover:border-dark"
+                    ? "bg-dark border-dark text-accent font-black italic shadow-hover"
+                    : "bg-surface border-border-primary text-primary font-bold hover:border-accent"
                 }`}
               >
                 {size}
@@ -152,7 +154,6 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
         onToggle={onBrandToggle}
       />
 
-      {/* Visual Spacer for the bottom of the sticky aside */}
       <div className="h-20" />
     </aside>
   );
