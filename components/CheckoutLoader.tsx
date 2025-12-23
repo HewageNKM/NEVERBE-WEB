@@ -3,29 +3,33 @@ import React from "react";
 
 /**
  * CheckoutLoader - Full-page Liquid Glass Loader
- * Premium white theme with 3-dot animation and processing message.
+ * Premium liquid glass effect with 3-dot animation and processing message.
  */
 const CheckoutLoader = () => {
   return (
-    <div className="fixed inset-0 z-300 flex flex-col items-center justify-center bg-surface/95 backdrop-blur-sm">
-      {/* Liquid Glass Card */}
+    <div className="fixed inset-0 z-300 flex flex-col items-center justify-center overflow-hidden">
+      {/* Liquid Glass Background */}
       <div
-        className="backdrop-blur-xl bg-white/80 rounded-3xl px-12 py-10 flex flex-col items-center max-w-sm mx-4"
+        className="absolute inset-0 backdrop-blur-2xl"
         style={{
+          background: `
+            radial-gradient(ellipse at 30% 20%, rgba(151, 225, 62, 0.1) 0%, transparent 50%),
+            radial-gradient(ellipse at 70% 80%, rgba(151, 225, 62, 0.08) 0%, transparent 50%),
+            radial-gradient(ellipse at 50% 50%, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 245, 0.98) 100%)
+          `,
           boxShadow: `
-            0 16px 48px rgba(151, 225, 62, 0.18),
-            0 8px 24px rgba(0, 0, 0, 0.08),
-            inset 0 2px 2px rgba(255, 255, 255, 0.9)
+            inset 0 1px 0 rgba(255, 255, 255, 0.9),
+            inset 0 -1px 0 rgba(0, 0, 0, 0.03)
           `,
         }}
-      >
+      />
+
+      {/* Content */}
+      <div className="relative z-10 flex flex-col items-center">
         {/* Cart Icon */}
-        <div
-          className="w-14 h-14 rounded-full bg-accent/10 flex items-center justify-center mb-6"
-          style={{ boxShadow: "0 4px 16px rgba(151, 225, 62, 0.2)" }}
-        >
+        <div className="w-16 h-16 rounded-full bg-accent/10 flex items-center justify-center mb-8">
           <svg
-            className="w-7 h-7 text-accent"
+            className="w-8 h-8 text-accent"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -41,41 +45,32 @@ const CheckoutLoader = () => {
 
         {/* Processing Message */}
         <h2 className="text-lg font-display font-black uppercase tracking-widest text-primary mb-2">
-          Processing
+          Processing Order
         </h2>
 
-        <p className="text-xs text-muted text-center mb-6">
+        <p className="text-xs text-muted text-center mb-8">
           Please wait while we secure your order
         </p>
 
         {/* 3-Dot Animation */}
-        <div className="flex gap-2.5">
+        <div className="flex gap-3">
           <div
-            className="w-3 h-3 rounded-full bg-accent animate-bounce"
-            style={{
-              animationDelay: "0ms",
-              boxShadow: "0 4px 12px rgba(151, 225, 62, 0.4)",
-            }}
+            className="w-4 h-4 rounded-full bg-accent animate-bounce"
+            style={{ animationDelay: "0ms" }}
           />
           <div
-            className="w-3 h-3 rounded-full bg-accent animate-bounce"
-            style={{
-              animationDelay: "150ms",
-              boxShadow: "0 4px 12px rgba(151, 225, 62, 0.4)",
-            }}
+            className="w-4 h-4 rounded-full bg-accent animate-bounce"
+            style={{ animationDelay: "150ms" }}
           />
           <div
-            className="w-3 h-3 rounded-full bg-accent animate-bounce"
-            style={{
-              animationDelay: "300ms",
-              boxShadow: "0 4px 12px rgba(151, 225, 62, 0.4)",
-            }}
+            className="w-4 h-4 rounded-full bg-accent animate-bounce"
+            style={{ animationDelay: "300ms" }}
           />
         </div>
-      </div>
 
-      {/* Bottom Warning Text */}
-      <p className="mt-6 text-xs text-muted">Do not close this page</p>
+        {/* Bottom Warning */}
+        <p className="mt-10 text-xs text-muted">Do not close this page</p>
+      </div>
     </div>
   );
 };

@@ -1,45 +1,43 @@
 "use client";
 
 /**
- * PageLoader - NEVERBE Premium Glass Theme
- * Full-page loading with liquid glass 3-dot animation.
+ * PageLoader - NEVERBE Liquid Glass
+ * Full-page loading with premium liquid glass effect and 3-dot animation.
  */
 const PageLoader = () => {
   return (
-    <main className="fixed inset-0 z-200 flex flex-col items-center justify-center bg-surface">
-      {/* Liquid Glass Container */}
+    <main className="fixed inset-0 z-200 flex flex-col items-center justify-center overflow-hidden">
+      {/* Liquid Glass Background */}
       <div
-        className="backdrop-blur-xl bg-white/60 rounded-3xl px-10 py-8 flex flex-col items-center"
+        className="absolute inset-0 bg-white/80 backdrop-blur-2xl"
         style={{
+          background: `
+            radial-gradient(ellipse at 30% 20%, rgba(151, 225, 62, 0.08) 0%, transparent 50%),
+            radial-gradient(ellipse at 70% 80%, rgba(151, 225, 62, 0.06) 0%, transparent 50%),
+            radial-gradient(ellipse at 50% 50%, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 245, 0.95) 100%)
+          `,
           boxShadow: `
-            0 8px 32px rgba(151, 225, 62, 0.15),
-            0 4px 16px rgba(0, 0, 0, 0.08),
-            inset 0 1px 1px rgba(255, 255, 255, 0.8)
+            inset 0 1px 0 rgba(255, 255, 255, 0.8),
+            inset 0 -1px 0 rgba(0, 0, 0, 0.03)
           `,
         }}
-      >
+      />
+
+      {/* Content */}
+      <div className="relative z-10 flex flex-col items-center">
         {/* 3-Dot Animation */}
-        <div className="flex gap-3 mb-6">
+        <div className="flex gap-4 mb-6">
           <div
-            className="w-3 h-3 rounded-full bg-accent animate-bounce"
-            style={{
-              animationDelay: "0ms",
-              boxShadow: "0 4px 12px rgba(151, 225, 62, 0.4)",
-            }}
+            className="w-4 h-4 rounded-full bg-accent animate-bounce"
+            style={{ animationDelay: "0ms" }}
           />
           <div
-            className="w-3 h-3 rounded-full bg-accent animate-bounce"
-            style={{
-              animationDelay: "150ms",
-              boxShadow: "0 4px 12px rgba(151, 225, 62, 0.4)",
-            }}
+            className="w-4 h-4 rounded-full bg-accent animate-bounce"
+            style={{ animationDelay: "150ms" }}
           />
           <div
-            className="w-3 h-3 rounded-full bg-accent animate-bounce"
-            style={{
-              animationDelay: "300ms",
-              boxShadow: "0 4px 12px rgba(151, 225, 62, 0.4)",
-            }}
+            className="w-4 h-4 rounded-full bg-accent animate-bounce"
+            style={{ animationDelay: "300ms" }}
           />
         </div>
 
