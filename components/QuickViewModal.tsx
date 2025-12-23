@@ -104,9 +104,8 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
     if (!selectedSize || !selectedVariant) return;
 
     const productDiscount =
-      Math.round(((product.marketPrice - product.sellingPrice) * qty) / 10) *
+      Math.round(((product.discount / 100) * product.sellingPrice * qty) / 10) *
       10;
-
     dispatch(
       addToBag({
         itemId: product.id,

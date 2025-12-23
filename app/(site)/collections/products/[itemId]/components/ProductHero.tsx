@@ -121,7 +121,7 @@ const ProductHero = ({ item }: { item: Product }) => {
   const handleAddToBag = () => {
     if (!selectedSize) return;
     const productDiscount =
-      Math.round(((item.marketPrice - item.sellingPrice) * qty) / 10) * 10;
+      Math.round(((item.discount / 100) * item.sellingPrice * qty) / 10) * 10;
     dispatch(
       addToBag({
         itemId: item.id,
