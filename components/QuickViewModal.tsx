@@ -103,17 +103,21 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
   const handleAddToBag = () => {
     if (!selectedSize || !selectedVariant) return;
 
+    const productDiscount =
+      Math.round(((product.marketPrice - product.sellingPrice) * qty) / 10) *
+      10;
+
     dispatch(
       addToBag({
         itemId: product.id,
         variantId: selectedVariant.variantId,
         size: selectedSize,
         quantity: qty,
-        price: finalPrice,
+        price: product.sellingPrice,
         bPrice: 0,
         name: product.name,
         thumbnail: selectedVariant.images[0]?.url || product.thumbnail.url,
-        discount: 0, // No discount - marketPrice is just decoration
+        discount: productDiscount,
         itemType: "product",
         maxQuantity: 10,
         variantName: selectedVariant.variantName,
@@ -121,6 +125,7 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
         brand: product.brand || "",
       })
     );
+    toast.success(`Added ${qty} item${qty > 1 ? "s" : ""} to bag`);
     onClose();
   };
 

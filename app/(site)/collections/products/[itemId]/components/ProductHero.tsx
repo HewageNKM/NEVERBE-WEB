@@ -120,19 +120,20 @@ const ProductHero = ({ item }: { item: Product }) => {
 
   const handleAddToBag = () => {
     if (!selectedSize) return;
-
+    const productDiscount =
+      Math.round(((item.marketPrice - item.sellingPrice) * qty) / 10) * 10;
     dispatch(
       addToBag({
         itemId: item.id,
         variantId: selectedVariant.variantId,
         size: selectedSize,
         quantity: qty,
-        price: finalPrice,
+        price: item.sellingPrice,
         name: item.name,
         thumbnail: selectedVariant.images[0]?.url || item.thumbnail.url,
         itemType: "product",
         variantName: selectedVariant.variantName,
-        discount: 0, // No discount - marketPrice is just decoration
+        discount: productDiscount,
         maxQuantity: 10,
         category: item.category || "",
         brand: item.brand || "",
