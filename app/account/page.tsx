@@ -33,7 +33,6 @@ const Account = () => {
   const { user } = useSelector((state: RootState) => state.authSlice);
   const dispatch = useDispatch();
 
-  // ... (Data fetching logic remains identical)
   useEffect(() => {
     const fetchData = async () => {
       if (user?.uid) {
@@ -96,9 +95,9 @@ const Account = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white text-black selection:bg-[#97e13e]/30">
-      <div className="max-w-[1200px] mx-auto px-6 md:px-12 py-10 md:py-20">
-        {/* TOP BAR: Navigation & Branding */}
+    <div className="min-h-screen bg-surface text-primary">
+      <div className="max-w-content mx-auto px-4 md:px-12 py-10 md:py-20">
+        {/* TOP BAR */}
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-12 gap-8">
           <div className="flex items-center gap-6">
             <Link href="/" className="hover:opacity-70 transition-opacity">
@@ -110,8 +109,8 @@ const Account = () => {
                 priority
               />
             </Link>
-            <div className="h-8 w-px bg-zinc-200 hidden md:block"></div>
-            <h1 className="text-2xl font-display font-black uppercase tracking-tighter">
+            <div className="h-8 w-px bg-border-default hidden md:block"></div>
+            <h1 className="text-2xl font-display font-black uppercase italic tracking-tighter">
               Account
             </h1>
           </div>
@@ -119,86 +118,51 @@ const Account = () => {
           <div className="flex items-center gap-6">
             <Link
               href="/"
-              className="text-xs font-bold uppercase tracking-widest text-zinc-400 hover:text-black transition-colors flex items-center gap-2"
+              className="text-xs font-bold uppercase tracking-widest text-muted hover:text-primary transition-colors flex items-center gap-2"
             >
               <IoArrowBackOutline size={16} /> Back to Store
             </Link>
             <button
               onClick={handleLogout}
-              className="text-xs font-bold uppercase tracking-widest text-zinc-400 hover:text-red-500 transition-colors flex items-center gap-2"
+              className="text-xs font-bold uppercase tracking-widest text-muted hover:text-error transition-colors flex items-center gap-2"
             >
               Logout <IoLogOutOutline size={16} />
             </button>
           </div>
         </div>
 
-        {/* PROFILE HEADER CARD */}
-        {!loading && user && (
-          <div className="bg-zinc-50 rounded-[2rem] p-8 md:p-12 mb-12 flex flex-col md:flex-row items-center gap-8 border border-zinc-100">
-            <div className="w-24 h-24 rounded-full bg-white border border-zinc-200 flex items-center justify-center text-zinc-300 shadow-sm overflow-hidden">
-              {user.photoURL ? (
-                <Image
-                  src={user.photoURL}
-                  alt="Profile"
-                  width={96}
-                  height={96}
-                  className="object-cover"
-                />
-              ) : (
-                <IoPersonCircleOutline size={80} />
-              )}
-            </div>
-            <div className="text-center md:text-left">
-              <h2 className="text-3xl font-display font-black uppercase tracking-tighter mb-1">
-                {user.displayName || "Member"}
-              </h2>
-              <p className="text-zinc-500 font-medium text-sm">{user.email}</p>
-            </div>
-            <div className="md:ml-auto flex gap-3">
-              <div className="bg-white px-6 py-3 rounded-2xl border border-zinc-200 shadow-sm text-center">
-                <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-1">
-                  Orders
-                </p>
-                <p className="font-display font-black text-xl">
-                  {orders.length}
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* NAVIGATION TABS: Clean Minimalist Style */}
-        <div className="flex items-center gap-8 border-b border-zinc-100 mb-12 overflow-x-auto no-scrollbar">
+        {/* NAVIGATION TABS */}
+        <div className="flex items-center gap-8 border-b border-default mb-12 overflow-x-auto hide-scrollbar">
           {[
             { id: "dashboard", label: "Overview" },
             { id: "orders", label: "My Orders" },
             { id: "addresses", label: "Addresses" },
-            { id: "details", label: "Account Settings" },
+            { id: "details", label: "Settings" },
           ].map((item) => (
             <button
               key={item.id}
               onClick={() => setActiveTab(item.id)}
               className={`whitespace-nowrap pb-4 text-sm font-bold uppercase tracking-widest transition-all relative ${
                 activeTab === item.id
-                  ? "text-black"
-                  : "text-zinc-400 hover:text-black"
+                  ? "text-primary"
+                  : "text-muted hover:text-primary"
               }`}
             >
               {item.label}
               {activeTab === item.id && (
                 <motion.div
                   layoutId="underline"
-                  className="absolute bottom-0 left-0 right-0 h-1 bg-[#97e13e]"
+                  className="absolute bottom-0 left-0 right-0 h-1 bg-accent rounded-full"
                 />
               )}
             </button>
           ))}
         </div>
 
-        {/* MAIN CONTENT AREA */}
+        {/* MAIN CONTENT */}
         <main className="animate-fade">
           {loading ? (
-            <div className="flex justify-center py-20">
+            <div className="flex justify-center py-20 relative h-40">
               <ComponentLoader />
             </div>
           ) : (
@@ -220,23 +184,23 @@ const Account = () => {
               )}
               {activeTab === "details" &&
                 (user?.isAnonymous ? (
-                  <div className="bg-zinc-50 rounded-[2.5rem] p-10 md:p-16 text-center border border-zinc-100 shadow-sm">
+                  <div className="bg-surface-2 rounded-2xl p-10 md:p-16 text-center border border-default">
                     <IoShieldCheckmarkOutline
-                      className="mx-auto text-[#97e13e] mb-6"
+                      className="mx-auto text-accent mb-6"
                       size={60}
                     />
-                    <h2 className="text-3xl font-display font-black uppercase tracking-tighter mb-4">
+                    <h2 className="text-3xl font-display font-black uppercase italic tracking-tighter mb-4">
                       Secure your profile
                     </h2>
-                    <p className="text-zinc-500 max-w-md mx-auto mb-10 font-medium">
+                    <p className="text-muted max-w-md mx-auto mb-10 font-medium">
                       Link your Google account to save your orders and profile
                       permanently.
                     </p>
                     <button
                       onClick={handleGoogleLink}
-                      className="inline-flex items-center justify-center gap-4 bg-black text-white px-10 py-5 rounded-full font-black uppercase text-xs tracking-widest hover:bg-[#97e13e] hover:text-black transition-all shadow-xl shadow-black/10 active:scale-95"
+                      className="inline-flex items-center justify-center gap-4 bg-dark text-inverse px-10 py-5 rounded-full font-black uppercase text-xs tracking-widest hover:bg-accent hover:text-dark transition-all active:scale-95"
                     >
-                      <span className="w-5 h-5 bg-white rounded-full flex items-center justify-center p-1">
+                      <span className="w-5 h-5 bg-surface rounded-full flex items-center justify-center p-1">
                         <svg viewBox="0 0 24 24">
                           <path
                             d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"

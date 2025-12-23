@@ -8,9 +8,7 @@ import {
 } from "firebase/auth";
 import toast from "react-hot-toast";
 import { auth } from "@/firebase/firebaseClient";
-import { useDispatch } from "react-redux";
 import { setUser } from "@/redux/authSlice/authSlice";
-import { motion } from "framer-motion";
 import {
   IoPersonOutline,
   IoLockClosedOutline,
@@ -35,9 +33,7 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
             displayName: `${fName} ${lName}`.trim(),
           });
           await auth.currentUser.reload();
-          toast.success("Profile Updated Successfully", {
-            style: { borderRadius: "10px", background: "#333", color: "#fff" },
-          });
+          toast.success("Profile Updated Successfully");
 
           const updatedUser = {
             ...user,
@@ -53,21 +49,21 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
     };
 
     return (
-      <div className="bg-white p-8 md:p-10 rounded-[2.5rem] border border-zinc-100 shadow-sm transition-all hover:shadow-md">
-        <div className="flex flex-col gap-8">
+      <div className="bg-surface p-8 rounded-2xl border border-default transition-all hover:border-accent">
+        <div className="flex flex-col gap-6">
           <div className="flex items-center gap-3">
-            <div className="p-3 bg-zinc-50 rounded-2xl text-black">
+            <div className="p-3 bg-surface-2 rounded-xl text-primary border border-default">
               <IoPersonOutline size={22} />
             </div>
-            <h3 className="text-xl font-display font-black uppercase tracking-tighter text-black">
-              Public Profile
+            <h3 className="text-xl font-display font-black uppercase italic tracking-tighter text-primary">
+              Profile
             </h3>
           </div>
 
-          <form className="space-y-6" onSubmit={handleUpdate}>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <form className="space-y-4" onSubmit={handleUpdate}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">
+                <label className="text-[10px] font-black uppercase tracking-widest text-muted ml-1">
                   First Name
                 </label>
                 <input
@@ -76,11 +72,11 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
                   defaultValue={
                     user.displayName ? user.displayName.split(" ")[0] : ""
                   }
-                  className="w-full bg-zinc-50 p-4 text-sm font-bold border border-transparent focus:border-black focus:bg-white outline-none rounded-2xl transition-all"
+                  className="w-full bg-surface-2 p-4 text-sm font-bold border border-default focus:border-primary focus:bg-surface outline-none rounded-xl transition-all"
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">
+                <label className="text-[10px] font-black uppercase tracking-widest text-muted ml-1">
                   Last Name
                 </label>
                 <input
@@ -91,24 +87,24 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
                       ? user.displayName.split(" ")[1]
                       : ""
                   }
-                  className="w-full bg-zinc-50 p-4 text-sm font-bold border border-transparent focus:border-black focus:bg-white outline-none rounded-2xl transition-all"
+                  className="w-full bg-surface-2 p-4 text-sm font-bold border border-default focus:border-primary focus:bg-surface outline-none rounded-xl transition-all"
                 />
               </div>
             </div>
 
             <div className="space-y-2">
-              <label className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">
-                Verified Email Address
+              <label className="text-[10px] font-black uppercase tracking-widest text-muted ml-1">
+                Email Address
               </label>
               <div className="relative">
                 <input
                   readOnly
                   type="email"
                   value={user.email}
-                  className="w-full bg-zinc-100 p-4 text-sm font-bold border border-transparent text-zinc-400 cursor-not-allowed outline-none rounded-2xl"
+                  className="w-full bg-surface-3 p-4 text-sm font-bold border border-default text-muted cursor-not-allowed outline-none rounded-xl"
                 />
                 <IoCheckmarkCircle
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-[#97e13e]"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-accent"
                   size={20}
                 />
               </div>
@@ -118,7 +114,7 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
               <button
                 type="submit"
                 disabled={isUpdating}
-                className="group flex items-center gap-3 bg-black text-white px-10 py-4 text-xs font-black uppercase tracking-widest hover:bg-[#97e13e] hover:text-black rounded-full transition-all disabled:opacity-50 active:scale-95 shadow-lg shadow-black/5"
+                className="group flex items-center gap-3 bg-dark text-inverse px-8 py-3 text-xs font-black uppercase tracking-widest hover:bg-accent hover:text-dark rounded-full transition-all disabled:opacity-50 active:scale-95"
               >
                 {isUpdating ? "Saving..." : "Save Changes"}
                 <IoRefreshOutline
@@ -158,7 +154,7 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
           );
           await reauthenticateWithCredential(auth.currentUser, credential);
           await updatePassword(auth.currentUser, newPass);
-          toast.success("Security Key Updated");
+          toast.success("Password Updated");
           (e.target as HTMLFormElement).reset();
         }
       } catch (err: any) {
@@ -169,65 +165,65 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
     };
 
     return (
-      <div className="bg-zinc-50 p-8 md:p-10 rounded-[2.5rem] border border-zinc-100 shadow-sm transition-all hover:shadow-md h-full">
-        <div className="flex flex-col gap-8">
+      <div className="bg-surface-2 p-8 rounded-2xl border border-default transition-all hover:border-accent h-full">
+        <div className="flex flex-col gap-6">
           <div className="flex items-center gap-3">
-            <div className="p-3 bg-white rounded-2xl text-black border border-zinc-200 shadow-sm">
+            <div className="p-3 bg-surface rounded-xl text-primary border border-default">
               <IoLockClosedOutline size={22} />
             </div>
-            <h3 className="text-xl font-display font-black uppercase tracking-tighter text-black">
-              Security Protocol
+            <h3 className="text-xl font-display font-black uppercase italic tracking-tighter text-primary">
+              Security
             </h3>
           </div>
 
           <form className="space-y-4" onSubmit={handleUpdate}>
             <div className="space-y-2">
-              <label className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">
+              <label className="text-[10px] font-black uppercase tracking-widest text-muted ml-1">
                 Current Password
               </label>
               <input
                 name="currentPass"
                 type="password"
                 required
-                className="w-full bg-white p-4 text-sm font-bold border border-zinc-200 focus:border-black outline-none rounded-2xl transition-all"
+                className="w-full bg-surface p-4 text-sm font-bold border border-default focus:border-primary outline-none rounded-xl transition-all"
               />
             </div>
             <div className="space-y-2">
-              <label className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">
+              <label className="text-[10px] font-black uppercase tracking-widest text-muted ml-1">
                 New Password
               </label>
               <input
                 name="newPass"
                 type="password"
                 required
-                className="w-full bg-white p-4 text-sm font-bold border border-zinc-200 focus:border-black outline-none rounded-2xl transition-all"
+                className="w-full bg-surface p-4 text-sm font-bold border border-default focus:border-primary outline-none rounded-xl transition-all"
               />
             </div>
             <div className="space-y-2">
-              <label className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">
+              <label className="text-[10px] font-black uppercase tracking-widest text-muted ml-1">
                 Confirm New Password
               </label>
               <input
                 name="confirmPass"
                 type="password"
                 required
-                className="w-full bg-white p-4 text-sm font-bold border border-zinc-200 focus:border-black outline-none rounded-2xl transition-all"
+                className="w-full bg-surface p-4 text-sm font-bold border border-default focus:border-primary outline-none rounded-xl transition-all"
               />
             </div>
 
-            <div className="flex flex-col sm:flex-row justify-between items-center gap-6 pt-6">
+            <div className="flex flex-col sm:flex-row justify-between items-center gap-4 pt-4">
               <button
                 type="button"
-                className="text-[10px] font-black uppercase tracking-widest text-zinc-400 hover:text-black underline underline-offset-8 decoration-[#97e13e] decoration-2 transition-all"
+                className="text-[10px] font-black uppercase tracking-widest text-muted hover:text-primary underline underline-offset-8 decoration-accent decoration-2 transition-all"
               >
                 Forgot Password?
               </button>
               <button
                 type="submit"
                 disabled={isUpdating}
-                className="w-full sm:w-auto bg-black text-white px-10 py-4 text-xs font-black uppercase tracking-widest hover:bg-[#97e13e] hover:text-black rounded-full transition-all disabled:opacity-50 active:scale-95 shadow-lg shadow-black/5"
+                className="w-full sm:w-auto bg-dark text-inverse px-8 py-3 text-xs font-black uppercase tracking-widest hover:bg-accent hover:text-dark rounded-full transition-all disabled:opacity-50 active:scale-95"
               >
-                {isUpdating ? "Updating..." : "Update Security"}
+                {isUpdating ? "Updating..." : "Update Password"}
               </button>
             </div>
           </form>
@@ -238,7 +234,7 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
 
   return (
     <div className="w-full">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <ProfileForm />
         <PasswordForm />
       </div>

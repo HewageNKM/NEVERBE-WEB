@@ -59,13 +59,9 @@ const SavedAddresses: React.FC<SavedAddressesProps> = ({
         });
 
         if (res.ok) {
-          // Update local state
           const updated = addresses.filter((a) => a.type !== type);
           setAddresses([...updated, newAddress]);
-
-          toast.success(`${type} Address Updated`, {
-            style: { background: "#111", color: "#fff", borderRadius: "10px" },
-          });
+          toast.success(`${type} Address Updated`);
           setIsEditing(false);
         }
       } catch (err) {
@@ -85,16 +81,16 @@ const SavedAddresses: React.FC<SavedAddressesProps> = ({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               onSubmit={handleSave}
-              className="bg-surface-2 p-8 rounded-[2rem] border border-white/10 space-y-4"
+              className="bg-surface-2 p-6 rounded-2xl border border-default space-y-4"
             >
               <div className="flex justify-between items-center mb-2">
-                <h3 className="text-lg font-bold text-inverse uppercase tracking-tight">
+                <h3 className="text-lg font-bold text-primary uppercase tracking-tight">
                   Edit {type} Address
                 </h3>
                 <button
                   type="button"
                   onClick={() => setIsEditing(false)}
-                  className="text-muted hover:text-white"
+                  className="text-muted hover:text-primary"
                 >
                   <IoCloseOutline size={24} />
                 </button>
@@ -105,7 +101,7 @@ const SavedAddresses: React.FC<SavedAddressesProps> = ({
                 defaultValue={existing?.address}
                 placeholder="Street Address"
                 required
-                className="w-full bg-dark p-4 rounded-xl border border-white/5 focus:border-accent outline-none text-sm"
+                className="w-full bg-surface p-4 rounded-xl border border-default focus:border-primary outline-none text-sm"
               />
               <div className="grid grid-cols-2 gap-4">
                 <input
@@ -113,20 +109,20 @@ const SavedAddresses: React.FC<SavedAddressesProps> = ({
                   defaultValue={existing?.city}
                   placeholder="City"
                   required
-                  className="w-full bg-dark p-4 rounded-xl border border-white/5 focus:border-accent outline-none text-sm"
+                  className="w-full bg-surface p-4 rounded-xl border border-default focus:border-primary outline-none text-sm"
                 />
                 <input
                   name="phone"
                   defaultValue={existing?.phone}
                   placeholder="Phone Number"
                   required
-                  className="w-full bg-dark p-4 rounded-xl border border-white/5 focus:border-accent outline-none text-sm"
+                  className="w-full bg-surface p-4 rounded-xl border border-default focus:border-primary outline-none text-sm"
                 />
               </div>
 
               <button
                 disabled={isSaving}
-                className="w-full bg-inverse text-dark py-4 rounded-full font-black uppercase text-[10px] tracking-widest hover:opacity-90 transition-all"
+                className="w-full bg-dark text-inverse py-3 rounded-full font-black uppercase text-[10px] tracking-widest hover:bg-accent hover:text-dark transition-all"
               >
                 {isSaving ? "Saving..." : "Save Address"}
               </button>
@@ -134,25 +130,25 @@ const SavedAddresses: React.FC<SavedAddressesProps> = ({
           ) : (
             <motion.div
               key="display"
-              className="bg-surface-2 p-8 rounded-[2.5rem] border border-white/5 flex flex-col justify-between h-full min-h-[240px] relative group"
+              className="bg-surface-2 p-6 rounded-2xl border border-default flex flex-col justify-between h-full min-h-[200px] relative group hover:border-accent transition-all"
             >
               <div>
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="w-10 h-10 bg-dark rounded-xl flex items-center justify-center text-accent border border-white/5">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 bg-surface rounded-xl flex items-center justify-center text-accent border border-default">
                     {type === "Shipping" ? (
                       <IoMapOutline size={20} />
                     ) : (
                       <IoCardOutline size={20} />
                     )}
                   </div>
-                  <h3 className="font-display font-black text-xl uppercase italic tracking-tighter text-inverse">
+                  <h3 className="font-display font-black text-lg uppercase italic tracking-tighter text-primary">
                     {type} Address
                   </h3>
                 </div>
 
                 {existing ? (
                   <div className="space-y-1">
-                    <p className="text-sm font-bold text-inverse">
+                    <p className="text-sm font-bold text-primary">
                       {existing.address}
                     </p>
                     <p className="text-sm text-muted">{existing.city}</p>
@@ -161,16 +157,16 @@ const SavedAddresses: React.FC<SavedAddressesProps> = ({
                     </p>
                   </div>
                 ) : (
-                  <p className="text-sm text-muted/40 italic">
+                  <p className="text-sm text-muted italic">
                     No address provided
                   </p>
                 )}
               </div>
 
-              <div className="mt-8">
+              <div className="mt-6">
                 <button
                   onClick={() => setIsEditing(true)}
-                  className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-accent hover:text-white transition-all"
+                  className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-accent hover:text-primary transition-all"
                 >
                   <IoPencilOutline size={14} />
                   {existing ? "Change Address" : "Add Address"}
@@ -178,8 +174,8 @@ const SavedAddresses: React.FC<SavedAddressesProps> = ({
               </div>
 
               {existing && (
-                <div className="absolute top-8 right-8 text-accent/50">
-                  <IoCheckmarkCircleOutline size={24} />
+                <div className="absolute top-6 right-6 text-accent/50">
+                  <IoCheckmarkCircleOutline size={22} />
                 </div>
               )}
             </motion.div>
@@ -190,12 +186,15 @@ const SavedAddresses: React.FC<SavedAddressesProps> = ({
   };
 
   return (
-    <div className="space-y-10">
-      <div className="border-b border-white/5 pb-6">
-        <h2 className="text-3xl font-display font-black uppercase italic tracking-tighter text-inverse">
+    <div className="space-y-8">
+      <div className="border-b border-default pb-6">
+        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-accent">
+          Delivery
+        </span>
+        <h2 className="text-3xl font-display font-black uppercase italic tracking-tighter text-primary mt-2">
           Your Addresses
         </h2>
-        <p className="text-xs text-muted font-bold uppercase tracking-widest mt-1">
+        <p className="text-xs text-muted font-bold uppercase tracking-widest mt-2">
           Manage your delivery and billing locations
         </p>
       </div>

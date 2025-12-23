@@ -44,11 +44,11 @@ const RegisterPage = () => {
       if (auth.currentUser && auth.currentUser.isAnonymous) {
         try {
           await linkWithPopup(auth.currentUser, provider);
-          toast.success("ACCOUNT SYNCED SUCCESSFULLY");
+          toast.success("Account synced successfully");
           router.push(redirectUrl);
           return;
         } catch (linkError: any) {
-          toast.error("LINK ERROR: ACCOUNT ALREADY IN USE");
+          toast.error("Account already in use");
           setLoading(false);
           return;
         }
@@ -56,7 +56,7 @@ const RegisterPage = () => {
       await signInWithPopup(auth, provider);
       router.push(redirectUrl);
     } catch (err: any) {
-      toast.error("GOOGLE SIGN-IN FAILED");
+      toast.error("Google sign-in failed");
     } finally {
       setLoading(false);
     }
@@ -77,7 +77,7 @@ const RegisterPage = () => {
         await updateProfile(user, {
           displayName: `${formData.firstName} ${formData.lastName}`.trim(),
         });
-        toast.success("MEMBER REGISTERED & HISTORY SAVED");
+        toast.success("Member registered & history saved");
       } else {
         const userCredential = await createUserWithEmailAndPassword(
           auth,
@@ -87,18 +87,18 @@ const RegisterPage = () => {
         await updateProfile(userCredential.user, {
           displayName: `${formData.firstName} ${formData.lastName}`.trim(),
         });
-        toast.success("WELCOME TO NEVERBE");
+        toast.success("Welcome to NEVERBE");
       }
       router.push(redirectUrl);
     } catch (err: any) {
-      toast.error("REGISTRATION FAILED. PLEASE CHECK DETAILS.");
+      toast.error("Registration failed. Check your details.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-white text-black flex flex-col items-center justify-center px-6 selection:bg-[#97e13e]/30 relative">
+    <div className="min-h-screen bg-surface text-primary flex flex-col items-center justify-center px-6 relative">
       {loading && <ComponentLoader />}
 
       <motion.div
@@ -111,10 +111,10 @@ const RegisterPage = () => {
             <Image src={Logo} width={130} height={45} alt="NEVERBE" priority />
           </Link>
 
-          <h1 className="text-3xl md:text-4xl font-display font-black uppercase tracking-tighter mb-4">
+          <h1 className="text-3xl md:text-4xl font-display font-black uppercase italic tracking-tighter mb-4">
             Become a Member
           </h1>
-          <p className="text-zinc-500 text-sm font-medium leading-relaxed max-w-[300px]">
+          <p className="text-muted text-sm font-medium leading-relaxed max-w-[300px]">
             Create your profile to unlock exclusive gear, faster checkout, and
             performance tracking.
           </p>
@@ -127,7 +127,7 @@ const RegisterPage = () => {
               type="text"
               placeholder="First Name"
               required
-              className="w-full bg-zinc-50 p-4 text-sm font-bold border border-zinc-200 focus:border-black focus:bg-white outline-none rounded-2xl transition-all placeholder:text-zinc-400"
+              className="w-full bg-surface-2 p-4 text-sm font-bold border border-default focus:border-primary focus:bg-surface outline-none rounded-xl transition-all placeholder:text-muted"
               onChange={handleChange}
             />
             <input
@@ -135,7 +135,7 @@ const RegisterPage = () => {
               type="text"
               placeholder="Last Name"
               required
-              className="w-full bg-zinc-50 p-4 text-sm font-bold border border-zinc-200 focus:border-black focus:bg-white outline-none rounded-2xl transition-all placeholder:text-zinc-400"
+              className="w-full bg-surface-2 p-4 text-sm font-bold border border-default focus:border-primary focus:bg-surface outline-none rounded-xl transition-all placeholder:text-muted"
               onChange={handleChange}
             />
           </div>
@@ -145,7 +145,7 @@ const RegisterPage = () => {
             type="email"
             placeholder="Email Address"
             required
-            className="w-full bg-zinc-50 p-4 text-sm font-bold border border-zinc-200 focus:border-black focus:bg-white outline-none rounded-2xl transition-all placeholder:text-zinc-400"
+            className="w-full bg-surface-2 p-4 text-sm font-bold border border-default focus:border-primary focus:bg-surface outline-none rounded-xl transition-all placeholder:text-muted"
             onChange={handleChange}
           />
 
@@ -154,18 +154,18 @@ const RegisterPage = () => {
             type="password"
             placeholder="Password (Min. 6 Characters)"
             required
-            className="w-full bg-zinc-50 p-4 text-sm font-bold border border-zinc-200 focus:border-black focus:bg-white outline-none rounded-2xl transition-all placeholder:text-zinc-400"
+            className="w-full bg-surface-2 p-4 text-sm font-bold border border-default focus:border-primary focus:bg-surface outline-none rounded-xl transition-all placeholder:text-muted"
             onChange={handleChange}
           />
 
-          <p className="text-[11px] text-zinc-400 text-center uppercase font-black tracking-widest leading-relaxed py-4 px-6">
+          <p className="text-[11px] text-muted text-center uppercase font-bold tracking-widest leading-relaxed py-4 px-6">
             By joining, you agree to our Privacy Policy and Terms of Use.
           </p>
 
           <button
             type="submit"
             disabled={loading}
-            className="group w-full bg-black text-white py-5 rounded-full font-display font-black uppercase tracking-widest text-xs flex items-center justify-center gap-3 transition-all hover:bg-zinc-800 active:scale-[0.98] disabled:opacity-50 shadow-lg shadow-black/5"
+            className="group w-full bg-dark text-inverse py-4 rounded-full font-display font-black uppercase tracking-widest text-xs flex items-center justify-center gap-3 transition-all hover:bg-accent hover:text-dark active:scale-[0.98] disabled:opacity-50"
           >
             {loading ? "Processing..." : "Create Account"}
             <IoArrowForwardOutline
@@ -175,20 +175,20 @@ const RegisterPage = () => {
           </button>
         </form>
 
-        {/* --- Divider --- */}
+        {/* Divider */}
         <div className="flex items-center gap-6 my-10">
-          <div className="h-px bg-zinc-100 flex-1"></div>
-          <span className="text-[10px] font-black text-zinc-300 tracking-widest uppercase">
+          <div className="h-px bg-border-default flex-1"></div>
+          <span className="text-[10px] font-black text-muted tracking-widest uppercase">
             Or
           </span>
-          <div className="h-px bg-zinc-100 flex-1"></div>
+          <div className="h-px bg-border-default flex-1"></div>
         </div>
 
-        {/* --- Google Button: Branded Accent --- */}
+        {/* Google Button */}
         <button
           onClick={handleGoogleRegister}
           type="button"
-          className="w-full bg-[#97e13e] text-black flex items-center justify-center gap-4 py-4 rounded-full font-black uppercase text-xs tracking-widest shadow-xl shadow-[#97e13e]/20 hover:scale-[1.02] transition-all active:scale-95"
+          className="w-full bg-accent text-dark flex items-center justify-center gap-4 py-4 rounded-full font-black uppercase text-xs tracking-widest hover:scale-[1.02] transition-all active:scale-95"
         >
           <svg className="w-5 h-5" viewBox="0 0 24 24">
             <path
@@ -213,13 +213,13 @@ const RegisterPage = () => {
 
         {/* Login Link */}
         <div className="text-center mt-12">
-          <p className="text-zinc-500 text-xs font-bold uppercase tracking-wide">
+          <p className="text-muted text-xs font-bold uppercase tracking-wide">
             Already a member?{" "}
             <Link
               href={`/account/login${
                 redirectUrl !== "/account" ? `?redirect=${redirectUrl}` : ""
               }`}
-              className="text-black font-black underline underline-offset-8 decoration-[#97e13e] decoration-4 hover:decoration-black transition-all ml-1"
+              className="text-primary font-black underline underline-offset-8 decoration-accent decoration-4 hover:decoration-primary transition-all ml-1"
             >
               Sign In.
             </Link>
@@ -231,7 +231,7 @@ const RegisterPage = () => {
       <div className="mt-16 relative z-10">
         <Link
           href="/"
-          className="group flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400 hover:text-black transition-all"
+          className="group flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted hover:text-primary transition-all"
         >
           <IoChevronBackOutline size={14} />
           Back to store

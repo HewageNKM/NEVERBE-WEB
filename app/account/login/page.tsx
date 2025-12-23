@@ -56,7 +56,7 @@ const AuthPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white text-black flex flex-col items-center justify-center px-6 selection:bg-accent/30 relative">
+    <div className="min-h-screen bg-surface text-primary flex flex-col items-center justify-center px-6 relative">
       {loading && <ComponentLoader />}
 
       <motion.div
@@ -69,10 +69,10 @@ const AuthPage = () => {
           <Link href="/" className="mb-8 transition-opacity hover:opacity-70">
             <Image src={Logo} width={130} height={50} alt="NEVERBE" priority />
           </Link>
-          <h1 className="text-3xl font-display font-black uppercase tracking-tighter mb-3">
+          <h1 className="text-3xl font-display font-black uppercase italic tracking-tighter mb-3">
             Sign In
           </h1>
-          <p className="text-zinc-500 text-sm font-medium">
+          <p className="text-muted text-sm font-medium">
             Enter your details to access your gear and orders.
           </p>
         </div>
@@ -80,32 +80,28 @@ const AuthPage = () => {
         {/* Auth Form */}
         <form onSubmit={handleAuth} className="space-y-4">
           <div className="space-y-3">
-            <div className="group">
-              <input
-                name="email"
-                type="email"
-                placeholder="Email Address"
-                required
-                className="w-full bg-zinc-50 p-4 text-sm font-bold border border-zinc-200 focus:border-black focus:bg-white outline-none rounded-2xl transition-all placeholder:text-zinc-400"
-                onChange={handleChange}
-              />
-            </div>
-            <div className="group">
-              <input
-                name="password"
-                type="password"
-                placeholder="Password"
-                required
-                className="w-full bg-zinc-50 p-4 text-sm font-bold border border-zinc-200 focus:border-black focus:bg-white outline-none rounded-2xl transition-all placeholder:text-zinc-400"
-                onChange={handleChange}
-              />
-            </div>
+            <input
+              name="email"
+              type="email"
+              placeholder="Email Address"
+              required
+              className="w-full bg-surface-2 p-4 text-sm font-bold border border-default focus:border-primary focus:bg-surface outline-none rounded-xl transition-all placeholder:text-muted"
+              onChange={handleChange}
+            />
+            <input
+              name="password"
+              type="password"
+              placeholder="Password"
+              required
+              className="w-full bg-surface-2 p-4 text-sm font-bold border border-default focus:border-primary focus:bg-surface outline-none rounded-xl transition-all placeholder:text-muted"
+              onChange={handleChange}
+            />
           </div>
 
           <div className="flex justify-end pr-2">
             <button
               type="button"
-              className="text-[11px] font-bold uppercase tracking-widest text-zinc-400 hover:text-black transition-colors"
+              className="text-[11px] font-bold uppercase tracking-widest text-muted hover:text-primary transition-colors"
             >
               Forgot Password?
             </button>
@@ -114,7 +110,7 @@ const AuthPage = () => {
           <button
             type="submit"
             disabled={loading}
-            className="group w-full bg-black text-white py-5 rounded-full font-display font-black uppercase tracking-widest text-xs flex items-center justify-center gap-3 transition-all hover:bg-zinc-800 active:scale-[0.98] disabled:opacity-50 shadow-lg shadow-black/5"
+            className="group w-full bg-dark text-inverse py-4 rounded-full font-display font-black uppercase tracking-widest text-xs flex items-center justify-center gap-3 transition-all hover:bg-accent hover:text-dark active:scale-[0.98] disabled:opacity-50"
           >
             {loading ? "Signing In..." : "Log In"}
             <IoArrowForward
@@ -124,20 +120,20 @@ const AuthPage = () => {
           </button>
         </form>
 
-        {/* --- Divider --- */}
+        {/* Divider */}
         <div className="flex items-center gap-4 my-10">
-          <div className="h-px bg-zinc-100 flex-1"></div>
-          <span className="text-[10px] font-black text-zinc-300 tracking-widest uppercase">
+          <div className="h-px bg-border-default flex-1"></div>
+          <span className="text-[10px] font-black text-muted tracking-widest uppercase">
             Or
           </span>
-          <div className="h-px bg-zinc-100 flex-1"></div>
+          <div className="h-px bg-border-default flex-1"></div>
         </div>
 
-        {/* --- Google Button: THE BRAND ACCENT --- */}
+        {/* Google Button */}
         <button
           onClick={handleGoogleLogin}
           type="button"
-          className="w-full bg-[#97e13e] text-black flex items-center justify-center gap-4 py-4 rounded-full font-black uppercase text-xs tracking-widest shadow-xl shadow-[#97e13e]/20 hover:scale-[1.02] transition-all active:scale-95"
+          className="w-full bg-accent text-dark flex items-center justify-center gap-4 py-4 rounded-full font-black uppercase text-xs tracking-widest hover:scale-[1.02] transition-all active:scale-95"
         >
           <svg className="w-5 h-5" viewBox="0 0 24 24">
             <path
@@ -160,15 +156,15 @@ const AuthPage = () => {
           Sign in with Google
         </button>
 
-        {/* Footer Toggle */}
+        {/* Footer */}
         <div className="text-center mt-12">
-          <p className="text-zinc-500 text-xs font-bold uppercase tracking-wide">
+          <p className="text-muted text-xs font-bold uppercase tracking-wide">
             Don&apos;t have an account?{" "}
             <Link
               href={`/account/register${
                 redirectUrl !== "/account" ? `?redirect=${redirectUrl}` : ""
               }`}
-              className="text-black font-black underline underline-offset-8 decoration-accent decoration-4 hover:decoration-black transition-all ml-1"
+              className="text-primary font-black underline underline-offset-8 decoration-accent decoration-4 hover:decoration-primary transition-all ml-1"
             >
               Join Us.
             </Link>
@@ -176,11 +172,11 @@ const AuthPage = () => {
         </div>
       </motion.div>
 
-      {/* Clean Return Link */}
+      {/* Return Link */}
       <div className="mt-16">
         <Link
           href="/"
-          className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-zinc-400 hover:text-black transition-all"
+          className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-muted hover:text-primary transition-all"
         >
           <IoChevronBackOutline size={14} />
           Return to Store
