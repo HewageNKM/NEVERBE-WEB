@@ -7,34 +7,41 @@ import type { Metadata } from "next";
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: {
-    default: "Shoes Online Sri Lanka | Men's & Women's Catalog",
-    template: "%s | NEVERBE",
-  },
+  title: "Buy Shoes Online Sri Lanka | Men's & Women's Footwear Collection",
   description:
-    "Browse sneakers, running shoes, and slides in Sri Lanka. Cash on delivery available island-wide.",
+    "Browse sneakers, running shoes, slides, sandals & casual footwear in Sri Lanka. Cash on Delivery available island-wide. Best prices on premium 7A quality shoes.",
   keywords: [
     "buy shoes online sri lanka",
     "shoes price in sri lanka",
+    "mens shoes sri lanka",
+    "womens shoes sri lanka",
+    "sneakers colombo",
+    "running shoes sri lanka",
     ...seoKeywords,
   ],
   alternates: { canonical: "https://neverbe.lk/collections/products" },
   openGraph: {
-    title: "Buy Shoes Online in Sri Lanka | Huge Collection",
+    title: "Buy Shoes Online in Sri Lanka | NEVERBE Collection",
     description:
-      "Shop sneakers and casual footwear at the best prices in Sri Lanka.",
+      "Shop the largest footwear collection in Sri Lanka. Sneakers, running shoes, slides & sandals at best prices. Cash on Delivery island-wide.",
     url: "https://neverbe.lk/collections/products",
     type: "website",
     siteName: "NEVERBE",
     locale: "en_LK",
     images: [
       {
-        url: "https://neverbe.lk/shoes-og.jpg",
+        url: "https://neverbe.lk/logo-og.png",
         width: 1200,
         height: 630,
-        alt: "NEVERBE",
+        alt: "NEVERBE - Buy Shoes Online Sri Lanka",
       },
     ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Buy Shoes Online in Sri Lanka | NEVERBE",
+    description: "Shop sneakers & footwear. Cash on Delivery island-wide.",
+    images: ["https://neverbe.lk/logo-og.png"],
   },
   metadataBase: new URL("https://neverbe.lk"),
 };
@@ -54,33 +61,66 @@ const Page = async () => {
 
   const productListingSchema = {
     "@context": "https://schema.org",
-    "@type": "CollectionPage",
-    name: "Shoes & Footwear Collection Sri Lanka",
-    description:
-      "Catalog of sneakers, running shoes, and slides available in Sri Lanka.",
-    url: "https://neverbe.lk/collections/products",
-    inLanguage: "en-LK",
-    mainEntity: {
-      "@type": "ItemList",
-      itemListElement: productList.map((product: any, index: number) => ({
-        "@type": "ListItem",
-        position: index + 1,
-        item: {
-          "@type": "Product",
-          name: product?.name,
-          image: product?.thumbnail?.url,
-          url: `https://neverbe.lk/collections/products/${product?.id}`,
-          brand: { "@type": "Brand", name: "NEVERBE" },
-          offers: {
-            "@type": "Offer",
-            priceCurrency: "LKR",
-            price: product?.sellingPrice || "0.00",
-            availability: "https://schema.org/InStock",
-            itemCondition: "https://schema.org/NewCondition",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: "Home",
+            item: "https://neverbe.lk",
           },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: "Products",
+            item: "https://neverbe.lk/collections/products",
+          },
+        ],
+      },
+      {
+        "@type": "CollectionPage",
+        name: "Buy Shoes Online Sri Lanka | NEVERBE Collection",
+        description:
+          "Shop sneakers, running shoes, slides & sandals in Sri Lanka. Cash on Delivery available.",
+        url: "https://neverbe.lk/collections/products",
+        inLanguage: "en-LK",
+        isPartOf: {
+          "@id": "https://neverbe.lk/#website",
         },
-      })),
-    },
+        mainEntity: {
+          "@type": "ItemList",
+          numberOfItems: productList.length,
+          itemListElement: productList
+            .slice(0, 20)
+            .map((product: any, index: number) => ({
+              "@type": "ListItem",
+              position: index + 1,
+              item: {
+                "@type": "Product",
+                name: product?.name,
+                image: product?.thumbnail?.url,
+                url: `https://neverbe.lk/collections/products/${product?.id}`,
+                brand: { "@type": "Brand", name: product?.brand || "NEVERBE" },
+                offers: {
+                  "@type": "Offer",
+                  priceCurrency: "LKR",
+                  price: product?.sellingPrice || "0.00",
+                  availability: product?.inStock
+                    ? "https://schema.org/InStock"
+                    : "https://schema.org/OutOfStock",
+                  itemCondition: "https://schema.org/NewCondition",
+                  seller: {
+                    "@type": "Organization",
+                    name: "NEVERBE",
+                  },
+                },
+              },
+            })),
+        },
+      },
+    ],
   };
 
   return (

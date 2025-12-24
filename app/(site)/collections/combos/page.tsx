@@ -9,12 +9,9 @@ import EmptyState from "@/components/EmptyState";
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: {
-    default: "Bundle Deals & Combo Offers | NEVERBE Sri Lanka",
-    template: "%s | NEVERBE",
-  },
+  title: "Bundle Deals & Combo Offers | NEVERBE Sri Lanka",
   description:
-    "Shop exclusive combo deals and save big! Bundle offers, BOGO deals, and multi-buy discounts on premium sneakers in Sri Lanka.",
+    "Shop exclusive combo deals and save big! Bundle offers, BOGO deals, and multi-buy discounts on premium sneakers in Sri Lanka. Cash on Delivery available.",
   keywords: [
     "combo deals sri lanka",
     "bundle offers",
@@ -35,6 +32,20 @@ export const metadata: Metadata = {
     type: "website",
     siteName: "NEVERBE",
     locale: "en_LK",
+    images: [
+      {
+        url: "https://neverbe.lk/logo-og.png",
+        width: 1200,
+        height: 630,
+        alt: "NEVERBE Bundle Deals",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Bundle Deals & Combo Offers | NEVERBE",
+    description: "BOGO deals & bundle discounts on sneakers in Sri Lanka.",
+    images: ["https://neverbe.lk/logo-og.png"],
   },
   metadataBase: new URL("https://neverbe.lk"),
 };
@@ -59,40 +70,60 @@ const CombosPage = async ({
     console.error("Error fetching combos:", e);
   }
 
-  /* Structured Data for SEO */
+  /* Structured Data with BreadcrumbList for SEO */
   const combosSchema = {
     "@context": "https://schema.org",
-    "@type": "CollectionPage",
-    name: "Bundle Deals & Combo Offers",
-    description:
-      "Exclusive combo deals, BOGO offers, and bundle discounts on premium footwear in Sri Lanka.",
-    url: `https://neverbe.lk/collections/combos?page=${page}`,
-    inLanguage: "en-LK",
-    mainEntity: {
-      "@type": "ItemList",
-      itemListElement: combos.map((combo: any, index: number) => ({
-        "@type": "ListItem",
-        position: index + 1,
-        item: {
-          "@type": "Product",
-          name: combo?.name,
-          image: combo?.previewThumbnail || "https://neverbe.lk/logo-og.png",
-          description:
-            combo?.description || "Bundle deal at NEVERBE Sri Lanka.",
-          url: `https://neverbe.lk/collections/combos/${combo?.id}`,
-          brand: {
-            "@type": "Brand",
-            name: "NEVERBE",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: "Home",
+            item: "https://neverbe.lk",
           },
-          offers: {
-            "@type": "Offer",
-            priceCurrency: "LKR",
-            price: combo?.comboPrice || "0.00",
-            availability: "https://schema.org/InStock",
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: "Bundle Deals",
+            item: "https://neverbe.lk/collections/combos",
           },
+        ],
+      },
+      {
+        "@type": "CollectionPage",
+        name: "Bundle Deals & Combo Offers",
+        description:
+          "Exclusive combo deals, BOGO offers, and bundle discounts on premium footwear in Sri Lanka.",
+        url: `https://neverbe.lk/collections/combos`,
+        inLanguage: "en-LK",
+        mainEntity: {
+          "@type": "ItemList",
+          numberOfItems: combos.length,
+          itemListElement: combos.map((combo: any, index: number) => ({
+            "@type": "ListItem",
+            position: index + 1,
+            item: {
+              "@type": "Product",
+              name: combo?.name,
+              image:
+                combo?.previewThumbnail || "https://neverbe.lk/logo-og.png",
+              description:
+                combo?.description || "Bundle deal at NEVERBE Sri Lanka.",
+              url: `https://neverbe.lk/collections/combos/${combo?.id}`,
+              brand: { "@type": "Brand", name: "NEVERBE" },
+              offers: {
+                "@type": "Offer",
+                priceCurrency: "LKR",
+                price: combo?.comboPrice || "0.00",
+                availability: "https://schema.org/InStock",
+              },
+            },
+          })),
         },
-      })),
-    },
+      },
+    ],
   };
 
   return (

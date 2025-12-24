@@ -10,24 +10,41 @@ import Link from "next/link";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Offers & Rewards | NEVERBE",
+  title: "Offers & Deals | NEVERBE Sri Lanka - Shoe Discounts",
   description:
-    "Explore exclusive deals, active promotions, and discount coupons.",
+    "Explore exclusive shoe deals, active promotions, and discount coupons at NEVERBE. Best prices on sneakers & footwear in Sri Lanka. Cash on Delivery available.",
+  alternates: { canonical: "https://neverbe.lk/collections/offers" },
+  keywords: [
+    "shoe offers sri lanka",
+    "discount shoes",
+    "shoe deals colombo",
+    "cheap sneakers",
+    "footwear sale",
+    "coupons neverbe",
+  ],
   openGraph: {
-    title: "Offers & Rewards | NEVERBE",
+    title: "Offers & Deals | NEVERBE Sri Lanka",
     description:
-      "Explore exclusive deals, active promotions, and discount coupons.",
+      "Exclusive shoe deals, promotions & discount coupons. Best prices on sneakers & footwear.",
     url: "https://neverbe.lk/collections/offers",
     type: "website",
     siteName: "NEVERBE",
+    locale: "en_LK",
     images: [
       {
-        url: "https://neverbe.lk/deals-og.jpg",
+        url: "https://neverbe.lk/logo-og.png",
         width: 1200,
         height: 630,
-        alt: "NEVERBE Offers",
+        alt: "NEVERBE Offers & Deals",
       },
     ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Offers & Deals | NEVERBE Sri Lanka",
+    description:
+      "Exclusive shoe deals & discount coupons. Best prices in Sri Lanka.",
+    images: ["https://neverbe.lk/logo-og.png"],
   },
 };
 
@@ -45,7 +62,7 @@ const OffersPage = async () => {
 
   let dealsList: any[] = [];
   try {
-    const dealsResult = await getDealsProducts(1, 30); // Increased count for full grid
+    const dealsResult = await getDealsProducts(1, 30);
     dealsList = dealsResult?.dataList || [];
   } catch (e) {
     console.error("Error fetching deal items:", e);
@@ -53,31 +70,55 @@ const OffersPage = async () => {
 
   const offersSchema = {
     "@context": "https://schema.org",
-    "@type": "CollectionPage",
-    name: "Offers & Rewards - NEVERBE",
-    description:
-      "Exclusive deals and discounts on premium footwear at NEVERBE.",
-    url: "https://neverbe.lk/collections/offers",
-    inLanguage: "en-LK",
-    mainEntity: {
-      "@type": "ItemList",
-      itemListElement: dealsList.map((product: any, index: number) => ({
-        "@type": "ListItem",
-        position: index + 1,
-        item: {
-          "@type": "Product",
-          name: product?.name,
-          image: product?.thumbnail?.url,
-          url: `https://neverbe.lk/collections/products/${product?.id}`,
-          offers: {
-            "@type": "Offer",
-            priceCurrency: "LKR",
-            price: product?.sellingPrice || "0.00",
-            availability: "https://schema.org/InStock",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: "Home",
+            item: "https://neverbe.lk",
           },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: "Offers",
+            item: "https://neverbe.lk/collections/offers",
+          },
+        ],
+      },
+      {
+        "@type": "CollectionPage",
+        name: "Offers & Deals - NEVERBE Sri Lanka",
+        description:
+          "Exclusive deals and discounts on premium footwear at NEVERBE.",
+        url: "https://neverbe.lk/collections/offers",
+        inLanguage: "en-LK",
+        mainEntity: {
+          "@type": "ItemList",
+          numberOfItems: dealsList.length,
+          itemListElement: dealsList
+            .slice(0, 15)
+            .map((product: any, index: number) => ({
+              "@type": "ListItem",
+              position: index + 1,
+              item: {
+                "@type": "Product",
+                name: product?.name,
+                image: product?.thumbnail?.url,
+                url: `https://neverbe.lk/collections/products/${product?.id}`,
+                offers: {
+                  "@type": "Offer",
+                  priceCurrency: "LKR",
+                  price: product?.sellingPrice || "0.00",
+                  availability: "https://schema.org/InStock",
+                },
+              },
+            })),
         },
-      })),
-    },
+      },
+    ],
   };
 
   return (

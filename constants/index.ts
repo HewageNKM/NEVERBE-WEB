@@ -24,6 +24,8 @@ export const seoKeywords: string[] = [
   "buy shoes online",
   "shoe shop",
   "shoe store near me",
+  "online shoe store sri lanka",
+  "best shoe shop in sri lanka",
 
   // 2. Category Specific (Capturing "any type")
   "sneakers",
@@ -32,7 +34,7 @@ export const seoKeywords: string[] = [
   "gym shoes",
   "casual shoes",
   "canvas shoes",
-  "formal shoes", // Even if you don't have many, listing it helps the domain authority
+  "formal shoes",
   "boots",
   "slides",
   "slippers",
@@ -40,6 +42,12 @@ export const seoKeywords: string[] = [
   "flip flops",
   "jogging shoes",
   "walking shoes",
+  "high tops",
+  "low tops",
+  "chunky sneakers",
+  "retro sneakers",
+  "basketball shoes",
+  "training shoes",
 
   // 3. Gender Specific
   "mens shoes",
@@ -47,6 +55,9 @@ export const seoKeywords: string[] = [
   "womens shoes",
   "ladies shoes",
   "boys shoes",
+  "girls shoes",
+  "kids shoes sri lanka",
+  "unisex sneakers",
 
   // 4. The Niche (Your specific strength)
   "first copy shoes",
@@ -55,12 +66,74 @@ export const seoKeywords: string[] = [
   "branded copy shoes",
   "nike copy",
   "adidas copy",
+  "replica sneakers",
+  "premium quality shoes",
+  "imported shoes sri lanka",
 
-  // 5. Locations
+  // 5. Sri Lankan Locations
   "shoes colombo",
   "shoes gampaha",
   "shoes kandy",
+  "shoes galle",
+  "shoes negombo",
+  "shoes kurunegala",
+  "shoes matara",
+  "shoes jaffna",
+  "shoes ratnapura",
+  "shoes anuradhapura",
   "cash on delivery shoes",
+  "COD shoes sri lanka",
+  "island wide delivery shoes",
+
+  // 6. Price & Value Keywords
+  "cheap shoes sri lanka",
+  "affordable footwear",
+  "best price shoes",
+  "discount shoes",
+  "shoes on sale",
+  "budget sneakers",
+  "low price shoes colombo",
+  "shoes under 5000",
+  "shoes under 10000",
+
+  // 7. Occasion-Based Keywords
+  "wedding shoes",
+  "party shoes",
+  "office shoes",
+  "school shoes",
+  "work shoes",
+  "casual wear shoes",
+  "daily wear shoes",
+  "gym workout shoes",
+  "outdoor shoes",
+  "beach sandals",
+
+  // 8. Material & Style Keywords
+  "leather shoes",
+  "mesh sneakers",
+  "synthetic shoes",
+  "breathable shoes",
+  "lightweight shoes",
+  "cushioned shoes",
+  "waterproof shoes",
+
+  // 9. Brand-Related Searches
+  "nike shoes sri lanka",
+  "adidas shoes sri lanka",
+  "puma shoes sri lanka",
+  "new balance sri lanka",
+  "jordan shoes sri lanka",
+  "air force 1 sri lanka",
+  "air max sri lanka",
+  "yeezy sri lanka",
+
+  // 10. Sinhala Romanized Terms
+  "sappathu",
+  "sappu",
+  "shoes ganna",
+  "shoes mila",
+  "sneakers lk",
+  "neverbe shoes",
 ];
 
 export const sortingOptions = [
