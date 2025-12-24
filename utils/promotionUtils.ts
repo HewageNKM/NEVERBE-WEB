@@ -74,6 +74,89 @@ export const checkVariantEligibility = (
   return false;
 };
 
+// ============ SINGLE VARIANT ELIGIBILITY CHECK ============
+
+/**
+ * Check if a specific variant is eligible for a promotion.
+ * Used for showing promotion indicators on variant swatches.
+ *
+ * Checks both:
+ * 1. applicableProductVariants (legacy/explicit targeting)
+ * 2. conditions array with SPECIFIC_PRODUCT type that has variantMode/variantIds
+ *
+ * Returns true if:
+ * - No variant targeting is set (product-level promotion applies to all variants)
+ * - Variant mode is ALL_VARIANTS for this product
+ * - Variant mode is SPECIFIC_VARIANTS and this variant is in the list
+ */
+export const isVariantEligibleForPromotion = (
+  productId: string,
+  variantId: string,
+  targets?: ProductVariantTarget[],
+  conditions?: PromotionCondition[]
+): boolean => {
+  // Check applicableProductVariants first (legacy/explicit targeting)
+  if (targets && targets.length > 0) {
+    const productTarget = targets.find((t) => t.productId === productId);
+    if (productTarget) {
+      if (productTarget.variantMode === "ALL_VARIANTS") return true;
+      if (
+        productTarget.variantMode === "SPECIFIC_VARIANTS" &&
+        productTarget.variantIds
+      ) {
+        return productTarget.variantIds.includes(variantId);
+      }
+      return false;
+    }
+  }
+
+  // Check conditions array for SPECIFIC_PRODUCT with variant targeting
+  if (conditions && conditions.length > 0) {
+    // Find all SPECIFIC_PRODUCT conditions for this product
+    const productConditions = conditions.filter(
+      (c) =>
+        c.type === "SPECIFIC_PRODUCT" &&
+        (c.value === productId || c.productIds?.includes(productId))
+    );
+
+    // If no conditions for this product, check if product has any condition
+    if (productConditions.length === 0) {
+      // Check if this product is targeted at all
+      const anyProductCondition = conditions.find(
+        (c) =>
+          c.type === "SPECIFIC_PRODUCT" &&
+          (c.value === productId || c.productIds?.includes(productId))
+      );
+      // If not targeted, promotion doesn't apply
+      return !anyProductCondition;
+    }
+
+    // Check each condition for this product
+    for (const condition of productConditions) {
+      // If no variantMode specified, treat as ALL_VARIANTS
+      if (!condition.variantMode || condition.variantMode === "ALL_VARIANTS") {
+        return true;
+      }
+
+      // SPECIFIC_VARIANTS - check if this variant is in the list
+      if (
+        condition.variantMode === "SPECIFIC_VARIANTS" &&
+        condition.variantIds
+      ) {
+        if (condition.variantIds.includes(variantId)) {
+          return true;
+        }
+      }
+    }
+
+    // Variant not in any eligible list
+    return false;
+  }
+
+  // No variant targeting at all - all variants are eligible
+  return true;
+};
+
 // ============ GET ELIGIBLE CART ITEMS ============
 
 export const getEligibleCartItems = (

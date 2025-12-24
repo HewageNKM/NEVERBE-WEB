@@ -13,6 +13,11 @@ import { addToBag } from "@/redux/bagSlice/bagSlice";
 import { Product } from "@/interfaces/Product";
 import { ProductVariant } from "@/interfaces/ProductVariant";
 import { usePromotionsContext } from "@/components/PromotionsProvider";
+import {
+  ProductVariantTarget,
+  PromotionCondition,
+} from "@/interfaces/Promotion";
+import { isVariantEligibleForPromotion } from "@/utils/promotionUtils";
 import SizeGrid from "@/components/SizeGrid";
 
 interface QuickViewModalProps {
@@ -37,6 +42,10 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
   const [qty, setQty] = useState(1);
   const [sizeStock, setSizeStock] = useState<Record<string, number>>({});
   const [stockLoading, setStockLoading] = useState(false);
+  // Track stock for ALL variants (variantId -> total stock)
+  const [allVariantStock, setAllVariantStock] = useState<
+    Record<string, number>
+  >({});
 
   useEffect(() => {
     if (product) {
@@ -45,9 +54,50 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
       setSelectedSize("");
       setQty(1);
       setSizeStock({});
+      setAllVariantStock({});
     }
   }, [product]);
 
+  // Preload stock for ALL variants when modal opens
+  useEffect(() => {
+    if (!product || !isOpen || !product.variants?.length) return;
+
+    const loadAllVariantStock = async () => {
+      const stockMap: Record<string, number> = {};
+
+      // Fetch stock for each variant in parallel
+      const promises = product.variants.map(async (variant) => {
+        if (!variant.sizes?.length) {
+          stockMap[variant.variantId] = 0;
+          return;
+        }
+
+        try {
+          const res = await fetch(
+            `/api/v1/inventory/batch?productId=${product.id}&variantId=${
+              variant.variantId
+            }&sizes=${variant.sizes.join(",")}`
+          );
+          const data = await res.json();
+          // Sum up total stock for this variant
+          const totalStock = Object.values(data.stock || {}).reduce(
+            (sum: number, qty: unknown) => sum + (Number(qty) || 0),
+            0
+          );
+          stockMap[variant.variantId] = totalStock;
+        } catch {
+          stockMap[variant.variantId] = 0;
+        }
+      });
+
+      await Promise.all(promises);
+      setAllVariantStock(stockMap);
+    };
+
+    loadAllVariantStock();
+  }, [product?.id, isOpen]);
+
+  // Load stock for selected variant (for size grid)
   useEffect(() => {
     if (
       !product ||
@@ -87,6 +137,22 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
   const finalPrice = product.sellingPrice;
   const originalPrice = product.marketPrice;
   const hasActiveDiscount = product.marketPrice > product.sellingPrice;
+
+  // Helper to check if a variant is eligible for a promotion
+  const getVariantPromotion = (variantId: string) => {
+    const promo = getPromotionForProduct(product.id, variantId);
+    if (!promo) return null;
+
+    // Check variant eligibility using both applicableProductVariants and conditions
+    const isEligible = isVariantEligibleForPromotion(
+      product.id,
+      variantId,
+      promo.applicableProductVariants as ProductVariantTarget[] | undefined,
+      promo.conditions as PromotionCondition[] | undefined
+    );
+
+    return isEligible ? promo : null;
+  };
 
   const availableStock = sizeStock[selectedSize] || 0;
   const bagQty =
@@ -183,29 +249,71 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
                 {/* Variant Swatches */}
                 {product.variants.length > 1 && (
                   <div className="px-4 sm:px-6 py-4 md:py-6 flex gap-2 sm:gap-3 overflow-x-auto hide-scrollbar justify-start md:justify-center bg-surface-2 border-t border-default md:border-t-0">
-                    {product.variants.map((v) => (
-                      <button
-                        key={v.variantId}
-                        onClick={() => {
-                          setSelectedVariant(v);
-                          setSelectedSize("");
-                        }}
-                        className={`relative w-12 h-12 sm:w-14 sm:h-14 shrink-0 bg-surface transition-all rounded-lg p-1 ${
-                          selectedVariant?.variantId === v.variantId
-                            ? "border-accent border-2 shadow-custom scale-105 z-10"
-                            : "border border-default hover:border-accent opacity-60 hover:opacity-100"
-                        }`}
-                      >
-                        <div className="relative w-full h-full">
-                          <Image
-                            src={v.images[0]?.url || ""}
-                            alt={v.variantName}
-                            fill
-                            className="object-contain mix-blend-multiply"
-                          />
-                        </div>
-                      </button>
-                    ))}
+                    {product.variants.map((v) => {
+                      // Check if this specific variant is eligible for a promotion
+                      const variantPromo = getVariantPromotion(v.variantId);
+                      // Check if variant is out of stock
+                      const variantTotalStock = allVariantStock[v.variantId];
+                      const isVariantOutOfStock =
+                        variantTotalStock !== undefined &&
+                        variantTotalStock <= 0;
+
+                      return (
+                        <button
+                          key={v.variantId}
+                          onClick={() => {
+                            setSelectedVariant(v);
+                            setSelectedSize("");
+                          }}
+                          disabled={isVariantOutOfStock}
+                          className={`relative w-12 h-12 sm:w-14 sm:h-14 shrink-0 bg-surface transition-all rounded-lg p-1 ${
+                            selectedVariant?.variantId === v.variantId
+                              ? "border-accent border-2 shadow-custom scale-105 z-10"
+                              : "border border-default hover:border-accent opacity-60 hover:opacity-100"
+                          } ${
+                            isVariantOutOfStock
+                              ? "opacity-40 cursor-not-allowed"
+                              : ""
+                          }`}
+                          title={
+                            isVariantOutOfStock
+                              ? `${v.variantName} - Out of Stock`
+                              : variantPromo
+                              ? `${v.variantName} - ${
+                                  variantPromo.name || "Promo"
+                                }`
+                              : v.variantName
+                          }
+                        >
+                          <div
+                            className={`relative w-full h-full ${
+                              isVariantOutOfStock ? "grayscale" : ""
+                            }`}
+                          >
+                            <Image
+                              src={v.images[0]?.url || ""}
+                              alt={v.variantName}
+                              fill
+                              className="object-contain mix-blend-multiply"
+                            />
+                          </div>
+                          {/* Out of Stock indicator - diagonal line */}
+                          {isVariantOutOfStock && (
+                            <div className="absolute inset-0 flex items-center justify-center">
+                              <div className="w-full h-0.5 bg-error/70 rotate-45 transform origin-center" />
+                            </div>
+                          )}
+                          {/* Promotion indicator badge */}
+                          {variantPromo && !isVariantOutOfStock && (
+                            <span className="absolute -top-1 -right-1 w-4 h-4 bg-accent rounded-full border-2 border-surface flex items-center justify-center shadow-custom">
+                              <span className="text-[7px] font-black text-dark">
+                                %
+                              </span>
+                            </span>
+                          )}
+                        </button>
+                      );
+                    })}
                   </div>
                 )}
               </div>

@@ -26,6 +26,11 @@ import { ProductVariant } from "@/interfaces/ProductVariant";
 import { KOKOLogo } from "@/assets/images";
 import SizeGuideDialog from "@/components/SizeGuideDialog";
 import { usePromotionsContext } from "@/components/PromotionsProvider";
+import {
+  ProductVariantTarget,
+  PromotionCondition,
+} from "@/interfaces/Promotion";
+import { isVariantEligibleForPromotion } from "@/utils/promotionUtils";
 import StockBadge from "@/components/StockBadge";
 import ShareButtons from "@/components/ShareButtons";
 import FloatingAddToBag from "@/components/FloatingAddToBag";
@@ -52,6 +57,10 @@ const ProductHero = ({ item }: { item: Product }) => {
   const [sizeStock, setSizeStock] = useState<Record<string, number>>({});
   const [stockLoading, setStockLoading] = useState(false);
   const [showSizeGuide, setShowSizeGuide] = useState(false);
+  // Track stock for ALL variants (variantId -> total stock)
+  const [allVariantStock, setAllVariantStock] = useState<
+    Record<string, number>
+  >({});
 
   // Get promotion for display purposes only (banner)
   const activePromo = getPromotionForProduct(
@@ -64,12 +73,68 @@ const ProductHero = ({ item }: { item: Product }) => {
   const originalPrice = item.marketPrice;
   const hasActiveDiscount = item.marketPrice > item.sellingPrice;
 
+  // Helper to check if a variant has a promotion indicator
+  const getVariantPromotion = (variantId: string) => {
+    const promo = getPromotionForProduct(item.id, variantId);
+    if (!promo) return null;
+
+    // Check variant eligibility using both applicableProductVariants and conditions
+    const isEligible = isVariantEligibleForPromotion(
+      item.id,
+      variantId,
+      promo.applicableProductVariants as ProductVariantTarget[] | undefined,
+      promo.conditions as PromotionCondition[] | undefined
+    );
+
+    return isEligible ? promo : null;
+  };
+
   useEffect(() => {
     if (selectedVariant.images?.length) {
       setSelectedImage(selectedVariant.images[0]);
     }
   }, [selectedVariant]);
 
+  // Preload stock for ALL variants on component mount
+  useEffect(() => {
+    if (!item.variants?.length) return;
+
+    const loadAllVariantStock = async () => {
+      const stockMap: Record<string, number> = {};
+
+      // Fetch stock for each variant in parallel
+      const promises = item.variants.map(async (variant) => {
+        if (!variant.sizes?.length) {
+          stockMap[variant.variantId] = 0;
+          return;
+        }
+
+        try {
+          const res = await fetch(
+            `/api/v1/inventory/batch?productId=${item.id}&variantId=${
+              variant.variantId
+            }&sizes=${variant.sizes.join(",")}`
+          );
+          const data = await res.json();
+          // Sum up total stock for this variant
+          const totalStock = Object.values(data.stock || {}).reduce(
+            (sum: number, qty: unknown) => sum + (Number(qty) || 0),
+            0
+          );
+          stockMap[variant.variantId] = totalStock;
+        } catch {
+          stockMap[variant.variantId] = 0;
+        }
+      });
+
+      await Promise.all(promises);
+      setAllVariantStock(stockMap);
+    };
+
+    loadAllVariantStock();
+  }, [item.id]);
+
+  // Load stock for selected variant (for size grid)
   useEffect(() => {
     const fetchStock = async () => {
       setStockLoading(true);
@@ -263,28 +328,63 @@ const ProductHero = ({ item }: { item: Product }) => {
               Select Color
             </h3>
             <div className="flex flex-wrap gap-2">
-              {item.variants.map((v) => (
-                <button
-                  key={v.variantId}
-                  onClick={() => {
-                    setSelectedVariant(v);
-                    setSelectedSize("");
-                  }}
-                  className={`w-12 h-12 bg-surface-2 rounded-md overflow-hidden border-2 transition-all ${
-                    selectedVariant.variantId === v.variantId
-                      ? "border-dark"
-                      : "border-transparent opacity-60"
-                  }`}
-                >
-                  <Image
-                    src={v.images[0].url}
-                    alt={v.variantName}
-                    width={48}
-                    height={48}
-                    className="object-cover mix-blend-multiply"
-                  />
-                </button>
-              ))}
+              {item.variants.map((v) => {
+                // Check if this specific variant is eligible for a promotion
+                const variantPromo = getVariantPromotion(v.variantId);
+                // Check if variant is out of stock
+                const variantTotalStock = allVariantStock[v.variantId];
+                const isVariantOutOfStock =
+                  variantTotalStock !== undefined && variantTotalStock <= 0;
+
+                return (
+                  <button
+                    key={v.variantId}
+                    onClick={() => {
+                      setSelectedVariant(v);
+                      setSelectedSize("");
+                    }}
+                    disabled={isVariantOutOfStock}
+                    className={`relative w-12 h-12 bg-surface-2 rounded-md overflow-hidden border-2 transition-all ${
+                      selectedVariant.variantId === v.variantId
+                        ? "border-dark"
+                        : "border-transparent opacity-60"
+                    } ${
+                      isVariantOutOfStock ? "opacity-40 cursor-not-allowed" : ""
+                    }`}
+                    title={
+                      isVariantOutOfStock
+                        ? `${v.variantName} - Out of Stock`
+                        : variantPromo
+                        ? `${v.variantName} - ${variantPromo.name || "Promo"}`
+                        : v.variantName
+                    }
+                  >
+                    <div className={isVariantOutOfStock ? "grayscale" : ""}>
+                      <Image
+                        src={v.images[0].url}
+                        alt={v.variantName}
+                        width={48}
+                        height={48}
+                        className="object-cover mix-blend-multiply"
+                      />
+                    </div>
+                    {/* Out of Stock indicator - diagonal line */}
+                    {isVariantOutOfStock && (
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="w-full h-0.5 bg-error/70 rotate-45 transform origin-center" />
+                      </div>
+                    )}
+                    {/* Promotion indicator badge */}
+                    {variantPromo && !isVariantOutOfStock && (
+                      <span className="absolute -top-1 -right-1 w-4 h-4 bg-accent rounded-full border-2 border-surface flex items-center justify-center shadow-custom">
+                        <span className="text-[7px] font-black text-dark">
+                          %
+                        </span>
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
             </div>
           </div>
 

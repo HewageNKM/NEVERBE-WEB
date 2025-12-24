@@ -5,12 +5,18 @@ import Link from "next/link";
 import { IoEyeOutline } from "react-icons/io5";
 import { KOKOLogo } from "@/assets/images";
 import { Product } from "@/interfaces/Product";
+import { ProductVariant } from "@/interfaces/ProductVariant";
+import {
+  ProductVariantTarget,
+  PromotionCondition,
+} from "@/interfaces/Promotion";
 import { usePromotionsContext } from "@/components/PromotionsProvider";
 import { useQuickView } from "@/components/QuickViewProvider";
 import {
   calculateFinalPrice,
   hasDiscount as checkHasDiscount,
 } from "@/utils/pricing";
+import { isVariantEligibleForPromotion } from "@/utils/promotionUtils";
 
 const ItemCard = ({
   item,
@@ -20,18 +26,45 @@ const ItemCard = ({
   priority?: boolean;
 }) => {
   const [outOfStocks, setOutOfStocks] = useState(false);
+  const [activeVariant, setActiveVariant] = useState<ProductVariant | null>(
+    null
+  );
   const { openQuickView } = useQuickView();
   const { getPromotionForProduct } = usePromotionsContext();
 
   useEffect(() => {
-    if (!item.variants?.length || item.variants.every((v) => v.stock === 0)) {
+    // Check if product is out of stock using the inStock property
+    if (!item.inStock) {
       setOutOfStocks(true);
+    }
+    // Set default variant
+    if (item.variants?.length > 0) {
+      setActiveVariant(item.variants[0]);
     }
   }, [item]);
 
   const activePromo = getPromotionForProduct(item.id);
   const discountedPrice = calculateFinalPrice(item, activePromo);
   const hasDiscount = checkHasDiscount(item, activePromo);
+
+  // Get the current display image - either from active variant or product thumbnail
+  const displayImage = activeVariant?.images?.[0]?.url || item.thumbnail.url;
+
+  // Helper to check if a variant has a promotion indicator
+  const getVariantPromotion = (variantId: string) => {
+    const promo = getPromotionForProduct(item.id, variantId);
+    if (!promo) return null;
+
+    // Check variant eligibility using both applicableProductVariants and conditions
+    const isEligible = isVariantEligibleForPromotion(
+      item.id,
+      variantId,
+      promo.applicableProductVariants as ProductVariantTarget[] | undefined,
+      promo.conditions as PromotionCondition[] | undefined
+    );
+
+    return isEligible ? promo : null;
+  };
 
   return (
     <article className="group relative flex flex-col w-full bg-surface transition-transform duration-500 hover:-translate-y-1">
@@ -44,7 +77,7 @@ const ItemCard = ({
           <Image
             width={600}
             height={750}
-            src={item.thumbnail.url}
+            src={displayImage}
             alt={item.name}
             className={`h-full w-full object-cover transition-all duration-700 group-hover:scale-105 ${
               outOfStocks ? "opacity-60 grayscale" : "group-hover:opacity-95"
@@ -121,7 +154,59 @@ const ItemCard = ({
               {item.category?.replace("-", " ") || "Premium Gear"}
             </p>
           </div>
+        </Link>
 
+        {/* Color Swatches - Interactive with Promotion Indicators */}
+        {item.variants?.length > 1 && (
+          <div className="flex items-center gap-1.5 mt-3">
+            {item.variants.slice(0, 5).map((variant) => {
+              // Check if this specific variant is eligible for a promotion
+              const variantPromo = getVariantPromotion(variant.variantId);
+              return (
+                <button
+                  key={variant.variantId}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setActiveVariant(variant);
+                  }}
+                  onMouseEnter={() => setActiveVariant(variant)}
+                  className={`relative w-7 h-7 rounded-full overflow-hidden border-2 transition-all duration-200 ${
+                    activeVariant?.variantId === variant.variantId
+                      ? "border-accent scale-110 shadow-custom"
+                      : "border-default hover:border-primary opacity-70 hover:opacity-100"
+                  }`}
+                  title={
+                    variantPromo
+                      ? `${variant.variantName} - ${
+                          variantPromo.name || "Promo"
+                        }`
+                      : variant.variantName
+                  }
+                >
+                  <Image
+                    src={variant.images?.[0]?.url || item.thumbnail.url}
+                    alt={variant.variantName}
+                    fill
+                    className="object-cover"
+                  />
+                  {/* Promotion indicator dot */}
+                  {variantPromo && (
+                    <span className="absolute -top-0.5 -right-0.5 w-3 h-3 bg-accent rounded-full border border-surface flex items-center justify-center">
+                      <span className="text-[6px] font-black text-dark">%</span>
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+            {item.variants.length > 5 && (
+              <span className="text-[10px] text-muted font-medium ml-1">
+                +{item.variants.length - 5}
+              </span>
+            )}
+          </div>
+        )}
+
+        <Link href={`/collections/products/${item?.id}`}>
           <div className="mt-3 flex flex-col gap-1.5">
             <div className="flex items-baseline gap-2 flex-wrap">
               {/* Price - Using text-success for discounts instead of error red */}
@@ -135,7 +220,7 @@ const ItemCard = ({
                 Rs. {discountedPrice.toLocaleString()}
               </span>
               {hasDiscount && (
-                <span className="text-muted text-xs line-through decoration-[1px]">
+                <span className="text-muted text-xs line-through decoration-1">
                   Rs.{" "}
                   {item.marketPrice > item.sellingPrice
                     ? item.marketPrice.toLocaleString()
