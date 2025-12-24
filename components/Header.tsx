@@ -158,47 +158,74 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
           </div>
         </div>
 
-        {/* FULL SCREEN SEARCH OVERLAY */}
+        {/* FULL SCREEN SEARCH OVERLAY - Mobile Optimized */}
         <AnimatePresence>
           {isSearchOpen && (
             <motion.div
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="fixed inset-0 bg-surface z-[100] p-4 lg:p-12 overflow-y-auto"
+              className="fixed inset-0 bg-surface z-[100] overflow-y-auto"
             >
-              <div className="max-w-content mx-auto">
-                <div className="flex justify-between items-center mb-12">
-                  <Image
-                    src={Logo}
-                    alt="NEVERBE"
-                    width={80}
-                    height={30}
-                    className="mix-blend-multiply"
-                  />
+              <div className="max-w-content mx-auto px-4 lg:px-12 py-4 lg:py-12">
+                {/* Mobile: Stacked layout, Desktop: Side-by-side */}
+                <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-4 lg:gap-0 mb-6 lg:mb-12">
+                  {/* Top row on mobile: Logo + Close */}
+                  <div className="flex justify-between items-center">
+                    <Image
+                      src={Logo}
+                      alt="NEVERBE"
+                      width={70}
+                      height={26}
+                      className="mix-blend-multiply lg:w-[80px] lg:h-[30px]"
+                    />
 
-                  <div className="flex-1 max-w-2xl mx-auto px-4">
-                    <div className="flex items-center bg-surface-2 border border-default rounded-full px-6 py-4 w-full focus-within:border-accent transition-all shadow-custom">
-                      <IoSearchOutline size={24} className="text-accent mr-4" />
+                    <button
+                      onClick={() => {
+                        setIsSearchOpen(false);
+                        clearSearch();
+                      }}
+                      className="p-2.5 lg:p-3 bg-surface-2 rounded-full hover:bg-dark hover:text-inverse transition-all lg:hidden"
+                    >
+                      <IoCloseOutline size={24} />
+                    </button>
+                  </div>
+
+                  {/* Search bar - full width on mobile */}
+                  <div className="flex-1 lg:max-w-2xl lg:mx-auto w-full">
+                    <div className="flex items-center bg-surface-2 border border-default rounded-full px-4 py-3 lg:px-6 lg:py-4 w-full focus-within:border-accent transition-all shadow-custom">
+                      <IoSearchOutline
+                        size={20}
+                        className="text-accent mr-3 lg:mr-4 shrink-0"
+                      />
                       <input
                         autoFocus
-                        placeholder="Search for premium gear..."
-                        className="w-full bg-transparent text-xl border-none outline-none font-display font-black italic tracking-tight placeholder:text-muted"
+                        placeholder="Search shoes..."
+                        className="w-full bg-transparent text-base lg:text-xl border-none outline-none font-display font-black italic tracking-tight placeholder:text-muted min-w-0"
                         onChange={onSearch}
                         value={search}
                       />
+                      {search && (
+                        <button
+                          onClick={() => clearSearch()}
+                          className="p-1.5 hover:bg-surface rounded-full transition-colors ml-2 shrink-0"
+                        >
+                          <IoCloseOutline size={18} className="text-muted" />
+                        </button>
+                      )}
                       {isSearching && (
-                        <div className="w-5 h-5 border-2 border-accent border-t-transparent rounded-full animate-spin" />
+                        <div className="w-5 h-5 border-2 border-accent border-t-transparent rounded-full animate-spin shrink-0 ml-2" />
                       )}
                     </div>
                   </div>
 
+                  {/* Desktop close button */}
                   <button
                     onClick={() => {
                       setIsSearchOpen(false);
                       clearSearch();
                     }}
-                    className="p-3 bg-surface-2 rounded-full hover:bg-dark hover:text-inverse transition-all"
+                    className="hidden lg:block p-3 bg-surface-2 rounded-full hover:bg-dark hover:text-inverse transition-all"
                   >
                     <IoCloseOutline size={28} />
                   </button>
@@ -207,13 +234,13 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
                 {/* Results Section */}
                 {showSearchResult && (
                   <div className="animate-fade">
-                    <p className="text-xs font-black uppercase tracking-[0.2em] text-muted mb-8 border-b border-default pb-4">
+                    <p className="text-xs font-black uppercase tracking-[0.2em] text-muted mb-6 lg:mb-8 border-b border-default pb-3 lg:pb-4">
                       Results{" "}
                       <span className="text-accent">({items.length})</span>
                     </p>
                     {items.length > 0 ? (
                       <SearchDialog
-                        containerStyle="shadow-none border-none grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6"
+                        containerStyle="shadow-none border-none grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 lg:gap-6"
                         results={items}
                         onClick={() => {
                           setIsSearchOpen(false);
@@ -221,9 +248,16 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
                         }}
                       />
                     ) : (
-                      <div className="py-20 text-center">
-                        <p className="text-2xl font-display font-black italic text-muted uppercase">
+                      <div className="py-12 lg:py-20 text-center">
+                        <IoSearchOutline
+                          size={48}
+                          className="mx-auto text-muted mb-4"
+                        />
+                        <p className="text-lg lg:text-2xl font-display font-black italic text-muted uppercase">
                           No matches found
+                        </p>
+                        <p className="text-sm text-secondary mt-2">
+                          Try a different search term
                         </p>
                       </div>
                     )}
