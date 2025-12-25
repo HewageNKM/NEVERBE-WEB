@@ -53,7 +53,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
         {/* --- Primary Navigation Grid --- */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 mb-16">
           {/* Column 1: Brand & Key Utility */}
-          <div className="flex flex-col gap-8">
+          <div className="flex flex-col gap-2">
             <Link
               href="/"
               className="inline-block transition-transform hover:scale-105"
@@ -61,9 +61,9 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
               <Image
                 src={Logo}
                 alt="NEVERBE"
-                width={120}
-                height={40}
-                className="object-contain invert brightness-200"
+                width={150}
+                height={50}
+                className="object-contain"
               />
             </Link>
 

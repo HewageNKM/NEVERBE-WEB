@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     locale: "en_LK",
     images: [
       {
-        url: "https://neverbe.lk/logo-og.png",
+        url: "https://neverbe.lk/shoes-og.jpg",
         width: 1200,
         height: 630,
         alt: "NEVERBE - Buy Shoes Online Sri Lanka",
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Buy Shoes Online in Sri Lanka | NEVERBE",
     description: "Shop sneakers & footwear. Cash on Delivery island-wide.",
-    images: ["https://neverbe.lk/logo-og.png"],
+    images: ["https://neverbe.lk/shoes-og.jpg"],
   },
   metadataBase: new URL("https://neverbe.lk"),
 };

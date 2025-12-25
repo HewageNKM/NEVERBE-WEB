@@ -95,8 +95,8 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
             <Image
               src={Logo}
               alt="NEVERBE"
-              width={85}
-              height={35}
+              width={130}
+              height={50}
               className="object-contain mix-blend-multiply transition-transform hover:scale-110 active:scale-95 duration-300"
             />
           </Link>
@@ -165,7 +165,7 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="fixed inset-0 bg-surface z-[100] overflow-y-auto"
+              className="fixed inset-0 bg-surface z-100 overflow-y-auto"
             >
               <div className="max-w-content mx-auto px-4 lg:px-12 py-4 lg:py-12">
                 {/* Mobile: Stacked layout, Desktop: Side-by-side */}
@@ -176,8 +176,8 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
                       src={Logo}
                       alt="NEVERBE"
                       width={70}
-                      height={26}
-                      className="mix-blend-multiply lg:w-[80px] lg:h-[30px]"
+                      height={30}
+                      className="mix-blend-multiply lg:w-[80px]"
                     />
 
                     <button
