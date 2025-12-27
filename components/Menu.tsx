@@ -176,7 +176,7 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
                           key={item.id}
                           href={`/collections/products?${
                             section.query
-                          }=${encodeURIComponent(item.label)}`}
+                          }=${encodeURIComponent(item.label.toLowerCase())}`}
                           className="text-base font-bold text-muted hover:text-accent hover:translate-x-1 transition-all uppercase tracking-tight"
                           onClick={() => dispatch(toggleMenu(false))}
                         >

@@ -34,7 +34,7 @@ const BrandsSlider = ({ items }: { items: any[] }) => {
           >
             <Link
               href={`/collections/products?brand=${encodeURIComponent(
-                brand.name
+                brand.name.toLowerCase()
               )}`}
             >
               {brand.logoUrl ? (
