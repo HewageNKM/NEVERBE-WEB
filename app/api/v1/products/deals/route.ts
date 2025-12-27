@@ -1,4 +1,4 @@
-import { getDealsProducts } from "@/services/ProductService";
+import { getDealsProductsFiltered } from "@/services/ProductService";
 import { NextRequest, NextResponse } from "next/server";
 
 export const GET = async (req: NextRequest) => {
@@ -10,7 +10,7 @@ export const GET = async (req: NextRequest) => {
     const size = Number(url.searchParams.get("size") || 20);
     const tags = url.searchParams.getAll("tag");
     const inStockParam = url.searchParams.get("inStock");
-    const sizesParam = url.searchParams.get("sizes"); // Comma-separated sizes
+    const sizesParam = url.searchParams.get("sizes");
     const genderParam = url.searchParams.get("gender");
 
     const inStock =
@@ -20,51 +20,32 @@ export const GET = async (req: NextRequest) => {
         ? false
         : undefined;
 
-    const sizesFilter = sizesParam ? sizesParam.split(",").filter(Boolean) : [];
-    const genderFilter = genderParam?.toLowerCase() || "";
+    const sizes = sizesParam ? sizesParam.split(",").filter(Boolean) : [];
+    const gender = genderParam?.toLowerCase() || "";
 
     console.log("[Deals API] Query params:", {
       page,
       size,
       tags,
       inStock,
-      sizesFilter,
-      genderFilter,
+      sizes,
+      gender,
     });
 
-    // Fetch deals
-    let result = await getDealsProducts(page, size, tags, inStock);
-
-    // Post-fetch gender filtering
-    if (genderFilter && result.dataList) {
-      result.dataList = result.dataList.filter((product: any) => {
-        return (product.gender || []).some(
-          (g: string) => g.toLowerCase() === genderFilter
-        );
-      });
-      result.total = result.dataList.length;
-    }
-
-    // Post-fetch size filtering
-    if (sizesFilter.length > 0 && result.dataList) {
-      result.dataList = result.dataList.filter((product: any) => {
-        const productSizes = new Set<string>();
-        // Check variants
-        (product.variants || []).forEach((v: any) => {
-          (v.sizes || []).forEach((s: string) => productSizes.add(s));
-        });
-        // Check top-level availableSizes
-        (product.availableSizes || []).forEach((s: string) =>
-          productSizes.add(s)
-        );
-
-        return sizesFilter.some((s) => productSizes.has(s));
-      });
-      result.total = result.dataList.length;
-    }
+    // Delegate to service layer for filtering
+    const result = await getDealsProductsFiltered({
+      tags,
+      inStock,
+      sizes,
+      gender,
+      page,
+      size,
+    });
 
     console.log(
-      `[Deals API] Fetched deals count: ${result.dataList?.length || 0}`
+      `[Deals API] Returning ${result.dataList?.length || 0} products (total: ${
+        result.total
+      })`
     );
 
     return NextResponse.json(result, { status: 200 });

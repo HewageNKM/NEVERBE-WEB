@@ -244,9 +244,28 @@ export const getDealsProducts = async (
       Math.min(startIndex + size, promoCount)
     );
     if (promoIdsToFetch.length > 0) {
-      const promoProducts = await productRepository.findByIds(
+      let promoProducts = await productRepository.findByIds(
         promoIdsToFetch.slice(0, 30)
       );
+
+      // Apply tag filter to promo products (findByIds doesn't support tag filtering)
+      if (tags && tags.length > 0) {
+        const tagsLower = tags.map((t) => t.toLowerCase());
+        promoProducts = promoProducts.filter((product) => {
+          const productTags = (product.tags || []).map((t: string) =>
+            t.toLowerCase()
+          );
+          return tagsLower.some((tag) => productTags.includes(tag));
+        });
+      }
+
+      // Apply inStock filter to promo products
+      if (typeof inStock === "boolean") {
+        promoProducts = promoProducts.filter(
+          (product) => product.inStock === inStock
+        );
+      }
+
       dataList = [...dataList, ...promoProducts];
     }
   }
@@ -271,4 +290,56 @@ export const getDealsProducts = async (
   }
 
   return { total, dataList };
+};
+
+/**
+ * Get deals products with filtering for gender and sizes
+ * Wraps getDealsProducts with post-fetch filtering
+ */
+export const getDealsProductsFiltered = async (
+  options: ProductFilterOptions
+): Promise<{ total: number; dataList: Product[] }> => {
+  const {
+    tags = [],
+    inStock,
+    sizes: sizesFilter = [],
+    gender: genderFilter = "",
+    page = 1,
+    size = 20,
+  } = options;
+
+  // Determine if post-filtering is needed
+  const needsPostFiltering = sizesFilter.length > 0 || genderFilter;
+  const fetchSize = needsPostFiltering ? 200 : size;
+
+  // Fetch deals from base function
+  const result = await getDealsProducts(1, fetchSize, tags, inStock);
+  let dataList = result.dataList || [];
+
+  // In-memory gender filtering
+  if (genderFilter && dataList.length > 0) {
+    dataList = dataList.filter((product) => {
+      return (product.gender || []).some(
+        (g: string) => g.toLowerCase() === genderFilter.toLowerCase()
+      );
+    });
+  }
+
+  // In-memory size filtering
+  if (sizesFilter.length > 0 && dataList.length > 0) {
+    dataList = dataList.filter((product) => {
+      const productSizes = new Set<string>();
+      (product.variants || []).forEach((v) => {
+        (v.sizes || []).forEach((s: string) => productSizes.add(s));
+      });
+      return sizesFilter.some((s) => productSizes.has(s));
+    });
+  }
+
+  // Apply pagination to filtered results
+  const total = dataList.length;
+  const startIndex = (page - 1) * size;
+  const paginatedList = dataList.slice(startIndex, startIndex + size);
+
+  return { total, dataList: paginatedList };
 };
