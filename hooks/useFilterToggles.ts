@@ -56,24 +56,26 @@ export function useFilterToggles(
 ) {
   const dispatch: AppDispatch = useDispatch();
 
+  // Single-select for brand (radio behavior - click to select, click again to deselect)
   const toggleBrand = useCallback(
     (value: string) => {
       const lowerValue = value.toLowerCase();
-      const newBrands = selectedBrands.includes(lowerValue)
-        ? selectedBrands.filter((b) => b !== lowerValue)
-        : [...selectedBrands, lowerValue];
-      dispatch(brandAction(newBrands.slice(0, 5)));
+      // If already selected, deselect. Otherwise, replace with new selection.
+      const newBrands = selectedBrands.includes(lowerValue) ? [] : [lowerValue];
+      dispatch(brandAction(newBrands));
     },
     [dispatch, selectedBrands, brandAction]
   );
 
+  // Single-select for category (radio behavior - click to select, click again to deselect)
   const toggleCategory = useCallback(
     (value: string) => {
       const lowerValue = value.toLowerCase();
+      // If already selected, deselect. Otherwise, replace with new selection.
       const newCats = selectedCategories.includes(lowerValue)
-        ? selectedCategories.filter((c) => c !== lowerValue)
-        : [...selectedCategories, lowerValue];
-      dispatch(categoryAction(newCats.slice(0, 5)));
+        ? []
+        : [lowerValue];
+      dispatch(categoryAction(newCats));
     },
     [dispatch, selectedCategories, categoryAction]
   );

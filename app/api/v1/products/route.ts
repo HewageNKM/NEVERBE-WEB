@@ -1,4 +1,4 @@
-import { getProducts } from "@/services/ProductService";
+import { getProductsFiltered } from "@/services/ProductService";
 import { NextRequest, NextResponse } from "next/server";
 
 export const GET = async (req: NextRequest) => {
@@ -10,8 +10,8 @@ export const GET = async (req: NextRequest) => {
     const size = Number(url.searchParams.get("size") || 20);
     const tags = url.searchParams.getAll("tag");
     const inStockParam = url.searchParams.get("inStock");
-    const sizesParam = url.searchParams.get("sizes"); // Comma-separated sizes
-    const genderParam = url.searchParams.get("gender"); // men, women, kids
+    const sizesParam = url.searchParams.get("sizes");
+    const genderParam = url.searchParams.get("gender");
 
     const inStock =
       inStockParam === "true"
@@ -20,54 +20,30 @@ export const GET = async (req: NextRequest) => {
         ? false
         : undefined;
 
-    // Parse sizes filter
-    const sizesFilter = sizesParam ? sizesParam.split(",").filter(Boolean) : [];
-    const genderFilter = genderParam?.toLowerCase() || "";
+    const sizes = sizesParam ? sizesParam.split(",").filter(Boolean) : [];
+    const gender = genderParam?.toLowerCase() || "";
 
-    // Logs for debugging
     console.log("[Products API] Query params:", {
       page,
       size,
       tags,
       inStock,
-      sizesFilter,
-      genderFilter,
+      sizes,
+      gender,
     });
 
-    // Fetch products
-    let result = await getProducts(tags, inStock, page, size);
-
-    // Post-fetch gender filtering
-    if (genderFilter && result.dataList) {
-      result.dataList = result.dataList.filter((product: any) => {
-        // Check if product has the requested gender in its gender array
-        return (product.gender || []).some(
-          (g: string) => g.toLowerCase() === genderFilter
-        );
-      });
-      result.total = result.dataList.length;
-    }
-
-    // Post-fetch size filtering (Firestore can't do multiple array-contains)
-    if (sizesFilter.length > 0 && result.dataList) {
-      result.dataList = result.dataList.filter((product: any) => {
-        // Check if product has any of the requested sizes in variants
-        const productSizes = new Set<string>();
-        (product.variants || []).forEach((v: any) => {
-          (v.sizes || []).forEach((s: string) => productSizes.add(s));
-        });
-        // Also check availableSizes if it exists
-        (product.availableSizes || []).forEach((s: string) =>
-          productSizes.add(s)
-        );
-
-        return sizesFilter.some((s) => productSizes.has(s));
-      });
-      result.total = result.dataList.length;
-    }
+    // Delegate to service layer for filtering
+    const result = await getProductsFiltered({
+      tags,
+      inStock,
+      sizes,
+      gender,
+      page,
+      size,
+    });
 
     console.log(
-      `[Products API] Fetched products count: ${result.dataList?.length || 0}`
+      `[Products API] Returning ${result.dataList.length} products (total: ${result.total})`
     );
 
     return NextResponse.json(result, { status: 200 });

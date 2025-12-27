@@ -32,7 +32,7 @@ export async function generateMetadata(context: {
     };
   }
 
-  const safeTitle = `${item.name} - Premium 7A/Master Copy`;
+  const safeTitle = `${item.name}`;
 
   return {
     title: safeTitle,

@@ -15,6 +15,14 @@ export interface ProductQueryOptions {
 }
 
 /**
+ * Extended filter options for post-fetch filtering
+ */
+export interface ProductFilterOptions extends ProductQueryOptions {
+  sizes?: string[];
+  gender?: string;
+}
+
+/**
  * Paginated result wrapper
  */
 export interface PaginatedResult<T> {
@@ -95,6 +103,70 @@ export class ProductRepository extends BaseRepository<Product> {
       .filter((p) => (p.variants?.length ?? 0) > 0);
 
     return { total, dataList };
+  }
+
+  /**
+   * Find products with in-memory filtering for sizes and gender
+   * Workaround for Firestore's single array-contains limitation
+   */
+  async findAllFiltered(
+    options: ProductFilterOptions = {}
+  ): Promise<PaginatedResult<Product>> {
+    const {
+      tags,
+      inStock,
+      sizes: sizesFilter = [],
+      gender: genderFilter = "",
+      page = 1,
+      size = 20,
+    } = options;
+
+    // Determine if post-filtering is needed
+    const needsPostFiltering = sizesFilter.length > 0 || genderFilter;
+    const fetchSize = needsPostFiltering ? 200 : size;
+
+    // Fetch from Firestore with tags/inStock filters
+    let query = this.getListedProductsQuery();
+
+    if (tags?.length) {
+      query = query.where("tags", "array-contains-any", tags);
+    }
+
+    if (typeof inStock === "boolean") {
+      query = query.where("inStock", "==", inStock);
+    }
+
+    const snapshot = await query.limit(fetchSize).get();
+    let dataList = snapshot.docs
+      .map((doc) => this.prepareProduct(doc.data() as Product))
+      .filter((p) => (p.variants?.length ?? 0) > 0);
+
+    // In-memory gender filtering
+    if (genderFilter && dataList.length > 0) {
+      dataList = dataList.filter((product) => {
+        return (product.gender || []).some(
+          (g: string) => g.toLowerCase() === genderFilter.toLowerCase()
+        );
+      });
+    }
+
+    // In-memory size filtering
+    if (sizesFilter.length > 0 && dataList.length > 0) {
+      dataList = dataList.filter((product) => {
+        const productSizes = new Set<string>();
+        (product.variants || []).forEach((v: ProductVariant) => {
+          (v.sizes || []).forEach((s: string) => productSizes.add(s));
+        });
+        return sizesFilter.some((s) => productSizes.has(s));
+      });
+    }
+
+    // Apply pagination to filtered results
+    const total = dataList.length;
+    const startIndex = (page - 1) * size;
+    const paginatedList = dataList.slice(startIndex, startIndex + size);
+
+    return { total, dataList: paginatedList };
   }
 
   /**
@@ -194,13 +266,23 @@ export class ProductRepository extends BaseRepository<Product> {
     const product = await this.findById(productId);
     if (!product) return [];
 
+    // Handle null/undefined category - use brand as fallback
+    const categoryTag = product.category?.toLowerCase();
+    const brandTag = product.brand?.toLowerCase();
+
+    // Build tags array, filtering out undefined values
+    const searchTags = [categoryTag, brandTag].filter(Boolean) as string[];
+
+    // If no valid tags, return empty - can't find similar products
+    if (searchTags.length === 0) return [];
+
     const snapshot = await this.getListedProductsQuery()
-      .where("tags", "array-contains-any", [product.category?.toLowerCase()])
+      .where("tags", "array-contains-any", searchTags)
       .limit(limit + 1) // +1 to account for excluding current product
       .get();
 
     return snapshot.docs
-      .filter((doc) => doc.id !== productId)
+      .filter((doc) => (doc.data() as Product).id !== productId) // Compare product id field, not doc.id
       .slice(0, limit)
       .map((doc) => this.prepareProduct(doc.data() as Product));
   }

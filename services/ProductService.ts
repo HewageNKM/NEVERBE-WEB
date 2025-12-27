@@ -1,7 +1,6 @@
 import { productRepository } from "@/repositories/ProductRepository";
 import { otherRepository } from "@/repositories/OtherRepository";
 import { Product } from "@/interfaces/Product";
-import { ProductVariant } from "@/interfaces/ProductVariant";
 import { adminFirestore } from "@/firebase/firebaseAdmin";
 import { getActivePromotions } from "./PromotionService";
 
@@ -18,6 +17,24 @@ export const getProducts = async (
   size: number = 20
 ): Promise<{ total: number; dataList: Product[] }> =>
   productRepository.findAll({ tags, inStock, page, size });
+
+/**
+ * Get products with filtering for gender and sizes
+ * Delegates to repository layer which handles in-memory filtering
+ */
+export interface ProductFilterOptions {
+  tags?: string[];
+  inStock?: boolean;
+  sizes?: string[];
+  gender?: string;
+  page?: number;
+  size?: number;
+}
+
+export const getProductsFiltered = async (
+  options: ProductFilterOptions
+): Promise<{ total: number; dataList: Product[] }> =>
+  productRepository.findAllFiltered(options);
 
 // ====================== New Arrivals ======================
 export const getNewArrivals = async (

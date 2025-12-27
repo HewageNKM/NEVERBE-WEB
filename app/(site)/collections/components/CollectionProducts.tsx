@@ -9,7 +9,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
 import { IoOptionsOutline } from "react-icons/io5";
 import {
-  setProducts,
   setPage,
   setSelectedSort,
   toggleFilter,
@@ -40,7 +39,6 @@ const CollectionProducts = ({
 }: CollectionProductsProps) => {
   const dispatch: AppDispatch = useDispatch();
   const {
-    products,
     page,
     size,
     selectedSort,
@@ -51,13 +49,14 @@ const CollectionProducts = ({
   } = useSelector((state: RootState) => state.categorySlice);
 
   const [isLoading, setIsLoading] = useState(false);
+  const [products, setProducts] = useState<Product[]>(initialItems);
   const [totalProducts, setTotalProducts] = useState(total);
 
-  // Init
+  // Init - sync initial props to local state
   useEffect(() => {
-    dispatch(setProducts(initialItems));
+    setProducts(initialItems);
     setTotalProducts(total);
-  }, [initialItems, total, dispatch]);
+  }, [initialItems, total]);
 
   // Fetch Logic
   useEffect(() => {
@@ -96,9 +95,12 @@ const CollectionProducts = ({
         const data = await res.json();
 
         // Use shared sorting utility
-        const sorted = sortProductsByPrice(data.dataList || [], selectedSort);
+        const sorted = sortProductsByPrice(
+          (data.dataList || []) as Product[],
+          selectedSort
+        );
 
-        dispatch(setProducts(sorted));
+        setProducts(sorted);
         setTotalProducts(data.total);
       } catch (err) {
         console.error(err);
@@ -122,7 +124,6 @@ const CollectionProducts = ({
     tagName,
     categoryName,
     brandName,
-    dispatch,
   ]);
 
   return (

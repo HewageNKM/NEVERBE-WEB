@@ -72,7 +72,10 @@ const DealsProducts = ({ items }: { items: Product[] }) => {
         const data = await res.json();
 
         // Use shared sorting utility
-        const sorted = sortProductsByPrice(data.dataList || [], selectedSort);
+        const sorted = sortProductsByPrice(
+          (data.dataList || []) as Product[],
+          selectedSort
+        );
 
         setProducts(sorted);
         setTotalProducts(data.total);

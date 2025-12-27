@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import { useSearchParams, usePathname } from "next/navigation";
 import Pagination from "@/components/Pagination";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,7 +12,6 @@ import { IoOptionsOutline } from "react-icons/io5";
 import { AnimatePresence } from "framer-motion";
 import {
   setPage,
-  setProducts,
   setSelectedSort,
   setSelectedGender,
   setSelectedBrand,
@@ -34,7 +33,6 @@ const Products = ({ items }: { items: Product[] }) => {
   const searchParams = useSearchParams();
 
   const {
-    products,
     page,
     size,
     selectedBrands,
@@ -47,8 +45,10 @@ const Products = ({ items }: { items: Product[] }) => {
   } = useSelector((state: RootState) => state.productsSlice);
 
   const [isLoading, setIsLoading] = useState(false);
+  const [products, setProducts] = useState<Product[]>(items);
   const [totalProduct, setTotalProduct] = useState(items?.length || 0);
   const [isInitialized, setIsInitialized] = useState(false);
+  const hasInitializedFromUrl = useRef(false);
 
   // Use shared filter toggle hooks
   const { toggleBrand, toggleCategory, toggleSize } = useFilterToggles(
@@ -60,8 +60,12 @@ const Products = ({ items }: { items: Product[] }) => {
     setSelectedSizes
   );
 
-  // --- Initializing from URL ---
+  // --- Initializing from URL (ONCE only) ---
   useEffect(() => {
+    // Prevent re-initialization when URL updates from our own updateURL()
+    if (hasInitializedFromUrl.current) return;
+    hasInitializedFromUrl.current = true;
+
     const gender = searchParams.get("gender") || "";
     const category = searchParams.get("category") || "";
     const brand = searchParams.get("brand") || "";
@@ -83,14 +87,6 @@ const Products = ({ items }: { items: Product[] }) => {
 
     setIsInitialized(true);
   }, [dispatch, searchParams]);
-
-  // --- Sync Redux with props and update total count ---
-  useEffect(() => {
-    dispatch(setProducts(items));
-    if (items?.length > 0 && totalProduct === 0) {
-      setTotalProduct(items.length);
-    }
-  }, [dispatch, items, totalProduct]);
 
   // --- URL Management ---
   const updateURL = useCallback(() => {
@@ -149,9 +145,12 @@ const Products = ({ items }: { items: Product[] }) => {
         const data = await res.json();
 
         // Use shared sorting utility
-        const sorted = sortProductsByPrice(data.dataList || [], selectedSort);
+        const sorted = sortProductsByPrice(
+          (data.dataList || []) as Product[],
+          selectedSort
+        );
 
-        dispatch(setProducts(sorted));
+        setProducts(sorted);
         setTotalProduct(data.total || sorted.length);
       } catch (e) {
         console.error(e);
@@ -161,7 +160,6 @@ const Products = ({ items }: { items: Product[] }) => {
     };
     fetchAndSort();
   }, [
-    dispatch,
     page,
     size,
     selectedBrands,
