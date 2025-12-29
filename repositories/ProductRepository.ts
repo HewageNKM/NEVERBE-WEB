@@ -1,6 +1,8 @@
 import { BaseRepository } from "./BaseRepository";
 import type { Query } from "firebase-admin/firestore";
 import type { Product, ProductVariant } from "@/interfaces";
+import { FirestoreQueryBuilder } from "./utils/FirestoreQueryBuilder";
+import { ProductFilterBuilder } from "./filters/ProductFilterBuilder";
 
 /**
  * Query options for product fetching
@@ -76,28 +78,49 @@ export class ProductRepository extends BaseRepository<Product> {
     });
   }
 
+  // --- Helpers for In-Memory Filtering ---
+
+  private filterByGender(products: Product[], gender: string): Product[] {
+    if (!gender) return products;
+    return products.filter((product) =>
+      (product.gender || []).some(
+        (g: string) => g.toLowerCase() === gender.toLowerCase()
+      )
+    );
+  }
+
+  private filterBySizes(products: Product[], sizes: string[]): Product[] {
+    if (!sizes || sizes.length === 0) return products;
+    return products.filter((product) => {
+      const productSizes = new Set<string>();
+      (product.variants || []).forEach((v: ProductVariant) => {
+        (v.sizes || []).forEach((s: string) => productSizes.add(s));
+      });
+      return sizes.some((s) => productSizes.has(s));
+    });
+  }
+
   /**
    * Find all products with optional filters and pagination
+   * Optimized using QueryBuilders
    */
   async findAll(
     options: ProductQueryOptions = {}
   ): Promise<PaginatedResult<Product>> {
-    const { tags, inStock, page = 1, size = 20 } = options;
+    const { page = 1, size = 20 } = options;
+    const builder = new FirestoreQueryBuilder(this.getListedProductsQuery());
 
-    let query = this.getListedProductsQuery();
+    // Apply basic filters using Filter Builder logic (reusing basic parts)
+    const filterBuilder = new ProductFilterBuilder(builder, options);
+    filterBuilder.applyOptimizedFilters();
 
-    if (tags?.length) {
-      query = query.where("tags", "array-contains-any", tags);
-    }
-
-    if (typeof inStock === "boolean") {
-      query = query.where("inStock", "==", inStock);
-    }
-
+    const query = builder.build();
     const total = await this.countDocuments(query);
-    const pagedQuery = this.applyPagination(query, page, size);
-    const snapshot = await pagedQuery.get();
 
+    builder.paginate(page, size);
+
+    // Execute
+    const snapshot = await builder.build().get();
     const dataList = snapshot.docs
       .map((doc) => this.prepareProduct(doc.data() as Product))
       .filter((p) => (p.variants?.length ?? 0) > 0);
@@ -107,76 +130,52 @@ export class ProductRepository extends BaseRepository<Product> {
 
   /**
    * Find products with in-memory filtering for sizes and gender
-   * Workaround for Firestore's single array-contains limitation
+   * Optimized to offload filtering to Firestore where possible
    */
   async findAllFiltered(
     options: ProductFilterOptions = {}
   ): Promise<PaginatedResult<Product>> {
-    const {
-      tags,
-      inStock,
-      sizes: sizesFilter = [],
-      gender: genderFilter = "",
-      page = 1,
-      size = 20,
-    } = options;
+    const { page = 1, size = 20 } = options;
 
-    // Determine if post-filtering is needed
-    const needsPostFiltering = sizesFilter.length > 0 || genderFilter;
-    const fetchSize = needsPostFiltering ? 200 : size;
+    const builder = new FirestoreQueryBuilder(this.getListedProductsQuery());
+    const filterBuilder = new ProductFilterBuilder(builder, options);
 
-    // Fetch from Firestore with tags/inStock filters
-    let query = this.getListedProductsQuery();
+    // 1. Apply DB Filters
+    filterBuilder.applyOptimizedFilters();
 
-    if (tags?.length) {
-      query = query.where("tags", "array-contains-any", tags);
-    }
+    // 2. Count Total
+    const query = builder.build();
+    const total = await this.countDocuments(query);
 
-    if (typeof inStock === "boolean") {
-      query = query.where("inStock", "==", inStock);
-    }
+    // 3. Paginate & Fetch
+    builder.paginate(page, size);
+    const snapshot = await builder.build().get();
 
-    const snapshot = await query.limit(fetchSize).get();
     let dataList = snapshot.docs
       .map((doc) => this.prepareProduct(doc.data() as Product))
       .filter((p) => (p.variants?.length ?? 0) > 0);
 
-    // In-memory gender filtering
-    if (genderFilter && dataList.length > 0) {
-      dataList = dataList.filter((product) => {
-        return (product.gender || []).some(
-          (g: string) => g.toLowerCase() === genderFilter.toLowerCase()
-        );
-      });
+    // 4. Post-Fetch In-Memory Filtering
+    if (filterBuilder.needsGenderPostFilter()) {
+      dataList = this.filterByGender(dataList, options.gender!);
     }
 
-    // In-memory size filtering
-    if (sizesFilter.length > 0 && dataList.length > 0) {
-      dataList = dataList.filter((product) => {
-        const productSizes = new Set<string>();
-        (product.variants || []).forEach((v: ProductVariant) => {
-          (v.sizes || []).forEach((s: string) => productSizes.add(s));
-        });
-        return sizesFilter.some((s) => productSizes.has(s));
-      });
+    if (filterBuilder.needsSizePostFilter()) {
+      dataList = this.filterBySizes(dataList, options.sizes!);
     }
 
-    // Apply pagination to filtered results
-    const total = dataList.length;
-    const startIndex = (page - 1) * size;
-    const paginatedList = dataList.slice(startIndex, startIndex + size);
-
-    return { total, dataList: paginatedList };
+    return { total, dataList };
   }
 
   /**
-   * Find a single product by ID
+   * Find single product by ID
    */
   async findById(id: string): Promise<Product | null> {
-    const snapshot = await this.getListedProductsQuery()
+    const builder = new FirestoreQueryBuilder(this.getListedProductsQuery())
       .where("id", "==", id)
-      .limit(1)
-      .get();
+      .limit(1);
+
+    const snapshot = await builder.build().get();
 
     if (snapshot.empty) return null;
     return this.prepareProduct(snapshot.docs[0].data() as Product);
@@ -187,43 +186,44 @@ export class ProductRepository extends BaseRepository<Product> {
    */
   async findByIds(ids: string[]): Promise<Product[]> {
     if (!ids.length) return [];
-
     const docs = await this.findDocsByIds(ids, "id");
-
     return docs
       .map((doc) => this.prepareProduct(doc.data() as Product))
       .filter((p) => p.variants?.length > 0);
   }
 
   /**
-   * Find new arrivals (products created/updated in last 30 days)
+   * Find new arrivals
    */
   async findNewArrivals(
     options: ProductQueryOptions = {}
   ): Promise<PaginatedResult<Product>> {
+    // Logic: Look for CreatedAt > 30 days ago
     const { page = 1, size = 20 } = options;
-
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
     const dateThreshold = thirtyDaysAgo.toISOString();
 
-    let query = this.getListedProductsQuery()
+    let builder = new FirestoreQueryBuilder(this.getListedProductsQuery())
       .where("createdAt", ">=", dateThreshold)
       .orderBy("createdAt", "desc");
 
-    const snapshot = await query.get();
-    let total = snapshot.size;
+    // Count
+    let total = await this.countDocuments(builder.build());
 
-    // Fallback to recent updated items if no new arrivals
+    // Fallback if no new arrivals
     if (total === 0 && page === 1) {
-      query = this.getListedProductsQuery().orderBy("updatedAt", "desc");
-      total = await this.countDocuments(query);
+      // Reset builder to query by UpdatedAt
+      builder = new FirestoreQueryBuilder(
+        this.getListedProductsQuery()
+      ).orderBy("updatedAt", "desc");
+      total = await this.countDocuments(builder.build());
     }
 
-    const pagedQuery = this.applyPagination(query, page, size);
-    const pagedSnapshot = await pagedQuery.get();
+    builder.paginate(page, size);
+    const snapshot = await builder.build().get();
 
-    const dataList = pagedSnapshot.docs
+    const dataList = snapshot.docs
       .map((doc) => this.prepareProduct(doc.data() as Product))
       .filter((p) => (p.variants?.length ?? 0) > 0);
 
@@ -231,30 +231,41 @@ export class ProductRepository extends BaseRepository<Product> {
   }
 
   /**
-   * Find products with discounts
+   * Find discounted products
    */
   async findDiscounted(
-    options: ProductQueryOptions = {}
+    options: ProductFilterOptions = {}
   ): Promise<PaginatedResult<Product>> {
-    const { tags, inStock, page = 1, size = 20 } = options;
+    const { page = 1, size = 20 } = options;
 
-    let query = this.getListedProductsQuery().where("discount", ">", 0);
+    const builder = new FirestoreQueryBuilder(this.getListedProductsQuery());
+    const filterBuilder = new ProductFilterBuilder(builder, options);
 
-    if (tags?.length) {
-      query = query.where("tags", "array-contains-any", tags);
-    }
+    // 1. Discount filter is mandatory
+    filterBuilder.applyDiscountFilter();
 
-    if (typeof inStock === "boolean") {
-      query = query.where("inStock", "==", inStock);
-    }
+    // 2. Apply other optimized filters (Tags/Gender/Stock/Sort)
+    filterBuilder.applyOptimizedFilters();
 
-    const total = await this.countDocuments(query);
-    const pagedQuery = this.applyPagination(query, page, size);
-    const snapshot = await pagedQuery.get();
+    // 3. Count
+    const total = await this.countDocuments(builder.build());
 
-    const dataList = snapshot.docs
+    // 4. Paginate
+    builder.paginate(page, size);
+    const snapshot = await builder.build().get();
+
+    let dataList = snapshot.docs
       .map((doc) => this.prepareProduct(doc.data() as Product))
       .filter((p) => (p.variants?.length ?? 0) > 0);
+
+    // 5. Post-Fetch Filtering
+    if (filterBuilder.needsGenderPostFilter()) {
+      dataList = this.filterByGender(dataList, options.gender!);
+    }
+
+    if (filterBuilder.needsSizePostFilter()) {
+      dataList = this.filterBySizes(dataList, options.sizes!);
+    }
 
     return { total, dataList };
   }
@@ -266,32 +277,32 @@ export class ProductRepository extends BaseRepository<Product> {
     const product = await this.findById(productId);
     if (!product) return [];
 
-    // Handle null/undefined category - use brand as fallback
     const categoryTag = product.category?.toLowerCase();
     const brandTag = product.brand?.toLowerCase();
-
-    // Build tags array, filtering out undefined values
     const searchTags = [categoryTag, brandTag].filter(Boolean) as string[];
 
-    // If no valid tags, return empty - can't find similar products
     if (searchTags.length === 0) return [];
 
-    const snapshot = await this.getListedProductsQuery()
+    const builder = new FirestoreQueryBuilder(this.getListedProductsQuery())
       .where("tags", "array-contains-any", searchTags)
-      .limit(limit + 1) // +1 to account for excluding current product
-      .get();
+      .limit(limit + 1);
+
+    const snapshot = await builder.build().get();
 
     return snapshot.docs
-      .filter((doc) => (doc.data() as Product).id !== productId) // Compare product id field, not doc.id
+      .filter((doc) => (doc.data() as Product).id !== productId)
       .slice(0, limit)
       .map((doc) => this.prepareProduct(doc.data() as Product));
   }
 
   /**
-   * Find recent items (for homepage)
+   * Find recent items
    */
   async findRecent(limit: number = 8): Promise<Product[]> {
-    const snapshot = await this.getListedProductsQuery().limit(limit).get();
+    const builder = new FirestoreQueryBuilder(
+      this.getListedProductsQuery()
+    ).limit(limit);
+    const snapshot = await builder.build().get();
 
     return snapshot.docs.map((doc) =>
       this.prepareProduct(doc.data() as Product)
@@ -299,7 +310,7 @@ export class ProductRepository extends BaseRepository<Product> {
   }
 
   /**
-   * Get product stock for a specific variant and size
+   * Get product stock
    */
   async getStock(
     productId: string,
@@ -307,25 +318,26 @@ export class ProductRepository extends BaseRepository<Product> {
     size: string,
     stockId: string
   ): Promise<number> {
-    const snapshot = await this.collection.firestore
-      .collection("stock_inventory")
+    const builder = new FirestoreQueryBuilder(
+      this.collection.firestore.collection("stock_inventory")
+    )
       .where("productId", "==", productId)
       .where("variantId", "==", variantId)
       .where("stockId", "==", stockId)
       .where("size", "==", size)
-      .limit(1)
-      .get();
+      .limit(1);
+
+    const snapshot = await builder.build().get();
 
     if (snapshot.empty) return 0;
     return snapshot.docs[0].data().quantity ?? 0;
   }
 
   /**
-   * Get all products for sitemap generation
+   * Find for sitemap
    */
   async findAllForSitemap(): Promise<{ id: string; updatedAt: any }[]> {
     const snapshot = await this.getListedProductsQuery().get();
-
     return snapshot.docs.map((doc) => ({
       id: doc.data().id,
       updatedAt: doc.data().updatedAt,

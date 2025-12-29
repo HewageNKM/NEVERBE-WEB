@@ -119,8 +119,9 @@ export class OtherRepository extends BaseRepository<any> {
    */
   async getPaymentMethods(): Promise<any[]> {
     const snapshot = await this.collection.firestore
-      .collection("paymentMethods")
-      .where("status", "==", "Active")
+      .collection("payment_methods")
+      .where("status", "==", true)
+      .where("isDeleted", "==", false)
       .where("available", "array-contains", "Website")
       .get();
 

@@ -8,6 +8,7 @@ interface DealsState {
   selectedBrands: string[];
   selectedCategories: string[];
   selectedSizes: string[];
+  selectedGender: string;
   selectedSort: string;
   showFilter: boolean;
 }
@@ -20,6 +21,7 @@ const initialState: DealsState = {
   selectedBrands: [],
   selectedCategories: [],
   selectedSizes: [],
+  selectedGender: "",
   selectedSort: "NO SELCT",
   showFilter: false,
 };
@@ -55,10 +57,14 @@ const dealsSlice = createSlice({
     setSelectedSizes(state, action: PayloadAction<string[]>) {
       state.selectedSizes = action.payload;
     },
+    setSelectedGender(state, action: PayloadAction<string>) {
+      state.selectedGender = action.payload;
+    },
     resetFilter(state) {
       state.selectedBrands = [];
       state.selectedCategories = [];
       state.selectedSizes = [];
+      state.selectedGender = "";
       state.inStock = false;
     },
   },
@@ -75,6 +81,7 @@ export const {
   setSelectedSort,
   toggleFilter,
   resetFilter,
+  setSelectedGender,
 } = dealsSlice.actions;
 
 export default dealsSlice.reducer;

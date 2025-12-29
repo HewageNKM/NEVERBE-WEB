@@ -3,6 +3,7 @@ import { otherRepository } from "@/repositories/OtherRepository";
 import { Product } from "@/interfaces/Product";
 import { adminFirestore } from "@/firebase/firebaseAdmin";
 import { getActivePromotions } from "./PromotionService";
+import { ProductVariant } from "@/interfaces/ProductVariant";
 
 /**
  * ProductService - Thin wrapper over ProductRepository
@@ -162,38 +163,14 @@ export const getHotProducts = async () => {
 };
 
 // ====================== Deals Products (Complex Business Logic) ======================
-// Kept in service layer - requires promotion aggregation and complex filtering
-const sanitizeProduct = <T extends { buyingPrice?: number }>(
-  product: T
-): Omit<T, "buyingPrice"> => {
-  const { buyingPrice, ...rest } = product;
-  return rest;
-};
 
-const filterActiveVariants = (variants: ProductVariant[] = []) =>
-  variants.filter((v) => v.status && !v.isDeleted);
-
-export const getDealsProducts = async (
-  page: number = 1,
-  size: number = 10,
-  tags?: string[],
-  inStock?: boolean
-) => {
-  // 1. Get Promoted Product IDs (Unified Promotion Model)
-  const activePromotions = await getActivePromotions();
+/**
+ * Helper: Extract targeted product IDs from active promotions
+ */
+const getPromotedProductIds = (activePromotions: any[]): Set<string> => {
   const promoProductIds = new Set<string>();
-  let hasGlobalPromotion = false;
 
   activePromotions.forEach((promo: any) => {
-    const hasProductTargeting =
-      (promo.applicableProducts && promo.applicableProducts.length > 0) ||
-      (promo.applicableProductVariants &&
-        promo.applicableProductVariants.length > 0) ||
-      (promo.conditions &&
-        promo.conditions.some((c: any) => c.type === "SPECIFIC_PRODUCT"));
-
-    if (!hasProductTargeting) hasGlobalPromotion = true;
-
     if (promo.applicableProducts) {
       promo.applicableProducts.forEach((id: string) => promoProductIds.add(id));
     }
@@ -215,77 +192,181 @@ export const getDealsProducts = async (
     }
   });
 
-  // If global promotion, delegate to repository
-  if (hasGlobalPromotion) {
-    return productRepository.findAll({ tags, inStock, page, size });
+  return promoProductIds;
+};
+
+/**
+ * Helper: Identify if any request-wide promotion exists (no specific products targeted)
+ */
+const hasGlobalPromotion = (activePromotions: any[]): boolean => {
+  return activePromotions.some((promo: any) => {
+    const hasProductTargeting =
+      (promo.applicableProducts && promo.applicableProducts.length > 0) ||
+      (promo.applicableProductVariants &&
+        promo.applicableProductVariants.length > 0) ||
+      (promo.conditions &&
+        promo.conditions.some((c: any) => c.type === "SPECIFIC_PRODUCT"));
+    return !hasProductTargeting;
+  });
+};
+
+export const getDealsProducts = async (
+  page: number = 1,
+  size: number = 10,
+  tags?: string[],
+  inStock?: boolean,
+  gender?: string,
+  sizes?: string[]
+): Promise<{ total: number; dataList: Product[] }> => {
+  const activePromotions = await getActivePromotions();
+
+  // 1. Check for Global Promotions
+  if (hasGlobalPromotion(activePromotions)) {
+    return productRepository.findAllFiltered({
+      tags,
+      inStock,
+      page,
+      size,
+      gender,
+      sizes,
+    });
   }
 
+  // 2. Fetch & Filter Promoted Products (Priority list)
+  const promoProductIds = getPromotedProductIds(activePromotions);
   const allPromoIds = Array.from(promoProductIds);
-  const promoCount = allPromoIds.length;
+  let promoProducts: Product[] = [];
 
-  // 2. Get discounted products count and fetch
+  if (allPromoIds.length > 0) {
+    promoProducts = await productRepository.findByIds(allPromoIds);
+
+    // Apply Filters to Promo Products in Memory
+
+    // Tags
+    if (tags && tags.length > 0) {
+      const tagsLower = tags.map((t) => t.toLowerCase());
+      promoProducts = promoProducts.filter((product) => {
+        const productTags = (product.tags || []).map((t: string) =>
+          t.toLowerCase()
+        );
+        return tagsLower.some((tag) => productTags.includes(tag));
+      });
+    }
+
+    // InStock
+    if (typeof inStock === "boolean") {
+      promoProducts = promoProducts.filter(
+        (product) => product.inStock === inStock
+      );
+    }
+
+    // Gender
+    if (gender) {
+      promoProducts = promoProducts.filter((product) =>
+        (product.gender || []).some(
+          (g: string) => g.toLowerCase() === gender.toLowerCase()
+        )
+      );
+    }
+
+    // Sizes
+    if (sizes && sizes.length > 0) {
+      promoProducts = promoProducts.filter((product) => {
+        const productSizes = new Set<string>();
+        (product.variants || []).forEach((v) => {
+          (v.sizes || []).forEach((s: string) => productSizes.add(s));
+        });
+        return sizes.some((s) => productSizes.has(s));
+      });
+    }
+  }
+
+  const promoCount = promoProducts.length;
+
+  // 3. Get Discounted Products Count
+  // We use findDiscounted for accurate count of "filling" items
   const discountResult = await productRepository.findDiscounted({
     tags,
     inStock,
+    gender,
+    sizes,
     page: 1,
-    size: 1000,
+    size: 1, // Minimal fetch for count
   });
   const discountTotal = discountResult.total;
   const total = promoCount + discountTotal;
 
-  // 3. Calculate ranges
+  // 4. Stitching Strategy
+  // Determine which items to return based on the requested page window
+
   const startIndex = (page - 1) * size;
   let dataList: Product[] = [];
 
-  // Fetch promo products if in range
+  // A) Add Promoted Products if they fall within the range
   if (startIndex < promoCount) {
-    const promoIdsToFetch = allPromoIds.slice(
-      startIndex,
-      Math.min(startIndex + size, promoCount)
-    );
-    if (promoIdsToFetch.length > 0) {
-      let promoProducts = await productRepository.findByIds(
-        promoIdsToFetch.slice(0, 30)
-      );
-
-      // Apply tag filter to promo products (findByIds doesn't support tag filtering)
-      if (tags && tags.length > 0) {
-        const tagsLower = tags.map((t) => t.toLowerCase());
-        promoProducts = promoProducts.filter((product) => {
-          const productTags = (product.tags || []).map((t: string) =>
-            t.toLowerCase()
-          );
-          return tagsLower.some((tag) => productTags.includes(tag));
-        });
-      }
-
-      // Apply inStock filter to promo products
-      if (typeof inStock === "boolean") {
-        promoProducts = promoProducts.filter(
-          (product) => product.inStock === inStock
-        );
-      }
-
-      dataList = [...dataList, ...promoProducts];
-    }
+    dataList = promoProducts.slice(startIndex, startIndex + size);
   }
 
-  // Fetch discounts if needed
+  // B) Fill remaining slots with Discounted Products
   if (dataList.length < size) {
     const remainingSlots = size - dataList.length;
+
+    // Calculate how many discounted items we conceptually skipped "behind" the promo items
+    // If startIndex > promoCount, we skipped (startIndex - promoCount) discounted items.
+    // If startIndex < promoCount, we are just starting to read discounted items from index 0.
     const discountOffset = Math.max(0, startIndex - promoCount);
-    const discountPage = Math.floor(discountOffset / remainingSlots) + 1;
 
-    const discounted = await productRepository.findDiscounted({
-      tags,
-      inStock,
-      page: discountPage,
-      size: remainingSlots,
-    });
+    // Mapping implicit logic offset to Page/Size for repository
+    // We need items from [discountOffset] to [discountOffset + remainingSlots]
+    // Since repository is Page-based (size=20 usually), we might span across 2 pages.
+    // Note: We use the requested 'size' (default 10 or 20) as the chunk size.
 
-    const deduped = discounted.dataList.filter(
-      (p) => !promoProductIds.has(p.id)
+    const pageA = Math.floor(discountOffset / size) + 1;
+    const pageB = Math.floor((discountOffset + remainingSlots) / size) + 1;
+
+    const promises = [
+      productRepository.findDiscounted({
+        tags,
+        inStock,
+        gender,
+        sizes,
+        page: pageA,
+        size: size,
+      }),
+    ];
+
+    if (pageB !== pageA) {
+      promises.push(
+        productRepository.findDiscounted({
+          tags,
+          inStock,
+          gender,
+          sizes,
+          page: pageB,
+          size: size,
+        })
+      );
+    }
+
+    const results = await Promise.all(promises);
+
+    // Merge results from potential multiple pages
+    let potentialDiscounts = results[0].dataList;
+    if (results[1]) {
+      potentialDiscounts = [...potentialDiscounts, ...results[1].dataList];
+    }
+
+    // Extract the exact slice we need relative to the fetched pages
+    const pageAStart = (pageA - 1) * size;
+    const relativeStart = discountOffset - pageAStart;
+
+    const neededDiscounts = potentialDiscounts.slice(
+      relativeStart,
+      relativeStart + remainingSlots
     );
+
+    // Dedup against Promos (Ensure we don't show a promo item again as a discount item)
+    const deduped = neededDiscounts.filter((p) => !promoProductIds.has(p.id));
     dataList = [...dataList, ...deduped];
   }
 
@@ -294,52 +375,11 @@ export const getDealsProducts = async (
 
 /**
  * Get deals products with filtering for gender and sizes
- * Wraps getDealsProducts with post-fetch filtering
+ * Optimized: Delegates fully to getDealsProducts
  */
 export const getDealsProductsFiltered = async (
   options: ProductFilterOptions
 ): Promise<{ total: number; dataList: Product[] }> => {
-  const {
-    tags = [],
-    inStock,
-    sizes: sizesFilter = [],
-    gender: genderFilter = "",
-    page = 1,
-    size = 20,
-  } = options;
-
-  // Determine if post-filtering is needed
-  const needsPostFiltering = sizesFilter.length > 0 || genderFilter;
-  const fetchSize = needsPostFiltering ? 200 : size;
-
-  // Fetch deals from base function
-  const result = await getDealsProducts(1, fetchSize, tags, inStock);
-  let dataList = result.dataList || [];
-
-  // In-memory gender filtering
-  if (genderFilter && dataList.length > 0) {
-    dataList = dataList.filter((product) => {
-      return (product.gender || []).some(
-        (g: string) => g.toLowerCase() === genderFilter.toLowerCase()
-      );
-    });
-  }
-
-  // In-memory size filtering
-  if (sizesFilter.length > 0 && dataList.length > 0) {
-    dataList = dataList.filter((product) => {
-      const productSizes = new Set<string>();
-      (product.variants || []).forEach((v) => {
-        (v.sizes || []).forEach((s: string) => productSizes.add(s));
-      });
-      return sizesFilter.some((s) => productSizes.has(s));
-    });
-  }
-
-  // Apply pagination to filtered results
-  const total = dataList.length;
-  const startIndex = (page - 1) * size;
-  const paginatedList = dataList.slice(startIndex, startIndex + size);
-
-  return { total, dataList: paginatedList };
+  const { tags, inStock, sizes, gender, page = 1, size = 20 } = options;
+  return getDealsProducts(page, size, tags, inStock, gender, sizes);
 };

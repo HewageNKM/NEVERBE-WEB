@@ -1,21 +1,8 @@
-"use client"
-import React, {ReactNode} from 'react';
-import {useSelector} from "react-redux";
-import {RootState} from "@/redux/store";
-import {AnimatePresence} from "framer-motion";
-import PopUpFilter from "@/app/(site)/collections/products/components/PopUpFilter";
+"use client";
+import React, { ReactNode } from "react";
 
-const Layout = ({children}:{children:ReactNode}) => {
-    const showFilter = useSelector((state:RootState) => state.productsSlice.showFilter);
-
-    return (
-        <div className="w-full relative">
-            {children}
-            <AnimatePresence>
-                {showFilter && (<PopUpFilter />)}
-            </AnimatePresence>
-        </div>
-    );
+const Layout = ({ children }: { children: ReactNode }) => {
+  return <div className="w-full relative">{children}</div>;
 };
 
 export default Layout;
