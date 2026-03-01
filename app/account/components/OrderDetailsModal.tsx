@@ -14,6 +14,7 @@ import { toSafeLocaleString } from "@/services/UtilService";
 import Image from "next/image";
 import Invoice from "@/components/Invoice";
 import Link from "next/link";
+import { Button } from "antd";
 import { Order } from "@/interfaces/Order";
 
 interface OrderDetailsModalProps {
@@ -45,11 +46,11 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
   // Calculation Logic
   const subtotal = items.reduce(
     (sum, item) => sum + item.price * item.quantity,
-    0
+    0,
   );
   const itemsDiscount = items.reduce(
     (sum, item) => sum + (item.discount || 0),
-    0
+    0,
   );
   const totalDiscount = itemsDiscount + (discount || 0);
   const total = subtotal - totalDiscount + (shippingFee || 0) + (fee || 0);
@@ -85,12 +86,12 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
                 {toSafeLocaleString(createdAt)}
               </p>
             </div>
-            <button
+            <Button
+              type="text"
+              icon={<IoClose size={22} />}
               onClick={onClose}
-              className="p-3 bg-zinc-50 hover:bg-zinc-100 text-black transition-all rounded-full"
-            >
-              <IoClose size={22} />
-            </button>
+              className="p-3 bg-zinc-50 hover:bg-zinc-100 text-black transition-all rounded-full h-auto"
+            />
           </div>
 
           <div className="p-6 md:p-10 overflow-y-auto hide-scrollbar space-y-10">

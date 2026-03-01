@@ -2,6 +2,7 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { Button } from "antd";
 import { collectionList } from "@/constants";
 // Ensure collectionList has distinct images.
 // If your collectionList is just 3 items, this grid works perfectly.
@@ -25,9 +26,9 @@ const FeaturedCategories = () => {
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
               />
               <div className="absolute bottom-6 left-6">
-                <button className="bg-surface text-primary px-6 py-3 rounded-full font-display font-black uppercase text-xs tracking-widest hover:bg-accent hover:text-dark transition-all shadow-custom hover:shadow-hover">
+                <Button className="bg-surface border-none text-primary px-6 py-5 rounded-full font-display font-black uppercase text-xs tracking-widest hover:bg-accent hover:text-dark transition-all shadow-custom hover:shadow-hover">
                   {collectionList[0].label}
-                </button>
+                </Button>
               </div>
             </Link>
           </div>
@@ -48,9 +49,9 @@ const FeaturedCategories = () => {
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
                 />
                 <div className="absolute bottom-6 left-6">
-                  <button className="bg-surface text-primary px-6 py-3 rounded-full font-display font-black uppercase text-xs tracking-widest hover:bg-accent hover:text-dark transition-all shadow-custom hover:shadow-hover">
+                  <Button className="bg-surface border-none text-primary px-6 py-5 rounded-full font-display font-black uppercase text-xs tracking-widest hover:bg-accent hover:text-dark transition-all shadow-custom hover:shadow-hover">
                     {item.label}
-                  </button>
+                  </Button>
                 </div>
               </Link>
             </div>

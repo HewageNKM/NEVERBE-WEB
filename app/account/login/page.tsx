@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import { Form, Input, Button } from "antd";
 import {
   signInWithEmailAndPassword,
   GoogleAuthProvider,
@@ -21,12 +22,6 @@ const AuthPage = () => {
   const redirectUrl = searchParams.get("redirect") || "/account";
   const [loading, setLoading] = useState(false);
 
-  const [formData, setFormData] = useState({ email: "", password: "" });
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
   const handleGoogleLogin = async () => {
     setLoading(true);
     const provider = new GoogleAuthProvider();
@@ -41,11 +36,10 @@ const AuthPage = () => {
     }
   };
 
-  const handleAuth = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleAuth = async (values: any) => {
     setLoading(true);
     try {
-      await signInWithEmailAndPassword(auth, formData.email, formData.password);
+      await signInWithEmailAndPassword(auth, values.email, values.password);
       toast.success("Signed in successfully");
       router.push(redirectUrl);
     } catch (err: any) {
@@ -78,30 +72,49 @@ const AuthPage = () => {
         </div>
 
         {/* Auth Form */}
-        <form onSubmit={handleAuth} className="space-y-4">
-          <div className="space-y-3">
-            <input
+        <Form
+          onFinish={handleAuth}
+          layout="vertical"
+          disabled={loading}
+          className="space-y-4"
+        >
+          <div className="space-y-4">
+            <Form.Item
               name="email"
-              type="email"
-              placeholder="Email Address"
-              required
-              className="w-full bg-surface-2 p-4 text-sm font-bold border border-default focus:border-primary focus:bg-surface outline-none rounded-xl transition-all placeholder:text-muted"
-              onChange={handleChange}
-            />
-            <input
+              rules={[
+                { required: true, message: "Please input your email!" },
+                { type: "email", message: "Please enter a valid email!" },
+              ]}
+              className="mb-0"
+            >
+              <Input
+                size="large"
+                placeholder="Email Address"
+                className="w-full bg-surface-2 hover:bg-surface focus:bg-surface border-default focus:border-primary px-4 py-3 text-sm font-bold rounded-xl transition-all"
+                name="email"
+              />
+            </Form.Item>
+
+            <Form.Item
               name="password"
-              type="password"
-              placeholder="Password"
-              required
-              className="w-full bg-surface-2 p-4 text-sm font-bold border border-default focus:border-primary focus:bg-surface outline-none rounded-xl transition-all placeholder:text-muted"
-              onChange={handleChange}
-            />
+              rules={[
+                { required: true, message: "Please input your password!" },
+              ]}
+              className="mb-0"
+            >
+              <Input.Password
+                size="large"
+                placeholder="Password"
+                className="w-full bg-surface-2 hover:bg-surface focus:bg-surface border-default focus:border-primary px-4 py-3 text-sm font-bold rounded-xl transition-all"
+                name="password"
+              />
+            </Form.Item>
           </div>
 
           <div className="flex justify-end pr-2">
             <button
               type="button"
-              className="text-[11px] font-bold uppercase tracking-widest text-muted hover:text-primary transition-colors"
+              className="text-[11px] font-bold uppercase tracking-widest text-muted hover:text-primary transition-colors mt-2"
             >
               Forgot Password?
             </button>
@@ -110,7 +123,7 @@ const AuthPage = () => {
           <button
             type="submit"
             disabled={loading}
-            className="group w-full bg-dark text-inverse py-4 rounded-full font-display font-black uppercase tracking-widest text-xs flex items-center justify-center gap-3 transition-all hover:bg-accent hover:text-dark active:scale-[0.98] disabled:opacity-50"
+            className="group w-full bg-dark text-inverse py-4 rounded-full font-display font-black uppercase tracking-widest text-xs flex items-center justify-center gap-3 transition-all hover:bg-accent hover:text-dark active:scale-[0.98] disabled:opacity-50 mt-4"
           >
             {loading ? "Signing In..." : "Log In"}
             <IoArrowForward
@@ -118,7 +131,7 @@ const AuthPage = () => {
               className="group-hover:translate-x-1 transition-transform"
             />
           </button>
-        </form>
+        </Form>
 
         {/* Divider */}
         <div className="flex items-center gap-4 my-10">
@@ -129,11 +142,10 @@ const AuthPage = () => {
           <div className="h-px bg-border-default flex-1"></div>
         </div>
 
-        {/* Google Button */}
-        <button
+        <Button
           onClick={handleGoogleLogin}
-          type="button"
-          className="w-full bg-accent text-dark flex items-center justify-center gap-4 py-4 rounded-full font-black uppercase text-xs tracking-widest hover:scale-[1.02] transition-all active:scale-95"
+          type="default"
+          className="w-full bg-accent text-dark border-none flex items-center justify-center gap-4 py-6 rounded-full font-black uppercase text-xs tracking-widest hover:scale-[1.02] transition-all"
         >
           <svg className="w-5 h-5" viewBox="0 0 24 24">
             <path
@@ -154,7 +166,7 @@ const AuthPage = () => {
             />
           </svg>
           Sign in with Google
-        </button>
+        </Button>
 
         {/* Footer */}
         <div className="text-center mt-12">

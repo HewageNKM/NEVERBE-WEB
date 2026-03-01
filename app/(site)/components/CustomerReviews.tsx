@@ -12,6 +12,7 @@ import {
   IoSparkles,
 } from "react-icons/io5";
 import { FcGoogle } from "react-icons/fc";
+import { Button } from "antd";
 
 // Static testimonial data - can be replaced with API data later
 const reviews = [
@@ -177,20 +178,20 @@ const CustomerReviews = () => {
 
         {/* Navigation Arrows - NEVERBE Style */}
         <div className="hidden md:flex items-center gap-3">
-          <button
+          <Button
+            type="text"
+            icon={<IoChevronBack size={20} />}
             onClick={() => swiperRef.current?.slidePrev()}
             className="w-12 h-12 rounded-full border-2 border-default bg-surface flex items-center justify-center text-primary hover:border-accent hover:bg-dark hover:text-accent transition-all duration-300 shadow-custom hover:shadow-hover"
             aria-label="Previous review"
-          >
-            <IoChevronBack size={20} />
-          </button>
-          <button
+          />
+          <Button
+            type="text"
+            icon={<IoChevronForward size={20} />}
             onClick={() => swiperRef.current?.slideNext()}
             className="w-12 h-12 rounded-full border-2 border-default bg-surface flex items-center justify-center text-primary hover:border-accent hover:bg-dark hover:text-accent transition-all duration-300 shadow-custom hover:shadow-hover"
             aria-label="Next review"
-          >
-            <IoChevronForward size={20} />
-          </button>
+          />
         </div>
       </div>
 

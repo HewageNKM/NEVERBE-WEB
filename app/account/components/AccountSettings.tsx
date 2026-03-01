@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import { Form, Input, Button } from "antd";
 import {
   updatePassword,
   updateProfile,
@@ -20,12 +21,10 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
   const ProfileForm = () => {
     const [isUpdating, setIsUpdating] = useState(false);
 
-    const handleUpdate = async (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
+    const handleUpdate = async (values: any) => {
       setIsUpdating(true);
-      const formData = new FormData(e.currentTarget);
-      const fName = formData.get("fName") as string;
-      const lName = formData.get("lName") as string;
+      const fName = values.fName;
+      const lName = values.lName;
 
       try {
         if (auth.currentUser) {
@@ -60,48 +59,61 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
             </h3>
           </div>
 
-          <form className="space-y-4" onSubmit={handleUpdate}>
+          <Form
+            layout="vertical"
+            className="space-y-4"
+            onFinish={handleUpdate}
+            initialValues={{
+              fName: user.displayName ? user.displayName.split(" ")[0] : "",
+              lName:
+                user.displayName && user.displayName.split(" ").length > 1
+                  ? user.displayName.split(" ")[1]
+                  : "",
+            }}
+          >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase tracking-widest text-muted ml-1">
-                  First Name
-                </label>
-                <input
-                  name="fName"
-                  type="text"
-                  defaultValue={
-                    user.displayName ? user.displayName.split(" ")[0] : ""
-                  }
-                  className="w-full bg-surface-2 p-4 text-sm font-bold border border-default focus:border-primary focus:bg-surface outline-none rounded-xl transition-all"
+              <Form.Item
+                name="fName"
+                label={
+                  <span className="text-[10px] font-black uppercase tracking-widest text-muted ml-1">
+                    First Name
+                  </span>
+                }
+                rules={[{ required: true }]}
+                className="mb-0"
+              >
+                <Input
+                  size="large"
+                  className="w-full bg-surface-2 p-3 text-sm font-bold border border-default focus:border-primary focus:bg-surface outline-none rounded-xl transition-all"
                 />
-              </div>
-              <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase tracking-widest text-muted ml-1">
-                  Last Name
-                </label>
-                <input
-                  name="lName"
-                  type="text"
-                  defaultValue={
-                    user.displayName && user.displayName.split(" ").length > 1
-                      ? user.displayName.split(" ")[1]
-                      : ""
-                  }
-                  className="w-full bg-surface-2 p-4 text-sm font-bold border border-default focus:border-primary focus:bg-surface outline-none rounded-xl transition-all"
+              </Form.Item>
+              <Form.Item
+                name="lName"
+                label={
+                  <span className="text-[10px] font-black uppercase tracking-widest text-muted ml-1">
+                    Last Name
+                  </span>
+                }
+                rules={[{ required: true }]}
+                className="mb-0"
+              >
+                <Input
+                  size="large"
+                  className="w-full bg-surface-2 p-3 text-sm font-bold border border-default focus:border-primary focus:bg-surface outline-none rounded-xl transition-all"
                 />
-              </div>
+              </Form.Item>
             </div>
 
             <div className="space-y-2">
-              <label className="text-[10px] font-black uppercase tracking-widest text-muted ml-1">
+              <label className="text-[10px] font-black uppercase tracking-widest text-muted ml-1 mb-2 block">
                 Email Address
               </label>
               <div className="relative">
-                <input
+                <Input
                   readOnly
                   type="email"
                   value={user.email}
-                  className="w-full bg-surface-3 p-4 text-sm font-bold border border-default text-muted cursor-not-allowed outline-none rounded-xl"
+                  className="w-full bg-surface-3 py-3 px-4 text-sm font-bold border border-default text-muted cursor-not-allowed outline-none rounded-xl"
                 />
                 <IoCheckmarkCircle
                   className="absolute right-4 top-1/2 -translate-y-1/2 text-accent"
@@ -111,19 +123,17 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
             </div>
 
             <div className="flex justify-end pt-4">
-              <button
-                type="submit"
-                disabled={isUpdating}
-                className="group flex items-center gap-3 bg-dark text-inverse px-8 py-3 text-xs font-black uppercase tracking-widest hover:bg-accent hover:text-dark rounded-full transition-all disabled:opacity-50 active:scale-95"
+              <Button
+                type="primary"
+                htmlType="submit"
+                loading={isUpdating}
+                className="group flex items-center gap-3 bg-dark hover:bg-accent text-inverse hover:text-dark px-8 py-5 rounded-full font-black uppercase tracking-widest text-xs border-none"
               >
-                {isUpdating ? "Saving..." : "Save Changes"}
-                <IoRefreshOutline
-                  className={isUpdating ? "animate-spin" : ""}
-                  size={18}
-                />
-              </button>
+                Save Changes
+                {!isUpdating && <IoRefreshOutline size={18} />}
+              </Button>
             </div>
-          </form>
+          </Form>
         </div>
       </div>
     );
@@ -132,13 +142,12 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
   const PasswordForm = () => {
     const [isUpdating, setIsUpdating] = useState(false);
 
-    const handleUpdate = async (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
+    const [form] = Form.useForm();
+    const handleUpdate = async (values: any) => {
       setIsUpdating(true);
-      const formData = new FormData(e.currentTarget);
-      const currentPass = formData.get("currentPass") as string;
-      const newPass = formData.get("newPass") as string;
-      const confirmPass = formData.get("confirmPass") as string;
+      const currentPass = values.currentPass;
+      const newPass = values.newPass;
+      const confirmPass = values.confirmPass;
 
       if (newPass !== confirmPass) {
         toast.error("New passwords do not match");
@@ -150,12 +159,12 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
         if (auth.currentUser && auth.currentUser.email) {
           const credential = EmailAuthProvider.credential(
             auth.currentUser.email,
-            currentPass
+            currentPass,
           );
           await reauthenticateWithCredential(auth.currentUser, credential);
           await updatePassword(auth.currentUser, newPass);
           toast.success("Password Updated");
-          (e.target as HTMLFormElement).reset();
+          form.resetFields();
         }
       } catch (err: any) {
         toast.error("Verification failed. Check current password.");
@@ -176,40 +185,57 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
             </h3>
           </div>
 
-          <form className="space-y-4" onSubmit={handleUpdate}>
-            <div className="space-y-2">
-              <label className="text-[10px] font-black uppercase tracking-widest text-muted ml-1">
-                Current Password
-              </label>
-              <input
-                name="currentPass"
-                type="password"
-                required
-                className="w-full bg-surface p-4 text-sm font-bold border border-default focus:border-primary outline-none rounded-xl transition-all"
+          <Form
+            form={form}
+            layout="vertical"
+            className="space-y-4"
+            onFinish={handleUpdate}
+          >
+            <Form.Item
+              name="currentPass"
+              label={
+                <span className="text-[10px] font-black uppercase tracking-widest text-muted ml-1">
+                  Current Password
+                </span>
+              }
+              rules={[{ required: true }]}
+              className="mb-0"
+            >
+              <Input.Password
+                size="large"
+                className="w-full bg-surface p-3 text-sm font-bold border border-default focus:border-primary outline-none rounded-xl transition-all"
               />
-            </div>
-            <div className="space-y-2">
-              <label className="text-[10px] font-black uppercase tracking-widest text-muted ml-1">
-                New Password
-              </label>
-              <input
-                name="newPass"
-                type="password"
-                required
-                className="w-full bg-surface p-4 text-sm font-bold border border-default focus:border-primary outline-none rounded-xl transition-all"
+            </Form.Item>
+            <Form.Item
+              name="newPass"
+              label={
+                <span className="text-[10px] font-black uppercase tracking-widest text-muted ml-1">
+                  New Password
+                </span>
+              }
+              rules={[{ required: true }]}
+              className="mb-0"
+            >
+              <Input.Password
+                size="large"
+                className="w-full bg-surface p-3 text-sm font-bold border border-default focus:border-primary outline-none rounded-xl transition-all"
               />
-            </div>
-            <div className="space-y-2">
-              <label className="text-[10px] font-black uppercase tracking-widest text-muted ml-1">
-                Confirm New Password
-              </label>
-              <input
-                name="confirmPass"
-                type="password"
-                required
-                className="w-full bg-surface p-4 text-sm font-bold border border-default focus:border-primary outline-none rounded-xl transition-all"
+            </Form.Item>
+            <Form.Item
+              name="confirmPass"
+              label={
+                <span className="text-[10px] font-black uppercase tracking-widest text-muted ml-1">
+                  Confirm New Password
+                </span>
+              }
+              rules={[{ required: true }]}
+              className="mb-0"
+            >
+              <Input.Password
+                size="large"
+                className="w-full bg-surface p-3 text-sm font-bold border border-default focus:border-primary outline-none rounded-xl transition-all"
               />
-            </div>
+            </Form.Item>
 
             <div className="flex flex-col sm:flex-row justify-between items-center gap-4 pt-4">
               <button
@@ -218,15 +244,16 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
               >
                 Forgot Password?
               </button>
-              <button
-                type="submit"
-                disabled={isUpdating}
-                className="w-full sm:w-auto bg-dark text-inverse px-8 py-3 text-xs font-black uppercase tracking-widest hover:bg-accent hover:text-dark rounded-full transition-all disabled:opacity-50 active:scale-95"
+              <Button
+                type="primary"
+                htmlType="submit"
+                loading={isUpdating}
+                className="w-full sm:w-auto bg-dark hover:bg-accent text-inverse hover:text-dark px-8 py-5 rounded-full font-black uppercase tracking-widest text-xs border-none"
               >
-                {isUpdating ? "Updating..." : "Update Password"}
-              </button>
+                Update Password
+              </Button>
             </div>
-          </form>
+          </Form>
         </div>
       </div>
     );

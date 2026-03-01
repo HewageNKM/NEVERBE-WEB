@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState, useMemo } from "react";
 import { useSelector } from "react-redux";
+import { Form, Input, Button } from "antd";
 import { RootState } from "@/redux/store";
 import { IoArrowForward, IoLockClosedOutline } from "react-icons/io5";
 import BagItemCard from "@/components/BagItemCard";
@@ -149,7 +150,9 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
     const fetchMethods = async () => {
       try {
         setIsPaymentLoading(true);
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/payment-methods`);
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/payment-methods`,
+        );
         const methods = await res.json();
         setPaymentOptions(methods || []);
         if (methods.length > 0 && !paymentType) {
@@ -319,10 +322,11 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
       </div>
 
       {/* Submit Button */}
-      <button
+      <Button
+        type="primary"
+        htmlType="submit"
         disabled={bagItems.length === 0 || !paymentType}
-        type="submit"
-        className="group w-full flex items-center justify-between px-6 py-4 bg-dark text-inverse rounded-full disabled:bg-surface-3 disabled:text-muted disabled:cursor-not-allowed transition-all duration-300 shadow-custom hover:shadow-hover hover:-translate-y-1 hover:bg-accent hover:text-dark"
+        className="group w-full flex items-center justify-between px-6 py-8 bg-dark border-none text-inverse rounded-full disabled:bg-surface-3 disabled:text-muted disabled:cursor-not-allowed transition-all duration-300 shadow-custom hover:shadow-hover hover:-translate-y-1 hover:bg-accent hover:text-dark"
       >
         <span className="font-display font-black uppercase tracking-widest text-sm">
           Complete Order
@@ -330,7 +334,7 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
         <div className="bg-inverse text-dark rounded-full p-1.5 transition-transform group-hover:translate-x-1 group-hover:bg-dark group-hover:text-accent">
           <IoArrowForward size={18} />
         </div>
-      </button>
+      </Button>
 
       {/* Security Footer */}
       <div className="mt-6 flex flex-col items-center justify-center text-center gap-2">

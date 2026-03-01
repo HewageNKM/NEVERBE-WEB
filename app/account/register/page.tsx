@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import { Form, Input, Button } from "antd";
 import {
   createUserWithEmailAndPassword,
   updateProfile,
@@ -24,17 +25,6 @@ const RegisterPage = () => {
   const searchParams = useSearchParams();
   const redirectUrl = searchParams.get("redirect") || "/account";
   const [loading, setLoading] = useState(false);
-
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-    firstName: "",
-    lastName: "",
-  });
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
 
   const handleGoogleRegister = async () => {
     setLoading(true);
@@ -62,30 +52,29 @@ const RegisterPage = () => {
     }
   };
 
-  const handleRegister = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleRegister = async (values: any) => {
     setLoading(true);
 
     try {
       const user = auth.currentUser;
       if (user && user.isAnonymous) {
         const credential = EmailAuthProvider.credential(
-          formData.email,
-          formData.password
+          values.email,
+          values.password,
         );
         await linkWithCredential(user, credential);
         await updateProfile(user, {
-          displayName: `${formData.firstName} ${formData.lastName}`.trim(),
+          displayName: `${values.firstName} ${values.lastName}`.trim(),
         });
         toast.success("Member registered & history saved");
       } else {
         const userCredential = await createUserWithEmailAndPassword(
           auth,
-          formData.email,
-          formData.password
+          values.email,
+          values.password,
         );
         await updateProfile(userCredential.user, {
-          displayName: `${formData.firstName} ${formData.lastName}`.trim(),
+          displayName: `${values.firstName} ${values.lastName}`.trim(),
         });
         toast.success("Welcome to NEVERBE");
       }
@@ -120,43 +109,66 @@ const RegisterPage = () => {
           </p>
         </div>
 
-        <form onSubmit={handleRegister} className="space-y-4">
+        <Form
+          onFinish={handleRegister}
+          layout="vertical"
+          disabled={loading}
+          className="space-y-4"
+        >
           <div className="grid grid-cols-2 gap-4">
-            <input
+            <Form.Item
               name="firstName"
-              type="text"
-              placeholder="First Name"
-              required
-              className="w-full bg-surface-2 p-4 text-sm font-bold border border-default focus:border-primary focus:bg-surface outline-none rounded-xl transition-all placeholder:text-muted"
-              onChange={handleChange}
-            />
-            <input
+              rules={[{ required: true, message: "Required" }]}
+              className="mb-0"
+            >
+              <Input
+                size="large"
+                placeholder="First Name"
+                className="w-full bg-surface-2 hover:bg-surface focus:bg-surface border-default focus:border-primary px-4 py-3 text-sm font-bold rounded-xl transition-all"
+              />
+            </Form.Item>
+            <Form.Item
               name="lastName"
-              type="text"
-              placeholder="Last Name"
-              required
-              className="w-full bg-surface-2 p-4 text-sm font-bold border border-default focus:border-primary focus:bg-surface outline-none rounded-xl transition-all placeholder:text-muted"
-              onChange={handleChange}
-            />
+              rules={[{ required: true, message: "Required" }]}
+              className="mb-0"
+            >
+              <Input
+                size="large"
+                placeholder="Last Name"
+                className="w-full bg-surface-2 hover:bg-surface focus:bg-surface border-default focus:border-primary px-4 py-3 text-sm font-bold rounded-xl transition-all"
+              />
+            </Form.Item>
           </div>
 
-          <input
+          <Form.Item
             name="email"
-            type="email"
-            placeholder="Email Address"
-            required
-            className="w-full bg-surface-2 p-4 text-sm font-bold border border-default focus:border-primary focus:bg-surface outline-none rounded-xl transition-all placeholder:text-muted"
-            onChange={handleChange}
-          />
+            rules={[
+              { required: true, message: "Required" },
+              { type: "email", message: "Invalid email" },
+            ]}
+            className="mb-0"
+          >
+            <Input
+              size="large"
+              placeholder="Email Address"
+              className="w-full bg-surface-2 hover:bg-surface focus:bg-surface border-default focus:border-primary px-4 py-3 text-sm font-bold rounded-xl transition-all"
+            />
+          </Form.Item>
 
-          <input
+          <Form.Item
             name="password"
-            type="password"
-            placeholder="Password (Min. 6 Characters)"
-            required
-            className="w-full bg-surface-2 p-4 text-sm font-bold border border-default focus:border-primary focus:bg-surface outline-none rounded-xl transition-all placeholder:text-muted"
-            onChange={handleChange}
-          />
+            rules={[
+              { required: true, message: "Required" },
+              { min: 6, message: "Min 6 characters" },
+            ]}
+            className="mb-0"
+          >
+            <Input.Password
+              size="large"
+              placeholder="Password (Min. 6 Characters)"
+              className="w-full bg-surface-2 hover:bg-surface focus:bg-surface border-default focus:border-primary px-4 py-3 text-sm font-bold rounded-xl transition-all"
+            />
+          </Form.Item>
 
           <p className="text-[11px] text-muted text-center uppercase font-bold tracking-widest leading-relaxed py-4 px-6">
             By joining, you agree to our Privacy Policy and Terms of Use.
@@ -173,7 +185,7 @@ const RegisterPage = () => {
               className="group-hover:translate-x-1 transition-transform"
             />
           </button>
-        </form>
+        </Form>
 
         {/* Divider */}
         <div className="flex items-center gap-6 my-10">
@@ -184,11 +196,10 @@ const RegisterPage = () => {
           <div className="h-px bg-border-default flex-1"></div>
         </div>
 
-        {/* Google Button */}
-        <button
+        <Button
           onClick={handleGoogleRegister}
-          type="button"
-          className="w-full bg-accent text-dark flex items-center justify-center gap-4 py-4 rounded-full font-black uppercase text-xs tracking-widest hover:scale-[1.02] transition-all active:scale-95"
+          type="default"
+          className="w-full bg-accent text-dark border-none flex items-center justify-center gap-4 py-6 rounded-full font-black uppercase text-xs tracking-widest hover:scale-[1.02] transition-all"
         >
           <svg className="w-5 h-5" viewBox="0 0 24 24">
             <path
@@ -209,7 +220,7 @@ const RegisterPage = () => {
             />
           </svg>
           Register with Google
-        </button>
+        </Button>
 
         {/* Login Link */}
         <div className="text-center mt-12">

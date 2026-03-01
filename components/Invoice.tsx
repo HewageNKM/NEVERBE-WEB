@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
+import { Button } from "antd";
 import { Logo } from "@/assets/images";
 import toast from "react-hot-toast";
 import { Order } from "@/interfaces/Order";
@@ -25,8 +26,8 @@ const Invoice: React.FC<InvoiceProps> = ({
   const [loading, setLoading] = useState(false);
 
   // NEVERBE Brand Colors in RGB
-  const BRAND_GREEN = [151, 225, 62]; // #97e13e
-  const BRAND_DARK = [26, 26, 26]; // #1a1a1a
+  const BRAND_GREEN: [number, number, number] = [151, 225, 62]; // #97e13e
+  const BRAND_DARK: [number, number, number] = [26, 26, 26]; // #1a1a1a
 
   const generateInvoice = async () => {
     if (loading) return;
@@ -49,7 +50,7 @@ const Invoice: React.FC<InvoiceProps> = ({
         centerX - imgWidth / 2,
         25 - imgHeight / 2,
         imgWidth,
-        imgHeight
+        imgHeight,
       );
 
       // Title - Performance Italic look via Helvetica-BoldOblique
@@ -77,7 +78,7 @@ const Invoice: React.FC<InvoiceProps> = ({
       doc.text("Order Summary", 140, yPos);
       doc.setFont("helvetica", "normal");
       doc.setTextColor(100);
-      doc.text(`ID: #${order.orderId.toUpperCase()}`, 140, yPos + 5);
+      doc.text(`ID: #${order.orderId?.toUpperCase() || "N/A"}`, 140, yPos + 5);
       doc.text(`Date: ${order.createdAt}`, 140, yPos + 10);
       doc.text(`Payment: ${order.paymentMethod.toUpperCase()}`, 140, yPos + 15);
 
@@ -99,7 +100,7 @@ const Invoice: React.FC<InvoiceProps> = ({
           customer.shippingZip || ""
         }`,
         20,
-        yPos + 15
+        yPos + 15,
       );
       doc.text(customer.shippingPhone || customer.phone, 20, yPos + 20);
 
@@ -142,7 +143,7 @@ const Invoice: React.FC<InvoiceProps> = ({
         const comboName = items[0]?.comboName || "Combo Bundle";
         const comboDiscount = items.reduce(
           (sum, i) => sum + (i.discount || 0),
-          0
+          0,
         );
         itemData.push([
           `[BUNDLE] ${comboName.toUpperCase()}`,
@@ -195,7 +196,7 @@ const Invoice: React.FC<InvoiceProps> = ({
       // --- Totals Section ---
       const subtotal = order.items.reduce(
         (sum, i) => sum + i.price * i.quantity,
-        0
+        0,
       );
       const totalDiscount =
         order.items.reduce((sum, i) => sum + (i.discount || 0), 0) +
@@ -209,7 +210,7 @@ const Invoice: React.FC<InvoiceProps> = ({
         label: string,
         value: string,
         isBold = false,
-        isGreen = false
+        isGreen = false,
       ) => {
         if (isGreen) doc.setTextColor(...BRAND_GREEN);
         else doc.setTextColor(...BRAND_DARK);
@@ -227,13 +228,13 @@ const Invoice: React.FC<InvoiceProps> = ({
           "Discount Applied:",
           `- Rs. ${totalDiscount.toLocaleString()}`,
           false,
-          true
+          true,
         );
       drawTotalLine(
         "Shipping Fee:",
-        order.shippingFee === 0
+        (order.shippingFee || 0) === 0
           ? "FREE"
-          : `Rs. ${order.shippingFee.toLocaleString()}`
+          : `Rs. ${(order.shippingFee || 0).toLocaleString()}`,
       );
 
       finalY += 3;
@@ -248,7 +249,7 @@ const Invoice: React.FC<InvoiceProps> = ({
         align: "center",
       });
 
-      doc.save(`NEVERBE_INV_${order.orderId.toUpperCase()}.pdf`);
+      doc.save(`NEVERBE_INV_${order.orderId?.toUpperCase() || "UNKNOWN"}.pdf`);
       toast.success("Invoice Downloaded");
     } catch (error) {
       console.error("PDF Error:", error);
@@ -260,16 +261,17 @@ const Invoice: React.FC<InvoiceProps> = ({
   };
 
   return (
-    <button
+    <Button
+      type="primary"
       onClick={generateInvoice}
       disabled={loading}
       className={`
-        group flex items-center justify-center gap-2 px-8 py-3 
-        bg-dark text-inverse rounded-full 
+        group flex items-center justify-center gap-2 px-8 py-5 
+        bg-dark border-none text-inverse rounded-full 
         font-display font-black uppercase italic tracking-widest text-xs
         hover:bg-accent hover:text-dark transition-all duration-300
         disabled:bg-surface-3 disabled:text-muted disabled:cursor-not-allowed
-        shadow-custom hover:shadow-hover active:scale-95
+        shadow-custom hover:shadow-hover
         ${className}
       `}
     >
@@ -281,7 +283,7 @@ const Invoice: React.FC<InvoiceProps> = ({
       ) : (
         btnText
       )}
-    </button>
+    </Button>
   );
 };
 

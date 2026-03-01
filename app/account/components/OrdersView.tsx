@@ -1,9 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
+import { Button } from "antd";
 import EmptyState from "@/components/EmptyState";
 import { useRouter } from "next/navigation";
-import { Order } from "@/interfaces/BagItem";
+import { Order } from "@/interfaces/Order";
 import OrderDetailsModal from "./OrderDetailsModal";
 import { toSafeLocaleString } from "@/services/UtilService";
 import Image from "next/image";
@@ -103,14 +104,15 @@ const OrdersView: React.FC<OrdersViewProps> = ({ orders }) => {
                       </p>
                     </div>
 
-                    <button
+                    <Button
+                      type="primary"
                       onClick={() => handleViewOrder(order)}
-                      className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-dark text-inverse text-[10px] font-black uppercase tracking-widest rounded-full hover:bg-accent hover:text-dark transition-all"
+                      className="inline-flex items-center justify-center gap-2 px-6 py-5 bg-dark border-none text-inverse text-[10px] font-black uppercase tracking-widest rounded-full hover:bg-accent hover:text-dark transition-all"
                     >
                       <IoReceiptOutline size={14} />
                       Details
                       <IoChevronForwardOutline className="group-hover:translate-x-1 transition-transform" />
-                    </button>
+                    </Button>
                   </div>
                 </div>
               </motion.div>

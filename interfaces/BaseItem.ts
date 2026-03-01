@@ -12,4 +12,7 @@ export interface BaseItem {
 
 export interface OrderItem extends BaseItem {
   variantName: string;
+  isComboItem?: boolean;
+  comboId?: string;
+  comboName?: string;
 }

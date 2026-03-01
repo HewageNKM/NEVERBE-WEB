@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import { AppDispatch, RootState } from "@/redux/store";
 import { clearBag } from "@/redux/bagSlice/bagSlice";
+import { Form, Input, Button } from "antd";
 import { FiX } from "react-icons/fi";
 import {
   calculateFee,
@@ -23,7 +24,6 @@ import { Order, Customer } from "@/interfaces";
 import { auth } from "@/firebase/firebaseClient";
 import { usePayment } from "@/hooks/usePayment";
 import usePromotions from "@/hooks/usePromotions";
-import { Form } from "antd";
 const formatSriLankanPhoneNumber = (phone: string) => {
   // Remove any non-digit characters
   const cleaned = phone.replace(/\D/g, "");
@@ -262,15 +262,15 @@ const CheckoutForm = () => {
       {otpState.showModal && otpState.pendingOrder && (
         <div className="fixed inset-0 bg-surface/80 backdrop-blur-xl flex justify-center items-center z-50 p-4">
           <div className="relative bg-surface p-8 w-full max-w-sm border border-default rounded-2xl shadow-hover">
-            <button
+            <Button
+              type="text"
+              icon={<FiX size={24} />}
               onClick={() => {
                 closeOTPModal();
                 setOtp("");
               }}
-              className="absolute top-4 right-4 text-primary hover:text-accent hover:scale-110 transition-all"
-            >
-              <FiX size={24} />
-            </button>
+              className="absolute top-4 right-4 text-primary hover:text-accent hover:bg-transparent"
+            />
 
             <h2 className="text-xl font-display font-black uppercase italic tracking-tighter mb-2 text-center text-primary">
               Verify Number
@@ -280,23 +280,23 @@ const CheckoutForm = () => {
             </p>
 
             <div className="flex flex-col gap-4">
-              <input
+              <Input
                 type="tel"
                 value={otp}
                 disabled={otpState.isVerifying}
                 onChange={(e) => setOtp(e.target.value)}
                 placeholder="000000"
-                className="w-full h-14 text-center text-2xl tracking-[0.5em] font-display font-black border-2 border-default bg-surface-2 rounded-xl focus:border-accent outline-none transition-colors text-primary"
+                className="w-full h-14 text-center text-2xl tracking-[0.5em] font-display font-black border-2 border-default bg-surface-2 rounded-xl focus:border-accent hover:border-accent outline-none transition-colors text-primary"
                 maxLength={6}
               />
-              <button
-                type="button"
+              <Button
+                type="primary"
                 onClick={() => handleOTPVerification(otp)}
-                disabled={otpState.isVerifying}
-                className="w-full py-4 bg-dark text-inverse rounded-full font-display font-black uppercase tracking-widest text-xs hover:bg-accent hover:text-dark transition-all shadow-custom hover:shadow-hover active:scale-95 disabled:bg-surface-3 disabled:text-muted disabled:shadow-none"
+                loading={otpState.isVerifying}
+                className="w-full h-14 bg-dark border-none text-inverse rounded-full font-display font-black uppercase tracking-widest text-xs hover:bg-accent hover:text-dark transition-all shadow-custom hover:shadow-hover"
               >
-                {otpState.isVerifying ? "Processing..." : "Confirm Order"}
-              </button>
+                Confirm Order
+              </Button>
 
               <button
                 type="button"

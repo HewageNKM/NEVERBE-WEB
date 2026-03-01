@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { Form, Input, Button } from "antd";
 import toast from "react-hot-toast";
 import { auth } from "@/firebase/firebaseClient";
 import { motion, AnimatePresence } from "framer-motion";
@@ -35,28 +36,30 @@ const SavedAddresses: React.FC<SavedAddressesProps> = ({
     const [isEditing, setIsEditing] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
 
-    const handleSave = async (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
+    const [form] = Form.useForm();
+    const handleSave = async (values: any) => {
       setIsSaving(true);
-      const formData = new FormData(e.currentTarget);
 
       const newAddress = {
         type,
-        address: formData.get("address") as string,
-        city: formData.get("city") as string,
-        phone: formData.get("phone") as string,
+        address: values.address,
+        city: values.city,
+        phone: values.phone,
       };
 
       try {
         const token = await auth.currentUser?.getIdToken();
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/customers/addresses`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/customers/addresses`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(newAddress),
           },
-          body: JSON.stringify(newAddress),
-        });
+        );
 
         if (res.ok) {
           const updated = addresses.filter((a) => a.type !== type);
@@ -75,58 +78,83 @@ const SavedAddresses: React.FC<SavedAddressesProps> = ({
       <div className="h-full">
         <AnimatePresence mode="wait">
           {isEditing ? (
-            <motion.form
+            <motion.div
               key="edit"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              onSubmit={handleSave}
-              className="bg-surface-2 p-6 rounded-2xl border border-default space-y-4"
+              className="bg-surface-2 p-6 rounded-2xl border border-default"
             >
-              <div className="flex justify-between items-center mb-2">
-                <h3 className="text-lg font-bold text-primary uppercase tracking-tight">
-                  Edit {type} Address
-                </h3>
-                <button
-                  type="button"
-                  onClick={() => setIsEditing(false)}
-                  className="text-muted hover:text-primary"
-                >
-                  <IoCloseOutline size={24} />
-                </button>
-              </div>
-
-              <input
-                name="address"
-                defaultValue={existing?.address}
-                placeholder="Street Address"
-                required
-                className="w-full bg-surface p-4 rounded-xl border border-default focus:border-primary outline-none text-sm"
-              />
-              <div className="grid grid-cols-2 gap-4">
-                <input
-                  name="city"
-                  defaultValue={existing?.city}
-                  placeholder="City"
-                  required
-                  className="w-full bg-surface p-4 rounded-xl border border-default focus:border-primary outline-none text-sm"
-                />
-                <input
-                  name="phone"
-                  defaultValue={existing?.phone}
-                  placeholder="Phone Number"
-                  required
-                  className="w-full bg-surface p-4 rounded-xl border border-default focus:border-primary outline-none text-sm"
-                />
-              </div>
-
-              <button
-                disabled={isSaving}
-                className="w-full bg-dark text-inverse py-3 rounded-full font-black uppercase text-[10px] tracking-widest hover:bg-accent hover:text-dark transition-all"
+              <Form
+                form={form}
+                layout="vertical"
+                className="space-y-4"
+                onFinish={handleSave}
+                initialValues={{
+                  address: existing?.address,
+                  city: existing?.city,
+                  phone: existing?.phone,
+                }}
               >
-                {isSaving ? "Saving..." : "Save Address"}
-              </button>
-            </motion.form>
+                <div className="flex justify-between items-center mb-2">
+                  <h3 className="text-lg font-bold text-primary uppercase tracking-tight">
+                    Edit {type} Address
+                  </h3>
+                  <button
+                    type="button"
+                    onClick={() => setIsEditing(false)}
+                    className="text-muted hover:text-primary"
+                  >
+                    <IoCloseOutline size={24} />
+                  </button>
+                </div>
+
+                <Form.Item
+                  name="address"
+                  rules={[{ required: true, message: "Required" }]}
+                  className="mb-0"
+                >
+                  <Input
+                    size="large"
+                    placeholder="Street Address"
+                    className="w-full bg-surface p-3 rounded-xl border border-default focus:border-primary outline-none text-sm transition-all hover:bg-surface focus:bg-surface"
+                  />
+                </Form.Item>
+                <div className="grid grid-cols-2 gap-4">
+                  <Form.Item
+                    name="city"
+                    rules={[{ required: true, message: "Required" }]}
+                    className="mb-0"
+                  >
+                    <Input
+                      size="large"
+                      placeholder="City"
+                      className="w-full bg-surface p-3 rounded-xl border border-default focus:border-primary outline-none text-sm transition-all hover:bg-surface focus:bg-surface"
+                    />
+                  </Form.Item>
+                  <Form.Item
+                    name="phone"
+                    rules={[{ required: true, message: "Required" }]}
+                    className="mb-0"
+                  >
+                    <Input
+                      size="large"
+                      placeholder="Phone Number"
+                      className="w-full bg-surface p-3 rounded-xl border border-default focus:border-primary outline-none text-sm transition-all hover:bg-surface focus:bg-surface"
+                    />
+                  </Form.Item>
+                </div>
+
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  loading={isSaving}
+                  className="w-full bg-dark hover:bg-accent text-inverse hover:text-dark py-5 rounded-full font-black uppercase text-[10px] tracking-widest border-none mt-4"
+                >
+                  Save Address
+                </Button>
+              </Form>
+            </motion.div>
           ) : (
             <motion.div
               key="display"
