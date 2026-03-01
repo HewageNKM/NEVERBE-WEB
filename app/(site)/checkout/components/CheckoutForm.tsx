@@ -23,6 +23,7 @@ import { Order, Customer } from "@/interfaces";
 import { auth } from "@/firebase/firebaseClient";
 import { usePayment } from "@/hooks/usePayment";
 import usePromotions from "@/hooks/usePromotions";
+import { Form } from "antd";
 const formatSriLankanPhoneNumber = (phone: string) => {
   // Remove any non-digit characters
   const cleaned = phone.replace(/\D/g, "");
@@ -45,15 +46,15 @@ const formatSriLankanPhoneNumber = (phone: string) => {
   return phone;
 };
 
-const createCustomerFromForm = (form: any): Customer => {
-  const name = `${form.first_name.value} ${form.last_name.value}`;
+const createCustomerFromForm = (values: any): Customer => {
+  const name = `${values.first_name} ${values.last_name}`;
   return {
     name,
-    email: form.email.value,
-    phone: formatSriLankanPhoneNumber(form.phone.value),
-    address: form.address.value,
-    city: form.city.value,
-    zip: form.zip.value || "",
+    email: values.email,
+    phone: formatSriLankanPhoneNumber(values.phone),
+    address: values.address,
+    city: values.city,
+    zip: values.zip || "",
     id: window.crypto.randomUUID().toLowerCase(),
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
@@ -69,12 +70,12 @@ const CheckoutForm = () => {
 
   const bagItems = useSelector((state: RootState) => state.bag.bag);
   const couponDiscount = useSelector(
-    (state: RootState) => state.bag.couponDiscount
+    (state: RootState) => state.bag.couponDiscount,
   );
   const promotionDiscount =
     useSelector((state: RootState) => state.bag.promotionDiscount) || 0;
   const promotionIds = useSelector(
-    (state: RootState) => state.bag.promotionIds
+    (state: RootState) => state.bag.promotionIds,
   );
   const user = auth?.currentUser;
 
@@ -112,11 +113,14 @@ const CheckoutForm = () => {
           setShippingCost(0);
           return;
         }
-        const res = await fetch("/api/v1/shipping/calculate", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ items: bagItems }),
-        });
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/shipping/calculate`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ items: bagItems }),
+          },
+        );
         const data = await res.json();
         setShippingCost(data.cost || 0);
       } catch (error) {
@@ -151,13 +155,10 @@ const CheckoutForm = () => {
     }
   }, [user]);
 
-  const handlePaymentSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
+  const handlePaymentSubmit = async (values: any) => {
     try {
       // Validate Logic
-      const form = e.target as any;
-      const newBilling = createCustomerFromForm(form);
+      const newBilling = createCustomerFromForm(values);
       const userId = user?.uid || null;
 
       const orderCustomer: Customer = {
@@ -184,7 +185,7 @@ const CheckoutForm = () => {
         bagItems,
         couponDiscount,
         promotionDiscount,
-        shippingCost
+        shippingCost,
       );
 
       // 2. Build Order Payload
@@ -196,7 +197,7 @@ const CheckoutForm = () => {
         {
           appliedPromotionId: promotionIds[0] || null, // Assuming first is primary if needed
           appliedPromotionIds: promotionIds,
-        }
+        },
       );
 
       console.log("New Order Payload:", newOrder);
@@ -211,8 +212,19 @@ const CheckoutForm = () => {
 
   return (
     <>
-      <form
-        onSubmit={handlePaymentSubmit}
+      <Form
+        layout="vertical"
+        onFinish={handlePaymentSubmit}
+        initialValues={{
+          first_name: billingCustomer?.name?.split(" ")[0] || "",
+          last_name: billingCustomer?.name?.split(" ").slice(1).join(" ") || "",
+          address: billingCustomer?.address || "",
+          city: billingCustomer?.city || "",
+          zip: billingCustomer?.zip || "",
+          email: billingCustomer?.email || "",
+          phone: billingCustomer?.phone || "",
+          country: "Sri Lanka",
+        }}
         className="flex flex-col lg:flex-row w-full gap-8 lg:gap-16 px-4 md:px-8 py-8 bg-surface"
       >
         {/* --- LEFT COLUMN: FORMS (Scrollable) --- */}
@@ -244,7 +256,7 @@ const CheckoutForm = () => {
             />
           </div>
         </div>
-      </form>
+      </Form>
 
       {/* --- OTP MODAL - NEVERBE Performance Style --- */}
       {otpState.showModal && otpState.pendingOrder && (
@@ -297,8 +309,8 @@ const CheckoutForm = () => {
                 {otpState.cooldown > 0
                   ? `Resend in ${otpState.cooldown}s`
                   : otpState.isResending
-                  ? "Sending..."
-                  : "Resend Code"}
+                    ? "Sending..."
+                    : "Resend Code"}
               </button>
             </div>
           </div>

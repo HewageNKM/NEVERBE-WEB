@@ -103,6 +103,8 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 
 import StoreProvider from "@/app/(site)/components/StoreProvider";
 import AuthProvider from "@/components/AuthProvider";
+import { AntdRegistry } from "@ant-design/nextjs-registry";
+import { ConfigProvider } from "antd";
 
 export default function RootLayout({
   children,
@@ -116,8 +118,20 @@ export default function RootLayout({
       >
         <StoreProvider>
           <AuthProvider>
-            <main className="flex-1">{children}</main>
-            <WebVitals />
+            <AntdRegistry>
+              <ConfigProvider
+                theme={{
+                  token: {
+                    colorPrimary: "#000000",
+                    fontFamily: "var(--font-inter)",
+                    borderRadius: 4,
+                  },
+                }}
+              >
+                <main className="flex-1">{children}</main>
+                <WebVitals />
+              </ConfigProvider>
+            </AntdRegistry>
           </AuthProvider>
         </StoreProvider>
       </body>

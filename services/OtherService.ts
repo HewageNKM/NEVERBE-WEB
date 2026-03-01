@@ -1,28 +1,9 @@
-import { otherRepository } from "@/repositories/OtherRepository";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api/v1/web";
 
-/**
- * OtherService - Thin wrapper over OtherRepository
- * Delegates all data access to repository layer
- */
-
-/**
- * Get active brands for dropdown
- */
-export const getBrandsForDropdown = () =>
-  otherRepository.getBrandsForDropdown();
-
-/**
- * Get full brand objects
- */
-export const getBrands = () => otherRepository.getBrands();
-
-/**
- * Get active categories for dropdown
- */
-export const getCategoriesForDropdown = () =>
-  otherRepository.getCategoriesForDropdown();
-
-/**
- * Get ERP settings
- */
-export const getSettings = () => otherRepository.getSettings();
+export const getBrands = async () => {
+  const res = await fetch(`${API_URL}/brands/dropdown`, { next: { revalidate: 60 } });
+  if (!res.ok) return [];
+  const data = await res.json();
+  // Map dropdown format to full array if needed, assuming the API returns array
+  return data.data || data;
+};

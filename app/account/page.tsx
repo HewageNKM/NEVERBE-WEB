@@ -49,7 +49,7 @@ const Account = () => {
           setOrders(ordersData);
 
           const token = await auth.currentUser?.getIdToken();
-          const res = await fetch("/api/v1/customers/addresses", {
+          const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/customers/addresses`, {
             headers: { Authorization: `Bearer ${token}` },
           });
           if (res.ok) {

@@ -149,7 +149,7 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
     const fetchMethods = async () => {
       try {
         setIsPaymentLoading(true);
-        const res = await fetch("/api/v1/payment-methods");
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/payment-methods`);
         const methods = await res.json();
         setPaymentOptions(methods || []);
         if (methods.length > 0 && !paymentType) {

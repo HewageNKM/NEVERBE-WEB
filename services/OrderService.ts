@@ -1,48 +1,8 @@
-import { orderRepository } from "@/repositories/OrderRepository";
-import {
-  sendOrderConfirmedEmail,
-  sendOrderConfirmedSMS,
-} from "./NotificationService";
-import { updateOrAddOrderHash } from "./IntegrityService";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api/v1/web";
 
-/**
- * OrderService - Thin wrapper over OrderRepository
- * Delegates data access to repository layer
- */
-
-/**
- * Fetch an order by ID for invoice purposes
- */
 export const getOrderByIdForInvoice = async (orderId: string) => {
-  const order = await orderRepository.findByOrderId(orderId);
-  if (!order) throw new Error(`Order ${orderId} not found.`);
-  return order;
-};
-
-/**
- * Update payment status and handle post-payment actions
- */
-export const updatePayment = async (
-  orderId: string,
-  paymentId: string,
-  status: string
-) => {
-  // Find document ID by orderId
-  const docId = await orderRepository.findDocIdByOrderId(orderId);
-  if (!docId) throw new Error(`Order ${orderId} not found.`);
-
-  // Update payment status
-  const orderData = await orderRepository.updatePaymentStatus(
-    docId,
-    paymentId,
-    status
-  );
-
-  // Post-payment actions
-  if (status.toLowerCase() === "paid") {
-    await sendOrderConfirmedSMS(orderId);
-    await sendOrderConfirmedEmail(orderId);
-  }
-
-  await updateOrAddOrderHash(orderData);
+  const res = await fetch(`${API_URL}/orders/${orderId}`, { next: { revalidate: 60 } });
+  if (!res.ok) return null;
+  const data = await res.json();
+  return data.data || data;
 };

@@ -14,6 +14,7 @@ import { NavigationItem, SocialMediaItem } from "@/services/WebsiteService";
 import { IoLogoFacebook, IoLogoInstagram } from "react-icons/io";
 import { IoLogoTiktok, IoLogoYoutube, IoLogoTwitter } from "react-icons/io5";
 import { IconType } from "react-icons";
+import { Row, Col } from "antd";
 
 const SOCIAL_ICON_MAP: Record<string, IconType> = {
   facebook: IoLogoFacebook,
@@ -51,9 +52,9 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
     <footer id="footer" className="w-full bg-dark text-inverse pt-16 pb-8">
       <div className="max-w-content mx-auto px-6 lg:px-12">
         {/* --- Primary Navigation Grid --- */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 mb-16">
+        <Row gutter={[32, 48]} className="mb-16">
           {/* Column 1: Brand & Key Utility */}
-          <div className="flex flex-col gap-2">
+          <Col xs={24} md={12} lg={6} className="flex flex-col gap-2">
             <Link
               href="/"
               className="inline-block transition-transform hover:scale-105"
@@ -82,10 +83,10 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                 </p>
               </Link>
             </div>
-          </div>
+          </Col>
 
           {/* Column 2: Information Lists */}
-          <div className="flex flex-col gap-6">
+          <Col xs={24} md={12} lg={6} className="flex flex-col gap-6">
             <h3 className="text-base font-display font-black uppercase tracking-widest text-inverse">
               Get Help
             </h3>
@@ -101,10 +102,10 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                 </li>
               ))}
             </ul>
-          </div>
+          </Col>
 
           {/* Column 3: Contact Utility */}
-          <div className="flex flex-col gap-6">
+          <Col xs={24} md={12} lg={6} className="flex flex-col gap-6">
             <h3 className="text-base font-display font-black uppercase tracking-widest text-inverse">
               Contact Us
             </h3>
@@ -127,10 +128,15 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                 </li>
               ))}
             </ul>
-          </div>
+          </Col>
 
           {/* Column 4: Social Icons */}
-          <div className="flex flex-col gap-6 lg:items-end">
+          <Col
+            xs={24}
+            md={12}
+            lg={6}
+            className="flex flex-col gap-6 lg:items-end"
+          >
             <h3 className="text-base font-display font-black uppercase tracking-widest text-inverse lg:hidden">
               Follow Us
             </h3>
@@ -146,8 +152,8 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                 </Link>
               ))}
             </div>
-          </div>
-        </div>
+          </Col>
+        </Row>
 
         {/* --- Bottom Legal & Credits Row --- */}
         <div className="pt-8 border-t border-dark/30 flex flex-col lg:flex-row justify-between items-center gap-8">

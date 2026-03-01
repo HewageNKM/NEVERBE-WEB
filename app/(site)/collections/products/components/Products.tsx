@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import Pagination from "@/components/Pagination";
+import { Pagination } from "antd";
 import ProductsFilter from "./ProductsFilter";
 import { IoOptionsOutline } from "react-icons/io5";
 import { AnimatePresence } from "framer-motion";
@@ -30,7 +30,7 @@ const Products = ({ items }: { items: Product[] }) => {
     toggleSize,
     resetFilters,
   } = useProductListing({
-    apiEndpoint: "/api/v1/products",
+    apiEndpoint: `${process.env.NEXT_PUBLIC_API_URL}/products`,
   });
 
   // Local state for mobile drawer only (UI state, not data state)
@@ -95,7 +95,14 @@ const Products = ({ items }: { items: Product[] }) => {
         {/* Pagination */}
         {total > 0 && totalPages > 1 && (
           <div className="flex justify-center mt-24 border-t border-default pt-12">
-            <Pagination count={totalPages} page={page} onChange={setPage} />
+            <Pagination
+              current={page}
+              total={total}
+              defaultPageSize={20}
+              onChange={(page) => setPage(page)}
+              showSizeChanger={false}
+              className="font-display font-bold uppercase"
+            />
           </div>
         )}
       </div>

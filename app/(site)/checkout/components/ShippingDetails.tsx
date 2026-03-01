@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { Customer } from "@/interfaces";
+import { Form, Input, Checkbox } from "antd";
 
 const ShippingDetails = ({
   shippingSameAsBilling,
@@ -31,90 +32,117 @@ const ShippingDetails = ({
       </div>
 
       <div className="flex items-center gap-3 mb-6 p-4 bg-surface-2 border border-default rounded-xl">
-        <input
-          type="checkbox"
+        <Checkbox
           id="sameAddress"
           checked={shippingSameAsBilling}
-          onChange={() => setShippingSameAsBilling((prev) => !prev)}
-          className="h-5 w-5 border-default focus:ring-accent accent-accent rounded-sm"
-        />
-        <label
-          htmlFor="sameAddress"
-          className="text-sm font-bold uppercase tracking-wide text-secondary select-none cursor-pointer"
+          onChange={(e) => setShippingSameAsBilling(!shippingSameAsBilling)}
         >
-          Same as billing address
-        </label>
+          <span className="text-sm font-bold uppercase tracking-wide text-secondary">
+            Same as billing address
+          </span>
+        </Checkbox>
       </div>
 
       {!shippingSameAsBilling && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6 w-full animate-fadeIn">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-0 w-full animate-fadeIn">
           <div>
-            <label className="block text-[10px] font-black uppercase tracking-widest text-muted mb-2">
-              Recipient Name *
-            </label>
-            <input
-              type="text"
+            <Form.Item
               name="shippingName"
-              required
-              value={shippingCustomer?.shippingName || ""}
-              onChange={handleChange}
-              className="w-full h-12 px-4 bg-surface-2 border border-default rounded-xl focus:border-accent focus:bg-surface outline-none transition-all placeholder:text-muted text-sm font-bold text-primary"
-            />
+              label={
+                <span className="text-[10px] font-black uppercase tracking-widest text-muted">
+                  Recipient Name *
+                </span>
+              }
+              rules={[
+                { required: true, message: "Please input recipient name!" },
+              ]}
+            >
+              <Input
+                size="large"
+                onChange={handleChange}
+                className="px-4 bg-surface-2 border-default rounded-xl hover:border-accent focus:border-accent text-sm font-bold text-primary"
+              />
+            </Form.Item>
           </div>
 
           <div>
-            <label className="block text-[10px] font-black uppercase tracking-widest text-muted mb-2">
-              Phone *
-            </label>
-            <input
-              type="tel"
+            <Form.Item
               name="shippingPhone"
-              required
-              value={shippingCustomer?.shippingPhone || ""}
-              onChange={handleChange}
-              className="w-full h-12 px-4 bg-surface-2 border border-default rounded-xl focus:border-accent focus:bg-surface outline-none transition-all placeholder:text-muted text-sm font-bold text-primary"
-            />
+              label={
+                <span className="text-[10px] font-black uppercase tracking-widest text-muted">
+                  Phone *
+                </span>
+              }
+              rules={[
+                {
+                  required: true,
+                  message: "Please input shipping phone number!",
+                },
+              ]}
+            >
+              <Input
+                size="large"
+                onChange={handleChange}
+                className="px-4 bg-surface-2 border-default rounded-xl hover:border-accent focus:border-accent text-sm font-bold text-primary"
+              />
+            </Form.Item>
           </div>
 
           <div className="md:col-span-2">
-            <label className="block text-[10px] font-black uppercase tracking-widest text-muted mb-2">
-              Address *
-            </label>
-            <input
-              type="text"
+            <Form.Item
               name="shippingAddress"
-              required
-              value={shippingCustomer?.shippingAddress || ""}
-              onChange={handleChange}
-              className="w-full h-12 px-4 bg-surface-2 border border-default rounded-xl focus:border-accent focus:bg-surface outline-none transition-all placeholder:text-muted text-sm font-bold text-primary"
-            />
+              label={
+                <span className="text-[10px] font-black uppercase tracking-widest text-muted">
+                  Address *
+                </span>
+              }
+              rules={[
+                { required: true, message: "Please input shipping address!" },
+              ]}
+            >
+              <Input
+                size="large"
+                onChange={handleChange}
+                className="px-4 bg-surface-2 border-default rounded-xl hover:border-accent focus:border-accent text-sm font-bold text-primary"
+              />
+            </Form.Item>
           </div>
 
           <div>
-            <label className="block text-[10px] font-black uppercase tracking-widest text-muted mb-2">
-              City *
-            </label>
-            <input
-              type="text"
+            <Form.Item
               name="shippingCity"
-              required
-              value={shippingCustomer?.shippingCity || ""}
-              onChange={handleChange}
-              className="w-full h-12 px-4 bg-surface-2 border border-default rounded-xl focus:border-accent focus:bg-surface outline-none transition-all placeholder:text-muted text-sm font-bold text-primary"
-            />
+              label={
+                <span className="text-[10px] font-black uppercase tracking-widest text-muted">
+                  City *
+                </span>
+              }
+              rules={[
+                { required: true, message: "Please input shipping city!" },
+              ]}
+            >
+              <Input
+                size="large"
+                onChange={handleChange}
+                className="px-4 bg-surface-2 border-default rounded-xl hover:border-accent focus:border-accent text-sm font-bold text-primary"
+              />
+            </Form.Item>
           </div>
 
           <div>
-            <label className="block text-[10px] font-black uppercase tracking-widest text-muted mb-2">
-              Postal Code
-            </label>
-            <input
-              type="text"
+            <Form.Item
               name="shippingZip"
-              value={shippingCustomer?.shippingZip || ""}
-              onChange={handleChange}
-              className="w-full h-12 px-4 bg-surface-2 border border-default rounded-xl focus:border-accent focus:bg-surface outline-none transition-all placeholder:text-muted text-sm font-bold text-primary"
-            />
+              label={
+                <span className="text-[10px] font-black uppercase tracking-widest text-muted">
+                  Postal Code
+                </span>
+              }
+            >
+              <Input
+                size="large"
+                onChange={handleChange}
+                className="px-4 bg-surface-2 border-default rounded-xl hover:border-accent focus:border-accent text-sm font-bold text-primary"
+              />
+            </Form.Item>
           </div>
         </div>
       )}

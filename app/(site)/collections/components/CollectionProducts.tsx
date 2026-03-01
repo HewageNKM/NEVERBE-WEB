@@ -77,13 +77,13 @@ const CollectionProducts = ({
           params.append("sizes", selectedSizes.join(","));
         }
 
-        let endpoint = "/api/v1/products";
+        let endpoint = `${process.env.NEXT_PUBLIC_API_URL}/products`;
 
         if (collectionType === "category" && categoryName) {
-          endpoint = `/api/v1/products/categories/${categoryName}`;
+          endpoint = `${process.env.NEXT_PUBLIC_API_URL}/products/categories/${categoryName}`;
         } else if (collectionType === "brand" && brandName) {
           // Need brand endpoint
-          endpoint = `/api/v1/products`; // Fallback or assume query param
+          endpoint = `${process.env.NEXT_PUBLIC_API_URL}/products`; // Fallback or assume query param
         } else {
           // Men, Women, New Arrivals use general product endpoint with tags
           if (tagName) params.append("tag", tagName);

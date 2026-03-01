@@ -19,6 +19,7 @@ import SeasonalPromo from "@/app/(site)/components/SeasonalPromo";
 import SearchDialog from "@/components/SearchDialog";
 import { NavigationItem } from "@/services/WebsiteService";
 import { useAlgoliaSearch } from "@/hooks/useAlgoliaSearch";
+import { Badge, Input, ConfigProvider } from "antd";
 
 const DEFAULT_NAV_ITEMS: NavigationItem[] = [
   { title: "New Arrivals", link: "/collections/new-arrivals" },
@@ -136,17 +137,19 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
 
             <button
               onClick={() => dispatch(showBag())}
-              className="relative p-2.5 hover:bg-surface-2 rounded-full transition-colors group"
+              className="relative p-2.5 px-3 hover:bg-surface-2 rounded-full transition-colors group"
             >
-              <IoBagHandleOutline
-                size={24}
-                className="group-hover:text-accent"
-              />
-              {bagItems.length > 0 && (
-                <span className="absolute top-2 right-2 h-4.5 w-4.5 bg-accent text-dark text-[10px] flex items-center justify-center rounded-full font-black shadow-custom">
-                  {bagItems.length}
-                </span>
-              )}
+              <Badge
+                count={bagItems.length}
+                offset={[-2, 6]}
+                color="#000"
+                size="small"
+              >
+                <IoBagHandleOutline
+                  size={24}
+                  className="group-hover:text-accent"
+                />
+              </Badge>
             </button>
 
             <button
@@ -193,30 +196,53 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
 
                   {/* Search bar - full width on mobile */}
                   <div className="flex-1 lg:max-w-2xl lg:mx-auto w-full">
-                    <div className="flex items-center bg-surface-2 border border-default rounded-full px-4 py-3 lg:px-6 lg:py-4 w-full focus-within:border-accent transition-all shadow-custom">
-                      <IoSearchOutline
-                        size={20}
-                        className="text-accent mr-3 lg:mr-4 shrink-0"
-                      />
-                      <input
+                    <ConfigProvider
+                      theme={{
+                        components: {
+                          Input: {
+                            colorBgContainer: "transparent",
+                            colorBorder: "var(--color-default)",
+                            hoverBorderColor: "var(--color-accent)",
+                            activeBorderColor: "var(--color-accent)",
+                            activeShadow: "none",
+                            borderRadius: 99,
+                          },
+                        },
+                      }}
+                    >
+                      <Input
                         autoFocus
+                        size="large"
                         placeholder="Search shoes..."
-                        className="w-full bg-transparent text-base lg:text-xl border-none outline-none font-display font-black italic tracking-tight placeholder:text-muted min-w-0"
+                        className="bg-surface-2 px-4 py-3 lg:px-6 lg:py-4 w-full shadow-custom text-base lg:text-xl font-display font-black italic tracking-tight"
+                        prefix={
+                          <IoSearchOutline
+                            size={20}
+                            className="text-accent mr-2 shrink-0"
+                          />
+                        }
+                        suffix={
+                          <div className="flex items-center">
+                            {search && (
+                              <button
+                                onClick={() => clearSearch()}
+                                className="p-1 hover:bg-surface rounded-full transition-colors shrink-0 mr-2"
+                              >
+                                <IoCloseOutline
+                                  size={18}
+                                  className="text-muted"
+                                />
+                              </button>
+                            )}
+                            {isSearching && (
+                              <div className="w-5 h-5 border-2 border-accent border-t-transparent rounded-full animate-spin shrink-0" />
+                            )}
+                          </div>
+                        }
                         onChange={onSearch}
                         value={search}
                       />
-                      {search && (
-                        <button
-                          onClick={() => clearSearch()}
-                          className="p-1.5 hover:bg-surface rounded-full transition-colors ml-2 shrink-0"
-                        >
-                          <IoCloseOutline size={18} className="text-muted" />
-                        </button>
-                      )}
-                      {isSearching && (
-                        <div className="w-5 h-5 border-2 border-accent border-t-transparent rounded-full animate-spin shrink-0 ml-2" />
-                      )}
-                    </div>
+                    </ConfigProvider>
                   </div>
 
                   {/* Desktop close button */}

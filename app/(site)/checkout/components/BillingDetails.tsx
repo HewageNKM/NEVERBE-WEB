@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { Customer } from "@/interfaces";
+import { Form, Input, Checkbox } from "antd";
 
 interface BillingDetailsProps {
   saveAddress: boolean;
@@ -19,133 +20,175 @@ const BillingDetails: React.FC<BillingDetailsProps> = ({
         Billing Address
       </h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6 w-full">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-0 w-full">
         <div>
-          <label className="block text-[10px] font-black uppercase tracking-widest text-muted mb-2">
-            First Name *
-          </label>
-          <input
-            type="text"
+          <Form.Item
             name="first_name"
-            required
-            defaultValue={customer?.name.split(" ")[0] || ""}
-            className="w-full h-12 px-4 bg-surface-2 border border-default rounded-xl focus:border-accent focus:bg-surface outline-none transition-all placeholder:text-muted text-sm font-bold text-primary"
-            placeholder="John"
-          />
+            label={
+              <span className="text-[10px] font-black uppercase tracking-widest text-muted">
+                First Name *
+              </span>
+            }
+            rules={[
+              { required: true, message: "Please input your first name!" },
+            ]}
+          >
+            <Input
+              size="large"
+              placeholder="John"
+              className="px-4 bg-surface-2 border-default rounded-xl hover:border-accent focus:border-accent text-sm font-bold text-primary"
+            />
+          </Form.Item>
         </div>
 
         <div>
-          <label className="block text-[10px] font-black uppercase tracking-widest text-muted mb-2">
-            Last Name *
-          </label>
-          <input
-            type="text"
+          <Form.Item
             name="last_name"
-            required
-            defaultValue={customer?.name.split(" ").slice(1).join(" ") || ""}
-            className="w-full h-12 px-4 bg-surface-2 border border-default rounded-xl focus:border-accent focus:bg-surface outline-none transition-all placeholder:text-muted text-sm font-bold text-primary"
-            placeholder="Doe"
-          />
+            label={
+              <span className="text-[10px] font-black uppercase tracking-widest text-muted">
+                Last Name *
+              </span>
+            }
+            rules={[
+              { required: true, message: "Please input your last name!" },
+            ]}
+          >
+            <Input
+              size="large"
+              placeholder="Doe"
+              className="px-4 bg-surface-2 border-default rounded-xl hover:border-accent focus:border-accent text-sm font-bold text-primary"
+            />
+          </Form.Item>
         </div>
 
         <div className="md:col-span-2">
-          <label className="block text-[10px] font-black uppercase tracking-widest text-muted mb-2">
-            Address *
-          </label>
-          <input
-            type="text"
+          <Form.Item
             name="address"
-            required
-            defaultValue={customer?.address || ""}
-            className="w-full h-12 px-4 bg-surface-2 border border-default rounded-xl focus:border-accent focus:bg-surface outline-none transition-all placeholder:text-muted text-sm font-bold text-primary"
-            placeholder="House No, Street Name"
-          />
+            label={
+              <span className="text-[10px] font-black uppercase tracking-widest text-muted">
+                Address *
+              </span>
+            }
+            rules={[{ required: true, message: "Please input your address!" }]}
+          >
+            <Input
+              size="large"
+              placeholder="House No, Street Name"
+              className="px-4 bg-surface-2 border-default rounded-xl hover:border-accent focus:border-accent text-sm font-bold text-primary"
+            />
+          </Form.Item>
         </div>
 
         <div>
-          <label className="block text-[10px] font-black uppercase tracking-widest text-muted mb-2">
-            City *
-          </label>
-          <input
-            type="text"
+          <Form.Item
             name="city"
-            required
-            defaultValue={customer?.city || ""}
-            className="w-full h-12 px-4 bg-surface-2 border border-default rounded-xl focus:border-accent focus:bg-surface outline-none transition-all placeholder:text-muted text-sm font-bold text-primary"
-            placeholder="Colombo"
-          />
+            label={
+              <span className="text-[10px] font-black uppercase tracking-widest text-muted">
+                City *
+              </span>
+            }
+            rules={[{ required: true, message: "Please input your city!" }]}
+          >
+            <Input
+              size="large"
+              placeholder="Colombo"
+              className="px-4 bg-surface-2 border-default rounded-xl hover:border-accent focus:border-accent text-sm font-bold text-primary"
+            />
+          </Form.Item>
         </div>
 
         <div>
-          <label className="block text-[10px] font-black uppercase tracking-widest text-muted mb-2">
-            Postal Code
-          </label>
-          <input
-            type="text"
+          <Form.Item
             name="zip"
-            defaultValue={customer?.zip || ""}
-            className="w-full h-12 px-4 bg-surface-2 border border-default rounded-xl focus:border-accent focus:bg-surface outline-none transition-all placeholder:text-muted text-sm font-bold text-primary"
-            placeholder="00700"
-          />
+            label={
+              <span className="text-[10px] font-black uppercase tracking-widest text-muted">
+                Postal Code
+              </span>
+            }
+          >
+            <Input
+              size="large"
+              placeholder="00700"
+              className="px-4 bg-surface-2 border-default rounded-xl hover:border-accent focus:border-accent text-sm font-bold text-primary"
+            />
+          </Form.Item>
         </div>
 
         <div>
-          <label className="block text-[10px] font-black uppercase tracking-widest text-muted mb-2">
-            Email *
-          </label>
-          <input
-            type="email"
+          <Form.Item
             name="email"
-            required
-            defaultValue={customer?.email || ""}
-            className="w-full h-12 px-4 bg-surface-2 border border-default rounded-xl focus:border-accent focus:bg-surface outline-none transition-all placeholder:text-muted text-sm font-bold text-primary"
-            placeholder="john@example.com"
-          />
+            label={
+              <span className="text-[10px] font-black uppercase tracking-widest text-muted">
+                Email *
+              </span>
+            }
+            rules={[
+              { required: true, message: "Please input your email!" },
+              { type: "email", message: "Please enter a valid email!" },
+            ]}
+          >
+            <Input
+              size="large"
+              placeholder="john@example.com"
+              className="px-4 bg-surface-2 border-default rounded-xl hover:border-accent focus:border-accent text-sm font-bold text-primary"
+            />
+          </Form.Item>
         </div>
 
         <div>
-          <label className="block text-[10px] font-black uppercase tracking-widest text-muted mb-2">
-            Phone *
-          </label>
-          <input
-            type="tel"
+          <Form.Item
             name="phone"
-            pattern="^07\d{8}$"
-            required
-            defaultValue={customer?.phone || ""}
-            className="w-full h-12 px-4 bg-surface-2 border border-default rounded-xl focus:border-accent focus:bg-surface outline-none transition-all placeholder:text-muted text-sm font-bold text-primary"
-            placeholder="07XXXXXXXX"
-          />
+            label={
+              <span className="text-[10px] font-black uppercase tracking-widest text-muted">
+                Phone *
+              </span>
+            }
+            rules={[
+              { required: true, message: "Please input your phone number!" },
+              {
+                pattern: /^07\d{8}$/,
+                message:
+                  "Must be a valid Sri Lankan mobile number (e.g., 07XXXXXXXX)",
+              },
+            ]}
+          >
+            <Input
+              size="large"
+              placeholder="07XXXXXXXX"
+              className="px-4 bg-surface-2 border-default rounded-xl hover:border-accent focus:border-accent text-sm font-bold text-primary"
+            />
+          </Form.Item>
         </div>
 
         <div className="md:col-span-2">
-          <label className="block text-[10px] font-black uppercase tracking-widest text-muted mb-2">
-            Country
-          </label>
-          <input
-            type="text"
+          <Form.Item
             name="country"
-            value="Sri Lanka"
-            disabled
-            className="w-full h-12 px-4 bg-surface-3 border border-default rounded-xl text-muted cursor-not-allowed text-sm font-bold"
-          />
+            label={
+              <span className="text-[10px] font-black uppercase tracking-widest text-muted">
+                Country
+              </span>
+            }
+            initialValue="Sri Lanka"
+          >
+            <Input
+              size="large"
+              disabled
+              className="px-4 bg-surface-3 border-default rounded-xl text-muted font-bold cursor-not-allowed"
+            />
+          </Form.Item>
         </div>
       </div>
 
-      <div className="flex items-center gap-3 mt-6">
-        <input
-          type="checkbox"
+      <div className="flex items-center gap-3 mt-2">
+        <Checkbox
           id="saveAddress"
           checked={saveAddress}
-          onChange={() => setSaveAddress(!saveAddress)}
-          className="h-5 w-5 border-default focus:ring-accent accent-accent rounded-sm"
-        />
-        <label
-          htmlFor="saveAddress"
-          className="text-sm font-bold text-secondary select-none cursor-pointer"
+          onChange={(e) => setSaveAddress(e.target.checked)}
         >
-          Save this information for next time
-        </label>
+          <span className="text-sm font-bold text-secondary">
+            Save this information for next time
+          </span>
+        </Checkbox>
       </div>
     </section>
   );
