@@ -1,5 +1,6 @@
 import { Order } from "@/interfaces/BagItem";
 import { getIdToken } from "@/firebase/firebaseClient";
+import axiosInstance from "../services/axiosInstance";
 
 /**
  * Add new order
@@ -7,19 +8,17 @@ import { getIdToken } from "@/firebase/firebaseClient";
 export const addNewOrder = async (newOrder: Order, captchaToken: string) => {
   try {
     const token = await getIdToken();
-    const response = await fetch("https://erp.neverbe.lk/api/v2/orders", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
+    const response = await axiosInstance.post(
+      "https://erp.neverbe.lk/api/v2/orders",
+      newOrder,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       },
-      body: JSON.stringify(newOrder),
-    });
+    );
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    return await response.json();
+    return response.data;
   } catch (e) {
     throw e;
   }
@@ -31,19 +30,13 @@ export const addNewOrder = async (newOrder: Order, captchaToken: string) => {
 export const initiateKOKOPayment = async (payload: any) => {
   try {
     const token = await getIdToken();
-    const response = await fetch("/api/v1/ipg/koko/initiate", {
-      method: "POST",
+    const response = await axiosInstance.post("/ipg/koko/initiate", payload, {
       headers: {
         Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
       },
-      body: JSON.stringify(payload),
     });
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    return await response.json();
+    return response.data;
   } catch (e) {
     throw e;
   }
@@ -55,19 +48,17 @@ export const initiateKOKOPayment = async (payload: any) => {
 export const initiatePayHerePayment = async (payload: any) => {
   try {
     const token = await getIdToken();
-    const response = await fetch("/api/v1/ipg/payhere/initiate", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
+    const response = await axiosInstance.post(
+      "/ipg/payhere/initiate",
+      payload,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       },
-      body: JSON.stringify(payload),
-    });
+    );
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    return await response.json();
+    return response.data;
   } catch (e) {
     throw e;
   }
@@ -79,19 +70,17 @@ export const initiatePayHerePayment = async (payload: any) => {
 export const requestOTP = async (phoneNumber: string, captchaToken: string) => {
   try {
     const token = await getIdToken();
-    const response = await fetch("/api/v1/otp", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
+    const response = await axiosInstance.post(
+      "/otp",
+      { phoneNumber, captchaToken },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       },
-      body: JSON.stringify({ phoneNumber, captchaToken }),
-    });
+    );
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    return await response.json();
+    return response.data;
   } catch (e) {
     throw e;
   }
@@ -103,19 +92,17 @@ export const requestOTP = async (phoneNumber: string, captchaToken: string) => {
 export const verifyOTP = async (phoneNumber: string, otp: string) => {
   try {
     const token = await getIdToken();
-    const response = await fetch("/api/v1/otp/verify", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
+    const response = await axiosInstance.post(
+      "/otp/verify",
+      { phoneNumber, otp },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       },
-      body: JSON.stringify({ phoneNumber, otp }),
-    });
+    );
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    return await response.json();
+    return response.data;
   } catch (e) {
     throw e;
   }
@@ -127,24 +114,20 @@ export const verifyOTP = async (phoneNumber: string, otp: string) => {
 
 export const sendCODOrderNotifications = async (
   orderId: string,
-  capchaToken: string
+  capchaToken: string,
 ) => {
   try {
     const token = await getIdToken();
-    const response = await fetch(
-      `/api/v1/orders/${orderId}/cod/notifications?capchaToken=${capchaToken}`,
+    const response = await axiosInstance.get(
+      `/orders/${orderId}/cod/notifications?capchaToken=${capchaToken}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
         },
-      }
+      },
     );
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    return await response.json();
+    return response.data;
   } catch (e) {
     throw e;
   }

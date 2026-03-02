@@ -8,6 +8,7 @@ import {
   IoChevronDownOutline,
   IoChevronForward,
 } from "react-icons/io5";
+import { Button, Input } from "antd";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";
 import { toggleMenu } from "@/redux/headerSlice/headerSlice";
@@ -52,7 +53,7 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex justify-end">
+    <div className="fixed inset-0 z-100 flex justify-end">
       {/* 1. Backdrop - Using Brand Blur */}
       <motion.div
         initial={{ opacity: 0 }}
@@ -73,26 +74,26 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
       >
         {/* Header */}
         <div className="flex items-center justify-between px-8 py-6 border-b border-default">
-          <span className="font-display font-black text-2xl uppercase italic tracking-tighter text-primary">
+          <span className="font-display font-black text-2xl uppercase tracking-tighter text-primary">
             Menu
           </span>
-          <button
+          <Button
+            type="text"
+            icon={<IoCloseOutline size={32} />}
             onClick={() => dispatch(toggleMenu(false))}
-            className="p-2 -mr-2 text-primary hover:bg-surface-2 rounded-full transition-all"
-          >
-            <IoCloseOutline size={32} />
-          </button>
+            className="p-2 -mr-2 text-primary hover:bg-surface-2 rounded-full transition-all h-auto w-auto"
+          />
         </div>
 
         {/* 3. Search Bar - Branded focus state */}
         <div className="px-6 py-6">
           <div className="relative group">
-            <input
+            <Input
               type="text"
               value={search}
               onChange={onSearch}
               placeholder="Search gear..."
-              className="w-full bg-surface-2 text-primary px-6 py-4 pl-12 rounded-full text-base font-bold transition-all focus:outline-none focus:ring-2 focus:ring-accent/50 border border-transparent focus:border-accent placeholder:text-muted"
+              className="w-full bg-surface-2 text-primary px-6 py-4 pl-12 rounded-full text-base font-bold transition-all focus:outline-none focus:ring-2 focus:ring-accent/50 border border-transparent focus:border-accent placeholder:text-muted h-auto"
             />
             <div className="absolute top-1/2 -translate-y-1/2 left-5">
               {isSearching ? (
@@ -125,7 +126,7 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
               onClick={() => dispatch(toggleMenu(false))}
               className="flex items-center justify-between py-4 group border-b border-default/50"
             >
-              <span className="text-3xl font-display font-black uppercase italic tracking-tighter text-primary transition-all group-hover:text-accent group-hover:translate-x-2">
+              <span className="text-3xl font-display font-black uppercase tracking-tighter text-primary transition-all group-hover:text-accent group-hover:translate-x-2">
                 {link.title}
               </span>
               <IoChevronForward
@@ -146,11 +147,13 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
             { id: "brands", label: "Brands", data: brands, query: "brand" },
           ].map((section) => (
             <div key={section.id} className="border-b border-default/50">
-              <button
+              <Button
+                type="text"
+                block
                 onClick={() => toggleSection(section.id)}
-                className="w-full flex justify-between items-center py-5 text-primary group"
+                className="w-full h-auto flex justify-between items-center py-5 text-primary group"
               >
-                <span className="text-2xl font-display font-black uppercase italic tracking-tighter group-hover:text-accent transition-colors">
+                <span className="text-2xl font-display font-black uppercase tracking-tighter group-hover:text-accent transition-colors">
                   {section.label}
                 </span>
                 <IoChevronDownOutline
@@ -161,7 +164,7 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
                   }`}
                   size={20}
                 />
-              </button>
+              </Button>
               <AnimatePresence>
                 {openSection === section.id && (
                   <motion.div

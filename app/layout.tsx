@@ -122,9 +122,33 @@ export default function RootLayout({
               <ConfigProvider
                 theme={{
                   token: {
-                    colorPrimary: "#000000",
+                    colorPrimary: "#97e13e",
                     fontFamily: "var(--font-inter)",
-                    borderRadius: 4,
+                    borderRadius: 20,
+                    colorBgLayout: "#ffffff",
+                    colorBgContainer: "#ffffff",
+                    boxShadow:
+                      "0 8px 32px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.8)",
+                    boxShadowSecondary:
+                      "0 12px 40px rgba(151, 225, 62, 0.12), 0 4px 16px rgba(0, 0, 0, 0.06)",
+                  },
+                  components: {
+                    Card: {
+                      borderRadiusLG: 24,
+                      paddingLG: 28,
+                      boxShadowTertiary: "0 4px 20px rgba(0, 0, 0, 0.04)",
+                    },
+                    Button: {
+                      borderRadius: 99,
+                      controlHeight: 44,
+                      controlHeightLG: 52,
+                      fontWeight: 700,
+                    },
+                    Carousel: {
+                      dotHeight: 4,
+                      dotWidth: 24,
+                      dotActiveWidth: 36,
+                    },
                   },
                 }}
               >

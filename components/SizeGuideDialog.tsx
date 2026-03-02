@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { IoClose } from "react-icons/io5";
+import { Button } from "antd";
 
 interface SizeGuideDialogProps {
   isOpen: boolean;
@@ -58,7 +59,7 @@ const SizeGuideDialog: React.FC<SizeGuideDialogProps> = ({
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
           {/* Backdrop with High-End Blur */}
           <motion.div
             initial={{ opacity: 0 }}
@@ -79,19 +80,19 @@ const SizeGuideDialog: React.FC<SizeGuideDialogProps> = ({
             {/* Header: Performance Style */}
             <div className="flex justify-between items-center p-6 md:px-8 border-b border-default shrink-0">
               <div className="flex flex-col">
-                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-accent italic">
+                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-accent">
                   Blueprint
                 </span>
-                <h2 className="text-2xl md:text-3xl font-display font-black uppercase italic tracking-tighter text-primary">
+                <h2 className="text-2xl md:text-3xl font-display font-black uppercase tracking-tighter text-primary">
                   Size Guide
                 </h2>
               </div>
-              <button
+              <Button
+                type="text"
+                icon={<IoClose size={24} />}
                 onClick={onClose}
-                className="p-3 bg-surface-2 text-primary hover:bg-dark hover:text-inverse transition-all rounded-full shadow-sm"
-              >
-                <IoClose size={24} />
-              </button>
+                className="p-3 bg-surface-2 text-primary hover:bg-dark hover:text-inverse transition-all rounded-full shadow-sm h-auto w-auto border-none"
+              />
             </div>
 
             {/* Content Container */}
@@ -105,12 +106,13 @@ const SizeGuideDialog: React.FC<SizeGuideDialogProps> = ({
               {/* Performance Tabs */}
               <div className="flex gap-6 mb-8 border-b border-default">
                 {(["men", "women", "kids"] as const).map((tab) => (
-                  <button
+                  <Button
+                    type="text"
                     key={tab}
                     onClick={() => setActiveTab(tab)}
-                    className={`pb-4 text-sm font-black uppercase tracking-widest transition-all relative ${
+                    className={`pb-4 text-sm font-black uppercase tracking-widest transition-all relative h-auto p-0 border-none rounded-none bg-transparent hover:bg-transparent ${
                       activeTab === tab
-                        ? "text-accent italic"
+                        ? "text-accent"
                         : "text-muted hover:text-primary"
                     }`}
                   >
@@ -121,7 +123,7 @@ const SizeGuideDialog: React.FC<SizeGuideDialogProps> = ({
                         className="absolute bottom-0 left-0 right-0 h-1 bg-accent shadow-[0_0_10px_#97e13e]"
                       />
                     )}
-                  </button>
+                  </Button>
                 ))}
               </div>
 
@@ -130,16 +132,16 @@ const SizeGuideDialog: React.FC<SizeGuideDialogProps> = ({
                 <table className="w-full text-sm text-left whitespace-nowrap">
                   <thead className="bg-dark text-accent">
                     <tr>
-                      <th className="px-6 py-4 font-display font-black uppercase italic tracking-tighter">
+                      <th className="px-6 py-4 font-display font-black uppercase tracking-tighter">
                         US Size
                       </th>
-                      <th className="px-6 py-4 font-display font-black uppercase italic tracking-tighter border-l border-white/10">
+                      <th className="px-6 py-4 font-display font-black uppercase tracking-tighter border-l border-white/10">
                         UK Size
                       </th>
-                      <th className="px-6 py-4 font-display font-black uppercase italic tracking-tighter border-l border-white/10">
+                      <th className="px-6 py-4 font-display font-black uppercase tracking-tighter border-l border-white/10">
                         EU Size
                       </th>
-                      <th className="px-6 py-4 font-display font-black uppercase italic tracking-tighter border-l border-white/10">
+                      <th className="px-6 py-4 font-display font-black uppercase tracking-tighter border-l border-white/10">
                         CM Length
                       </th>
                     </tr>
@@ -148,14 +150,14 @@ const SizeGuideDialog: React.FC<SizeGuideDialogProps> = ({
                     {(activeTab === "men"
                       ? menSizes
                       : activeTab === "women"
-                      ? womenSizes
-                      : kidSizes
+                        ? womenSizes
+                        : kidSizes
                     ).map((row, idx) => (
                       <tr
                         key={idx}
                         className="hover:bg-surface-2 transition-colors group"
                       >
-                        <td className="px-6 py-4 font-black text-primary text-base italic tracking-tighter group-hover:text-accent transition-colors">
+                        <td className="px-6 py-4 font-black text-primary text-base tracking-tighter group-hover:text-accent transition-colors">
                           {row.us}
                         </td>
                         <td className="px-6 py-4 text-muted font-bold border-l border-default">

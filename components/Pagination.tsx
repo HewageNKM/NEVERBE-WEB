@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { IoChevronBack, IoChevronForward } from "react-icons/io5";
+import { Button } from "antd";
 
 interface PaginationProps {
   count: number;
@@ -66,11 +67,12 @@ const Pagination: React.FC<PaginationProps> = ({
       aria-label="Pagination"
     >
       {/* --- PREVIOUS BUTTON --- */}
-      <button
+      <Button
+        type="text"
         onClick={() => page > 1 && onChange(page - 1)}
         disabled={page === 1}
         className={`
-          group flex items-center justify-center w-12 h-12 rounded-full border transition-all duration-300
+          group flex items-center justify-center w-12 h-12 rounded-full border transition-all duration-300 p-0
           ${
             page === 1
               ? "border-border-primary text-muted opacity-40 cursor-not-allowed"
@@ -78,12 +80,13 @@ const Pagination: React.FC<PaginationProps> = ({
           }
         `}
         aria-label="Previous page"
-      >
-        <IoChevronBack
-          size={20}
-          className="transition-transform group-hover:-translate-x-0.5"
-        />
-      </button>
+        icon={
+          <IoChevronBack
+            size={20}
+            className="transition-transform group-hover:-translate-x-0.5"
+          />
+        }
+      />
 
       {/* --- PAGE NUMBERS --- */}
       <div className="flex items-center gap-1.5 mx-4">
@@ -96,31 +99,33 @@ const Pagination: React.FC<PaginationProps> = ({
               ···
             </span>
           ) : (
-            <button
+            <Button
+              type="text"
               key={p}
               onClick={() => onChange(p)}
               className={`
-                w-12 h-12 rounded-full text-base font-display transition-all duration-300 tabular-nums
+                w-12 h-12 rounded-full text-base font-display transition-all duration-300 tabular-nums p-0
                 ${
                   p === page
-                    ? "bg-accent text-dark font-black italic tracking-tighter shadow-custom scale-110"
+                    ? "bg-accent text-dark font-black tracking-tighter shadow-custom scale-110 hover:bg-accent hover:text-dark"
                     : "text-muted font-bold hover:text-primary hover:bg-surface-2"
                 }
               `}
               aria-current={p === page ? "page" : undefined}
             >
               {p}
-            </button>
-          )
+            </Button>
+          ),
         )}
       </div>
 
       {/* --- NEXT BUTTON --- */}
-      <button
+      <Button
+        type="text"
         onClick={() => page < count && onChange(page + 1)}
         disabled={page === count}
         className={`
-          group flex items-center justify-center w-12 h-12 rounded-full border transition-all duration-300
+          group flex items-center justify-center w-12 h-12 rounded-full border transition-all duration-300 p-0
           ${
             page === count
               ? "border-border-primary text-muted opacity-40 cursor-not-allowed"
@@ -128,12 +133,13 @@ const Pagination: React.FC<PaginationProps> = ({
           }
         `}
         aria-label="Next page"
-      >
-        <IoChevronForward
-          size={20}
-          className="transition-transform group-hover:translate-x-0.5"
-        />
-      </button>
+        icon={
+          <IoChevronForward
+            size={20}
+            className="transition-transform group-hover:translate-x-0.5"
+          />
+        }
+      />
     </nav>
   );
 };

@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import axiosInstance from "@/services/axiosInstance";
 
 interface FilterOption {
   id: string;
@@ -24,14 +25,14 @@ export const useFilterData = (fetchCategories: boolean = true): FilterData => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const promises = [fetch("/api/v1/brands/dropdown")];
+        const promises = [axiosInstance.get("/brands/dropdown")];
         if (fetchCategories) {
-          promises.push(fetch("/api/v1/categories/dropdown"));
+          promises.push(axiosInstance.get("/categories/dropdown"));
         }
 
         const responses = await Promise.all(promises);
-        const [brandsData, categoriesData] = await Promise.all(
-          responses.map((r) => r.json())
+        const [brandsData, categoriesData] = responses.map(
+          (r) => r.data.data || r.data,
         );
 
         setBrands(brandsData || []);

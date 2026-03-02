@@ -15,7 +15,7 @@ import SEOContent from "./components/SEOContent";
 import FeaturedCategories from "./components/FeaturedCategory";
 import TrendingBundles from "./components/TrendingBundles";
 import { getPaginatedCombos } from "@/services/PromotionService";
-
+import { Flex } from "antd";
 export const metadata: Metadata = {
   title: {
     default:
@@ -62,7 +62,6 @@ export const metadata: Metadata = {
 };
 
 export const revalidate = 3600;
-
 const Page = async () => {
   const dataPromise = Promise.all([
     getRecentItems().catch((err) => []),
@@ -243,38 +242,40 @@ const Page = async () => {
   };
 
   return (
-    <main className="flex min-h-screen flex-col bg-white text-black">
+    <Flex vertical className="bg-white min-h-screen w-full">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
 
-      <Hero slides={sliders} />
+      <Flex vertical style={{ width: "100%", flex: "auto" }}>
+        <Hero slides={sliders} />
 
-      {/* The "Nike-style" Essentials Grid */}
-      <FeaturedCategories />
+        {/* The "Nike-style" Essentials Grid */}
+        <FeaturedCategories />
 
-      {/* Promotional Ads from NEVER-PANEL */}
-      <PromotionalAds />
+        {/* Promotional Ads from NEVER-PANEL */}
+        <PromotionalAds />
 
-      <div className="space-y-20 pb-20">
-        {hotItems.length > 0 && <PopularProducts hotItems={hotItems} />}
+        <Flex vertical gap={0}>
+          {hotItems.length > 0 && <PopularProducts hotItems={hotItems} />}
 
-        {/* New Bundles Section */}
-        {combos.length > 0 && <TrendingBundles bundles={combos} />}
+          {/* New Bundles Section */}
+          {combos.length > 0 && <TrendingBundles bundles={combos} />}
 
-        {arrivals.length > 0 && <NewArrivals arrivals={arrivals} />}
+          {arrivals.length > 0 && <NewArrivals arrivals={arrivals} />}
 
-        {/* A large visual break for Brands */}
-        {brands.length > 0 && <BrandsSlider items={brands} />}
+          {/* A large visual break for Brands */}
+          {brands.length > 0 && <BrandsSlider items={brands} />}
 
-        {/* Customer Reviews Section */}
-        <CustomerReviews />
+          {/* Customer Reviews Section */}
+          <CustomerReviews />
 
-        <WhyUs />
-        <SEOContent />
-      </div>
-    </main>
+          <WhyUs />
+          <SEOContent />
+        </Flex>
+      </Flex>
+    </Flex>
   );
 };
 export default Page;

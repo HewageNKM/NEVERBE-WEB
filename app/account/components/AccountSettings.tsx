@@ -238,12 +238,12 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
             </Form.Item>
 
             <div className="flex flex-col sm:flex-row justify-between items-center gap-4 pt-4">
-              <button
-                type="button"
-                className="text-[10px] font-black uppercase tracking-widest text-muted hover:text-primary underline underline-offset-8 decoration-accent decoration-2 transition-all"
+              <Button
+                type="link"
+                className="text-[10px] font-black uppercase tracking-widest text-muted hover:text-primary underline underline-offset-8 decoration-accent decoration-2 transition-all p-0 h-auto"
               >
                 Forgot Password?
-              </button>
+              </Button>
               <Button
                 type="primary"
                 htmlType="submit"

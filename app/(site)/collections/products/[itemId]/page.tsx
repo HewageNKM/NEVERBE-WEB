@@ -8,6 +8,7 @@ import { Product } from "@/interfaces/Product";
 import ProductFAQ from "./components/ProductFAQ";
 import RecentlyViewedTracker from "./components/RecentlyViewedTracker";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import { Flex } from "antd";
 
 const getProduct = cache(async (id: string): Promise<Product | null> => {
   try {
@@ -108,27 +109,34 @@ const Page = async (context: { params: Promise<{ itemId: string }> }) => {
     {
       label: item.category || "Footwear",
       href: `/collections/products?category=${encodeURIComponent(
-        item.category || ""
+        item.category || "",
       )}`,
     },
     { label: item.name },
   ];
 
   return (
-    <main className="w-full relative mt-[80px] md:mt-[100px] min-h-screen px-4 md:px-8 bg-white text-black">
+    <Flex
+      vertical
+      className="w-full relative mt-[80px] md:mt-[100px] min-h-screen px-4 md:px-8 bg-white text-black"
+    >
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
       />
       {/* Breadcrumbs Navigation */}
-      <div className="max-w-[1440px] mx-auto pt-4 pb-2">
+      <Flex
+        vertical
+        gap={16}
+        className="max-w-[1440px] mx-auto pt-4 pb-2 text-black"
+      >
         <Breadcrumbs items={breadcrumbItems} />
-      </div>
+      </Flex>
       <ProductHero item={item} />
       <ProductFAQ />
       <SimilarProducts items={similarItems || []} />
       <RecentlyViewedTracker product={item} />
-    </main>
+    </Flex>
   );
 };
 

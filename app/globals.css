@@ -47,8 +47,9 @@
   /* === TYPOGRAPHY === */
   --font-sans: var(--font-inter), ui-sans-serif, system-ui;
   --font-display: var(--font-plus-jakarta-sans), ui-sans-serif, system-ui;
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
-    "Liberation Mono", "Courier New", monospace;
+  --font-mono:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
 
   /* === FONT SIZES === */
   --text-xs: 11px;
@@ -200,6 +201,81 @@
   }
   .text-accent-dark {
     color: var(--color-primary-dark);
+  }
+
+  /* === GLASSMORPHISM UTILITIES === */
+  /* Standard glass card - white frosted effect */
+  .glass-card {
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.06),
+      inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  }
+
+  /* Green-tinted glass card - NEVERBE brand accent */
+  .glass-card-green {
+    background: rgba(151, 225, 62, 0.08);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(151, 225, 62, 0.2);
+    box-shadow:
+      0 8px 32px rgba(151, 225, 62, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  }
+
+  /* Full-width glass section background */
+  .glass-section {
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.9) 0%,
+      rgba(248, 250, 245, 0.95) 50%,
+      rgba(255, 255, 255, 0.9) 100%
+    );
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  /* Glassmorphic header / sticky bar */
+  .glass-header {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border-bottom: 1px solid rgba(151, 225, 62, 0.12);
+  }
+
+  /* Dark glass variant (for overlays on images) */
+  .glass-dark {
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+  }
+
+  /* Hover glow effect for interactive glass elements */
+  .glass-glow-hover {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .glass-glow-hover:hover {
+    box-shadow:
+      0 12px 40px rgba(151, 225, 62, 0.15),
+      0 4px 16px rgba(0, 0, 0, 0.08);
+    border-color: rgba(151, 225, 62, 0.35);
+    transform: translateY(-2px);
+  }
+
+  /* === SECTION SPACING === */
+  .section-spacing {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+  }
+  @media (min-width: 768px) {
+    .section-spacing {
+      padding-top: 6rem;
+      padding-bottom: 6rem;
+    }
   }
 
   /* === SCROLLBAR UTILITIES === */

@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { applyCoupon, removeCoupon } from "@/redux/bagSlice/bagSlice";
 import { RootState } from "@/redux/store";
 import { BagItem } from "@/interfaces/BagItem";
+import axiosInstance from "@/services/axiosInstance";
 import {
   calculateTotal,
   calculateTotalDiscount,
@@ -85,10 +86,10 @@ export const useCoupon = (options: UseCouponOptions = {}): UseCouponReturn => {
   const dispatch = useDispatch();
   const bagItems = useSelector((state: RootState) => state.bag.bag);
   const savedCouponCode = useSelector(
-    (state: RootState) => state.bag.couponCode
+    (state: RootState) => state.bag.couponCode,
   );
   const savedDiscount = useSelector(
-    (state: RootState) => state.bag.couponDiscount
+    (state: RootState) => state.bag.couponDiscount,
   );
   const user = useSelector((state: RootState) => state.authSlice.user);
 
@@ -117,7 +118,7 @@ export const useCoupon = (options: UseCouponOptions = {}): UseCouponReturn => {
     return bagItems
       .map(
         (item) =>
-          `${item.itemId}-${item.variantId}-${item.size}-${item.quantity}`
+          `${item.itemId}-${item.variantId}-${item.size}-${item.quantity}`,
       )
       .sort()
       .join("|");
@@ -168,24 +169,20 @@ export const useCoupon = (options: UseCouponOptions = {}): UseCouponReturn => {
     }));
 
     try {
-      const res = await fetch("/api/v1/coupons/validate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          code,
-          userId: user?.uid,
-          cartTotal: getCartTotal(),
-          cartItems: bagItems.map((item) => ({
-            itemId: item.itemId,
-            variantId: item.variantId,
-            quantity: item.quantity,
-            price: item.price,
-            discount: item.discount,
-          })),
-        }),
+      const res = await axiosInstance.post("/coupons/validate", {
+        code,
+        userId: user?.uid,
+        cartTotal: getCartTotal(),
+        cartItems: bagItems.map((item) => ({
+          itemId: item.itemId,
+          variantId: item.variantId,
+          quantity: item.quantity,
+          price: item.price,
+          discount: item.discount,
+        })),
       });
 
-      const result: CouponValidationResult = await res.json();
+      const result: CouponValidationResult = res.data;
       lastValidatedCode.current = code;
 
       if (result.valid) {
@@ -194,7 +191,7 @@ export const useCoupon = (options: UseCouponOptions = {}): UseCouponReturn => {
           applyCoupon({
             code: code,
             discount: result.discount,
-          })
+          }),
         );
 
         setCouponState((prev) => ({
@@ -303,7 +300,7 @@ export const useCoupon = (options: UseCouponOptions = {}): UseCouponReturn => {
         }));
       }
     },
-    [autoValidate, debounceMs, validateCoupon]
+    [autoValidate, debounceMs, validateCoupon],
   );
 
   // Apply validated coupon to cart
@@ -313,7 +310,7 @@ export const useCoupon = (options: UseCouponOptions = {}): UseCouponReturn => {
         applyCoupon({
           code: couponState.code,
           discount: couponState.discount,
-        })
+        }),
       );
 
       setCouponState((prev) => ({

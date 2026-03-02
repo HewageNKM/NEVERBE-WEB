@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback, useMemo } from "react";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import { Product } from "@/interfaces/Product";
 import { sortProductsByPrice } from "@/utils/formatting";
+import axiosInstance from "@/services/axiosInstance";
 
 type SortOption = "NO SELCT" | "LOW TO HIGH" | "HIGH TO LOW" | "NEW ARRIVALS";
 
@@ -29,15 +30,15 @@ export const useProductListing = ({
   // Array params are usually comma-separated in URL
   const selectedBrands = useMemo(
     () => searchParams.get("brand")?.split(",").filter(Boolean) || [],
-    [searchParams]
+    [searchParams],
   );
   const selectedCategories = useMemo(
     () => searchParams.get("category")?.split(",").filter(Boolean) || [],
-    [searchParams]
+    [searchParams],
   );
   const selectedSizes = useMemo(
     () => searchParams.get("sizes")?.split(",").filter(Boolean) || [],
-    [searchParams]
+    [searchParams],
   );
 
   // Parse Sort
@@ -72,8 +73,11 @@ export const useProductListing = ({
         if (selectedSizes.length > 0)
           params.set("sizes", selectedSizes.join(","));
 
-        const res = await fetch(`${apiEndpoint}?${params}`);
-        const data = await res.json();
+        const endpoint = apiEndpoint
+          .replace("/api/v1/web", "")
+          .replace("/api/v1", "");
+        const res = await axiosInstance.get(`${endpoint}?${params}`);
+        const data = res.data;
 
         // Client-side Sort (if API sort isn't sufficient or for consistency)
         // Note: Ideally API handles sort. But current legacy behavior does it client-side?
@@ -81,7 +85,7 @@ export const useProductListing = ({
         // We will maintain that for now, but API *should* do it.
         const sorted = sortProductsByPrice(
           (data.dataList || []) as Product[],
-          selectedSort
+          selectedSort,
         );
 
         setProducts(sorted);
@@ -121,7 +125,7 @@ export const useProductListing = ({
       // Pagination changes DEFINITELY scroll to top.
       router.push(url, { scroll: false });
     },
-    [pathname, router]
+    [pathname, router],
   );
 
   const createQueryString = useCallback(
@@ -133,7 +137,7 @@ export const useProductListing = ({
       });
       return params;
     },
-    [searchParams]
+    [searchParams],
   );
 
   // -- Pagination --

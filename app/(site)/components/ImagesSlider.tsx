@@ -1,25 +1,24 @@
 "use client";
-import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
-import "swiper/css/effect-fade";
-import { Autoplay, EffectFade } from "swiper/modules";
+// Clean imports
 import Image from "next/image";
 import { Slide } from "@/interfaces/BagItem";
 
+import { Carousel } from "antd";
+
 const ImagesSlider = ({ images }: { images: Slide[] }) => {
   return (
-    <Swiper
-      autoplay={{
-        delay: 6000,
-        disableOnInteraction: false,
-      }}
+    <Carousel
+      autoplay
+      autoplaySpeed={6000}
       effect="fade"
-      modules={[EffectFade, Autoplay]}
       className="w-full h-full"
     >
       {images.map((image, index) => (
-        <SwiperSlide key={image.id} className="w-full h-full bg-gray-900">
-          <div className="relative w-full h-full">
+        <div
+          key={image.id}
+          className="w-full h-full bg-gray-900 block overflow-hidden"
+        >
+          <div className="relative w-full h-[60vh] md:h-[85vh]">
             <Image
               src={image.url}
               alt="NEVERBE Hero"
@@ -30,9 +29,9 @@ const ImagesSlider = ({ images }: { images: Slide[] }) => {
             {/* Dark Gradient Overlay for text readability */}
             <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-black/30" />
           </div>
-        </SwiperSlide>
+        </div>
       ))}
-    </Swiper>
+    </Carousel>
   );
 };
 

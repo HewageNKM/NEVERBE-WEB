@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { applyPromotions, removePromotion } from "@/redux/bagSlice/bagSlice";
 import { BagItem } from "@/interfaces/BagItem";
+import axiosInstance from "@/services/axiosInstance";
 import {
   calculateTotal,
   calculateTotalDiscount,
@@ -64,7 +65,7 @@ export const usePromotions = (): UsePromotionsReturn => {
   const dispatch = useDispatch();
   const bagItems = useSelector((state: RootState) => state.bag.bag);
   const appliedPromotionId = useSelector(
-    (state: RootState) => state.bag.promotionId
+    (state: RootState) => state.bag.promotionId,
   );
   const [promotions, setPromotions] = useState<ActivePromotion[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -81,7 +82,7 @@ export const usePromotions = (): UsePromotionsReturn => {
     return bagItems
       .map(
         (item) =>
-          `${item.itemId}-${item.variantId}-${item.size}-${item.quantity}`
+          `${item.itemId}-${item.variantId}-${item.size}-${item.quantity}`,
       )
       .sort()
       .join("|");
@@ -98,9 +99,9 @@ export const usePromotions = (): UsePromotionsReturn => {
 
     setIsLoading(true);
     try {
-      const res = await fetch("/api/v1/promotions");
-      if (res.ok) {
-        const data = await res.json();
+      const res = await axiosInstance.get("/promotions");
+      if (res.data) {
+        const data = res.data;
 
         // Process promotions to check eligibility
         const processedPromotions: ActivePromotion[] = (data || [])
@@ -108,12 +109,12 @@ export const usePromotions = (): UsePromotionsReturn => {
             const eligibilityResult = checkEligibility(
               promo,
               bagItems,
-              cartTotal
+              cartTotal,
             );
             const { progress, remaining } = calculateProgress(
               promo,
               cartTotal,
-              bagItems
+              bagItems,
             );
 
             return {
@@ -125,7 +126,7 @@ export const usePromotions = (): UsePromotionsReturn => {
               stackable: promo.stackable || false, // Include stackable flag
               discountValue: promo.actions?.[0]?.value,
               minOrderAmount: promo.conditions?.find(
-                (c: any) => c.type === "MIN_AMOUNT"
+                (c: any) => c.type === "MIN_AMOUNT",
               )?.value,
               applicableProducts: promo.applicableProducts,
               applicableProductVariants: promo.applicableProductVariants, // Include variant targeting
@@ -156,7 +157,7 @@ export const usePromotions = (): UsePromotionsReturn => {
         // --- STACKING LOGIC ---
         // Filter eligible promotions with savings
         const eligible = processedPromotions.filter(
-          (p) => p.isEligible && p.savings && p.savings > 0
+          (p) => p.isEligible && p.savings && p.savings > 0,
         );
 
         if (eligible.length > 0) {
@@ -171,7 +172,7 @@ export const usePromotions = (): UsePromotionsReturn => {
                   name: firstEligible.name,
                   discount: firstEligible.savings || 0,
                 },
-              ])
+              ]),
             );
           } else {
             // First promotion IS stackable - collect all stackable promotions
@@ -200,13 +201,13 @@ export const usePromotions = (): UsePromotionsReturn => {
   // Helper: Check if cart items are eligible based on variant-level targeting
   const checkVariantEligibility = (
     items: BagItem[],
-    targets: ProductVariantTarget[]
+    targets: ProductVariantTarget[],
   ): boolean => {
     if (!targets || targets.length === 0) return true;
 
     for (const target of targets) {
       const matchingCartItems = items.filter(
-        (item) => item.itemId === target.productId
+        (item) => item.itemId === target.productId,
       );
 
       if (matchingCartItems.length === 0) continue;
@@ -216,7 +217,7 @@ export const usePromotions = (): UsePromotionsReturn => {
       if (target.variantMode === "SPECIFIC_VARIANTS" && target.variantIds) {
         const hasMatchingVariant = matchingCartItems.some(
           (item) =>
-            item.variantId && target.variantIds!.includes(item.variantId)
+            item.variantId && target.variantIds!.includes(item.variantId),
         );
         if (hasMatchingVariant) return true;
       }
@@ -227,7 +228,7 @@ export const usePromotions = (): UsePromotionsReturn => {
   // Helper: Get cart items that match variant-level targeting (for discount calculation)
   const getEligibleCartItems = (
     items: BagItem[],
-    targets: ProductVariantTarget[]
+    targets: ProductVariantTarget[],
   ): BagItem[] => {
     if (!targets || targets.length === 0) return items;
 
@@ -250,7 +251,7 @@ export const usePromotions = (): UsePromotionsReturn => {
   const checkEligibility = (
     promo: any,
     items: BagItem[],
-    total: number
+    total: number,
   ): { eligible: boolean; restricted: boolean; reason?: string } => {
     // First check date validity
     const now = new Date();
@@ -272,7 +273,7 @@ export const usePromotions = (): UsePromotionsReturn => {
     ) {
       const variantEligible = checkVariantEligibility(
         items,
-        promo.applicableProductVariants
+        promo.applicableProductVariants,
       );
       if (!variantEligible) {
         return {
@@ -286,7 +287,7 @@ export const usePromotions = (): UsePromotionsReturn => {
     // Check applicable products targeting (if any cart item matches)
     if (promo.applicableProducts && promo.applicableProducts.length > 0) {
       const hasApplicableProduct = items.some((item) =>
-        promo.applicableProducts.includes(item.itemId)
+        promo.applicableProducts.includes(item.itemId),
       );
       if (!hasApplicableProduct) {
         return {
@@ -302,7 +303,7 @@ export const usePromotions = (): UsePromotionsReturn => {
       const hasApplicableCategory = items.some(
         (item) =>
           (item as any).category &&
-          promo.applicableCategories.includes((item as any).category)
+          promo.applicableCategories.includes((item as any).category),
       );
       if (!hasApplicableCategory) {
         return {
@@ -318,7 +319,7 @@ export const usePromotions = (): UsePromotionsReturn => {
       const hasApplicableBrand = items.some(
         (item) =>
           (item as any).brand &&
-          promo.applicableBrands.includes((item as any).brand)
+          promo.applicableBrands.includes((item as any).brand),
       );
       if (!hasApplicableBrand) {
         return {
@@ -332,7 +333,7 @@ export const usePromotions = (): UsePromotionsReturn => {
     // Check excluded products (if ALL items are excluded, promo doesn't apply)
     if (promo.excludedProducts && promo.excludedProducts.length > 0) {
       const allExcluded = items.every((item) =>
-        promo.excludedProducts.includes(item.itemId)
+        promo.excludedProducts.includes(item.itemId),
       );
       if (allExcluded) {
         return {
@@ -352,10 +353,10 @@ export const usePromotions = (): UsePromotionsReturn => {
     // SPECIFIC_PRODUCT: Cart needs to have ANY of the specified products (variant-aware)
     // Other conditions (MIN_AMOUNT, MIN_QUANTITY, CATEGORY): ALL must be met
     const productConditions = promo.conditions.filter(
-      (c: any) => c.type === "SPECIFIC_PRODUCT"
+      (c: any) => c.type === "SPECIFIC_PRODUCT",
     );
     const otherConditions = promo.conditions.filter(
-      (c: any) => c.type !== "SPECIFIC_PRODUCT"
+      (c: any) => c.type !== "SPECIFIC_PRODUCT",
     );
 
     // Collect all product IDs for MIN_QUANTITY calculation
@@ -378,7 +379,7 @@ export const usePromotions = (): UsePromotionsReturn => {
             (item) =>
               item.itemId === condition.value &&
               item.variantId &&
-              condition.variantIds.includes(item.variantId)
+              condition.variantIds.includes(item.variantId),
           );
         }
         // ALL_VARIANTS or no restriction - just check product ID
@@ -419,7 +420,7 @@ export const usePromotions = (): UsePromotionsReturn => {
             });
             eligibleQty = eligibleItems.reduce(
               (sum, item) => sum + item.quantity,
-              0
+              0,
             );
           } else {
             // No specific products - count all items
@@ -431,7 +432,7 @@ export const usePromotions = (): UsePromotionsReturn => {
           return items.some(
             (item) =>
               (item as any).category === condition.value ||
-              promo.applicableCategories?.includes((item as any).category)
+              promo.applicableCategories?.includes((item as any).category),
           );
         case "CUSTOMER_TAG":
           console.log("CUSTOMER_TAG condition - validated server-side");
@@ -448,7 +449,7 @@ export const usePromotions = (): UsePromotionsReturn => {
   const calculateProgress = (
     promo: any,
     total: number,
-    items: BagItem[]
+    items: BagItem[],
   ): { progress: number; remaining: number } => {
     // Get SPECIFIC_PRODUCT conditions
     const productConditions =
@@ -457,7 +458,7 @@ export const usePromotions = (): UsePromotionsReturn => {
     // If no specific products, check MIN_AMOUNT
     if (productConditions.length === 0) {
       const minAmount = promo.conditions?.find(
-        (c: any) => c.type === "MIN_AMOUNT"
+        (c: any) => c.type === "MIN_AMOUNT",
       )?.value;
       if (!minAmount) return { progress: 100, remaining: 0 };
       const progress = Math.min(Math.round((total / minAmount) * 100), 100);
@@ -486,17 +487,17 @@ export const usePromotions = (): UsePromotionsReturn => {
 
     // Check MIN_QUANTITY for eligible items
     const minQtyCondition = promo.conditions?.find(
-      (c: any) => c.type === "MIN_QUANTITY"
+      (c: any) => c.type === "MIN_QUANTITY",
     );
     if (minQtyCondition) {
       const requiredQty = Number(minQtyCondition.value);
       const eligibleQty = eligibleItems.reduce(
         (sum, item) => sum + item.quantity,
-        0
+        0,
       );
       const progress = Math.min(
         Math.round((eligibleQty / requiredQty) * 100),
-        100
+        100,
       );
       const remaining = Math.max(requiredQty - eligibleQty, 0);
       return { progress, remaining };
@@ -509,7 +510,7 @@ export const usePromotions = (): UsePromotionsReturn => {
   const calculateSavings = (
     promo: any,
     total: number,
-    items: BagItem[]
+    items: BagItem[],
   ): number => {
     const action = promo.actions?.[0];
     if (!action) return 0;
@@ -521,11 +522,11 @@ export const usePromotions = (): UsePromotionsReturn => {
     ) {
       const eligibleItems = getEligibleCartItems(
         items,
-        promo.applicableProductVariants
+        promo.applicableProductVariants,
       );
       const eligibleTotal = eligibleItems.reduce(
         (sum, item) => sum + item.price * item.quantity,
-        0
+        0,
       );
 
       // Apply discount only to eligible items
@@ -559,7 +560,7 @@ export const usePromotions = (): UsePromotionsReturn => {
 
       const eligibleTotal = eligibleItems.reduce(
         (sum, item) => sum + item.price * item.quantity,
-        0
+        0,
       );
       return calculateDiscountAmount(action, eligibleTotal, eligibleItems);
     }
@@ -571,11 +572,11 @@ export const usePromotions = (): UsePromotionsReturn => {
     // Exclude excluded products from calculation
     if (promo.excludedProducts && promo.excludedProducts.length > 0) {
       eligibleItems = eligibleItems.filter(
-        (item) => !promo.excludedProducts.includes(item.itemId)
+        (item) => !promo.excludedProducts.includes(item.itemId),
       );
       applicableTotal = eligibleItems.reduce(
         (sum, item) => sum + item.price * item.quantity,
-        0
+        0,
       );
     }
 
@@ -586,7 +587,7 @@ export const usePromotions = (): UsePromotionsReturn => {
   const calculateDiscountAmount = (
     action: any,
     applicableTotal: number,
-    eligibleItems: BagItem[]
+    eligibleItems: BagItem[],
   ): number => {
     switch (action.type) {
       case "PERCENTAGE_OFF":
@@ -605,7 +606,7 @@ export const usePromotions = (): UsePromotionsReturn => {
         // Return the price of the free item if specified
         if (action.freeProductId) {
           const freeItem = eligibleItems.find(
-            (item: BagItem) => item.itemId === action.freeProductId
+            (item: BagItem) => item.itemId === action.freeProductId,
           );
           if (freeItem) {
             return freeItem.price;
@@ -630,7 +631,7 @@ export const usePromotions = (): UsePromotionsReturn => {
   const getPromoMessage = (promo: any, isEligible: boolean): string => {
     const action = promo.actions?.[0];
     const minAmount = promo.conditions?.find(
-      (c: any) => c.type === "MIN_AMOUNT"
+      (c: any) => c.type === "MIN_AMOUNT",
     )?.value;
 
     if (!action) return promo.description;
@@ -675,22 +676,22 @@ export const usePromotions = (): UsePromotionsReturn => {
   // Split promotions by eligibility
   const eligiblePromotions = promotions.filter((p) => p.isEligible);
   const nearbyPromotions = promotions.filter(
-    (p) => !p.isEligible && !p.isRestricted && (p.progress || 0) >= 50
+    (p) => !p.isEligible && !p.isRestricted && (p.progress || 0) >= 50,
   );
   // Promotions that user could qualify for if they had the right items
   const restrictedPromotions = promotions.filter(
-    (p) => !p.isEligible && p.isRestricted
+    (p) => !p.isEligible && p.isRestricted,
   );
 
   // Get applied promotions from Redux state
   const appliedPromotionIds = useSelector(
-    (state: RootState) => state.bag.promotionIds
+    (state: RootState) => state.bag.promotionIds,
   );
   const totalPromotionDiscount = useSelector(
-    (state: RootState) => state.bag.promotionDiscount
+    (state: RootState) => state.bag.promotionDiscount,
   );
   const reduxAppliedPromotions = useSelector(
-    (state: RootState) => state.bag.appliedPromotions
+    (state: RootState) => state.bag.appliedPromotions,
   );
 
   // Find currently applied promotion (primary - for backward compat)
@@ -699,7 +700,7 @@ export const usePromotions = (): UsePromotionsReturn => {
 
   // Find all applied promotions
   const appliedPromotionsFromState: ActivePromotion[] = promotions.filter((p) =>
-    appliedPromotionIds.includes(p.id)
+    appliedPromotionIds.includes(p.id),
   );
 
   return {

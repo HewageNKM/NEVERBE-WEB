@@ -2,6 +2,7 @@
 import React from "react";
 import ToggleSwitch from "@/components/ToggleSwitch";
 import { useFilterData } from "@/hooks/useFilterData";
+import { Button } from "antd";
 import { AVAILABLE_SIZES } from "@/constants/filters";
 
 interface FilterPanelProps {
@@ -30,17 +31,18 @@ const FilterSection = ({
   onToggle: (label: string) => void;
 }) => (
   <div className="py-8 border-t border-default animate-fade">
-    <h3 className="text-md font-display font-black uppercase italic tracking-tighter text-primary mb-6">
+    <h3 className="text-md font-display font-black uppercase tracking-tighter text-primary mb-6">
       {title}
     </h3>
     <div className="flex flex-col gap-4">
       {items.map((item, idx) => {
         const isSelected = selectedItems.includes(item.label?.toLowerCase());
         return (
-          <button
+          <Button
+            type="text"
             key={idx}
             onClick={() => onToggle(item.label)}
-            className="flex items-center gap-3 group text-left"
+            className="flex items-center gap-3 group text-left h-auto p-0 hover:bg-transparent"
           >
             {/* BRANDED CHECKBOX: Accent green on selection */}
             <div
@@ -64,7 +66,7 @@ const FilterSection = ({
             >
               {item.label}
             </span>
-          </button>
+          </Button>
         );
       })}
     </div>
@@ -90,15 +92,16 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
     <aside className="hidden lg:block w-[280px] pr-10 sticky top-24 h-fit max-h-[85vh] overflow-y-auto hide-scrollbar">
       {/* Header */}
       <div className="flex justify-between items-end mb-8">
-        <h2 className="text-2xl font-display font-black uppercase italic tracking-tighter text-primary">
+        <h2 className="text-2xl font-display font-black uppercase tracking-tighter text-primary">
           {title}
         </h2>
-        <button
+        <Button
+          type="link"
           onClick={onReset}
-          className="text-xs font-bold uppercase tracking-widest text-muted hover:text-accent transition-colors underline underline-offset-4"
+          className="text-xs font-bold uppercase tracking-widest text-muted hover:text-accent transition-colors underline underline-offset-4 p-0 h-auto"
         >
           Clear All
-        </button>
+        </Button>
       </div>
 
       {/* In Stock Toggle */}
@@ -115,24 +118,24 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
 
       {/* Select Size Grid */}
       <div className="py-8 border-t border-default">
-        <h3 className="text-md font-display font-black uppercase italic tracking-tighter text-primary mb-6">
+        <h3 className="text-md font-display font-black uppercase tracking-tighter text-primary mb-6">
           Select Size
         </h3>
         <div className="grid grid-cols-3 gap-2">
           {AVAILABLE_SIZES.map((size) => {
             const isSelected = selectedSizes.includes(size);
             return (
-              <button
+              <Button
                 key={size}
                 onClick={() => onSizeToggle(size)}
                 className={`aspect-square flex items-center justify-center border rounded-[4px] text-base transition-all duration-300 ${
                   isSelected
-                    ? "bg-dark border-dark text-accent font-black italic shadow-hover"
-                    : "bg-surface border-border-primary text-primary font-bold hover:border-accent"
+                    ? "bg-dark border-dark text-accent font-black shadow-hover"
+                    : "bg-surface border-border-primary text-primary font-bold hover:border-accent hover:text-accent"
                 }`}
               >
                 {size}
-              </button>
+              </Button>
             );
           })}
         </div>

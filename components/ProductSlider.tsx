@@ -1,18 +1,18 @@
 "use client";
+
 import React, { useRef } from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation } from "swiper/modules";
-import type { Swiper as SwiperType } from "swiper";
-import "swiper/css";
-import "swiper/css/navigation";
+import { Carousel, Typography, Button, Flex } from "antd";
+import type { CarouselRef } from "antd/es/carousel";
 import ItemCard from "@/components/ItemCard";
 import { Product } from "@/interfaces/Product";
 import Link from "next/link";
 import {
-  IoArrowForward,
-  IoChevronBack,
-  IoChevronForward,
-} from "react-icons/io5";
+  ArrowRightOutlined,
+  LeftOutlined,
+  RightOutlined,
+} from "@ant-design/icons";
+
+const { Title, Text } = Typography;
 
 interface ProductSliderProps {
   title: string;
@@ -22,10 +22,6 @@ interface ProductSliderProps {
   className?: string;
 }
 
-/**
- * ProductSlider - NEVERBE Performance Gear Style
- * Consolidates slider logic with brand-specific motion and typography.
- */
 const ProductSlider: React.FC<ProductSliderProps> = ({
   title,
   items,
@@ -33,105 +29,187 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
   viewAllHref,
   className = "",
 }) => {
-  const swiperRef = useRef<SwiperType | null>(null);
+  const carouselRef = useRef<CarouselRef>(null);
 
   if (!items || items.length === 0) return null;
 
   return (
-    <section
-      className={`w-full max-w-content mx-auto px-4 md:px-8 animate-fade ${className}`}
-    >
+    <div className={`w-full max-w-content mx-auto px-4 md:px-8 ${className}`}>
       {/* Header Area */}
-      <div className="flex flex-col md:flex-row md:justify-between md:items-end mb-8 gap-6">
-        <div>
-          <h2 className="text-3xl md:text-4xl font-display font-black uppercase italic tracking-tighter text-primary">
+      <Flex
+        vertical={true}
+        className="md:flex-row md:justify-between md:items-end mb-10 gap-6"
+      >
+        <Flex vertical gap={4}>
+          <Text
+            style={{
+              fontSize: 11,
+              fontWeight: 800,
+              textTransform: "uppercase",
+              letterSpacing: "0.2em",
+              color: "#97e13e",
+            }}
+          >
+            {subtitle || "Curated For You"}
+          </Text>
+          <Title
+            level={2}
+            style={{
+              margin: 0,
+              textTransform: "uppercase",
+              fontWeight: 900,
+              letterSpacing: "-0.03em",
+            }}
+          >
             {title}
-          </h2>
-          {subtitle && (
-            <p className="text-base text-muted mt-2 max-w-md font-medium">
-              {subtitle}
-            </p>
-          )}
-        </div>
+          </Title>
+        </Flex>
 
-        <div className="flex items-center justify-between md:justify-end gap-6">
+        <Flex
+          align="center"
+          justify="space-between"
+          gap={24}
+          className="md:justify-end"
+        >
           {/* Desktop Navigation Arrows */}
-          <div className="hidden md:flex items-center gap-3">
-            <button
-              onClick={() => swiperRef.current?.slidePrev()}
-              className="w-12 h-12 rounded-full border border-border-dark flex items-center justify-center text-primary hover:bg-accent hover:text-dark hover:border-accent hover:shadow-hover transition-all duration-300"
+          <Flex align="center" gap={12} className="hidden md:flex">
+            <Button
+              shape="circle"
+              icon={<LeftOutlined />}
+              size="large"
+              onClick={() => carouselRef.current?.prev()}
+              style={{
+                border: "1px solid rgba(151, 225, 62, 0.2)",
+                background: "rgba(255,255,255,0.7)",
+                backdropFilter: "blur(8px)",
+              }}
+              className="hover:!border-[#97e13e] hover:!text-[#97e13e]"
               aria-label="Previous slide"
-            >
-              <IoChevronBack size={20} />
-            </button>
-            <button
-              onClick={() => swiperRef.current?.slideNext()}
-              className="w-12 h-12 rounded-full border border-border-dark flex items-center justify-center text-primary hover:bg-accent hover:text-dark hover:border-accent hover:shadow-hover transition-all duration-300"
+            />
+            <Button
+              shape="circle"
+              icon={<RightOutlined />}
+              size="large"
+              onClick={() => carouselRef.current?.next()}
+              style={{
+                border: "1px solid rgba(151, 225, 62, 0.2)",
+                background: "rgba(255,255,255,0.7)",
+                backdropFilter: "blur(8px)",
+              }}
+              className="hover:!border-[#97e13e] hover:!text-[#97e13e]"
               aria-label="Next slide"
-            >
-              <IoChevronForward size={20} />
-            </button>
-          </div>
+            />
+          </Flex>
 
-          {/* View All Link */}
+          {/* View All Button */}
           {viewAllHref && (
-            <Link
-              href={viewAllHref}
-              className="flex items-center gap-2 text-sm font-black uppercase tracking-[0.15em] text-primary hover:text-accent group transition-colors"
-            >
-              View All
-              <span className="bg-dark text-inverse p-1.5 rounded-full group-hover:bg-accent group-hover:text-dark transition-all">
-                <IoArrowForward size={14} />
-              </span>
+            <Link href={viewAllHref}>
+              <Button
+                type="text"
+                icon={<ArrowRightOutlined />}
+                iconPosition="end"
+                style={{
+                  fontWeight: 800,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.1em",
+                  fontSize: 12,
+                }}
+                className="hover:!text-[#97e13e]"
+              >
+                View All
+              </Button>
             </Link>
           )}
-        </div>
-      </div>
+        </Flex>
+      </Flex>
 
-      <Swiper
-        modules={[Navigation]}
-        onSwiper={(swiper) => {
-          swiperRef.current = swiper;
-        }}
-        spaceBetween={20}
-        slidesPerView={1.3} // Slightly more reveal on mobile to encourage swiping
-        breakpoints={{
-          640: { slidesPerView: 2.2 },
-          1024: { slidesPerView: 4 },
-          1440: { slidesPerView: 4.2 },
-        }}
-        className="pb-12!"
+      <Carousel
+        ref={carouselRef}
+        dots={false}
+        infinite={false}
+        draggable
+        slidesToShow={4}
+        responsive={[
+          {
+            breakpoint: 1440,
+            settings: { slidesToShow: 4 },
+          },
+          {
+            breakpoint: 1024,
+            settings: { slidesToShow: 3.2 },
+          },
+          {
+            breakpoint: 640,
+            settings: { slidesToShow: 2.2 },
+          },
+          {
+            breakpoint: 0,
+            settings: { slidesToShow: 1.2 },
+          },
+        ]}
       >
         {items.map((item, index) => (
-          <SwiperSlide key={item.id}>
+          <div key={item.id} className="px-2 pb-4">
             <ItemCard item={item} priority={index < 4} />
-          </SwiperSlide>
+          </div>
         ))}
 
-        {/* Mobile-Only "View All" Slide */}
+        {/* Mobile-Only "Explore All" Slide */}
         {viewAllHref && (
-          <SwiperSlide className="md:hidden">
+          <div className="px-2 md:hidden h-full">
             <Link
               href={viewAllHref}
-              className="flex flex-col w-full h-full group"
+              className="flex flex-col items-center justify-center w-full aspect-4/5 rounded-[24px] group transition-all duration-300"
+              style={{
+                background: "rgba(248, 250, 245, 0.9)",
+                border: "2px dashed rgba(151, 225, 62, 0.25)",
+                backdropFilter: "blur(8px)",
+              }}
             >
-              <div className="relative aspect-4/5 w-full overflow-hidden bg-surface-2 border-2 border-dashed border-border-primary flex flex-col items-center justify-center rounded-sm">
-                <div className="w-16 h-16 rounded-full bg-dark text-accent flex items-center justify-center mb-4 shadow-custom group-active:scale-90 transition-all">
-                  <IoArrowForward size={32} />
-                </div>
-                <span className="font-display font-black uppercase italic tracking-tighter text-lg">
-                  Explore All
-                </span>
-                <span className="text-[10px] font-bold uppercase tracking-widest text-muted mt-1">
-                  {items.length}+ Items Available
-                </span>
+              <div
+                style={{
+                  width: 60,
+                  height: 60,
+                  borderRadius: "50%",
+                  background:
+                    "linear-gradient(135deg, #97e13e 0%, #7bc922 100%)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  marginBottom: 16,
+                  boxShadow: "0 8px 24px rgba(151, 225, 62, 0.35)",
+                }}
+                className="group-active:scale-95 transition-transform"
+              >
+                <ArrowRightOutlined style={{ fontSize: 22, color: "#000" }} />
               </div>
-              <div className="pt-4 pb-6 px-1" />
+              <Text
+                strong
+                style={{
+                  textTransform: "uppercase",
+                  letterSpacing: "0.1em",
+                  fontSize: 12,
+                }}
+              >
+                Explore All
+              </Text>
+              <Text
+                type="secondary"
+                style={{
+                  fontSize: 10,
+                  fontWeight: 800,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.1em",
+                  marginTop: 4,
+                }}
+              >
+                {items.length}+ Items
+              </Text>
             </Link>
-          </SwiperSlide>
+          </div>
         )}
-      </Swiper>
-    </section>
+      </Carousel>
+    </div>
   );
 };
 

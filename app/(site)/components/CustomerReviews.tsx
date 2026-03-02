@@ -1,20 +1,23 @@
 "use client";
 
 import React, { useRef } from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation } from "swiper/modules";
-import type { Swiper as SwiperType } from "swiper";
-import "swiper/css";
 import {
-  IoChevronBack,
-  IoChevronForward,
-  IoStar,
-  IoSparkles,
-} from "react-icons/io5";
+  Carousel,
+  Typography,
+  Button,
+  Rate,
+  Avatar,
+  Card,
+  Flex,
+  Space,
+} from "antd";
+import type { CarouselRef } from "antd/es/carousel";
+import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 import { FcGoogle } from "react-icons/fc";
-import { Button } from "antd";
+import { motion } from "framer-motion";
 
-// Static testimonial data - can be replaced with API data later
+const { Title, Text, Paragraph } = Typography;
+
 const reviews = [
   {
     id: 1,
@@ -60,9 +63,7 @@ const reviews = [
   },
 ];
 
-// NEVERBE Performance Review Card
 const ReviewCard = ({ review }: { review: (typeof reviews)[0] }) => {
-  // Generate initials from name
   const initials = review.name
     .split(" ")
     .map((n) => n[0])
@@ -70,168 +71,294 @@ const ReviewCard = ({ review }: { review: (typeof reviews)[0] }) => {
     .toUpperCase();
 
   return (
-    <div className="group bg-surface border border-default rounded-2xl p-6 h-full flex flex-col shadow-custom hover:shadow-hover hover:border-accent transition-all duration-500 hover:-translate-y-1">
-      {/* Header with Avatar and Google badge */}
-      <div className="flex items-start justify-between mb-4">
-        <div className="flex items-center gap-3">
-          {/* Performance Avatar - Accent Gradient */}
-          <div className="relative">
-            <div className="w-12 h-12 rounded-full bg-linear-to-br from-[#97e13e] to-[#6db82a] flex items-center justify-center text-dark font-display font-black text-sm shadow-[0_0_15px_rgba(151,225,62,0.4)]">
-              {initials}
+    <Card
+      hoverable
+      style={{
+        borderRadius: 24,
+        height: "100%",
+        border: "1px solid rgba(151, 225, 62, 0.12)",
+        background: "rgba(255, 255, 255, 0.7)",
+        backdropFilter: "blur(12px)",
+      }}
+      styles={{
+        body: {
+          padding: 24,
+          height: "100%",
+        },
+      }}
+      className="glass-glow-hover"
+    >
+      <Flex vertical justify="space-between" style={{ height: "100%" }}>
+        <div>
+          <Flex justify="space-between" align="start" className="mb-4">
+            <Flex gap={12} align="center">
+              <Avatar
+                size={48}
+                style={{
+                  background:
+                    "linear-gradient(135deg, #97e13e 0%, #7bc922 100%)",
+                  color: "#000",
+                  fontWeight: 900,
+                  boxShadow: "0 4px 12px rgba(151, 225, 62, 0.3)",
+                }}
+              >
+                {initials}
+              </Avatar>
+              <Flex vertical>
+                <Text
+                  strong
+                  style={{
+                    textTransform: "uppercase",
+                    letterSpacing: "-0.02em",
+                    fontSize: 13,
+                  }}
+                >
+                  {review.name}
+                </Text>
+                <Text
+                  type="secondary"
+                  style={{
+                    fontSize: 10,
+                    textTransform: "uppercase",
+                    fontWeight: 700,
+                    letterSpacing: "0.05em",
+                  }}
+                >
+                  {review.date}
+                </Text>
+              </Flex>
+            </Flex>
+            <div
+              style={{
+                background: "rgba(255,255,255,0.8)",
+                borderRadius: "50%",
+                padding: 8,
+                boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+                border: "1px solid rgba(0,0,0,0.04)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <FcGoogle size={20} />
             </div>
-            {/* Verified Badge */}
-            {review.rating === 5 && (
-              <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-dark rounded-full flex items-center justify-center">
-                <IoSparkles size={10} className="text-accent" />
-              </div>
-            )}
-          </div>
-          <div>
-            <p className="font-display font-black text-sm uppercase tracking-tight text-primary group-hover:text-accent transition-colors">
-              {review.name}
-            </p>
-            <p className="text-[10px] text-muted uppercase tracking-widest font-bold">
-              {review.date}
-            </p>
-          </div>
-        </div>
-        {/* Google Badge */}
-        <div className="p-1.5 bg-surface-2 rounded-lg group-hover:bg-accent/10 transition-colors">
-          <FcGoogle size={18} />
-        </div>
-      </div>
+          </Flex>
 
-      {/* Star Rating - Performance Style */}
-      <div className="flex gap-1 mb-4">
-        {[...Array(5)].map((_, i) => (
-          <div
-            key={i}
-            className={`p-0.5 rounded ${
-              i < review.rating ? "text-accent" : "text-surface-3"
-            }`}
+          <Rate
+            disabled
+            defaultValue={review.rating}
+            className="mb-4"
+            style={{ color: "#97e13e", fontSize: 14 }}
+          />
+
+          <Paragraph
+            style={{
+              marginBottom: 24,
+              color: "rgba(0,0,0,0.6)",
+              fontWeight: 500,
+              fontStyle: "italic",
+              lineHeight: 1.7,
+            }}
           >
-            <IoStar
-              size={14}
-              className={
-                i < review.rating
-                  ? "drop-shadow-[0_0_4px_rgba(151,225,62,0.6)]"
-                  : ""
-              }
-            />
-          </div>
-        ))}
-      </div>
+            &ldquo;{review.text}&rdquo;
+          </Paragraph>
+        </div>
 
-      {/* Review Text */}
-      <p className="text-sm text-secondary leading-relaxed flex-1 italic">
-        "{review.text}"
-      </p>
-
-      {/* Bottom Accent Line */}
-      <div className="mt-4 pt-4 border-t border-default">
-        <span className="text-[9px] font-black uppercase tracking-widest text-muted group-hover:text-accent transition-colors">
-          Verified Purchase
-        </span>
-      </div>
-    </div>
+        <Flex
+          align="center"
+          gap={8}
+          style={{
+            paddingTop: 16,
+            borderTop: "1px solid rgba(151, 225, 62, 0.1)",
+          }}
+        >
+          <div
+            style={{
+              width: 16,
+              height: 4,
+              background: "linear-gradient(90deg, #97e13e, #7bc922)",
+              borderRadius: 99,
+            }}
+          />
+          <Text
+            type="secondary"
+            style={{
+              fontSize: 10,
+              fontWeight: 800,
+              textTransform: "uppercase",
+              letterSpacing: "0.05em",
+            }}
+          >
+            Verified Purchase
+          </Text>
+        </Flex>
+      </Flex>
+    </Card>
   );
 };
 
 const CustomerReviews = () => {
-  const swiperRef = useRef<SwiperType | null>(null);
+  const carouselRef = useRef<CarouselRef>(null);
 
   return (
-    <section className="w-full max-w-content mx-auto px-4 md:px-8 py-16 md:py-24">
-      {/* Header with Google Rating Badge */}
-      <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-6 mb-12">
-        <div>
-          {/* Rating Summary - Performance Style */}
-          <div className="flex items-center gap-4 mb-4">
-            <div className="flex items-center gap-2 px-4 py-2 bg-surface-2 rounded-full border border-default">
-              <FcGoogle size={24} />
-              <div className="flex items-center gap-0.5">
-                {[...Array(5)].map((_, i) => (
-                  <IoStar
-                    key={i}
-                    size={14}
-                    className="text-accent drop-shadow-[0_0_4px_rgba(151,225,62,0.4)]"
-                  />
-                ))}
-              </div>
-              <span className="text-lg font-display font-black italic text-primary">
+    <section className="w-full max-w-content mx-auto px-4 md:px-8 section-spacing">
+      <Flex
+        vertical
+        justify="space-between"
+        align="start"
+        gap={24}
+        className="mb-12 md:flex-row md:items-end"
+      >
+        <Flex vertical gap={8}>
+          <Flex align="center" gap={16} className="mb-4">
+            <Space
+              style={{
+                background: "rgba(255,255,255,0.8)",
+                backdropFilter: "blur(12px)",
+                borderRadius: 99,
+                padding: "6px 16px",
+                border: "1px solid rgba(151, 225, 62, 0.15)",
+                boxShadow: "0 4px 16px rgba(0,0,0,0.04)",
+              }}
+            >
+              <FcGoogle size={22} />
+              <Rate
+                disabled
+                defaultValue={5}
+                style={{ color: "#97e13e", fontSize: 14 }}
+              />
+              <Text strong style={{ fontSize: 18, fontWeight: 900 }}>
                 4.9
-              </span>
-            </div>
-            <span className="text-xs text-muted font-bold uppercase tracking-wider">
+              </Text>
+            </Space>
+            <Text
+              type="secondary"
+              style={{
+                fontSize: 11,
+                fontWeight: 800,
+                textTransform: "uppercase",
+                letterSpacing: "0.08em",
+              }}
+            >
               200+ Reviews
-            </span>
-          </div>
+            </Text>
+          </Flex>
 
-          {/* Title - NEVERBE Performance Style */}
-          <h2 className="text-3xl md:text-4xl font-display font-black uppercase italic tracking-tighter text-primary mb-2">
-            Athletes Trust Us
-          </h2>
-          <p className="text-sm text-muted font-medium max-w-md">
+          <Flex vertical gap={4}>
+            <Text
+              style={{
+                fontSize: 11,
+                fontWeight: 800,
+                textTransform: "uppercase",
+                letterSpacing: "0.2em",
+                color: "#97e13e",
+              }}
+            >
+              Testimonials
+            </Text>
+            <Title
+              level={2}
+              style={{
+                margin: 0,
+                textTransform: "uppercase",
+                fontWeight: 900,
+                letterSpacing: "-0.03em",
+              }}
+            >
+              Athletes Trust Us
+            </Title>
+          </Flex>
+          <Text type="secondary" style={{ fontWeight: 500, display: "block" }}>
             Real performance reviews from real Sri Lankan athletes
-          </p>
-        </div>
+          </Text>
+        </Flex>
 
-        {/* Navigation Arrows - NEVERBE Style */}
-        <div className="hidden md:flex items-center gap-3">
+        <Flex align="center" gap={12} className="hidden md:flex">
           <Button
-            type="text"
-            icon={<IoChevronBack size={20} />}
-            onClick={() => swiperRef.current?.slidePrev()}
-            className="w-12 h-12 rounded-full border-2 border-default bg-surface flex items-center justify-center text-primary hover:border-accent hover:bg-dark hover:text-accent transition-all duration-300 shadow-custom hover:shadow-hover"
-            aria-label="Previous review"
+            shape="circle"
+            icon={<LeftOutlined />}
+            size="large"
+            onClick={() => carouselRef.current?.prev()}
+            style={{
+              border: "1px solid rgba(151, 225, 62, 0.2)",
+              background: "rgba(255,255,255,0.7)",
+              backdropFilter: "blur(8px)",
+            }}
+            className="hover:!border-[#97e13e] hover:!text-[#97e13e]"
           />
           <Button
-            type="text"
-            icon={<IoChevronForward size={20} />}
-            onClick={() => swiperRef.current?.slideNext()}
-            className="w-12 h-12 rounded-full border-2 border-default bg-surface flex items-center justify-center text-primary hover:border-accent hover:bg-dark hover:text-accent transition-all duration-300 shadow-custom hover:shadow-hover"
-            aria-label="Next review"
+            shape="circle"
+            icon={<RightOutlined />}
+            size="large"
+            onClick={() => carouselRef.current?.next()}
+            style={{
+              border: "1px solid rgba(151, 225, 62, 0.2)",
+              background: "rgba(255,255,255,0.7)",
+              backdropFilter: "blur(8px)",
+            }}
+            className="hover:!border-[#97e13e] hover:!text-[#97e13e]"
           />
-        </div>
-      </div>
+        </Flex>
+      </Flex>
 
-      {/* Reviews Slider */}
-      <Swiper
-        modules={[Navigation]}
-        onSwiper={(swiper) => {
-          swiperRef.current = swiper;
-        }}
-        spaceBetween={20}
-        slidesPerView={1.1}
-        breakpoints={{
-          640: { slidesPerView: 2 },
-          1024: { slidesPerView: 3 },
-          1280: { slidesPerView: 4 },
-        }}
-        className="pb-4!"
+      <Carousel
+        ref={carouselRef}
+        dots={false}
+        infinite={false}
+        draggable
+        slidesToShow={4}
+        responsive={[
+          {
+            breakpoint: 1280,
+            settings: { slidesToShow: 4 },
+          },
+          {
+            breakpoint: 1024,
+            settings: { slidesToShow: 3 },
+          },
+          {
+            breakpoint: 640,
+            settings: { slidesToShow: 1.2 },
+          },
+          {
+            breakpoint: 0,
+            settings: { slidesToShow: 1.1 },
+          },
+        ]}
       >
         {reviews.map((review) => (
-          <SwiperSlide key={review.id}>
+          <div key={review.id} className="px-2 pb-4">
             <ReviewCard review={review} />
-          </SwiperSlide>
+          </div>
         ))}
-      </Swiper>
+      </Carousel>
 
-      {/* Google Reviews CTA - Performance Style */}
-      <div className="flex justify-center mt-12">
-        <a
+      <Flex justify="center" className="mt-12">
+        <Button
+          type="primary"
+          shape="round"
+          size="large"
           href="https://g.page/r/neverbe/review"
           target="_blank"
-          rel="noopener noreferrer"
-          className="group inline-flex items-center gap-3 px-8 py-4 bg-dark text-inverse rounded-full font-display font-black uppercase tracking-widest text-xs hover:bg-accent hover:text-dark transition-all duration-300 shadow-custom hover:shadow-hover hover:-translate-y-1"
+          icon={<FcGoogle size={20} />}
+          style={{
+            height: 56,
+            padding: "0 36px",
+            fontWeight: 800,
+            textTransform: "uppercase",
+            letterSpacing: "0.1em",
+            alignItems: "center",
+            display: "flex",
+            backgroundColor: "#111",
+            color: "#fff",
+            border: "none",
+            boxShadow: "0 8px 32px rgba(0,0,0,0.2)",
+          }}
+          className="hover:!bg-[#97e13e] hover:!text-black transition-colors"
         >
-          <FcGoogle size={20} />
-          <span>Rate Your Performance</span>
-          <div className="w-6 h-6 bg-accent text-dark rounded-full flex items-center justify-center group-hover:bg-dark group-hover:text-accent transition-colors">
-            <IoChevronForward size={14} />
-          </div>
-        </a>
-      </div>
+          Rate Your Performance
+        </Button>
+      </Flex>
     </section>
   );
 };

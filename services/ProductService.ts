@@ -1,14 +1,10 @@
-const API_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api/v1/web";
+import axiosInstance from "./axiosInstance";
 
 export const getProducts = async (params: any = {}) => {
   try {
     const q = new URLSearchParams(params).toString();
-    const res = await fetch(`${API_URL}/products?${q}`, {
-      next: { revalidate: 60 },
-    });
-    if (!res.ok) return { dataList: [], total: 0 };
-    return res.json();
+    const res = await axiosInstance.get(`/products?${q}`);
+    return res.data;
   } catch (error) {
     console.error("Failed to fetch products:", error);
     return { dataList: [], total: 0 };
@@ -17,12 +13,8 @@ export const getProducts = async (params: any = {}) => {
 
 export const getRecentItems = async (limit: number = 10) => {
   try {
-    const res = await fetch(`${API_URL}/products?sort=new&size=${limit}`, {
-      next: { revalidate: 60 },
-    });
-    if (!res.ok) return [];
-    const data = await res.json();
-    return data.dataList || [];
+    const res = await axiosInstance.get(`/products?sort=new&size=${limit}`);
+    return res.data.dataList || [];
   } catch (error) {
     console.error("Failed to fetch recent items:", error);
     return [];
@@ -31,11 +23,8 @@ export const getRecentItems = async (limit: number = 10) => {
 
 export const getProductById = async (id: string) => {
   try {
-    const res = await fetch(`${API_URL}/products/${id}`, {
-      next: { revalidate: 60 },
-    });
-    if (!res.ok) return null;
-    const data = await res.json();
+    const res = await axiosInstance.get(`/products/${id}`);
+    const data = res.data;
     return data.data || data;
   } catch (error) {
     console.error(`Failed to fetch product ${id}:`, error);
@@ -45,12 +34,10 @@ export const getProductById = async (id: string) => {
 
 export const getSimilarItems = async (id: string, limit: number = 4) => {
   try {
-    const res = await fetch(`${API_URL}/products/${id}/similar?size=${limit}`, {
-      next: { revalidate: 60 },
-    });
-    if (!res.ok) return [];
-    const data = await res.json();
-    return data.dataList || [];
+    const res = await axiosInstance.get(
+      `/products/${id}/similar?size=${limit}`,
+    );
+    return res.data.dataList || [];
   } catch (error) {
     console.error(`Failed to fetch similar items for ${id}:`, error);
     return [];
@@ -59,11 +46,8 @@ export const getSimilarItems = async (id: string, limit: number = 4) => {
 
 export const getNewArrivals = async (limit: number = 10) => {
   try {
-    const res = await fetch(`${API_URL}/products?sort=new&size=${limit}`, {
-      next: { revalidate: 60 },
-    });
-    if (!res.ok) return { dataList: [], total: 0 };
-    return res.json();
+    const res = await axiosInstance.get(`/products?sort=new&size=${limit}`);
+    return res.data;
   } catch (error) {
     console.error("Failed to fetch new arrivals:", error);
     return { dataList: [], total: 0 };
@@ -73,11 +57,8 @@ export const getNewArrivals = async (limit: number = 10) => {
 export const getDealsProducts = async (params: any = {}) => {
   try {
     const q = new URLSearchParams(params).toString();
-    const res = await fetch(`${API_URL}/products/deals?${q}`, {
-      next: { revalidate: 60 },
-    });
-    if (!res.ok) return { dataList: [], total: 0 };
-    return res.json();
+    const res = await axiosInstance.get(`/products/deals?${q}`);
+    return res.data;
   } catch (error) {
     console.error("Failed to fetch deals products:", error);
     return { dataList: [], total: 0 };
@@ -86,12 +67,8 @@ export const getDealsProducts = async (params: any = {}) => {
 
 export const getHotProducts = async () => {
   try {
-    const res = await fetch(`${API_URL}/products?sort=new`, {
-      next: { revalidate: 60 },
-    });
-    if (!res.ok) return [];
-    const data = await res.json();
-    return data.dataList || [];
+    const res = await axiosInstance.get("/products?sort=new");
+    return res.data.dataList || [];
   } catch (error) {
     console.error("Failed to fetch hot products:", error);
     return [];
@@ -100,9 +77,8 @@ export const getHotProducts = async () => {
 
 export const getBrandForSitemap = async () => {
   try {
-    const res = await fetch(`${API_URL}/brands`, { next: { revalidate: 60 } });
-    if (!res.ok) return [];
-    const brands = await res.json();
+    const res = await axiosInstance.get("/brands");
+    const brands = res.data;
     return brands.map((b: any) => ({
       url: `${process.env.NEXT_PUBLIC_BASE_URL}/collections/products?brand=${b.name}`,
       priority: 0.6,
@@ -117,11 +93,8 @@ export const getBrandForSitemap = async () => {
 
 export const getCategoriesForSitemap = async () => {
   try {
-    const res = await fetch(`${API_URL}/categories`, {
-      next: { revalidate: 60 },
-    });
-    if (!res.ok) return [];
-    const categories = await res.json();
+    const res = await axiosInstance.get("/categories");
+    const categories = res.data;
     return categories.map((c: any) => ({
       url: `${process.env.NEXT_PUBLIC_BASE_URL}/collections/products?category=${c.name}`,
       priority: 0.7,
@@ -136,12 +109,8 @@ export const getCategoriesForSitemap = async () => {
 
 export const getProductsForSitemap = async () => {
   try {
-    const res = await fetch(`${API_URL}/products?size=200`, {
-      next: { revalidate: 60 },
-    });
-    if (!res.ok) return [];
-    const data = await res.json();
-    const products = data.dataList || [];
+    const res = await axiosInstance.get("/products?size=200");
+    const products = res.data.dataList || [];
     return products.map((p: any) => ({
       url: `${process.env.NEXT_PUBLIC_BASE_URL}/collections/products/${p.id}`,
       priority: 0.8,

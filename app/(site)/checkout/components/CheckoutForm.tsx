@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import { AppDispatch, RootState } from "@/redux/store";
 import { clearBag } from "@/redux/bagSlice/bagSlice";
-import { Form, Input, Button } from "antd";
+import { Form, Input, Button, Row, Col, Modal, Flex, Typography } from "antd";
 import { FiX } from "react-icons/fi";
 import {
   calculateFee,
@@ -24,6 +24,7 @@ import { Order, Customer } from "@/interfaces";
 import { auth } from "@/firebase/firebaseClient";
 import { usePayment } from "@/hooks/usePayment";
 import usePromotions from "@/hooks/usePromotions";
+import axiosInstance from "@/services/axiosInstance";
 const formatSriLankanPhoneNumber = (phone: string) => {
   // Remove any non-digit characters
   const cleaned = phone.replace(/\D/g, "");
@@ -113,15 +114,10 @@ const CheckoutForm = () => {
           setShippingCost(0);
           return;
         }
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/shipping/calculate`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ items: bagItems }),
-          },
-        );
-        const data = await res.json();
+        const res = await axiosInstance.post("/shipping/calculate", {
+          items: bagItems,
+        });
+        const data = res.data;
         setShippingCost(data.cost || 0);
       } catch (error) {
         console.error("Failed to fetch shipping cost", error);
@@ -225,97 +221,114 @@ const CheckoutForm = () => {
           phone: billingCustomer?.phone || "",
           country: "Sri Lanka",
         }}
-        className="flex flex-col lg:flex-row w-full gap-8 lg:gap-16 px-4 md:px-8 py-8 bg-surface"
+        className="w-full px-4 md:px-8 py-8 bg-surface"
       >
-        {/* --- LEFT COLUMN: FORMS (Scrollable) --- */}
-        <div className="w-full lg:w-[60%] flex flex-col gap-10">
-          <BillingDetails
-            saveAddress={saveAddress}
-            setSaveAddress={setSaveAddress}
-            customer={billingCustomer}
-          />
+        <Row gutter={[32, 32]} className="w-full">
+          {/* --- LEFT COLUMN: FORMS --- */}
+          <Col xs={24} lg={14}>
+            <Flex vertical gap={40}>
+              <BillingDetails
+                saveAddress={saveAddress}
+                setSaveAddress={setSaveAddress}
+                customer={billingCustomer}
+              />
 
-          <ShippingDetails
-            shippingSameAsBilling={shippingSameAsBilling}
-            setShippingSameAsBilling={setShippingSameAsBilling}
-            shippingCustomer={shippingCustomer}
-            setShippingCustomer={setShippingCustomer}
-          />
-        </div>
+              <ShippingDetails
+                shippingSameAsBilling={shippingSameAsBilling}
+                setShippingSameAsBilling={setShippingSameAsBilling}
+                shippingCustomer={shippingCustomer}
+                setShippingCustomer={setShippingCustomer}
+              />
+            </Flex>
+          </Col>
 
-        {/* --- RIGHT COLUMN: SUMMARY & PAYMENT (Sticky) --- */}
-        <div className="w-full lg:w-[40%] relative">
-          <div className="sticky top-10">
-            <PaymentDetails
-              setPaymentType={setPaymentType}
-              paymentType={paymentType || ""}
-              setPaymentTypeId={setPaymentTypeId}
-              setPaymentFee={setPaymentFee}
-              selectedPaymentFee={paymentFee}
-              shippingCost={shippingCost}
-            />
-          </div>
-        </div>
+          {/* --- RIGHT COLUMN: SUMMARY & PAYMENT --- */}
+          <Col xs={24} lg={10}>
+            <div className="sticky top-10">
+              <PaymentDetails
+                setPaymentType={setPaymentType}
+                paymentType={paymentType || ""}
+                setPaymentTypeId={setPaymentTypeId}
+                setPaymentFee={setPaymentFee}
+                selectedPaymentFee={paymentFee}
+                shippingCost={shippingCost}
+              />
+            </div>
+          </Col>
+        </Row>
       </Form>
 
-      {/* --- OTP MODAL - NEVERBE Performance Style --- */}
-      {otpState.showModal && otpState.pendingOrder && (
-        <div className="fixed inset-0 bg-surface/80 backdrop-blur-xl flex justify-center items-center z-50 p-4">
-          <div className="relative bg-surface p-8 w-full max-w-sm border border-default rounded-2xl shadow-hover">
-            <Button
-              type="text"
-              icon={<FiX size={24} />}
-              onClick={() => {
-                closeOTPModal();
-                setOtp("");
-              }}
-              className="absolute top-4 right-4 text-primary hover:text-accent hover:bg-transparent"
+      <Modal
+        open={otpState.showModal && !!otpState.pendingOrder}
+        onCancel={() => {
+          closeOTPModal();
+          setOtp("");
+        }}
+        footer={null}
+        centered
+        width={400}
+        closeIcon={<FiX size={24} />}
+        className="performance-modal"
+        styles={{
+          body: {
+            padding: "32px",
+            borderRadius: "24px",
+            background: "#ffffff",
+          },
+          mask: {
+            backdropFilter: "blur(12px)",
+            background: "rgba(255, 255, 255, 0.8)",
+          },
+        }}
+      >
+        <Flex vertical align="center" gap={8} className="text-center">
+          <Typography.Title
+            level={3}
+            className="uppercase tracking-tighter mb-0"
+            style={{ fontWeight: 900, margin: 0 }}
+          >
+            Verify Number
+          </Typography.Title>
+          <Typography.Text type="secondary" className="font-medium">
+            Enter the code sent to {otpState.pendingOrder?.customer.phone}
+          </Typography.Text>
+
+          <Flex vertical gap={16} className="w-full mt-6">
+            <Input
+              type="tel"
+              value={otp}
+              disabled={otpState.isVerifying}
+              onChange={(e) => setOtp(e.target.value)}
+              placeholder="000000"
+              className="w-full h-14 text-center text-2xl tracking-[0.5em] font-display font-black border-2 border-default bg-surface-2 rounded-xl focus:border-accent hover:border-accent outline-none transition-colors text-primary"
+              maxLength={6}
             />
+            <Button
+              type="primary"
+              onClick={() => handleOTPVerification(otp)}
+              loading={otpState.isVerifying}
+              className="w-full h-14 bg-dark border-none text-inverse rounded-full font-display font-black uppercase tracking-widest text-xs hover:bg-accent hover:text-dark transition-all shadow-custom hover:shadow-hover"
+            >
+              Confirm Order
+            </Button>
 
-            <h2 className="text-xl font-display font-black uppercase italic tracking-tighter mb-2 text-center text-primary">
-              Verify Number
-            </h2>
-            <p className="text-center text-sm text-muted mb-6 font-medium">
-              Enter the code sent to {otpState.pendingOrder.customer.phone}
-            </p>
-
-            <div className="flex flex-col gap-4">
-              <Input
-                type="tel"
-                value={otp}
-                disabled={otpState.isVerifying}
-                onChange={(e) => setOtp(e.target.value)}
-                placeholder="000000"
-                className="w-full h-14 text-center text-2xl tracking-[0.5em] font-display font-black border-2 border-default bg-surface-2 rounded-xl focus:border-accent hover:border-accent outline-none transition-colors text-primary"
-                maxLength={6}
-              />
-              <Button
-                type="primary"
-                onClick={() => handleOTPVerification(otp)}
-                loading={otpState.isVerifying}
-                className="w-full h-14 bg-dark border-none text-inverse rounded-full font-display font-black uppercase tracking-widest text-xs hover:bg-accent hover:text-dark transition-all shadow-custom hover:shadow-hover"
-              >
-                Confirm Order
-              </Button>
-
-              <button
-                type="button"
-                onClick={() =>
-                  handleResendOTP(otpState.pendingOrder!.customer.phone)
-                }
-                disabled={otpState.isResending || otpState.cooldown > 0}
-                className="text-xs font-black uppercase tracking-widest text-muted hover:text-accent transition-all"
-              >
-                {otpState.cooldown > 0
-                  ? `Resend in ${otpState.cooldown}s`
-                  : otpState.isResending
-                    ? "Sending..."
-                    : "Resend Code"}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+            <Button
+              type="link"
+              onClick={() =>
+                handleResendOTP(otpState.pendingOrder!.customer.phone)
+              }
+              disabled={otpState.isResending || otpState.cooldown > 0}
+              className="text-xs font-black uppercase tracking-widest text-muted hover:text-accent transition-all p-0 h-auto"
+            >
+              {otpState.cooldown > 0
+                ? `Resend in ${otpState.cooldown}s`
+                : otpState.isResending
+                  ? "Sending..."
+                  : "Resend Code"}
+            </Button>
+          </Flex>
+        </Flex>
+      </Modal>
 
       {isProcessing && <CheckoutLoader />}
     </>

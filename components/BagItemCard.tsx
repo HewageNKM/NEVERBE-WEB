@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";
 import { removeFromBag } from "@/redux/bagSlice/bagSlice";
 import { BagItem } from "@/interfaces/BagItem";
+import { Button } from "antd";
 
 interface BagItemCardProps {
   item: BagItem;
@@ -51,12 +52,13 @@ const BagItemCard = ({
             </p>
           )}
           {showRemove && (
-            <button
+            <Button
+              type="link"
               onClick={() => dispatch(removeFromBag(item))}
-              className="text-[9px] font-bold uppercase tracking-wide text-muted hover:text-error underline transition-colors mt-1"
+              className="text-[9px] font-bold uppercase tracking-wide text-muted hover:text-error underline transition-colors mt-1 p-0 h-auto"
             >
               Remove
-            </button>
+            </Button>
           )}
         </div>
         <div className="text-right shrink-0">
@@ -142,12 +144,13 @@ const BagItemCard = ({
 
         {/* Bottom: Actions */}
         <div className="flex justify-start mt-2">
-          <button
+          <Button
+            type="link"
             onClick={() => dispatch(removeFromBag(item))}
-            className="text-[10px] font-bold uppercase tracking-wider text-muted hover:text-error underline transition-colors"
+            className="text-[10px] font-bold uppercase tracking-wider text-muted hover:text-error underline transition-colors p-0 h-auto"
           >
             Remove
-          </button>
+          </Button>
         </div>
       </div>
     </div>

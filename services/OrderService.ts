@@ -1,8 +1,12 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api/v1/web";
+import axiosInstance from "./axiosInstance";
 
 export const getOrderByIdForInvoice = async (orderId: string) => {
-  const res = await fetch(`${API_URL}/orders/${orderId}`, { next: { revalidate: 60 } });
-  if (!res.ok) return null;
-  const data = await res.json();
-  return data.data || data;
+  try {
+    const res = await axiosInstance.get(`/orders/${orderId}`);
+    const data = res.data;
+    return data.data || data;
+  } catch (error) {
+    console.error("Failed to fetch order details:", error);
+    return null;
+  }
 };

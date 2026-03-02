@@ -26,6 +26,8 @@ import { BagItem } from "@/interfaces/BagItem";
 import Image from "next/image";
 import usePromotions from "@/hooks/usePromotions";
 import PromotionBanner from "@/components/PromotionBanner";
+import { Button } from "antd";
+import axiosInstance from "@/services/axiosInstance";
 
 // --- Types ---
 interface BundleGroup {
@@ -91,12 +93,13 @@ const BundleGroupCard = ({
 
       {/* Bundle Footer */}
       <div className="px-4 py-3 flex justify-between items-center bg-surface-3">
-        <button
+        <Button
+          type="link"
           onClick={() => bundle.items.forEach((item) => onRemove(item))}
-          className="text-xs font-bold uppercase tracking-wider text-muted hover:text-error underline underline-offset-4 transition-colors"
+          className="text-xs font-bold uppercase tracking-wider text-muted hover:text-error underline underline-offset-4 transition-colors p-0 h-auto"
         >
           Remove Bundle
-        </button>
+        </Button>
         <div className="text-right">
           {bundle.totalDiscount > 0 && (
             <p className="text-xs text-muted line-through">
@@ -170,12 +173,13 @@ const SingleItemCard = ({
           </div>
         </div>
 
-        <button
+        <Button
+          type="link"
           onClick={() => onRemove(item)}
-          className="text-xs font-bold uppercase tracking-wider text-muted hover:text-error underline underline-offset-4 transition-colors mt-2 self-start"
+          className="text-xs font-bold uppercase tracking-wider text-muted hover:text-error underline underline-offset-4 transition-colors mt-2 self-start p-0 h-auto"
         >
           Remove
-        </button>
+        </Button>
       </div>
     </div>
   );
@@ -252,13 +256,9 @@ const Bag = () => {
             quantity: item.quantity,
           })),
         };
-        const res = await fetch("/api/v1/shipping/calculate", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        });
-        if (res.ok) {
-          const data = await res.json();
+        const res = await axiosInstance.post("/shipping/calculate", payload);
+        if (res.data) {
+          const data = res.data;
           setShippingCost(data.cost);
         }
       } catch (error) {
@@ -288,7 +288,7 @@ const Bag = () => {
         {/* --- Header --- */}
         <div className="flex justify-between items-center px-6 py-5 border-b border-dark">
           <div>
-            <h2 className="text-2xl font-black uppercase tracking-tighter italic text-primary">
+            <h2 className="text-2xl font-black uppercase tracking-tighter text-primary">
               Your Bag
             </h2>
             <p className="text-xs font-bold uppercase tracking-widest text-muted mt-0.5">
@@ -297,13 +297,13 @@ const Bag = () => {
                 ` · ${bundles.length} Bundle${bundles.length > 1 ? "s" : ""}`}
             </p>
           </div>
-          <button
+          <Button
+            type="text"
             onClick={() => dispatch(hideBag())}
-            className="p-2 border border-transparent hover:border-dark text-primary transition-all rounded-full"
+            className="p-2 border border-transparent hover:border-dark text-primary transition-all rounded-full h-auto w-auto"
             aria-label="Close Bag"
-          >
-            <IoCloseOutline size={28} />
-          </button>
+            icon={<IoCloseOutline size={28} />}
+          />
         </div>
 
         {/* --- Items List --- */}
@@ -330,15 +330,16 @@ const Bag = () => {
           ) : (
             <div className="h-full flex flex-col items-center justify-center text-center">
               <IoBagHandleOutline size={64} className="mb-4 text-accent" />
-              <p className="font-black uppercase tracking-tighter text-xl text-muted italic">
+              <p className="font-black uppercase tracking-tighter text-xl text-muted">
                 Your bag is empty
               </p>
-              <button
+              <Button
+                type="link"
                 onClick={() => dispatch(hideBag())}
-                className="mt-6 text-sm font-bold uppercase tracking-widest text-primary underline underline-offset-8 decoration-accent hover:decoration-primary transition-all"
+                className="mt-6 text-sm font-bold uppercase tracking-widest text-primary underline underline-offset-8 decoration-accent hover:decoration-primary transition-all p-0 h-auto"
               >
                 Start Shopping
-              </button>
+              </Button>
             </div>
           )}
         </div>
@@ -409,20 +410,21 @@ const Bag = () => {
               </span>
             </div>
 
-            <button
+            <Button
+              type="text"
               onClick={() => {
                 dispatch(hideBag());
                 router.push("/checkout");
               }}
-              className="group w-full flex items-center justify-between px-6 py-5 bg-dark text-inverse transition-all shadow-lg hover:shadow-hover hover:-translate-y-0.5"
+              className="group w-full flex items-center justify-between px-6 py-8 bg-dark text-inverse transition-all shadow-lg hover:shadow-hover hover:-translate-y-0.5 rounded-none border-none hover:bg-dark hover:text-inverse focus:bg-dark focus:text-inverse"
             >
               <span className="text-base font-black uppercase tracking-widest">
                 Checkout Now
               </span>
-              <div className="bg-accent text-primary rounded-full p-1.5 transition-transform group-hover:translate-x-2">
+              <div className="bg-accent text-primary rounded-full p-1.5 transition-transform group-hover:translate-x-2 flex items-center justify-center">
                 <IoArrowForward size={18} />
               </div>
-            </button>
+            </Button>
 
             <div className="flex items-center justify-center gap-4 opacity-60 grayscale hover:grayscale-0 transition-all">
               {/* Minimal placeholder for payment icons */}

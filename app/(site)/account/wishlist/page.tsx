@@ -11,6 +11,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { IoHeartDislike, IoTrashOutline } from "react-icons/io5";
 import { motion, AnimatePresence } from "framer-motion";
+import { Button } from "antd";
 
 const WishlistPage = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -27,11 +28,11 @@ const WishlistPage = () => {
   return (
     <main className="w-full min-h-screen bg-white">
       {/* Header */}
-      <div className="w-full max-w-[1920px] mx-auto px-4 md:px-12 py-12 md:py-20 text-left">
+      <div className="w-full max-w-content mx-auto px-4 md:px-12 py-12 md:py-20 text-left">
         <h1 className="text-[28px] md:text-[42px] font-medium tracking-tight text-primary leading-none mb-4">
           Your Wishlist
         </h1>
-        <p className="text-secondary max-w-xl text-[16px] md:text-[18px] font-normal">
+        <p className="text-secondary max-w-xl text-md md:text-[18px] font-normal">
           {wishlistItems.length > 0
             ? `${wishlistItems.length} saved ${
                 wishlistItems.length === 1 ? "item" : "items"
@@ -40,7 +41,7 @@ const WishlistPage = () => {
         </p>
       </div>
 
-      <div className="w-full max-w-[1920px] mx-auto px-4 md:px-12 pb-20">
+      <div className="w-full max-w-content mx-auto px-4 md:px-12 pb-20">
         {wishlistItems.length === 0 ? (
           /* Empty State */
           <div className="flex flex-col items-center justify-center py-20">
@@ -74,7 +75,7 @@ const WishlistPage = () => {
                   className="group"
                 >
                   <Link href={`/collections/products/${item.productId}`}>
-                    <div className="relative aspect-[4/5] bg-surface-2 overflow-hidden mb-4">
+                    <div className="relative aspect-4/5 bg-surface-2 overflow-hidden mb-4">
                       <Image
                         src={item.thumbnail}
                         alt={item.name}
@@ -83,17 +84,19 @@ const WishlistPage = () => {
                       />
 
                       {/* Remove Button */}
-                      <button
+                      <Button
+                        type="text"
                         onClick={(e) => {
                           e.preventDefault();
                           e.stopPropagation();
                           handleRemove(item.productId, item.variantId);
                         }}
-                        className="absolute top-4 right-4 w-10 h-10 bg-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-gray-100"
+                        className="absolute top-4 right-4 w-10 h-10 bg-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-gray-100 border-none p-0"
                         aria-label="Remove from wishlist"
-                      >
-                        <IoTrashOutline size={18} className="text-primary" />
-                      </button>
+                        icon={
+                          <IoTrashOutline size={18} className="text-primary" />
+                        }
+                      />
                     </div>
                   </Link>
 

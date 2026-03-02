@@ -48,7 +48,7 @@ const PromotionBanner: React.FC<PromotionBannerProps> = ({
           size={20}
         />
         <div>
-          <p className="text-base font-display font-black uppercase italic tracking-tighter text-primary">
+          <p className="text-base font-display font-black uppercase tracking-tighter text-primary">
             Promotions Locked
           </p>
           <p className="text-sm text-secondary mt-1 font-medium leading-relaxed">
@@ -86,8 +86,8 @@ const PromotionBanner: React.FC<PromotionBannerProps> = ({
       appliedPromotions.length > 0
         ? appliedPromotions
         : bestPromo
-        ? [bestPromo]
-        : [];
+          ? [bestPromo]
+          : [];
     const hasStackedPromotions = displayPromotions.length > 1;
 
     return (
@@ -110,7 +110,7 @@ const PromotionBanner: React.FC<PromotionBannerProps> = ({
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between gap-4">
                     <div className="min-w-0">
-                      <p className="text-base font-display font-black uppercase italic tracking-tighter text-primary">
+                      <p className="text-base font-display font-black uppercase tracking-tighter text-primary">
                         {hasStackedPromotions
                           ? `${displayPromotions.length} Offers Applied`
                           : displayPromotions[0].name}
@@ -122,7 +122,7 @@ const PromotionBanner: React.FC<PromotionBannerProps> = ({
                       </p>
                     </div>
                     {totalPromotionDiscount > 0 && (
-                      <p className="text-xl font-display font-black italic text-success whitespace-nowrap tracking-tighter">
+                      <p className="text-xl font-display font-black text-success whitespace-nowrap tracking-tighter">
                         -Rs. {totalPromotionDiscount.toLocaleString()}
                       </p>
                     )}
@@ -146,19 +146,19 @@ const PromotionBanner: React.FC<PromotionBannerProps> = ({
                   <IoAlertCircleOutline size={20} />
                 </div>
                 <div>
-                  <p className="text-base font-display font-black uppercase italic tracking-tighter text-primary">
+                  <p className="text-base font-display font-black uppercase tracking-tighter text-primary">
                     Unlock Special Savings
                   </p>
                   <p className="text-sm text-secondary mt-1 font-medium">
                     Spend{" "}
-                    <span className="text-dark font-black tracking-tighter italic">
+                    <span className="text-dark font-black tracking-tighter">
                       Rs. {nearestPromo.remaining?.toLocaleString()}
                     </span>{" "}
                     more to get {nearestPromo.name}
                   </p>
                 </div>
               </div>
-              <span className="text-xs font-black italic text-accent bg-dark px-2 py-0.5 rounded shadow-custom">
+              <span className="text-xs font-black text-accent bg-dark px-2 py-0.5 rounded shadow-custom">
                 {nearestPromo.progress}%
               </span>
             </div>
@@ -194,9 +194,9 @@ const PromotionBanner: React.FC<PromotionBannerProps> = ({
             <IoFlashOutline size={16} className="text-accent animate-pulse" />
             {promo.isEligible ? (
               <>
-                <span className="italic">{promo.message}</span>
+                <span>{promo.message}</span>
                 {promo.savings && (
-                  <span className="bg-accent text-dark px-3 py-0.5 font-black italic tracking-tighter ml-2 shadow-custom">
+                  <span className="bg-accent text-dark px-3 py-0.5 font-black tracking-tighter ml-2 shadow-custom">
                     SAVE RS. {promo.savings.toLocaleString()}
                   </span>
                 )}
@@ -204,7 +204,7 @@ const PromotionBanner: React.FC<PromotionBannerProps> = ({
             ) : (
               <span>
                 Add Rs. {promo.remaining?.toLocaleString()} for{" "}
-                <span className="text-accent font-black italic tracking-tighter underline underline-offset-4 decoration-accent/50">
+                <span className="text-accent font-black tracking-tighter underline underline-offset-4 decoration-accent/50">
                   {promo.name}
                 </span>
               </span>
@@ -234,10 +234,10 @@ const PromotionBanner: React.FC<PromotionBannerProps> = ({
 
             <div className="flex-1 text-center md:text-left">
               <div className="flex flex-col md:flex-row items-center md:items-start gap-4 mb-4">
-                <span className="text-[10px] font-black uppercase tracking-[0.25em] bg-accent text-dark px-3 py-1 italic shadow-custom">
+                <span className="text-[10px] font-black uppercase tracking-[0.25em] bg-accent text-dark px-3 py-1 shadow-custom">
                   Active Offer
                 </span>
-                <h3 className="text-3xl font-display font-black uppercase italic tracking-tighter text-primary">
+                <h3 className="text-3xl font-display font-black uppercase tracking-tighter text-primary">
                   {promo.name}
                 </h3>
               </div>
@@ -249,7 +249,7 @@ const PromotionBanner: React.FC<PromotionBannerProps> = ({
                   <span className="text-xs font-black uppercase tracking-widest text-success mb-1">
                     Your Benefit:
                   </span>
-                  <p className="text-3xl font-display font-black italic text-success tracking-tighter">
+                  <p className="text-3xl font-display font-black text-success tracking-tighter">
                     - Rs. {promo.savings.toLocaleString()}
                   </p>
                 </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { intervalToDuration } from "date-fns";
+import { intervalToDuration, Duration } from "date-fns";
 
 interface Props {
   targetDate: string; // ISO String
@@ -56,7 +56,7 @@ const CountdownTimer: React.FC<Props> = ({
 
     return (
       <span
-        className={`font-display font-black italic text-accent tracking-tighter ${className}`}
+        className={`font-display font-black text-accent tracking-tighter ${className}`}
       >
         {parts.join(" ")}
       </span>
@@ -72,7 +72,7 @@ const CountdownTimer: React.FC<Props> = ({
   }) => (
     <div className="flex flex-col items-center min-w-[32px]">
       {/* Numbers using Brand Display font for a premium look */}
-      <span className="font-display font-black text-xl md:text-2xl leading-none text-primary italic tracking-tighter">
+      <span className="font-display font-black text-xl md:text-2xl leading-none text-primary tracking-tighter">
         {String(value || 0).padStart(2, "0")}
       </span>
       {labels && (

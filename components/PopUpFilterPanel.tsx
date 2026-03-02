@@ -2,6 +2,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { IoCloseOutline } from "react-icons/io5";
+import { Button } from "antd";
 import ToggleSwitch from "@/components/ToggleSwitch";
 import DropShadow from "@/components/DropShadow";
 import { useFilterData } from "@/hooks/useFilterData";
@@ -33,17 +34,18 @@ const FilterList = ({
   onToggle: (label: string) => void;
 }) => (
   <div className="py-8 border-t border-default animate-fade">
-    <h3 className="text-lg font-display font-black uppercase italic tracking-tighter text-primary mb-6">
+    <h3 className="text-lg font-display font-black uppercase tracking-tighter text-primary mb-6">
       {title}
     </h3>
     <div className="flex flex-col gap-5">
       {items.map((item, i) => {
         const isActive = selected.includes(item.label?.toLowerCase());
         return (
-          <button
+          <Button
+            type="text"
             key={i}
             onClick={() => onToggle(item.label)}
-            className="flex items-center gap-4 group text-left"
+            className="flex items-center gap-4 group text-left h-auto p-0 hover:bg-transparent"
           >
             {/* BRANDED CHECKBOX: Accent Green on active */}
             <div
@@ -59,14 +61,12 @@ const FilterList = ({
             </div>
             <span
               className={`text-md tracking-tight transition-colors ${
-                isActive
-                  ? "text-primary font-bold italic"
-                  : "text-muted font-medium"
+                isActive ? "text-primary font-bold" : "text-muted font-medium"
               }`}
             >
               {item.label}
             </span>
-          </button>
+          </Button>
         );
       })}
     </div>
@@ -100,15 +100,15 @@ const PopUpFilterPanel: React.FC<PopUpFilterPanelProps> = ({
       >
         {/* HEADER: Technical Performance Look */}
         <div className="px-8 py-6 flex justify-between items-center bg-surface border-b border-default z-20">
-          <h2 className="text-2xl font-display font-black uppercase italic tracking-tighter text-primary">
+          <h2 className="text-2xl font-display font-black uppercase tracking-tighter text-primary">
             Filters
           </h2>
-          <button
+          <Button
+            type="text"
+            icon={<IoCloseOutline size={32} />}
             onClick={onClose}
-            className="p-2 -mr-2 text-primary hover:bg-surface-2 hover:text-accent transition-all rounded-full"
-          >
-            <IoCloseOutline size={32} />
-          </button>
+            className="p-2 -mr-2 text-primary hover:bg-surface-2 hover:text-accent transition-all rounded-full h-auto w-auto border-none"
+          />
         </div>
 
         {/* BODY: Scannable vertical scroll */}
@@ -123,24 +123,24 @@ const PopUpFilterPanel: React.FC<PopUpFilterPanelProps> = ({
 
           {/* SIZES: NEVERBE Performance Grid */}
           <div className="py-8 border-t border-default">
-            <h3 className="text-lg font-display font-black uppercase italic tracking-tighter text-primary mb-6">
+            <h3 className="text-lg font-display font-black uppercase tracking-tighter text-primary mb-6">
               Select Size
             </h3>
             <div className="grid grid-cols-3 gap-2">
               {AVAILABLE_SIZES.map((size) => {
                 const isActive = selectedSizes.includes(size);
                 return (
-                  <button
+                  <Button
                     key={size}
                     onClick={() => onSizeToggle(size)}
-                    className={`aspect-square flex items-center justify-center border rounded-[4px] text-base transition-all duration-300 ${
+                    className={`aspect-square flex items-center justify-center border rounded-[4px] text-base transition-all duration-300 p-0 h-auto ${
                       isActive
-                        ? "bg-dark text-accent border-dark font-black italic shadow-hover scale-[1.02]"
-                        : "bg-surface text-primary border-border-primary font-bold hover:border-accent"
+                        ? "bg-dark text-accent border-dark font-black shadow-hover scale-[1.02] hover:bg-dark hover:text-accent"
+                        : "bg-surface text-primary border-border-primary font-bold hover:border-accent hover:text-accent"
                     }`}
                   >
                     {size}
-                  </button>
+                  </Button>
                 );
               })}
             </div>
@@ -167,18 +167,20 @@ const PopUpFilterPanel: React.FC<PopUpFilterPanelProps> = ({
 
         {/* FOOTER ACTIONS: High-Energy Pill Buttons */}
         <div className="p-8 border-t-2 border-dark/5 bg-surface-2 flex gap-4 mt-auto shadow-[0_-10px_30px_rgba(0,0,0,0.03)]">
-          <button
+          <Button
+            type="link"
             onClick={onReset}
-            className="flex-1 py-4 text-xs font-black uppercase tracking-[0.2em] text-muted hover:text-error transition-all underline underline-offset-8"
+            className="flex-1 py-4 text-xs font-black uppercase tracking-[0.2em] text-muted hover:text-error transition-all underline underline-offset-8 h-auto"
           >
             Clear All
-          </button>
-          <button
+          </Button>
+          <Button
+            type="primary"
             onClick={onClose}
-            className="flex-2 py-4 bg-dark text-inverse text-sm font-black uppercase tracking-widest rounded-full hover:bg-accent hover:text-dark transition-all shadow-custom hover:shadow-hover active:scale-95"
+            className="flex-2 py-6 bg-dark text-inverse text-sm font-black uppercase tracking-widest rounded-full hover:bg-accent hover:text-dark transition-all shadow-custom hover:shadow-hover active:scale-95 border-none h-auto"
           >
             Apply Filters
-          </button>
+          </Button>
         </div>
       </motion.aside>
     </DropShadow>

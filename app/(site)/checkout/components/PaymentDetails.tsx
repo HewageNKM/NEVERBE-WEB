@@ -2,7 +2,17 @@
 
 import React, { useEffect, useState, useMemo } from "react";
 import { useSelector } from "react-redux";
-import { Form, Input, Button } from "antd";
+import {
+  Form,
+  Input,
+  Button,
+  Typography,
+  Flex,
+  Divider,
+  Space,
+  Card,
+  Badge,
+} from "antd";
 import { RootState } from "@/redux/store";
 import { IoArrowForward, IoLockClosedOutline } from "react-icons/io5";
 import BagItemCard from "@/components/BagItemCard";
@@ -19,6 +29,7 @@ import { PaymentMethod } from "@/interfaces";
 import { BagItem } from "@/interfaces/BagItem";
 import PaymentOptions from "./PaymentOptions";
 import Image from "next/image";
+import axiosInstance from "@/services/axiosInstance";
 
 interface PaymentDetailsProps {
   paymentType: string;
@@ -150,15 +161,15 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
     const fetchMethods = async () => {
       try {
         setIsPaymentLoading(true);
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/payment-methods`,
-        );
-        const methods = await res.json();
-        setPaymentOptions(methods || []);
-        if (methods.length > 0 && !paymentType) {
-          setPaymentType(methods[0].name);
-          setPaymentTypeId(methods[0].paymentId);
-          setPaymentFee(methods[0].fee);
+        const res = await axiosInstance.get("/payment-methods");
+        if (res.data) {
+          const methods = res.data;
+          setPaymentOptions(methods || []);
+          if (methods.length > 0 && !paymentType) {
+            setPaymentType(methods[0].name);
+            setPaymentTypeId(methods[0].paymentId);
+            setPaymentFee(methods[0].fee);
+          }
         }
       } catch (e) {
         console.error(e);
@@ -191,17 +202,28 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
   const regularCount = regularItems.length;
 
   return (
-    <div className="bg-surface p-6 md:p-8 w-full border border-default rounded-2xl h-fit sticky top-24 shadow-custom">
+    <Card
+      styles={{ body: { padding: "24px 32px" } }}
+      className="w-full border-default rounded-2xl h-fit sticky top-24 shadow-custom"
+    >
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-display font-black uppercase italic tracking-tighter text-primary">
+      <Flex align="center" justify="space-between" className="mb-6">
+        <Typography.Title
+          level={4}
+          className="uppercase tracking-tighter"
+          style={{ margin: 0, fontWeight: 900 }}
+        >
           Order Summary
-        </h2>
-        <span className="text-xs font-black bg-dark text-inverse px-3 py-1.5 rounded-full uppercase tracking-widest">
-          {bagItems.length} Items
-          {bundleCount > 0 && ` · ${bundleCount} Bundle`}
-        </span>
-      </div>
+        </Typography.Title>
+        <Badge
+          count={`${bagItems.length} Items${bundleCount > 0 ? ` · ${bundleCount} Bundle` : ""}`}
+          style={{
+            backgroundColor: "#1a1a1a",
+            color: "#ffffff",
+            fontWeight: 800,
+          }}
+        />
+      </Flex>
 
       {/* Promotion Banner */}
       <div className="mb-6">
@@ -209,7 +231,11 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
       </div>
 
       {/* Items - Grouped by Bundles and Regular */}
-      <div className="mb-6 space-y-4 max-h-[320px] overflow-y-auto pr-2 hide-scrollbar">
+      <Flex
+        vertical
+        gap={16}
+        className="mb-6 max-h-[320px] overflow-y-auto pr-2 hide-scrollbar"
+      >
         {/* Bundles First */}
         {bundles.map((bundle) => (
           <BundleCard key={bundle.comboId} bundle={bundle} />
@@ -224,15 +250,15 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
             showRemove
           />
         ))}
-      </div>
+      </Flex>
 
-      <Divider />
+      <Divider className="my-6 border-default" />
 
       {/* Payment Selection */}
       <div className="mb-6">
-        <h3 className="text-[10px] font-black uppercase tracking-widest text-muted mb-3">
+        <Typography.Text className="text-[10px] font-black uppercase tracking-widest text-muted block mb-3">
           Select Payment Method
-        </h3>
+        </Typography.Text>
         {isPaymentLoading ? (
           <div className="h-12 bg-surface-3 animate-pulse w-full rounded-xl"></div>
         ) : (
@@ -246,79 +272,91 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
         )}
       </div>
 
-      <Divider />
+      <Divider className="my-6 border-default" />
 
       {/* Coupon Section */}
       <div className="mb-6">
-        <h3 className="text-[10px] font-black uppercase tracking-widest text-muted mb-3">
+        <Typography.Text className="text-[10px] font-black uppercase tracking-widest text-muted block mb-3">
           Promo Code
-        </h3>
+        </Typography.Text>
         <CouponInput />
       </div>
 
-      <Divider />
+      <Divider className="my-6 border-default" />
 
       {/* Financial Breakdown */}
-      <div className="space-y-3 mb-6">
-        <div className="flex justify-between items-center text-sm">
-          <span className="text-secondary font-medium">Subtotal</span>
-          <span className="font-bold text-primary font-mono">
+      <Flex vertical gap={12} className="mb-6">
+        <Flex justify="space-between" align="center">
+          <Typography.Text className="text-secondary font-medium">
+            Subtotal
+          </Typography.Text>
+          <Typography.Text className="font-bold text-primary font-mono">
             Rs. {rawSubTotal.toLocaleString()}
-          </span>
-        </div>
+          </Typography.Text>
+        </Flex>
 
         {itemDiscount > 0 && (
-          <div className="flex justify-between items-center text-sm text-success">
-            <span className="font-medium">Discounts</span>
-            <span className="font-bold font-mono">
+          <Flex justify="space-between" align="center" className="text-success">
+            <Typography.Text className="font-medium text-success">
+              Discounts
+            </Typography.Text>
+            <Typography.Text className="font-bold font-mono text-success">
               - Rs. {itemDiscount.toLocaleString()}
-            </span>
-          </div>
+            </Typography.Text>
+          </Flex>
         )}
 
         {promotionDiscount > 0 && (
-          <div className="flex justify-between items-center text-sm text-success">
-            <span className="font-medium">Promotion</span>
-            <span className="font-bold font-mono">
+          <Flex justify="space-between" align="center" className="text-success">
+            <Typography.Text className="font-medium text-success">
+              Promotion
+            </Typography.Text>
+            <Typography.Text className="font-bold font-mono text-success">
               - Rs. {promotionDiscount.toLocaleString()}
-            </span>
-          </div>
+            </Typography.Text>
+          </Flex>
         )}
 
         {couponDiscount > 0 && (
-          <div className="flex justify-between items-center text-sm text-success">
-            <span className="font-medium">Coupon</span>
-            <span className="font-bold font-mono">
+          <Flex justify="space-between" align="center" className="text-success">
+            <Typography.Text className="font-medium text-success">
+              Coupon
+            </Typography.Text>
+            <Typography.Text className="font-bold font-mono text-success">
               - Rs. {couponDiscount.toLocaleString()}
-            </span>
-          </div>
+            </Typography.Text>
+          </Flex>
         )}
 
-        <div className="flex justify-between items-center text-sm">
-          <span className="text-secondary font-medium">Shipping</span>
-          <span className="font-bold text-primary font-mono">
+        <Flex justify="space-between" align="center">
+          <Typography.Text className="text-secondary font-medium">
+            Shipping
+          </Typography.Text>
+          <Typography.Text className="font-bold text-primary font-mono">
             {shipping === 0 ? "FREE" : `Rs. ${shipping}`}
-          </span>
-        </div>
+          </Typography.Text>
+        </Flex>
 
-        <div className="flex justify-between items-center text-sm">
-          <span className="text-secondary font-medium">Handling Fee</span>
-          <span className="font-bold text-primary font-mono">
+        <Flex justify="space-between" align="center">
+          <Typography.Text className="text-secondary font-medium">
+            Handling Fee
+          </Typography.Text>
+          <Typography.Text className="font-bold text-primary font-mono">
             Rs. {fee.toFixed(2)}
-          </span>
-        </div>
-      </div>
+          </Typography.Text>
+        </Flex>
+      </Flex>
 
       {/* Total Section */}
       <div className="border-t-2 border-dark pt-4 mb-8">
-        <div className="flex justify-between items-end">
-          <span className="text-sm font-black uppercase tracking-widest text-primary">
+        <Flex justify="space-between" align="end">
+          <Typography.Text className="text-sm font-black uppercase tracking-widest text-primary">
             Total Due
-          </span>
-          <span className="text-3xl font-display font-black italic tracking-tighter text-primary leading-none">
+          </Typography.Text>
+          <Typography.Text className="text-3xl font-display font-black tracking-tighter text-primary leading-none">
             Rs.{finalTotal.toLocaleString()}
-          </span>
-        </div>
+          </Typography.Text>
+        </Flex>
       </div>
 
       {/* Submit Button */}
@@ -337,19 +375,19 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
       </Button>
 
       {/* Security Footer */}
-      <div className="mt-6 flex flex-col items-center justify-center text-center gap-2">
-        <div className="flex items-center gap-1.5 text-muted">
+      <Flex vertical align="center" gap={8} className="mt-6 text-center">
+        <Flex align="center" gap={6} className="text-muted">
           <IoLockClosedOutline size={12} />
-          <span className="text-[10px] font-black uppercase tracking-widest">
+          <Typography.Text className="text-[10px] font-black uppercase tracking-widest text-muted">
             Secure Checkout
-          </span>
-        </div>
-        <p className="text-[9px] text-muted leading-relaxed max-w-[250px]">
+          </Typography.Text>
+        </Flex>
+        <Typography.Text className="text-[9px] text-muted leading-relaxed max-w-[250px]">
           By placing this order, you agree to the Terms of Service. Please do
           not close this window until the Invoice loads.
-        </p>
-      </div>
-    </div>
+        </Typography.Text>
+      </Flex>
+    </Card>
   );
 };
 

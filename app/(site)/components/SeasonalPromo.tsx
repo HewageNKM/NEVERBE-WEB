@@ -1,11 +1,10 @@
 "use client";
 
 import React from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, EffectFade } from "swiper/modules";
-import "swiper/css";
-import "swiper/css/effect-fade";
+import { Carousel, Typography } from "antd";
 import Link from "next/link";
+
+const { Text } = Typography;
 
 const SeasonalPromo = ({
   season,
@@ -14,7 +13,6 @@ const SeasonalPromo = ({
 }) => {
   if (!season) return null;
 
-  // Editorial Style Copy (Less Emojis, More Hype)
   const christmasOffers = [
     {
       text: "HOLIDAY SALE: UP TO 50% OFF SELECTED STYLES",
@@ -42,44 +40,41 @@ const SeasonalPromo = ({
 
   const offers = season === "christmas" ? christmasOffers : newYearOffers;
 
-  // Sophisticated Color Palette
   const bgClass =
-    season === "christmas"
-      ? "bg-[#900000] text-white" // Deep Crimson
-      : "bg-black text-white"; // Sleek Black for New Year
+    season === "christmas" ? "bg-[#900000] text-white" : "bg-black text-white";
 
   return (
     <div className={`w-full ${bgClass} relative z-50`}>
       <div className="max-w-content mx-auto px-4">
-        <Swiper
-          modules={[Autoplay, EffectFade]}
+        <Carousel
+          autoplay
+          dots={false}
           effect="fade"
-          fadeEffect={{ crossFade: true }}
-          spaceBetween={0}
-          centeredSlides={true}
-          autoplay={{
-            delay: 4000,
-            disableOnInteraction: false,
-          }}
-          loop={true}
-          className="h-9"
+          style={{ height: "36px" }}
         >
           {offers.map((offer, index) => (
-            <SwiperSlide
-              key={index}
-              className="flex items-center justify-center h-full"
-            >
+            <div key={index}>
               <Link
                 href={offer.link}
-                className="flex items-center justify-center h-full w-full"
+                className="flex items-center justify-center h-9 w-full text-center"
               >
-                <p className="text-[10px] md:text-xs font-black uppercase tracking-[0.2em] hover:underline hover:text-accent transition-colors cursor-pointer text-center italic">
+                <Text
+                  style={{
+                    color: "inherit",
+                    fontSize: "10px",
+                    fontWeight: 900,
+                    textTransform: "uppercase",
+                    letterSpacing: "0.2em",
+                    cursor: "pointer",
+                  }}
+                  className="hover:text-[#97e13e] transition-colors"
+                >
                   {offer.text}
-                </p>
+                </Text>
               </Link>
-            </SwiperSlide>
+            </div>
           ))}
-        </Swiper>
+        </Carousel>
       </div>
     </div>
   );

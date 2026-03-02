@@ -11,6 +11,7 @@ import {
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import useCoupon from "@/hooks/useCoupon";
 import confetti from "canvas-confetti";
+import { Button, Input } from "antd";
 
 interface CouponInputProps {
   className?: string;
@@ -105,8 +106,7 @@ const CouponInput: React.FC<CouponInputProps> = ({
       {/* Input Row */}
       <div className="flex gap-2">
         <div className="relative flex-1">
-          <input
-            type="text"
+          <Input
             value={couponState.code}
             onChange={(e) => setCode(e.target.value)}
             placeholder={isBlocked ? "Promotions locked" : "Promo Code"}
@@ -117,10 +117,10 @@ const CouponInput: React.FC<CouponInputProps> = ({
                 isBlocked
                   ? "bg-surface-3 border-transparent text-muted cursor-not-allowed"
                   : couponState.isApplied
-                  ? "bg-surface-2 border-success text-success"
-                  : couponState.messageType === "error"
-                  ? "border-error focus:border-error"
-                  : "border-border-secondary focus:border-accent"
+                    ? "bg-surface-2 border-success text-success"
+                    : couponState.messageType === "error"
+                      ? "border-error focus-within:border-error"
+                      : "border-border-secondary focus-within:border-accent"
               }
             `}
           />
@@ -134,14 +134,14 @@ const CouponInput: React.FC<CouponInputProps> = ({
 
         {/* Action Button */}
         {couponState.isApplied ? (
-          <button
+          <Button
             onClick={removeCouponFromCart}
             className="px-6 h-12 bg-surface border border-border-secondary text-primary text-base font-bold rounded-full hover:border-dark transition-all"
           >
             Remove
-          </button>
+          </Button>
         ) : (
-          <button
+          <Button
             onClick={validateCoupon}
             disabled={
               !couponState.code || couponState.isValidating || isBlocked
@@ -149,7 +149,7 @@ const CouponInput: React.FC<CouponInputProps> = ({
             className="px-8 h-12 bg-dark text-inverse text-base font-bold rounded-full hover:bg-accent hover:text-primary disabled:bg-surface-3 disabled:text-muted disabled:cursor-not-allowed transition-all shadow-md active:scale-95"
           >
             {couponState.isValidating ? "..." : "Apply"}
-          </button>
+          </Button>
         )}
       </div>
 
@@ -159,7 +159,7 @@ const CouponInput: React.FC<CouponInputProps> = ({
           <motion.div
             initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
-            className={`flex items-center gap-2 mt-3 text-base font-bold italic tracking-tight ${getMessageColor()}`}
+            className={`flex items-center gap-2 mt-3 text-base font-bold tracking-tight ${getMessageColor()}`}
           >
             {getMessageIcon()}
             <span>{couponState.message}</span>
@@ -196,7 +196,7 @@ const CouponInput: React.FC<CouponInputProps> = ({
                           animate={{
                             width: `${Math.min(
                               (condition.current / condition.required) * 100,
-                              100
+                              100,
                             )}%`,
                           }}
                           className="h-full bg-accent shadow-[0_0_8px_rgba(151,225,62,0.5)]"
@@ -222,7 +222,7 @@ const CouponInput: React.FC<CouponInputProps> = ({
           >
             <div className="flex justify-between items-center">
               <div>
-                <p className="text-base font-black text-primary uppercase italic tracking-tighter">
+                <p className="text-base font-black text-primary uppercase tracking-tighter">
                   {couponState.isApplied ? "Promo Applied" : "Code Eligible"}
                 </p>
                 <p className="text-xs text-muted font-mono mt-0.5">
@@ -230,7 +230,7 @@ const CouponInput: React.FC<CouponInputProps> = ({
                 </p>
               </div>
               <div className="text-right">
-                <p className="text-2xl font-black text-success tracking-tighter italic">
+                <p className="text-2xl font-black text-success tracking-tighter">
                   -Rs. {couponState.discount.toLocaleString()}
                 </p>
               </div>

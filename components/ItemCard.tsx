@@ -17,6 +17,10 @@ import {
   hasDiscount as checkHasDiscount,
 } from "@/utils/pricing";
 import { isVariantEligibleForPromotion } from "@/utils/promotionUtils";
+// ItemCard with Antd Fluid Design
+import { Card, Button, Typography, Badge, Tag } from "antd";
+
+const { Text, Title, Paragraph } = Typography;
 
 const ItemCard = ({
   item,
@@ -27,17 +31,15 @@ const ItemCard = ({
 }) => {
   const [outOfStocks, setOutOfStocks] = useState(false);
   const [activeVariant, setActiveVariant] = useState<ProductVariant | null>(
-    null
+    null,
   );
   const { openQuickView } = useQuickView();
   const { getPromotionForProduct } = usePromotionsContext();
 
   useEffect(() => {
-    // Check if product is out of stock using the inStock property
     if (!item.inStock) {
       setOutOfStocks(true);
     }
-    // Set default variant
     if (item.variants?.length > 0) {
       setActiveVariant(item.variants[0]);
     }
@@ -47,206 +49,232 @@ const ItemCard = ({
   const discountedPrice = calculateFinalPrice(item, activePromo);
   const hasDiscount = checkHasDiscount(item, activePromo);
 
-  // Get the current display image - either from active variant or product thumbnail
   const displayImage = activeVariant?.images?.[0]?.url || item.thumbnail.url;
 
-  // Helper to check if a variant has a promotion indicator
   const getVariantPromotion = (variantId: string) => {
     const promo = getPromotionForProduct(item.id, variantId);
     if (!promo) return null;
 
-    // Check variant eligibility using both applicableProductVariants and conditions
     const isEligible = isVariantEligibleForPromotion(
       item.id,
       variantId,
       promo.applicableProductVariants as ProductVariantTarget[] | undefined,
-      promo.conditions as PromotionCondition[] | undefined
+      promo.conditions as PromotionCondition[] | undefined,
     );
-
     return isEligible ? promo : null;
   };
 
   return (
-    <article className="group relative flex flex-col w-full bg-surface transition-transform duration-500 hover:-translate-y-1">
-      {/* IMAGE CONTAINER */}
-      <div className="relative aspect-4/5 w-full overflow-hidden bg-surface-2">
-        <Link
-          href={`/collections/products/${item?.id}`}
-          className="cursor-pointer block h-full w-full"
-        >
-          <Image
-            width={600}
-            height={750}
-            src={displayImage}
-            alt={item.name}
-            className={`h-full w-full object-cover transition-all duration-700 group-hover:scale-105 ${
-              outOfStocks ? "opacity-60 grayscale" : "group-hover:opacity-95"
-            }`}
-            priority={priority}
-          />
-        </Link>
+    <Badge.Ribbon
+      text={
+        outOfStocks
+          ? "Sold Out"
+          : activePromo
+            ? activePromo.type === "BOGO"
+              ? "Buy 1 Get 1"
+              : "Special Offer"
+            : item.discount > 0
+              ? `${item.discount}% Off`
+              : "Just In"
+      }
+      color={outOfStocks ? "#000" : "#97e13e"}
+      style={{
+        padding: "0 16px",
+        fontWeight: 800,
+        textTransform: "uppercase",
+        color: outOfStocks ? "#fff" : "#000",
+        letterSpacing: "0.05em",
+      }}
+    >
+      <Card
+        hoverable
+        className="group"
+        style={{
+          borderRadius: 24,
+          overflow: "hidden",
+          border: "1px solid #e0e8d8",
+          transition: "all 0.3s ease",
+        }}
+        styles={{
+          body: { padding: "16px" },
+          cover: { position: "relative" },
+        }}
+        cover={
+          <div className="relative aspect-4/5 w-full overflow-hidden bg-surface-3 rounded-t-[24px]">
+            <Link
+              href={`/collections/products/${item?.id}`}
+              className="block h-full w-full"
+            >
+              <Image
+                width={600}
+                height={750}
+                src={displayImage}
+                alt={item.name}
+                className={`h-full w-full object-cover transition-transform duration-700 group-hover:scale-105 ${
+                  outOfStocks ? "opacity-60 grayscale" : ""
+                }`}
+                priority={priority}
+              />
+            </Link>
 
-        {/* --- BADGES: Solid Backgrounds for Readability --- */}
-        <div className="absolute top-3 left-3 flex flex-col gap-1.5 items-start">
-          {activePromo ? (
-            // Promo Badge: Vibrant Green Background, Dark Text, Performance Font
-            <span className="bg-accent text-primary px-3 py-1.5 text-xs font-display font-black uppercase italic tracking-tighter shadow-sm">
-              {activePromo.type === "BOGO" ? "Buy 1 Get 1" : "Special Offer"}
-            </span>
-          ) : item.discount > 0 ? (
-            // Discount Badge: Vibrant Green Background
-            <span className="bg-accent text-primary px-3 py-1.5 text-xs font-display font-black uppercase italic tracking-tighter shadow-sm">
-              {item.discount}% Off
-            </span>
-          ) : !outOfStocks ? (
-            // "Just In" Badge: Clean Surface Background
-            <span className="bg-surface text-primary px-3 py-1.5 text-xs font-bold uppercase tracking-widest shadow-sm border border-default">
-              Just In
-            </span>
-          ) : null}
-        </div>
+            {!outOfStocks && (
+              <div className="absolute bottom-4 left-4 right-4 translate-y-[150%] group-hover:translate-y-0 transition-transform duration-300 z-10 hidden lg:block">
+                <Button
+                  block
+                  shape="round"
+                  size="large"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    openQuickView(item);
+                  }}
+                  style={{
+                    backgroundColor: "rgba(255, 255, 255, 0.95)",
+                    backdropFilter: "blur(8px)",
+                    fontWeight: 800,
+                    textTransform: "uppercase",
+                    letterSpacing: "0.1em",
+                    border: "1px solid #e0e8d8",
+                  }}
+                  className="hover:!text-[#97e13e] hover:!border-[#97e13e]"
+                >
+                  Quick Look
+                </Button>
+              </div>
+            )}
 
-        {/* Sold Out Overlay - Darker and Themed */}
-        {outOfStocks && (
-          <div className="absolute inset-0 bg-dark/50 flex items-center justify-center backdrop-blur-[1px]">
-            <span className="bg-surface-2 px-5 py-2 text-sm font-display font-black uppercase italic tracking-widest text-accent shadow-custom border border-accent">
-              Sold Out
-            </span>
+            {!outOfStocks && (
+              <Button
+                shape="circle"
+                icon={<IoEyeOutline size={20} />}
+                onClick={(e) => {
+                  e.preventDefault();
+                  openQuickView(item);
+                }}
+                className="absolute bottom-3 right-3 lg:hidden z-10 shadow-md"
+                style={{
+                  backgroundColor: "rgba(255, 255, 255, 0.95)",
+                  backdropFilter: "blur(8px)",
+                  border: "none",
+                }}
+              />
+            )}
           </div>
-        )}
-
-        {/* Quick View - Desktop Slide-up (Hover changes to Green) */}
-        {!outOfStocks && (
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              openQuickView(item);
-            }}
-            className="absolute bottom-0 left-0 w-full bg-surface/95 backdrop-blur-sm py-4 text-sm font-bold uppercase tracking-widest text-primary transition-all translate-y-full group-hover:translate-y-0 duration-300 hidden lg:block border-t border-default hover:bg-accent hover:border-accent hover:text-dark z-10"
-          >
-            Quick Look
-          </button>
-        )}
-
-        {/* Quick View - Mobile Icon (Green glow shadow) */}
-        {!outOfStocks && (
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              openQuickView(item);
-            }}
-            className="absolute bottom-3 right-3 lg:hidden w-10 h-10 bg-surface rounded-full shadow-custom flex items-center justify-center text-primary active:scale-90 transition-all hover:text-accent z-10"
-          >
-            <IoEyeOutline size={20} />
-          </button>
-        )}
-      </div>
-
-      {/* DETAILS AREA */}
-      <div className="flex flex-col pt-4 pb-6 px-1">
+        }
+      >
         <Link href={`/collections/products/${item?.id}`}>
-          <div className="flex flex-col gap-1">
-            {/* Title using Display Font */}
-            <h3 className="text-base font-display font-bold text-primary leading-tight tracking-tight line-clamp-2 group-hover:text-accent transition-colors">
+          <div className="flex flex-col gap-1 mb-3">
+            <Title
+              level={5}
+              style={{
+                margin: 0,
+                fontWeight: 800,
+                letterSpacing: "-0.02em",
+              }}
+              className="group-hover:text-accent transition-colors line-clamp-2"
+            >
               {item.name}
-            </h3>
-            <p className="text-sm text-muted font-medium leading-relaxed capitalize">
+            </Title>
+            <Text
+              type="secondary"
+              style={{ textTransform: "capitalize", fontWeight: 600 }}
+            >
               {item.category?.replace("-", " ") || "Premium Gear"}
-            </p>
+            </Text>
           </div>
         </Link>
 
-        {/* Color Swatches - Interactive with Promotion Indicators */}
         {item.variants?.length > 1 && (
-          <div className="flex items-center gap-1.5 mt-3">
+          <div className="flex items-center gap-2 mb-3">
             {item.variants.slice(0, 5).map((variant) => {
-              // Check if this specific variant is eligible for a promotion
               const variantPromo = getVariantPromotion(variant.variantId);
               return (
-                <button
+                <div
                   key={variant.variantId}
+                  className="relative cursor-pointer"
                   onClick={(e) => {
                     e.preventDefault();
                     setActiveVariant(variant);
                   }}
                   onMouseEnter={() => setActiveVariant(variant)}
-                  className={`relative w-7 h-7 rounded-full overflow-hidden border-2 transition-all duration-200 ${
-                    activeVariant?.variantId === variant.variantId
-                      ? "border-accent scale-110 shadow-custom"
-                      : "border-default hover:border-primary opacity-70 hover:opacity-100"
-                  }`}
-                  title={
-                    variantPromo
-                      ? `${variant.variantName} - ${
-                          variantPromo.name || "Promo"
-                        }`
-                      : variant.variantName
-                  }
                 >
-                  <Image
-                    src={variant.images?.[0]?.url || item.thumbnail.url}
-                    alt={variant.variantName}
-                    fill
-                    className="object-cover"
-                  />
-                  {/* Promotion indicator dot */}
+                  <div
+                    className={`w-8 h-8 rounded-full overflow-hidden border-2 transition-all duration-200 ${
+                      activeVariant?.variantId === variant.variantId
+                        ? "border-[#97e13e] shadow-sm transform scale-110 relative z-10"
+                        : "border-transparent opacity-70 hover:opacity-100"
+                    }`}
+                  >
+                    <Image
+                      src={variant.images?.[0]?.url || item.thumbnail.url}
+                      alt={variant.variantName}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
                   {variantPromo && (
-                    <span className="absolute -top-0.5 -right-0.5 w-3 h-3 bg-accent rounded-full border border-surface flex items-center justify-center">
-                      <span className="text-[6px] font-black text-dark">%</span>
-                    </span>
+                    <div className="absolute -top-1 -right-1 z-20 w-3.5 h-3.5 bg-[#97e13e] rounded-full border border-white flex items-center justify-center shadow-sm">
+                      <span className="text-[7px] font-black text-black">
+                        %
+                      </span>
+                    </div>
                   )}
-                </button>
+                </div>
               );
             })}
             {item.variants.length > 5 && (
-              <span className="text-[10px] text-muted font-medium ml-1">
+              <Text type="secondary" style={{ fontSize: 11, fontWeight: 700 }}>
                 +{item.variants.length - 5}
-              </span>
+              </Text>
             )}
           </div>
         )}
 
         <Link href={`/collections/products/${item?.id}`}>
-          <div className="mt-3 flex flex-col gap-1.5">
-            <div className="flex items-baseline gap-2 flex-wrap">
-              {/* Price - Using text-success for discounts instead of error red */}
-              <span
-                className={`text-md font-black ${
-                  hasDiscount
-                    ? "text-success italic tracking-tight"
-                    : "text-primary"
-                }`}
-              >
-                Rs. {discountedPrice.toLocaleString()}
-              </span>
-              {hasDiscount && (
-                <span className="text-muted text-xs line-through decoration-1">
-                  Rs.{" "}
-                  {item.marketPrice > item.sellingPrice
-                    ? item.marketPrice.toLocaleString()
-                    : item.sellingPrice.toLocaleString()}
-                </span>
-              )}
-            </div>
+          <div className="flex items-baseline gap-2 flex-wrap mb-1 text-base">
+            <Text
+              strong
+              style={{
+                color: hasDiscount ? "#97e13e" : "inherit",
+                fontSize: "1.1rem",
+                letterSpacing: "-0.03em",
+              }}
+            >
+              Rs. {discountedPrice.toLocaleString()}
+            </Text>
+            {hasDiscount && (
+              <Text delete type="secondary" style={{ fontSize: "0.85rem" }}>
+                Rs.{" "}
+                {item.marketPrice > item.sellingPrice
+                  ? item.marketPrice.toLocaleString()
+                  : item.sellingPrice.toLocaleString()}
+              </Text>
+            )}
+          </div>
 
-            {/* KOKO Installments */}
-            <div className="flex items-center gap-2 mt-0.5">
-              <span className="text-[11px] text-muted font-medium uppercase tracking-wider">
-                3 x Installments with
-              </span>
-              <div className="w-9 h-4 relative grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all">
-                <Image
-                  src={KOKOLogo}
-                  alt="KOKO"
-                  fill
-                  className="object-contain"
-                />
-              </div>
+          <div className="flex items-center gap-2 mt-2">
+            <Text
+              type="secondary"
+              style={{
+                fontSize: "10px",
+                textTransform: "uppercase",
+                fontWeight: 700,
+                letterSpacing: "0.05em",
+              }}
+            >
+              3 x Installments with
+            </Text>
+            <div className="w-10 h-4 relative grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all">
+              <Image
+                src={KOKOLogo}
+                alt="KOKO"
+                fill
+                className="object-contain"
+              />
             </div>
           </div>
         </Link>
-      </div>
-    </article>
+      </Card>
+    </Badge.Ribbon>
   );
 };
 

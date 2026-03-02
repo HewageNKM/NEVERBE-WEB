@@ -62,12 +62,13 @@ const CombosPage = async ({
   let totalPages = 0;
 
   try {
-    const data = await getPaginatedCombos(page, pageSize);
-    combos = data.combos;
-    total = data.total;
-    totalPages = data.totalPages;
+    const data = await getPaginatedCombos({ page, pageSize });
+    combos = data.combos || data.dataList || [];
+    total = data.total || 0;
+    totalPages = data.totalPages || Math.ceil(total / pageSize);
   } catch (e) {
     console.error("Error fetching combos:", e);
+    combos = [];
   }
 
   /* Structured Data with BreadcrumbList for SEO */
@@ -135,7 +136,7 @@ const CombosPage = async ({
 
       {/* NEVERBE Performance Header */}
       <div className="w-full max-w-content mx-auto px-4 md:px-12 py-12 md:py-20 text-left">
-        <h1 className="text-3xl md:text-5xl font-display font-black uppercase italic tracking-tighter text-primary leading-none mb-4">
+        <h1 className="text-3xl md:text-5xl font-display font-black uppercase tracking-tighter text-primary leading-none mb-4">
           Bundle Deals
         </h1>
         <p className="text-muted max-w-xl text-sm md:text-base font-medium uppercase tracking-wide">

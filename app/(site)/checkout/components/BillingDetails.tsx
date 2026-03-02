@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { Customer } from "@/interfaces";
-import { Form, Input, Checkbox } from "antd";
+import { Form, Input, Checkbox, Row, Col, Typography } from "antd";
 
 interface BillingDetailsProps {
   saveAddress: boolean;
@@ -16,12 +16,16 @@ const BillingDetails: React.FC<BillingDetailsProps> = ({
 }) => {
   return (
     <section className="flex flex-col items-start w-full">
-      <h2 className="text-xl font-display font-black uppercase italic tracking-tighter mb-6 text-primary">
+      <Typography.Title
+        level={4}
+        className="uppercase tracking-tighter mb-6 text-primary"
+        style={{ margin: 0, fontWeight: 900 }}
+      >
         Billing Address
-      </h2>
+      </Typography.Title>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-0 w-full">
-        <div>
+      <Row gutter={[16, 0]} className="w-full">
+        <Col xs={24} md={12}>
           <Form.Item
             name="first_name"
             label={
@@ -39,9 +43,9 @@ const BillingDetails: React.FC<BillingDetailsProps> = ({
               className="px-4 bg-surface-2 border-default rounded-xl hover:border-accent focus:border-accent text-sm font-bold text-primary"
             />
           </Form.Item>
-        </div>
+        </Col>
 
-        <div>
+        <Col xs={24} md={12}>
           <Form.Item
             name="last_name"
             label={
@@ -59,9 +63,9 @@ const BillingDetails: React.FC<BillingDetailsProps> = ({
               className="px-4 bg-surface-2 border-default rounded-xl hover:border-accent focus:border-accent text-sm font-bold text-primary"
             />
           </Form.Item>
-        </div>
+        </Col>
 
-        <div className="md:col-span-2">
+        <Col span={24}>
           <Form.Item
             name="address"
             label={
@@ -77,9 +81,9 @@ const BillingDetails: React.FC<BillingDetailsProps> = ({
               className="px-4 bg-surface-2 border-default rounded-xl hover:border-accent focus:border-accent text-sm font-bold text-primary"
             />
           </Form.Item>
-        </div>
+        </Col>
 
-        <div>
+        <Col xs={24} md={12}>
           <Form.Item
             name="city"
             label={
@@ -95,9 +99,9 @@ const BillingDetails: React.FC<BillingDetailsProps> = ({
               className="px-4 bg-surface-2 border-default rounded-xl hover:border-accent focus:border-accent text-sm font-bold text-primary"
             />
           </Form.Item>
-        </div>
+        </Col>
 
-        <div>
+        <Col xs={24} md={12}>
           <Form.Item
             name="zip"
             label={
@@ -112,9 +116,9 @@ const BillingDetails: React.FC<BillingDetailsProps> = ({
               className="px-4 bg-surface-2 border-default rounded-xl hover:border-accent focus:border-accent text-sm font-bold text-primary"
             />
           </Form.Item>
-        </div>
+        </Col>
 
-        <div>
+        <Col xs={24} md={12}>
           <Form.Item
             name="email"
             label={
@@ -133,9 +137,9 @@ const BillingDetails: React.FC<BillingDetailsProps> = ({
               className="px-4 bg-surface-2 border-default rounded-xl hover:border-accent focus:border-accent text-sm font-bold text-primary"
             />
           </Form.Item>
-        </div>
+        </Col>
 
-        <div>
+        <Col xs={24} md={12}>
           <Form.Item
             name="phone"
             label={
@@ -158,9 +162,9 @@ const BillingDetails: React.FC<BillingDetailsProps> = ({
               className="px-4 bg-surface-2 border-default rounded-xl hover:border-accent focus:border-accent text-sm font-bold text-primary"
             />
           </Form.Item>
-        </div>
+        </Col>
 
-        <div className="md:col-span-2">
+        <Col span={24}>
           <Form.Item
             name="country"
             label={
@@ -176,8 +180,8 @@ const BillingDetails: React.FC<BillingDetailsProps> = ({
               className="px-4 bg-surface-3 border-default rounded-xl text-muted font-bold cursor-not-allowed"
             />
           </Form.Item>
-        </div>
-      </div>
+        </Col>
+      </Row>
 
       <div className="flex items-center gap-3 mt-2">
         <Checkbox

@@ -36,7 +36,7 @@ const StockBadge: React.FC<StockBadgeProps> = ({
         <div className="absolute inset-0 bg-accent/40 rounded-full blur-md animate-ping" />
       </div>
 
-      <span className="text-xs font-display font-black uppercase italic tracking-tighter">
+      <span className="text-xs font-display font-black uppercase tracking-tighter">
         Critical: Only {stockCount} {stockCount === 1 ? "Unit" : "Units"} Left
       </span>
     </div>

@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { Customer } from "@/interfaces";
-import { Form, Input, Checkbox } from "antd";
+import { Form, Input, Checkbox, Row, Col, Typography, Flex } from "antd";
 
 const ShippingDetails = ({
   shippingSameAsBilling,
@@ -25,27 +25,35 @@ const ShippingDetails = ({
 
   return (
     <section className="w-full">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-display font-black uppercase italic tracking-tighter text-primary">
+      <Flex align="center" justify="space-between" className="mb-6">
+        <Typography.Title
+          level={4}
+          className="uppercase tracking-tighter"
+          style={{ margin: 0, fontWeight: 900 }}
+        >
           Shipping
-        </h2>
-      </div>
+        </Typography.Title>
+      </Flex>
 
-      <div className="flex items-center gap-3 mb-6 p-4 bg-surface-2 border border-default rounded-xl">
+      <Flex
+        align="center"
+        gap={12}
+        className="mb-6 p-4 bg-surface-2 border border-default rounded-xl"
+      >
         <Checkbox
           id="sameAddress"
           checked={shippingSameAsBilling}
           onChange={(e) => setShippingSameAsBilling(!shippingSameAsBilling)}
         >
-          <span className="text-sm font-bold uppercase tracking-wide text-secondary">
+          <span className="text-sm font-bold uppercase tracking-wide text-secondary font-display">
             Same as billing address
           </span>
         </Checkbox>
-      </div>
+      </Flex>
 
       {!shippingSameAsBilling && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-0 w-full animate-fadeIn">
-          <div>
+        <Row gutter={[16, 0]} className="w-full animate-fadeIn">
+          <Col xs={24} md={12}>
             <Form.Item
               name="shippingName"
               label={
@@ -63,9 +71,9 @@ const ShippingDetails = ({
                 className="px-4 bg-surface-2 border-default rounded-xl hover:border-accent focus:border-accent text-sm font-bold text-primary"
               />
             </Form.Item>
-          </div>
+          </Col>
 
-          <div>
+          <Col xs={24} md={12}>
             <Form.Item
               name="shippingPhone"
               label={
@@ -86,9 +94,9 @@ const ShippingDetails = ({
                 className="px-4 bg-surface-2 border-default rounded-xl hover:border-accent focus:border-accent text-sm font-bold text-primary"
               />
             </Form.Item>
-          </div>
+          </Col>
 
-          <div className="md:col-span-2">
+          <Col span={24}>
             <Form.Item
               name="shippingAddress"
               label={
@@ -106,9 +114,9 @@ const ShippingDetails = ({
                 className="px-4 bg-surface-2 border-default rounded-xl hover:border-accent focus:border-accent text-sm font-bold text-primary"
               />
             </Form.Item>
-          </div>
+          </Col>
 
-          <div>
+          <Col xs={24} md={12}>
             <Form.Item
               name="shippingCity"
               label={
@@ -126,9 +134,9 @@ const ShippingDetails = ({
                 className="px-4 bg-surface-2 border-default rounded-xl hover:border-accent focus:border-accent text-sm font-bold text-primary"
               />
             </Form.Item>
-          </div>
+          </Col>
 
-          <div>
+          <Col xs={24} md={12}>
             <Form.Item
               name="shippingZip"
               label={
@@ -143,8 +151,8 @@ const ShippingDetails = ({
                 className="px-4 bg-surface-2 border-default rounded-xl hover:border-accent focus:border-accent text-sm font-bold text-primary"
               />
             </Form.Item>
-          </div>
-        </div>
+          </Col>
+        </Row>
       )}
     </section>
   );

@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
-import { Form, Input, Button } from "antd";
+import { FirebaseError } from "firebase/app";
+import { Form, Input, ConfigProvider, Button } from "antd";
 import {
   signInWithEmailAndPassword,
   GoogleAuthProvider,
@@ -112,25 +113,26 @@ const AuthPage = () => {
           </div>
 
           <div className="flex justify-end pr-2">
-            <button
-              type="button"
-              className="text-[11px] font-bold uppercase tracking-widest text-muted hover:text-primary transition-colors mt-2"
+            <Button
+              type="link"
+              className="text-[11px] font-bold uppercase tracking-widest text-muted hover:text-primary transition-colors mt-2 p-0 h-auto"
             >
               Forgot Password?
-            </button>
+            </Button>
           </div>
 
-          <button
-            type="submit"
+          <Button
+            type="primary"
+            htmlType="submit"
             disabled={loading}
-            className="group w-full bg-dark text-inverse py-4 rounded-full font-display font-black uppercase tracking-widest text-xs flex items-center justify-center gap-3 transition-all hover:bg-accent hover:text-dark active:scale-[0.98] disabled:opacity-50 mt-4"
+            className="group w-full h-auto bg-dark text-inverse py-4 rounded-full font-display font-black uppercase tracking-widest text-xs flex items-center justify-center gap-3 transition-all hover:bg-accent hover:text-dark active:scale-[0.98] disabled:opacity-50 mt-4 border-none"
           >
             {loading ? "Signing In..." : "Log In"}
             <IoArrowForward
               size={18}
               className="group-hover:translate-x-1 transition-transform"
             />
-          </button>
+          </Button>
         </Form>
 
         {/* Divider */}

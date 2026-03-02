@@ -12,6 +12,7 @@ import {
   isPromotionDateValid,
   checkVariantEligibility,
 } from "@/utils/promotionUtils";
+import axiosInstance from "@/services/axiosInstance";
 
 // Active promotion for context consumers
 export interface ActivePromotion extends Partial<Promotion> {
@@ -29,7 +30,7 @@ interface PromotionsContextType {
   isLoading: boolean;
   getPromotionForProduct: (
     productId: string,
-    variantId?: string
+    variantId?: string,
   ) => ActivePromotion | null;
 }
 
@@ -53,9 +54,9 @@ export const PromotionsProvider = ({
   useEffect(() => {
     const fetchPromotions = async () => {
       try {
-        const res = await fetch("/api/v1/promotions");
-        if (res.ok) {
-          const data = await res.json();
+        const res = await axiosInstance.get("/promotions");
+        if (res.data) {
+          const data = res.data;
           setPromotions(data || []);
         }
       } catch (error) {
@@ -89,7 +90,7 @@ export const PromotionsProvider = ({
           ];
           const variantMatch = checkVariantEligibility(
             mockCartItem,
-            promo.applicableProductVariants as ProductVariantTarget[]
+            promo.applicableProductVariants as ProductVariantTarget[],
           );
           if (!variantMatch) return false;
           return true;
@@ -105,7 +106,7 @@ export const PromotionsProvider = ({
           const hasSpecificProduct = promo.conditions.some(
             (c: any) =>
               c.type === "SPECIFIC_PRODUCT" &&
-              (c.value === productId || c.productIds?.includes(productId))
+              (c.value === productId || c.productIds?.includes(productId)),
           );
           if (hasSpecificProduct) return true;
         }
@@ -116,11 +117,11 @@ export const PromotionsProvider = ({
       // Return highest priority match
       return (
         matches.sort(
-          (a: any, b: any) => (b.priority || 0) - (a.priority || 0)
+          (a: any, b: any) => (b.priority || 0) - (a.priority || 0),
         )[0] || null
       );
     },
-    [promotions]
+    [promotions],
   );
 
   return (

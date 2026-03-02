@@ -1,9 +1,13 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api/v1/web";
+import axiosInstance from "./axiosInstance";
 
 export const getBrands = async () => {
-  const res = await fetch(`${API_URL}/brands/dropdown`, { next: { revalidate: 60 } });
-  if (!res.ok) return [];
-  const data = await res.json();
-  // Map dropdown format to full array if needed, assuming the API returns array
-  return data.data || data;
+  try {
+    const res = await axiosInstance.get("/brands/dropdown");
+    const data = res.data;
+    // Map dropdown format to full array if needed, assuming the API returns array
+    return data.data || data;
+  } catch (error) {
+    console.error("Failed to fetch brands:", error);
+    return [];
+  }
 };

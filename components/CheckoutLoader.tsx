@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import { Flex, Spin, Typography } from "antd";
 
 /**
  * CheckoutLoader - Full-page Liquid Glass Loader
@@ -7,7 +8,12 @@ import React from "react";
  */
 const CheckoutLoader = () => {
   return (
-    <div className="fixed inset-0 z-300 flex flex-col items-center justify-center overflow-hidden">
+    <Flex
+      vertical
+      align="center"
+      justify="center"
+      className="fixed inset-0 z-300 overflow-hidden"
+    >
       {/* Liquid Glass Background */}
       <div
         className="absolute inset-0 backdrop-blur-2xl"
@@ -25,53 +31,47 @@ const CheckoutLoader = () => {
       />
 
       {/* Content */}
-      <div className="relative z-10 flex flex-col items-center">
-        {/* Cart Icon */}
-        <div className="w-16 h-16 rounded-full bg-accent/10 flex items-center justify-center mb-8">
-          <svg
-            className="w-8 h-8 text-accent"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+      <Flex vertical align="center" gap={40} className="relative z-10">
+        <Flex vertical align="center" gap={16}>
+          {/* Branded Spin */}
+          <div className="relative">
+            <Spin
+              size="large"
+              indicator={
+                <div className="flex gap-2">
+                  <div className="w-3 h-3 rounded-full bg-accent animate-bounce" />
+                  <div
+                    className="w-3 h-3 rounded-full bg-accent animate-bounce"
+                    style={{ animationDelay: "150ms" }}
+                  />
+                  <div
+                    className="w-3 h-3 rounded-full bg-accent animate-bounce"
+                    style={{ animationDelay: "300ms" }}
+                  />
+                </div>
+              }
             />
-          </svg>
-        </div>
+          </div>
 
-        {/* Processing Message */}
-        <h2 className="text-lg font-display font-black uppercase tracking-widest text-primary mb-2">
-          Processing Order
-        </h2>
+          <Flex vertical align="center" gap={4}>
+            <Typography.Title
+              level={4}
+              className="uppercase tracking-widest text-primary m-0"
+              style={{ margin: 0, fontWeight: 900, fontSize: "1.125rem" }}
+            >
+              Processing Order
+            </Typography.Title>
+            <Typography.Text type="secondary" className="text-xs font-medium">
+              Please wait while we secure your order
+            </Typography.Text>
+          </Flex>
+        </Flex>
 
-        <p className="text-xs text-muted text-center mb-8">
-          Please wait while we secure your order
-        </p>
-
-        {/* 3-Dot Animation */}
-        <div className="flex gap-3">
-          <div
-            className="w-4 h-4 rounded-full bg-accent animate-bounce"
-            style={{ animationDelay: "0ms" }}
-          />
-          <div
-            className="w-4 h-4 rounded-full bg-accent animate-bounce"
-            style={{ animationDelay: "150ms" }}
-          />
-          <div
-            className="w-4 h-4 rounded-full bg-accent animate-bounce"
-            style={{ animationDelay: "300ms" }}
-          />
-        </div>
-
-        {/* Bottom Warning */}
-        <p className="mt-10 text-xs text-muted">Do not close this page</p>
-      </div>
-    </div>
+        <Typography.Text className="text-[10px] uppercase font-black tracking-widest text-[#97e13e]/60 animate-pulse">
+          Do not close this page
+        </Typography.Text>
+      </Flex>
+    </Flex>
   );
 };
 

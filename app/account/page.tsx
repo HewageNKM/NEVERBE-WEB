@@ -23,6 +23,7 @@ import {
   IoPersonCircleOutline,
 } from "react-icons/io5";
 import { motion } from "framer-motion";
+import axiosInstance from "@/services/axiosInstance";
 
 const Account = () => {
   const router = useRouter();
@@ -39,7 +40,7 @@ const Account = () => {
         try {
           const ordersQuery = query(
             collection(db, "orders"),
-            where("userId", "==", user.uid)
+            where("userId", "==", user.uid),
           );
           const ordersSnapshot = await getDocs(ordersQuery);
           const ordersData = ordersSnapshot.docs.map((doc) => ({
@@ -49,11 +50,11 @@ const Account = () => {
           setOrders(ordersData);
 
           const token = await auth.currentUser?.getIdToken();
-          const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/customers/addresses`, {
+          const res = await axiosInstance.get("/customers/addresses", {
             headers: { Authorization: `Bearer ${token}` },
           });
-          if (res.ok) {
-            const data = await res.json();
+          if (res.data) {
+            const data = res.data;
             setAddresses(data);
           }
         } catch (error) {

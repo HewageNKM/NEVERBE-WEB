@@ -8,6 +8,7 @@ import {
   IoTimeOutline,
   IoChevronForward,
 } from "react-icons/io5";
+import { Button } from "antd";
 
 interface UserProfile {
   name?: string;
@@ -75,13 +76,14 @@ const ProfileOverview: React.FC<ProfileOverviewProps> = ({
             </p>
           </div>
 
-          <button
+          <Button
+            type="primary"
             onClick={() => setActiveTab("orders")}
-            className="group relative z-10 self-start flex items-center gap-2 bg-dark text-inverse px-6 py-3 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-accent hover:text-dark transition-all"
+            className="group relative z-10 self-start flex items-center gap-2 bg-dark text-inverse px-6 py-3 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-accent hover:text-dark transition-all border-none h-auto"
           >
             View Orders ({ordersCount})
             <IoChevronForward className="group-hover:translate-x-1 transition-transform" />
-          </button>
+          </Button>
         </motion.div>
 
         {/* Settings Tile */}
@@ -105,13 +107,14 @@ const ProfileOverview: React.FC<ProfileOverviewProps> = ({
             </p>
           </div>
 
-          <button
+          <Button
+            type="primary"
             onClick={() => setActiveTab("details")}
-            className="group relative z-10 self-start flex items-center gap-2 bg-dark text-inverse px-6 py-3 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-accent hover:text-dark transition-all"
+            className="group relative z-10 self-start flex items-center gap-2 bg-dark text-inverse px-6 py-3 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-accent hover:text-dark transition-all border-none h-auto"
           >
             Manage Settings
             <IoChevronForward className="group-hover:translate-x-1 transition-transform" />
-          </button>
+          </Button>
         </motion.div>
       </div>
     </div>

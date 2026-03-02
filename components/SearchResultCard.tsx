@@ -36,7 +36,7 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({
     isPromo?: boolean;
   }) => (
     <span
-      className={`absolute top-2 left-2 px-2 py-1 text-[9px] font-display font-black uppercase italic tracking-tighter shadow-custom z-10 ${
+      className={`absolute top-2 left-2 px-2 py-1 text-[9px] font-display font-black uppercase tracking-tighter shadow-custom z-10 ${
         isPromo ? "bg-accent text-dark" : "bg-dark text-inverse"
       }`}
     >
@@ -84,7 +84,7 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({
 
           <div className="mt-auto pt-3 flex items-baseline gap-2 flex-wrap">
             <span
-              className={`text-md font-black italic tracking-tighter ${
+              className={`text-md font-black tracking-tighter ${
                 hasDiscount ? "text-success" : "text-primary"
               }`}
             >
@@ -122,11 +122,11 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({
 
       <div className="flex-1 min-w-0">
         <div className="flex justify-between items-start gap-2">
-          <h2 className="text-base font-display font-black uppercase italic tracking-tighter text-primary leading-tight truncate group-hover:text-accent transition-colors">
+          <h2 className="text-base font-display font-black uppercase tracking-tighter text-primary leading-tight truncate group-hover:text-accent transition-colors">
             {item.name}
           </h2>
           {activePromo && (
-            <span className="shrink-0 bg-accent text-dark text-[8px] font-black italic px-1.5 py-0.5 shadow-sm">
+            <span className="shrink-0 bg-accent text-dark text-[8px] font-black px-1.5 py-0.5 shadow-sm">
               PROMO
             </span>
           )}
@@ -138,7 +138,7 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({
 
         <div className="flex items-center gap-3 mt-2">
           <span
-            className={`text-base font-black italic tracking-tighter ${
+            className={`text-base font-black tracking-tighter ${
               hasDiscount ? "text-success" : "text-primary"
             }`}
           >

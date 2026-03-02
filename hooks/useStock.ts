@@ -1,5 +1,6 @@
 "use client";
 import { useState, useCallback } from "react";
+import axiosInstance from "@/services/axiosInstance";
 
 interface UseStockOptions {
   onError?: (error: Error) => void;
@@ -11,7 +12,7 @@ interface UseStockReturn {
   fetchStock: (
     productId: string,
     variantId: string,
-    sizes: string[]
+    sizes: string[],
   ) => Promise<void>;
   clearStock: () => void;
 }
@@ -34,12 +35,12 @@ export function useStock(options: UseStockOptions = {}): UseStockReturn {
 
       setStockLoading(true);
       try {
-        const res = await fetch(
-          `/api/v1/inventory/batch?productId=${productId}&variantId=${variantId}&sizes=${sizes.join(
-            ","
-          )}`
+        const res = await axiosInstance.get(
+          `/inventory/batch?productId=${productId}&variantId=${variantId}&sizes=${sizes.join(
+            ",",
+          )}`,
         );
-        const data = await res.json();
+        const data = res.data;
         setSizeStock(data.stock || {});
       } catch (error) {
         if (onError) {
@@ -52,7 +53,7 @@ export function useStock(options: UseStockOptions = {}): UseStockReturn {
         setStockLoading(false);
       }
     },
-    [onError]
+    [onError],
   );
 
   const clearStock = useCallback(() => {

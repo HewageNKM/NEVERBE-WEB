@@ -16,8 +16,9 @@ import {
 import { AnimatePresence } from "framer-motion";
 import { Product } from "@/interfaces/Product";
 import CollectionPopUpFilter from "./CollectionPopUpFilter";
-import { sortProductsByPrice } from "@/utils/formatting";
 import SortDropdown from "@/components/SortDropdown";
+import axiosInstance from "@/services/axiosInstance";
+import { sortProductsByPrice } from "@/utils/formatting";
 
 // Mapping for dynamic endpoint construction
 interface CollectionProductsProps {
@@ -77,13 +78,13 @@ const CollectionProducts = ({
           params.append("sizes", selectedSizes.join(","));
         }
 
-        let endpoint = `${process.env.NEXT_PUBLIC_API_URL}/products`;
+        let endpoint = "/products";
 
         if (collectionType === "category" && categoryName) {
-          endpoint = `${process.env.NEXT_PUBLIC_API_URL}/products/categories/${categoryName}`;
+          endpoint = `/products/categories/${categoryName}`;
         } else if (collectionType === "brand" && brandName) {
           // Need brand endpoint
-          endpoint = `${process.env.NEXT_PUBLIC_API_URL}/products`; // Fallback or assume query param
+          endpoint = "/products"; // Fallback or assume query param
         } else {
           // Men, Women, New Arrivals use general product endpoint with tags
           if (tagName) params.append("tag", tagName);
@@ -91,13 +92,13 @@ const CollectionProducts = ({
           // New Arrivals might just be latest, so no tag needed unless filtering
         }
 
-        const res = await fetch(`${endpoint}?${params}`);
-        const data = await res.json();
+        const res = await axiosInstance.get(`${endpoint}?${params}`);
+        const data = res.data;
 
         // Use shared sorting utility
         const sorted = sortProductsByPrice(
           (data.dataList || []) as Product[],
-          selectedSort
+          selectedSort,
         );
 
         setProducts(sorted);

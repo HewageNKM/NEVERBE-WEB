@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { IoBagAdd, IoAddOutline, IoRemoveOutline } from "react-icons/io5";
+import { Button } from "antd";
 
 interface FloatingAddToBagProps {
   productName: string;
@@ -58,7 +59,7 @@ const FloatingAddToBag: React.FC<FloatingAddToBagProps> = ({
                 {productName}
               </p>
               <div className="flex items-center gap-2">
-                <p className="text-md font-display font-black italic text-accent tracking-tighter">
+                <p className="text-md font-display font-black text-accent tracking-tighter">
                   Rs. {price.toLocaleString()}
                 </p>
                 {selectedSize && (
@@ -72,46 +73,49 @@ const FloatingAddToBag: React.FC<FloatingAddToBagProps> = ({
             {/* Quantity Selector */}
             {onQtyChange && (
               <div className="flex items-center border border-default rounded-full overflow-hidden">
-                <button
+                <Button
+                  type="text"
                   onClick={() => onQtyChange(Math.max(1, qty - 1))}
                   disabled={qty <= 1}
-                  className="w-8 h-8 flex items-center justify-center text-primary hover:bg-surface-2 disabled:text-muted disabled:cursor-not-allowed"
-                >
-                  <IoRemoveOutline size={16} />
-                </button>
+                  className="w-8 h-8 flex items-center justify-center text-primary hover:bg-surface-2 disabled:text-muted disabled:cursor-not-allowed p-0 rounded-none border-none"
+                  icon={<IoRemoveOutline size={16} />}
+                />
                 <span className="w-6 text-center font-display font-black text-sm text-primary">
                   {qty}
                 </span>
-                <button
+                <Button
+                  type="text"
                   onClick={() => onQtyChange(Math.min(maxQty, qty + 1))}
                   disabled={qty >= maxQty}
-                  className="w-8 h-8 flex items-center justify-center text-primary hover:bg-surface-2 disabled:text-muted disabled:cursor-not-allowed"
-                >
-                  <IoAddOutline size={16} />
-                </button>
+                  className="w-8 h-8 flex items-center justify-center text-primary hover:bg-surface-2 disabled:text-muted disabled:cursor-not-allowed p-0 rounded-none border-none"
+                  icon={<IoAddOutline size={16} />}
+                />
               </div>
             )}
 
             {/* Branded Add to Bag Button */}
-            <button
+            <Button
+              type="primary"
               onClick={onAddToBag}
               disabled={!canAddToBag}
               className={`
-                flex items-center gap-2 px-6 py-3 rounded-full transition-all active:scale-95 shadow-custom
+                h-auto flex items-center gap-2 px-6 py-3 rounded-full transition-all active:scale-95 shadow-custom border-none
                 ${
                   canAddToBag
                     ? "bg-dark text-inverse hover:bg-accent hover:text-primary font-black uppercase tracking-widest text-xs"
                     : "bg-surface-3 text-muted cursor-not-allowed font-bold uppercase text-xs"
                 }
               `}
+              icon={
+                <IoBagAdd
+                  size={20}
+                  className={canAddToBag ? "text-accent" : ""}
+                />
+              }
             >
-              <IoBagAdd
-                size={20}
-                className={canAddToBag ? "text-accent" : ""}
-              />
               <span className="hidden sm:inline">Add to Bag</span>
               <span className="sm:hidden">Add</span>
-            </button>
+            </Button>
           </div>
         </motion.div>
       )}

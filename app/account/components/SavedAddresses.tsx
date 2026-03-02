@@ -12,6 +12,7 @@ import {
   IoCheckmarkCircleOutline,
   IoPencilOutline,
 } from "react-icons/io5";
+import axiosInstance from "@/services/axiosInstance";
 
 interface Address {
   type: "Shipping" | "Billing";
@@ -49,19 +50,17 @@ const SavedAddresses: React.FC<SavedAddressesProps> = ({
 
       try {
         const token = await auth.currentUser?.getIdToken();
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/customers/addresses`,
+        const res = await axiosInstance.post(
+          "/customers/addresses",
+          newAddress,
           {
-            method: "POST",
             headers: {
-              "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
-            body: JSON.stringify(newAddress),
           },
         );
 
-        if (res.ok) {
+        if (res.data) {
           const updated = addresses.filter((a) => a.type !== type);
           setAddresses([...updated, newAddress]);
           toast.success(`${type} Address Updated`);

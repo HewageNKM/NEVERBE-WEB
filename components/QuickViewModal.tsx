@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { IoClose, IoAdd, IoRemove, IoFlash } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
+import { Button } from "antd";
 
 import { AppDispatch, RootState } from "@/redux/store";
 import { addToBag } from "@/redux/bagSlice/bagSlice";
@@ -19,6 +20,7 @@ import {
 } from "@/interfaces/Promotion";
 import { isVariantEligibleForPromotion } from "@/utils/promotionUtils";
 import SizeGrid from "@/components/SizeGrid";
+import axiosInstance from "@/services/axiosInstance";
 
 interface QuickViewModalProps {
   isOpen: boolean;
@@ -36,7 +38,7 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
   const { getPromotionForProduct } = usePromotionsContext();
 
   const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(
-    null
+    null,
   );
   const [selectedSize, setSelectedSize] = useState("");
   const [qty, setQty] = useState(1);
@@ -73,16 +75,16 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
         }
 
         try {
-          const res = await fetch(
-            `/api/v1/inventory/batch?productId=${product.id}&variantId=${
+          const res = await axiosInstance.get(
+            `/inventory/batch?productId=${product.id}&variantId=${
               variant.variantId
-            }&sizes=${variant.sizes.join(",")}`
+            }&sizes=${variant.sizes.join(",")}`,
           );
-          const data = await res.json();
+          const data = res.data;
           // Sum up total stock for this variant
           const totalStock = Object.values(data.stock || {}).reduce(
             (sum: number, qty: unknown) => sum + (Number(qty) || 0),
-            0
+            0,
           );
           stockMap[variant.variantId] = totalStock;
         } catch {
@@ -109,12 +111,12 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
     const loadStock = async () => {
       setStockLoading(true);
       try {
-        const res = await fetch(
-          `/api/v1/inventory/batch?productId=${product.id}&variantId=${
+        const res = await axiosInstance.get(
+          `/inventory/batch?productId=${product.id}&variantId=${
             selectedVariant.variantId
-          }&sizes=${selectedVariant.sizes.join(",")}`
+          }&sizes=${selectedVariant.sizes.join(",")}`,
         );
-        const data = await res.json();
+        const data = res.data;
         setSizeStock(data.stock || {});
       } catch {
         setSizeStock({});
@@ -130,7 +132,7 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
   // Get promotion for display purposes only (banner)
   const activePromo = getPromotionForProduct(
     product.id,
-    selectedVariant?.variantId
+    selectedVariant?.variantId,
   );
 
   // Use only product-level pricing (no promotion in calculations)
@@ -148,7 +150,7 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
       product.id,
       variantId,
       promo.applicableProductVariants as ProductVariantTarget[] | undefined,
-      promo.conditions as PromotionCondition[] | undefined
+      promo.conditions as PromotionCondition[] | undefined,
     );
 
     return isEligible ? promo : null;
@@ -160,7 +162,7 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
       (b) =>
         b.itemId === product.id &&
         b.variantId === selectedVariant?.variantId &&
-        b.size === selectedSize
+        b.size === selectedSize,
     )?.quantity || 0;
 
   const isOutOfStock = Boolean(selectedSize && availableStock <= 0);
@@ -188,7 +190,7 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
         variantName: selectedVariant.variantName,
         category: product.category || "",
         brand: product.brand || "",
-      })
+      }),
     );
     toast.success(`Added ${qty} item${qty > 1 ? "s" : ""} to bag`);
     onClose();
@@ -221,12 +223,12 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
             </div>
 
             {/* Desktop Close Button */}
-            <button
+            <Button
+              type="text"
+              icon={<IoClose size={20} />}
               onClick={onClose}
-              className="hidden md:flex absolute top-4 right-4 z-50 p-2.5 bg-dark text-inverse rounded-full hover:bg-accent hover:text-dark transition-all shadow-custom"
-            >
-              <IoClose size={20} />
-            </button>
+              className="hidden md:flex absolute top-4 right-4 z-50 p-2.5 bg-dark text-inverse rounded-full hover:bg-accent hover:text-dark transition-all shadow-custom h-auto w-auto border-none"
+            />
 
             <div className="flex flex-col md:flex-row h-full overflow-y-auto hide-scrollbar">
               {/* LEFT: VISUALS SECTION */}
@@ -259,7 +261,8 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
                         variantTotalStock <= 0;
 
                       return (
-                        <button
+                        <Button
+                          type="text"
                           key={v.variantId}
                           onClick={() => {
                             setSelectedVariant(v);
@@ -268,8 +271,8 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
                           disabled={isVariantOutOfStock}
                           className={`relative w-12 h-12 sm:w-14 sm:h-14 shrink-0 bg-surface transition-all rounded-lg p-1 ${
                             selectedVariant?.variantId === v.variantId
-                              ? "border-accent border-2 shadow-custom scale-105 z-10"
-                              : "border border-default hover:border-accent opacity-60 hover:opacity-100"
+                              ? "border-accent border-2 shadow-custom scale-105 z-10 hover:bg-surface focus:bg-surface"
+                              : "border border-default hover:border-accent opacity-60 hover:opacity-100 hover:bg-surface focus:bg-surface"
                           } ${
                             isVariantOutOfStock
                               ? "opacity-40 cursor-not-allowed"
@@ -279,10 +282,10 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
                             isVariantOutOfStock
                               ? `${v.variantName} - Out of Stock`
                               : variantPromo
-                              ? `${v.variantName} - ${
-                                  variantPromo.name || "Promo"
-                                }`
-                              : v.variantName
+                                ? `${v.variantName} - ${
+                                    variantPromo.name || "Promo"
+                                  }`
+                                : v.variantName
                           }
                         >
                           <div
@@ -311,7 +314,7 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
                               </span>
                             </span>
                           )}
-                        </button>
+                        </Button>
                       );
                     })}
                   </div>
@@ -330,7 +333,7 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
                     >
                       <IoFlash className="animate-pulse shrink-0" size={16} />
                       <div className="flex-1 min-w-0">
-                        <p className="text-xs sm:text-sm font-display font-black uppercase italic tracking-tighter truncate">
+                        <p className="text-xs sm:text-sm font-display font-black uppercase tracking-tighter truncate">
                           {activePromo.name || "Special Offer"}
                         </p>
                         <p className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider opacity-80 hidden sm:block">
@@ -342,10 +345,10 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
                 </AnimatePresence>
 
                 <div className="mb-4 sm:mb-6">
-                  <p className="text-accent text-[10px] sm:text-xs font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] mb-1 sm:mb-2 italic">
+                  <p className="text-accent text-[10px] sm:text-xs font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] mb-1 sm:mb-2">
                     {product.brand?.replace("-", " ")}
                   </p>
-                  <h2 className="text-xl sm:text-2xl md:text-3xl font-display font-black text-primary leading-tight uppercase italic tracking-tighter">
+                  <h2 className="text-xl sm:text-2xl md:text-3xl font-display font-black text-primary leading-tight uppercase tracking-tighter">
                     {product.name}
                   </h2>
                 </div>
@@ -353,7 +356,7 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
                 {/* Performance Pricing Area */}
                 <div className="flex items-center gap-3 mb-6 sm:mb-8">
                   <span
-                    className={`text-2xl sm:text-3xl font-display font-black italic tracking-tighter ${
+                    className={`text-2xl sm:text-3xl font-display font-black tracking-tighter ${
                       hasActiveDiscount ? "text-success" : "text-primary"
                     }`}
                   >
@@ -372,9 +375,13 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
                     <p className="text-xs sm:text-sm font-black uppercase tracking-widest text-primary">
                       Select Size
                     </p>
-                    <button className="text-[9px] sm:text-[10px] font-bold uppercase text-accent hover:text-primary transition-colors underline underline-offset-4">
+                    <Button
+                      type="link"
+                      onClick={() => {}} // Add Size Guide click handler if exists in parent context later
+                      className="text-[9px] sm:text-[10px] font-bold uppercase text-accent hover:text-primary transition-colors underline underline-offset-4 p-0 h-auto"
+                    >
                       Size Guide
-                    </button>
+                    </Button>
                   </div>
                   <SizeGrid
                     sizes={selectedVariant?.sizes || []}
@@ -392,27 +399,27 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
                       Quantity
                     </span>
                     <div className="flex items-center bg-surface-2 border border-default rounded-full px-3 py-1.5 sm:px-4 sm:py-2">
-                      <button
+                      <Button
+                        type="text"
                         onClick={() => setQty((p) => Math.max(1, p - 1))}
-                        className="p-1 hover:text-accent disabled:opacity-10 transition-colors"
+                        className="p-1 hover:text-accent disabled:opacity-10 transition-colors h-auto w-auto bg-transparent border-none"
                         disabled={qty <= 1}
-                      >
-                        <IoRemove size={18} />
-                      </button>
-                      <span className="w-10 sm:w-12 text-center text-sm sm:text-base font-display font-black italic tracking-tighter">
+                        icon={<IoRemove size={18} />}
+                      />
+                      <span className="w-10 sm:w-12 text-center text-sm sm:text-base font-display font-black tracking-tighter">
                         {qty}
                       </span>
-                      <button
+                      <Button
+                        type="text"
                         onClick={() =>
                           setQty((p) =>
-                            Math.min(availableStock - bagQty || 10, p + 1)
+                            Math.min(availableStock - bagQty || 10, p + 1),
                           )
                         }
-                        className="p-1 hover:text-accent disabled:opacity-10 transition-colors"
+                        className="p-1 hover:text-accent disabled:opacity-10 transition-colors h-auto w-auto bg-transparent border-none"
                         disabled={qty >= availableStock - bagQty || qty >= 10}
-                      >
-                        <IoAdd size={18} />
-                      </button>
+                        icon={<IoAdd size={18} />}
+                      />
                     </div>
                   </div>
 
@@ -426,7 +433,7 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
                         }`}
                       />
                       <span
-                        className={`text-[10px] sm:text-xs font-black uppercase tracking-tighter italic ${
+                        className={`text-[10px] sm:text-xs font-black uppercase tracking-tighter ${
                           availableStock < 5 ? "text-error" : "text-success"
                         }`}
                       >
@@ -440,17 +447,18 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
 
                 {/* Action Performance Pills */}
                 <div className="mt-auto space-y-3 pb-6 sm:pb-4 md:pb-0">
-                  <button
+                  <Button
+                    type="primary"
                     onClick={handleAddToBag}
                     disabled={!selectedSize || isOutOfStock || isLimitReached}
-                    className="group w-full py-4 sm:py-5 bg-dark text-inverse rounded-full font-display font-black uppercase italic tracking-wider text-xs sm:text-sm transition-all hover:bg-accent hover:text-dark hover:shadow-hover active:scale-[0.98] disabled:bg-surface-3 disabled:text-muted disabled:cursor-not-allowed"
+                    className="group w-full h-auto py-5 sm:py-6 border-none bg-dark text-inverse rounded-full font-display font-black uppercase tracking-wider text-xs sm:text-sm transition-all hover:bg-accent hover:text-dark hover:shadow-hover active:scale-[0.98] disabled:bg-surface-3 disabled:text-muted disabled:cursor-not-allowed"
                   >
                     {isOutOfStock
                       ? "Sold Out"
                       : isLimitReached
-                      ? "Inventory Maxed"
-                      : "Add to Bag"}
-                  </button>
+                        ? "Inventory Maxed"
+                        : "Add to Bag"}
+                  </Button>
 
                   <Link
                     href={`/collections/products/${product.id}`}

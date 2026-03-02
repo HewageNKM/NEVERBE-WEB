@@ -13,6 +13,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { Button } from "antd";
 
 import { AppDispatch, RootState } from "@/redux/store";
 import { addToBag } from "@/redux/bagSlice/bagSlice";
@@ -35,6 +36,7 @@ import StockBadge from "@/components/StockBadge";
 import ShareButtons from "@/components/ShareButtons";
 import FloatingAddToBag from "@/components/FloatingAddToBag";
 import SizeGrid from "@/components/SizeGrid";
+import axiosInstance from "@/services/axiosInstance";
 
 const ProductHero = ({ item }: { item: Product }) => {
   const router = useRouter();
@@ -50,7 +52,7 @@ const ProductHero = ({ item }: { item: Product }) => {
 
   const [selectedImage, setSelectedImage] = useState(item.thumbnail);
   const [selectedVariant, setSelectedVariant] = useState<ProductVariant>(
-    item.variants[0]
+    item.variants[0],
   );
   const [selectedSize, setSelectedSize] = useState<string>("");
   const [qty, setQty] = useState(1);
@@ -65,7 +67,7 @@ const ProductHero = ({ item }: { item: Product }) => {
   // Get promotion for display purposes only (banner)
   const activePromo = getPromotionForProduct(
     item.id,
-    selectedVariant.variantId
+    selectedVariant.variantId,
   );
 
   // Use only product-level pricing (no promotion in calculations)
@@ -83,7 +85,7 @@ const ProductHero = ({ item }: { item: Product }) => {
       item.id,
       variantId,
       promo.applicableProductVariants as ProductVariantTarget[] | undefined,
-      promo.conditions as PromotionCondition[] | undefined
+      promo.conditions as PromotionCondition[] | undefined,
     );
 
     return isEligible ? promo : null;
@@ -110,16 +112,16 @@ const ProductHero = ({ item }: { item: Product }) => {
         }
 
         try {
-          const res = await fetch(
-            `/api/v1/inventory/batch?productId=${item.id}&variantId=${
+          const res = await axiosInstance.get(
+            `/inventory/batch?productId=${item.id}&variantId=${
               variant.variantId
-            }&sizes=${variant.sizes.join(",")}`
+            }&sizes=${variant.sizes.join(",")}`,
           );
-          const data = await res.json();
+          const data = res.data;
           // Sum up total stock for this variant
           const totalStock = Object.values(data.stock || {}).reduce(
             (sum: number, qty: unknown) => sum + (Number(qty) || 0),
-            0
+            0,
           );
           stockMap[variant.variantId] = totalStock;
         } catch {
@@ -139,12 +141,12 @@ const ProductHero = ({ item }: { item: Product }) => {
     const fetchStock = async () => {
       setStockLoading(true);
       try {
-        const res = await fetch(
-          `/api/v1/inventory/batch?productId=${item.id}&variantId=${
+        const res = await axiosInstance.get(
+          `/inventory/batch?productId=${item.id}&variantId=${
             selectedVariant.variantId
-          }&sizes=${selectedVariant.sizes.join(",")}`
+          }&sizes=${selectedVariant.sizes.join(",")}`,
         );
-        const data = await res.json();
+        const data = res.data;
         setSizeStock(data.stock || {});
       } catch (e) {
         console.error(e);
@@ -155,20 +157,20 @@ const ProductHero = ({ item }: { item: Product }) => {
     fetchStock();
   }, [selectedVariant.variantId, item.id]);
 
-  const availableStock = selectedSize ? sizeStock[selectedSize] ?? 0 : 0;
+  const availableStock = selectedSize ? (sizeStock[selectedSize] ?? 0) : 0;
   const bagQty =
     bagItems.find(
       (b) =>
         b.itemId === item.id &&
         b.variantId === selectedVariant.variantId &&
-        b.size === selectedSize
+        b.size === selectedSize,
     )?.quantity || 0;
   const isLimitReached =
     selectedSize !== "" && availableStock > 0 && bagQty + qty > availableStock;
 
   // Check if current variant is in wishlist
   const isInWishlist = wishlistItems.some(
-    (w) => w.productId === item.id && w.variantId === selectedVariant.variantId
+    (w) => w.productId === item.id && w.variantId === selectedVariant.variantId,
   );
 
   const handleToggleWishlist = () => {
@@ -202,7 +204,7 @@ const ProductHero = ({ item }: { item: Product }) => {
         maxQuantity: 10,
         category: item.category || "",
         brand: item.brand || "",
-      } as any)
+      } as any),
     );
     toast.success(`Added ${qty} item${qty > 1 ? "s" : ""} to bag`);
     setQty(1); // Reset quantity after adding
@@ -242,13 +244,14 @@ const ProductHero = ({ item }: { item: Product }) => {
 
         <div className="grid grid-cols-6 gap-2">
           {selectedVariant.images.map((img, idx) => (
-            <button
+            <Button
+              type="text"
               key={idx}
               onMouseEnter={() => setSelectedImage(img)}
-              className={`relative aspect-square bg-surface-2 rounded-sm overflow-hidden border-2 transition-all ${
+              className={`relative aspect-square bg-surface-2 rounded-sm overflow-hidden border-2 transition-all p-0 h-auto ${
                 selectedImage.url === img.url
-                  ? "border-dark"
-                  : "border-transparent opacity-70"
+                  ? "border-dark hover:border-dark focus:border-dark"
+                  : "border-transparent opacity-70 hover:opacity-100 focus:opacity-100"
               }`}
             >
               <Image
@@ -257,7 +260,7 @@ const ProductHero = ({ item }: { item: Product }) => {
                 fill
                 className="object-cover mix-blend-multiply"
               />
-            </button>
+            </Button>
           ))}
         </div>
       </div>
@@ -337,17 +340,18 @@ const ProductHero = ({ item }: { item: Product }) => {
                   variantTotalStock !== undefined && variantTotalStock <= 0;
 
                 return (
-                  <button
+                  <Button
+                    type="text"
                     key={v.variantId}
                     onClick={() => {
                       setSelectedVariant(v);
                       setSelectedSize("");
                     }}
                     disabled={isVariantOutOfStock}
-                    className={`relative w-12 h-12 bg-surface-2 rounded-md overflow-hidden border-2 transition-all ${
+                    className={`relative w-12 h-12 bg-surface-2 rounded-md overflow-hidden border-2 transition-all p-0 ${
                       selectedVariant.variantId === v.variantId
-                        ? "border-dark"
-                        : "border-transparent opacity-60"
+                        ? "border-dark hover:border-dark focus:border-dark"
+                        : "border-transparent opacity-60 hover:opacity-100 focus:opacity-100 hover:bg-surface-2 focus:bg-surface-2"
                     } ${
                       isVariantOutOfStock ? "opacity-40 cursor-not-allowed" : ""
                     }`}
@@ -355,8 +359,8 @@ const ProductHero = ({ item }: { item: Product }) => {
                       isVariantOutOfStock
                         ? `${v.variantName} - Out of Stock`
                         : variantPromo
-                        ? `${v.variantName} - ${variantPromo.name || "Promo"}`
-                        : v.variantName
+                          ? `${v.variantName} - ${variantPromo.name || "Promo"}`
+                          : v.variantName
                     }
                   >
                     <div className={isVariantOutOfStock ? "grayscale" : ""}>
@@ -382,7 +386,7 @@ const ProductHero = ({ item }: { item: Product }) => {
                         </span>
                       </span>
                     )}
-                  </button>
+                  </Button>
                 );
               })}
             </div>
@@ -393,12 +397,13 @@ const ProductHero = ({ item }: { item: Product }) => {
               <h3 className="text-xs font-bold uppercase text-muted">
                 Select Size
               </h3>
-              <button
+              <Button
+                type="link"
                 onClick={() => setShowSizeGuide(true)}
-                className="text-xs text-secondary underline"
+                className="text-xs text-secondary underline p-0 h-auto"
               >
                 Size Guide
-              </button>
+              </Button>
             </div>
             <SizeGrid
               sizes={selectedVariant.sizes}
@@ -417,25 +422,25 @@ const ProductHero = ({ item }: { item: Product }) => {
                 Qty
               </span>
               <div className="flex items-center border border-default rounded-full overflow-hidden">
-                <button
+                <Button
+                  type="text"
                   onClick={() => setQty(Math.max(1, qty - 1))}
                   disabled={qty <= 1}
-                  className="w-10 h-10 flex items-center justify-center text-primary hover:bg-surface-2 transition-colors disabled:text-muted disabled:cursor-not-allowed"
-                >
-                  <IoRemoveOutline size={18} />
-                </button>
+                  className="w-10 h-10 flex items-center justify-center text-primary hover:bg-surface-2 transition-colors disabled:text-muted disabled:cursor-not-allowed rounded-none p-0"
+                  icon={<IoRemoveOutline size={18} />}
+                />
                 <span className="w-10 text-center font-display font-black text-primary">
                   {qty}
                 </span>
-                <button
+                <Button
+                  type="text"
                   onClick={() => setQty(Math.min(10, qty + 1))}
                   disabled={
                     qty >= 10 || (!!selectedSize && qty >= availableStock)
                   }
-                  className="w-10 h-10 flex items-center justify-center text-primary hover:bg-surface-2 transition-colors disabled:text-muted disabled:cursor-not-allowed"
-                >
-                  <IoAddOutline size={18} />
-                </button>
+                  className="w-10 h-10 flex items-center justify-center text-primary hover:bg-surface-2 transition-colors disabled:text-muted disabled:cursor-not-allowed rounded-none p-0"
+                  icon={<IoAddOutline size={18} />}
+                />
               </div>
               {selectedSize && availableStock > 0 && (
                 <span className="text-[10px] text-muted font-bold uppercase">
@@ -445,38 +450,41 @@ const ProductHero = ({ item }: { item: Product }) => {
             </div>
 
             <div className="flex gap-3">
-              <button
+              <Button
+                type="primary"
                 onClick={handleAddToBag}
                 disabled={
                   !selectedSize || availableStock === 0 || isLimitReached
                 }
-                className="flex-1 py-5 bg-dark text-inverse rounded-full font-display font-black uppercase tracking-widest text-xs hover:bg-accent hover:text-dark transition-all shadow-custom hover:shadow-hover active:scale-95 disabled:bg-surface-3 disabled:text-muted disabled:shadow-none disabled:cursor-not-allowed"
+                className="flex-1 h-auto py-5 bg-dark text-inverse rounded-full font-display font-black uppercase tracking-widest text-xs hover:bg-accent hover:text-dark transition-all shadow-custom hover:shadow-hover active:scale-95 disabled:bg-surface-3 disabled:text-muted disabled:shadow-none disabled:cursor-not-allowed border-none"
               >
                 {isLimitReached
                   ? "Inventory Maxed"
                   : availableStock === 0 && selectedSize
-                  ? "Sold Out"
-                  : "Add to Bag"}
-              </button>
+                    ? "Sold Out"
+                    : "Add to Bag"}
+              </Button>
 
               {/* Wishlist Toggle */}
-              <button
+              <Button
+                type="text"
                 onClick={handleToggleWishlist}
-                className={`w-16 h-16 rounded-full border-2 flex items-center justify-center transition-all ${
+                className={`w-16 h-16 rounded-full border-2 flex items-center justify-center transition-all p-0 ${
                   isInWishlist
-                    ? "bg-dark border-dark text-inverse"
-                    : "bg-surface border-default text-primary hover:border-dark"
+                    ? "bg-dark border-dark text-inverse hover:bg-dark hover:text-inverse focus:bg-dark focus:text-inverse"
+                    : "bg-surface border-default text-primary hover:border-dark hover:bg-surface hover:text-primary focus:bg-surface focus:text-primary"
                 }`}
                 aria-label={
                   isInWishlist ? "Remove from wishlist" : "Add to wishlist"
                 }
-              >
-                {isInWishlist ? (
-                  <IoHeart size={24} />
-                ) : (
-                  <IoHeartOutline size={24} />
-                )}
-              </button>
+                icon={
+                  isInWishlist ? (
+                    <IoHeart size={24} />
+                  ) : (
+                    <IoHeartOutline size={24} />
+                  )
+                }
+              />
             </div>
 
             {/* Koko Installment Offer */}

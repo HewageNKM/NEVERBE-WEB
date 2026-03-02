@@ -53,8 +53,8 @@ const Invoice: React.FC<InvoiceProps> = ({
         imgHeight,
       );
 
-      // Title - Performance Italic look via Helvetica-BoldOblique
-      doc.setFont("helvetica", "bolditalic");
+      // Title - Performance Bold look via Helvetica-Bold
+      doc.setFont("helvetica", "bold");
       doc.setFontSize(24);
       doc.setTextColor(...BRAND_DARK);
       doc.text("INVOICE", 105, 55, { align: "center" });
@@ -268,7 +268,7 @@ const Invoice: React.FC<InvoiceProps> = ({
       className={`
         group flex items-center justify-center gap-2 px-8 py-5 
         bg-dark border-none text-inverse rounded-full 
-        font-display font-black uppercase italic tracking-widest text-xs
+        font-display font-black uppercase tracking-widest text-xs
         hover:bg-accent hover:text-dark transition-all duration-300
         disabled:bg-surface-3 disabled:text-muted disabled:cursor-not-allowed
         shadow-custom hover:shadow-hover

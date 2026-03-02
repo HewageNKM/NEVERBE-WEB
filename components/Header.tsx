@@ -19,7 +19,9 @@ import SeasonalPromo from "@/app/(site)/components/SeasonalPromo";
 import SearchDialog from "@/components/SearchDialog";
 import { NavigationItem } from "@/services/WebsiteService";
 import { useAlgoliaSearch } from "@/hooks/useAlgoliaSearch";
-import { Badge, Input, ConfigProvider } from "antd";
+import { Badge, Input, ConfigProvider, Button, Flex, Typography } from "antd";
+
+const { Text } = Typography;
 
 const DEFAULT_NAV_ITEMS: NavigationItem[] = [
   { title: "New Arrivals", link: "/collections/new-arrivals" },
@@ -59,38 +61,84 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
   };
 
   return (
-    <div className="w-full bg-surface z-50">
-      {/* 1. UTILITY TOP BAR - NEVERBE Style */}
-      <div className="hidden lg:flex bg-surface-2 px-12 py-2 justify-between items-center text-xs font-bold uppercase tracking-widest text-secondary border-b border-default">
-        <div className="flex gap-6">
-          <Link href="/contact" className="hover:text-accent transition-colors">
+    <div className="w-full z-50">
+      {/* 1. UTILITY TOP BAR */}
+      <Flex
+        justify="space-between"
+        align="center"
+        className="hidden lg:flex px-12 py-2"
+        style={{
+          fontSize: 10,
+          fontWeight: 800,
+          textTransform: "uppercase" as const,
+          letterSpacing: "0.15em",
+          background: "rgba(248, 250, 245, 0.8)",
+          backdropFilter: "blur(12px)",
+          borderBottom: "1px solid rgba(151, 225, 62, 0.08)",
+        }}
+      >
+        <Flex gap={24} align="center">
+          <Link
+            href="/contact"
+            className="hover:text-[#97e13e] transition-colors text-gray-500"
+          >
             Help
           </Link>
-          <span className="text-border-primary">|</span>
+          <Text type="secondary" style={{ opacity: 0.2, fontSize: 10 }}>
+            |
+          </Text>
           <Link
             href="/account/register"
-            className="hover:text-accent transition-colors text-primary"
+            className="hover:text-[#97e13e] transition-colors text-gray-800"
           >
             Join Us
           </Link>
-        </div>
-        <div className="flex gap-4">
+        </Flex>
+        <Flex gap={16} align="center">
           <Link
             href={user ? "/account" : "/account/login"}
-            className="hover:text-accent transition-colors flex items-center gap-1"
+            className="hover:text-[#97e13e] transition-colors flex items-center gap-1"
           >
-            Hi,{" "}
-            <span className="text-primary font-black italic">
+            <Text
+              style={{
+                fontSize: 10,
+                fontWeight: 700,
+                color: "rgba(0,0,0,0.4)",
+                textTransform: "uppercase",
+              }}
+            >
+              Hi,
+            </Text>
+            <Text
+              style={{
+                fontSize: 10,
+                fontWeight: 900,
+                color: "rgba(0,0,0,0.8)",
+                textTransform: "uppercase",
+              }}
+            >
               {user ? user.displayName?.split(" ")[0] : "Sign In"}
-            </span>
+            </Text>
           </Link>
-        </div>
-      </div>
+        </Flex>
+      </Flex>
 
-      <header className="sticky top-0 w-full bg-surface transition-all duration-300 border-b border-default lg:border-none">
+      <header
+        className="sticky top-0 w-full transition-all duration-300 z-50"
+        style={{
+          background: "rgba(255, 255, 255, 0.88)",
+          backdropFilter: "blur(24px) saturate(180%)",
+          WebkitBackdropFilter: "blur(24px) saturate(180%)",
+          borderBottom: "1px solid rgba(151, 225, 62, 0.1)",
+        }}
+      >
         <SeasonalPromo season={season} />
 
-        <div className="max-w-content mx-auto px-4 lg:px-12 flex justify-between items-center h-[64px] lg:h-[80px]">
+        <Flex
+          justify="space-between"
+          align="center"
+          className="max-w-content mx-auto px-4 lg:px-12 h-[64px] lg:h-[80px]"
+        >
           {/* LOGO */}
           <Link href="/" className="shrink-0">
             <Image
@@ -102,79 +150,109 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
             />
           </Link>
 
-          {/* DESKTOP NAV - Performance Centering */}
+          {/* DESKTOP NAV */}
           <nav className="hidden lg:block absolute left-1/2 -translate-x-1/2">
-            <ul className="flex gap-8 text-base font-bold uppercase tracking-tighter">
+            <Flex component="ul" gap={32} className="m-0 p-0 list-none">
               {navItems.map((item) => (
                 <li key={item.title}>
                   <Link
                     href={item.link}
-                    className="relative pb-2 hover:text-accent transition-colors group"
+                    className="relative pb-2 text-[13px] font-bold uppercase tracking-tight hover:text-[#97e13e] transition-colors group"
                   >
                     {item.title}
-                    <span className="absolute bottom-0 left-0 w-0 h-[3px] bg-accent transition-all duration-300 group-hover:w-full" />
+                    <span
+                      className="absolute bottom-0 left-0 w-0 h-[2px] transition-all duration-300 group-hover:w-full"
+                      style={{
+                        background: "linear-gradient(90deg, #97e13e, #7bc922)",
+                        borderRadius: 99,
+                      }}
+                    />
                   </Link>
                 </li>
               ))}
-            </ul>
+            </Flex>
           </nav>
 
           {/* ICONS & SEARCH */}
-          <div className="flex items-center gap-1 lg:gap-3">
-            <button
+          <Flex align="center" gap={4} className="lg:gap-12">
+            <Button
+              type="text"
               onClick={() => setIsSearchOpen(true)}
-              className="p-2.5 hover:bg-surface-2 rounded-full transition-colors group"
-            >
-              <IoSearchOutline size={24} className="group-hover:text-accent" />
-            </button>
+              className="p-2.5 hover:bg-surface-2 rounded-full transition-colors group border-none h-auto w-auto flex items-center justify-center m-0"
+              icon={
+                <IoSearchOutline
+                  size={24}
+                  className="group-hover:text-[#97e13e] transition-colors"
+                />
+              }
+            />
 
             <Link
               href="/account/wishlist"
-              className="p-2.5 hover:bg-surface-2 rounded-full transition-colors group"
+              className="p-2.5 hover:bg-surface-2 rounded-full transition-colors group flex items-center justify-center"
             >
-              <IoHeartOutline size={24} className="group-hover:text-accent" />
+              <IoHeartOutline
+                size={24}
+                className="group-hover:text-[#97e13e] text-black transition-colors"
+              />
             </Link>
 
-            <button
+            <Button
+              type="text"
               onClick={() => dispatch(showBag())}
-              className="relative p-2.5 px-3 hover:bg-surface-2 rounded-full transition-colors group"
+              className="relative p-2.5 hover:bg-surface-2 rounded-full transition-colors group border-none h-auto w-auto flex items-center justify-center m-0"
             >
               <Badge
                 count={bagItems.length}
                 offset={[-2, 6]}
-                color="#000"
+                color="#97e13e"
                 size="small"
+                style={{ color: "#000", fontWeight: 800 }}
               >
                 <IoBagHandleOutline
                   size={24}
-                  className="group-hover:text-accent"
+                  className="group-hover:text-[#97e13e] text-black transition-colors"
                 />
               </Badge>
-            </button>
+            </Button>
 
-            <button
+            <Button
+              type="text"
               onClick={() => dispatch(toggleMenu(true))}
-              className="lg:hidden p-2.5 hover:bg-surface-2 rounded-full"
-            >
-              <IoMenuOutline size={28} />
-            </button>
-          </div>
-        </div>
+              className="lg:hidden p-2.5 hover:bg-surface-2 rounded-full border-none h-auto w-auto flex items-center justify-center m-0"
+              icon={<IoMenuOutline size={28} />}
+            />
+          </Flex>
+        </Flex>
 
-        {/* FULL SCREEN SEARCH OVERLAY - Mobile Optimized */}
+        {/* FULL SCREEN SEARCH OVERLAY */}
         <AnimatePresence>
           {isSearchOpen && (
             <motion.div
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="fixed inset-0 bg-surface z-100 overflow-y-auto"
+              className="fixed inset-0 z-[100] overflow-y-auto"
+              style={{
+                background: "rgba(255, 255, 255, 0.96)",
+                backdropFilter: "blur(32px) saturate(200%)",
+                WebkitBackdropFilter: "blur(32px) saturate(200%)",
+              }}
             >
               <div className="max-w-content mx-auto px-4 lg:px-12 py-4 lg:py-12">
                 {/* Mobile: Stacked layout, Desktop: Side-by-side */}
-                <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-4 lg:gap-0 mb-6 lg:mb-12">
-                  {/* Top row on mobile: Logo + Close */}
-                  <div className="flex justify-between items-center">
+                <Flex
+                  vertical
+                  justify="space-between"
+                  align="center"
+                  gap={16}
+                  className="mb-6 lg:mb-12 lg:flex-row"
+                >
+                  <Flex
+                    justify="space-between"
+                    align="center"
+                    className="w-full lg:w-auto"
+                  >
                     <Image
                       src={Logo}
                       alt="NEVERBE"
@@ -183,28 +261,33 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
                       className="mix-blend-multiply lg:w-[80px]"
                     />
 
-                    <button
+                    <Button
+                      type="text"
                       onClick={() => {
                         setIsSearchOpen(false);
                         clearSearch();
                       }}
-                      className="p-2.5 lg:p-3 bg-surface-2 rounded-full hover:bg-dark hover:text-inverse transition-all lg:hidden"
-                    >
-                      <IoCloseOutline size={24} />
-                    </button>
-                  </div>
+                      className="lg:hidden h-auto w-auto border-none flex items-center justify-center"
+                      style={{
+                        padding: 10,
+                        borderRadius: "50%",
+                        background: "rgba(151, 225, 62, 0.1)",
+                      }}
+                      icon={<IoCloseOutline size={24} />}
+                    />
+                  </Flex>
 
-                  {/* Search bar - full width on mobile */}
-                  <div className="flex-1 lg:max-w-2xl lg:mx-auto w-full">
+                  {/* Search bar */}
+                  <Flex className="flex-1 lg:max-w-2xl lg:mx-auto w-full">
                     <ConfigProvider
                       theme={{
                         components: {
                           Input: {
                             colorBgContainer: "transparent",
-                            colorBorder: "var(--color-default)",
-                            hoverBorderColor: "var(--color-accent)",
-                            activeBorderColor: "var(--color-accent)",
-                            activeShadow: "none",
+                            colorBorder: "rgba(151, 225, 62, 0.2)",
+                            hoverBorderColor: "#97e13e",
+                            activeBorderColor: "#97e13e",
+                            activeShadow: "0 0 0 3px rgba(151, 225, 62, 0.1)",
                             borderRadius: 99,
                           },
                         },
@@ -214,56 +297,111 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
                         autoFocus
                         size="large"
                         placeholder="Search shoes..."
-                        className="bg-surface-2 px-4 py-3 lg:px-6 lg:py-4 w-full shadow-custom text-base lg:text-xl font-display font-black italic tracking-tight"
+                        className="w-full"
+                        style={{
+                          padding: "12px 24px",
+                          fontSize: 16,
+                          fontWeight: 700,
+                          background: "rgba(248, 250, 245, 0.8)",
+                          backdropFilter: "blur(12px)",
+                          boxShadow: "0 4px 20px rgba(0,0,0,0.04)",
+                        }}
                         prefix={
                           <IoSearchOutline
                             size={20}
-                            className="text-accent mr-2 shrink-0"
+                            style={{
+                              color: "#97e13e",
+                              marginRight: 8,
+                              flexShrink: 0,
+                            }}
                           />
                         }
                         suffix={
-                          <div className="flex items-center">
+                          <Flex align="center">
                             {search && (
-                              <button
+                              <Button
+                                type="text"
                                 onClick={() => clearSearch()}
-                                className="p-1 hover:bg-surface rounded-full transition-colors shrink-0 mr-2"
-                              >
-                                <IoCloseOutline
-                                  size={18}
-                                  className="text-muted"
-                                />
-                              </button>
+                                className="p-1 hover:bg-surface rounded-full transition-colors shrink-0 mr-2 h-auto w-auto border-none flex items-center justify-center"
+                                icon={
+                                  <IoCloseOutline
+                                    size={18}
+                                    className="text-muted"
+                                  />
+                                }
+                              />
                             )}
                             {isSearching && (
-                              <div className="w-5 h-5 border-2 border-accent border-t-transparent rounded-full animate-spin shrink-0" />
+                              <div
+                                className="animate-spin shrink-0"
+                                style={{
+                                  width: 20,
+                                  height: 20,
+                                  border: "2px solid #97e13e",
+                                  borderTopColor: "transparent",
+                                  borderRadius: "50%",
+                                }}
+                              />
                             )}
-                          </div>
+                          </Flex>
                         }
                         onChange={onSearch}
                         value={search}
                       />
                     </ConfigProvider>
-                  </div>
+                  </Flex>
 
                   {/* Desktop close button */}
-                  <button
+                  <Button
+                    type="text"
                     onClick={() => {
                       setIsSearchOpen(false);
                       clearSearch();
                     }}
-                    className="hidden lg:block p-3 bg-surface-2 rounded-full hover:bg-dark hover:text-inverse transition-all"
-                  >
-                    <IoCloseOutline size={28} />
-                  </button>
-                </div>
+                    className="hidden lg:flex h-auto w-auto border-none items-center justify-center"
+                    style={{
+                      padding: 12,
+                      borderRadius: "50%",
+                      background: "rgba(151, 225, 62, 0.1)",
+                      transition: "all 0.3s ease",
+                    }}
+                    icon={<IoCloseOutline size={28} />}
+                  />
+                </Flex>
 
                 {/* Results Section */}
                 {showSearchResult && (
                   <div className="animate-fade">
-                    <p className="text-xs font-black uppercase tracking-[0.2em] text-muted mb-6 lg:mb-8 border-b border-default pb-3 lg:pb-4">
-                      Results{" "}
-                      <span className="text-accent">({items.length})</span>
-                    </p>
+                    <Flex
+                      align="center"
+                      gap={8}
+                      style={{
+                        marginBottom: 24,
+                        paddingBottom: 16,
+                        borderBottom: "1px solid rgba(151, 225, 62, 0.1)",
+                      }}
+                    >
+                      <Text
+                        style={{
+                          fontSize: 11,
+                          fontWeight: 900,
+                          textTransform: "uppercase",
+                          letterSpacing: "0.2em",
+                          color: "rgba(0,0,0,0.35)",
+                        }}
+                      >
+                        Results
+                      </Text>
+                      <Text
+                        style={{
+                          fontSize: 11,
+                          fontWeight: 900,
+                          color: "#97e13e",
+                        }}
+                      >
+                        ({items.length})
+                      </Text>
+                    </Flex>
                     {items.length > 0 ? (
                       <SearchDialog
                         containerStyle="shadow-none border-none grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 lg:gap-6"
@@ -274,18 +412,36 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
                         }}
                       />
                     ) : (
-                      <div className="py-12 lg:py-20 text-center">
+                      <Flex
+                        vertical
+                        align="center"
+                        justify="center"
+                        style={{ padding: "80px 0" }}
+                      >
                         <IoSearchOutline
                           size={48}
-                          className="mx-auto text-muted mb-4"
+                          style={{
+                            color: "rgba(0,0,0,0.15)",
+                            marginBottom: 16,
+                          }}
                         />
-                        <p className="text-lg lg:text-2xl font-display font-black italic text-muted uppercase">
+                        <Text
+                          style={{
+                            fontSize: 20,
+                            fontWeight: 900,
+                            textTransform: "uppercase",
+                            color: "rgba(0,0,0,0.2)",
+                          }}
+                        >
                           No matches found
-                        </p>
-                        <p className="text-sm text-secondary mt-2">
+                        </Text>
+                        <Text
+                          type="secondary"
+                          style={{ marginTop: 8, fontSize: 13 }}
+                        >
                           Try a different search term
-                        </p>
-                      </div>
+                        </Text>
+                      </Flex>
                     )}
                   </div>
                 )}

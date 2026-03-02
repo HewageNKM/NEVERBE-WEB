@@ -4,6 +4,7 @@ import SearchResultCard from "@/components/SearchResultCard";
 import { motion, AnimatePresence } from "framer-motion";
 import { IoSearchOutline } from "react-icons/io5";
 import { Product } from "@/interfaces/Product";
+import { Button } from "antd";
 
 interface SearchDialogProps {
   results: Product[];
@@ -85,7 +86,7 @@ const SearchDialog: React.FC<SearchDialogProps> = ({
               />
             </div>
 
-            <h3 className="text-2xl font-display font-black uppercase italic tracking-tighter text-primary">
+            <h3 className="text-2xl font-display font-black uppercase tracking-tighter text-primary">
               No results found
             </h3>
 
@@ -93,12 +94,13 @@ const SearchDialog: React.FC<SearchDialogProps> = ({
               Adjust your filters or search for a better fit.
             </p>
 
-            <button
+            <Button
+              type="link"
               onClick={onClick}
-              className="mt-8 text-xs font-black uppercase tracking-widest text-primary underline underline-offset-8 decoration-accent hover:decoration-primary transition-all"
+              className="mt-8 text-xs font-black uppercase tracking-widest text-primary underline underline-offset-8 decoration-accent hover:decoration-primary transition-all p-0"
             >
               Clear Search
-            </button>
+            </Button>
           </div>
         )}
       </motion.div>

@@ -4,6 +4,7 @@ import { IoLogoWhatsapp } from "react-icons/io5";
 import { FaFacebookF, FaLink } from "react-icons/fa";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
+import { Button } from "antd";
 
 interface ShareButtonsProps {
   title: string;
@@ -26,7 +27,7 @@ const ShareButtons: React.FC<ShareButtonsProps> = ({
 
   const shareToWhatsApp = () => {
     const text = encodeURIComponent(
-      `Check out ${title} on NEVERBE!\n${fullUrl}`
+      `Check out ${title} on NEVERBE!\n${fullUrl}`,
     );
     window.open(`https://wa.me/?text=${text}`, "_blank");
   };
@@ -36,7 +37,7 @@ const ShareButtons: React.FC<ShareButtonsProps> = ({
     window.open(
       `https://www.facebook.com/sharer/sharer.php?u=${shareUrl}`,
       "_blank",
-      "width=600,height=400"
+      "width=600,height=400",
     );
   };
 
@@ -60,40 +61,45 @@ const ShareButtons: React.FC<ShareButtonsProps> = ({
   return (
     <div className={`flex flex-col gap-3 ${className} animate-fade`}>
       {/* Performance Label */}
-      <span className="text-[10px] font-display font-black uppercase italic tracking-[0.2em] text-muted">
+      <span className="text-[10px] font-display font-black uppercase tracking-[0.2em] text-muted">
         Share the Gear
       </span>
 
       <div className="flex items-center gap-3">
         {/* WhatsApp - Primary platform for SL market */}
-        <button
+        <Button
+          type="text"
+          shape="circle"
           onClick={shareToWhatsApp}
-          className="flex items-center justify-center w-12 h-12 rounded-full bg-[#25D366] text-white shadow-lg hover:shadow-[#25D366]/40 hover:-translate-y-1 transition-all active:scale-90"
+          className="flex items-center justify-center w-12 h-12 rounded-full bg-[#25D366] text-white shadow-lg hover:bg-[#25D366] hover:text-white hover:shadow-[#25D366]/40 hover:-translate-y-1 transition-all active:scale-90 border-none p-0"
           aria-label="Share on WhatsApp"
-        >
-          <IoLogoWhatsapp size={24} />
-        </button>
+          icon={<IoLogoWhatsapp size={24} />}
+        />
 
         {/* Facebook */}
-        <button
+        <Button
+          type="text"
+          shape="circle"
           onClick={shareToFacebook}
-          className="flex items-center justify-center w-12 h-12 rounded-full bg-[#1877F2] text-white shadow-lg hover:shadow-[#1877F2]/40 hover:-translate-y-1 transition-all active:scale-90"
+          className="flex items-center justify-center w-12 h-12 rounded-full bg-[#1877F2] text-white shadow-lg hover:bg-[#1877F2] hover:text-white hover:shadow-[#1877F2]/40 hover:-translate-y-1 transition-all active:scale-90 border-none p-0"
           aria-label="Share on Facebook"
-        >
-          <FaFacebookF size={20} />
-        </button>
+          icon={<FaFacebookF size={20} />}
+        />
 
         {/* Copy Link - Branded Performance Style */}
-        <button
+        <Button
+          type="text"
+          shape="circle"
           onClick={copyLink}
-          className="group flex items-center justify-center w-12 h-12 rounded-full bg-dark text-accent border border-accent/20 shadow-custom hover:bg-accent hover:text-dark hover:shadow-hover hover:-translate-y-1 transition-all active:scale-90"
+          className="group flex items-center justify-center w-12 h-12 rounded-full bg-dark text-accent border border-accent/20 shadow-custom hover:bg-accent hover:text-dark hover:shadow-hover hover:-translate-y-1 transition-all active:scale-90 p-0"
           aria-label="Copy link"
-        >
-          <FaLink
-            size={18}
-            className="group-hover:rotate-12 transition-transform"
-          />
-        </button>
+          icon={
+            <FaLink
+              size={18}
+              className="group-hover:rotate-12 transition-transform"
+            />
+          }
+        />
       </div>
     </div>
   );
