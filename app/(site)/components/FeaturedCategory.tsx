@@ -1,11 +1,21 @@
 "use client";
-import React from "react";
+import React, { useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Row, Col, Card, Typography, Flex } from "antd";
+import { Typography, Flex, Button } from "antd";
 import { collectionList } from "@/constants";
-import { ArrowRightOutlined } from "@ant-design/icons";
+import {
+  ArrowRightOutlined,
+  LeftOutlined,
+  RightOutlined,
+} from "@ant-design/icons";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation } from "swiper/modules";
 import { motion } from "framer-motion";
+
+// Import Swiper styles
+import "swiper/css";
+import "swiper/css/navigation";
 
 const { Title, Text } = Typography;
 
@@ -22,68 +32,87 @@ const fadeUp = {
   }),
 };
 
-// Reusable gradient overlay + hover CTA for each category card
-const CategoryCardInner = ({ label }: { label: string }) => (
-  <>
-    {/* Dark gradient so label always reads on any image */}
-    <div
-      className="absolute inset-x-0 bottom-0 z-10 pointer-events-none transition-all duration-500"
-      style={{
-        height: "65%",
-        background:
-          "linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.45) 50%, transparent 100%)",
-      }}
-    />
-    {/* CTA row */}
-    <div className="absolute inset-x-0 bottom-0 p-5 z-20">
-      <Flex align="center" justify="space-between">
-        <span
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 8,
-            padding: "8px 18px",
-            borderRadius: 99,
-            background: "rgba(255,255,255,0.12)",
-            backdropFilter: "blur(12px)",
-            WebkitBackdropFilter: "blur(12px)",
-            border: "1px solid rgba(255,255,255,0.2)",
-            fontWeight: 800,
-            fontSize: 12,
-            textTransform: "uppercase" as const,
-            letterSpacing: "0.08em",
-            color: "#fff",
-            transition: "all 0.35s cubic-bezier(0.4,0,0.2,1)",
-          }}
-          className="group-hover:!bg-[#2e9e5b] group-hover:!text-black group-hover:!border-transparent"
-        >
-          {label}
-        </span>
+// Reusable category card component used within SwiperSlide
+const CategoryCard = ({ item, index }: { item: any; index: number }) => (
+  <motion.div
+    variants={fadeUp}
+    initial="hidden"
+    whileInView="visible"
+    viewport={{ once: true }}
+    custom={index}
+    className="h-full"
+  >
+    <Link href={item.url} className="block w-full h-full group">
+      <div className="relative aspect-4/5 w-full overflow-hidden rounded-[24px] bg-gray-100 border border-gray-100/50">
+        <Image
+          src={item.image}
+          alt={item.label}
+          fill
+          className="object-cover transition-transform duration-700 group-hover:scale-105"
+          sizes="(max-width: 768px) 80vw, (max-width: 1280px) 33vw, 25vw"
+        />
+
+        {/* Dark gradient overlay */}
         <div
-          className="opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all duration-400"
+          className="absolute inset-x-0 bottom-0 z-10 pointer-events-none transition-all duration-500 h-[65%]"
           style={{
-            width: 40,
-            height: 40,
-            borderRadius: "50%",
-            background: "#2e9e5b",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            flexShrink: 0,
+            background:
+              "linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.45) 50%, transparent 100%)",
           }}
-        >
-          <ArrowRightOutlined style={{ color: "#fff", fontSize: 16 }} />
+        />
+
+        {/* Card Content Overlay */}
+        <div className="absolute inset-x-0 bottom-0 p-5 z-20">
+          <Flex align="center" justify="space-between">
+            <span
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+                padding: "clamp(6px, 1.5vw, 8px) clamp(12px, 2vw, 18px)",
+                borderRadius: 99,
+                background: "rgba(255,255,255,0.12)",
+                backdropFilter: "blur(12px)",
+                WebkitBackdropFilter: "blur(12px)",
+                border: "1px solid rgba(255,255,255,0.2)",
+                fontWeight: 800,
+                fontSize: "clamp(10px, 1.2vw, 12px)",
+                textTransform: "uppercase" as const,
+                letterSpacing: "0.08em",
+                color: "#fff",
+                transition: "all 0.35s cubic-bezier(0.4,0,0.2,1)",
+              }}
+              className="group-hover:!bg-[#2e9e5b] group-hover:!text-black group-hover:!border-transparent max-w-[85%] truncate"
+            >
+              {item.label}
+            </span>
+            <div className="opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all duration-400 w-10 h-10 rounded-full bg-[#2e9e5b] flex items-center justify-center flex-shrink-0">
+              <ArrowRightOutlined style={{ color: "#fff", fontSize: 16 }} />
+            </div>
+          </Flex>
         </div>
-      </Flex>
-    </div>
-  </>
+      </div>
+    </Link>
+  </motion.div>
 );
 
 const FeaturedCategories = () => {
+  const prevRef = useRef<HTMLButtonElement>(null);
+  const nextRef = useRef<HTMLButtonElement>(null);
+
   return (
-    <section className="w-full max-w-content mx-auto px-4 md:px-8 section-spacing">
-      <Flex align="end" justify="space-between" className="mb-10">
-        <Flex vertical gap={4}>
+    <section className="w-full max-w-content mx-auto px-4 md:px-8 py-12">
+      <Flex
+        vertical={false}
+        align="end"
+        justify="space-between"
+        className="mb-14 flex-col md:flex-row gap-6"
+      >
+        <Flex
+          vertical
+          gap={4}
+          className="text-center md:text-left w-full md:w-auto"
+        >
           <Text
             style={{
               fontSize: 11,
@@ -107,113 +136,96 @@ const FeaturedCategories = () => {
             Shop by Category
           </Title>
         </Flex>
-        <Link href="/collections/products" className="hidden md:block">
-          <span
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 6,
-              fontWeight: 800,
-              textTransform: "uppercase",
-              letterSpacing: "0.1em",
-              fontSize: 12,
-              transition: "color 0.3s ease",
-            }}
-            className="hover:!text-[#2e9e5b]"
-          >
-            View All <ArrowRightOutlined />
-          </span>
-        </Link>
+
+        {/* Standardized Swiper Navigation Buttons */}
+        <Flex
+          align="center"
+          gap={12}
+          className="w-full md:w-auto justify-between md:justify-end"
+        >
+          <Flex align="center" gap={12} className="ml-auto">
+            <Button
+              ref={prevRef}
+              shape="circle"
+              icon={
+                <LeftOutlined style={{ fontSize: "clamp(12px, 2vw, 14px)" }} />
+              }
+              className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center hover:border-[#2e9e5b]! hover:text-[#2e9e5b]!"
+            />
+            <Button
+              ref={nextRef}
+              shape="circle"
+              icon={
+                <RightOutlined style={{ fontSize: "clamp(12px, 2vw, 14px)" }} />
+              }
+              className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center hover:border-[#2e9e5b]! hover:text-[#2e9e5b]!"
+            />
+          </Flex>
+
+          <Link href="/collections/products" className="hidden md:block ml-4">
+            <span
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                fontWeight: 800,
+                textTransform: "uppercase",
+                letterSpacing: "0.1em",
+                fontSize: 12,
+                transition: "color 0.3s ease",
+              }}
+              className="hover:!text-black cursor-pointer"
+            >
+              View All <ArrowRightOutlined />
+            </span>
+          </Link>
+        </Flex>
       </Flex>
 
-      <Row gutter={[20, 20]} align="stretch">
-        {/* First Item — Large Feature Card */}
-        {collectionList[0] && (
-          <Col xs={24} md={8}>
-            <motion.div
-              variants={fadeUp}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              custom={0}
-              style={{ height: "100%" }}
-            >
-              <Link
-                href={collectionList[0].url}
-                className="block w-full h-full"
-              >
-                <Card
-                  hoverable
-                  style={{
-                    height: "100%",
-                    minHeight: 420,
-                    overflow: "hidden",
-                    padding: 0,
-                    border: "none",
-                    borderRadius: 24,
-                  }}
-                  styles={{ body: { padding: 0, height: "100%" } }}
-                  className="group"
-                >
-                  <div className="relative w-full h-full">
-                    <Image
-                      src={collectionList[0].image}
-                      alt={collectionList[0].label}
-                      fill
-                      className="object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
-                    <CategoryCardInner label={collectionList[0].label} />
-                  </div>
-                </Card>
-              </Link>
-            </motion.div>
-          </Col>
-        )}
+      <div className="relative pb-4">
+        <Swiper
+          modules={[Navigation]}
+          onInit={(s) => {
+            if (
+              s.params.navigation &&
+              typeof s.params.navigation !== "boolean"
+            ) {
+              s.params.navigation.prevEl = prevRef.current;
+              s.params.navigation.nextEl = nextRef.current;
+              s.navigation.init();
+              s.navigation.update();
+            }
+          }}
+          spaceBetween={16}
+          slidesPerView={1.3}
+          breakpoints={{
+            768: { slidesPerView: 3.2 },
+            1280: { slidesPerView: 3.5 },
+          }}
+          className="overflow-visible!"
+        >
+          {collectionList.map((item, index) => (
+            <SwiperSlide key={index}>
+              <CategoryCard item={item} index={index} />
+            </SwiperSlide>
+          ))}
 
-        {/* Second & Third Items — Side Cards */}
-        <Col xs={24} md={16}>
-          <Row gutter={[20, 20]} style={{ height: "100%" }}>
-            {collectionList.slice(1, 3).map((item, idx) => (
-              <Col xs={24} sm={12} key={idx} style={{ height: "100%" }}>
-                <motion.div
-                  variants={fadeUp}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true }}
-                  custom={idx + 1}
-                  style={{ height: "100%" }}
-                >
-                  <Link href={item.url} className="block w-full h-full">
-                    <Card
-                      hoverable
-                      style={{
-                        height: "100%",
-                        minHeight: 300,
-                        overflow: "hidden",
-                        padding: 0,
-                        border: "none",
-                        borderRadius: 24,
-                      }}
-                      styles={{ body: { padding: 0, height: "100%" } }}
-                      className="group"
-                    >
-                      <div className="relative w-full h-full">
-                        <Image
-                          src={item.image}
-                          alt={item.label}
-                          fill
-                          className="object-cover transition-transform duration-700 group-hover:scale-105"
-                        />
-                        <CategoryCardInner label={item.label} />
-                      </div>
-                    </Card>
-                  </Link>
-                </motion.div>
-              </Col>
-            ))}
-          </Row>
-        </Col>
-      </Row>
+          {/* Mobile "View All" Slide */}
+          <SwiperSlide className="md:hidden">
+            <Link
+              href="/collections/products"
+              className="flex flex-col items-center justify-center w-full aspect-4/5 rounded-[24px] border border-[#2e9e5b]/20 bg-[#2e9e5b]/5 transition-all duration-300 group hover:bg-[#2e9e5b]/10"
+            >
+              <div className="w-12 h-12 rounded-full bg-[#2e9e5b] flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <ArrowRightOutlined style={{ color: "white", fontSize: 20 }} />
+              </div>
+              <Text strong className="uppercase tracking-widest text-[11px]">
+                Explore All
+              </Text>
+            </Link>
+          </SwiperSlide>
+        </Swiper>
+      </div>
     </section>
   );
 };

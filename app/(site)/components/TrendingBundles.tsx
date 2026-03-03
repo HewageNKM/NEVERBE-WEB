@@ -1,16 +1,18 @@
 "use client";
 
-import { Carousel, Typography, Button, Flex } from "antd";
+import { Typography, Button, Flex } from "antd";
 import ComboCard from "@/app/(site)/collections/combos/components/ComboCard";
 import Link from "next/link";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation } from "swiper/modules";
 import {
   ArrowRightOutlined,
   LeftOutlined,
   RightOutlined,
 } from "@ant-design/icons";
 import { useRef } from "react";
-import type { CarouselRef } from "antd/es/carousel";
 import { motion } from "framer-motion";
+import "swiper/css";
 
 const { Title, Text } = Typography;
 
@@ -19,22 +21,36 @@ interface TrendingBundlesProps {
 }
 
 const TrendingBundles: React.FC<TrendingBundlesProps> = ({ bundles }) => {
-  const carouselRef = useRef<CarouselRef>(null);
+  const prevRef = useRef<HTMLButtonElement>(null);
+  const nextRef = useRef<HTMLButtonElement>(null);
 
   if (!bundles || bundles.length === 0) return null;
 
   return (
     <section className="w-full max-w-content mx-auto px-4 md:px-8 section-spacing">
-      <Flex justify="space-between" align="center" className="mb-8 gap-4">
+      <Flex
+        vertical={false}
+        justify="space-between"
+        align="center"
+        className="mb-8 gap-4 flex-col md:flex-row"
+      >
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.55, ease: "easeOut" }}
         >
-          <Flex vertical gap={4}>
+          <Flex
+            vertical
+            gap={4}
+            className="text-center md:text-left w-full md:w-auto"
+          >
             {/* Section label + Live badge */}
-            <Flex align="center" gap={10}>
+            <Flex
+              align="center"
+              gap={10}
+              className="justify-center md:justify-start"
+            >
               <Text
                 style={{
                   fontSize: 11,
@@ -100,23 +116,25 @@ const TrendingBundles: React.FC<TrendingBundlesProps> = ({ bundles }) => {
         <Flex
           align="center"
           gap={12}
-          className="hidden md:flex ml-auto items-center"
+          className="w-full md:w-auto justify-between md:justify-end items-center"
         >
           {/* Desktop Navigation Arrows */}
-          <Flex align="center" gap={8}>
+          <Flex align="center" gap={12} className="ml-auto">
             <Button
+              ref={prevRef}
               shape="circle"
-              icon={<LeftOutlined />}
-              size="middle"
-              className=" hover:border-[#2e9e5b]! hover:text-[#2e9e5b]!"
-              onClick={() => carouselRef.current?.prev()}
+              icon={
+                <LeftOutlined style={{ fontSize: "clamp(12px, 2vw, 14px)" }} />
+              }
+              className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center hover:border-[#2e9e5b]! hover:text-[#2e9e5b]!"
             />
             <Button
+              ref={nextRef}
               shape="circle"
-              icon={<RightOutlined />}
-              size="middle"
-              className=" hover:border-[#2e9e5b]! hover:text-[#2e9e5b]!"
-              onClick={() => carouselRef.current?.next()}
+              icon={
+                <RightOutlined style={{ fontSize: "clamp(12px, 2vw, 14px)" }} />
+              }
+              className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center hover:border-[#2e9e5b]! hover:text-[#2e9e5b]!"
             />
           </Flex>
 
@@ -139,75 +157,74 @@ const TrendingBundles: React.FC<TrendingBundlesProps> = ({ bundles }) => {
         </Flex>
       </Flex>
 
-      <Carousel
-        ref={carouselRef}
-        dots={false}
-        infinite={false}
-        draggable
-        slidesToShow={4}
-        responsive={[
-          {
-            breakpoint: 1280,
-            settings: { slidesToShow: 4 },
-          },
-          {
-            breakpoint: 1024,
-            settings: { slidesToShow: 3.2 },
-          },
-          {
-            breakpoint: 640,
-            settings: { slidesToShow: 2.2 },
-          },
-          {
-            breakpoint: 0,
-            settings: { slidesToShow: 1.2 },
-          },
-        ]}
-      >
-        {bundles.map((bundle) => (
-          <div key={bundle.id} className="px-2">
-            <ComboCard combo={bundle} />
-          </div>
-        ))}
+      <div className="relative pb-4">
+        <Swiper
+          modules={[Navigation]}
+          onInit={(s) => {
+            if (
+              s.params.navigation &&
+              typeof s.params.navigation !== "boolean"
+            ) {
+              s.params.navigation.prevEl = prevRef.current;
+              s.params.navigation.nextEl = nextRef.current;
+              s.navigation.init();
+              s.navigation.update();
+            }
+          }}
+          spaceBetween={16}
+          slidesPerView={1.3}
+          breakpoints={{
+            768: { slidesPerView: 3.2 },
+            1280: { slidesPerView: 4.2 },
+          }}
+          className="overflow-visible!"
+        >
+          {bundles.map((bundle) => (
+            <SwiperSlide key={bundle.id}>
+              <ComboCard combo={bundle} />
+            </SwiperSlide>
+          ))}
 
-        {/* Mobile "View All" Card */}
-        <div className="px-2 md:hidden">
-          <Link
-            href="/collections/combos"
-            className=" flex flex-col items-center justify-center w-full aspect-4/5 rounded-[24px] transition-all duration-300 group"
-            style={{
-              border: "1px solid rgba(46, 158, 91, 0.15)",
-            }}
-          >
-            <div
+          {/* Mobile "View All" Slide */}
+          <SwiperSlide className="px-2 md:hidden">
+            <Link
+              href="/collections/combos"
+              className=" flex flex-col items-center justify-center w-full aspect-4/5 rounded-[24px] transition-all duration-300 group"
               style={{
-                width: 60,
-                height: 60,
-                borderRadius: "50%",
-                background: "linear-gradient(135deg, #2e9e5b 0%, #26854b 100%)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                marginBottom: 16,
-              }}
-              className="group-active:scale-95 transition-transform"
-            >
-              <ArrowRightOutlined style={{ fontSize: 22, color: "#fff" }} />
-            </div>
-            <Text
-              strong
-              style={{
-                textTransform: "uppercase",
-                letterSpacing: "0.1em",
-                fontSize: 12,
-                textAlign: "center",
+                border: "1px solid rgba(46, 158, 91, 0.15)",
               }}
             >
-              Explore All Bundles
-            </Text>
-          </Link>
-        </div>
-      </Carousel>
+              <div
+                style={{
+                  width: 60,
+                  height: 60,
+                  borderRadius: "50%",
+                  background:
+                    "linear-gradient(135deg, #2e9e5b 0%, #26854b 100%)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  marginBottom: 16,
+                }}
+                className="group-active:scale-95 transition-transform"
+              >
+                <ArrowRightOutlined style={{ fontSize: 22, color: "#fff" }} />
+              </div>
+              <Text
+                strong
+                style={{
+                  textTransform: "uppercase",
+                  letterSpacing: "0.1em",
+                  fontSize: 12,
+                  textAlign: "center",
+                }}
+              >
+                Explore All Bundles
+              </Text>
+            </Link>
+          </SwiperSlide>
+        </Swiper>
+      </div>
 
       {/* Mobile sticky CTA */}
       <Flex justify="center" className="mt-6 md:hidden">

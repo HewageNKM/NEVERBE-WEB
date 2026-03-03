@@ -1,16 +1,18 @@
 "use client";
 
 import React, { useRef } from "react";
-import { Carousel, Typography, Button, Flex } from "antd";
-import type { CarouselRef } from "antd/es/carousel";
+import { Typography, Button, Flex } from "antd";
 import ItemCard from "@/components/ItemCard";
 import { Product } from "@/interfaces/Product";
 import Link from "next/link";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation } from "swiper/modules";
 import {
   ArrowRightOutlined,
   LeftOutlined,
   RightOutlined,
 } from "@ant-design/icons";
+import "swiper/css";
 
 const { Title, Text } = Typography;
 
@@ -29,15 +31,23 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
   viewAllHref,
   className = "",
 }) => {
-  const carouselRef = useRef<CarouselRef>(null);
+  const prevRef = useRef<HTMLButtonElement>(null);
+  const nextRef = useRef<HTMLButtonElement>(null);
 
   if (!items || items.length === 0) return null;
 
   return (
-    <div className={`w-full max-w-content mx-auto px-4 md:px-8 ${className}`}>
+    <div
+      className={`relative w-full max-w-content mx-auto px-4 md:px-8 py-12 ${className}`}
+    >
       {/* Header Area */}
-      <Flex align="center" justify="space-between" className="mb-8 gap-4">
-        <Flex vertical gap={4}>
+      <Flex
+        vertical={false}
+        align="center"
+        justify="space-between"
+        className="mb-8 gap-4 flex-col md:flex-row"
+      >
+        <Flex vertical gap={4} className="text-center md:text-left">
           <Text
             style={{
               fontSize: 11,
@@ -61,23 +71,28 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
             {title}
           </Title>
         </Flex>
-
-        <Flex align="center" gap={12}>
+        <Flex
+          align="center"
+          gap={12}
+          className="w-full md:w-auto justify-between md:justify-end"
+        >
           {/* Desktop Navigation Arrows */}
-          <Flex align="center" gap={8} className="hidden md:flex ml-auto">
+          <Flex align="center" gap={8} className="ml-auto">
             <Button
+              ref={prevRef}
               shape="circle"
-              icon={<LeftOutlined />}
-              size="middle"
-              className=" hover:border-[#2e9e5b]! hover:text-[#2e9e5b]!"
-              onClick={() => carouselRef.current?.prev()}
+              icon={
+                <LeftOutlined style={{ fontSize: "clamp(12px, 2vw, 14px)" }} />
+              }
+              className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center hover:border-[#2e9e5b]! hover:text-[#2e9e5b]!"
             />
             <Button
+              ref={nextRef}
               shape="circle"
-              icon={<RightOutlined />}
-              size="middle"
-              className=" hover:border-[#2e9e5b]! hover:text-[#2e9e5b]!"
-              onClick={() => carouselRef.current?.next()}
+              icon={
+                <RightOutlined style={{ fontSize: "clamp(12px, 2vw, 14px)" }} />
+              }
+              className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center hover:border-[#2e9e5b]! hover:text-[#2e9e5b]!"
             />
           </Flex>
 
@@ -103,90 +118,88 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
         </Flex>
       </Flex>
 
-      <Carousel
-        ref={carouselRef}
-        dots={false}
-        infinite={false}
-        draggable
-        slidesToShow={4}
-        responsive={[
-          {
-            breakpoint: 1440,
-            settings: { slidesToShow: 4 },
-          },
-          {
-            breakpoint: 1024,
-            settings: { slidesToShow: 3.2 },
-          },
-          {
-            breakpoint: 640,
-            settings: { slidesToShow: 2.2 },
-          },
-          {
-            breakpoint: 0,
-            settings: { slidesToShow: 1.2 },
-          },
-        ]}
-      >
-        {items.map((item, index) => (
-          <div key={item.id} className="px-2 pb-4">
-            <ItemCard item={item} priority={index < 4} />
-          </div>
-        ))}
+      <div className="relative pb-4">
+        <Swiper
+          modules={[Navigation]}
+          onInit={(s) => {
+            if (
+              s.params.navigation &&
+              typeof s.params.navigation !== "boolean"
+            ) {
+              s.params.navigation.prevEl = prevRef.current;
+              s.params.navigation.nextEl = nextRef.current;
+              s.navigation.init();
+              s.navigation.update();
+            }
+          }}
+          spaceBetween={16}
+          slidesPerView={1.3}
+          breakpoints={{
+            768: { slidesPerView: 3.2 },
+            1280: { slidesPerView: 4.2 },
+          }}
+          className="overflow-visible!"
+        >
+          {items.map((item) => (
+            <SwiperSlide key={item.id}>
+              <ItemCard item={item} />
+            </SwiperSlide>
+          ))}
 
-        {/* Mobile-Only "Explore All" Slide */}
-        {viewAllHref && (
-          <div className="px-2 md:hidden h-full">
-            <Link
-              href={viewAllHref}
-              className="apple-glass flex flex-col items-center justify-center w-full aspect-4/5 rounded-[24px] group transition-all duration-300"
-              style={{
-                border: "2px dashed rgba(46, 158, 91, 0.25)",
-              }}
-            >
-              <div
+          {/* Mobile-Only "Explore All" Slide */}
+          {viewAllHref && (
+            <SwiperSlide className="px-2 md:hidden">
+              <Link
+                href={viewAllHref}
+                className="apple-glass flex flex-col items-center justify-center w-full aspect-4/5 rounded-[24px] group transition-all duration-300"
                 style={{
-                  width: 60,
-                  height: 60,
-                  borderRadius: "50%",
-                  background:
-                    "linear-gradient(135deg, #2e9e5b 0%, #26854b 100%)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  marginBottom: 16,
-                  boxShadow: "0 8px 24px rgba(46, 158, 91, 0.35)",
-                }}
-                className="group-active:scale-95 transition-transform"
-              >
-                <ArrowRightOutlined style={{ fontSize: 22, color: "#fff" }} />
-              </div>
-              <Text
-                strong
-                style={{
-                  textTransform: "uppercase",
-                  letterSpacing: "0.1em",
-                  fontSize: 12,
+                  border: "2px dashed rgba(46, 158, 91, 0.25)",
                 }}
               >
-                Explore All
-              </Text>
-              <Text
-                type="secondary"
-                style={{
-                  fontSize: 10,
-                  fontWeight: 800,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.1em",
-                  marginTop: 4,
-                }}
-              >
-                {items.length}+ Items
-              </Text>
-            </Link>
-          </div>
-        )}
-      </Carousel>
+                <div
+                  style={{
+                    width: 60,
+                    height: 60,
+                    borderRadius: "50%",
+                    background:
+                      "linear-gradient(135deg, #2e9e5b 0%, #26854b 100%)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    marginBottom: 16,
+                    boxShadow: "0 8px 24px rgba(46, 158, 91, 0.35)",
+                  }}
+                  className="group-active:scale-95 transition-transform"
+                >
+                  <ArrowRightOutlined style={{ fontSize: 22, color: "#fff" }} />
+                </div>
+                <Text
+                  strong
+                  style={{
+                    textTransform: "uppercase",
+                    letterSpacing: "0.1em",
+                    fontSize: 12,
+                  }}
+                >
+                  Explore All
+                </Text>
+                <Text
+                  type="secondary"
+                  style={{
+                    fontSize: 10,
+                    fontWeight: 800,
+                    textTransform: "uppercase",
+                    letterSpacing: "0.1em",
+                    marginTop: 4,
+                  }}
+                >
+                  {items.length}+ Items
+                </Text>
+              </Link>
+            </SwiperSlide>
+          )}
+        </Swiper>
+      </div>
     </div>
   );
 };

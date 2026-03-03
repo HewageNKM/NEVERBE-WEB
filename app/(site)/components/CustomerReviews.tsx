@@ -1,19 +1,13 @@
 "use client";
 
-import React, { useRef } from "react";
-import {
-  Carousel,
-  Typography,
-  Button,
-  Rate,
-  Avatar,
-  Card,
-  Flex,
-  Space,
-} from "antd";
-import type { CarouselRef } from "antd/es/carousel";
+import { useRef } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation } from "swiper/modules";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 import { FcGoogle } from "react-icons/fc";
+import "swiper/css";
+
+import { Typography, Button, Rate, Avatar, Card, Flex, Space } from "antd";
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -203,7 +197,8 @@ const ReviewCard = ({ review }: { review: (typeof reviews)[0] }) => {
 };
 
 const CustomerReviews = () => {
-  const carouselRef = useRef<CarouselRef>(null);
+  const prevRef = useRef<HTMLButtonElement>(null);
+  const nextRef = useRef<HTMLButtonElement>(null);
 
   return (
     <section
@@ -296,55 +291,55 @@ const CustomerReviews = () => {
             </Text>
           </Flex>
 
-          <Flex align="center" gap={12} className="hidden md:flex ml-auto">
+          <Flex align="center" gap={12} className="ml-auto">
             <Button
+              ref={prevRef}
               shape="circle"
-              icon={<LeftOutlined />}
-              size="middle"
-              onClick={() => carouselRef.current?.prev()}
-              className="hover:border-[#2e9e5b]! hover:text-[#2e9e5b]!"
+              icon={
+                <LeftOutlined style={{ fontSize: "clamp(12px, 2vw, 14px)" }} />
+              }
+              className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center hover:border-[#2e9e5b]! hover:text-[#2e9e5b]!"
             />
             <Button
+              ref={nextRef}
               shape="circle"
-              icon={<RightOutlined />}
-              size="middle"
-              onClick={() => carouselRef.current?.next()}
-              className="hover:border-[#2e9e5b]! hover:text-[#2e9e5b]!"
+              icon={
+                <RightOutlined style={{ fontSize: "clamp(12px, 2vw, 14px)" }} />
+              }
+              className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center hover:border-[#2e9e5b]! hover:text-[#2e9e5b]!"
             />
           </Flex>
         </Flex>
 
-        <Carousel
-          ref={carouselRef}
-          dots={false}
-          infinite={false}
-          draggable
-          slidesToShow={4}
-          responsive={[
-            {
-              breakpoint: 1280,
-              settings: { slidesToShow: 4 },
-            },
-            {
-              breakpoint: 1024,
-              settings: { slidesToShow: 3 },
-            },
-            {
-              breakpoint: 640,
-              settings: { slidesToShow: 1.2 },
-            },
-            {
-              breakpoint: 0,
-              settings: { slidesToShow: 1.1 },
-            },
-          ]}
-        >
-          {reviews.map((review) => (
-            <div key={review.id} className="px-2 pb-4">
-              <ReviewCard review={review} />
-            </div>
-          ))}
-        </Carousel>
+        <div className="relative pb-8">
+          <Swiper
+            modules={[Navigation]}
+            onInit={(s) => {
+              if (
+                s.params.navigation &&
+                typeof s.params.navigation !== "boolean"
+              ) {
+                s.params.navigation.prevEl = prevRef.current;
+                s.params.navigation.nextEl = nextRef.current;
+                s.navigation.init();
+                s.navigation.update();
+              }
+            }}
+            spaceBetween={16}
+            slidesPerView={1.3}
+            breakpoints={{
+              768: { slidesPerView: 3.2 },
+              1280: { slidesPerView: 4.2 },
+            }}
+            className="overflow-visible!"
+          >
+            {reviews.map((review) => (
+              <SwiperSlide key={review.id} className="pb-4">
+                <ReviewCard review={review} />
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
 
         <Flex justify="center" className="mt-12">
           <a

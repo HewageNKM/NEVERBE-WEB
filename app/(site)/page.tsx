@@ -68,7 +68,7 @@ const Page = async () => {
     getSliders().catch((err) => []),
     getHotProducts().catch((err) => []),
     getBrands().catch((err) => []),
-    getPaginatedCombos(1, 8).catch((err) => ({ combos: [] })),
+    getPaginatedCombos(1).catch((err) => ({ combos: [] })),
   ]);
 
   const [arrivals, sliders, hotItems, brands, combosData] = await dataPromise;
@@ -251,39 +251,24 @@ const Page = async () => {
 
         <Flex vertical style={{ width: "100%", flex: "auto" }}>
           <Hero slides={sliders} />
+          <FeaturedCategories />
+          <PromotionalAds />
 
-          {/* Section spacing wrapper */}
-          <div
-            className="flex flex-col"
-            style={{ gap: "clamp(2rem, 5vw, 5rem)" }}
-          >
-            {/* The "Nike-style" Essentials Grid */}
-            <FeaturedCategories />
+          {hotItems.length > 0 && <PopularProducts hotItems={hotItems} />}
 
-            {/* Promotional Ads from NEVER-PANEL */}
-            <PromotionalAds />
+          {/* New Bundles Section */}
+          {combos.length > 0 && <TrendingBundles bundles={combos} />}
 
-            <div
-              className="flex flex-col"
-              style={{ gap: "clamp(2rem, 5vw, 5rem)" }}
-            >
-              {hotItems.length > 0 && <PopularProducts hotItems={hotItems} />}
+          {arrivals.length > 0 && <NewArrivals arrivals={arrivals} />}
 
-              {/* New Bundles Section */}
-              {combos.length > 0 && <TrendingBundles bundles={combos} />}
+          {/* A large visual break for Brands */}
+          {brands.length > 0 && <BrandsSlider items={brands} />}
 
-              {arrivals.length > 0 && <NewArrivals arrivals={arrivals} />}
+          {/* Customer Reviews Section */}
+          <CustomerReviews />
 
-              {/* A large visual break for Brands */}
-              {brands.length > 0 && <BrandsSlider items={brands} />}
-
-              {/* Customer Reviews Section */}
-              <CustomerReviews />
-
-              <WhyUs />
-              <SEOContent />
-            </div>
-          </div>
+          <WhyUs />
+          <SEOContent />
         </Flex>
       </Flex>
     </div>

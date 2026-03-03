@@ -2,10 +2,20 @@ import axiosInstance from "./axiosInstance";
 
 export const getBrands = async () => {
   try {
-    const res = await axiosInstance.get("/web/brands/dropdown");
-    const data = res.data;
-    // Map dropdown format to full array if needed, assuming the API returns array
-    return data.data || data;
+    // Try the generic brands endpoint first as it's more likely to have logo URLs
+    let res = await axiosInstance.get("/web/brands");
+    let data = res.data;
+
+    // Fallback if main endpoint is empty or missing data
+    if (!data.data || (Array.isArray(data.data) && data.data.length === 0)) {
+      res = await axiosInstance.get("/web/brands/dropdown");
+      data = res.data;
+    }
+
+    const brandsArray =
+      data.data || data.brands || (Array.isArray(data) ? data : []);
+
+    return brandsArray;
   } catch (error) {
     console.error("Failed to fetch brands:", error);
     return [];

@@ -66,84 +66,87 @@ const WhyUs = () => {
 
       <div className="max-w-content mx-auto px-4 md:px-8">
         {/* Mobile: horizontal scroll row */}
-        <div className="flex md:hidden gap-4 overflow-x-auto pb-4 hide-scrollbar snap-x snap-mandatory">
-          {benefits.map((item, index) => (
-            <div
-              key={index}
-              className="snap-start flex-shrink-0 w-[68vw] max-w-[260px] group"
-              style={{
-                padding: "20px 16px",
-                borderRadius: 20,
-                background: "#fff",
-                border: "1px solid rgba(46, 158, 91, 0.2)",
-                position: "relative",
-                overflow: "hidden",
-                boxShadow: "0 2px 12px rgba(0,0,0,0.05)",
-              }}
-            >
-              {/* Watermark digit */}
-              <span
-                style={{
-                  position: "absolute",
-                  bottom: -8,
-                  right: 10,
-                  fontSize: 72,
-                  fontWeight: 900,
-                  lineHeight: 1,
-                  color: "rgba(46, 158, 91, 0.10)",
-                  fontFamily: "var(--font-display), sans-serif",
-                  pointerEvents: "none",
-                  userSelect: "none",
-                }}
-              >
-                {item.number}
-              </span>
+        <div className="block md:hidden">
+          <div className="flex gap-4 overflow-x-auto pb-4 hide-scrollbar snap-x snap-mandatory">
+            {benefits.map((item, index) => (
               <div
+                key={index}
+                className="snap-start shrink-0 w-[68vw] max-w-[260px] group"
                 style={{
-                  width: 48,
-                  height: 48,
-                  borderRadius: "50%",
-                  background:
-                    "linear-gradient(135deg, rgba(46, 158, 91, 0.18) 0%, rgba(46, 158, 91, 0.06) 100%)",
+                  padding: "20px 16px",
+                  borderRadius: 20,
+                  background: "#fff",
                   border: "1px solid rgba(46, 158, 91, 0.2)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  marginBottom: 16,
+                  position: "relative",
+                  overflow: "hidden",
+                  boxShadow: "0 2px 12px rgba(0,0,0,0.05)",
                 }}
               >
-                <item.icon size={22} style={{ color: "#2e9e5b" }} />
+                {/* Watermark digit */}
+                <span
+                  style={{
+                    position: "absolute",
+                    bottom: -8,
+                    right: 10,
+                    fontSize: 72,
+                    fontWeight: 900,
+                    lineHeight: 1,
+                    color: "rgba(46, 158, 91, 0.10)",
+                    fontFamily: "var(--font-display), sans-serif",
+                    pointerEvents: "none",
+                    userSelect: "none",
+                  }}
+                >
+                  {item.number}
+                </span>
+                <div
+                  style={{
+                    width: 48,
+                    height: 48,
+                    borderRadius: "50%",
+                    background:
+                      "linear-gradient(135deg, rgba(46, 158, 91, 0.18) 0%, rgba(46, 158, 91, 0.06) 100%)",
+                    border: "1px solid rgba(46, 158, 91, 0.2)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    marginBottom: 16,
+                  }}
+                >
+                  <item.icon size={22} style={{ color: "#2e9e5b" }} />
+                </div>
+                <Text
+                  style={{
+                    margin: 0,
+                    textTransform: "uppercase",
+                    fontWeight: 900,
+                    letterSpacing: "-0.01em",
+                    fontSize: 12,
+                    color: "#1a1a1a",
+                    display: "block",
+                    marginBottom: 4,
+                  }}
+                >
+                  {item.title}
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 11,
+                    fontWeight: 500,
+                    display: "block",
+                    color: "#777",
+                  }}
+                >
+                  {item.desc}
+                </Text>
               </div>
-              <Text
-                style={{
-                  margin: 0,
-                  textTransform: "uppercase",
-                  fontWeight: 900,
-                  letterSpacing: "-0.01em",
-                  fontSize: 12,
-                  color: "#1a1a1a",
-                  display: "block",
-                  marginBottom: 4,
-                }}
-              >
-                {item.title}
-              </Text>
-              <Text
-                style={{
-                  fontSize: 11,
-                  fontWeight: 500,
-                  display: "block",
-                  color: "#777",
-                }}
-              >
-                {item.desc}
-              </Text>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
 
         {/* Desktop: 4-column grid */}
-        <Row gutter={[24, 24]} justify="center" className="hidden md:flex">
+        <div className="hidden md:block">
+          <Row gutter={[24, 24]} justify="center">
           {benefits.map((item, index) => (
             <Col md={6} key={index}>
               <motion.div
