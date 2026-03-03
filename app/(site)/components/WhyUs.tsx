@@ -147,103 +147,104 @@ const WhyUs = () => {
         {/* Desktop: 4-column grid */}
         <div className="hidden md:block">
           <Row gutter={[24, 24]} justify="center">
-          {benefits.map((item, index) => (
-            <Col md={6} key={index}>
-              <motion.div
-                variants={fadeUp}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                custom={index}
-              >
-                <div
-                  className="group relative overflow-hidden h-full"
-                  style={{
-                    padding: "28px 20px",
-                    borderRadius: 20,
-                    background: "#fff",
-                    border: "1px solid rgba(46, 158, 91, 0.15)",
-                    boxShadow: "0 2px 20px rgba(0,0,0,0.04)",
-                    transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
-                    borderLeft: "3px solid rgba(46, 158, 91, 0.5)",
-                    cursor: "default",
-                  }}
+            {benefits.map((item, index) => (
+              <Col md={6} key={index}>
+                <motion.div
+                  variants={fadeUp}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true }}
+                  custom={index}
                 >
-                  {/* Watermark digit */}
-                  <span
-                    className="transition-all duration-500 group-hover:text-[rgba(46, 158, 91,0.12)]"
+                  <div
+                    className="group relative overflow-hidden h-full"
                     style={{
-                      position: "absolute",
-                      bottom: -8,
-                      right: 10,
-                      fontSize: 88,
-                      fontWeight: 900,
-                      lineHeight: 1,
-                      color: "rgba(46, 158, 91, 0.07)",
-                      fontFamily: "var(--font-display), sans-serif",
-                      pointerEvents: "none",
-                      userSelect: "none",
+                      padding: "28px 20px",
+                      borderRadius: 20,
+                      background: "#fff",
+                      border: "1px solid rgba(46, 158, 91, 0.15)",
+                      boxShadow: "0 2px 20px rgba(0,0,0,0.04)",
+                      transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+                      borderLeft: "3px solid rgba(46, 158, 91, 0.5)",
+                      cursor: "default",
                     }}
                   >
-                    {item.number}
-                  </span>
-
-                  <Flex vertical gap={12}>
-                    <div
-                      className="transition-all duration-400 group-hover:scale-110"
+                    {/* Watermark digit */}
+                    <span
+                      className="transition-all duration-500 group-hover:text-[rgba(46, 158, 91,0.12)]"
                       style={{
-                        width: 56,
-                        height: 56,
-                        borderRadius: "50%",
-                        background:
-                          "linear-gradient(135deg, rgba(46, 158, 91, 0.2) 0%, rgba(46, 158, 91, 0.08) 100%)",
-                        border: "1px solid rgba(46, 158, 91, 0.2)",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+                        position: "absolute",
+                        bottom: -8,
+                        right: 10,
+                        fontSize: 88,
+                        fontWeight: 900,
+                        lineHeight: 1,
+                        color: "rgba(46, 158, 91, 0.07)",
+                        fontFamily: "var(--font-display), sans-serif",
+                        pointerEvents: "none",
+                        userSelect: "none",
                       }}
                     >
-                      <item.icon
-                        size={24}
+                      {item.number}
+                    </span>
+
+                    <Flex vertical gap={12}>
+                      <div
+                        className="transition-all duration-400 group-hover:scale-110"
                         style={{
-                          color: "#2e9e5b",
-                          transition: "color 0.3s ease",
-                        }}
-                      />
-                    </div>
-                    <div>
-                      <Text
-                        style={{
-                          margin: 0,
-                          textTransform: "uppercase",
-                          fontWeight: 900,
-                          letterSpacing: "-0.01em",
-                          fontSize: 12,
-                          color: "#1a1a1a",
-                          display: "block",
-                        }}
-                      >
-                        {item.title}
-                      </Text>
-                      <Text
-                        style={{
-                          fontSize: 11,
-                          fontWeight: 500,
-                          display: "block",
-                          marginTop: 4,
-                          color: "#777",
+                          width: 56,
+                          height: 56,
+                          borderRadius: "50%",
+                          background:
+                            "linear-gradient(135deg, rgba(46, 158, 91, 0.2) 0%, rgba(46, 158, 91, 0.08) 100%)",
+                          border: "1px solid rgba(46, 158, 91, 0.2)",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
                         }}
                       >
-                        {item.desc}
-                      </Text>
-                    </div>
-                  </Flex>
-                </div>
-              </motion.div>
-            </Col>
-          ))}
-        </Row>
+                        <item.icon
+                          size={24}
+                          style={{
+                            color: "#2e9e5b",
+                            transition: "color 0.3s ease",
+                          }}
+                        />
+                      </div>
+                      <div>
+                        <Text
+                          style={{
+                            margin: 0,
+                            textTransform: "uppercase",
+                            fontWeight: 900,
+                            letterSpacing: "-0.01em",
+                            fontSize: 12,
+                            color: "#1a1a1a",
+                            display: "block",
+                          }}
+                        >
+                          {item.title}
+                        </Text>
+                        <Text
+                          style={{
+                            fontSize: 11,
+                            fontWeight: 500,
+                            display: "block",
+                            marginTop: 4,
+                            color: "#777",
+                          }}
+                        >
+                          {item.desc}
+                        </Text>
+                      </div>
+                    </Flex>
+                  </div>
+                </motion.div>
+              </Col>
+            ))}
+          </Row>
+        </div>
       </div>
     </section>
   );

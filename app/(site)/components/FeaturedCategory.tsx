@@ -86,7 +86,7 @@ const CategoryCard = ({ item, index }: { item: any; index: number }) => (
             >
               {item.label}
             </span>
-            <div className="opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all duration-400 w-10 h-10 rounded-full bg-[#2e9e5b] flex items-center justify-center flex-shrink-0">
+            <div className="opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all duration-400 w-10 h-10 rounded-full bg-[#2e9e5b] flex items-center justify-center shrink-0">
               <ArrowRightOutlined style={{ color: "#fff", fontSize: 16 }} />
             </div>
           </Flex>
@@ -174,7 +174,7 @@ const FeaturedCategories = () => {
                 fontSize: 12,
                 transition: "color 0.3s ease",
               }}
-              className="hover:!text-black cursor-pointer"
+              className="hover:text-black! cursor-pointer"
             >
               View All <ArrowRightOutlined />
             </span>

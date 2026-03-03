@@ -3,7 +3,7 @@ import { getApp, getApps, initializeApp } from "firebase/app";
 import { collection, getFirestore, getDocs } from "firebase/firestore";
 import { getAnalytics, isSupported } from "@firebase/analytics";
 import { getAuth, onAuthStateChanged, signInAnonymously } from "firebase/auth";
-import { Item } from "@/interfaces/BagItem";
+// unused import removed
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -36,6 +36,30 @@ export const signUser = async () => {
   return user.user;
 };
 
+// Singleton to handle concurrent sign-in requests
+let signInPromise: Promise<any> | null = null;
+
 export const getIdToken = async () => {
-  return auth.currentUser?.getIdToken();
+  // 1. If we already have a user, return their token
+  if (auth.currentUser) {
+    return auth.currentUser.getIdToken();
+  }
+
+  // 2. If a sign-in is already in progress, wait for it
+  if (signInPromise) {
+    await signInPromise;
+    return auth.currentUser?.getIdToken();
+  }
+
+  // 3. Initiate a new anonymous sign-in
+  try {
+    signInPromise = signInAnonymously(auth);
+    const result = await signInPromise;
+    signInPromise = null;
+    return result.user.getIdToken();
+  } catch (error) {
+    signInPromise = null;
+    console.error("Firebase Anonymous Sign-in failed:", error);
+    throw error;
+  }
 };
