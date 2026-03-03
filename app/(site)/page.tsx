@@ -242,7 +242,7 @@ const Page = async () => {
   };
 
   return (
-    <div className="bg-[#fcfdfa] min-h-screen w-full relative">
+    <div className="bg-[#fcfdfa] min-h-screen w-full relative overflow-x-hidden">
       <Flex vertical className="w-full relative z-10">
         <script
           type="application/ld+json"

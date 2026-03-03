@@ -59,45 +59,20 @@ const Hero = ({ slides }: { slides: Slide[] }) => {
           </div>
         )}
 
-        {/* Navigation Arrows — bottom-right, desktop only */}
         <div className="hidden md:flex absolute bottom-6 right-8 z-20 gap-3">
           <Button
             shape="circle"
-            size="large"
+            size="middle"
             icon={<LeftOutlined />}
             onClick={() => sliderRef.current?.prev?.()}
-            style={{
-              width: 48,
-              height: 48,
-              background: "rgba(0,0,0,0.55)",
-              border: "1px solid rgba(255,255,255,0.14)",
-              color: "#fff",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              backdropFilter: "blur(10px)",
-              transition: "all 0.3s ease",
-            }}
-            className="hover:!bg-[#2e9e5b] hover:!text-black hover:!border-[#2e9e5b]"
+            className="hover:border-[#2e9e5b]! hover:text-[#2e9e5b]!"
           />
           <Button
             shape="circle"
-            size="large"
+            size="middle"
             icon={<RightOutlined />}
             onClick={() => sliderRef.current?.next?.()}
-            style={{
-              width: 48,
-              height: 48,
-              background: "rgba(255,255,255,0.85)",
-              border: "1px solid rgba(46, 158, 91,0.2)",
-              color: "#1a1a1a",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              backdropFilter: "blur(10px)",
-              transition: "all 0.3s ease",
-            }}
-            className="hover:!bg-[#2e9e5b] hover:!text-black hover:!border-[#2e9e5b]"
+            className="hover:border-[#2e9e5b]! hover:text-[#2e9e5b]!"
           />
         </div>
       </div>

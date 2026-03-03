@@ -296,32 +296,20 @@ const CustomerReviews = () => {
             </Text>
           </Flex>
 
-          <Flex align="center" gap={12} className="hidden md:flex">
+          <Flex align="center" gap={12} className="hidden md:flex ml-auto">
             <Button
               shape="circle"
               icon={<LeftOutlined />}
-              size="large"
+              size="middle"
               onClick={() => carouselRef.current?.prev()}
-              style={{
-                background: "rgba(46, 158, 91, 0.08)",
-                border: "1px solid rgba(46, 158, 91, 0.2)",
-                color: "#1a1a1a",
-                transition: "all 0.3s ease",
-              }}
-              className="hover:!border-[#2e9e5b] hover:!bg-[#2e9e5b]/20"
+              className="hover:border-[#2e9e5b]! hover:text-[#2e9e5b]!"
             />
             <Button
               shape="circle"
               icon={<RightOutlined />}
-              size="large"
+              size="middle"
               onClick={() => carouselRef.current?.next()}
-              style={{
-                background: "rgba(46, 158, 91, 0.08)",
-                border: "1px solid rgba(46, 158, 91, 0.2)",
-                color: "#1a1a1a",
-                transition: "all 0.3s ease",
-              }}
-              className="hover:!border-[#2e9e5b] hover:!bg-[#2e9e5b]/20"
+              className="hover:border-[#2e9e5b]! hover:text-[#2e9e5b]!"
             />
           </Flex>
         </Flex>
