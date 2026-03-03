@@ -66,9 +66,10 @@ export const useProductListing = ({
         if (selectedGender) params.set("gender", selectedGender);
         if (sortParam) params.set("sort", sortParam);
 
-        // API expects 'tag' for both brands and categories
-        selectedBrands.forEach((b) => params.append("tag", b));
-        selectedCategories.forEach((c) => params.append("tag", c));
+        // API now handles brand and category separately for AND logic
+        if (selectedBrands[0]) params.set("brand", selectedBrands[0]);
+        if (selectedCategories[0])
+          params.set("category", selectedCategories[0]);
 
         if (selectedSizes.length > 0)
           params.set("sizes", selectedSizes.join(","));

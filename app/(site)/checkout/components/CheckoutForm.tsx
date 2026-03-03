@@ -13,6 +13,7 @@ import CheckoutLoader from "@/components/CheckoutLoader";
 import toast from "react-hot-toast";
 import { Customer } from "@/interfaces";
 import { auth } from "@/firebase/firebaseClient";
+import { signInAnonymously } from "firebase/auth";
 import { usePayment } from "@/hooks/usePayment";
 import usePromotions from "@/hooks/usePromotions";
 import axiosInstance from "@/actions/axiosInstance";
@@ -76,6 +77,28 @@ const CheckoutForm = () => {
   const [paymentFee, setPaymentFee] = useState<number>(0);
   const [shippingSameAsBilling, setShippingSameAsBilling] = useState(true);
   const [saveAddress, setSaveAddress] = useState(true);
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+
+  // 1. Auth Guard: Ensure Anonymous Sign-in
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        if (!auth.currentUser) {
+          console.log(
+            "[CheckoutAuth] No user found, signing in anonymously...",
+          );
+          await signInAnonymously(auth);
+        }
+      } catch (error) {
+        console.error("[CheckoutAuth] Anonymous sign-in failed:", error);
+        toast.error("Authentication failed. Please refresh the page.");
+      } finally {
+        setIsCheckingAuth(false);
+      }
+    };
+
+    checkAuth();
+  }, []);
 
   // Initialize billing customer with user data if available
   const initialCustomerState: Customer = {
@@ -196,6 +219,10 @@ const CheckoutForm = () => {
       toast.error("Failed to process order. Please try again.");
     }
   };
+
+  if (isCheckingAuth || !user) {
+    return <CheckoutLoader />;
+  }
 
   return (
     <>

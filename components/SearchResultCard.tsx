@@ -50,7 +50,7 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({
       <Link
         href={`/collections/products/${item.id}`}
         onClick={onClick}
-        className="group flex flex-col bg-surface hover:bg-surface-2 transition-all duration-300 cursor-pointer h-full border border-transparent hover:border-default hover:shadow-hover"
+        className="group flex flex-col bg-surface hover:bg-surface-2 transition-all duration-300 cursor-pointer border border-transparent hover:border-default hover:shadow-hover"
       >
         {/* Product Image */}
         <div className="relative aspect-square bg-surface-2 overflow-hidden">

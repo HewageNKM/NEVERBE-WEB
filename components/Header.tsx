@@ -72,7 +72,7 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
     const handleScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [fetchRecommendations]);
+  }, []);
 
   return (
     <div className="w-full z-50">

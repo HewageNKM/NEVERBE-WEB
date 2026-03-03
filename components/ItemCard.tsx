@@ -95,8 +95,6 @@ const ItemCard = ({
         style={{
           overflow: "hidden",
           transition: "all 0.3s ease",
-          height: "100%",
-          minHeight: 360,
         }}
         styles={{
           body: { padding: "10px 12px" },
