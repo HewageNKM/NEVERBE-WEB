@@ -99,7 +99,7 @@ const PromotionalAds: React.FC = () => {
                   hoverable
                   style={{
                     height: "100%",
-                    borderRadius: 28,
+                    borderRadius: 24,
                     overflow: "hidden",
                     border: "none",
                   }}
@@ -114,25 +114,12 @@ const PromotionalAds: React.FC = () => {
                       className="object-cover transition-transform duration-700 group-hover:scale-105"
                       sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     />
-                    {/* Gradient overlay */}
-                    <div
-                      style={{
-                        position: "absolute",
-                        inset: 0,
-                        background:
-                          "linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 60%)",
-                        opacity: 0.85,
-                        transition: "opacity 0.3s ease",
-                      }}
-                      className="group-hover:!opacity-100"
-                    />
-
-                    {/* Bottom content */}
-                    <div className="absolute bottom-0 left-0 right-0 p-6">
+                    {/* Bottom frosted glass panel */}
+                    <div className="absolute inset-x-4 bottom-4 bg-white/80 backdrop-blur-md rounded-[24px] p-5 transition-transform duration-300 group-hover:-translate-y-2 border border-white/40 shadow-[0_8px_32px_rgba(0,0,0,0.08)]">
                       <Title
                         level={3}
                         style={{
-                          color: "white",
+                          color: "#1a1a1a",
                           margin: 0,
                           textTransform: "uppercase",
                           fontWeight: 900,
@@ -145,37 +132,31 @@ const PromotionalAds: React.FC = () => {
                       <Flex align="center" gap={8} className="mt-3">
                         <Text
                           style={{
-                            color: "rgba(255,255,255,0.85)",
+                            color: "rgba(0,0,0,0.6)",
                             fontWeight: 800,
                             textTransform: "uppercase",
                             letterSpacing: "0.1em",
                             fontSize: 12,
                           }}
-                          className="group-hover:!text-[#97e13e] transition-colors"
+                          className="group-hover:text-[#97e13e]! transition-colors"
                         >
                           Shop Now
                         </Text>
                         <div
+                          className="bg-white/80 backdrop-blur-sm border border-[rgba(151,225,62,0.2)] flex items-center justify-center transition-all duration-300 group-hover:bg-[#97e13e]! group-hover:border-[#97e13e]! shadow-[0_4px_12px_rgba(0,0,0,0.05)]"
                           style={{
-                            width: 28,
-                            height: 28,
+                            width: 32,
+                            height: 32,
                             borderRadius: "50%",
-                            background: "rgba(151, 225, 62, 0.2)",
-                            border: "1px solid rgba(151, 225, 62, 0.4)",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            transition: "all 0.3s ease",
+                            padding: 0,
                           }}
-                          className="group-hover:!bg-[#97e13e]"
                         >
                           <ArrowRightOutlined
                             style={{
-                              color: "white",
-                              fontSize: 11,
-                              transition: "all 0.3s ease",
+                              color: "rgba(0,0,0,0.8)",
+                              fontSize: 14,
                             }}
-                            className="group-hover:!text-black group-hover:translate-x-0.5 transition-all"
+                            className="group-hover:text-black! group-hover:translate-x-0.5 transition-all"
                           />
                         </div>
                       </Flex>

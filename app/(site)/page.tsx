@@ -242,40 +242,51 @@ const Page = async () => {
   };
 
   return (
-    <Flex vertical className="bg-white min-h-screen w-full">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-      />
+    <div className="bg-[#fcfdfa] min-h-screen w-full relative">
+      <Flex vertical className="w-full relative z-10">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        />
 
-      <Flex vertical style={{ width: "100%", flex: "auto" }}>
-        <Hero slides={sliders} />
+        <Flex vertical style={{ width: "100%", flex: "auto" }}>
+          <Hero slides={sliders} />
 
-        {/* The "Nike-style" Essentials Grid */}
-        <FeaturedCategories />
+          {/* Section spacing wrapper */}
+          <div
+            className="flex flex-col"
+            style={{ gap: "clamp(2rem, 5vw, 5rem)" }}
+          >
+            {/* The "Nike-style" Essentials Grid */}
+            <FeaturedCategories />
 
-        {/* Promotional Ads from NEVER-PANEL */}
-        <PromotionalAds />
+            {/* Promotional Ads from NEVER-PANEL */}
+            <PromotionalAds />
 
-        <Flex vertical gap={0}>
-          {hotItems.length > 0 && <PopularProducts hotItems={hotItems} />}
+            <div
+              className="flex flex-col"
+              style={{ gap: "clamp(2rem, 5vw, 5rem)" }}
+            >
+              {hotItems.length > 0 && <PopularProducts hotItems={hotItems} />}
 
-          {/* New Bundles Section */}
-          {combos.length > 0 && <TrendingBundles bundles={combos} />}
+              {/* New Bundles Section */}
+              {combos.length > 0 && <TrendingBundles bundles={combos} />}
 
-          {arrivals.length > 0 && <NewArrivals arrivals={arrivals} />}
+              {arrivals.length > 0 && <NewArrivals arrivals={arrivals} />}
 
-          {/* A large visual break for Brands */}
-          {brands.length > 0 && <BrandsSlider items={brands} />}
+              {/* A large visual break for Brands */}
+              {brands.length > 0 && <BrandsSlider items={brands} />}
 
-          {/* Customer Reviews Section */}
-          <CustomerReviews />
+              {/* Customer Reviews Section */}
+              <CustomerReviews />
 
-          <WhyUs />
-          <SEOContent />
+              <WhyUs />
+              <SEOContent />
+            </div>
+          </div>
         </Flex>
       </Flex>
-    </Flex>
+    </div>
   );
 };
 export default Page;

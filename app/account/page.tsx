@@ -111,7 +111,7 @@ const Account = () => {
               />
             </Link>
             <div className="h-8 w-px bg-border-default hidden md:block"></div>
-            <h1 className="text-2xl font-display font-black uppercase italic tracking-tighter">
+            <h1 className="text-2xl font-display font-black uppercase tracking-tighter">
               Account
             </h1>
           </div>
@@ -190,7 +190,7 @@ const Account = () => {
                       className="mx-auto text-accent mb-6"
                       size={60}
                     />
-                    <h2 className="text-3xl font-display font-black uppercase italic tracking-tighter mb-4">
+                    <h2 className="text-3xl font-display font-black uppercase tracking-tighter mb-4">
                       Secure your profile
                     </h2>
                     <p className="text-muted max-w-md mx-auto mb-10 font-medium">

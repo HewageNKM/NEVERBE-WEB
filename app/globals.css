@@ -33,6 +33,14 @@
   --color-border-secondary: #c8d4bc;
   --color-border-dark: #97e13e;
 
+  /* === DARK THEME COLORS (SimplyTek-Inspired) === */
+  --color-dark-bg: #111111;
+  --color-dark-surface: #1a1a1a;
+  --color-dark-elevated: #222222;
+  --color-dark-border: #2a2a2a;
+  --color-dark-text: #e5e5e5;
+  --color-dark-text-muted: #888888;
+
   /* === ACCENT COLORS === */
   --color-accent: #97e13e;
   --color-accent-hover: #7bc922;
@@ -203,79 +211,66 @@
     color: var(--color-primary-dark);
   }
 
-  /* === GLASSMORPHISM UTILITIES === */
-  /* Standard glass card - white frosted effect */
-  .glass-card {
-    background: rgba(255, 255, 255, 0.6);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    box-shadow:
-      0 8px 32px rgba(0, 0, 0, 0.06),
-      inset 0 1px 0 rgba(255, 255, 255, 0.8);
-  }
+  /* === MODERN CLEAN FLUID UTILITIES === */
 
-  /* Green-tinted glass card - NEVERBE brand accent */
-  .glass-card-green {
-    background: rgba(151, 225, 62, 0.08);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(151, 225, 62, 0.2);
-    box-shadow:
-      0 8px 32px rgba(151, 225, 62, 0.08),
-      inset 0 1px 0 rgba(255, 255, 255, 0.6);
-  }
-
-  /* Full-width glass section background */
-  .glass-section {
-    background: linear-gradient(
-      135deg,
-      rgba(255, 255, 255, 0.9) 0%,
-      rgba(248, 250, 245, 0.95) 50%,
-      rgba(255, 255, 255, 0.9) 100%
-    );
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-  }
-
-  /* Glassmorphic header / sticky bar */
-  .glass-header {
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(24px) saturate(180%);
-    -webkit-backdrop-filter: blur(24px) saturate(180%);
-    border-bottom: 1px solid rgba(151, 225, 62, 0.12);
-  }
-
-  /* Dark glass variant (for overlays on images) */
-  .glass-dark {
-    background: rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-  }
-
-  /* Hover glow effect for interactive glass elements */
-  .glass-glow-hover {
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  .glass-glow-hover:hover {
-    box-shadow:
-      0 12px 40px rgba(151, 225, 62, 0.15),
-      0 4px 16px rgba(0, 0, 0, 0.08);
-    border-color: rgba(151, 225, 62, 0.35);
-    transform: translateY(-2px);
-  }
-
-  /* === SECTION SPACING === */
+  /* === SECTION SPACING — fluid via clamp() === */
   .section-spacing {
-    padding-top: 4rem;
-    padding-bottom: 4rem;
+    padding-top: clamp(2.5rem, 6vw, 6rem);
+    padding-bottom: clamp(2.5rem, 6vw, 6rem);
   }
-  @media (min-width: 768px) {
-    .section-spacing {
-      padding-top: 6rem;
-      padding-bottom: 6rem;
-    }
+
+  /* === GLASS MORPHISM CARD === */
+  .glass-card {
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+  }
+
+  /* === GREEN GLOW SHADOW (removed — per design cleanup) === */
+
+  /* === SLIDE-UP ANIMATION === */
+  .animate-slide-up {
+    animation: slideInUp 0.55s cubic-bezier(0.4, 0, 0.2, 1) both;
+  }
+
+  /* === PULSE DOT (for live badges) === */
+  .pulse-green {
+    animation: pulseGreen 1.8s ease-in-out infinite;
+  }
+
+  /* === TRUST BADGE ROW === */
+  .trust-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 99px;
+    background: rgba(151, 225, 62, 0.08);
+    border: 1px solid rgba(151, 225, 62, 0.25);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #4a4a4a;
+    transition: all 0.3s ease;
+  }
+  .trust-badge:hover {
+    background: rgba(151, 225, 62, 0.18);
+    border-color: rgba(151, 225, 62, 0.5);
+    color: #1a1a1a;
+  }
+
+  /* === DARK SECTION UTILITIES === */
+  .dark-section {
+    background-color: var(--color-dark-bg);
+    color: var(--color-dark-text);
+  }
+  .dark-surface {
+    background-color: var(--color-dark-surface);
+  }
+  .dark-elevated {
+    background-color: var(--color-dark-elevated);
   }
 
   /* === SCROLLBAR UTILITIES === */
@@ -292,6 +287,14 @@
   /* Entrance Animation */
   .animate-fade {
     animation: fade 0.35s ease-out;
+  }
+
+  /* Marquee Animation Utility */
+  .animate-marquee {
+    animation: marquee 30s linear infinite;
+  }
+  .animate-marquee-reverse {
+    animation: marquee-reverse 30s linear infinite;
   }
 }
 
@@ -321,6 +324,27 @@
   }
 }
 
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulseGreen {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(151, 225, 62, 0.6);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(151, 225, 62, 0);
+  }
+}
+
 @keyframes shimmer {
   0% {
     background-position: 200% 0;
@@ -330,7 +354,74 @@
   }
 }
 
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes marquee-reverse {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
 /* Shimmer Animation Utility */
 .animate-shimmer {
   animation: shimmer 2s linear infinite;
+}
+
+/* Announcement Bar Styles */
+.announcement-bar {
+  background: #f0f7e6;
+  border-bottom: 1px solid rgba(151, 225, 62, 0.3);
+}
+
+/* Light header */
+.header-dark {
+  background: rgba(255, 255, 255, 0.97);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.header-dark-scrolled {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border-bottom-color: rgba(151, 225, 62, 0.3);
+}
+
+/* Green gradient separator line */
+.green-separator {
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    #97e13e 50%,
+    transparent 100%
+  );
+  opacity: 0.6;
+}
+
+/* Quote watermark for review cards */
+.review-quote-mark {
+  position: absolute;
+  top: -8px;
+  left: 16px;
+  font-size: 96px;
+  font-weight: 900;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.04);
+  font-family: Georgia, serif;
+  pointer-events: none;
+  user-select: none;
+  transition: color 0.4s ease;
+}
+.group\/review:hover .review-quote-mark {
+  color: rgba(0, 0, 0, 0.07);
 }

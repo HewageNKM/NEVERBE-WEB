@@ -40,32 +40,36 @@ const ComboCard: React.FC<ComboCardProps> = ({ combo }) => {
   return (
     <Badge.Ribbon
       text={hasSavings ? `Save ${savingsPercent}%` : getTypeLabel()}
-      color={hasSavings ? "#000" : "#97e13e"}
+      color={hasSavings ? "#1a1a1a" : "#97e13e"}
       style={{
-        padding: "0 16px",
+        padding: "0 10px",
+        fontSize: "11px",
         fontWeight: 800,
         textTransform: "uppercase",
-        color: hasSavings ? "#97e13e" : "#000",
+        color: "#fff",
         letterSpacing: "0.05em",
         top: 12,
       }}
     >
-      <Link href={`/collections/combos/${combo.id}`} className="block w-full">
+      <Link
+        href={`/collections/combos/${combo.id}`}
+        className="block w-full h-full"
+      >
         <Card
           hoverable
-          className="group"
+          className="group "
           style={{
-            borderRadius: 24,
             overflow: "hidden",
-            border: "1px solid #e0e8d8",
             transition: "all 0.3s ease",
+            height: "100%",
+            minHeight: 360,
           }}
           styles={{
-            body: { padding: "16px" },
+            body: { padding: "10px 12px" },
             cover: { position: "relative" },
           }}
           cover={
-            <div className="relative aspect-4/5 w-full overflow-hidden bg-surface-2 rounded-t-[24px]">
+            <div className="relative aspect-square w-full overflow-hidden bg-[#fcfdfa] rounded-t-[24px]">
               {combo.previewThumbnail || combo.thumbnail?.url ? (
                 <Image
                   src={combo.previewThumbnail || combo.thumbnail?.url || ""}
@@ -84,7 +88,7 @@ const ComboCard: React.FC<ComboCardProps> = ({ combo }) => {
                   <Tag
                     color="#97e13e"
                     style={{
-                      color: "#000",
+                      color: "#fff",
                       fontWeight: 800,
                       letterSpacing: "0.05em",
                       textTransform: "uppercase",
@@ -105,15 +109,20 @@ const ComboCard: React.FC<ComboCardProps> = ({ combo }) => {
                 level={5}
                 style={{
                   margin: 0,
+                  fontSize: 13,
                   fontWeight: 800,
                   letterSpacing: "-0.02em",
                   textTransform: "uppercase",
+                  lineHeight: 1.2,
                 }}
                 className="group-hover:text-accent transition-colors line-clamp-1"
               >
                 {combo.name}
               </Title>
-              <Text type="secondary" style={{ fontWeight: 600 }}>
+              <Text
+                type="secondary"
+                style={{ fontWeight: 600, fontSize: "11px" }}
+              >
                 {combo.items?.length || 0} Piece Bundle
               </Text>
             </div>
@@ -136,14 +145,14 @@ const ComboCard: React.FC<ComboCardProps> = ({ combo }) => {
               <Text
                 strong
                 style={{
-                  fontSize: "1.25rem",
+                  fontSize: "1rem",
                   letterSpacing: "-0.03em",
                 }}
               >
                 Rs. {combo.comboPrice.toLocaleString()}
               </Text>
               {hasSavings && (
-                <Text delete type="secondary" style={{ fontSize: "0.85rem" }}>
+                <Text delete type="secondary" style={{ fontSize: "0.75rem" }}>
                   Rs. {combo.originalPrice.toLocaleString()}
                 </Text>
               )}

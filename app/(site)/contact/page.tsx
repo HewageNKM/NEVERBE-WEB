@@ -101,7 +101,7 @@ const ContactPage = () => {
 
       {/* --- Header Section --- */}
       <header className="text-center mb-12">
-        <h1 className="text-4xl sm:text-5xl font-display font-black uppercase italic tracking-tighter text-primary">
+        <h1 className="text-4xl sm:text-5xl font-display font-black uppercase tracking-tighter text-primary">
           Contact Us
         </h1>
         <p className="text-muted mt-4 text-base max-w-2xl mx-auto">

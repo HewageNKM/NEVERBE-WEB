@@ -8,6 +8,9 @@ import DealsProducts from "./components/DealsProducts";
 import Image from "next/image";
 import Link from "next/link";
 import { Metadata } from "next";
+import { Breadcrumb, Typography, Divider, Button } from "antd";
+
+const { Title, Text, Paragraph } = Typography;
 
 export const metadata: Metadata = {
   title: "Offers & Deals | NEVERBE Sri Lanka - Shoe Discounts",
@@ -57,7 +60,7 @@ const OffersPage = async () => {
   ]);
 
   const bannerPromotions = promotions.filter(
-    (p: any) => p.bannerUrl && p.isActive
+    (p: any) => p.bannerUrl && p.isActive,
   );
 
   let dealsList: any[] = [];
@@ -122,53 +125,94 @@ const OffersPage = async () => {
   };
 
   return (
-    <main className="w-full min-h-screen bg-surface">
+    <main className="w-full min-h-screen" style={{ background: "#f8faf5" }}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(offersSchema) }}
       />
 
-      {/* NEVERBE Performance Header */}
-      <div className="w-full max-w-content mx-auto px-4 md:px-12 py-12 md:py-20 text-left">
-        <h1 className="text-3xl md:text-5xl font-display font-black uppercase italic tracking-tighter text-primary leading-none mb-4">
-          Member Rewards & Offers
-        </h1>
-        <p className="text-muted max-w-xl text-sm md:text-base font-medium uppercase tracking-wide">
-          Unlock exclusive campaigns, seasonal coupons, and the best markdown
-          deals on premium footwear.
-        </p>
+      {/* Page Header */}
+      <div className="w-full max-w-content mx-auto px-4 md:px-12 pt-8 pb-6">
+        <Breadcrumb
+          style={{ marginBottom: 16 }}
+          items={[{ title: <Link href="/">Home</Link> }, { title: "Offers" }]}
+        />
+        <Title
+          level={1}
+          style={{
+            fontSize: "clamp(2rem, 5vw, 3.5rem)",
+            fontWeight: 900,
+            textTransform: "uppercase",
+            letterSpacing: "-0.03em",
+            lineHeight: 1,
+            margin: 0,
+            marginBottom: 8,
+          }}
+        >
+          Offers & Deals
+        </Title>
+        <Text style={{ color: "#888", fontSize: 14 }}>
+          Exclusive campaigns, seasonal coupons &amp; markdown deals.
+        </Text>
       </div>
 
-      <div className="w-full max-w-content mx-auto px-4 md:px-12 space-y-24 pb-20">
+      <div
+        className="w-full max-w-content mx-auto px-4 md:px-12 pb-20"
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "clamp(2rem, 4vw, 4rem)",
+        }}
+      >
         {/* Active Campaigns */}
         {bannerPromotions.length > 0 && (
           <section>
-            <div className="mb-10">
-              <h2 className="text-lg font-display font-black uppercase tracking-tight text-primary">
-                Active Campaigns
-              </h2>
-            </div>
-
+            <Title
+              level={5}
+              style={{
+                textTransform: "uppercase",
+                letterSpacing: "0.08em",
+                color: "#999",
+                fontWeight: 800,
+                marginBottom: 20,
+              }}
+            >
+              Active Campaigns
+            </Title>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {bannerPromotions.map((promo: any) => (
                 <div
                   key={promo.id}
-                  className="group block relative aspect-4/5 bg-surface-2 overflow-hidden cursor-pointer rounded-2xl shadow-custom hover:shadow-hover transition-all"
+                  className="group block relative bg-gray-100 overflow-hidden cursor-pointer rounded-2xl hover:shadow-lg transition-all"
+                  style={{ aspectRatio: "4/5" }}
                 >
                   <Image
                     src={promo.bannerUrl}
                     alt={promo.name}
                     fill
-                    className="object-cover transition-transform duration-1000 group-hover:scale-105"
+                    className="object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
-                  <div className="absolute bottom-10 left-10 right-10">
-                    <h3 className="text-inverse text-xl font-display font-black uppercase italic tracking-tight mb-3">
+                  <div className="absolute bottom-8 left-8 right-8">
+                    <h3 className="text-white text-lg font-black uppercase tracking-tight mb-3">
                       {promo.name}
                     </h3>
-                    <button className="px-6 py-3 bg-surface text-primary text-xs font-display font-black uppercase tracking-widest rounded-full hover:bg-accent hover:text-dark transition-all shadow-custom">
+                    <Button
+                      style={{
+                        borderRadius: 99,
+                        background: "#fff",
+                        color: "#1a1a1a",
+                        border: "none",
+                        fontWeight: 800,
+                        fontSize: 11,
+                        textTransform: "uppercase",
+                        letterSpacing: "0.08em",
+                        height: 36,
+                        padding: "0 20px",
+                      }}
+                    >
                       Shop Now
-                    </button>
+                    </Button>
                   </div>
                 </div>
               ))}
@@ -176,16 +220,22 @@ const OffersPage = async () => {
           </section>
         )}
 
-        {/* Coupons Section */}
+        {/* Coupons */}
         {coupons.length > 0 && (
           <section>
-            <div className="mb-10">
-              <h2 className="text-lg font-display font-black uppercase tracking-tight text-primary">
-                Your Available Coupons
-              </h2>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <Title
+              level={5}
+              style={{
+                textTransform: "uppercase",
+                letterSpacing: "0.08em",
+                color: "#999",
+                fontWeight: 800,
+                marginBottom: 20,
+              }}
+            >
+              Available Coupons
+            </Title>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {coupons.map((coupon) => (
                 <CouponCard key={coupon.id} coupon={coupon} />
               ))}
@@ -194,73 +244,123 @@ const OffersPage = async () => {
         )}
 
         {/* Markdown Deals */}
-        <section className="pt-16 border-t border-default">
-          <div className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <section>
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
             <div>
-              <h2 className="text-2xl md:text-4xl font-display font-black uppercase italic tracking-tighter text-primary leading-none">
-                Shop Markdown Deals
-              </h2>
-              <p className="text-muted text-sm mt-3 uppercase tracking-wide">
-                Highest performance footwear at our best prices.
-              </p>
+              <Title
+                level={2}
+                style={{
+                  textTransform: "uppercase",
+                  letterSpacing: "-0.02em",
+                  fontWeight: 900,
+                  margin: 0,
+                  marginBottom: 4,
+                }}
+              >
+                Markdown Deals
+              </Title>
+              <Text style={{ color: "#888", fontSize: 13 }}>
+                Best prices on premium products.
+              </Text>
             </div>
             <Link
               href="/collections/combos"
-              className="text-xs font-black uppercase tracking-widest text-primary hover:text-accent transition-colors border-b-2 border-transparent hover:border-accent pb-1"
+              style={{
+                fontSize: 12,
+                fontWeight: 800,
+                color: "#5a9a1a",
+                textTransform: "uppercase",
+                letterSpacing: "0.06em",
+                whiteSpace: "nowrap",
+              }}
             >
-              View Bundles & Combos
+              View Bundle Deals →
             </Link>
           </div>
-
           <DealsProducts items={dealsList} />
         </section>
       </div>
 
       {/* SEO Footer */}
-      <section className="bg-surface-2 py-16 mt-0">
+      <div
+        style={{
+          borderTop: "1px solid rgba(0,0,0,0.06)",
+          padding: "48px 0",
+          marginTop: 24,
+        }}
+      >
         <div className="max-w-content mx-auto px-8 lg:px-12">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 lg:gap-24">
-            <div className="max-w-sm">
-              <h2 className="text-sm font-display font-black uppercase tracking-tight text-primary mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+            <div>
+              <Text
+                strong
+                style={{
+                  fontSize: 11,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.1em",
+                  color: "#aaa",
+                  display: "block",
+                  marginBottom: 12,
+                }}
+              >
                 Member Benefits
-              </h2>
-              <p className="text-sm text-muted leading-relaxed mb-4">
-                Unlock exclusive deals and early access to new drops. Sign up
-                for NEVERBE membership to get the best prices on premium
-                footwear in Sri Lanka.
-              </p>
+              </Text>
+              <Paragraph style={{ fontSize: 13, color: "#777", margin: 0 }}>
+                Sign up to unlock early access, exclusive deals, and the best
+                prices on premium products in Sri Lanka.
+              </Paragraph>
             </div>
-
-            <div className="max-w-sm">
-              <h3 className="text-sm font-display font-black uppercase tracking-tight text-primary mb-6">
+            <div>
+              <Text
+                strong
+                style={{
+                  fontSize: 11,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.1em",
+                  color: "#aaa",
+                  display: "block",
+                  marginBottom: 12,
+                }}
+              >
                 Ways to Save
-              </h3>
-              <ul className="text-sm text-muted space-y-3 font-medium">
-                <li className="hover:text-accent cursor-pointer transition-colors">
-                  Seasonal Markdown Deals
-                </li>
-                <li className="hover:text-accent cursor-pointer transition-colors">
-                  Exclusive Coupon Codes
-                </li>
-                <li className="hover:text-accent cursor-pointer transition-colors">
-                  Bundle & Save Combos
-                </li>
+              </Text>
+              <ul
+                style={{
+                  fontSize: 13,
+                  color: "#777",
+                  lineHeight: 2,
+                  listStyle: "none",
+                  padding: 0,
+                  margin: 0,
+                }}
+              >
+                <li>Seasonal Markdown Deals</li>
+                <li>Exclusive Coupon Codes</li>
+                <li>Bundle &amp; Save Combos</li>
               </ul>
             </div>
-
-            <div className="max-w-sm">
-              <h3 className="text-sm font-display font-black uppercase tracking-tight text-primary mb-6">
+            <div>
+              <Text
+                strong
+                style={{
+                  fontSize: 11,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.1em",
+                  color: "#aaa",
+                  display: "block",
+                  marginBottom: 12,
+                }}
+              >
                 Price Match Promise
-              </h3>
-              <p className="text-sm text-muted leading-relaxed">
-                We offer the best prices on 7A quality footwear. If you find a
-                better price elsewhere, let us know and we&apos;ll do our best
-                to match it.
-              </p>
+              </Text>
+              <Paragraph style={{ fontSize: 13, color: "#777", margin: 0 }}>
+                Found a better price elsewhere? Let us know and we&apos;ll do
+                our best to match it.
+              </Paragraph>
             </div>
           </div>
         </div>
-      </section>
+      </div>
     </main>
   );
 };

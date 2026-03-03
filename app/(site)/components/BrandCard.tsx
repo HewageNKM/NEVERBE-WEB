@@ -29,7 +29,7 @@ const BrandCard: React.FC<BrandCardProps> = ({ brand, url, image }) => {
             className="object-contain w-48 h-32 transition-all duration-500 grayscale group-hover:grayscale-0 group-hover:scale-110"
           />
         ) : (
-          <div className="w-48 h-32 flex items-center justify-center text-muted font-display font-black uppercase italic tracking-tighter text-lg group-hover:text-accent transition-colors">
+          <div className="w-48 h-32 flex items-center justify-center text-muted font-display font-black uppercase tracking-tighter text-lg group-hover:text-accent transition-colors">
             {brand}
           </div>
         )}

@@ -2,7 +2,7 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Row, Col, Card, Typography, Button, Flex } from "antd";
+import { Row, Col, Card, Typography, Flex } from "antd";
 import { collectionList } from "@/constants";
 import { ArrowRightOutlined } from "@ant-design/icons";
 import { motion } from "framer-motion";
@@ -14,9 +14,70 @@ const fadeUp = {
   visible: (i: number) => ({
     opacity: 1,
     y: 0,
-    transition: { delay: i * 0.15, duration: 0.6, ease: [0.4, 0, 0.2, 1] },
+    transition: {
+      delay: i * 0.15,
+      duration: 0.6,
+      ease: [0.4, 0, 0.2, 1] as [number, number, number, number],
+    },
   }),
 };
+
+// Reusable gradient overlay + hover CTA for each category card
+const CategoryCardInner = ({ label }: { label: string }) => (
+  <>
+    {/* Dark gradient so label always reads on any image */}
+    <div
+      className="absolute inset-x-0 bottom-0 z-10 pointer-events-none transition-all duration-500"
+      style={{
+        height: "65%",
+        background:
+          "linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.45) 50%, transparent 100%)",
+      }}
+    />
+    {/* CTA row */}
+    <div className="absolute inset-x-0 bottom-0 p-5 z-20">
+      <Flex align="center" justify="space-between">
+        <span
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 8,
+            padding: "8px 18px",
+            borderRadius: 99,
+            background: "rgba(255,255,255,0.12)",
+            backdropFilter: "blur(12px)",
+            WebkitBackdropFilter: "blur(12px)",
+            border: "1px solid rgba(255,255,255,0.2)",
+            fontWeight: 800,
+            fontSize: 12,
+            textTransform: "uppercase" as const,
+            letterSpacing: "0.08em",
+            color: "#fff",
+            transition: "all 0.35s cubic-bezier(0.4,0,0.2,1)",
+          }}
+          className="group-hover:!bg-[#97e13e] group-hover:!text-black group-hover:!border-transparent"
+        >
+          {label}
+        </span>
+        <div
+          className="opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all duration-400"
+          style={{
+            width: 40,
+            height: 40,
+            borderRadius: "50%",
+            background: "#97e13e",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexShrink: 0,
+          }}
+        >
+          <ArrowRightOutlined style={{ color: "#fff", fontSize: 16 }} />
+        </div>
+      </Flex>
+    </div>
+  </>
+);
 
 const FeaturedCategories = () => {
   return (
@@ -43,24 +104,25 @@ const FeaturedCategories = () => {
               letterSpacing: "-0.03em",
             }}
           >
-            The Essentials
+            Shop by Category
           </Title>
         </Flex>
         <Link href="/collections/products" className="hidden md:block">
-          <Button
-            type="text"
-            icon={<ArrowRightOutlined />}
-            iconPosition="end"
+          <span
             style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6,
               fontWeight: 800,
               textTransform: "uppercase",
               letterSpacing: "0.1em",
               fontSize: 12,
+              transition: "color 0.3s ease",
             }}
             className="hover:!text-[#97e13e]"
           >
-            View All
-          </Button>
+            View All <ArrowRightOutlined />
+          </span>
         </Link>
       </Flex>
 
@@ -88,7 +150,7 @@ const FeaturedCategories = () => {
                     overflow: "hidden",
                     padding: 0,
                     border: "none",
-                    borderRadius: 28,
+                    borderRadius: 24,
                   }}
                   styles={{ body: { padding: 0, height: "100%" } }}
                   className="group"
@@ -100,50 +162,7 @@ const FeaturedCategories = () => {
                       fill
                       className="object-cover transition-transform duration-700 group-hover:scale-105"
                     />
-                    {/* Glassmorphic bottom overlay */}
-                    <div
-                      className="absolute inset-x-0 bottom-0 p-6 transition-all duration-300"
-                      style={{
-                        background:
-                          "linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 100%)",
-                      }}
-                    >
-                      <Flex align="center" justify="space-between">
-                        <Button
-                          type="default"
-                          shape="round"
-                          size="large"
-                          style={{
-                            fontWeight: 800,
-                            textTransform: "uppercase",
-                            letterSpacing: "0.08em",
-                            fontSize: 12,
-                            background: "rgba(255,255,255,0.9)",
-                            backdropFilter: "blur(12px)",
-                            border: "1px solid rgba(255,255,255,0.5)",
-                          }}
-                        >
-                          {collectionList[0].label}
-                        </Button>
-                        <div
-                          className="opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:translate-x-0 -translate-x-2"
-                          style={{
-                            width: 40,
-                            height: 40,
-                            borderRadius: "50%",
-                            background: "rgba(151, 225, 62, 0.9)",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            boxShadow: "0 4px 16px rgba(151, 225, 62, 0.4)",
-                          }}
-                        >
-                          <ArrowRightOutlined
-                            style={{ color: "#000", fontSize: 16 }}
-                          />
-                        </div>
-                      </Flex>
-                    </div>
+                    <CategoryCardInner label={collectionList[0].label} />
                   </div>
                 </Card>
               </Link>
@@ -173,7 +192,7 @@ const FeaturedCategories = () => {
                         overflow: "hidden",
                         padding: 0,
                         border: "none",
-                        borderRadius: 28,
+                        borderRadius: 24,
                       }}
                       styles={{ body: { padding: 0, height: "100%" } }}
                       className="group"
@@ -185,49 +204,7 @@ const FeaturedCategories = () => {
                           fill
                           className="object-cover transition-transform duration-700 group-hover:scale-105"
                         />
-                        <div
-                          className="absolute inset-x-0 bottom-0 p-6"
-                          style={{
-                            background:
-                              "linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 100%)",
-                          }}
-                        >
-                          <Flex align="center" justify="space-between">
-                            <Button
-                              type="default"
-                              shape="round"
-                              size="large"
-                              style={{
-                                fontWeight: 800,
-                                textTransform: "uppercase",
-                                letterSpacing: "0.08em",
-                                fontSize: 12,
-                                background: "rgba(255,255,255,0.9)",
-                                backdropFilter: "blur(12px)",
-                                border: "1px solid rgba(255,255,255,0.5)",
-                              }}
-                            >
-                              {item.label}
-                            </Button>
-                            <div
-                              className="opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:translate-x-0 -translate-x-2"
-                              style={{
-                                width: 40,
-                                height: 40,
-                                borderRadius: "50%",
-                                background: "rgba(151, 225, 62, 0.9)",
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                boxShadow: "0 4px 16px rgba(151, 225, 62, 0.4)",
-                              }}
-                            >
-                              <ArrowRightOutlined
-                                style={{ color: "#000", fontSize: 16 }}
-                              />
-                            </div>
-                          </Flex>
-                        </div>
+                        <CategoryCardInner label={item.label} />
                       </div>
                     </Card>
                   </Link>

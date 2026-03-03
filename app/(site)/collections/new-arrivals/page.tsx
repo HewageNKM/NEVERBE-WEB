@@ -3,6 +3,10 @@ export const revalidate = 3600;
 import CollectionProducts from "@/app/(site)/collections/components/CollectionProducts";
 import { getNewArrivals } from "@/services/ProductService";
 import type { Metadata } from "next";
+import Link from "next/link";
+import { Breadcrumb, Typography } from "antd";
+
+const { Title, Text, Paragraph } = Typography;
 
 export const metadata: Metadata = {
   title: "New Arrivals - Latest Shoes & Sneakers | NEVERBE Sri Lanka",
@@ -103,21 +107,39 @@ const NewArrivalsPage = async () => {
   };
 
   return (
-    <main className="w-full min-h-screen bg-surface">
-      {/* NEVERBE Performance Header */}
-      <div className="w-full max-w-content mx-auto px-4 md:px-12 py-12 md:py-20 text-left">
-        <h1 className="text-3xl md:text-5xl font-display font-black uppercase italic tracking-tighter text-primary leading-none mb-4">
-          New Arrivals
-        </h1>
-        <p className="text-muted max-w-xl text-sm md:text-base font-medium uppercase tracking-wide">
-          The latest heat. Fresh styles just added to the collection.
-        </p>
-      </div>
-
+    <main className="w-full min-h-screen" style={{ background: "#f8faf5" }}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
+
+      {/* Page Header */}
+      <div className="w-full max-w-content mx-auto px-4 md:px-12 pt-8 pb-6">
+        <Breadcrumb
+          style={{ marginBottom: 16 }}
+          items={[
+            { title: <Link href="/">Home</Link> },
+            { title: "New Arrivals" },
+          ]}
+        />
+        <Title
+          level={1}
+          style={{
+            fontSize: "clamp(2rem, 5vw, 3.5rem)",
+            fontWeight: 900,
+            textTransform: "uppercase",
+            letterSpacing: "-0.03em",
+            lineHeight: 1,
+            margin: 0,
+            marginBottom: 8,
+          }}
+        >
+          New Arrivals
+        </Title>
+        <Text style={{ color: "#888", fontSize: 14 }}>
+          Fresh styles just added to the collection.
+        </Text>
+      </div>
 
       <CollectionProducts
         initialItems={dataList}
@@ -127,48 +149,81 @@ const NewArrivalsPage = async () => {
       />
 
       {/* SEO Footer */}
-      <section className="bg-surface-2 py-16 mt-0">
+      <div
+        style={{ borderTop: "1px solid rgba(0,0,0,0.06)", padding: "48px 0" }}
+      >
         <div className="max-w-content mx-auto px-8 lg:px-12">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 lg:gap-24">
-            <div className="max-w-sm">
-              <h2 className="text-sm font-display font-black uppercase tracking-tight text-primary mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+            <div>
+              <Text
+                strong
+                style={{
+                  fontSize: 11,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.1em",
+                  color: "#aaa",
+                  display: "block",
+                  marginBottom: 12,
+                }}
+              >
                 Fresh Drops Weekly
-              </h2>
-              <p className="text-sm text-muted leading-relaxed mb-4">
-                Stay with the trend. We update our collection with the latest
-                releases from top global sneaker culture. 7A quality guaranteed.
-              </p>
+              </Text>
+              <Paragraph style={{ fontSize: 13, color: "#777", margin: 0 }}>
+                We update our collection with the latest releases from global
+                sneaker culture. 7A quality guaranteed.
+              </Paragraph>
             </div>
-
-            <div className="max-w-sm">
-              <h3 className="text-sm font-display font-black uppercase tracking-tight text-primary mb-6">
+            <div>
+              <Text
+                strong
+                style={{
+                  fontSize: 11,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.1em",
+                  color: "#aaa",
+                  display: "block",
+                  marginBottom: 12,
+                }}
+              >
                 Trending Now
-              </h3>
-              <ul className="text-sm text-muted space-y-3 font-medium">
-                <li className="hover:text-accent cursor-pointer transition-colors">
-                  Retro High Tops
-                </li>
-                <li className="hover:text-accent cursor-pointer transition-colors">
-                  Chunky Dad Shoes
-                </li>
-                <li className="hover:text-accent cursor-pointer transition-colors">
-                  Minimalist Slides
-                </li>
+              </Text>
+              <ul
+                style={{
+                  fontSize: 13,
+                  color: "#777",
+                  lineHeight: 2,
+                  listStyle: "none",
+                  padding: 0,
+                  margin: 0,
+                }}
+              >
+                <li>Retro High Tops</li>
+                <li>Chunky Dad Shoes</li>
+                <li>Minimalist Slides</li>
               </ul>
             </div>
-
-            <div className="max-w-sm">
-              <h3 className="text-sm font-display font-black uppercase tracking-tight text-primary mb-6">
+            <div>
+              <Text
+                strong
+                style={{
+                  fontSize: 11,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.1em",
+                  color: "#aaa",
+                  display: "block",
+                  marginBottom: 12,
+                }}
+              >
                 Limited Stock
-              </h3>
-              <p className="text-sm text-muted leading-relaxed">
+              </Text>
+              <Paragraph style={{ fontSize: 13, color: "#777", margin: 0 }}>
                 Most new arrivals are limited runs. If you see your size, grab
-                it before it&apos;s gone. Free returns on all new drops.
-              </p>
+                it before it&apos;s gone.
+              </Paragraph>
             </div>
           </div>
         </div>
-      </section>
+      </div>
     </main>
   );
 };

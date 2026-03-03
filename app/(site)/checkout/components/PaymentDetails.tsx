@@ -55,7 +55,7 @@ const BundleCard = ({ bundle }: { bundle: BundleGroup }) => {
   return (
     <div className="border border-default bg-surface rounded-xl overflow-hidden shadow-custom">
       <div className="bg-dark text-inverse px-3 py-2 flex justify-between items-center">
-        <span className="text-[9px] font-display font-black uppercase italic tracking-tighter">
+        <span className="text-[9px] font-display font-black uppercase tracking-tighter">
           Bundle
         </span>
         <span className="text-[10px] font-bold">{bundle.comboName}</span>
@@ -97,7 +97,7 @@ const BundleCard = ({ bundle }: { bundle: BundleGroup }) => {
               Rs. {bundle.totalPrice.toLocaleString()}
             </span>
           )}
-          <span className="text-xs font-display font-black italic text-success">
+          <span className="text-xs font-display font-black text-success">
             Rs. {netPrice.toLocaleString()}
           </span>
         </div>

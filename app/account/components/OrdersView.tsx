@@ -37,7 +37,7 @@ const OrdersView: React.FC<OrdersViewProps> = ({ orders }) => {
           <span className="text-[10px] font-black uppercase tracking-[0.3em] text-accent">
             Purchases
           </span>
-          <h2 className="text-3xl font-display font-black uppercase italic tracking-tighter text-primary">
+          <h2 className="text-3xl font-display font-black uppercase tracking-tighter text-primary">
             Order History
           </h2>
         </div>

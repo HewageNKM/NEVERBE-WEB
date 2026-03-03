@@ -199,7 +199,7 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
                       Shipping Details
                     </h3>
                   </div>
-                  <address className="not-italic text-sm text-zinc-500 font-medium leading-relaxed pl-8 border-l-2 border-zinc-100 group-hover:border-[#97e13e] transition-colors">
+                  <address className="not-text-sm text-zinc-500 font-medium leading-relaxed pl-8 border-l-2 border-zinc-100 group-hover:border-[#97e13e] transition-colors">
                     <p className="text-black font-black uppercase tracking-tighter text-base">
                       {customer.shippingName || customer.name}
                     </p>

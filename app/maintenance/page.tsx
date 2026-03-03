@@ -25,7 +25,7 @@ export default function MaintenancePage() {
           className="mb-6 px-4 py-1.5 border border-accent/30 rounded-full bg-accent/5 flex items-center gap-2"
         >
           <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse shadow-[0_0_8px_#97e13e]" />
-          <span className="text-[10px] font-black uppercase tracking-[0.3em] text-accent italic">
+          <span className="text-[10px] font-black uppercase tracking-[0.3em] text-accent">
             System Protocol 4.0
           </span>
         </motion.div>
@@ -35,7 +35,7 @@ export default function MaintenancePage() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          className="text-7xl md:text-[12rem] font-display font-black uppercase italic tracking-tighter leading-none mb-4 text-accent drop-shadow-[0_0_30px_rgba(151,225,62,0.2)]"
+          className="text-7xl md:text-[12rem] font-display font-black uppercase tracking-tighter leading-none mb-4 text-accent drop-shadow-[0_0_30px_rgba(151,225,62,0.2)]"
         >
           Neverbe
         </motion.h1>
@@ -61,7 +61,7 @@ export default function MaintenancePage() {
           transition={{ delay: 0.4, duration: 0.8 }}
           className="space-y-6 max-w-lg"
         >
-          <h2 className="text-xl md:text-2xl font-display font-black uppercase italic tracking-tight text-inverse">
+          <h2 className="text-xl md:text-2xl font-display font-black uppercase tracking-tight text-inverse">
             Performance Upgrade In Progress
           </h2>
           <p className="text-muted font-medium text-sm md:text-base leading-relaxed">
@@ -80,7 +80,7 @@ export default function MaintenancePage() {
         >
           <a
             href="mailto:support@neverbe.lk"
-            className="group relative flex items-center gap-4 px-8 py-4 bg-accent text-dark rounded-full font-display font-black uppercase italic tracking-widest text-xs transition-all hover:shadow-hover hover:scale-105 active:scale-95"
+            className="group relative flex items-center gap-4 px-8 py-4 bg-accent text-dark rounded-full font-display font-black uppercase tracking-widest text-xs transition-all hover:shadow-hover hover:scale-105 active:scale-95"
           >
             Contact Control
             <FaArrowRightLong
@@ -95,7 +95,7 @@ export default function MaintenancePage() {
       <footer className="absolute bottom-12 w-full text-center">
         <div className="flex flex-col items-center gap-4">
           <div className="w-12 h-[1px] bg-accent/20" />
-          <p className="text-[10px] font-black uppercase text-muted tracking-[0.4em] italic">
+          <p className="text-[10px] font-black uppercase text-muted tracking-[0.4em]">
             &copy; {new Date().getFullYear()} NEVERBE PERFORMANCE CLOTHING LABS
           </p>
         </div>

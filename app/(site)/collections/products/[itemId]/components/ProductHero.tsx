@@ -236,7 +236,7 @@ const ProductHero = ({ item }: { item: Product }) => {
 
           {/* Discount Badge - Branded */}
           {item.discount > 0 && (
-            <div className="absolute top-4 left-4 bg-accent text-dark px-4 py-2 font-display font-black text-xs uppercase italic tracking-tighter shadow-custom">
+            <div className="absolute top-4 left-4 bg-accent text-dark px-4 py-2 font-display font-black text-xs uppercase tracking-tighter shadow-custom">
               {item.discount}% Off
             </div>
           )}
@@ -271,7 +271,7 @@ const ProductHero = ({ item }: { item: Product }) => {
           {/* Promotion Banner - Display Only */}
           {activePromo && (
             <div className="bg-accent text-dark p-4 flex items-center gap-3 shadow-custom">
-              <p className="text-sm font-display font-black uppercase italic tracking-tighter">
+              <p className="text-sm font-display font-black uppercase tracking-tighter">
                 {activePromo.name || "Special Offer"}
               </p>
               <span className="text-[9px] font-bold uppercase tracking-widest opacity-70">
@@ -281,14 +281,14 @@ const ProductHero = ({ item }: { item: Product }) => {
           )}
 
           <header>
-            <h2 className="text-xs font-black uppercase tracking-[0.2em] text-accent mb-2 italic">
+            <h2 className="text-xs font-black uppercase tracking-[0.2em] text-accent mb-2">
               {item.brand?.replace("-", " ")}
             </h2>
-            <h1 className="text-4xl lg:text-5xl font-display font-black uppercase italic tracking-tighter leading-[0.9] mb-4 text-primary">
+            <h1 className="text-4xl lg:text-5xl font-display font-black uppercase tracking-tighter leading-[0.9] mb-4 text-primary">
               {item.name}
             </h1>
             <div className="flex items-baseline gap-4 flex-wrap">
-              <span className="text-3xl font-display font-black italic tracking-tighter text-primary">
+              <span className="text-3xl font-display font-black tracking-tighter text-primary">
                 Rs. {finalPrice.toLocaleString()}
               </span>
               {hasActiveDiscount && (
@@ -297,7 +297,7 @@ const ProductHero = ({ item }: { item: Product }) => {
                 </span>
               )}
               {hasActiveDiscount && (
-                <span className="bg-success text-dark text-[10px] font-black px-3 py-1 uppercase tracking-widest italic shadow-custom">
+                <span className="bg-success text-dark text-[10px] font-black px-3 py-1 uppercase tracking-widest shadow-custom">
                   Save Rs. {(originalPrice - finalPrice).toLocaleString()}
                 </span>
               )}

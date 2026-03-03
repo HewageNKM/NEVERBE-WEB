@@ -556,7 +556,7 @@ const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
               </span>
             </div>
 
-            <h1 className="text-4xl md:text-5xl font-display font-black uppercase italic tracking-tighter text-primary leading-[0.9]">
+            <h1 className="text-4xl md:text-5xl font-display font-black uppercase tracking-tighter text-primary leading-[0.9]">
               {combo.name}
             </h1>
 
@@ -573,7 +573,7 @@ const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
               <span className="text-xl font-bold text-muted line-through">
                 Rs. {combo.originalPrice.toLocaleString()}
               </span>
-              <span className="bg-success text-dark text-[10px] font-black px-3 py-1 uppercase tracking-widest italic">
+              <span className="bg-success text-dark text-[10px] font-black px-3 py-1 uppercase tracking-widest">
                 Save Rs. {pricing.savings.toLocaleString()}
               </span>
             </div>

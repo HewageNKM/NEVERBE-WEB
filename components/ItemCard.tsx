@@ -75,32 +75,35 @@ const ItemCard = ({
               : "Special Offer"
             : item.discount > 0
               ? `${item.discount}% Off`
-              : "Just In"
+              : null
       }
-      color={outOfStocks ? "#000" : "#97e13e"}
+      color={outOfStocks ? "#1a1a1a" : "#97e13e"}
       style={{
-        padding: "0 16px",
+        padding: "0 10px",
+        fontSize: "11px",
         fontWeight: 800,
         textTransform: "uppercase",
-        color: outOfStocks ? "#fff" : "#000",
+        color: "#fff",
         letterSpacing: "0.05em",
+        display:
+          outOfStocks || activePromo || item.discount > 0 ? undefined : "none",
       }}
     >
       <Card
         hoverable
-        className="group"
+        className="group active:scale-[0.98]"
         style={{
-          borderRadius: 24,
           overflow: "hidden",
-          border: "1px solid #e0e8d8",
           transition: "all 0.3s ease",
+          height: "100%",
+          minHeight: 360,
         }}
         styles={{
-          body: { padding: "16px" },
+          body: { padding: "10px 12px" },
           cover: { position: "relative" },
         }}
         cover={
-          <div className="relative aspect-4/5 w-full overflow-hidden bg-surface-3 rounded-t-[24px]">
+          <div className="relative aspect-square w-full overflow-hidden bg-[#fcfdfa] rounded-t-[24px]">
             <Link
               href={`/collections/products/${item?.id}`}
               className="block h-full w-full"
@@ -128,14 +131,11 @@ const ItemCard = ({
                     openQuickView(item);
                   }}
                   style={{
-                    backgroundColor: "rgba(255, 255, 255, 0.95)",
-                    backdropFilter: "blur(8px)",
                     fontWeight: 800,
                     textTransform: "uppercase",
                     letterSpacing: "0.1em",
-                    border: "1px solid #e0e8d8",
                   }}
-                  className="hover:!text-[#97e13e] hover:!border-[#97e13e]"
+                  className=" hover:text-[#97e13e]! hover:border-[#97e13e]!"
                 >
                   Quick Look
                 </Button>
@@ -150,25 +150,22 @@ const ItemCard = ({
                   e.preventDefault();
                   openQuickView(item);
                 }}
-                className="absolute bottom-3 right-3 lg:hidden z-10 shadow-md"
-                style={{
-                  backgroundColor: "rgba(255, 255, 255, 0.95)",
-                  backdropFilter: "blur(8px)",
-                  border: "none",
-                }}
+                className="absolute bottom-3 right-3 lg:hidden z-10 shadow-md  border-none"
               />
             )}
           </div>
         }
       >
         <Link href={`/collections/products/${item?.id}`}>
-          <div className="flex flex-col gap-1 mb-3">
+          <div className="flex flex-col gap-0.5 mb-2">
             <Title
               level={5}
               style={{
                 margin: 0,
+                fontSize: 13,
                 fontWeight: 800,
                 letterSpacing: "-0.02em",
+                lineHeight: 1.2,
               }}
               className="group-hover:text-accent transition-colors line-clamp-2"
             >
@@ -176,7 +173,11 @@ const ItemCard = ({
             </Title>
             <Text
               type="secondary"
-              style={{ textTransform: "capitalize", fontWeight: 600 }}
+              style={{
+                textTransform: "capitalize",
+                fontWeight: 600,
+                fontSize: "11px",
+              }}
             >
               {item.category?.replace("-", " ") || "Premium Gear"}
             </Text>
@@ -184,7 +185,7 @@ const ItemCard = ({
         </Link>
 
         {item.variants?.length > 1 && (
-          <div className="flex items-center gap-2 mb-3">
+          <div className="flex items-center gap-1.5 mb-2">
             {item.variants.slice(0, 5).map((variant) => {
               const variantPromo = getVariantPromotion(variant.variantId);
               return (
@@ -198,7 +199,7 @@ const ItemCard = ({
                   onMouseEnter={() => setActiveVariant(variant)}
                 >
                   <div
-                    className={`w-8 h-8 rounded-full overflow-hidden border-2 transition-all duration-200 ${
+                    className={`w-6 h-6 rounded-full overflow-hidden border-2 transition-all duration-200 ${
                       activeVariant?.variantId === variant.variantId
                         ? "border-[#97e13e] shadow-sm transform scale-110 relative z-10"
                         : "border-transparent opacity-70 hover:opacity-100"
@@ -222,7 +223,7 @@ const ItemCard = ({
               );
             })}
             {item.variants.length > 5 && (
-              <Text type="secondary" style={{ fontSize: 11, fontWeight: 700 }}>
+              <Text type="secondary" style={{ fontSize: 10, fontWeight: 700 }}>
                 +{item.variants.length - 5}
               </Text>
             )}
@@ -230,19 +231,19 @@ const ItemCard = ({
         )}
 
         <Link href={`/collections/products/${item?.id}`}>
-          <div className="flex items-baseline gap-2 flex-wrap mb-1 text-base">
+          <div className="flex items-baseline gap-1.5 flex-wrap mb-1 text-base">
             <Text
               strong
               style={{
                 color: hasDiscount ? "#97e13e" : "inherit",
-                fontSize: "1.1rem",
+                fontSize: "1rem",
                 letterSpacing: "-0.03em",
               }}
             >
               Rs. {discountedPrice.toLocaleString()}
             </Text>
             {hasDiscount && (
-              <Text delete type="secondary" style={{ fontSize: "0.85rem" }}>
+              <Text delete type="secondary" style={{ fontSize: "0.75rem" }}>
                 Rs.{" "}
                 {item.marketPrice > item.sellingPrice
                   ? item.marketPrice.toLocaleString()
@@ -251,19 +252,23 @@ const ItemCard = ({
             )}
           </div>
 
-          <div className="flex items-center gap-2 mt-2">
+          <div className="flex items-center justify-between mt-1 pt-1.5 border-t border-gray-100/50">
             <Text
               type="secondary"
               style={{
-                fontSize: "10px",
-                textTransform: "uppercase",
+                fontSize: "11px",
                 fontWeight: 700,
-                letterSpacing: "0.05em",
+                letterSpacing: "-0.01em",
               }}
             >
-              3 x Installments with
+              3 x Rs.{" "}
+              {(discountedPrice / 3).toLocaleString("en-US", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}{" "}
+              with
             </Text>
-            <div className="w-10 h-4 relative grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all">
+            <div className="w-7 h-2.5 relative">
               <Image
                 src={KOKOLogo}
                 alt="KOKO"

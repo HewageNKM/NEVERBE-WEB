@@ -168,7 +168,7 @@ const SavedAddresses: React.FC<SavedAddressesProps> = ({
                       <IoCardOutline size={20} />
                     )}
                   </div>
-                  <h3 className="font-display font-black text-lg uppercase italic tracking-tighter text-primary">
+                  <h3 className="font-display font-black text-lg uppercase tracking-tighter text-primary">
                     {type} Address
                   </h3>
                 </div>
@@ -184,7 +184,7 @@ const SavedAddresses: React.FC<SavedAddressesProps> = ({
                     </p>
                   </div>
                 ) : (
-                  <p className="text-sm text-muted italic">
+                  <p className="text-sm text-muted">
                     No address provided
                   </p>
                 )}
@@ -218,7 +218,7 @@ const SavedAddresses: React.FC<SavedAddressesProps> = ({
         <span className="text-[10px] font-black uppercase tracking-[0.3em] text-accent">
           Delivery
         </span>
-        <h2 className="text-3xl font-display font-black uppercase italic tracking-tighter text-primary mt-2">
+        <h2 className="text-3xl font-display font-black uppercase tracking-tighter text-primary mt-2">
           Your Addresses
         </h2>
         <p className="text-xs text-muted font-bold uppercase tracking-widest mt-2">

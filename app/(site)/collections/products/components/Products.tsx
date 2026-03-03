@@ -1,9 +1,8 @@
 "use client";
 import React from "react";
-import { Pagination } from "antd";
+import { Pagination, Button, Badge } from "antd";
 import ProductsFilter from "./ProductsFilter";
 import { IoOptionsOutline } from "react-icons/io5";
-import { AnimatePresence } from "framer-motion";
 import { Product } from "@/interfaces/Product";
 import SortDropdown from "@/components/SortDropdown";
 import PopUpFilterPanel from "@/components/PopUpFilterPanel";
@@ -57,34 +56,65 @@ const Products = ({ items }: { items: Product[] }) => {
         }}
       />
 
-      {/* Mobile Filter Drawer */}
-      <AnimatePresence>
-        {showFilter && (
-          <PopUpFilterPanel
-            selectedBrands={filters.brands}
-            selectedCategories={filters.categories}
-            selectedSizes={filters.sizes}
-            inStock={filters.inStock}
-            onBrandToggle={toggleBrand}
-            onCategoryToggle={toggleCategory}
-            onSizeToggle={toggleSize}
-            onInStockChange={setInStock}
-            onReset={resetFilters}
-            onClose={() => setShowFilter(false)}
-          />
-        )}
-      </AnimatePresence>
+      {/* Mobile Filter Drawer - Antd Drawer, no AnimatePresence needed */}
+      {showFilter && (
+        <PopUpFilterPanel
+          selectedBrands={filters.brands}
+          selectedCategories={filters.categories}
+          selectedSizes={filters.sizes}
+          inStock={filters.inStock}
+          onBrandToggle={toggleBrand}
+          onCategoryToggle={toggleCategory}
+          onSizeToggle={toggleSize}
+          onInStockChange={setInStock}
+          onReset={resetFilters}
+          onClose={() => setShowFilter(false)}
+        />
+      )}
 
       <div className="flex-1 w-full">
-        {/* Icon-only Toolbar */}
-        <div className="relative z-20 bg-surface/90 backdrop-blur-md py-4 flex justify-between lg:justify-end items-center gap-2">
-          <button
+        <div className="relative z-20 py-4 flex justify-between lg:justify-end items-center gap-3">
+          <Button
             onClick={() => setShowFilter(true)}
-            className="lg:hidden w-10 h-10 flex items-center justify-center bg-surface-2 border border-default rounded-full hover:border-accent text-primary hover:text-accent transition-all"
-            aria-label="Open Filters"
+            className="lg:hidden"
+            icon={<IoOptionsOutline size={16} />}
+            style={{
+              borderRadius: 99,
+              fontWeight: 700,
+              fontSize: 12,
+              textTransform: "uppercase",
+              letterSpacing: "0.06em",
+              height: 38,
+              padding: "0 16px",
+              border: "1.5px solid rgba(0,0,0,0.12)",
+              background: "#fff",
+              color: "#333",
+            }}
           >
-            <IoOptionsOutline size={18} />
-          </button>
+            Filters
+            {filters.brands.length +
+              filters.categories.length +
+              filters.sizes.length +
+              (filters.inStock ? 1 : 0) >
+              0 && (
+              <span
+                style={{
+                  marginLeft: 6,
+                  background: "#97e13e",
+                  color: "#fff",
+                  borderRadius: 99,
+                  fontSize: 10,
+                  fontWeight: 900,
+                  padding: "1px 7px",
+                }}
+              >
+                {filters.brands.length +
+                  filters.categories.length +
+                  filters.sizes.length +
+                  (filters.inStock ? 1 : 0)}
+              </span>
+            )}
+          </Button>
 
           <SortDropdown value={filters.sort} onChange={setSort} />
         </div>

@@ -132,14 +132,19 @@ const Page = async () => {
         }}
       />
 
-      {/* NEVERBE Performance Header */}
-      <div className="w-full max-w-content mx-auto px-4 md:px-12 py-12 md:py-20 text-left">
-        <h1 className="text-3xl md:text-5xl font-display font-black uppercase italic tracking-tighter text-primary leading-none mb-4">
-          Products
+      {/* Page Header */}
+      <div className="w-full max-w-content mx-auto px-4 md:px-12 pt-10 pb-6 text-left">
+        <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">
+          All Products
+        </p>
+        <h1 className="text-3xl md:text-5xl font-display font-black uppercase tracking-tighter text-gray-900 leading-none mb-3">
+          Collection
         </h1>
-        <p className="text-muted max-w-xl text-sm md:text-base font-medium uppercase tracking-wide">
-          Browse our complete collection. Sneakers, slides, and more for every
-          style.
+        <p
+          className="text-muted max-w-xl text-sm font-medium"
+          style={{ color: "#888" }}
+        >
+          Browse sneakers, apparel, accessories and more.
         </p>
       </div>
 
@@ -151,49 +156,36 @@ const Page = async () => {
       </div>
 
       {/* SEO Footer */}
-      <section className="bg-surface-2 py-16 mt-20">
+      <section className="py-12 mt-8 border-t border-gray-100">
         <div className="max-w-content mx-auto px-8 lg:px-12">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 lg:gap-24">
-            <div className="max-w-sm">
-              <h2 className="text-sm font-display font-black uppercase tracking-tight text-primary mb-6">
-                Premium Footwear in Sri Lanka
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+            <div>
+              <h2 className="text-xs font-black uppercase tracking-widest text-gray-400 mb-4">
+                Premium Fashion in Sri Lanka
               </h2>
-              <p className="text-sm text-muted leading-relaxed mb-4">
-                NEVERBE offers an extensive range of footwear designed to meet
-                every lifestyle need. From high-performance sports shoes to
-                stylish casual sneakers, we provide the best shoe prices in Sri
-                Lanka without compromising on quality.
+              <p className="text-sm text-gray-500 leading-relaxed">
+                NEVERBE offers shoes, clothing, activewear, and accessories —
+                all with island-wide Cash on Delivery.
               </p>
             </div>
-
-            <div className="max-w-sm">
-              <h3 className="text-sm font-display font-black uppercase tracking-tight text-primary mb-6">
+            <div>
+              <h3 className="text-xs font-black uppercase tracking-widest text-gray-400 mb-4">
                 Popular Collections
               </h3>
-              <ul className="text-sm text-muted space-y-3 font-medium">
-                <li className="hover:text-accent cursor-pointer transition-colors">
-                  Men&apos;s Lifestyle Sneakers
-                </li>
-                <li className="hover:text-accent cursor-pointer transition-colors">
-                  Women&apos;s Performance Running
-                </li>
-                <li className="hover:text-accent cursor-pointer transition-colors">
-                  Island-wide COD Footwear
-                </li>
-                <li className="hover:text-accent cursor-pointer transition-colors">
-                  High-Ankle Gym Boots
-                </li>
+              <ul className="text-sm text-gray-500 space-y-2 font-medium">
+                <li>Men&apos;s Sneakers</li>
+                <li>Women&apos;s Activewear</li>
+                <li>Slides &amp; Sandals</li>
+                <li>High-Ankle Boots</li>
               </ul>
             </div>
-
-            <div className="max-w-sm">
-              <h3 className="text-sm font-display font-black uppercase tracking-tight text-primary mb-6">
+            <div>
+              <h3 className="text-xs font-black uppercase tracking-widest text-gray-400 mb-4">
                 Quality Guaranteed
               </h3>
-              <p className="text-sm text-muted leading-relaxed">
-                We accept size exchanges within 7 days. Every product is checked
-                for quality (7A Grade) to ensure you get the durability and
-                comfort you deserve.
+              <p className="text-sm text-gray-500 leading-relaxed">
+                Size exchanges within 7 days. Every product is 7A Grade quality
+                — durability and comfort guaranteed.
               </p>
             </div>
           </div>

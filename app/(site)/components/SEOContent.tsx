@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import { Typography, Row, Col, Card, Flex, Divider, Tag } from "antd";
+import { Typography, Row, Col, Flex, Divider, Tag } from "antd";
 
 const { Title, Paragraph, Text } = Typography;
 
@@ -13,8 +13,12 @@ const SEOContent = () => {
     "Casual Slides",
     "High-Ankle Boots",
     "Gym Footwear",
-    "Office Shoes",
-    "Party Wear",
+    "Men's Clothing",
+    "Women's Clothing",
+    "Sports Apparel",
+    "Activewear",
+    "Accessories",
+    "Socks & Undergarments",
   ];
 
   const searchLinks = [
@@ -26,28 +30,33 @@ const SEOContent = () => {
       label: "Men's Sandals",
       href: "/collections/products?category=sandals%20%26%20slippers%20%26%20slides",
     },
-    { label: "Nike Copy Shoes", href: "/collections/products?brand=nike" },
+    {
+      label: "Men's Activewear",
+      href: "/collections/products?category=activewear",
+    },
     { label: "Shoe Sale", href: "/collections/offers" },
     {
       label: "Best Sneakers 2025",
       href: "/collections/products?category=sneakers",
     },
+    {
+      label: "Women's Sports Apparel",
+      href: "/collections/products?category=sports%20apparel",
+    },
+    {
+      label: "Clothing Sri Lanka",
+      href: "/collections/products?category=clothing",
+    },
   ];
 
   return (
-    <Card
-      styles={{
-        body: { padding: "48px 0" },
-      }}
+    <div
+      className="!rounded-none !border-x-0 !border-b-0"
       style={{
-        borderRadius: 0,
-        border: "none",
-        borderTop: "1px solid rgba(151, 225, 62, 0.08)",
-        background:
-          "linear-gradient(180deg, rgba(248,250,245,0.5) 0%, rgba(255,255,255,1) 100%)",
+        padding: "48px 0",
       }}
     >
-      <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
+      <div className="max-w-content mx-auto px-6 lg:px-12">
         <Row gutter={[48, 48]}>
           {/* LEFT COLUMN: Main Keywords */}
           <Col xs={24} lg={12}>
@@ -62,45 +71,44 @@ const SEOContent = () => {
                   letterSpacing: "0.05em",
                 }}
               >
-                Premium Footwear in Sri Lanka
+                Premium Fashion & Footwear in Sri Lanka
               </Title>
               <Paragraph
                 style={{
-                  color: "rgba(0,0,0,0.4)",
+                  color: "#1a1a1a",
                   fontSize: 12,
                   marginBottom: 0,
                   lineHeight: 1.8,
                 }}
               >
-                NEVERBE is the premier online destination to{" "}
-                <Text strong style={{ color: "rgba(0,0,0,0.55)" }}>
-                  buy shoes in Sri Lanka
+                NEVERBE is Sri Lanka&apos;s premier online destination to{" "}
+                <Text strong style={{ color: "#1a1a1a" }}>
+                  buy shoes, clothing, and fashion accessories
                 </Text>
                 . We bridge the gap between high-end street culture and
-                affordability, offering a curated selection of
-                <Text strong style={{ color: "rgba(0,0,0,0.55)" }}>
-                  {" "}
-                  sneakers, running shoes, and casual footwear
+                affordability, offering a curated selection of{" "}
+                <Text strong style={{ color: "#1a1a1a" }}>
+                  sneakers, activewear, sports apparel, and casual footwear
                 </Text>
                 . Whether you are in Colombo, Kandy, or Galle, our island-wide
                 delivery ensures you get the latest drops right to your door.
               </Paragraph>
               <Paragraph
                 style={{
-                  color: "rgba(0,0,0,0.4)",
+                  color: "#1a1a1a",
                   fontSize: 12,
                   marginBottom: 0,
                   lineHeight: 1.8,
                 }}
               >
                 We specialize in{" "}
-                <Text strong style={{ color: "rgba(0,0,0,0.55)" }}>
+                <Text strong style={{ color: "#1a1a1a" }}>
                   Master Copy (7A Quality)
                 </Text>{" "}
-                footwear, giving you the look and feel of major global brands
-                like Nike, Adidas, and Jordan at a fraction of the cost.
-                Experience premium materials, durable stitching, and iconic
-                designs without the premium price tag.
+                footwear and fashion, giving you the look and feel of major
+                global brands like Nike, Adidas, and Jordan at a fraction of the
+                cost. From premium shoes to everyday clothing and wearables —
+                experience iconic designs without the premium price tag.
               </Paragraph>
             </Flex>
           </Col>
@@ -132,7 +140,7 @@ const SEOContent = () => {
                         fontWeight: 600,
                         border: "1px solid rgba(151, 225, 62, 0.15)",
                         background: "rgba(151, 225, 62, 0.05)",
-                        color: "rgba(0,0,0,0.5)",
+                        color: "#1a1a1a",
                         cursor: "default",
                         transition: "all 0.3s ease",
                       }}
@@ -162,20 +170,21 @@ const SEOContent = () => {
                 </Title>
                 <Paragraph
                   style={{
-                    color: "rgba(0,0,0,0.4)",
+                    color: "#1a1a1a",
                     fontSize: 12,
                     marginBottom: 0,
                     lineHeight: 1.8,
                   }}
                 >
-                  Stop searching for &quot;shoe shops near me&quot; and trust
-                  our secure online platform. We offer{" "}
-                  <Text strong style={{ color: "rgba(0,0,0,0.55)" }}>
+                  Stop searching for &quot;shops near me&quot; and trust our
+                  secure online platform. We offer{" "}
+                  <Text strong style={{ color: "#1a1a1a" }}>
                     Cash on Delivery (COD)
                   </Text>
                   , hassle-free exchanges, and dedicated customer support. Join
-                  thousands of satisfied customers who have upgraded their shoe
-                  game with NEVERBE.
+                  thousands of satisfied customers across Sri Lanka who have
+                  upgraded their wardrobe — from shoes and clothing to
+                  accessories — with NEVERBE.
                 </Paragraph>
               </Flex>
             </Flex>
@@ -196,7 +205,7 @@ const SEOContent = () => {
               fontWeight: 800,
               textTransform: "uppercase",
               letterSpacing: "0.2em",
-              color: "rgba(0,0,0,0.25)",
+              color: "#1a1a1a",
               display: "block",
               marginBottom: 16,
             }}
@@ -218,10 +227,10 @@ const SEOContent = () => {
                     fontWeight: 600,
                     textTransform: "uppercase",
                     letterSpacing: "0.05em",
-                    color: "rgba(0,0,0,0.35)",
+                    color: "#1a1a1a",
                     transition: "color 0.3s ease",
                   }}
-                  className="hover:!text-[#97e13e]"
+                  className="hover:text-[#97e13e]!"
                 >
                   {link.label}
                 </Link>
@@ -230,7 +239,7 @@ const SEOContent = () => {
           </Flex>
         </div>
       </div>
-    </Card>
+    </div>
   );
 };
 

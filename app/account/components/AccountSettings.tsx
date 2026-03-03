@@ -54,7 +54,7 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
             <div className="p-3 bg-surface-2 rounded-xl text-primary border border-default">
               <IoPersonOutline size={22} />
             </div>
-            <h3 className="text-xl font-display font-black uppercase italic tracking-tighter text-primary">
+            <h3 className="text-xl font-display font-black uppercase tracking-tighter text-primary">
               Profile
             </h3>
           </div>
@@ -180,7 +180,7 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
             <div className="p-3 bg-surface rounded-xl text-primary border border-default">
               <IoLockClosedOutline size={22} />
             </div>
-            <h3 className="text-xl font-display font-black uppercase italic tracking-tighter text-primary">
+            <h3 className="text-xl font-display font-black uppercase tracking-tighter text-primary">
               Security
             </h3>
           </div>

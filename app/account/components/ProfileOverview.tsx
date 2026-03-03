@@ -42,7 +42,7 @@ const ProfileOverview: React.FC<ProfileOverviewProps> = ({
         <span className="text-[10px] font-black uppercase tracking-[0.3em] text-accent">
           Dashboard
         </span>
-        <h2 className="text-3xl md:text-4xl font-display font-black uppercase italic tracking-tighter text-primary mt-2">
+        <h2 className="text-3xl md:text-4xl font-display font-black uppercase tracking-tighter text-primary mt-2">
           Member Overview
         </h2>
         <div className="flex items-center gap-2 mt-4 text-muted">
@@ -68,7 +68,7 @@ const ProfileOverview: React.FC<ProfileOverviewProps> = ({
             <div className="w-12 h-12 bg-surface rounded-xl flex items-center justify-center text-accent mb-4 border border-default">
               <IoCubeOutline size={24} />
             </div>
-            <h3 className="text-2xl font-display font-black uppercase italic tracking-tighter text-primary mb-3">
+            <h3 className="text-2xl font-display font-black uppercase tracking-tighter text-primary mb-3">
               Order History
             </h3>
             <p className="text-muted font-medium text-sm leading-relaxed">
@@ -99,7 +99,7 @@ const ProfileOverview: React.FC<ProfileOverviewProps> = ({
             <div className="w-12 h-12 bg-surface rounded-xl flex items-center justify-center text-accent mb-4 border border-default">
               <IoSettingsOutline size={24} />
             </div>
-            <h3 className="text-2xl font-display font-black uppercase italic tracking-tighter text-primary mb-3">
+            <h3 className="text-2xl font-display font-black uppercase tracking-tighter text-primary mb-3">
               Account Settings
             </h3>
             <p className="text-muted font-medium text-sm leading-relaxed">

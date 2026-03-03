@@ -25,7 +25,7 @@ export default function SuccessPageClient({
           <div className="w-16 h-16 bg-surface-2 rounded-full flex items-center justify-center mx-auto mb-6">
             <span className="text-3xl">⚠️</span>
           </div>
-          <h1 className="text-3xl font-display font-black uppercase italic tracking-tighter mb-4 text-primary">
+          <h1 className="text-3xl font-display font-black uppercase tracking-tighter mb-4 text-primary">
             Link Expired
           </h1>
           <p className="text-muted font-medium text-sm mb-8">
@@ -49,7 +49,7 @@ export default function SuccessPageClient({
       <div className="w-full max-w-2xl animate-fadeIn">
         <SuccessAnimationComponents />
 
-        <h1 className="text-4xl md:text-6xl font-display font-black uppercase italic tracking-tighter leading-none mb-4 text-primary">
+        <h1 className="text-4xl md:text-6xl font-display font-black uppercase tracking-tighter leading-none mb-4 text-primary">
           Order Confirmed
         </h1>
 

@@ -23,7 +23,7 @@ const Page = ({
         <FailAnimationComponent />
 
         {/* Heading */}
-        <h1 className="text-4xl md:text-6xl font-display font-black uppercase italic tracking-tighter leading-none mb-4 text-primary">
+        <h1 className="text-4xl md:text-6xl font-display font-black uppercase tracking-tighter leading-none mb-4 text-primary">
           Order Failed
         </h1>
 

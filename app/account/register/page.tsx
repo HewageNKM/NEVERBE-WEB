@@ -100,7 +100,7 @@ const RegisterPage = () => {
             <Image src={Logo} width={130} height={45} alt="NEVERBE" priority />
           </Link>
 
-          <h1 className="text-3xl md:text-4xl font-display font-black uppercase italic tracking-tighter mb-4">
+          <h1 className="text-3xl md:text-4xl font-display font-black uppercase tracking-tighter mb-4">
             Become a Member
           </h1>
           <p className="text-muted text-sm font-medium leading-relaxed max-w-[300px]">

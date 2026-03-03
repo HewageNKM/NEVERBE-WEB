@@ -1,21 +1,18 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-  IoSearchOutline,
-  IoCloseOutline,
-  IoChevronDownOutline,
-  IoChevronForward,
-} from "react-icons/io5";
-import { Button, Input } from "antd";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/redux/store";
+import { IoSearchOutline, IoChevronForward } from "react-icons/io5";
+import { Button, Input, Drawer, Collapse, Typography } from "antd";
+import { RightOutlined } from "@ant-design/icons";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/redux/store";
 import { toggleMenu } from "@/redux/headerSlice/headerSlice";
 import SearchDialog from "@/components/SearchDialog";
 import { NavigationItem } from "@/services/WebsiteService";
 import { useAlgoliaSearch } from "@/hooks/useAlgoliaSearch";
 import { useFilterData } from "@/hooks/useFilterData";
+
+const { Text } = Typography;
 
 const DEFAULT_LINKS: NavigationItem[] = [
   { title: "Home", link: "/" },
@@ -25,7 +22,7 @@ const DEFAULT_LINKS: NavigationItem[] = [
 
 const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
   const dispatch: AppDispatch = useDispatch();
-  const [openSection, setOpenSection] = useState<string | null>(null);
+  const isOpen = useSelector((state: RootState) => state.headerSlice.showMenu);
 
   const {
     query: search,
@@ -47,179 +44,277 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
     displayLinks = [{ title: "Home", link: "/" }, ...displayLinks];
   }
 
-  const handleOverlayClick = () => dispatch(toggleMenu(false));
-  const toggleSection = (section: string) => {
-    setOpenSection((prev) => (prev === section ? null : section));
-  };
+  const handleClose = () => dispatch(toggleMenu(false));
 
-  return (
-    <div className="fixed inset-0 z-100 flex justify-end">
-      {/* 1. Backdrop - Using Brand Blur */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        onClick={handleOverlayClick}
-        className="absolute inset-0 bg-surface/80 backdrop-blur-xl"
-      />
-
-      {/* 2. Drawer Container */}
-      <motion.div
-        initial={{ x: "100%" }}
-        animate={{ x: 0 }}
-        exit={{ x: "100%" }}
-        transition={{ type: "spring", damping: 25, stiffness: 200 }}
-        className="relative w-full max-w-[360px] h-full bg-surface text-primary flex flex-col shadow-hover"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Header */}
-        <div className="flex items-center justify-between px-8 py-6 border-b border-default">
-          <span className="font-display font-black text-2xl uppercase tracking-tighter text-primary">
-            Menu
-          </span>
-          <Button
-            type="text"
-            icon={<IoCloseOutline size={32} />}
-            onClick={() => dispatch(toggleMenu(false))}
-            className="p-2 -mr-2 text-primary hover:bg-surface-2 rounded-full transition-all h-auto w-auto"
-          />
-        </div>
-
-        {/* 3. Search Bar - Branded focus state */}
-        <div className="px-6 py-6">
-          <div className="relative group">
-            <Input
-              type="text"
-              value={search}
-              onChange={onSearch}
-              placeholder="Search gear..."
-              className="w-full bg-surface-2 text-primary px-6 py-4 pl-12 rounded-full text-base font-bold transition-all focus:outline-none focus:ring-2 focus:ring-accent/50 border border-transparent focus:border-accent placeholder:text-muted h-auto"
-            />
-            <div className="absolute top-1/2 -translate-y-1/2 left-5">
-              {isSearching ? (
-                <div className="w-5 h-5 border-2 border-accent border-t-transparent rounded-full animate-spin" />
-              ) : (
-                <IoSearchOutline size={22} className="text-primary" />
-              )}
-            </div>
-          </div>
-          {showSearchResult && items.length > 0 && (
-            <div className="absolute left-0 right-0 top-[160px] z-50 px-4 animate-fade">
-              <SearchDialog
-                containerStyle="max-h-[60vh] shadow-hover border border-default rounded-2xl overflow-hidden"
-                results={items}
-                onClick={() => {
-                  clearSearch();
-                  dispatch(toggleMenu(false));
-                }}
-              />
-            </div>
-          )}
-        </div>
-
-        {/* 4. Navigation Links */}
-        <nav className="flex-1 overflow-y-auto px-8 space-y-1 hide-scrollbar">
-          {displayLinks.map((link) => (
+  const collapseItems = [
+    {
+      key: "categories",
+      label: (
+        <Text
+          style={{
+            fontSize: 22,
+            fontFamily: "var(--font-display), sans-serif",
+            fontWeight: 900,
+            textTransform: "uppercase",
+            letterSpacing: "-0.03em",
+            color: "#1a1a1a",
+          }}
+        >
+          Categories
+        </Text>
+      ),
+      children: (
+        <div
+          className="flex flex-col space-y-3 pl-3"
+          style={{ borderLeft: "2px solid rgba(151,225,62,0.4)" }}
+        >
+          {categories.map((item) => (
             <Link
-              key={link.title}
-              href={link.link}
-              onClick={() => dispatch(toggleMenu(false))}
-              className="flex items-center justify-between py-4 group border-b border-default/50"
+              key={item.id}
+              href={`/collections/products?category=${encodeURIComponent(item.label.toLowerCase())}`}
+              className="text-sm font-bold uppercase tracking-tight transition-all hover:translate-x-1 hover:text-[#5a9a1a]!"
+              style={{ color: "#777" }}
+              onClick={handleClose}
             >
-              <span className="text-3xl font-display font-black uppercase tracking-tighter text-primary transition-all group-hover:text-accent group-hover:translate-x-2">
-                {link.title}
-              </span>
-              <IoChevronForward
-                size={20}
-                className="text-muted group-hover:text-accent"
-              />
+              {item.label}
             </Link>
           ))}
-
-          {/* Collapsible Sections */}
-          {[
-            {
-              id: "categories",
-              label: "Categories",
-              data: categories,
-              query: "category",
-            },
-            { id: "brands", label: "Brands", data: brands, query: "brand" },
-          ].map((section) => (
-            <div key={section.id} className="border-b border-default/50">
-              <Button
-                type="text"
-                block
-                onClick={() => toggleSection(section.id)}
-                className="w-full h-auto flex justify-between items-center py-5 text-primary group"
-              >
-                <span className="text-2xl font-display font-black uppercase tracking-tighter group-hover:text-accent transition-colors">
-                  {section.label}
-                </span>
-                <IoChevronDownOutline
-                  className={`transition-all duration-300 ${
-                    openSection === section.id
-                      ? "rotate-180 text-accent"
-                      : "text-muted"
-                  }`}
-                  size={20}
-                />
-              </Button>
-              <AnimatePresence>
-                {openSection === section.id && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    className="overflow-hidden"
-                  >
-                    <div className="flex flex-col pb-6 space-y-4 pl-4 border-l-2 border-accent/30">
-                      {section.data.map((item) => (
-                        <Link
-                          key={item.id}
-                          href={`/collections/products?${
-                            section.query
-                          }=${encodeURIComponent(item.label.toLowerCase())}`}
-                          className="text-base font-bold text-muted hover:text-accent hover:translate-x-1 transition-all uppercase tracking-tight"
-                          onClick={() => dispatch(toggleMenu(false))}
-                        >
-                          {item.label}
-                        </Link>
-                      ))}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          ))}
-        </nav>
-
-        {/* 5. Footer - Utility Links */}
-        <div className="p-8 bg-surface-2 border-t border-default mt-auto">
-          <div className="flex flex-col gap-6">
-            <div className="flex gap-8">
-              <Link
-                href="/contact"
-                className="text-sm font-black uppercase tracking-widest text-primary hover:text-accent transition-colors"
-                onClick={() => dispatch(toggleMenu(false))}
-              >
-                Contact
-              </Link>
-              <Link
-                href="/contact"
-                className="text-sm font-black uppercase tracking-widest text-primary hover:text-accent transition-colors"
-                onClick={() => dispatch(toggleMenu(false))}
-              >
-                Help
-              </Link>
-            </div>
-            <p className="text-[10px] text-muted font-black uppercase tracking-[0.2em]">
-              &copy; {new Date().getFullYear()} NEVERBE, INC.
-            </p>
-          </div>
         </div>
-      </motion.div>
-    </div>
+      ),
+    },
+    {
+      key: "brands",
+      label: (
+        <Text
+          style={{
+            fontSize: 22,
+            fontFamily: "var(--font-display), sans-serif",
+            fontWeight: 900,
+            textTransform: "uppercase",
+            letterSpacing: "-0.03em",
+            color: "#1a1a1a",
+          }}
+        >
+          Brands
+        </Text>
+      ),
+      children: (
+        <div
+          className="flex flex-col space-y-3 pl-3"
+          style={{ borderLeft: "2px solid rgba(151,225,62,0.4)" }}
+        >
+          {brands.map((item) => (
+            <Link
+              key={item.id}
+              href={`/collections/products?brand=${encodeURIComponent(item.label.toLowerCase())}`}
+              className="text-sm font-bold uppercase tracking-tight transition-all hover:translate-x-1 hover:text-[#5a9a1a]!"
+              style={{ color: "#777" }}
+              onClick={handleClose}
+            >
+              {item.label}
+            </Link>
+          ))}
+        </div>
+      ),
+    },
+  ];
+
+  return (
+    <Drawer
+      open={isOpen}
+      onClose={handleClose}
+      placement="right"
+      width={360}
+      styles={{
+        header: {
+          background: "#fff",
+          borderBottom: "1px solid rgba(151,225,62,0.15)",
+          padding: "20px 28px",
+          borderRadius: 0,
+        },
+        body: {
+          background: "#f8faf5",
+          padding: 0,
+          display: "flex",
+          flexDirection: "column",
+          overflow: "hidden",
+        },
+        mask: { backdropFilter: "blur(8px)" },
+        content: {
+          borderRadius: "32px 0 0 32px",
+          overflow: "hidden",
+        },
+      }}
+      title={
+        <span
+          style={{
+            fontFamily: "var(--font-display), sans-serif",
+            fontWeight: 900,
+            fontSize: 20,
+            textTransform: "uppercase",
+            letterSpacing: "-0.03em",
+            color: "#1a1a1a",
+          }}
+        >
+          Menu
+        </span>
+      }
+      closeIcon={
+        <span
+          style={{
+            color: "#5a9a1a",
+            fontSize: 20,
+            lineHeight: 1,
+            fontWeight: 700,
+          }}
+        >
+          ✕
+        </span>
+      }
+    >
+      {/* Search */}
+      <div className="px-6 py-5 bg-white relative">
+        <Input
+          type="text"
+          value={search}
+          onChange={onSearch}
+          placeholder="Search products..."
+          prefix={
+            isSearching ? (
+              <div
+                className="animate-spin"
+                style={{
+                  width: 16,
+                  height: 16,
+                  border: "2px solid #97e13e",
+                  borderTopColor: "transparent",
+                  borderRadius: "50%",
+                  flexShrink: 0,
+                }}
+              />
+            ) : (
+              <IoSearchOutline
+                size={16}
+                style={{ color: "#97e13e", flexShrink: 0 }}
+              />
+            )
+          }
+          style={{
+            background: "#f8faf5",
+            border: "1px solid rgba(151,225,62,0.25)",
+            borderRadius: 99,
+            color: "#1a1a1a",
+            fontSize: 13,
+            fontWeight: 600,
+          }}
+        />
+        {showSearchResult && items.length > 0 && (
+          <div className="absolute left-0 right-0 top-[72px] z-50 px-4 animate-fade">
+            <SearchDialog
+              containerStyle="max-h-[60vh] flex flex-col shadow-lg bg-white/95 backdrop-blur-xl border border-gray-100 rounded-[24px] overflow-hidden"
+              results={items}
+              onClick={() => {
+                clearSearch();
+                handleClose();
+              }}
+            />
+          </div>
+        )}
+      </div>
+
+      {/* Nav Links */}
+      <nav
+        className="flex-1 overflow-y-auto px-6 bg-white hide-scrollbar"
+        style={{ paddingTop: 8, paddingBottom: 8 }}
+      >
+        {displayLinks.map((link) => (
+          <Link
+            key={link.title}
+            href={link.link}
+            onClick={handleClose}
+            className="flex items-center justify-between py-4 group"
+            style={{ borderBottom: "1px solid rgba(0,0,0,0.04)" }}
+          >
+            <span
+              style={{
+                fontFamily: "var(--font-display), sans-serif",
+                fontWeight: 900,
+                fontSize: 26,
+                textTransform: "uppercase",
+                letterSpacing: "-0.03em",
+                color: "#1a1a1a",
+                transition: "color 0.2s ease, transform 0.2s ease",
+              }}
+              className="group-hover:text-[#5a9a1a]! group-hover:translate-x-2 inline-block transition-all"
+            >
+              {link.title}
+            </span>
+            <IoChevronForward
+              size={16}
+              style={{ color: "rgba(0,0,0,0.15)", flexShrink: 0 }}
+              className="group-hover:!text-[#97e13e]"
+            />
+          </Link>
+        ))}
+
+        {/* Collapsible sections via Ant Collapse */}
+        <Collapse
+          ghost
+          expandIconPosition="end"
+          expandIcon={({ isActive }) => (
+            <RightOutlined
+              rotate={isActive ? 90 : 0}
+              style={{
+                color: isActive ? "#97e13e" : "rgba(0,0,0,0.2)",
+                transition: "all 0.3s ease",
+                fontSize: 14,
+              }}
+            />
+          )}
+          items={collapseItems}
+          style={{ borderTop: "1px solid rgba(0,0,0,0.04)" }}
+        />
+      </nav>
+
+      {/* Footer */}
+      <div
+        className="p-6 mt-auto bg-white"
+        style={{
+          borderTop: "1px solid rgba(151,225,62,0.15)",
+        }}
+      >
+        <div className="flex gap-8 mb-3">
+          <Link
+            href="/contact"
+            className="text-xs font-black uppercase tracking-widest transition-colors hover:!text-[#97e13e]"
+            style={{ color: "#aaa" }}
+            onClick={handleClose}
+          >
+            Contact
+          </Link>
+          <Link
+            href="/contact"
+            className="text-xs font-black uppercase tracking-widest transition-colors hover:!text-[#97e13e]"
+            style={{ color: "#aaa" }}
+            onClick={handleClose}
+          >
+            Help
+          </Link>
+        </div>
+        <p
+          style={{
+            fontSize: 9,
+            fontWeight: 900,
+            textTransform: "uppercase",
+            letterSpacing: "0.2em",
+            color: "#ccc",
+            margin: 0,
+          }}
+        >
+          &copy; {new Date().getFullYear()} NEVERBE, INC.
+        </p>
+      </div>
+    </Drawer>
   );
 };
 

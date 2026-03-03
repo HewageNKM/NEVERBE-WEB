@@ -123,31 +123,59 @@ export default function RootLayout({
                 theme={{
                   token: {
                     colorPrimary: "#97e13e",
+                    colorLink: "#5a9a1a",
+                    colorLinkHover: "#97e13e",
+                    colorLinkActive: "#4a8012",
+                    colorInfo: "#97e13e",
+                    colorSuccess: "#97e13e",
                     fontFamily: "var(--font-inter)",
-                    borderRadius: 20,
-                    colorBgLayout: "#ffffff",
+                    borderRadius: 12,
+                    colorBgLayout: "#f8faf5",
                     colorBgContainer: "#ffffff",
-                    boxShadow:
-                      "0 8px 32px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.8)",
-                    boxShadowSecondary:
-                      "0 12px 40px rgba(151, 225, 62, 0.12), 0 4px 16px rgba(0, 0, 0, 0.06)",
+                    colorTextBase: "#1a1a1a",
                   },
                   components: {
                     Card: {
-                      borderRadiusLG: 24,
-                      paddingLG: 28,
-                      boxShadowTertiary: "0 4px 20px rgba(0, 0, 0, 0.04)",
+                      borderRadiusLG: 20,
+                      paddingLG: 24,
+                      colorBgContainer: "#ffffff",
                     },
                     Button: {
                       borderRadius: 99,
                       controlHeight: 44,
-                      controlHeightLG: 52,
+                      controlHeightLG: 56,
                       fontWeight: 700,
+                      colorPrimary: "#97e13e",
+                      colorPrimaryHover: "#7bc922",
+                      primaryColor: "#ffffff",
                     },
                     Carousel: {
-                      dotHeight: 4,
-                      dotWidth: 24,
-                      dotActiveWidth: 36,
+                      dotHeight: 6,
+                      dotWidth: 32,
+                      dotActiveWidth: 48,
+                    },
+                    Input: {
+                      borderRadius: 99,
+                      colorPrimary: "#97e13e",
+                      colorPrimaryHover: "#97e13e",
+                      activeBorderColor: "#97e13e",
+                      hoverBorderColor: "#97e13e",
+                    },
+                    Select: {
+                      borderRadius: 99,
+                      colorPrimary: "#97e13e",
+                    },
+                    Tag: {
+                      borderRadiusSM: 99,
+                    },
+                    Collapse: {
+                      borderRadius: 12,
+                    },
+                    Drawer: {
+                      borderRadius: 32,
+                    },
+                    Badge: {
+                      colorPrimary: "#97e13e",
                     },
                   },
                 }}

@@ -31,7 +31,7 @@ const CouponCard: React.FC<Props> = ({ coupon }) => {
     >
       {/* Visual Header / Discount */}
       <div className="bg-surface-2 p-4 sm:p-5 flex flex-col items-center justify-center min-w-[100px] sm:min-w-[120px]">
-        <div className="text-2xl sm:text-3xl font-display font-black tracking-tighter text-primary italic leading-none">
+        <div className="text-2xl sm:text-3xl font-display font-black tracking-tighter text-primary leading-none">
           {coupon.discountType === "PERCENTAGE"
             ? `${coupon.discountValue}%`
             : coupon.discountType === "FIXED"
@@ -47,7 +47,7 @@ const CouponCard: React.FC<Props> = ({ coupon }) => {
       <div className="flex-1 p-4 sm:p-5 flex flex-col justify-between">
         <div>
           <div className="flex flex-wrap items-center gap-2 mb-2">
-            <span className="bg-accent text-dark text-[10px] font-display font-black italic px-3 py-1 rounded-full uppercase tracking-tight">
+            <span className="bg-accent text-dark text-[10px] font-display font-black px-3 py-1 rounded-full uppercase tracking-tight">
               {coupon.code.toUpperCase()}
             </span>
             {coupon.endDate && (
@@ -68,7 +68,7 @@ const CouponCard: React.FC<Props> = ({ coupon }) => {
             )}
           </div>
 
-          <h3 className="text-sm sm:text-base font-display font-black text-primary uppercase italic tracking-tight line-clamp-2">
+          <h3 className="text-sm sm:text-base font-display font-black text-primary uppercase tracking-tight line-clamp-2">
             {coupon.description || "Exclusive Member Offer"}
           </h3>
 

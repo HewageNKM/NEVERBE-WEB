@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
 import { showBag } from "@/redux/bagSlice/bagSlice";
@@ -10,6 +10,8 @@ import {
   IoSearchOutline,
   IoCloseOutline,
   IoHeartOutline,
+  IoChevronBackOutline,
+  IoChevronForwardOutline,
 } from "react-icons/io5";
 import Link from "next/link";
 import Image from "next/image";
@@ -22,6 +24,13 @@ import { useAlgoliaSearch } from "@/hooks/useAlgoliaSearch";
 import { Badge, Input, ConfigProvider, Button, Flex, Typography } from "antd";
 
 const { Text } = Typography;
+
+const ANNOUNCEMENTS = [
+  "🚚 Island-Wide Delivery Available",
+  "💳 Cash on Delivery — Pay When You Receive",
+  "🔄 Easy Returns & Exchanges Within 7 Days",
+  "⭐ 100% Premium Quality Guaranteed",
+];
 
 const DEFAULT_NAV_ITEMS: NavigationItem[] = [
   { title: "New Arrivals", link: "/collections/new-arrivals" },
@@ -41,6 +50,8 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
   const user = useSelector((state: RootState) => state.authSlice.user);
   const dispatch: AppDispatch = useDispatch();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [announcementIndex, setAnnouncementIndex] = useState(0);
 
   let navItems = mainNav.length > 0 ? mainNav : DEFAULT_NAV_ITEMS;
   if (!navItems.some((item) => item.link === "/collections/offers")) {
@@ -60,84 +71,81 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
     performSearch(evt.target.value);
   };
 
+  // Scroll detection
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 10);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Announcement rotation
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setAnnouncementIndex((prev) => (prev + 1) % ANNOUNCEMENTS.length);
+    }, 4000);
+    return () => clearInterval(timer);
+  }, []);
+
   return (
     <div className="w-full z-50">
-      {/* 1. UTILITY TOP BAR */}
-      <Flex
-        justify="space-between"
-        align="center"
-        className="hidden lg:flex px-12 py-2"
-        style={{
-          fontSize: 10,
-          fontWeight: 800,
-          textTransform: "uppercase" as const,
-          letterSpacing: "0.15em",
-          background: "rgba(248, 250, 245, 0.8)",
-          backdropFilter: "blur(12px)",
-          borderBottom: "1px solid rgba(151, 225, 62, 0.08)",
-        }}
-      >
-        <Flex gap={24} align="center">
-          <Link
-            href="/contact"
-            className="hover:text-[#97e13e] transition-colors text-gray-500"
-          >
-            Help
-          </Link>
-          <Text type="secondary" style={{ opacity: 0.2, fontSize: 10 }}>
-            |
-          </Text>
-          <Link
-            href="/account/register"
-            className="hover:text-[#97e13e] transition-colors text-gray-800"
-          >
-            Join Us
-          </Link>
-        </Flex>
-        <Flex gap={16} align="center">
-          <Link
-            href={user ? "/account" : "/account/login"}
-            className="hover:text-[#97e13e] transition-colors flex items-center gap-1"
-          >
-            <Text
+      {/* 1. ANNOUNCEMENT BAR — Light with rotating text */}
+      <div className="announcement-bar w-full py-2.5 px-4 relative overflow-hidden">
+        <Flex justify="center" align="center" gap={16}>
+          <Button
+            type="text"
+            size="small"
+            icon={<IoChevronBackOutline size={14} />}
+            onClick={() =>
+              setAnnouncementIndex(
+                (prev) =>
+                  (prev - 1 + ANNOUNCEMENTS.length) % ANNOUNCEMENTS.length,
+              )
+            }
+            className="!text-[#5a8a1a]/60 hover:!text-[#4a7a10] !border-none !p-0 !h-auto !w-auto"
+          />
+          <AnimatePresence mode="wait">
+            <motion.span
+              key={announcementIndex}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.3 }}
               style={{
-                fontSize: 10,
+                fontSize: 11,
                 fontWeight: 700,
-                color: "rgba(0,0,0,0.4)",
                 textTransform: "uppercase",
+                letterSpacing: "0.12em",
+                color: "#3a6a10",
+                textAlign: "center",
+                minWidth: 280,
+                display: "inline-block",
               }}
             >
-              Hi,
-            </Text>
-            <Text
-              style={{
-                fontSize: 10,
-                fontWeight: 900,
-                color: "rgba(0,0,0,0.8)",
-                textTransform: "uppercase",
-              }}
-            >
-              {user ? user.displayName?.split(" ")[0] : "Sign In"}
-            </Text>
-          </Link>
+              {ANNOUNCEMENTS[announcementIndex]}
+            </motion.span>
+          </AnimatePresence>
+          <Button
+            type="text"
+            size="small"
+            icon={<IoChevronForwardOutline size={14} />}
+            onClick={() =>
+              setAnnouncementIndex((prev) => (prev + 1) % ANNOUNCEMENTS.length)
+            }
+            className="!text-[#5a8a1a]/60 hover:!text-[#4a7a10] !border-none !p-0 !h-auto !w-auto"
+          />
         </Flex>
-      </Flex>
+      </div>
 
+      {/* 2. MAIN HEADER — Dark sticky nav */}
       <header
-        className="sticky top-0 w-full transition-all duration-300 z-50"
-        style={{
-          background: "rgba(255, 255, 255, 0.88)",
-          backdropFilter: "blur(24px) saturate(180%)",
-          WebkitBackdropFilter: "blur(24px) saturate(180%)",
-          borderBottom: "1px solid rgba(151, 225, 62, 0.1)",
-        }}
+        className={`sticky top-0 w-full transition-all duration-300 z-50 header-dark ${scrolled ? "header-dark-scrolled" : ""}`}
       >
         <SeasonalPromo season={season} />
 
         <Flex
           justify="space-between"
           align="center"
-          className="max-w-content mx-auto px-4 lg:px-12 h-[64px] lg:h-[80px]"
+          className="max-w-content mx-auto px-4 lg:px-12 h-[64px] lg:h-[76px]"
         >
           {/* LOGO */}
           <Link href="/" className="shrink-0">
@@ -146,7 +154,7 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
               alt="NEVERBE"
               width={130}
               height={50}
-              className="object-contain mix-blend-multiply transition-transform hover:scale-110 active:scale-95 duration-300"
+              className="object-contain transition-transform hover:scale-110 active:scale-95 duration-300"
             />
           </Link>
 
@@ -157,11 +165,11 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
                 <li key={item.title}>
                   <Link
                     href={item.link}
-                    className="relative pb-2 text-[13px] font-bold uppercase tracking-tight hover:text-[#97e13e] transition-colors group"
+                    className="relative pb-2 text-[13px] font-bold uppercase tracking-tight text-gray-700 hover:text-[#5a9a1a] transition-colors group"
                   >
                     {item.title}
                     <span
-                      className="absolute bottom-0 left-0 w-0 h-[2px] transition-all duration-300 group-hover:w-full"
+                      className="absolute bottom-0 left-0 w-0 h-[3px] transition-all duration-300 group-hover:w-full"
                       style={{
                         background: "linear-gradient(90deg, #97e13e, #7bc922)",
                         borderRadius: 99,
@@ -178,40 +186,40 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
             <Button
               type="text"
               onClick={() => setIsSearchOpen(true)}
-              className="p-2.5 hover:bg-surface-2 rounded-full transition-colors group border-none h-auto w-auto flex items-center justify-center m-0"
+              className="p-2.5 rounded-full transition-colors group !border-none !h-auto !w-auto flex items-center justify-center m-0"
               icon={
                 <IoSearchOutline
                   size={24}
-                  className="group-hover:text-[#97e13e] transition-colors"
+                  className="text-gray-600 group-hover:text-[#5a9a1a] transition-colors"
                 />
               }
             />
 
             <Link
               href="/account/wishlist"
-              className="p-2.5 hover:bg-surface-2 rounded-full transition-colors group flex items-center justify-center"
+              className="p-2.5 rounded-full transition-colors group flex items-center justify-center"
             >
               <IoHeartOutline
                 size={24}
-                className="group-hover:text-[#97e13e] text-black transition-colors"
+                className="group-hover:text-[#5a9a1a] text-gray-600 transition-colors"
               />
             </Link>
 
             <Button
               type="text"
               onClick={() => dispatch(showBag())}
-              className="relative p-2.5 hover:bg-surface-2 rounded-full transition-colors group border-none h-auto w-auto flex items-center justify-center m-0"
+              className="relative p-2.5 rounded-full transition-colors group !border-none !h-auto !w-auto flex items-center justify-center m-0"
             >
               <Badge
                 count={bagItems.length}
                 offset={[-2, 6]}
                 color="#97e13e"
                 size="small"
-                style={{ color: "#000", fontWeight: 800 }}
+                style={{ color: "#fff", fontWeight: 800 }}
               >
                 <IoBagHandleOutline
                   size={24}
-                  className="group-hover:text-[#97e13e] text-black transition-colors"
+                  className="group-hover:text-[#5a9a1a] text-gray-600 transition-colors"
                 />
               </Badge>
             </Button>
@@ -219,8 +227,8 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
             <Button
               type="text"
               onClick={() => dispatch(toggleMenu(true))}
-              className="lg:hidden p-2.5 hover:bg-surface-2 rounded-full border-none h-auto w-auto flex items-center justify-center m-0"
-              icon={<IoMenuOutline size={28} />}
+              className="lg:hidden p-2.5 rounded-full !border-none !h-auto !w-auto flex items-center justify-center m-0"
+              icon={<IoMenuOutline size={28} className="text-gray-700" />}
             />
           </Flex>
         </Flex>
@@ -232,11 +240,11 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="fixed inset-0 z-[100] overflow-y-auto"
+              className="fixed inset-0 z-100 overflow-y-auto"
               style={{
-                background: "rgba(255, 255, 255, 0.96)",
-                backdropFilter: "blur(32px) saturate(200%)",
-                WebkitBackdropFilter: "blur(32px) saturate(200%)",
+                background: "rgba(248, 250, 245, 0.96)",
+                backdropFilter: "blur(32px)",
+                WebkitBackdropFilter: "blur(32px)",
               }}
             >
               <div className="max-w-content mx-auto px-4 lg:px-12 py-4 lg:py-12">
@@ -258,7 +266,7 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
                       alt="NEVERBE"
                       width={70}
                       height={30}
-                      className="mix-blend-multiply lg:w-[80px]"
+                      className="lg:w-[80px]"
                     />
 
                     <Button
@@ -267,13 +275,15 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
                         setIsSearchOpen(false);
                         clearSearch();
                       }}
-                      className="lg:hidden h-auto w-auto border-none flex items-center justify-center"
+                      className="lg:hidden !h-auto !w-auto !border-none flex items-center justify-center"
                       style={{
                         padding: 10,
                         borderRadius: "50%",
-                        background: "rgba(151, 225, 62, 0.1)",
+                        background: "rgba(0,0,0,0.06)",
                       }}
-                      icon={<IoCloseOutline size={24} />}
+                      icon={
+                        <IoCloseOutline size={24} className="text-gray-600" />
+                      }
                     />
                   </Flex>
 
@@ -283,12 +293,14 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
                       theme={{
                         components: {
                           Input: {
-                            colorBgContainer: "transparent",
-                            colorBorder: "rgba(151, 225, 62, 0.2)",
+                            colorBgContainer: "#fff",
+                            colorBorder: "rgba(151, 225, 62, 0.3)",
                             hoverBorderColor: "#97e13e",
                             activeBorderColor: "#97e13e",
-                            activeShadow: "0 0 0 3px rgba(151, 225, 62, 0.1)",
+                            activeShadow: "0 0 0 3px rgba(151, 225, 62, 0.12)",
                             borderRadius: 99,
+                            colorText: "#1a1a1a",
+                            colorTextPlaceholder: "rgba(0,0,0,0.3)",
                           },
                         },
                       }}
@@ -296,15 +308,14 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
                       <Input
                         autoFocus
                         size="large"
-                        placeholder="Search shoes..."
+                        placeholder="Search products..."
                         className="w-full"
                         style={{
                           padding: "12px 24px",
                           fontSize: 16,
                           fontWeight: 700,
-                          background: "rgba(248, 250, 245, 0.8)",
+                          background: "#fff",
                           backdropFilter: "blur(12px)",
-                          boxShadow: "0 4px 20px rgba(0,0,0,0.04)",
                         }}
                         prefix={
                           <IoSearchOutline
@@ -322,11 +333,11 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
                               <Button
                                 type="text"
                                 onClick={() => clearSearch()}
-                                className="p-1 hover:bg-surface rounded-full transition-colors shrink-0 mr-2 h-auto w-auto border-none flex items-center justify-center"
+                                className="p-1 rounded-full transition-colors shrink-0 mr-2 !h-auto !w-auto !border-none flex items-center justify-center"
                                 icon={
                                   <IoCloseOutline
                                     size={18}
-                                    className="text-muted"
+                                    className="text-gray-400"
                                   />
                                 }
                               />
@@ -358,14 +369,16 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
                       setIsSearchOpen(false);
                       clearSearch();
                     }}
-                    className="hidden lg:flex h-auto w-auto border-none items-center justify-center"
+                    className="hidden lg:flex !h-auto !w-auto !border-none items-center justify-center"
                     style={{
                       padding: 12,
                       borderRadius: "50%",
-                      background: "rgba(151, 225, 62, 0.1)",
+                      background: "rgba(0,0,0,0.06)",
                       transition: "all 0.3s ease",
                     }}
-                    icon={<IoCloseOutline size={28} />}
+                    icon={
+                      <IoCloseOutline size={28} className="text-gray-600" />
+                    }
                   />
                 </Flex>
 
@@ -378,7 +391,7 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
                       style={{
                         marginBottom: 24,
                         paddingBottom: 16,
-                        borderBottom: "1px solid rgba(151, 225, 62, 0.1)",
+                        borderBottom: "1px solid rgba(151, 225, 62, 0.15)",
                       }}
                     >
                       <Text
@@ -396,7 +409,7 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
                         style={{
                           fontSize: 11,
                           fontWeight: 900,
-                          color: "#97e13e",
+                          color: "#5a9a1a",
                         }}
                       >
                         ({items.length})
@@ -421,7 +434,7 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
                         <IoSearchOutline
                           size={48}
                           style={{
-                            color: "rgba(0,0,0,0.15)",
+                            color: "rgba(0,0,0,0.12)",
                             marginBottom: 16,
                           }}
                         />
@@ -430,14 +443,17 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
                             fontSize: 20,
                             fontWeight: 900,
                             textTransform: "uppercase",
-                            color: "rgba(0,0,0,0.2)",
+                            color: "rgba(0,0,0,0.18)",
                           }}
                         >
                           No matches found
                         </Text>
                         <Text
-                          type="secondary"
-                          style={{ marginTop: 8, fontSize: 13 }}
+                          style={{
+                            marginTop: 8,
+                            fontSize: 13,
+                            color: "rgba(0,0,0,0.3)",
+                          }}
                         >
                           Try a different search term
                         </Text>

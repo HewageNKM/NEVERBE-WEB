@@ -1,10 +1,7 @@
 "use client";
 import React from "react";
-import { motion } from "framer-motion";
+import { Drawer, Button, Switch, Tag } from "antd";
 import { IoCloseOutline } from "react-icons/io5";
-import { Button } from "antd";
-import ToggleSwitch from "@/components/ToggleSwitch";
-import DropShadow from "@/components/DropShadow";
 import { useFilterData } from "@/hooks/useFilterData";
 import { AVAILABLE_SIZES } from "@/constants/filters";
 
@@ -33,40 +30,35 @@ const FilterList = ({
   selected: string[];
   onToggle: (label: string) => void;
 }) => (
-  <div className="py-8 border-t border-default animate-fade">
-    <h3 className="text-lg font-display font-black uppercase tracking-tighter text-primary mb-6">
+  <div className="py-6 border-t border-gray-100">
+    <h3 className="text-xs font-black uppercase tracking-widest text-gray-400 mb-4">
       {title}
     </h3>
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-wrap gap-2">
       {items.map((item, i) => {
         const isActive = selected.includes(item.label?.toLowerCase());
         return (
-          <Button
-            type="text"
+          <button
             key={i}
             onClick={() => onToggle(item.label)}
-            className="flex items-center gap-4 group text-left h-auto p-0 hover:bg-transparent"
+            style={{
+              padding: "6px 16px",
+              borderRadius: 99,
+              fontSize: 12,
+              fontWeight: 700,
+              border: isActive
+                ? "1.5px solid #97e13e"
+                : "1.5px solid rgba(0,0,0,0.1)",
+              background: isActive ? "rgba(151,225,62,0.1)" : "transparent",
+              color: isActive ? "#3d6b10" : "#555",
+              cursor: "pointer",
+              transition: "all 0.2s ease",
+              textTransform: "uppercase",
+              letterSpacing: "0.04em",
+            }}
           >
-            {/* BRANDED CHECKBOX: Accent Green on active */}
-            <div
-              className={`w-6 h-6 border rounded-[4px] flex items-center justify-center transition-all duration-300 ${
-                isActive
-                  ? "bg-accent border-accent shadow-custom"
-                  : "bg-surface border-border-secondary group-hover:border-accent"
-              }`}
-            >
-              {isActive && (
-                <div className="w-2.5 h-2.5 bg-dark rounded-full animate-pulse" />
-              )}
-            </div>
-            <span
-              className={`text-md tracking-tight transition-colors ${
-                isActive ? "text-primary font-bold" : "text-muted font-medium"
-              }`}
-            >
-              {item.label}
-            </span>
-          </Button>
+            {item.label}
+          </button>
         );
       })}
     </div>
@@ -87,103 +79,183 @@ const PopUpFilterPanel: React.FC<PopUpFilterPanelProps> = ({
   showCategories = true,
 }) => {
   const { brands, categories } = useFilterData(showCategories);
+  const activeFilterCount =
+    selectedBrands.length +
+    selectedCategories.length +
+    selectedSizes.length +
+    (inStock ? 1 : 0);
 
   return (
-    <DropShadow variant="light" containerStyle="flex justify-end">
-      <motion.aside
-        initial={{ x: "100%" }}
-        animate={{ x: 0 }}
-        exit={{ x: "100%" }}
-        transition={{ type: "spring", damping: 25, stiffness: 200 }}
-        className="bg-surface w-full max-w-[440px] h-full shadow-hover relative flex flex-col"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* HEADER: Technical Performance Look */}
-        <div className="px-8 py-6 flex justify-between items-center bg-surface border-b border-default z-20">
-          <h2 className="text-2xl font-display font-black uppercase tracking-tighter text-primary">
-            Filters
-          </h2>
+    <Drawer
+      open
+      onClose={onClose}
+      placement="right"
+      width={360}
+      styles={{
+        header: {
+          background: "#fff",
+          borderBottom: "1px solid rgba(0,0,0,0.06)",
+          padding: "20px 24px",
+        },
+        body: {
+          background: "#fff",
+          padding: 0,
+          display: "flex",
+          flexDirection: "column",
+        },
+        footer: {
+          background: "#fff",
+          borderTop: "1px solid rgba(0,0,0,0.06)",
+          padding: "16px 24px",
+        },
+        content: { borderRadius: "24px 0 0 24px", overflow: "hidden" },
+      }}
+      title={
+        <span
+          style={{
+            fontWeight: 900,
+            fontSize: 16,
+            textTransform: "uppercase",
+            letterSpacing: "-0.02em",
+            color: "#1a1a1a",
+          }}
+        >
+          Filters
+          {activeFilterCount > 0 && (
+            <span
+              style={{
+                marginLeft: 8,
+                background: "#97e13e",
+                color: "#fff",
+                borderRadius: 99,
+                fontSize: 11,
+                fontWeight: 800,
+                padding: "2px 8px",
+              }}
+            >
+              {activeFilterCount}
+            </span>
+          )}
+        </span>
+      }
+      closeIcon={<IoCloseOutline size={22} style={{ color: "#555" }} />}
+      footer={
+        <div className="flex gap-3">
           <Button
             type="text"
-            icon={<IoCloseOutline size={32} />}
-            onClick={onClose}
-            className="p-2 -mr-2 text-primary hover:bg-surface-2 hover:text-accent transition-all rounded-full h-auto w-auto border-none"
-          />
-        </div>
-
-        {/* BODY: Scannable vertical scroll */}
-        <div className="flex-1 overflow-y-auto px-8 hide-scrollbar">
-          {/* In Stock Toggle - Branded Utility Section */}
-          <div className="flex justify-between items-center py-8 border-t border-default first:border-none">
-            <span className="text-base font-bold uppercase tracking-tight text-primary">
-              In Stock Only
-            </span>
-            <ToggleSwitch checked={inStock} onChange={onInStockChange} />
-          </div>
-
-          {/* SIZES: NEVERBE Performance Grid */}
-          <div className="py-8 border-t border-default">
-            <h3 className="text-lg font-display font-black uppercase tracking-tighter text-primary mb-6">
-              Select Size
-            </h3>
-            <div className="grid grid-cols-3 gap-2">
-              {AVAILABLE_SIZES.map((size) => {
-                const isActive = selectedSizes.includes(size);
-                return (
-                  <Button
-                    key={size}
-                    onClick={() => onSizeToggle(size)}
-                    className={`aspect-square flex items-center justify-center border rounded-[4px] text-base transition-all duration-300 p-0 h-auto ${
-                      isActive
-                        ? "bg-dark text-accent border-dark font-black shadow-hover scale-[1.02] hover:bg-dark hover:text-accent"
-                        : "bg-surface text-primary border-border-primary font-bold hover:border-accent hover:text-accent"
-                    }`}
-                  >
-                    {size}
-                  </Button>
-                );
-              })}
-            </div>
-          </div>
-
-          {showCategories && (
-            <FilterList
-              title="Shop by Category"
-              items={categories}
-              selected={selectedCategories}
-              onToggle={onCategoryToggle}
-            />
-          )}
-
-          <FilterList
-            title="Brands"
-            items={brands}
-            selected={selectedBrands}
-            onToggle={onBrandToggle}
-          />
-
-          <div className="h-24" />
-        </div>
-
-        {/* FOOTER ACTIONS: High-Energy Pill Buttons */}
-        <div className="p-8 border-t-2 border-dark/5 bg-surface-2 flex gap-4 mt-auto shadow-[0_-10px_30px_rgba(0,0,0,0.03)]">
-          <Button
-            type="link"
-            onClick={onReset}
-            className="flex-1 py-4 text-xs font-black uppercase tracking-[0.2em] text-muted hover:text-error transition-all underline underline-offset-8 h-auto"
+            onClick={() => {
+              onReset();
+            }}
+            disabled={activeFilterCount === 0}
+            style={{
+              flex: 1,
+              height: 44,
+              fontWeight: 800,
+              fontSize: 12,
+              textTransform: "uppercase",
+              letterSpacing: "0.08em",
+              color: activeFilterCount > 0 ? "#e53e3e" : "#ccc",
+              border: "1.5px solid rgba(0,0,0,0.08)",
+              borderRadius: 99,
+            }}
           >
             Clear All
           </Button>
           <Button
             type="primary"
             onClick={onClose}
-            className="flex-2 py-6 bg-dark text-inverse text-sm font-black uppercase tracking-widest rounded-full hover:bg-accent hover:text-dark transition-all shadow-custom hover:shadow-hover active:scale-95 border-none h-auto"
+            style={{
+              flex: 2,
+              height: 44,
+              background: "#97e13e",
+              color: "#fff",
+              border: "none",
+              fontWeight: 800,
+              fontSize: 12,
+              textTransform: "uppercase",
+              letterSpacing: "0.08em",
+              borderRadius: 99,
+            }}
           >
-            Apply Filters
+            View Results
           </Button>
         </div>
-      </motion.aside>
-    </DropShadow>
+      }
+    >
+      <div className="flex-1 overflow-y-auto px-6 hide-scrollbar">
+        {/* In Stock */}
+        <div className="flex justify-between items-center py-5 border-b border-gray-100">
+          <span
+            style={{
+              fontSize: 13,
+              fontWeight: 700,
+              textTransform: "uppercase",
+              letterSpacing: "0.05em",
+              color: "#1a1a1a",
+            }}
+          >
+            In Stock Only
+          </span>
+          <Switch
+            checked={inStock}
+            onChange={onInStockChange}
+            style={{ background: inStock ? "#97e13e" : undefined }}
+          />
+        </div>
+
+        {/* Sizes */}
+        <div className="py-6 border-b border-gray-100">
+          <h3 className="text-xs font-black uppercase tracking-widest text-gray-400 mb-4">
+            Size
+          </h3>
+          <div className="grid grid-cols-4 gap-2">
+            {AVAILABLE_SIZES.map((size) => {
+              const isActive = selectedSizes.includes(size);
+              return (
+                <button
+                  key={size}
+                  onClick={() => onSizeToggle(size)}
+                  style={{
+                    aspectRatio: "1",
+                    border: isActive
+                      ? "2px solid #97e13e"
+                      : "1.5px solid rgba(0,0,0,0.1)",
+                    background: isActive ? "rgba(151,225,62,0.1)" : "#f8f9fa",
+                    color: isActive ? "#3d6b10" : "#333",
+                    fontWeight: 800,
+                    fontSize: 13,
+                    borderRadius: 12,
+                    cursor: "pointer",
+                    transition: "all 0.2s ease",
+                    padding: "10px 0",
+                  }}
+                >
+                  {size}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {showCategories && (
+          <FilterList
+            title="Category"
+            items={categories}
+            selected={selectedCategories}
+            onToggle={onCategoryToggle}
+          />
+        )}
+
+        <FilterList
+          title="Brand"
+          items={brands}
+          selected={selectedBrands}
+          onToggle={onBrandToggle}
+        />
+
+        <div className="h-6" />
+      </div>
+    </Drawer>
   );
 };
 

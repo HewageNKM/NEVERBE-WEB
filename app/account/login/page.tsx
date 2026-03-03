@@ -64,7 +64,7 @@ const AuthPage = () => {
           <Link href="/" className="mb-8 transition-opacity hover:opacity-70">
             <Image src={Logo} width={130} height={50} alt="NEVERBE" priority />
           </Link>
-          <h1 className="text-3xl font-display font-black uppercase italic tracking-tighter mb-3">
+          <h1 className="text-3xl font-display font-black uppercase tracking-tighter mb-3">
             Sign In
           </h1>
           <p className="text-muted text-sm font-medium">

@@ -1,8 +1,7 @@
 "use client";
 import React from "react";
-import ToggleSwitch from "@/components/ToggleSwitch";
 import { useFilterData } from "@/hooks/useFilterData";
-import { Button } from "antd";
+import { Button, Switch } from "antd";
 import { AVAILABLE_SIZES } from "@/constants/filters";
 
 interface FilterPanelProps {
@@ -30,43 +29,35 @@ const FilterSection = ({
   selectedItems: string[];
   onToggle: (label: string) => void;
 }) => (
-  <div className="py-8 border-t border-default animate-fade">
-    <h3 className="text-md font-display font-black uppercase tracking-tighter text-primary mb-6">
+  <div className="py-5 border-t border-gray-100">
+    <h3 className="text-xs font-black uppercase tracking-widest text-gray-400 mb-3">
       {title}
     </h3>
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-wrap gap-2">
       {items.map((item, idx) => {
         const isSelected = selectedItems.includes(item.label?.toLowerCase());
         return (
-          <Button
-            type="text"
+          <button
             key={idx}
             onClick={() => onToggle(item.label)}
-            className="flex items-center gap-3 group text-left h-auto p-0 hover:bg-transparent"
+            style={{
+              padding: "5px 14px",
+              borderRadius: 99,
+              fontSize: 11,
+              fontWeight: 700,
+              border: isSelected
+                ? "1.5px solid #97e13e"
+                : "1.5px solid rgba(0,0,0,0.1)",
+              background: isSelected ? "rgba(151,225,62,0.1)" : "transparent",
+              color: isSelected ? "#3d6b10" : "#666",
+              cursor: "pointer",
+              transition: "all 0.2s ease",
+              textTransform: "uppercase",
+              letterSpacing: "0.04em",
+            }}
           >
-            {/* BRANDED CHECKBOX: Accent green on selection */}
-            <div
-              className={`w-5 h-5 border rounded-[4px] flex items-center justify-center transition-all duration-300 ${
-                isSelected
-                  ? "bg-accent border-accent shadow-custom"
-                  : "bg-surface border-border-secondary group-hover:border-accent"
-              }`}
-            >
-              {isSelected && (
-                <div className="w-2 h-2 bg-dark rounded-full animate-pulse" />
-              )}
-            </div>
-
-            <span
-              className={`text-base tracking-tight transition-colors ${
-                isSelected
-                  ? "text-primary font-bold"
-                  : "text-secondary font-medium group-hover:text-primary"
-              }`}
-            >
-              {item.label}
-            </span>
-          </Button>
+            {item.label}
+          </button>
         );
       })}
     </div>
@@ -105,37 +96,47 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
       </div>
 
       {/* In Stock Toggle */}
-      <div className="flex justify-between items-center py-6 border-b border-default">
-        <span className="text-base font-bold text-primary uppercase tracking-tight">
+      <div className="flex justify-between items-center py-5 border-b border-gray-100">
+        <span className="text-xs font-black text-gray-500 uppercase tracking-widest">
           In Stock Only
         </span>
-        <ToggleSwitch
+        <Switch
           checked={inStock}
           onChange={onInStockChange}
           size="small"
+          style={{ background: inStock ? "#97e13e" : undefined }}
         />
       </div>
 
       {/* Select Size Grid */}
-      <div className="py-8 border-t border-default">
-        <h3 className="text-md font-display font-black uppercase tracking-tighter text-primary mb-6">
-          Select Size
+      <div className="py-5 border-b border-gray-100">
+        <h3 className="text-xs font-black uppercase tracking-widest text-gray-400 mb-3">
+          Size
         </h3>
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-3 gap-1.5">
           {AVAILABLE_SIZES.map((size) => {
             const isSelected = selectedSizes.includes(size);
             return (
-              <Button
+              <button
                 key={size}
                 onClick={() => onSizeToggle(size)}
-                className={`aspect-square flex items-center justify-center border rounded-[4px] text-base transition-all duration-300 ${
-                  isSelected
-                    ? "bg-dark border-dark text-accent font-black shadow-hover"
-                    : "bg-surface border-border-primary text-primary font-bold hover:border-accent hover:text-accent"
-                }`}
+                style={{
+                  padding: "8px 0",
+                  borderRadius: 10,
+                  fontSize: 12,
+                  fontWeight: 800,
+                  border: isSelected
+                    ? "2px solid #97e13e"
+                    : "1.5px solid rgba(0,0,0,0.1)",
+                  background: isSelected ? "rgba(151,225,62,0.1)" : "#f8f9fa",
+                  color: isSelected ? "#3d6b10" : "#333",
+                  cursor: "pointer",
+                  transition: "all 0.2s ease",
+                  textAlign: "center",
+                }}
               >
                 {size}
-              </Button>
+              </button>
             );
           })}
         </div>

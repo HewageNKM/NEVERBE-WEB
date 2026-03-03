@@ -36,10 +36,7 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
   return (
     <div className={`w-full max-w-content mx-auto px-4 md:px-8 ${className}`}>
       {/* Header Area */}
-      <Flex
-        vertical={true}
-        className="md:flex-row md:justify-between md:items-end mb-10 gap-6"
-      >
+      <Flex align="center" justify="space-between" className="mb-8 gap-4">
         <Flex vertical gap={4}>
           <Text
             style={{
@@ -65,39 +62,22 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
           </Title>
         </Flex>
 
-        <Flex
-          align="center"
-          justify="space-between"
-          gap={24}
-          className="md:justify-end"
-        >
+        <Flex align="center" gap={12}>
           {/* Desktop Navigation Arrows */}
-          <Flex align="center" gap={12} className="hidden md:flex">
+          <Flex align="center" gap={8} className="hidden md:flex ml-auto">
             <Button
               shape="circle"
               icon={<LeftOutlined />}
-              size="large"
+              size="middle"
+              className=" hover:border-[#97e13e]! hover:text-[#97e13e]!"
               onClick={() => carouselRef.current?.prev()}
-              style={{
-                border: "1px solid rgba(151, 225, 62, 0.2)",
-                background: "rgba(255,255,255,0.7)",
-                backdropFilter: "blur(8px)",
-              }}
-              className="hover:!border-[#97e13e] hover:!text-[#97e13e]"
-              aria-label="Previous slide"
             />
             <Button
               shape="circle"
               icon={<RightOutlined />}
-              size="large"
+              size="middle"
+              className=" hover:border-[#97e13e]! hover:text-[#97e13e]!"
               onClick={() => carouselRef.current?.next()}
-              style={{
-                border: "1px solid rgba(151, 225, 62, 0.2)",
-                background: "rgba(255,255,255,0.7)",
-                backdropFilter: "blur(8px)",
-              }}
-              className="hover:!border-[#97e13e] hover:!text-[#97e13e]"
-              aria-label="Next slide"
             />
           </Flex>
 
@@ -114,7 +94,7 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
                   letterSpacing: "0.1em",
                   fontSize: 12,
                 }}
-                className="hover:!text-[#97e13e]"
+                className="hover:text-[#97e13e]!"
               >
                 View All
               </Button>
@@ -159,11 +139,9 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
           <div className="px-2 md:hidden h-full">
             <Link
               href={viewAllHref}
-              className="flex flex-col items-center justify-center w-full aspect-4/5 rounded-[24px] group transition-all duration-300"
+              className="apple-glass flex flex-col items-center justify-center w-full aspect-4/5 rounded-[24px] group transition-all duration-300"
               style={{
-                background: "rgba(248, 250, 245, 0.9)",
                 border: "2px dashed rgba(151, 225, 62, 0.25)",
-                backdropFilter: "blur(8px)",
               }}
             >
               <div
@@ -181,7 +159,7 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
                 }}
                 className="group-active:scale-95 transition-transform"
               >
-                <ArrowRightOutlined style={{ fontSize: 22, color: "#000" }} />
+                <ArrowRightOutlined style={{ fontSize: 22, color: "#fff" }} />
               </div>
               <Text
                 strong

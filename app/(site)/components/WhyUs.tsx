@@ -6,17 +6,22 @@ import {
   HiOutlineRefresh,
 } from "react-icons/hi";
 import { BiSupport } from "react-icons/bi";
-import { Row, Col, Card, Typography, Flex } from "antd";
+import { Row, Col, Typography, Flex } from "antd";
 import { motion } from "framer-motion";
 
-const { Title, Text } = Typography;
+const { Text } = Typography;
 
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   visible: (i: number) => ({
     opacity: 1,
     y: 0,
-    transition: { delay: i * 0.1, duration: 0.5, ease: [0.4, 0, 0.2, 1] },
+    transition: {
+      delay: i * 0.1,
+      duration: 0.5,
+      ease: [0.4, 0, 0.2, 1] as any,
+    },
   }),
 };
 
@@ -26,94 +31,170 @@ const WhyUs = () => {
       title: "Island-wide Delivery",
       desc: "Fast delivery to your doorstep.",
       icon: HiOutlineTruck,
+      number: "01",
     },
     {
       title: "Cash on Delivery",
       desc: "Pay when you receive.",
       icon: HiOutlineShieldCheck,
+      number: "02",
     },
     {
       title: "Easy Returns",
       desc: "Hassle-free exchange policy.",
       icon: HiOutlineRefresh,
+      number: "03",
     },
     {
       title: "Premium Support",
       desc: "Call us anytime: 070 520 8999",
       icon: BiSupport,
+      number: "04",
     },
   ];
 
   return (
-    <section className="w-full section-spacing">
-      <div
-        className="max-w-content mx-auto px-4 md:px-8 py-12 md:py-16 rounded-none md:rounded-[32px]"
-        style={{
-          background:
-            "linear-gradient(135deg, rgba(248,250,245,0.95) 0%, rgba(255,255,255,0.98) 50%, rgba(248,250,245,0.95) 100%)",
-        }}
-      >
-        <Flex vertical align="center" className="mb-10">
-          <Text
-            style={{
-              fontSize: 11,
-              fontWeight: 800,
-              textTransform: "uppercase",
-              letterSpacing: "0.2em",
-              color: "#97e13e",
-              marginBottom: 4,
-            }}
-          >
-            Why Choose Us
-          </Text>
-          <Title
-            level={3}
-            style={{
-              margin: 0,
-              textTransform: "uppercase",
-              fontWeight: 900,
-              letterSpacing: "-0.02em",
-              textAlign: "center",
-            }}
-          >
-            Built for Performance
-          </Title>
-        </Flex>
+    <section
+      className="w-full"
+      style={{
+        background: "#f8faf5",
+        padding: "52px 0",
+      }}
+    >
+      {/* Thin green top separator */}
+      <div className="green-separator mb-12" />
 
-        <Row gutter={[20, 20]}>
+      <div className="max-w-content mx-auto px-4 md:px-8">
+        {/* Mobile: horizontal scroll row */}
+        <div className="flex md:hidden gap-4 overflow-x-auto pb-4 hide-scrollbar snap-x snap-mandatory">
           {benefits.map((item, index) => (
-            <Col xs={12} md={6} key={index}>
+            <div
+              key={index}
+              className="snap-start flex-shrink-0 w-[68vw] max-w-[260px] group"
+              style={{
+                padding: "20px 16px",
+                borderRadius: 20,
+                background: "#fff",
+                border: "1px solid rgba(151, 225, 62, 0.2)",
+                position: "relative",
+                overflow: "hidden",
+                boxShadow: "0 2px 12px rgba(0,0,0,0.05)",
+              }}
+            >
+              {/* Watermark digit */}
+              <span
+                style={{
+                  position: "absolute",
+                  bottom: -8,
+                  right: 10,
+                  fontSize: 72,
+                  fontWeight: 900,
+                  lineHeight: 1,
+                  color: "rgba(151, 225, 62, 0.10)",
+                  fontFamily: "var(--font-display), sans-serif",
+                  pointerEvents: "none",
+                  userSelect: "none",
+                }}
+              >
+                {item.number}
+              </span>
+              <div
+                style={{
+                  width: 48,
+                  height: 48,
+                  borderRadius: "50%",
+                  background:
+                    "linear-gradient(135deg, rgba(151, 225, 62, 0.18) 0%, rgba(151, 225, 62, 0.06) 100%)",
+                  border: "1px solid rgba(151, 225, 62, 0.2)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  marginBottom: 16,
+                }}
+              >
+                <item.icon size={22} style={{ color: "#97e13e" }} />
+              </div>
+              <Text
+                style={{
+                  margin: 0,
+                  textTransform: "uppercase",
+                  fontWeight: 900,
+                  letterSpacing: "-0.01em",
+                  fontSize: 12,
+                  color: "#1a1a1a",
+                  display: "block",
+                  marginBottom: 4,
+                }}
+              >
+                {item.title}
+              </Text>
+              <Text
+                style={{
+                  fontSize: 11,
+                  fontWeight: 500,
+                  display: "block",
+                  color: "#777",
+                }}
+              >
+                {item.desc}
+              </Text>
+            </div>
+          ))}
+        </div>
+
+        {/* Desktop: 4-column grid */}
+        <Row gutter={[24, 24]} justify="center" className="hidden md:flex">
+          {benefits.map((item, index) => (
+            <Col md={6} key={index}>
               <motion.div
                 variants={fadeUp}
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
                 custom={index}
-                style={{ height: "100%" }}
               >
-                <Card
-                  hoverable
+                <div
+                  className="group relative overflow-hidden h-full"
                   style={{
-                    borderRadius: 24,
-                    height: "100%",
-                    textAlign: "center",
-                    border: "1px solid rgba(151, 225, 62, 0.12)",
-                    background: "rgba(255, 255, 255, 0.7)",
-                    backdropFilter: "blur(12px)",
+                    padding: "28px 20px",
+                    borderRadius: 20,
+                    background: "#fff",
+                    border: "1px solid rgba(151, 225, 62, 0.15)",
+                    boxShadow: "0 2px 20px rgba(0,0,0,0.04)",
+                    transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+                    borderLeft: "3px solid rgba(151, 225, 62, 0.5)",
+                    cursor: "default",
                   }}
-                  styles={{ body: { padding: "28px 20px" } }}
-                  className="group glass-glow-hover"
                 >
-                  <Flex vertical align="center" gap={16}>
+                  {/* Watermark digit */}
+                  <span
+                    className="transition-all duration-500 group-hover:text-[rgba(151,225,62,0.12)]"
+                    style={{
+                      position: "absolute",
+                      bottom: -8,
+                      right: 10,
+                      fontSize: 88,
+                      fontWeight: 900,
+                      lineHeight: 1,
+                      color: "rgba(151, 225, 62, 0.07)",
+                      fontFamily: "var(--font-display), sans-serif",
+                      pointerEvents: "none",
+                      userSelect: "none",
+                    }}
+                  >
+                    {item.number}
+                  </span>
+
+                  <Flex vertical gap={12}>
                     <div
                       className="transition-all duration-400 group-hover:scale-110"
                       style={{
-                        width: 64,
-                        height: 64,
-                        borderRadius: 20,
+                        width: 56,
+                        height: 56,
+                        borderRadius: "50%",
                         background:
-                          "linear-gradient(135deg, rgba(151, 225, 62, 0.1) 0%, rgba(151, 225, 62, 0.05) 100%)",
-                        border: "1px solid rgba(151, 225, 62, 0.15)",
+                          "linear-gradient(135deg, rgba(151, 225, 62, 0.2) 0%, rgba(151, 225, 62, 0.08) 100%)",
+                        border: "1px solid rgba(151, 225, 62, 0.2)",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
@@ -121,40 +202,41 @@ const WhyUs = () => {
                       }}
                     >
                       <item.icon
-                        size={28}
+                        size={24}
                         style={{
-                          color: "#5fa31a",
+                          color: "#97e13e",
                           transition: "color 0.3s ease",
                         }}
                       />
                     </div>
                     <div>
-                      <Title
-                        level={5}
+                      <Text
                         style={{
                           margin: 0,
                           textTransform: "uppercase",
                           fontWeight: 900,
                           letterSpacing: "-0.01em",
-                          fontSize: 13,
+                          fontSize: 12,
+                          color: "#1a1a1a",
+                          display: "block",
                         }}
                       >
                         {item.title}
-                      </Title>
+                      </Text>
                       <Text
-                        type="secondary"
                         style={{
-                          fontSize: 12,
+                          fontSize: 11,
                           fontWeight: 500,
                           display: "block",
-                          marginTop: 6,
+                          marginTop: 4,
+                          color: "#777",
                         }}
                       >
                         {item.desc}
                       </Text>
                     </div>
                   </Flex>
-                </Card>
+                </div>
               </motion.div>
             </Col>
           ))}

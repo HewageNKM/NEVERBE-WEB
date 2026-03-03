@@ -5,7 +5,7 @@ const ProductFAQ = () => {
   return (
     <section className="bg-surface-2 py-20 mt-16">
       <div className="max-w-content mx-auto px-8 md:px-12">
-        <h3 className="text-lg font-display font-black uppercase italic tracking-tighter text-primary mb-12">
+        <h3 className="text-lg font-display font-black uppercase tracking-tighter text-primary mb-12">
           The NEVERBE Standard
         </h3>
 

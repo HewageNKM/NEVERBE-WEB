@@ -14,7 +14,15 @@ import { NavigationItem, SocialMediaItem } from "@/services/WebsiteService";
 import { IoLogoFacebook, IoLogoInstagram } from "react-icons/io";
 import { IoLogoTiktok, IoLogoYoutube, IoLogoTwitter } from "react-icons/io5";
 import { IconType } from "react-icons";
-import { Row, Col, Typography, Flex, Divider } from "antd";
+import { Row, Col, Typography, Flex, Divider, Input, Button } from "antd";
+import {
+  SendOutlined,
+  SafetyCertificateOutlined,
+  CarOutlined,
+  DollarCircleOutlined,
+  ReloadOutlined,
+  StarOutlined,
+} from "@ant-design/icons";
 
 const { Title, Text } = Typography;
 
@@ -53,16 +61,100 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
   return (
     <footer
       id="footer"
-      className="w-full"
+      className="w-full !rounded-none !border-x-0 !border-b-0"
       style={{
-        background:
-          "linear-gradient(180deg, rgba(248,250,245,0.5) 0%, rgba(255,255,255,1) 40%)",
-        borderTop: "1px solid rgba(151, 225, 62, 0.08)",
-        paddingTop: 64,
-        paddingBottom: 32,
+        background: "#f8faf5",
+        paddingTop: 0,
+        paddingBottom: 0,
       }}
     >
-      <div className="max-w-content mx-auto px-6 lg:px-12">
+      {/* Green gradient top separator */}
+      <div className="green-separator" />
+
+      <div
+        className="max-w-content mx-auto px-6 lg:px-12"
+        style={{ paddingTop: 64 }}
+      >
+        {/* --- Newsletter Section --- */}
+        <Flex
+          vertical
+          align="center"
+          gap={16}
+          className="mb-16 md:flex-row md:justify-between"
+        >
+          <Flex vertical gap={4}>
+            <Text
+              style={{
+                fontSize: 11,
+                fontWeight: 800,
+                textTransform: "uppercase",
+                letterSpacing: "0.2em",
+                color: "#97e13e",
+              }}
+            >
+              Stay Updated
+            </Text>
+            <Title
+              level={4}
+              style={{
+                margin: 0,
+                color: "#1a1a1a",
+                fontWeight: 900,
+                textTransform: "uppercase",
+                letterSpacing: "-0.02em",
+              }}
+            >
+              Get The Latest Drops
+            </Title>
+            <Text
+              style={{
+                color: "#777",
+                fontSize: 13,
+                fontWeight: 500,
+              }}
+            >
+              Subscribe for exclusive offers and new arrivals
+            </Text>
+          </Flex>
+          <Flex gap={8} className="w-full md:w-auto md:min-w-[360px]">
+            <Input
+              placeholder="Enter your email"
+              size="large"
+              style={{
+                background: "#fff",
+                border: "1px solid rgba(151, 225, 62, 0.3)",
+                borderRadius: 99,
+                color: "#1a1a1a",
+                padding: "0 24px",
+                fontSize: 14,
+                fontWeight: 600,
+              }}
+            />
+            <Button
+              type="primary"
+              size="large"
+              icon={<SendOutlined />}
+              style={{
+                background: "#97e13e",
+                border: "none",
+                borderRadius: 99,
+                fontWeight: 800,
+                color: "#fff",
+                padding: "0 28px",
+              }}
+            >
+              Subscribe
+            </Button>
+          </Flex>
+        </Flex>
+
+        <Divider
+          style={{
+            borderColor: "rgba(151, 225, 62, 0.15)",
+            margin: "0 0 48px 0",
+          }}
+        />
+
         {/* --- Primary Navigation Grid --- */}
         <Row gutter={[32, 48]} className="mb-16">
           {/* Column 1: Brand & Key Utility */}
@@ -77,7 +169,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                   alt="NEVERBE"
                   width={150}
                   height={50}
-                  className="object-contain"
+                  className="object-contain brightness-0 invert"
                 />
               </Link>
 
@@ -90,6 +182,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                     margin: 0,
                     textTransform: "uppercase",
                     letterSpacing: "0.15em",
+                    color: "#aaa",
                   }}
                 >
                   Store Location
@@ -107,7 +200,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                     style={{
                       fontSize: 11,
                       fontWeight: 700,
-                      color: "rgba(0,0,0,0.45)",
+                      color: "#555",
                       textTransform: "uppercase",
                       lineHeight: 1.6,
                       transition: "color 0.3s ease",
@@ -132,6 +225,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                   margin: 0,
                   textTransform: "uppercase",
                   letterSpacing: "0.15em",
+                  color: "#aaa",
                 }}
               >
                 Get Help
@@ -144,7 +238,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                     style={{
                       fontSize: 11,
                       fontWeight: 700,
-                      color: "rgba(0,0,0,0.45)",
+                      color: "#555",
                       textTransform: "uppercase",
                       letterSpacing: "0.08em",
                       transition: "color 0.3s ease",
@@ -169,6 +263,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                   margin: 0,
                   textTransform: "uppercase",
                   letterSpacing: "0.15em",
+                  color: "#aaa",
                 }}
               >
                 Contact Us
@@ -184,7 +279,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                     <info.icon
                       size={16}
                       style={{
-                        color: "rgba(0,0,0,0.3)",
+                        color: "#aaa",
                         transition: "color 0.3s ease",
                       }}
                       className="group-hover:!text-[#97e13e]"
@@ -193,7 +288,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                       style={{
                         fontSize: 11,
                         fontWeight: 700,
-                        color: "rgba(0,0,0,0.45)",
+                        color: "#555",
                         textTransform: "uppercase",
                         letterSpacing: "0.05em",
                         transition: "color 0.3s ease",
@@ -220,6 +315,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                   margin: 0,
                   textTransform: "uppercase",
                   letterSpacing: "0.15em",
+                  color: "#aaa",
                 }}
               >
                 Follow Us
@@ -233,15 +329,15 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                     style={{
                       padding: 12,
                       borderRadius: 16,
-                      background: "rgba(151, 225, 62, 0.06)",
-                      border: "1px solid rgba(151, 225, 62, 0.1)",
+                      background: "rgba(151, 225, 62, 0.08)",
+                      border: "1px solid rgba(151, 225, 62, 0.15)",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
                       transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-                      color: "rgba(0,0,0,0.5)",
+                      color: "#555",
                     }}
-                    className="hover:!bg-[#97e13e] hover:!text-black hover:!border-[#97e13e] hover:!shadow-[0_8px_24px_rgba(151,225,62,0.3)]"
+                    className="hover:!bg-[#97e13e] hover:!text-black hover:!border-[#97e13e]"
                   >
                     <media.Icon size={20} />
                   </Link>
@@ -251,9 +347,34 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
           </Col>
         </Row>
 
+        {/* --- Trust Badges Row --- */}
+        <Divider
+          style={{
+            borderColor: "rgba(151, 225, 62, 0.15)",
+            margin: "0 0 28px 0",
+          }}
+        />
+        <Flex justify="center" gap={12} wrap style={{ marginBottom: 40 }}>
+          {[
+            { Icon: SafetyCertificateOutlined, label: "Secure Checkout" },
+            { Icon: CarOutlined, label: "Island-wide Delivery" },
+            { Icon: DollarCircleOutlined, label: "Cash on Delivery" },
+            { Icon: ReloadOutlined, label: "Easy Returns" },
+            { Icon: StarOutlined, label: "100% Quality Guaranteed" },
+          ].map((badge) => (
+            <span key={badge.label} className="trust-badge">
+              <badge.Icon style={{ color: "#97e13e", fontSize: 14 }} />
+              {badge.label}
+            </span>
+          ))}
+        </Flex>
+
         {/* --- Bottom Legal & Credits Row --- */}
         <Divider
-          style={{ borderColor: "rgba(151, 225, 62, 0.08)", margin: "32px 0" }}
+          style={{
+            borderColor: "rgba(151, 225, 62, 0.15)",
+            margin: "0",
+          }}
         />
         <Flex
           vertical
@@ -261,6 +382,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
           align="center"
           gap={32}
           className="lg:flex-row"
+          style={{ padding: "24px 0" }}
         >
           <Flex vertical align="center" gap={24} className="md:flex-row">
             <Text
@@ -269,7 +391,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                 fontWeight: 800,
                 textTransform: "uppercase",
                 letterSpacing: "0.15em",
-                color: "rgba(0,0,0,0.6)",
+                color: "#aaa",
               }}
             >
               © {new Date().getFullYear()} NEVERBE, INC.
@@ -282,7 +404,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                   fontWeight: 800,
                   textTransform: "uppercase",
                   letterSpacing: "0.15em",
-                  color: "rgba(0,0,0,0.35)",
+                  color: "#aaa",
                   transition: "color 0.3s ease",
                 }}
                 className="hover:!text-[#97e13e]"
@@ -296,7 +418,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                   fontWeight: 800,
                   textTransform: "uppercase",
                   letterSpacing: "0.15em",
-                  color: "rgba(0,0,0,0.35)",
+                  color: "#aaa",
                   transition: "color 0.3s ease",
                 }}
                 className="hover:!text-[#97e13e]"
@@ -311,14 +433,14 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
             <Link
               href={payHere.payHereLink}
               target="_blank"
-              className="opacity-40 hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-500"
+              className="opacity-30 hover:opacity-100 transition-all duration-500"
             >
               <Image
                 src={payHere.longWhiteBanner}
                 width={180}
                 height={40}
                 alt="Secure Payments"
-                className="object-contain h-5 w-auto invert"
+                className="object-contain h-5 w-auto"
               />
             </Link>
 
@@ -329,7 +451,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                 fontWeight: 900,
                 textTransform: "uppercase",
                 letterSpacing: "0.2em",
-                color: "rgba(0,0,0,0.3)",
+                color: "#aaa",
               }}
             >
               Engineered By{" "}
@@ -337,7 +459,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                 href="https://github.com/HewageNKM"
                 target="_blank"
                 className="hover:!text-[#97e13e] transition-colors"
-                style={{ color: "rgba(0,0,0,0.6)" }}
+                style={{ color: "#777" }}
               >
                 N. MALWENNA
               </Link>

@@ -79,7 +79,7 @@ const UpsellNudge: React.FC<Props> = ({
         <span
           className={
             isMet
-              ? "text-accent font-black uppercase italic tracking-tight"
+              ? "text-accent font-black uppercase tracking-tight"
               : ""
           }
         >

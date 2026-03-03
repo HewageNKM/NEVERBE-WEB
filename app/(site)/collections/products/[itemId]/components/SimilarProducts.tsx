@@ -17,7 +17,7 @@ const SimilarProducts = ({ items }: { items: Product[] }) => {
   return (
     <section className="w-full max-w-content mx-auto py-20 px-4 md:px-12">
       <div className="flex justify-between items-end mb-10">
-        <h2 className="text-xl md:text-2xl font-display font-black uppercase italic tracking-tighter text-primary">
+        <h2 className="text-xl md:text-2xl font-display font-black uppercase tracking-tighter text-primary">
           You Might Also Like
         </h2>
 
