@@ -99,13 +99,13 @@ const SavedAddresses: React.FC<SavedAddressesProps> = ({
                   <h3 className="text-lg font-bold text-primary uppercase tracking-tight">
                     Edit {type} Address
                   </h3>
-                  <button
-                    type="button"
+                  <Button
+                    type="text"
                     onClick={() => setIsEditing(false)}
-                    className="text-muted hover:text-primary"
+                    className="text-muted hover:text-primary transition-colors p-0 h-auto"
                   >
                     <IoCloseOutline size={24} />
-                  </button>
+                  </Button>
                 </div>
 
                 <Form.Item
@@ -189,13 +189,14 @@ const SavedAddresses: React.FC<SavedAddressesProps> = ({
               </div>
 
               <div className="mt-6">
-                <button
+                <Button
+                  type="text"
                   onClick={() => setIsEditing(true)}
                   className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-accent hover:text-primary transition-all"
                 >
                   <IoPencilOutline size={14} />
                   {existing ? "Change Address" : "Add Address"}
-                </button>
+                </Button>
               </div>
 
               {existing && (

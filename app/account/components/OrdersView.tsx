@@ -44,7 +44,7 @@ const OrdersView: React.FC<OrdersViewProps> = ({ orders }) => {
 
         <div className="space-y-4">
           {orders.length === 0 ? (
-            <div className="py-20 bg-surface-2 rounded-2xl border border-default flex items-center justify-center text-center px-6">
+            <div className="py-20 bg-surface-2 rounded-2xl border border-default flex items-center justify-center text-center px-6 max-w-xl mx-auto">
               <EmptyState
                 heading="No orders yet"
                 subHeading="Your purchase history will appear here once you've made your first order."
