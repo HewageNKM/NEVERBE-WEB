@@ -128,7 +128,7 @@ const Page = async (context: { params: Promise<{ itemId: string }> }) => {
       <Flex
         vertical
         gap={16}
-        className="max-w-[1440px] mx-auto pt-4 pb-2 text-black"
+        className="w-full max-w-[1600px] mx-auto pt-4 pb-2 text-black px-4 md:px-10 lg:px-16"
       >
         <Breadcrumbs items={breadcrumbItems} />
       </Flex>

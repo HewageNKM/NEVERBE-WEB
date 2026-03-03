@@ -211,9 +211,9 @@ const ProductHero = ({ item }: { item: Product }) => {
   };
 
   return (
-    <section className="max-w-content mx-auto px-4 md:px-10 py-6 flex flex-col lg:flex-row gap-10 lg:gap-16">
+    <section className="w-full max-w-[1600px] mx-auto px-4 md:px-10 lg:px-16 py-10 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">
       {/* --- LEFT COLUMN: IMAGES --- */}
-      <div className="flex-1 lg:w-3/5 flex flex-col gap-4">
+      <div className="lg:col-span-7 flex flex-col gap-4">
         <div className="relative aspect-square bg-surface-2 rounded-sm overflow-hidden group">
           <AnimatePresence mode="wait">
             <motion.div
@@ -266,8 +266,8 @@ const ProductHero = ({ item }: { item: Product }) => {
       </div>
 
       {/* --- RIGHT COLUMN: DETAILS --- */}
-      <div className="lg:w-2/5 relative">
-        <div className="lg:sticky lg:top-24 flex flex-col gap-6">
+      <div className="lg:col-span-5 relative lg:pl-4 xl:pl-8">
+        <div className="lg:sticky lg:top-24 flex flex-col gap-16">
           {/* Promotion Banner - Display Only */}
           {activePromo && (
             <div className="bg-accent text-dark p-4 flex items-center gap-3 shadow-custom">
@@ -281,13 +281,13 @@ const ProductHero = ({ item }: { item: Product }) => {
           )}
 
           <header>
-            <h2 className="text-xs font-black uppercase tracking-[0.2em] text-accent mb-2">
+            <h2 className="text-xs font-black uppercase tracking-[0.2em] text-accent mb-3">
               {item.brand?.replace("-", " ")}
             </h2>
-            <h1 className="text-4xl lg:text-5xl font-display font-black uppercase tracking-tighter leading-[0.9] mb-4 text-primary">
+            <h1 className="text-4xl lg:text-5xl font-display font-black uppercase tracking-tighter leading-[0.9] mb-6 text-primary">
               {item.name}
             </h1>
-            <div className="flex items-baseline gap-4 flex-wrap">
+            <div className="flex items-baseline gap-6 flex-wrap">
               <span className="text-3xl font-display font-black tracking-tighter text-primary">
                 Rs. {finalPrice.toLocaleString()}
               </span>
@@ -309,15 +309,15 @@ const ProductHero = ({ item }: { item: Product }) => {
             </div>
 
             {/* Value Props Ticker */}
-            <div className="flex gap-4 mt-6 border-y border-default py-3">
+            <div className="flex gap-6 mt-10 border-y border-default py-4">
               <div className="flex items-center gap-2">
-                <FaTruckFast className="text-muted" size={14} />
+                <FaTruckFast className="text-muted" size={16} />
                 <span className="text-[10px] font-bold uppercase text-secondary">
                   Standard Shipping 2-3 Days
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <FaArrowRotateLeft className="text-muted" size={14} />
+                <FaArrowRotateLeft className="text-muted" size={16} />
                 <span className="text-[10px] font-bold uppercase text-secondary">
                   Size Exchange
                 </span>
@@ -327,7 +327,7 @@ const ProductHero = ({ item }: { item: Product }) => {
 
           {/* Color & Size Selection (Existing Logic) */}
           <div>
-            <h3 className="text-xs font-bold uppercase mb-3 text-muted">
+            <h3 className="text-xs font-bold uppercase mb-5 text-muted">
               Select Color
             </h3>
             <div className="flex flex-wrap gap-2">
@@ -348,7 +348,7 @@ const ProductHero = ({ item }: { item: Product }) => {
                       setSelectedSize("");
                     }}
                     disabled={isVariantOutOfStock}
-                    className={`relative w-12 h-12 bg-surface-2 rounded-md overflow-hidden border-2 transition-all p-0 ${
+                    className={`relative w-20 h-20 bg-surface-2 rounded-md overflow-hidden border-2 transition-all p-0 ${
                       selectedVariant.variantId === v.variantId
                         ? "border-dark hover:border-dark focus:border-dark"
                         : "border-transparent opacity-60 hover:opacity-100 focus:opacity-100 hover:bg-surface-2 focus:bg-surface-2"
@@ -367,8 +367,8 @@ const ProductHero = ({ item }: { item: Product }) => {
                       <Image
                         src={v.images[0].url}
                         alt={v.variantName}
-                        width={48}
-                        height={48}
+                        width={80}
+                        height={80}
                         className="object-cover mix-blend-multiply"
                       />
                     </div>
@@ -393,7 +393,7 @@ const ProductHero = ({ item }: { item: Product }) => {
           </div>
 
           <div>
-            <div className="flex justify-between items-center mb-3">
+            <div className="flex justify-between items-center mb-5">
               <h3 className="text-xs font-bold uppercase text-muted">
                 Select Size
               </h3>
@@ -417,36 +417,38 @@ const ProductHero = ({ item }: { item: Product }) => {
           {/* Actions */}
           <div className="flex flex-col gap-4 mt-4">
             {/* Quantity Selector */}
-            <div className="flex items-center gap-4">
+            <div className="flex flex-col gap-4">
               <span className="text-xs font-bold uppercase text-muted">
-                Qty
+                Quantity
               </span>
-              <div className="flex items-center border border-default rounded-full overflow-hidden">
-                <Button
-                  type="text"
-                  onClick={() => setQty(Math.max(1, qty - 1))}
-                  disabled={qty <= 1}
-                  className="w-10 h-10 flex items-center justify-center text-primary hover:bg-surface-2 transition-colors disabled:text-muted disabled:cursor-not-allowed rounded-none p-0"
-                  icon={<IoRemoveOutline size={18} />}
-                />
-                <span className="w-10 text-center font-display font-black text-primary">
-                  {qty}
-                </span>
-                <Button
-                  type="text"
-                  onClick={() => setQty(Math.min(10, qty + 1))}
-                  disabled={
-                    qty >= 10 || (!!selectedSize && qty >= availableStock)
-                  }
-                  className="w-10 h-10 flex items-center justify-center text-primary hover:bg-surface-2 transition-colors disabled:text-muted disabled:cursor-not-allowed rounded-none p-0"
-                  icon={<IoAddOutline size={18} />}
-                />
+              <div className="flex items-center gap-6">
+                <div className="flex items-center border border-default rounded-full overflow-hidden">
+                  <Button
+                    type="text"
+                    onClick={() => setQty(Math.max(1, qty - 1))}
+                    disabled={qty <= 1}
+                    className="w-12 h-12 flex items-center justify-center text-primary hover:bg-surface-2 transition-colors disabled:text-muted disabled:cursor-not-allowed rounded-none p-0"
+                    icon={<IoRemoveOutline size={20} />}
+                  />
+                  <span className="w-12 text-center font-display font-black text-base text-primary">
+                    {qty}
+                  </span>
+                  <Button
+                    type="text"
+                    onClick={() => setQty(Math.min(10, qty + 1))}
+                    disabled={
+                      qty >= 10 || (!!selectedSize && qty >= availableStock)
+                    }
+                    className="w-12 h-12 flex items-center justify-center text-primary hover:bg-surface-2 transition-colors disabled:text-muted disabled:cursor-not-allowed rounded-none p-0"
+                    icon={<IoAddOutline size={20} />}
+                  />
+                </div>
+                {selectedSize && availableStock > 0 && (
+                  <span className="text-[10px] text-muted font-bold uppercase bg-surface-2 px-3 py-1 rounded-full">
+                    {availableStock} available
+                  </span>
+                )}
               </div>
-              {selectedSize && availableStock > 0 && (
-                <span className="text-[10px] text-muted font-bold uppercase">
-                  {availableStock} available
-                </span>
-              )}
             </div>
 
             <div className="flex gap-3">

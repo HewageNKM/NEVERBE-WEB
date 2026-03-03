@@ -75,13 +75,8 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
         style={{ paddingTop: 64 }}
       >
         {/* --- Newsletter Section --- */}
-        <Flex
-          vertical
-          align="center"
-          gap={16}
-          className="mb-16 md:flex-row md:justify-between"
-        >
-          <Flex vertical gap={4}>
+        <div className="flex flex-col items-center gap-8 mb-16 text-center">
+          <div className="flex flex-col items-center gap-2">
             <Text
               style={{
                 fontSize: 11,
@@ -114,8 +109,8 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
             >
               Subscribe for exclusive offers and new arrivals
             </Text>
-          </Flex>
-          <div className="flex items-center w-full md:w-auto md:min-w-[440px] mt-8 md:mt-0 bg-white rounded-full p-2 shadow-sm border border-gray-200 focus-within:border-[#2e9e5b] focus-within:ring-1 focus-within:ring-[#2e9e5b] transition-all">
+          </div>
+          <div className="flex items-center w-full max-w-[500px] md:max-w-[600px] lg:max-w-[800px] bg-white rounded-full p-2 shadow-sm border border-gray-200 focus-within:border-[#2e9e5b] focus-within:ring-1 focus-within:ring-[#2e9e5b] transition-all">
             <Input
               placeholder="Enter your email address"
               variant="borderless"
@@ -147,7 +142,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
               Subscribe
             </Button>
           </div>
-        </Flex>
+        </div>
 
         <Divider
           style={{
