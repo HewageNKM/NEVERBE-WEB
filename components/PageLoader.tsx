@@ -1,8 +1,10 @@
 "use client";
 
+import { Spin, ConfigProvider } from "antd";
+
 /**
  * PageLoader - NEVERBE Liquid Glass
- * Full-page loading with premium liquid glass effect and 3-dot animation.
+ * Full-page loading with premium liquid glass effect and Ant Design loading animation.
  */
 const PageLoader = () => {
   return (
@@ -25,24 +27,21 @@ const PageLoader = () => {
 
       {/* Content */}
       <div className="relative z-10 flex flex-col items-center">
-        {/* 3-Dot Animation */}
-        <div className="flex gap-4 mb-6">
-          <div
-            className="w-4 h-4 rounded-full bg-accent animate-bounce"
-            style={{ animationDelay: "0ms" }}
-          />
-          <div
-            className="w-4 h-4 rounded-full bg-accent animate-bounce"
-            style={{ animationDelay: "150ms" }}
-          />
-          <div
-            className="w-4 h-4 rounded-full bg-accent animate-bounce"
-            style={{ animationDelay: "300ms" }}
-          />
+        {/* Ant Design Spin Loader */}
+        <div className="mb-6 flex items-center justify-center">
+          <ConfigProvider
+            theme={{
+              token: {
+                colorPrimary: "#2e9e5b",
+              },
+            }}
+          >
+            <Spin size="large" />
+          </ConfigProvider>
         </div>
 
         {/* Brand Name */}
-        <p className="text-xs font-display font-black uppercase tracking-[0.3em] text-primary">
+        <p className="text-xs font-display font-black uppercase tracking-[0.3em] text-primary mt-2">
           NEVERBE
         </p>
       </div>

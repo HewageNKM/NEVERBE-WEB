@@ -1,9 +1,11 @@
 "use client";
 import React from "react";
 
+import { Spin, ConfigProvider } from "antd";
+
 /**
  * ComponentLoader - NEVERBE Liquid Glass
- * Overlay with liquid glass effect and 3-dot animation.
+ * Overlay with liquid glass effect and Ant Design loading animation.
  */
 const ComponentLoader = () => {
   return (
@@ -23,22 +25,17 @@ const ComponentLoader = () => {
         }}
       />
 
-      {/* 3-dot loader */}
+      {/* Ant Design Spin Loader */}
       <div className="relative z-10 w-full h-full flex items-center justify-center">
-        <div className="flex gap-2.5">
-          <div
-            className="w-3 h-3 rounded-full bg-accent animate-bounce"
-            style={{ animationDelay: "0ms" }}
-          />
-          <div
-            className="w-3 h-3 rounded-full bg-accent animate-bounce"
-            style={{ animationDelay: "150ms" }}
-          />
-          <div
-            className="w-3 h-3 rounded-full bg-accent animate-bounce"
-            style={{ animationDelay: "300ms" }}
-          />
-        </div>
+        <ConfigProvider
+          theme={{
+            token: {
+              colorPrimary: "#2e9e5b",
+            },
+          }}
+        >
+          <Spin size="large" />
+        </ConfigProvider>
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Flex, Spin, Typography } from "antd";
+import { Flex, Spin, Typography, ConfigProvider } from "antd";
 
 /**
  * CheckoutLoader - Full-page Liquid Glass Loader
@@ -35,22 +35,15 @@ const CheckoutLoader = () => {
         <Flex vertical align="center" gap={16}>
           {/* Branded Spin */}
           <div className="relative">
-            <Spin
-              size="large"
-              indicator={
-                <div className="flex gap-2">
-                  <div className="w-3 h-3 rounded-full bg-[#2e9e5b] animate-bounce" />
-                  <div
-                    className="w-3 h-3 rounded-full bg-[#2e9e5b] animate-bounce"
-                    style={{ animationDelay: "150ms" }}
-                  />
-                  <div
-                    className="w-3 h-3 rounded-full bg-[#2e9e5b] animate-bounce"
-                    style={{ animationDelay: "300ms" }}
-                  />
-                </div>
-              }
-            />
+            <ConfigProvider
+              theme={{
+                token: {
+                  colorPrimary: "#2e9e5b",
+                },
+              }}
+            >
+              <Spin size="large" />
+            </ConfigProvider>
           </div>
 
           <Flex vertical align="center" gap={4}>

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Button } from "antd";
+import { Button, Spin } from "antd";
 
 interface SizeGridProps {
   sizes: string[];
@@ -60,10 +60,8 @@ const SizeGrid: React.FC<SizeGridProps> = ({
             )}
 
             {stockLoading ? (
-              <div className="flex gap-1">
-                <div className="w-1 h-1 bg-muted rounded-full animate-bounce" />
-                <div className="w-1 h-1 bg-muted rounded-full animate-bounce [animation-delay:0.2s]" />
-                <div className="w-1 h-1 bg-muted rounded-full animate-bounce [animation-delay:0.4s]" />
+              <div className="flex items-center justify-center">
+                <Spin size="small" />
               </div>
             ) : (
               size
