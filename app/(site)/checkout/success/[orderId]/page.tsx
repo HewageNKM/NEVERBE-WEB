@@ -3,7 +3,7 @@ import React from "react";
 import { redirect, notFound } from "next/navigation";
 import SuccessPageClient from "./components/SuccessPageClient";
 import { Metadata } from "next";
-import { getOrderByIdForInvoice } from "@/services/OrderService";
+import { getOrderByIdForInvoice } from "@/actions/orderAction";
 
 export const metadata: Metadata = {
   title: "Order Success",

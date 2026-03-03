@@ -10,7 +10,7 @@ import Footer from "@/components/Footer";
 import Menu from "@/components/Menu";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import { NavigationItem, SocialMediaItem } from "@/services/WebsiteService";
+import { NavigationItem, SocialMediaItem } from "@/actions/websiteAction";
 import { PromotionsProvider } from "@/components/PromotionsProvider";
 import QuickViewProvider from "@/components/QuickViewProvider";
 import RecentlyViewedProvider from "@/components/RecentlyViewedProvider";

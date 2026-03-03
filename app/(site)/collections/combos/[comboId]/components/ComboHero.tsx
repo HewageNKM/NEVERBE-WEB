@@ -15,7 +15,7 @@ import { addMultipleToBag } from "@/redux/bagSlice/bagSlice";
 import { ComboProduct, ComboItem } from "@/interfaces/ComboProduct";
 import { BagItem, VariantMode } from "@/interfaces/BagItem";
 import SizeGrid from "@/components/SizeGrid";
-import axiosInstance from "@/services/axiosInstance";
+import axiosInstance from "@/actions/axiosInstance";
 
 // --- Types ---
 interface PopulatedComboItem extends ComboItem {
@@ -175,7 +175,7 @@ const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
     setStockLoading((prev) => ({ ...prev, [key]: true }));
     try {
       const res = await axiosInstance.get(
-        `/inventory?productId=${productId}&variantId=${variantId}&size=${size}`,
+        `/web/inventory?productId=${productId}&variantId=${variantId}&size=${size}`,
       );
       const data = res.data;
       setStockStatus((prev) => ({ ...prev, [key]: data.quantity || 0 }));

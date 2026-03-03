@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
 import { toggleMenu } from "@/redux/headerSlice/headerSlice";
 import SearchDialog from "@/components/SearchDialog";
-import { NavigationItem } from "@/services/WebsiteService";
+import { NavigationItem } from "@/actions/websiteAction";
 import { useAlgoliaSearch } from "@/hooks/useAlgoliaSearch";
 import { useFilterData } from "@/hooks/useFilterData";
 

@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { applyCoupon, removeCoupon } from "@/redux/bagSlice/bagSlice";
 import { RootState } from "@/redux/store";
 import { BagItem } from "@/interfaces/BagItem";
-import axiosInstance from "@/services/axiosInstance";
+import axiosInstance from "@/actions/axiosInstance";
 import {
   calculateTotal,
   calculateTotalDiscount,
@@ -169,7 +169,7 @@ export const useCoupon = (options: UseCouponOptions = {}): UseCouponReturn => {
     }));
 
     try {
-      const res = await axiosInstance.post("/coupons/validate", {
+      const res = await axiosInstance.post("/web/coupons/validate", {
         code,
         userId: user?.uid,
         cartTotal: getCartTotal(),

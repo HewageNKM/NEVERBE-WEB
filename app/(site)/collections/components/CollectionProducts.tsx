@@ -17,7 +17,7 @@ import { AnimatePresence } from "framer-motion";
 import { Product } from "@/interfaces/Product";
 import CollectionPopUpFilter from "./CollectionPopUpFilter";
 import SortDropdown from "@/components/SortDropdown";
-import axiosInstance from "@/services/axiosInstance";
+import axiosInstance from "@/actions/axiosInstance";
 import { sortProductsByPrice } from "@/utils/formatting";
 
 // Mapping for dynamic endpoint construction

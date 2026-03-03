@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { getPaginatedCombos } from "@/services/PromotionService";
+import { getPaginatedCombos } from "@/actions/promotionAction";
 import Link from "next/link";
 import CombosGrid from "./components/CombosGrid";
 import EmptyState from "@/components/EmptyState";

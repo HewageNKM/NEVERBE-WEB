@@ -29,7 +29,7 @@ import { PaymentMethod } from "@/interfaces";
 import { BagItem } from "@/interfaces/BagItem";
 import PaymentOptions from "./PaymentOptions";
 import Image from "next/image";
-import axiosInstance from "@/services/axiosInstance";
+import axiosInstance from "@/actions/axiosInstance";
 
 interface PaymentDetailsProps {
   paymentType: string;
@@ -161,7 +161,7 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
     const fetchMethods = async () => {
       try {
         setIsPaymentLoading(true);
-        const res = await axiosInstance.get("/payment-methods");
+        const res = await axiosInstance.get("/web/payment-methods");
         if (res.data) {
           const methods = res.data;
           setPaymentOptions(methods || []);

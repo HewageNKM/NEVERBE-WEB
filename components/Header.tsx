@@ -19,7 +19,7 @@ import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import SeasonalPromo from "@/app/(site)/components/SeasonalPromo";
 import SearchDialog from "@/components/SearchDialog";
-import { NavigationItem } from "@/services/WebsiteService";
+import { NavigationItem } from "@/actions/websiteAction";
 import { useAlgoliaSearch } from "@/hooks/useAlgoliaSearch";
 import { Badge, Input, ConfigProvider, Button, Flex, Typography } from "antd";
 

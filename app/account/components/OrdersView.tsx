@@ -6,7 +6,7 @@ import EmptyState from "@/components/EmptyState";
 import { useRouter } from "next/navigation";
 import { Order } from "@/interfaces/Order";
 import OrderDetailsModal from "./OrderDetailsModal";
-import { toSafeLocaleString } from "@/services/UtilService";
+import { toSafeLocaleString } from "@/actions/utilAction";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { IoReceiptOutline, IoChevronForwardOutline } from "react-icons/io5";

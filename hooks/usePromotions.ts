@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { applyPromotions, removePromotion } from "@/redux/bagSlice/bagSlice";
 import { BagItem } from "@/interfaces/BagItem";
-import axiosInstance from "@/services/axiosInstance";
+import axiosInstance from "@/actions/axiosInstance";
 import {
   calculateTotal,
   calculateTotalDiscount,
@@ -99,7 +99,7 @@ export const usePromotions = (): UsePromotionsReturn => {
 
     setIsLoading(true);
     try {
-      const res = await axiosInstance.get("/promotions");
+      const res = await axiosInstance.get("/web/promotions");
       if (res.data) {
         const data = res.data;
 

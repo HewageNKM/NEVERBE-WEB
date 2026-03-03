@@ -1,8 +1,8 @@
 import {
   getActivePromotions,
   getActiveCoupons,
-} from "@/services/PromotionService";
-import { getDealsProducts } from "@/services/ProductService";
+} from "@/actions/promotionAction";
+import { getDealsProducts } from "@/actions/productAction";
 import CouponCard from "./components/CouponCard";
 import DealsProducts from "./components/DealsProducts";
 import Image from "next/image";

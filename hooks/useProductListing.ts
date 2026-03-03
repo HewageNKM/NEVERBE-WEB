@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback, useMemo } from "react";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import { Product } from "@/interfaces/Product";
 import { sortProductsByPrice } from "@/utils/formatting";
-import axiosInstance from "@/services/axiosInstance";
+import axiosInstance from "@/actions/axiosInstance";
 
 type SortOption = "NO SELCT" | "LOW TO HIGH" | "HIGH TO LOW" | "NEW ARRIVALS";
 
@@ -73,9 +73,10 @@ export const useProductListing = ({
         if (selectedSizes.length > 0)
           params.set("sizes", selectedSizes.join(","));
 
-        const endpoint = apiEndpoint
-          .replace("/api/v1/web", "")
-          .replace("/api/v1", "");
+        const endpoint = apiEndpoint.includes("/api/v1")
+          ? apiEndpoint.split("/api/v1")[1]
+          : apiEndpoint;
+
         const res = await axiosInstance.get(`${endpoint}?${params}`);
         const data = res.data;
 

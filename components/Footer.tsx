@@ -9,7 +9,7 @@ import {
 } from "@/constants";
 import Image from "next/image";
 import { GoLocation } from "react-icons/go";
-import { NavigationItem, SocialMediaItem } from "@/services/WebsiteService";
+import { NavigationItem, SocialMediaItem } from "@/actions/websiteAction";
 import { IoLogoFacebook, IoLogoInstagram } from "react-icons/io";
 import { IoLogoTiktok, IoLogoYoutube, IoLogoTwitter } from "react-icons/io5";
 import { IconType } from "react-icons";

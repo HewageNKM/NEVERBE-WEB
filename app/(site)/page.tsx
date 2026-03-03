@@ -7,14 +7,14 @@ import BrandsSlider from "./components/BrandsSlider";
 import PromotionalAds from "./components/PromotionalAds";
 import CustomerReviews from "./components/CustomerReviews";
 
-import { getHotProducts, getRecentItems } from "@/services/ProductService";
-import { getSliders } from "@/services/SlideService";
-import { getBrands } from "@/services/OtherService";
+import { getHotProducts, getRecentItems } from "@/actions/productAction";
+import { getSliders } from "@/actions/slideAction";
+import { getBrands } from "@/actions/otherAction";
 import type { Metadata } from "next";
 import SEOContent from "./components/SEOContent";
 import FeaturedCategories from "./components/FeaturedCategory";
 import TrendingBundles from "./components/TrendingBundles";
-import { getPaginatedCombos } from "@/services/PromotionService";
+import { getPaginatedCombos } from "@/actions/promotionAction";
 import { Flex } from "antd";
 export const metadata: Metadata = {
   title: {

@@ -1,5 +1,7 @@
 import { BaseItem } from "./BaseItem";
 
+export type VariantMode = "ALL_VARIANTS" | "SPECIFIC_VARIANTS";
+
 /**
  * BagItem represents an item in the shopping bag/cart
  */

@@ -3,7 +3,7 @@ import axiosInstance from "./axiosInstance";
 export const getProducts = async (params: any = {}) => {
   try {
     const q = new URLSearchParams(params).toString();
-    const res = await axiosInstance.get(`/products?${q}`);
+    const res = await axiosInstance.get(`/web/products?${q}`);
     return res.data;
   } catch (error) {
     console.error("Failed to fetch products:", error);
@@ -13,7 +13,7 @@ export const getProducts = async (params: any = {}) => {
 
 export const getRecentItems = async (limit: number = 10) => {
   try {
-    const res = await axiosInstance.get(`/products?sort=new&size=${limit}`);
+    const res = await axiosInstance.get(`/web/products?sort=new&size=${limit}`);
     return res.data.dataList || [];
   } catch (error) {
     console.error("Failed to fetch recent items:", error);
@@ -23,7 +23,7 @@ export const getRecentItems = async (limit: number = 10) => {
 
 export const getProductById = async (id: string) => {
   try {
-    const res = await axiosInstance.get(`/products/${id}`);
+    const res = await axiosInstance.get(`/web/products/${id}`);
     const data = res.data;
     return data.data || data;
   } catch (error) {
@@ -35,7 +35,7 @@ export const getProductById = async (id: string) => {
 export const getSimilarItems = async (id: string, limit: number = 4) => {
   try {
     const res = await axiosInstance.get(
-      `/products/${id}/similar?size=${limit}`,
+      `/web/products/${id}/similar?size=${limit}`,
     );
     return res.data.dataList || [];
   } catch (error) {
@@ -46,7 +46,7 @@ export const getSimilarItems = async (id: string, limit: number = 4) => {
 
 export const getNewArrivals = async (limit: number = 10) => {
   try {
-    const res = await axiosInstance.get(`/products?sort=new&size=${limit}`);
+    const res = await axiosInstance.get(`/web/products?sort=new&size=${limit}`);
     return res.data;
   } catch (error) {
     console.error("Failed to fetch new arrivals:", error);
@@ -57,7 +57,7 @@ export const getNewArrivals = async (limit: number = 10) => {
 export const getDealsProducts = async (params: any = {}) => {
   try {
     const q = new URLSearchParams(params).toString();
-    const res = await axiosInstance.get(`/products/deals?${q}`);
+    const res = await axiosInstance.get(`/web/products/deals?${q}`);
     return res.data;
   } catch (error) {
     console.error("Failed to fetch deals products:", error);
@@ -67,7 +67,7 @@ export const getDealsProducts = async (params: any = {}) => {
 
 export const getHotProducts = async () => {
   try {
-    const res = await axiosInstance.get("/products?sort=new");
+    const res = await axiosInstance.get("/web/products?sort=new");
     return res.data.dataList || [];
   } catch (error) {
     console.error("Failed to fetch hot products:", error);
@@ -77,7 +77,7 @@ export const getHotProducts = async () => {
 
 export const getBrandForSitemap = async () => {
   try {
-    const res = await axiosInstance.get("/brands");
+    const res = await axiosInstance.get("/web/brands/dropdown");
     const brands = res.data;
     return brands.map((b: any) => ({
       url: `${process.env.NEXT_PUBLIC_BASE_URL}/collections/products?brand=${b.name}`,
@@ -93,7 +93,7 @@ export const getBrandForSitemap = async () => {
 
 export const getCategoriesForSitemap = async () => {
   try {
-    const res = await axiosInstance.get("/categories");
+    const res = await axiosInstance.get("/web/categories/dropdown");
     const categories = res.data;
     return categories.map((c: any) => ({
       url: `${process.env.NEXT_PUBLIC_BASE_URL}/collections/products?category=${c.name}`,
@@ -109,7 +109,7 @@ export const getCategoriesForSitemap = async () => {
 
 export const getProductsForSitemap = async () => {
   try {
-    const res = await axiosInstance.get("/products?size=200");
+    const res = await axiosInstance.get("/web/products?size=200");
     const products = res.data.dataList || [];
     return products.map((p: any) => ({
       url: `${process.env.NEXT_PUBLIC_BASE_URL}/collections/products/${p.id}`,

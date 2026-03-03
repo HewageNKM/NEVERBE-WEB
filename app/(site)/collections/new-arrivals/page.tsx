@@ -1,7 +1,7 @@
 export const revalidate = 3600;
 
 import CollectionProducts from "@/app/(site)/collections/components/CollectionProducts";
-import { getNewArrivals } from "@/services/ProductService";
+import { getNewArrivals } from "@/actions/productAction";
 import type { Metadata } from "next";
 import Link from "next/link";
 

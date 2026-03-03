@@ -23,7 +23,7 @@ import {
   IoPersonCircleOutline,
 } from "react-icons/io5";
 import { motion } from "framer-motion";
-import axiosInstance from "@/services/axiosInstance";
+import axiosInstance from "@/actions/axiosInstance";
 
 const Account = () => {
   const router = useRouter();
@@ -50,7 +50,7 @@ const Account = () => {
           setOrders(ordersData);
 
           const token = await auth.currentUser?.getIdToken();
-          const res = await axiosInstance.get("/customers/addresses", {
+          const res = await axiosInstance.get("/web/customers/addresses", {
             headers: { Authorization: `Bearer ${token}` },
           });
           if (res.data) {

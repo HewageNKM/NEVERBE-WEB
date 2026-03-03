@@ -1,7 +1,7 @@
 import "@/app/globals.css";
 import GlobalProvider from "@/app/(site)/components/GlobalProvider";
 import { getSeason } from "@/utils/getSeason";
-import { getNavigationConfig } from "@/services/WebsiteService";
+import { getNavigationConfig } from "@/actions/websiteAction";
 
 import SeasonalAnimationsWrapper from "@/app/(site)/components/SeasonalAnimationsWrapper";
 

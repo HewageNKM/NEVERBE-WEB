@@ -27,7 +27,7 @@ import Image from "next/image";
 import usePromotions from "@/hooks/usePromotions";
 import PromotionBanner from "@/components/PromotionBanner";
 import { Button } from "antd";
-import axiosInstance from "@/services/axiosInstance";
+import axiosInstance from "@/actions/axiosInstance";
 
 // --- Types ---
 interface BundleGroup {
@@ -256,7 +256,10 @@ const Bag = () => {
             quantity: item.quantity,
           })),
         };
-        const res = await axiosInstance.post("/shipping/calculate", payload);
+        const res = await axiosInstance.post(
+          "/web/shipping/calculate",
+          payload,
+        );
         if (res.data) {
           const data = res.data;
           setShippingCost(data.cost);

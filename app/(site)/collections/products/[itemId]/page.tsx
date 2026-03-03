@@ -2,7 +2,7 @@ import { cache } from "react";
 import ProductHero from "@/app/(site)/collections/products/[itemId]/components/ProductHero";
 import SimilarProducts from "@/app/(site)/collections/products/[itemId]/components/SimilarProducts";
 import { notFound } from "next/navigation";
-import { getProductById, getSimilarItems } from "@/services/ProductService";
+import { getProductById, getSimilarItems } from "@/actions/productAction";
 import type { Metadata } from "next";
 import { Product } from "@/interfaces/Product";
 import ProductFAQ from "./components/ProductFAQ";

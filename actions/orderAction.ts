@@ -1,6 +1,6 @@
-import { Order } from "@/interfaces/BagItem";
+import { Order } from "@/interfaces/Order";
 import { getIdToken } from "@/firebase/firebaseClient";
-import axiosInstance from "../services/axiosInstance";
+import axiosInstance from "./axiosInstance";
 
 /**
  * Add new order
@@ -8,9 +8,27 @@ import axiosInstance from "../services/axiosInstance";
 export const addNewOrder = async (newOrder: Order, captchaToken: string) => {
   try {
     const token = await getIdToken();
+    const response = await axiosInstance.post("/web/orders", newOrder, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return response.data;
+  } catch (e) {
+    throw e;
+  }
+};
+
+/**
+ * Initiate KOKO Payment
+ */
+export const initiateKOKOPayment = async (payload: any) => {
+  try {
+    const token = await getIdToken();
     const response = await axiosInstance.post(
-      "https://erp.neverbe.lk/api/v2/orders",
-      newOrder,
+      "/web/ipg/koko/initiate",
+      payload,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -25,31 +43,13 @@ export const addNewOrder = async (newOrder: Order, captchaToken: string) => {
 };
 
 /**
- * Initiate KOKO Payment
- */
-export const initiateKOKOPayment = async (payload: any) => {
-  try {
-    const token = await getIdToken();
-    const response = await axiosInstance.post("/ipg/koko/initiate", payload, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    return response.data;
-  } catch (e) {
-    throw e;
-  }
-};
-
-/**
  * Initiate PayHere Payment
  */
 export const initiatePayHerePayment = async (payload: any) => {
   try {
     const token = await getIdToken();
     const response = await axiosInstance.post(
-      "/ipg/payhere/initiate",
+      "/web/ipg/payhere/initiate",
       payload,
       {
         headers: {
@@ -71,7 +71,7 @@ export const requestOTP = async (phoneNumber: string, captchaToken: string) => {
   try {
     const token = await getIdToken();
     const response = await axiosInstance.post(
-      "/otp",
+      "/web/otp",
       { phoneNumber, captchaToken },
       {
         headers: {
@@ -93,7 +93,7 @@ export const verifyOTP = async (phoneNumber: string, otp: string) => {
   try {
     const token = await getIdToken();
     const response = await axiosInstance.post(
-      "/otp/verify",
+      "/web/otp/verify",
       { phoneNumber, otp },
       {
         headers: {
@@ -119,7 +119,7 @@ export const sendCODOrderNotifications = async (
   try {
     const token = await getIdToken();
     const response = await axiosInstance.get(
-      `/orders/${orderId}/cod/notifications?capchaToken=${capchaToken}`,
+      `/web/orders/${orderId}/cod/notifications?capchaToken=${capchaToken}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -130,5 +130,16 @@ export const sendCODOrderNotifications = async (
     return response.data;
   } catch (e) {
     throw e;
+  }
+};
+
+export const getOrderByIdForInvoice = async (orderId: string) => {
+  try {
+    const res = await axiosInstance.get(`/web/orders/${orderId}`);
+    const data = res.data;
+    return data.data || data;
+  } catch (error) {
+    console.error("Failed to fetch order details:", error);
+    return null;
   }
 };

@@ -3,7 +3,7 @@ import axiosInstance from "./axiosInstance";
 export const getPaginatedCombos = async (params: any = {}) => {
   try {
     const q = new URLSearchParams(params).toString();
-    const res = await axiosInstance.get(`/combos?${q}`);
+    const res = await axiosInstance.get(`/web/combos?${q}`);
     return res.data;
   } catch (error) {
     console.error("Failed to fetch paginated combos:", error);
@@ -13,7 +13,7 @@ export const getPaginatedCombos = async (params: any = {}) => {
 
 export const getComboById = async (id: string) => {
   try {
-    const res = await axiosInstance.get(`/combos/${id}`);
+    const res = await axiosInstance.get(`/web/combos/${id}`);
     return res.data;
   } catch (error) {
     console.error(`Failed to fetch combo ${id}:`, error);
@@ -23,7 +23,7 @@ export const getComboById = async (id: string) => {
 
 export const getActivePromotions = async () => {
   try {
-    const res = await axiosInstance.get("/promotions/active");
+    const res = await axiosInstance.get("/web/promotions");
     return res.data;
   } catch (error) {
     console.error("Failed to fetch active promotions:", error);
@@ -33,7 +33,7 @@ export const getActivePromotions = async () => {
 
 export const getActiveCoupons = async () => {
   try {
-    const res = await axiosInstance.get("/coupons/active");
+    const res = await axiosInstance.get("/web/coupons");
     return res.data;
   } catch (error) {
     console.error("Failed to fetch active coupons:", error);

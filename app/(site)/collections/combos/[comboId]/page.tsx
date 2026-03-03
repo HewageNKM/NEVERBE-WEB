@@ -1,7 +1,7 @@
 import { cache } from "react";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getComboById } from "@/services/PromotionService";
+import { getComboById } from "@/actions/promotionAction";
 import ComboHero from "./components/ComboHero";
 import Breadcrumbs from "@/components/Breadcrumbs";
 

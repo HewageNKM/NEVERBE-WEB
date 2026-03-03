@@ -1,6 +1,6 @@
 "use client";
 import { useState, useCallback } from "react";
-import axiosInstance from "@/services/axiosInstance";
+import axiosInstance from "@/actions/axiosInstance";
 
 interface UseStockOptions {
   onError?: (error: Error) => void;
@@ -36,7 +36,7 @@ export function useStock(options: UseStockOptions = {}): UseStockReturn {
       setStockLoading(true);
       try {
         const res = await axiosInstance.get(
-          `/inventory/batch?productId=${productId}&variantId=${variantId}&sizes=${sizes.join(
+          `/web/inventory/batch?productId=${productId}&variantId=${variantId}&sizes=${sizes.join(
             ",",
           )}`,
         );

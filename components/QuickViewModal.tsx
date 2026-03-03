@@ -20,7 +20,7 @@ import {
 } from "@/interfaces/Promotion";
 import { isVariantEligibleForPromotion } from "@/utils/promotionUtils";
 import SizeGrid from "@/components/SizeGrid";
-import axiosInstance from "@/services/axiosInstance";
+import axiosInstance from "@/actions/axiosInstance";
 
 interface QuickViewModalProps {
   isOpen: boolean;
@@ -76,7 +76,7 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
 
         try {
           const res = await axiosInstance.get(
-            `/inventory/batch?productId=${product.id}&variantId=${
+            `/web/inventory/batch?productId=${product.id}&variantId=${
               variant.variantId
             }&sizes=${variant.sizes.join(",")}`,
           );
@@ -112,7 +112,7 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
       setStockLoading(true);
       try {
         const res = await axiosInstance.get(
-          `/inventory/batch?productId=${product.id}&variantId=${
+          `/web/inventory/batch?productId=${product.id}&variantId=${
             selectedVariant.variantId
           }&sizes=${selectedVariant.sizes.join(",")}`,
         );

@@ -1,5 +1,5 @@
 import { FirestoreQueryBuilder } from "../utils/FirestoreQueryBuilder";
-import type { ProductFilterOptions } from "@/services/ProductService";
+import type { ProductFilterOptions } from "@/actions/productAction";
 
 /**
  * ProductFilterBuilder

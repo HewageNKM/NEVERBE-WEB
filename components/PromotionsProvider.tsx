@@ -12,7 +12,7 @@ import {
   isPromotionDateValid,
   checkVariantEligibility,
 } from "@/utils/promotionUtils";
-import axiosInstance from "@/services/axiosInstance";
+import axiosInstance from "@/actions/axiosInstance";
 
 // Active promotion for context consumers
 export interface ActivePromotion extends Partial<Promotion> {
@@ -54,7 +54,7 @@ export const PromotionsProvider = ({
   useEffect(() => {
     const fetchPromotions = async () => {
       try {
-        const res = await axiosInstance.get("/promotions");
+        const res = await axiosInstance.get("/web/promotions");
         if (res.data) {
           const data = res.data;
           setPromotions(data || []);

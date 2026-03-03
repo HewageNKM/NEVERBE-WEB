@@ -10,7 +10,7 @@ import {
   IoCardOutline,
   IoCheckmarkCircle,
 } from "react-icons/io5";
-import { toSafeLocaleString } from "@/services/UtilService";
+import { toSafeLocaleString } from "@/actions/utilAction";
 import Image from "next/image";
 import Invoice from "@/components/Invoice";
 import Link from "next/link";

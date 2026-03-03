@@ -12,7 +12,7 @@ import {
   IoCheckmarkCircleOutline,
   IoPencilOutline,
 } from "react-icons/io5";
-import axiosInstance from "@/services/axiosInstance";
+import axiosInstance from "@/actions/axiosInstance";
 
 interface Address {
   type: "Shipping" | "Billing";
@@ -51,7 +51,7 @@ const SavedAddresses: React.FC<SavedAddressesProps> = ({
       try {
         const token = await auth.currentUser?.getIdToken();
         const res = await axiosInstance.post(
-          "/customers/addresses",
+          "/web/customers/addresses",
           newAddress,
           {
             headers: {
@@ -184,9 +184,7 @@ const SavedAddresses: React.FC<SavedAddressesProps> = ({
                     </p>
                   </div>
                 ) : (
-                  <p className="text-sm text-muted">
-                    No address provided
-                  </p>
+                  <p className="text-sm text-muted">No address provided</p>
                 )}
               </div>
 

@@ -1,5 +1,5 @@
 import Products from "@/app/(site)/collections/products/components/Products";
-import { getProducts } from "@/services/ProductService";
+import { getProducts } from "@/actions/productAction";
 import type { Metadata } from "next";
 import Link from "next/link";
 

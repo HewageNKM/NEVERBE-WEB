@@ -4,27 +4,18 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import { AppDispatch, RootState } from "@/redux/store";
-import { clearBag } from "@/redux/bagSlice/bagSlice";
 import { Form, Input, Button, Row, Col, Modal, Flex, Typography } from "antd";
 import { FiX } from "react-icons/fi";
-import {
-  calculateFee,
-  calculateShippingCost,
-  calculateSubTotal,
-  calculateTotalDiscount,
-  calculateTransactionFeeCharge,
-  generateOrderId,
-} from "@/utils/bagCalculations";
 import BillingDetails from "./BillingDetails";
 import ShippingDetails from "./ShippingDetails";
 import PaymentDetails from "@/app/(site)/checkout/components/PaymentDetails";
 import CheckoutLoader from "@/components/CheckoutLoader";
 import toast from "react-hot-toast";
-import { Order, Customer } from "@/interfaces";
+import { Customer } from "@/interfaces";
 import { auth } from "@/firebase/firebaseClient";
 import { usePayment } from "@/hooks/usePayment";
 import usePromotions from "@/hooks/usePromotions";
-import axiosInstance from "@/services/axiosInstance";
+import axiosInstance from "@/actions/axiosInstance";
 const formatSriLankanPhoneNumber = (phone: string) => {
   // Remove any non-digit characters
   const cleaned = phone.replace(/\D/g, "");
@@ -114,7 +105,7 @@ const CheckoutForm = () => {
           setShippingCost(0);
           return;
         }
-        const res = await axiosInstance.post("/shipping/calculate", {
+        const res = await axiosInstance.post("/web/shipping/calculate", {
           items: bagItems,
         });
         const data = res.data;
