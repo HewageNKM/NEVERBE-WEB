@@ -212,10 +212,10 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
       className="w-full border-gray-200 rounded-2xl h-full shadow-sm flex flex-col mx-auto"
     >
       {/* Header */}
-      <Flex align="center" justify="space-between" className="mb-6">
+      <Flex vertical align="center" gap={8} className="mb-6">
         <Typography.Title
           level={4}
-          className="uppercase tracking-tighter"
+          className="uppercase tracking-tighter text-center w-full"
           style={{ margin: 0, fontWeight: 900 }}
         >
           Order Summary

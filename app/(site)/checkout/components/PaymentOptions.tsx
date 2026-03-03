@@ -98,7 +98,7 @@ const PaymentOptions: React.FC<PaymentOptionsProps> = ({
                 {option.description && (
                   <p
                     className={`
-                      text-[10px] font-medium uppercase tracking-wide mt-1.5
+                      text-[10px] font-medium uppercase tracking-wide mt-1.5 hidden md:block
                       ${isSelected ? "text-[#2e9e5b]" : "text-gray-400"}
                     `}
                   >
