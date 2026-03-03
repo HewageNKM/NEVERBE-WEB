@@ -200,223 +200,229 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
   const regularCount = regularItems.length;
 
   return (
-    <Card
-      styles={{
-        body: {
-          padding: "clamp(8px, 2vw, 32px)" /* drastically reduced for mobile */,
-          display: "flex",
-          flexDirection: "column",
-          height: "100%",
-        },
-      }}
-      className="w-full border-gray-200 rounded-2xl h-full shadow-sm flex flex-col mx-auto"
-    >
-      {/* Header */}
-      <Flex vertical align="center" gap={8} className="mb-6">
-        <Typography.Title
-          level={4}
-          className="uppercase tracking-tighter text-center w-full"
-          style={{ margin: 0, fontWeight: 900 }}
-        >
-          Order Summary
-        </Typography.Title>
-        <Badge
-          count={`${bagItems.length} Items${bundleCount > 0 ? ` · ${bundleCount} Bundle` : ""}`}
-          style={{
-            backgroundColor: "#1a1a1a",
-            color: "#ffffff",
-            fontWeight: 800,
-          }}
-        />
-      </Flex>
-
-      {/* Promotion Banner */}
-      <div className="mb-6">
-        <PromotionBanner variant="inline" />
-      </div>
-
-      {/* Items - Grouped by Bundles and Regular */}
-      <Flex
-        vertical
-        gap={16}
-        className="mb-6 max-h-[320px] overflow-y-auto pr-2 hide-scrollbar"
-      >
-        {/* Bundles First */}
-        {bundles.map((bundle) => (
-          <BundleCard key={bundle.comboId} bundle={bundle} />
-        ))}
-
-        {/* Regular Items */}
-        {regularItems.map((item, index) => (
-          <BagItemCard
-            key={`${item.itemId}-${item.variantId}-${item.size}-${index}`}
-            item={item}
-            compact
-            showRemove
-          />
-        ))}
-      </Flex>
-
-      <Divider style={{ margin: "24px 0", borderColor: "#f0f0f0" }} />
-
-      {/* Payment Selection */}
-      <div className="mb-6">
-        <Typography.Text className="text-[10px] font-black uppercase tracking-widest text-muted block mb-3">
-          Select Payment Method
-        </Typography.Text>
-        {isPaymentLoading ? (
-          <div className="h-12 bg-surface-3 animate-pulse w-full rounded-xl"></div>
-        ) : (
-          <PaymentOptions
-            paymentOptions={paymentOptions}
-            paymentType={paymentType}
-            setPaymentType={setPaymentType}
-            setPaymentTypeId={setPaymentTypeId}
-            setPaymentFee={setPaymentFee}
-          />
-        )}
-      </div>
-
-      <Divider style={{ margin: "24px 0", borderColor: "#f0f0f0" }} />
-
-      {/* Coupon Section */}
-      <div className="mb-6">
-        <Typography.Text className="text-[10px] font-black uppercase tracking-widest text-muted block mb-3">
-          Promo Code
-        </Typography.Text>
-        <CouponInput />
-      </div>
-
-      <Divider style={{ margin: "24px 0", borderColor: "#f0f0f0" }} />
-
-      {/* Financial Breakdown */}
-      <Flex vertical gap={12} className="mb-6">
-        <Flex justify="space-between" align="center">
-          <Typography.Text className="text-secondary font-medium">
-            Subtotal
-          </Typography.Text>
-          <Typography.Text className="font-bold text-primary font-mono">
-            Rs. {rawSubTotal.toLocaleString()}
-          </Typography.Text>
-        </Flex>
-
-        {itemDiscount > 0 && (
-          <Flex
-            justify="space-between"
-            align="center"
-            className="text-[#2e9e5b] bg-[#2e9e5b]/10 py-1.5 px-3 rounded-lg -mx-3"
-          >
-            <Typography.Text className="font-bold text-[#2e9e5b]">
-              Discounts
-            </Typography.Text>
-            <Typography.Text className="font-bold font-mono text-[#2e9e5b]">
-              - Rs. {itemDiscount.toLocaleString()}
-            </Typography.Text>
-          </Flex>
-        )}
-
-        {promotionDiscount > 0 && (
-          <Flex
-            justify="space-between"
-            align="center"
-            className="text-[#2e9e5b] bg-[#2e9e5b]/10 py-1.5 px-3 rounded-lg -mx-3"
-          >
-            <Typography.Text className="font-bold text-[#2e9e5b]">
-              Promotion
-            </Typography.Text>
-            <Typography.Text className="font-bold font-mono text-[#2e9e5b]">
-              - Rs. {promotionDiscount.toLocaleString()}
-            </Typography.Text>
-          </Flex>
-        )}
-
-        {couponDiscount > 0 && (
-          <Flex
-            justify="space-between"
-            align="center"
-            className="text-[#2e9e5b] bg-[#2e9e5b]/10 py-1.5 px-3 rounded-lg -mx-3"
-          >
-            <Typography.Text className="font-bold text-[#2e9e5b]">
-              Coupon
-            </Typography.Text>
-            <Typography.Text className="font-bold font-mono text-[#2e9e5b]">
-              - Rs. {couponDiscount.toLocaleString()}
-            </Typography.Text>
-          </Flex>
-        )}
-
-        <Flex justify="space-between" align="center">
-          <Typography.Text className="text-secondary font-medium">
-            Shipping
-          </Typography.Text>
-          <Typography.Text className="font-bold text-primary font-mono">
-            {shipping === 0 ? "FREE" : `Rs. ${shipping}`}
-          </Typography.Text>
-        </Flex>
-
-        <Flex
-          justify="space-between"
-          align="center"
-          className="bg-orange-50 py-1.5 px-3 rounded-lg -mx-3"
-        >
-          <Typography.Text className="text-orange-600 font-bold">
-            Handling Fee
-          </Typography.Text>
-          <Typography.Text className="font-bold text-orange-600 font-mono">
-            + Rs. {fee.toFixed(2)}
-          </Typography.Text>
-        </Flex>
-      </Flex>
-
-      {/* Total Section */}
-      <div className="border-t-2 border-black pt-4 mt-auto mb-8">
-        <Flex justify="space-between" align="end">
-          <Typography.Text className="text-sm font-black uppercase tracking-widest text-primary">
-            Total Due
-          </Typography.Text>
-          <Typography.Text className="text-3xl font-display font-black tracking-tighter text-primary leading-none">
-            Rs.{finalTotal.toLocaleString()}
-          </Typography.Text>
-        </Flex>
-      </div>
-
-      {/* Submit Button */}
-      <Button
-        type="primary"
-        htmlType="submit"
-        disabled={bagItems.length === 0 || !paymentType}
-        style={{
-          background:
-            bagItems.length === 0 || !paymentType ? undefined : "#2e9e5b",
-          border: "none",
-          borderRadius: 99,
-          height: 64,
-          padding: "0 24px",
+    <div className="w-full flex justify-center h-full">
+      <Card
+        bordered={false}
+        styles={{
+          body: {
+            padding: "clamp(12px, 3vw, 32px)",
+            display: "flex",
+            flexDirection: "column",
+            height: "100%",
+          },
         }}
-        className="group w-full flex items-center justify-between text-white transition-all duration-300 shadow-sm hover:shadow-md hover:-translate-y-1"
+        className="w-full max-w-[450px] lg:max-w-none border-0 lg:border border-gray-200 rounded-2xl h-full shadow-none lg:shadow-sm flex flex-col"
       >
-        <span className="font-display font-black uppercase tracking-widest text-sm">
-          Complete Order
-        </span>
-        <div className="bg-white text-[#2e9e5b] rounded-full p-2 transition-transform group-hover:translate-x-1">
-          <IoArrowForward size={18} />
-        </div>
-      </Button>
+        {/* Header */}
+        <Flex vertical align="center" gap={8} className="mb-6">
+          <Typography.Title
+            level={4}
+            className="uppercase tracking-tighter text-center w-full"
+            style={{ margin: 0, fontWeight: 900 }}
+          >
+            Order Summary
+          </Typography.Title>
+          <Badge
+            count={`${bagItems.length} Items${bundleCount > 0 ? ` · ${bundleCount} Bundle` : ""}`}
+            style={{
+              backgroundColor: "#1a1a1a",
+              color: "#ffffff",
+              fontWeight: 800,
+            }}
+          />
+        </Flex>
 
-      {/* Security Footer */}
-      <Flex vertical align="center" gap={8} className="mt-6 text-center">
-        <Flex align="center" gap={6} className="text-muted">
-          <IoLockClosedOutline size={12} />
-          <Typography.Text className="text-[10px] font-black uppercase tracking-widest text-muted">
-            Secure Checkout
+        {/* Promotion Banner */}
+        <div className="mb-6">
+          <PromotionBanner variant="inline" />
+        </div>
+
+        {/* Items - Grouped by Bundles and Regular */}
+        <Flex
+          vertical
+          gap={16}
+          className="mb-6 max-h-[320px] overflow-y-auto pr-2 hide-scrollbar"
+        >
+          {/* Bundles First */}
+          {bundles.map((bundle) => (
+            <BundleCard key={bundle.comboId} bundle={bundle} />
+          ))}
+
+          {/* Regular Items */}
+          {regularItems.map((item, index) => (
+            <BagItemCard
+              key={`${item.itemId}-${item.variantId}-${item.size}-${index}`}
+              item={item}
+              compact
+              showRemove
+            />
+          ))}
+        </Flex>
+
+        <Divider style={{ margin: "24px 0", borderColor: "#f0f0f0" }} />
+
+        {/* Payment Selection */}
+        <div className="mb-6">
+          <Typography.Text className="text-[10px] font-black uppercase tracking-widest text-muted block mb-3">
+            Select Payment Method
+          </Typography.Text>
+          {isPaymentLoading ? (
+            <div className="h-12 bg-surface-3 animate-pulse w-full rounded-xl"></div>
+          ) : (
+            <PaymentOptions
+              paymentOptions={paymentOptions}
+              paymentType={paymentType}
+              setPaymentType={setPaymentType}
+              setPaymentTypeId={setPaymentTypeId}
+              setPaymentFee={setPaymentFee}
+            />
+          )}
+        </div>
+
+        <Divider style={{ margin: "24px 0", borderColor: "#f0f0f0" }} />
+
+        {/* Coupon Section */}
+        <div className="mb-6">
+          <Typography.Text className="text-[10px] font-black uppercase tracking-widest text-muted block mb-3">
+            Promo Code
+          </Typography.Text>
+          <CouponInput />
+        </div>
+
+        <Divider style={{ margin: "24px 0", borderColor: "#f0f0f0" }} />
+
+        {/* Financial Breakdown */}
+        <Flex vertical gap={12} className="mb-6">
+          <Flex justify="space-between" align="center">
+            <Typography.Text className="text-secondary font-medium">
+              Subtotal
+            </Typography.Text>
+            <Typography.Text className="font-bold text-primary font-mono">
+              Rs. {rawSubTotal.toLocaleString()}
+            </Typography.Text>
+          </Flex>
+
+          {itemDiscount > 0 && (
+            <Flex
+              justify="space-between"
+              align="center"
+              className="text-[#2e9e5b] bg-[#2e9e5b]/10 py-1.5 px-3 rounded-lg -mx-3"
+            >
+              <Typography.Text className="font-bold text-[#2e9e5b]">
+                Discounts
+              </Typography.Text>
+              <Typography.Text className="font-bold font-mono text-[#2e9e5b]">
+                - Rs. {itemDiscount.toLocaleString()}
+              </Typography.Text>
+            </Flex>
+          )}
+
+          {promotionDiscount > 0 && (
+            <Flex
+              justify="space-between"
+              align="center"
+              className="text-[#2e9e5b] bg-[#2e9e5b]/10 py-1.5 px-3 rounded-lg -mx-3"
+            >
+              <Typography.Text className="font-bold text-[#2e9e5b]">
+                Promotion
+              </Typography.Text>
+              <Typography.Text className="font-bold font-mono text-[#2e9e5b]">
+                - Rs. {promotionDiscount.toLocaleString()}
+              </Typography.Text>
+            </Flex>
+          )}
+
+          {couponDiscount > 0 && (
+            <Flex
+              justify="space-between"
+              align="center"
+              className="text-[#2e9e5b] bg-[#2e9e5b]/10 py-1.5 px-3 rounded-lg -mx-3"
+            >
+              <Typography.Text className="font-bold text-[#2e9e5b]">
+                Coupon
+              </Typography.Text>
+              <Typography.Text className="font-bold font-mono text-[#2e9e5b]">
+                - Rs. {couponDiscount.toLocaleString()}
+              </Typography.Text>
+            </Flex>
+          )}
+
+          <Flex justify="space-between" align="center">
+            <Typography.Text className="text-secondary font-medium">
+              Shipping
+            </Typography.Text>
+            <Typography.Text className="font-bold text-primary font-mono">
+              {shipping === 0 ? "FREE" : `Rs. ${shipping}`}
+            </Typography.Text>
+          </Flex>
+
+          <Flex
+            justify="space-between"
+            align="center"
+            className="bg-orange-50 py-1.5 px-3 rounded-lg -mx-3"
+          >
+            <Typography.Text className="text-orange-600 font-bold">
+              Handling Fee
+            </Typography.Text>
+            <Typography.Text className="font-bold text-orange-600 font-mono">
+              + Rs. {fee.toFixed(2)}
+            </Typography.Text>
+          </Flex>
+        </Flex>
+
+        {/* Total Section */}
+        <div className="border-t-2 border-black pt-4 mt-auto mb-8">
+          <Flex justify="space-between" align="end">
+            <Typography.Text className="text-sm font-black uppercase tracking-widest text-primary">
+              Total Due
+            </Typography.Text>
+            <Typography.Text className="text-3xl font-display font-black tracking-tighter text-primary leading-none">
+              Rs.{finalTotal.toLocaleString()}
+            </Typography.Text>
+          </Flex>
+        </div>
+
+        {/* Submit Button */}
+        <Button
+          type="primary"
+          htmlType="submit"
+          disabled={bagItems.length === 0 || !paymentType}
+          style={{
+            background:
+              bagItems.length === 0 || !paymentType ? undefined : "#2e9e5b",
+            border: "none",
+            borderRadius: 99,
+            height: 64,
+            padding: "0 24px",
+          }}
+          className="group w-full flex items-center justify-between text-white transition-all duration-300 shadow-sm hover:shadow-md hover:-translate-y-1"
+        >
+          <span className="font-display font-black uppercase tracking-widest text-sm">
+            Complete Order
+          </span>
+          <div className="bg-white text-[#2e9e5b] rounded-full p-2 transition-transform group-hover:translate-x-1">
+            <IoArrowForward size={18} />
+          </div>
+        </Button>
+
+        {/* Spacer for better mobile layout */}
+        <div className="h-10" />
+
+        {/* Security Footer */}
+        <Flex vertical align="center" gap={8} className="text-center">
+          <Flex align="center" gap={6} className="text-muted">
+            <IoLockClosedOutline size={12} />
+            <Typography.Text className="text-[10px] font-black uppercase tracking-widest text-muted">
+              Secure Checkout
+            </Typography.Text>
+          </Flex>
+          <Typography.Text className="text-[9px] text-muted leading-relaxed max-w-[250px]">
+            By placing this order, you agree to the Terms of Service. Please do
+            not close this window until the checkout is complete.
           </Typography.Text>
         </Flex>
-        <Typography.Text className="text-[9px] text-muted leading-relaxed max-w-[250px]">
-          By placing this order, you agree to the Terms of Service. Please do
-          not close this window until the checkout is complete.
-        </Typography.Text>
-      </Flex>
-    </Card>
+      </Card>
+    </div>
   );
 };
 

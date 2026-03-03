@@ -239,16 +239,14 @@ const CheckoutForm = () => {
 
           {/* --- RIGHT COLUMN: SUMMARY & PAYMENT --- */}
           <Col xs={24} lg={10}>
-            <div className="h-full">
-              <PaymentDetails
-                setPaymentType={setPaymentType}
-                paymentType={paymentType || ""}
-                setPaymentTypeId={setPaymentTypeId}
-                setPaymentFee={setPaymentFee}
-                selectedPaymentFee={paymentFee}
-                shippingCost={shippingCost}
-              />
-            </div>
+            <PaymentDetails
+              setPaymentType={setPaymentType}
+              paymentType={paymentType || ""}
+              setPaymentTypeId={setPaymentTypeId}
+              setPaymentFee={setPaymentFee}
+              selectedPaymentFee={paymentFee}
+              shippingCost={shippingCost}
+            />
           </Col>
         </Row>
       </Form>
