@@ -340,21 +340,19 @@ const ProductHero = ({ item }: { item: Product }) => {
                   variantTotalStock !== undefined && variantTotalStock <= 0;
 
                 return (
-                  <Button
-                    type="text"
+                  <button
+                    type="button"
                     key={v.variantId}
                     onClick={() => {
                       setSelectedVariant(v);
                       setSelectedSize("");
                     }}
-                    disabled={isVariantOutOfStock}
+                    disabled={false} // Removed isVariantOutOfStock to allow selection
                     className={`relative w-20 h-20 bg-surface-2 rounded-md overflow-hidden border-2 transition-all p-0 ${
                       selectedVariant.variantId === v.variantId
-                        ? "border-dark hover:border-dark focus:border-dark"
+                        ? "border-accent shadow-[0_0_0_2px_var(--color-green-500)]"
                         : "border-transparent opacity-60 hover:opacity-100 focus:opacity-100 hover:bg-surface-2 focus:bg-surface-2"
-                    } ${
-                      isVariantOutOfStock ? "opacity-40 cursor-not-allowed" : ""
-                    }`}
+                    } ${isVariantOutOfStock ? "opacity-40" : ""}`}
                     title={
                       isVariantOutOfStock
                         ? `${v.variantName} - Out of Stock`
@@ -363,12 +361,17 @@ const ProductHero = ({ item }: { item: Product }) => {
                           : v.variantName
                     }
                   >
-                    <div className={isVariantOutOfStock ? "grayscale" : ""}>
+                    <div
+                      className={
+                        isVariantOutOfStock
+                          ? "grayscale w-full h-full"
+                          : "w-full h-full"
+                      }
+                    >
                       <Image
                         src={v.images[0].url}
                         alt={v.variantName}
-                        width={80}
-                        height={80}
+                        fill
                         className="object-cover mix-blend-multiply"
                       />
                     </div>
@@ -386,7 +389,7 @@ const ProductHero = ({ item }: { item: Product }) => {
                         </span>
                       </span>
                     )}
-                  </Button>
+                  </button>
                 );
               })}
             </div>

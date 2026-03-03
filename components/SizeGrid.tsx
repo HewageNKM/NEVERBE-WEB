@@ -40,17 +40,17 @@ const SizeGrid: React.FC<SizeGridProps> = ({
             disabled={isDisabled}
             onClick={() => onSelectSize(size)}
             className={`
-              relative py-6 h-auto text-base transition-all duration-300
-              flex items-center justify-center rounded-sm overflow-hidden
-              font-display font-bold uppercase tracking-tight
-              ${
-                isSelected
-                  ? "bg-dark text-accent border-dark font-black tracking-tighter shadow-custom scale-[1.02] z-10"
-                  : isOutOfStock
-                    ? "bg-surface-3 text-muted border-transparent cursor-not-allowed opacity-40"
-                    : "bg-surface text-primary border border-border-primary hover:border-accent hover:text-accent"
-              }
-            `}
+                relative py-5 h-auto text-base transition-all duration-300
+                flex items-center justify-center rounded-sm overflow-hidden
+                font-display font-bold uppercase tracking-tight w-full
+                ${
+                  isSelected
+                    ? "bg-[#2e9e5b]! text-white! border-[#2e9e5b]! font-black tracking-tighter shadow-custom scale-[1.02] z-10"
+                    : isOutOfStock
+                      ? "bg-surface-3 text-muted border-transparent cursor-not-allowed opacity-40"
+                      : "bg-surface text-primary border border-border-primary hover:border-accent hover:text-accent"
+                }
+              `}
           >
             {/* Out of Stock Diagonal Strike - More "Performance" than a standard line-through */}
             {isOutOfStock && (

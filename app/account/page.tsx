@@ -24,6 +24,7 @@ import {
 } from "react-icons/io5";
 import { motion } from "framer-motion";
 import axiosInstance from "@/actions/axiosInstance";
+import { Button } from "antd";
 
 const Account = () => {
   const router = useRouter();
@@ -123,12 +124,13 @@ const Account = () => {
             >
               <IoArrowBackOutline size={16} /> Back to Store
             </Link>
-            <button
+            <Button
+              type="text"
               onClick={handleLogout}
-              className="text-xs font-bold uppercase tracking-widest text-muted hover:text-error transition-colors flex items-center gap-2"
+              className="text-xs font-bold uppercase tracking-widest text-muted hover:text-error! hover:bg-transparent! transition-colors flex items-center gap-2 p-0 h-auto"
             >
               Logout <IoLogOutOutline size={16} />
-            </button>
+            </Button>
           </div>
         </div>
 
@@ -140,13 +142,14 @@ const Account = () => {
             { id: "addresses", label: "Addresses" },
             { id: "details", label: "Settings" },
           ].map((item) => (
-            <button
+            <Button
+              type="text"
               key={item.id}
               onClick={() => setActiveTab(item.id)}
-              className={`whitespace-nowrap pb-4 text-sm font-bold uppercase tracking-widest transition-all relative ${
+              className={`whitespace-nowrap pb-4 px-0 h-auto text-sm font-bold uppercase tracking-widest transition-all relative hover:bg-transparent! ${
                 activeTab === item.id
-                  ? "text-primary"
-                  : "text-muted hover:text-primary"
+                  ? "text-primary!"
+                  : "text-muted! hover:text-primary!"
               }`}
             >
               {item.label}
@@ -156,7 +159,7 @@ const Account = () => {
                   className="absolute bottom-0 left-0 right-0 h-1 bg-accent rounded-full"
                 />
               )}
-            </button>
+            </Button>
           ))}
         </div>
 
@@ -197,9 +200,10 @@ const Account = () => {
                       Link your Google account to save your orders and profile
                       permanently.
                     </p>
-                    <button
+                    <Button
+                      type="default"
                       onClick={handleGoogleLink}
-                      className="inline-flex items-center justify-center gap-4 bg-dark text-inverse px-10 py-5 rounded-full font-black uppercase text-xs tracking-widest hover:bg-accent hover:text-dark transition-all active:scale-95"
+                      className="inline-flex h-auto items-center justify-center gap-4 bg-dark text-inverse px-10 py-5 rounded-full font-black uppercase text-xs tracking-widest hover:bg-accent! hover:text-dark! hover:border-accent! transition-all active:scale-95 border-none"
                     >
                       <span className="w-5 h-5 bg-surface rounded-full flex items-center justify-center p-1">
                         <svg viewBox="0 0 24 24">
@@ -222,7 +226,7 @@ const Account = () => {
                         </svg>
                       </span>
                       Sync with Google
-                    </button>
+                    </Button>
                   </div>
                 ) : (
                   <AccountSettings user={user} dispatch={dispatch} />

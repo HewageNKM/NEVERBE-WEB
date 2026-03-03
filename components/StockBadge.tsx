@@ -26,8 +26,8 @@ const StockBadge: React.FC<StockBadgeProps> = ({
     <div
       className={`
         inline-flex items-center gap-2 px-3 py-1.5 
-        bg-dark text-accent border border-accent/30 
-        rounded-sm shadow-custom animate-fade ${className}
+        bg-[#2e9e5b] text-white border border-[#2e9e5b]
+        rounded-md shadow-[0_4px_12px_rgba(46,158,91,0.2)] animate-fade ${className}
       `}
     >
       {/* High-Energy Pulse Icon */}
