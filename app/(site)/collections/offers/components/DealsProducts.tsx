@@ -27,7 +27,7 @@ const DealsProducts = ({ items }: { items: Product[] }) => {
     toggleSize,
     resetFilters,
   } = useProductListing({
-    apiEndpoint: `${process.env.NEXT_PUBLIC_API_URL}/products/deals`,
+    apiEndpoint: "/web/products/deals",
   });
 
   const [showFilter, setShowFilter] = React.useState(false);

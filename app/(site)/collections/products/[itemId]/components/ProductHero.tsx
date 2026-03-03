@@ -113,7 +113,7 @@ const ProductHero = ({ item }: { item: Product }) => {
 
         try {
           const res = await axiosInstance.get(
-            `/inventory/batch?productId=${item.id}&variantId=${
+            `/web/inventory/batch?productId=${item.id}&variantId=${
               variant.variantId
             }&sizes=${variant.sizes.join(",")}`,
           );
@@ -142,7 +142,7 @@ const ProductHero = ({ item }: { item: Product }) => {
       setStockLoading(true);
       try {
         const res = await axiosInstance.get(
-          `/inventory/batch?productId=${item.id}&variantId=${
+          `/web/inventory/batch?productId=${item.id}&variantId=${
             selectedVariant.variantId
           }&sizes=${selectedVariant.sizes.join(",")}`,
         );

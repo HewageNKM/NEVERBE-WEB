@@ -29,7 +29,7 @@ const Products = ({ items }: { items: Product[] }) => {
     toggleSize,
     resetFilters,
   } = useProductListing({
-    apiEndpoint: `${process.env.NEXT_PUBLIC_API_URL}/products`,
+    apiEndpoint: "/web/products",
   });
 
   // Local state for mobile drawer only (UI state, not data state)

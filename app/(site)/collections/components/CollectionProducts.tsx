@@ -78,18 +78,13 @@ const CollectionProducts = ({
           params.append("sizes", selectedSizes.join(","));
         }
 
-        let endpoint = "/products";
-
+        const endpoint = "/web/products";
         if (collectionType === "category" && categoryName) {
-          endpoint = `/products/categories/${categoryName}`;
+          params.append("tag", categoryName);
         } else if (collectionType === "brand" && brandName) {
-          // Need brand endpoint
-          endpoint = "/products"; // Fallback or assume query param
+          params.append("tag", brandName);
         } else {
-          // Men, Women, New Arrivals use general product endpoint with tags
           if (tagName) params.append("tag", tagName);
-
-          // New Arrivals might just be latest, so no tag needed unless filtering
         }
 
         const res = await axiosInstance.get(`${endpoint}?${params}`);
