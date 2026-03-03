@@ -2,30 +2,66 @@
 
 import React from "react";
 import { termsAndConditions } from "@/constants";
+import { Typography, Row, Col } from "antd";
+
+const { Title, Paragraph, Text } = Typography;
 
 const TermsContent = () => {
   return (
     <div className="flex flex-col">
       {termsAndConditions.map((item, index) => (
-        <div
+        <Row
           key={index}
-          className="group flex flex-col md:flex-row gap-4 md:gap-12 py-10 border-t border-gray-100 first:border-none"
+          className="group py-10 border-t border-gray-100 first:border-none w-full"
+          gutter={[32, 24]}
         >
           {/* Index Number - Sticky feel */}
-          <span className="text-xs font-bold text-gray-300 group-hover:text-black transition-colors uppercase tracking-widest shrink-0 w-16 pt-1">
-            {String(index + 1).padStart(2, "0")}
-          </span>
+          <Col xs={24} md={4} lg={3}>
+            <Text
+              className="group-hover:text-primary transition-colors"
+              style={{
+                fontSize: 12,
+                fontWeight: 800,
+                textTransform: "uppercase",
+                letterSpacing: "0.1em",
+                color: "var(--color-muted, #9ca3af)",
+              }}
+            >
+              {String(index + 1).padStart(2, "0")}
+            </Text>
+          </Col>
 
           {/* Content Body */}
-          <div className="flex flex-col gap-3 max-w-3xl">
-            <h2 className="text-xl md:text-2xl font-black uppercase tracking-tight text-black">
-              {item.title}
-            </h2>
-            <p className="text-sm md:text-base text-gray-600 font-medium leading-relaxed whitespace-pre-line">
-              {item.description}
-            </p>
-          </div>
-        </div>
+          <Col xs={24} md={20} lg={21}>
+            <div className="flex flex-col gap-3 max-w-3xl">
+              <Title
+                level={2}
+                style={{
+                  fontSize: "1.25rem",
+                  fontWeight: 900,
+                  textTransform: "uppercase",
+                  letterSpacing: "-0.02em",
+                  color: "var(--color-primary, #1a1a1a)",
+                  marginBottom: 8,
+                }}
+              >
+                {item.title}
+              </Title>
+              <Paragraph
+                style={{
+                  fontSize: "0.875rem",
+                  fontWeight: 500,
+                  color: "var(--color-secondary, #4b5563)",
+                  lineHeight: 1.8,
+                  whiteSpace: "pre-line",
+                  margin: 0,
+                }}
+              >
+                {item.description}
+              </Paragraph>
+            </div>
+          </Col>
+        </Row>
       ))}
     </div>
   );

@@ -75,7 +75,7 @@ const ReviewCard = ({ review }: { review: (typeof reviews)[0] }) => {
       style={{
         height: "100%",
         background: "#fff",
-        border: "1px solid rgba(151, 225, 62, 0.15)",
+        border: "1px solid rgba(46, 158, 91, 0.15)",
         position: "relative",
         overflow: "hidden",
         boxShadow: "0 2px 16px rgba(0,0,0,0.05)",
@@ -86,7 +86,7 @@ const ReviewCard = ({ review }: { review: (typeof reviews)[0] }) => {
           height: "100%",
         },
       }}
-      className="group/review hover:!border-[#97e13e]/40 hover:-translate-y-2 transition-all duration-500 !rounded-[24px]"
+      className="group/review hover:!border-[#2e9e5b]/40 hover:-translate-y-2 transition-all duration-500 !rounded-[24px]"
     >
       {/* Quote watermark */}
       <span className="review-quote-mark">❝</span>
@@ -99,7 +99,7 @@ const ReviewCard = ({ review }: { review: (typeof reviews)[0] }) => {
                 size={48}
                 style={{
                   background:
-                    "linear-gradient(135deg, #97e13e 0%, #7bc922 100%)",
+                    "linear-gradient(135deg, #2e9e5b 0%, #26854b 100%)",
                   color: "#fff",
                   fontWeight: 900,
                   flexShrink: 0,
@@ -134,10 +134,10 @@ const ReviewCard = ({ review }: { review: (typeof reviews)[0] }) => {
             </Flex>
             <div
               style={{
-                background: "rgba(151, 225, 62, 0.08)",
+                background: "rgba(46, 158, 91, 0.08)",
                 borderRadius: "50%",
                 padding: 8,
-                border: "1px solid rgba(151, 225, 62, 0.15)",
+                border: "1px solid rgba(46, 158, 91, 0.15)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -152,7 +152,7 @@ const ReviewCard = ({ review }: { review: (typeof reviews)[0] }) => {
             disabled
             defaultValue={review.rating}
             className="mb-4"
-            style={{ color: "#97e13e", fontSize: 14 }}
+            style={{ color: "#2e9e5b", fontSize: 14 }}
           />
 
           <Paragraph
@@ -174,14 +174,14 @@ const ReviewCard = ({ review }: { review: (typeof reviews)[0] }) => {
           gap={8}
           style={{
             paddingTop: 16,
-            borderTop: "1px solid rgba(151, 225, 62, 0.15)",
+            borderTop: "1px solid rgba(46, 158, 91, 0.15)",
           }}
         >
           <div
             style={{
               width: 16,
               height: 4,
-              background: "linear-gradient(90deg, #97e13e, #7bc922)",
+              background: "linear-gradient(90deg, #2e9e5b, #26854b)",
               borderRadius: 99,
             }}
           />
@@ -230,15 +230,15 @@ const CustomerReviews = () => {
                 style={{
                   borderRadius: 99,
                   padding: "6px 16px",
-                  background: "rgba(151, 225, 62, 0.1)",
-                  border: "1px solid rgba(151, 225, 62, 0.25)",
+                  background: "rgba(46, 158, 91, 0.1)",
+                  border: "1px solid rgba(46, 158, 91, 0.25)",
                 }}
               >
                 <FcGoogle size={22} />
                 <Rate
                   disabled
                   defaultValue={5}
-                  style={{ color: "#97e13e", fontSize: 14 }}
+                  style={{ color: "#2e9e5b", fontSize: 14 }}
                 />
                 <Text
                   strong
@@ -267,7 +267,7 @@ const CustomerReviews = () => {
                   fontWeight: 800,
                   textTransform: "uppercase",
                   letterSpacing: "0.2em",
-                  color: "#97e13e",
+                  color: "#2e9e5b",
                 }}
               >
                 Testimonials
@@ -303,12 +303,12 @@ const CustomerReviews = () => {
               size="large"
               onClick={() => carouselRef.current?.prev()}
               style={{
-                background: "rgba(151, 225, 62, 0.08)",
-                border: "1px solid rgba(151, 225, 62, 0.2)",
+                background: "rgba(46, 158, 91, 0.08)",
+                border: "1px solid rgba(46, 158, 91, 0.2)",
                 color: "#1a1a1a",
                 transition: "all 0.3s ease",
               }}
-              className="hover:!border-[#97e13e] hover:!bg-[#97e13e]/20"
+              className="hover:!border-[#2e9e5b] hover:!bg-[#2e9e5b]/20"
             />
             <Button
               shape="circle"
@@ -316,12 +316,12 @@ const CustomerReviews = () => {
               size="large"
               onClick={() => carouselRef.current?.next()}
               style={{
-                background: "rgba(151, 225, 62, 0.08)",
-                border: "1px solid rgba(151, 225, 62, 0.2)",
+                background: "rgba(46, 158, 91, 0.08)",
+                border: "1px solid rgba(46, 158, 91, 0.2)",
                 color: "#1a1a1a",
                 transition: "all 0.3s ease",
               }}
-              className="hover:!border-[#97e13e] hover:!bg-[#97e13e]/20"
+              className="hover:!border-[#2e9e5b] hover:!bg-[#2e9e5b]/20"
             />
           </Flex>
         </Flex>
@@ -376,7 +376,7 @@ const CustomerReviews = () => {
                 textTransform: "uppercase",
                 letterSpacing: "0.1em",
                 fontSize: 13,
-                backgroundColor: "#97e13e",
+                backgroundColor: "#2e9e5b",
                 color: "#fff",
                 border: "none",
               }}

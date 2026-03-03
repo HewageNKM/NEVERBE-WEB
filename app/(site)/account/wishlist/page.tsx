@@ -56,7 +56,7 @@ const WishlistPage = () => {
             </p>
             <Link
               href="/collections/products"
-              className="px-8 py-4 bg-dark text-white rounded-full font-medium text-[14px] hover:opacity-70 transition-all"
+              className="px-8 py-3 bg-[#2e9e5b] hover:bg-[#26854b] text-white rounded-full font-bold uppercase tracking-widest text-sm transition-all shadow-md hover:shadow-lg"
             >
               Start Shopping
             </Link>

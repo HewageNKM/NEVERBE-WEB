@@ -127,7 +127,7 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
                 type="primary"
                 htmlType="submit"
                 loading={isUpdating}
-                className="group flex items-center gap-3 bg-dark hover:bg-accent text-inverse hover:text-dark px-8 py-5 rounded-full font-black uppercase tracking-widest text-xs border-none"
+                className="group flex items-center gap-3 bg-[#2e9e5b] hover:bg-[#26854b] shadow-md hover:shadow-lg text-white px-8 py-5 rounded-full font-black uppercase tracking-widest text-xs border-none transition-all active:scale-[0.98]"
               >
                 Save Changes
                 {!isUpdating && <IoRefreshOutline size={18} />}
@@ -248,7 +248,7 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
                 type="primary"
                 htmlType="submit"
                 loading={isUpdating}
-                className="w-full sm:w-auto bg-dark hover:bg-accent text-inverse hover:text-dark px-8 py-5 rounded-full font-black uppercase tracking-widest text-xs border-none"
+                className="w-full sm:w-auto bg-[#2e9e5b] hover:bg-[#26854b] shadow-md hover:shadow-lg text-white px-8 py-5 rounded-full font-black uppercase tracking-widest text-xs border-none transition-all active:scale-[0.98]"
               >
                 Update Password
               </Button>

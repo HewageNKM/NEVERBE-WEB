@@ -107,7 +107,7 @@ const OrdersView: React.FC<OrdersViewProps> = ({ orders }) => {
                     <Button
                       type="primary"
                       onClick={() => handleViewOrder(order)}
-                      className="inline-flex items-center justify-center gap-2 px-6 py-5 bg-dark border-none text-inverse text-[10px] font-black uppercase tracking-widest rounded-full hover:bg-accent hover:text-dark transition-all"
+                      className="inline-flex items-center justify-center gap-2 px-6 py-5 bg-[#2e9e5b] hover:bg-[#26854b] shadow-md hover:shadow-lg border-none text-white text-[10px] font-black uppercase tracking-widest rounded-full transition-all"
                     >
                       <IoReceiptOutline size={14} />
                       Details

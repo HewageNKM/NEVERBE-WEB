@@ -19,8 +19,8 @@ const CheckoutLoader = () => {
         className="absolute inset-0 backdrop-blur-2xl"
         style={{
           background: `
-            radial-gradient(ellipse at 30% 20%, rgba(151, 225, 62, 0.1) 0%, transparent 50%),
-            radial-gradient(ellipse at 70% 80%, rgba(151, 225, 62, 0.08) 0%, transparent 50%),
+            radial-gradient(ellipse at 30% 20%, rgba(46, 158, 91, 0.1) 0%, transparent 50%),
+            radial-gradient(ellipse at 70% 80%, rgba(46, 158, 91, 0.08) 0%, transparent 50%),
             radial-gradient(ellipse at 50% 50%, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 245, 0.98) 100%)
           `,
           boxShadow: `
@@ -39,13 +39,13 @@ const CheckoutLoader = () => {
               size="large"
               indicator={
                 <div className="flex gap-2">
-                  <div className="w-3 h-3 rounded-full bg-accent animate-bounce" />
+                  <div className="w-3 h-3 rounded-full bg-[#2e9e5b] animate-bounce" />
                   <div
-                    className="w-3 h-3 rounded-full bg-accent animate-bounce"
+                    className="w-3 h-3 rounded-full bg-[#2e9e5b] animate-bounce"
                     style={{ animationDelay: "150ms" }}
                   />
                   <div
-                    className="w-3 h-3 rounded-full bg-accent animate-bounce"
+                    className="w-3 h-3 rounded-full bg-[#2e9e5b] animate-bounce"
                     style={{ animationDelay: "300ms" }}
                   />
                 </div>
@@ -56,7 +56,7 @@ const CheckoutLoader = () => {
           <Flex vertical align="center" gap={4}>
             <Typography.Title
               level={4}
-              className="uppercase tracking-widest text-primary m-0"
+              className="uppercase tracking-widest text-[#1a1a1a] m-0"
               style={{ margin: 0, fontWeight: 900, fontSize: "1.125rem" }}
             >
               Processing Order
@@ -67,7 +67,7 @@ const CheckoutLoader = () => {
           </Flex>
         </Flex>
 
-        <Typography.Text className="text-[10px] uppercase font-black tracking-widest text-[#97e13e]/60 animate-pulse">
+        <Typography.Text className="text-[10px] uppercase font-black tracking-widest text-[#2e9e5b]/60 animate-pulse">
           Do not close this page
         </Typography.Text>
       </Flex>

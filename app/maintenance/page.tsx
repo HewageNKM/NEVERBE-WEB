@@ -11,7 +11,7 @@ export default function MaintenancePage() {
         className="absolute inset-0 opacity-5 pointer-events-none"
         style={{
           backgroundImage:
-            "linear-gradient(#97e13e 1px, transparent 1px), linear-gradient(90deg, #97e13e 1px, transparent 1px)",
+            "linear-gradient(#2e9e5b 1px, transparent 1px), linear-gradient(90deg, #2e9e5b 1px, transparent 1px)",
           size: "40px 40px",
           backgroundSize: "60px 60px",
         }}
@@ -24,7 +24,7 @@ export default function MaintenancePage() {
           animate={{ opacity: 1, scale: 1 }}
           className="mb-6 px-4 py-1.5 border border-accent/30 rounded-full bg-accent/5 flex items-center gap-2"
         >
-          <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse shadow-[0_0_8px_#97e13e]" />
+          <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse shadow-[0_0_8px_#2e9e5b]" />
           <span className="text-[10px] font-black uppercase tracking-[0.3em] text-accent">
             System Protocol 4.0
           </span>
@@ -35,7 +35,7 @@ export default function MaintenancePage() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          className="text-7xl md:text-[12rem] font-display font-black uppercase tracking-tighter leading-none mb-4 text-accent drop-shadow-[0_0_30px_rgba(151,225,62,0.2)]"
+          className="text-7xl md:text-[12rem] font-display font-black uppercase tracking-tighter leading-none mb-4 text-accent drop-shadow-[0_0_30px_rgba(46, 158, 91,0.2)]"
         >
           Neverbe
         </motion.h1>
@@ -48,7 +48,7 @@ export default function MaintenancePage() {
           className="w-full max-w-sm h-1.5 bg-zinc-900 overflow-hidden mb-12 -skew-x-12 border border-white/5"
         >
           <motion.div
-            className="h-full bg-accent w-full origin-left shadow-[0_0_15px_#97e13e]"
+            className="h-full bg-accent w-full origin-left shadow-[0_0_15px_#2e9e5b]"
             animate={{ x: ["-100%", "100%"] }}
             transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
           />

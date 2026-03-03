@@ -47,10 +47,10 @@ const FilterList = ({
               fontSize: 12,
               fontWeight: 700,
               border: isActive
-                ? "1.5px solid #97e13e"
+                ? "1.5px solid #2e9e5b"
                 : "1.5px solid rgba(0,0,0,0.1)",
-              background: isActive ? "rgba(151,225,62,0.1)" : "transparent",
-              color: isActive ? "#3d6b10" : "#555",
+              background: isActive ? "rgba(46, 158, 91,0.1)" : "transparent",
+              color: isActive ? "#1d6639" : "#555",
               cursor: "pointer",
               transition: "all 0.2s ease",
               textTransform: "uppercase",
@@ -125,7 +125,7 @@ const PopUpFilterPanel: React.FC<PopUpFilterPanelProps> = ({
             <span
               style={{
                 marginLeft: 8,
-                background: "#97e13e",
+                background: "#2e9e5b",
                 color: "#fff",
                 borderRadius: 99,
                 fontSize: 11,
@@ -167,7 +167,7 @@ const PopUpFilterPanel: React.FC<PopUpFilterPanelProps> = ({
             style={{
               flex: 2,
               height: 44,
-              background: "#97e13e",
+              background: "#2e9e5b",
               color: "#fff",
               border: "none",
               fontWeight: 800,
@@ -199,7 +199,7 @@ const PopUpFilterPanel: React.FC<PopUpFilterPanelProps> = ({
           <Switch
             checked={inStock}
             onChange={onInStockChange}
-            style={{ background: inStock ? "#97e13e" : undefined }}
+            style={{ background: inStock ? "#2e9e5b" : undefined }}
           />
         </div>
 
@@ -218,10 +218,10 @@ const PopUpFilterPanel: React.FC<PopUpFilterPanelProps> = ({
                   style={{
                     aspectRatio: "1",
                     border: isActive
-                      ? "2px solid #97e13e"
+                      ? "2px solid #2e9e5b"
                       : "1.5px solid rgba(0,0,0,0.1)",
-                    background: isActive ? "rgba(151,225,62,0.1)" : "#f8f9fa",
-                    color: isActive ? "#3d6b10" : "#333",
+                    background: isActive ? "rgba(46, 158, 91,0.1)" : "#f8f9fa",
+                    color: isActive ? "#1d6639" : "#333",
                     fontWeight: 800,
                     fontSize: 13,
                     borderRadius: 12,

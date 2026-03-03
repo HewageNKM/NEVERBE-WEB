@@ -46,10 +46,10 @@ const FilterSection = ({
               fontSize: 11,
               fontWeight: 700,
               border: isSelected
-                ? "1.5px solid #97e13e"
+                ? "1.5px solid #2e9e5b"
                 : "1.5px solid rgba(0,0,0,0.1)",
-              background: isSelected ? "rgba(151,225,62,0.1)" : "transparent",
-              color: isSelected ? "#3d6b10" : "#666",
+              background: isSelected ? "rgba(46, 158, 91,0.1)" : "transparent",
+              color: isSelected ? "#1d6639" : "#666",
               cursor: "pointer",
               transition: "all 0.2s ease",
               textTransform: "uppercase",
@@ -86,13 +86,12 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
         <h2 className="text-2xl font-display font-black uppercase tracking-tighter text-primary">
           {title}
         </h2>
-        <Button
-          type="link"
+        <button
           onClick={onReset}
-          className="text-xs font-bold uppercase tracking-widest text-muted hover:text-accent transition-colors underline underline-offset-4 p-0 h-auto"
+          className="text-xs font-bold uppercase tracking-widest text-muted hover:text-[#2e9e5b] transition-colors underline underline-offset-4 bg-transparent border-none cursor-pointer"
         >
           Clear All
-        </Button>
+        </button>
       </div>
 
       {/* In Stock Toggle */}
@@ -104,7 +103,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
           checked={inStock}
           onChange={onInStockChange}
           size="small"
-          style={{ background: inStock ? "#97e13e" : undefined }}
+          style={{ background: inStock ? "#2e9e5b" : undefined }}
         />
       </div>
 
@@ -126,10 +125,10 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
                   fontSize: 12,
                   fontWeight: 800,
                   border: isSelected
-                    ? "2px solid #97e13e"
+                    ? "2px solid #2e9e5b"
                     : "1.5px solid rgba(0,0,0,0.1)",
-                  background: isSelected ? "rgba(151,225,62,0.1)" : "#f8f9fa",
-                  color: isSelected ? "#3d6b10" : "#333",
+                  background: isSelected ? "rgba(46, 158, 91,0.1)" : "#f8f9fa",
+                  color: isSelected ? "#1d6639" : "#333",
                   cursor: "pointer",
                   transition: "all 0.2s ease",
                   textAlign: "center",

@@ -79,7 +79,7 @@ const ProfileOverview: React.FC<ProfileOverviewProps> = ({
           <Button
             type="primary"
             onClick={() => setActiveTab("orders")}
-            className="group relative z-10 self-start flex items-center gap-2 bg-dark text-inverse px-6 py-3 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-accent hover:text-dark transition-all border-none h-auto"
+            className="group relative z-10 self-start flex items-center gap-2 bg-[#2e9e5b] text-white px-6 py-3 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-[#26854b] shadow-md hover:shadow-lg transition-all border-none h-auto active:scale-[0.98]"
           >
             View Orders ({ordersCount})
             <IoChevronForward className="group-hover:translate-x-1 transition-transform" />
@@ -110,7 +110,7 @@ const ProfileOverview: React.FC<ProfileOverviewProps> = ({
           <Button
             type="primary"
             onClick={() => setActiveTab("details")}
-            className="group relative z-10 self-start flex items-center gap-2 bg-dark text-inverse px-6 py-3 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-accent hover:text-dark transition-all border-none h-auto"
+            className="group relative z-10 self-start flex items-center gap-2 bg-[#2e9e5b] text-white px-6 py-3 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-[#26854b] shadow-md hover:shadow-lg transition-all border-none h-auto active:scale-[0.98]"
           >
             Manage Settings
             <IoChevronForward className="group-hover:translate-x-1 transition-transform" />

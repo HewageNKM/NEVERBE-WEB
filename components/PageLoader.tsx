@@ -12,8 +12,8 @@ const PageLoader = () => {
         className="absolute inset-0 bg-white/80 backdrop-blur-2xl"
         style={{
           background: `
-            radial-gradient(ellipse at 30% 20%, rgba(151, 225, 62, 0.08) 0%, transparent 50%),
-            radial-gradient(ellipse at 70% 80%, rgba(151, 225, 62, 0.06) 0%, transparent 50%),
+            radial-gradient(ellipse at 30% 20%, rgba(46, 158, 91, 0.08) 0%, transparent 50%),
+            radial-gradient(ellipse at 70% 80%, rgba(46, 158, 91, 0.06) 0%, transparent 50%),
             radial-gradient(ellipse at 50% 50%, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 245, 0.95) 100%)
           `,
           boxShadow: `

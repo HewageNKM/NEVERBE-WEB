@@ -8,7 +8,6 @@ import {
   socialMedia,
 } from "@/constants";
 import Image from "next/image";
-import { Logo } from "@/assets/images";
 import { GoLocation } from "react-icons/go";
 import { NavigationItem, SocialMediaItem } from "@/services/WebsiteService";
 import { IoLogoFacebook, IoLogoInstagram } from "react-icons/io";
@@ -89,7 +88,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                 fontWeight: 800,
                 textTransform: "uppercase",
                 letterSpacing: "0.2em",
-                color: "#97e13e",
+                color: "#2e9e5b",
               }}
             >
               Stay Updated
@@ -116,41 +115,43 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
               Subscribe for exclusive offers and new arrivals
             </Text>
           </Flex>
-          <Flex gap={8} className="w-full md:w-auto md:min-w-[360px]">
+          <div className="flex items-center w-full md:w-auto md:min-w-[440px] mt-8 md:mt-0 bg-white rounded-full p-2 shadow-sm border border-gray-200 focus-within:border-[#2e9e5b] focus-within:ring-1 focus-within:ring-[#2e9e5b] transition-all">
             <Input
-              placeholder="Enter your email"
-              size="large"
+              placeholder="Enter your email address"
+              variant="borderless"
               style={{
-                background: "#fff",
-                border: "1px solid rgba(151, 225, 62, 0.3)",
-                borderRadius: 99,
+                fontSize: 15,
+                fontWeight: 500,
                 color: "#1a1a1a",
-                padding: "0 24px",
-                fontSize: 14,
-                fontWeight: 600,
+                backgroundColor: "transparent",
               }}
+              className="flex-1 px-4 placeholder:text-gray-400"
             />
             <Button
               type="primary"
-              size="large"
               icon={<SendOutlined />}
               style={{
-                background: "#97e13e",
+                background: "#2e9e5b",
                 border: "none",
                 borderRadius: 99,
                 fontWeight: 800,
                 color: "#fff",
-                padding: "0 28px",
+                height: 46,
+                padding: "0 32px",
+                textTransform: "uppercase",
+                letterSpacing: "0.05em",
+                fontSize: 13,
               }}
+              className="hover:scale-105 transition-transform shadow-[0_4px_12px_rgba(46,158,91,0.2)]"
             >
               Subscribe
             </Button>
-          </Flex>
+          </div>
         </Flex>
 
         <Divider
           style={{
-            borderColor: "rgba(151, 225, 62, 0.15)",
+            borderColor: "rgba(46, 158, 91, 0.15)",
             margin: "0 0 48px 0",
           }}
         />
@@ -165,11 +166,11 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                 className="inline-block transition-transform hover:scale-105"
               >
                 <Image
-                  src={Logo}
+                  src="/logo.png"
                   alt="NEVERBE"
                   width={150}
                   height={50}
-                  className="object-contain brightness-0 invert"
+                  className="object-contain"
                 />
               </Link>
 
@@ -194,7 +195,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                 >
                   <GoLocation
                     size={18}
-                    className="mt-0.5 text-gray-400 group-hover:text-[#97e13e] transition-colors"
+                    className="mt-0.5 text-gray-400 group-hover:text-[#2e9e5b] transition-colors"
                   />
                   <Text
                     style={{
@@ -205,7 +206,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                       lineHeight: 1.6,
                       transition: "color 0.3s ease",
                     }}
-                    className="group-hover:!text-[#97e13e]"
+                    className="group-hover:text-[#2e9e5b]!"
                   >
                     {address.address}
                   </Text>
@@ -243,7 +244,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                       letterSpacing: "0.08em",
                       transition: "color 0.3s ease",
                     }}
-                    className="hover:!text-[#97e13e]"
+                    className="hover:text-[#2e9e5b]!"
                   >
                     {link.title}
                   </Link>
@@ -282,7 +283,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                         color: "#aaa",
                         transition: "color 0.3s ease",
                       }}
-                      className="group-hover:!text-[#97e13e]"
+                      className="group-hover:text-[#2e9e5b]!"
                     />
                     <Text
                       style={{
@@ -293,7 +294,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                         letterSpacing: "0.05em",
                         transition: "color 0.3s ease",
                       }}
-                      className="group-hover:!text-[#97e13e]"
+                      className="group-hover:text-[#2e9e5b]!"
                     >
                       {info.content}
                     </Text>
@@ -329,15 +330,15 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                     style={{
                       padding: 12,
                       borderRadius: 16,
-                      background: "rgba(151, 225, 62, 0.08)",
-                      border: "1px solid rgba(151, 225, 62, 0.15)",
+                      background: "rgba(46, 158, 91, 0.08)",
+                      border: "1px solid rgba(46, 158, 91, 0.15)",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
                       transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                       color: "#555",
                     }}
-                    className="hover:!bg-[#97e13e] hover:!text-black hover:!border-[#97e13e]"
+                    className="hover:bg-[#2e9e5b]! hover:!text-black hover:border-[#2e9e5b]!"
                   >
                     <media.Icon size={20} />
                   </Link>
@@ -350,7 +351,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
         {/* --- Trust Badges Row --- */}
         <Divider
           style={{
-            borderColor: "rgba(151, 225, 62, 0.15)",
+            borderColor: "rgba(46, 158, 91, 0.15)",
             margin: "0 0 28px 0",
           }}
         />
@@ -363,7 +364,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
             { Icon: StarOutlined, label: "100% Quality Guaranteed" },
           ].map((badge) => (
             <span key={badge.label} className="trust-badge">
-              <badge.Icon style={{ color: "#97e13e", fontSize: 14 }} />
+              <badge.Icon style={{ color: "#2e9e5b", fontSize: 14 }} />
               {badge.label}
             </span>
           ))}
@@ -372,7 +373,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
         {/* --- Bottom Legal & Credits Row --- */}
         <Divider
           style={{
-            borderColor: "rgba(151, 225, 62, 0.15)",
+            borderColor: "rgba(46, 158, 91, 0.15)",
             margin: "0",
           }}
         />
@@ -396,36 +397,6 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
             >
               © {new Date().getFullYear()} NEVERBE, INC.
             </Text>
-            <Flex gap={24}>
-              <Link
-                href="/terms"
-                style={{
-                  fontSize: 10,
-                  fontWeight: 800,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.15em",
-                  color: "#aaa",
-                  transition: "color 0.3s ease",
-                }}
-                className="hover:!text-[#97e13e]"
-              >
-                Terms
-              </Link>
-              <Link
-                href="/privacy"
-                style={{
-                  fontSize: 10,
-                  fontWeight: 800,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.15em",
-                  color: "#aaa",
-                  transition: "color 0.3s ease",
-                }}
-                className="hover:!text-[#97e13e]"
-              >
-                Privacy
-              </Link>
-            </Flex>
           </Flex>
 
           <Flex vertical align="center" gap={32} className="md:flex-row">
@@ -433,7 +404,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
             <Link
               href={payHere.payHereLink}
               target="_blank"
-              className="opacity-30 hover:opacity-100 transition-all duration-500"
+              className="hover:opacity-80 transition-opacity duration-300"
             >
               <Image
                 src={payHere.longWhiteBanner}
@@ -443,27 +414,6 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                 className="object-contain h-5 w-auto"
               />
             </Link>
-
-            {/* Developer Credit */}
-            <Text
-              style={{
-                fontSize: 9,
-                fontWeight: 900,
-                textTransform: "uppercase",
-                letterSpacing: "0.2em",
-                color: "#aaa",
-              }}
-            >
-              Engineered By{" "}
-              <Link
-                href="https://github.com/HewageNKM"
-                target="_blank"
-                className="hover:!text-[#97e13e] transition-colors"
-                style={{ color: "#777" }}
-              >
-                N. MALWENNA
-              </Link>
-            </Text>
           </Flex>
         </Flex>
       </div>

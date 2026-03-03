@@ -122,12 +122,12 @@ export default function RootLayout({
               <ConfigProvider
                 theme={{
                   token: {
-                    colorPrimary: "#97e13e",
-                    colorLink: "#5a9a1a",
-                    colorLinkHover: "#97e13e",
-                    colorLinkActive: "#4a8012",
-                    colorInfo: "#97e13e",
-                    colorSuccess: "#97e13e",
+                    colorPrimary: "#2e9e5b",
+                    colorLink: "#2e9e5b",
+                    colorLinkHover: "#2e9e5b",
+                    colorLinkActive: "#26854b",
+                    colorInfo: "#2e9e5b",
+                    colorSuccess: "#2e9e5b",
                     fontFamily: "var(--font-inter)",
                     borderRadius: 12,
                     colorBgLayout: "#f8faf5",
@@ -145,8 +145,8 @@ export default function RootLayout({
                       controlHeight: 44,
                       controlHeightLG: 56,
                       fontWeight: 700,
-                      colorPrimary: "#97e13e",
-                      colorPrimaryHover: "#7bc922",
+                      colorPrimary: "#2e9e5b",
+                      colorPrimaryHover: "#26854b",
                       primaryColor: "#ffffff",
                     },
                     Carousel: {
@@ -156,14 +156,14 @@ export default function RootLayout({
                     },
                     Input: {
                       borderRadius: 99,
-                      colorPrimary: "#97e13e",
-                      colorPrimaryHover: "#97e13e",
-                      activeBorderColor: "#97e13e",
-                      hoverBorderColor: "#97e13e",
+                      colorPrimary: "#2e9e5b",
+                      colorPrimaryHover: "#2e9e5b",
+                      activeBorderColor: "#2e9e5b",
+                      hoverBorderColor: "#2e9e5b",
                     },
                     Select: {
                       borderRadius: 99,
-                      colorPrimary: "#97e13e",
+                      colorPrimary: "#2e9e5b",
                     },
                     Tag: {
                       borderRadiusSM: 99,
@@ -175,7 +175,7 @@ export default function RootLayout({
                       borderRadius: 32,
                     },
                     Badge: {
-                      colorPrimary: "#97e13e",
+                      colorPrimary: "#2e9e5b",
                     },
                   },
                 }}

@@ -29,7 +29,7 @@ const BrandsSlider = ({ items }: { items: any[] }) => {
               fontWeight: 800,
               textTransform: "uppercase",
               letterSpacing: "0.2em",
-              color: "#97e13e",
+              color: "#2e9e5b",
             }}
           >
             Trusted Brands

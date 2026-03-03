@@ -73,7 +73,7 @@ const DealsProducts = ({ items }: { items: Product[] }) => {
         <div className="relative z-20 bg-surface/90 backdrop-blur-md py-4 flex justify-between lg:justify-end items-center gap-2">
           <button
             onClick={() => setShowFilter(true)}
-            className="lg:hidden w-10 h-10 flex items-center justify-center bg-surface-2 border border-default rounded-full hover:border-accent text-primary hover:text-accent transition-all"
+            className="hidden w-10 h-10 items-center justify-center bg-surface-2 border border-default rounded-full hover:border-accent text-primary hover:text-accent transition-all"
             aria-label="Open Filters"
           >
             <IoOptionsOutline size={18} />

@@ -36,27 +36,3 @@ env:
     value: "T4W2OD5EXU"
   - variable: NEXT_PUBLIC_KOKO_REDIRECT_URL
     value: "https://prodapi.paykoko.com/api/merchants/orderCreate"
-
-  # --- Sensitive Secrets (Referencing Google Cloud Secret Manager) ---
-  - variable: FIREBASE_ADMIN_PRIVATE_KEY
-    secret: FIREBASE_ADMIN_PRIVATE_KEY
-  - variable: FIREBASE_CLIENT_EMAIL
-    secret: FIREBASE_CLIENT_EMAIL
-  - variable: RECAPTCHA_SECRET_KEY
-    secret: RECAPTCHA_SECRET_KEY
-  - variable: PAYHERE_MERCHANT_SECRET
-    secret: PAYHERE_MERCHANT_SECRET
-  - variable: PAYHERE_MERCHANT_ID
-    secret: PAYHERE_MERCHANT_ID
-  - variable: KOKO_MERCHANT_ID
-    secret: KOKO_MERCHANT_ID
-  - variable: KOKO_API_KEY
-    secret: KOKO_API_KEY
-  - variable: KOKO_PRIVATE_KEY
-    secret: KOKO_PRIVATE_KEY
-  - variable: KOKO_PUBLIC_KEY
-    secret: KOKO_PUBLIC_KEY
-  - variable: TEXT_API_KEY
-    secret: TEXT_API_KEY
-  - variable: HASH_SECRET
-    secret: HASH_SECRET

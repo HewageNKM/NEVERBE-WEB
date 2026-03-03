@@ -76,7 +76,7 @@ const Products = ({ items }: { items: Product[] }) => {
         <div className="relative z-20 py-4 flex justify-between lg:justify-end items-center gap-3">
           <Button
             onClick={() => setShowFilter(true)}
-            className="lg:hidden"
+            className="hidden"
             icon={<IoOptionsOutline size={16} />}
             style={{
               borderRadius: 99,
@@ -100,7 +100,7 @@ const Products = ({ items }: { items: Product[] }) => {
               <span
                 style={{
                   marginLeft: 6,
-                  background: "#97e13e",
+                  background: "#2e9e5b",
                   color: "#fff",
                   borderRadius: 99,
                   fontSize: 10,

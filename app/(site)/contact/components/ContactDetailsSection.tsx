@@ -2,45 +2,80 @@
 import React from "react";
 import { contactInfo } from "@/constants";
 import Link from "next/link";
+import { Typography, Space } from "antd";
+
+const { Title, Text } = Typography;
 
 const ContactDetailsSection = () => {
   return (
     <section className="flex flex-col gap-8">
       <div>
-        <h2 className="text-xl font-black uppercase tracking-tighter mb-2">
+        <Title
+          level={2}
+          style={{
+            fontSize: "1.5rem",
+            fontWeight: 900,
+            textTransform: "uppercase",
+            letterSpacing: "-0.02em",
+            marginBottom: 8,
+          }}
+        >
           Get in Touch
-        </h2>
-        <div className="h-1 w-12 bg-black"></div>
+        </Title>
+        <div style={{ height: 4, width: 48, background: "#1a1a1a" }}></div>
       </div>
 
-      <p className="text-sm font-medium text-gray-500 leading-relaxed max-w-sm">
+      <Text
+        style={{
+          fontSize: "0.875rem",
+          fontWeight: 500,
+          color: "#666",
+          lineHeight: 1.6,
+          maxWidth: 400,
+        }}
+      >
         For inquiries regarding online orders, shipping, or returns, please
         contact our support team. We typically respond within 24 hours.
-      </p>
+      </Text>
 
-      <ul className="flex flex-col gap-6">
+      <Space direction="vertical" size={24}>
         {contactInfo.map((info, idx) => (
-          <li key={idx}>
+          <div key={idx}>
             <Link
               href={info.link}
               target="_blank"
               rel="noopener noreferrer"
               className="group flex flex-col items-start gap-1"
             >
-              <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400 group-hover:text-black transition-colors">
-                {info.title || "Contact"}{" "}
-                {/* Assuming your constant might have a title, if not, hardcode or infer */}
-              </span>
+              <Text
+                style={{
+                  fontSize: 10,
+                  fontWeight: 800,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.1em",
+                  color: "#aaa",
+                }}
+                className="group-hover:text-black transition-colors"
+              >
+                {info.title || "Contact"}
+              </Text>
               <div className="flex items-center gap-3">
                 <info.icon size={20} className="text-black" />
-                <span className="text-lg font-bold text-black border-b border-transparent group-hover:border-black transition-all">
+                <Text
+                  style={{
+                    fontSize: "1.125rem",
+                    fontWeight: 800,
+                    color: "#1a1a1a",
+                  }}
+                  className="border-b border-transparent group-hover:border-black transition-all"
+                >
                   {info.content}
-                </span>
+                </Text>
               </div>
             </Link>
-          </li>
+          </div>
         ))}
-      </ul>
+      </Space>
     </section>
   );
 };

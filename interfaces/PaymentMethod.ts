@@ -4,6 +4,7 @@ export interface PaymentMethod {
   paymentId: string;
   name: string;
   fee: number;
+  description?: string;
   status: "Active" | "Inactive";
   available: string[];
 

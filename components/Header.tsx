@@ -10,12 +10,12 @@ import {
   IoSearchOutline,
   IoCloseOutline,
   IoHeartOutline,
+  IoPersonOutline,
   IoChevronBackOutline,
   IoChevronForwardOutline,
 } from "react-icons/io5";
 import Link from "next/link";
 import Image from "next/image";
-import { Logo } from "@/assets/images";
 import { AnimatePresence, motion } from "framer-motion";
 import SeasonalPromo from "@/app/(site)/components/SeasonalPromo";
 import SearchDialog from "@/components/SearchDialog";
@@ -24,13 +24,6 @@ import { useAlgoliaSearch } from "@/hooks/useAlgoliaSearch";
 import { Badge, Input, ConfigProvider, Button, Flex, Typography } from "antd";
 
 const { Text } = Typography;
-
-const ANNOUNCEMENTS = [
-  "🚚 Island-Wide Delivery Available",
-  "💳 Cash on Delivery — Pay When You Receive",
-  "🔄 Easy Returns & Exchanges Within 7 Days",
-  "⭐ 100% Premium Quality Guaranteed",
-];
 
 const DEFAULT_NAV_ITEMS: NavigationItem[] = [
   { title: "New Arrivals", link: "/collections/new-arrivals" },
@@ -51,7 +44,6 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
   const dispatch: AppDispatch = useDispatch();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [announcementIndex, setAnnouncementIndex] = useState(0);
 
   let navItems = mainNav.length > 0 ? mainNav : DEFAULT_NAV_ITEMS;
   if (!navItems.some((item) => item.link === "/collections/offers")) {
@@ -64,6 +56,8 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
     isSearching,
     showResults: showSearchResult,
     search: performSearch,
+    fetchRecommendations,
+    recommendations,
     clearSearch,
   } = useAlgoliaSearch();
 
@@ -71,77 +65,21 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
     performSearch(evt.target.value);
   };
 
-  // Scroll detection
+  // Scroll detection & Pre-fetch recommendations
   useEffect(() => {
+    fetchRecommendations();
+
     const handleScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  // Announcement rotation
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setAnnouncementIndex((prev) => (prev + 1) % ANNOUNCEMENTS.length);
-    }, 4000);
-    return () => clearInterval(timer);
-  }, []);
+  }, [fetchRecommendations]);
 
   return (
     <div className="w-full z-50">
-      {/* 1. ANNOUNCEMENT BAR — Light with rotating text */}
-      <div className="announcement-bar w-full py-2.5 px-4 relative overflow-hidden">
-        <Flex justify="center" align="center" gap={16}>
-          <Button
-            type="text"
-            size="small"
-            icon={<IoChevronBackOutline size={14} />}
-            onClick={() =>
-              setAnnouncementIndex(
-                (prev) =>
-                  (prev - 1 + ANNOUNCEMENTS.length) % ANNOUNCEMENTS.length,
-              )
-            }
-            className="!text-[#5a8a1a]/60 hover:!text-[#4a7a10] !border-none !p-0 !h-auto !w-auto"
-          />
-          <AnimatePresence mode="wait">
-            <motion.span
-              key={announcementIndex}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.3 }}
-              style={{
-                fontSize: 11,
-                fontWeight: 700,
-                textTransform: "uppercase",
-                letterSpacing: "0.12em",
-                color: "#3a6a10",
-                textAlign: "center",
-                minWidth: 280,
-                display: "inline-block",
-              }}
-            >
-              {ANNOUNCEMENTS[announcementIndex]}
-            </motion.span>
-          </AnimatePresence>
-          <Button
-            type="text"
-            size="small"
-            icon={<IoChevronForwardOutline size={14} />}
-            onClick={() =>
-              setAnnouncementIndex((prev) => (prev + 1) % ANNOUNCEMENTS.length)
-            }
-            className="!text-[#5a8a1a]/60 hover:!text-[#4a7a10] !border-none !p-0 !h-auto !w-auto"
-          />
-        </Flex>
-      </div>
-
       {/* 2. MAIN HEADER — Dark sticky nav */}
       <header
         className={`sticky top-0 w-full transition-all duration-300 z-50 header-dark ${scrolled ? "header-dark-scrolled" : ""}`}
       >
-        <SeasonalPromo season={season} />
-
         <Flex
           justify="space-between"
           align="center"
@@ -150,10 +88,10 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
           {/* LOGO */}
           <Link href="/" className="shrink-0">
             <Image
-              src={Logo}
+              src="/logo.png"
               alt="NEVERBE"
-              width={130}
-              height={50}
+              width={60}
+              height={30}
               className="object-contain transition-transform hover:scale-110 active:scale-95 duration-300"
             />
           </Link>
@@ -165,13 +103,13 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
                 <li key={item.title}>
                   <Link
                     href={item.link}
-                    className="relative pb-2 text-[13px] font-bold uppercase tracking-tight text-gray-700 hover:text-[#5a9a1a] transition-colors group"
+                    className="relative pb-2 text-[13px] font-bold uppercase tracking-tight text-gray-700 hover:text-[#2e9e5b] transition-colors group"
                   >
                     {item.title}
                     <span
                       className="absolute bottom-0 left-0 w-0 h-[3px] transition-all duration-300 group-hover:w-full"
                       style={{
-                        background: "linear-gradient(90deg, #97e13e, #7bc922)",
+                        background: "linear-gradient(90deg, #2e9e5b, #26854b)",
                         borderRadius: 99,
                       }}
                     />
@@ -182,54 +120,66 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
           </nav>
 
           {/* ICONS & SEARCH */}
-          <Flex align="center" gap={4} className="lg:gap-12">
-            <Button
-              type="text"
+          <Flex align="center" gap={4} className="lg:gap-[16px]">
+            <button
               onClick={() => setIsSearchOpen(true)}
-              className="p-2.5 rounded-full transition-colors group !border-none !h-auto !w-auto flex items-center justify-center m-0"
-              icon={
-                <IoSearchOutline
-                  size={24}
-                  className="text-gray-600 group-hover:text-[#5a9a1a] transition-colors"
-                />
-              }
-            />
+              className="flex shrink-0 items-center justify-center w-[40px] h-[40px] rounded-full hover:bg-black/5 transition-colors group cursor-pointer border-none bg-transparent outline-none m-0 p-0"
+            >
+              <IoSearchOutline
+                size={24}
+                className="text-gray-700 group-hover:text-[#2e9e5b] transition-colors"
+              />
+            </button>
 
             <Link
-              href="/account/wishlist"
-              className="p-2.5 rounded-full transition-colors group flex items-center justify-center"
+              href="/account"
+              className="flex shrink-0 items-center justify-center w-[40px] h-[40px] rounded-full hover:bg-black/5 transition-colors group cursor-pointer border-none bg-transparent outline-none m-0 p-0"
             >
-              <IoHeartOutline
+              <IoPersonOutline
                 size={24}
-                className="group-hover:text-[#5a9a1a] text-gray-600 transition-colors"
+                className="text-gray-700 group-hover:text-[#2e9e5b] transition-colors"
               />
             </Link>
 
-            <Button
-              type="text"
+            <Link
+              href="/account/wishlist"
+              className="flex shrink-0 items-center justify-center w-[40px] h-[40px] rounded-full hover:bg-black/5 transition-colors group cursor-pointer border-none bg-transparent outline-none m-0 p-0"
+            >
+              <IoHeartOutline
+                size={24}
+                className="text-gray-700 group-hover:text-[#2e9e5b] transition-colors"
+              />
+            </Link>
+
+            <button
               onClick={() => dispatch(showBag())}
-              className="relative p-2.5 rounded-full transition-colors group !border-none !h-auto !w-auto flex items-center justify-center m-0"
+              className="flex shrink-0 items-center justify-center w-[40px] h-[40px] rounded-full hover:bg-black/5 transition-colors group cursor-pointer border-none bg-transparent outline-none m-0 p-0"
             >
               <Badge
                 count={bagItems.length}
                 offset={[-2, 6]}
-                color="#97e13e"
+                color="#2e9e5b"
                 size="small"
                 style={{ color: "#fff", fontWeight: 800 }}
               >
                 <IoBagHandleOutline
                   size={24}
-                  className="group-hover:text-[#5a9a1a] text-gray-600 transition-colors"
+                  className="text-gray-700 group-hover:text-[#2e9e5b] transition-colors"
                 />
               </Badge>
-            </Button>
+            </button>
 
-            <Button
-              type="text"
-              onClick={() => dispatch(toggleMenu(true))}
-              className="lg:hidden p-2.5 rounded-full !border-none !h-auto !w-auto flex items-center justify-center m-0"
-              icon={<IoMenuOutline size={28} className="text-gray-700" />}
-            />
+            <div className="lg:hidden flex items-center justify-center">
+              <button
+                onClick={() => dispatch(toggleMenu(true))}
+                className="flex shrink-0 items-center justify-center w-[40px] h-[40px] rounded-full hover:bg-black/5 transition-colors group cursor-pointer border-none bg-transparent outline-none m-0 p-0"
+              >
+                <IoMenuOutline
+                  size={28}
+                  className="text-gray-800 group-hover:text-[#2e9e5b] transition-colors"
+                />
+              </button>
+            </div>
           </Flex>
         </Flex>
 
@@ -262,29 +212,21 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
                     className="w-full lg:w-auto"
                   >
                     <Image
-                      src={Logo}
+                      src="/logo.png"
                       alt="NEVERBE"
-                      width={70}
-                      height={30}
-                      className="lg:w-[80px]"
+                      width={60}
+                      height={24}
+                      className="lg:w-[70px]"
                     />
-
-                    <Button
-                      type="text"
+                    <button
                       onClick={() => {
                         setIsSearchOpen(false);
                         clearSearch();
                       }}
-                      className="lg:hidden !h-auto !w-auto !border-none flex items-center justify-center"
-                      style={{
-                        padding: 10,
-                        borderRadius: "50%",
-                        background: "rgba(0,0,0,0.06)",
-                      }}
-                      icon={
-                        <IoCloseOutline size={24} className="text-gray-600" />
-                      }
-                    />
+                      className="lg:hidden flex shrink-0 items-center justify-center w-10 h-10 rounded-full bg-black/5 hover:bg-black/10 transition-colors cursor-pointer border-none outline-none m-0 p-0"
+                    >
+                      <IoCloseOutline size={24} className="text-gray-600" />
+                    </button>
                   </Flex>
 
                   {/* Search bar */}
@@ -294,10 +236,10 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
                         components: {
                           Input: {
                             colorBgContainer: "#fff",
-                            colorBorder: "rgba(151, 225, 62, 0.3)",
-                            hoverBorderColor: "#97e13e",
-                            activeBorderColor: "#97e13e",
-                            activeShadow: "0 0 0 3px rgba(151, 225, 62, 0.12)",
+                            colorBorder: "rgba(46, 158, 91, 0.3)",
+                            hoverBorderColor: "#2e9e5b",
+                            activeBorderColor: "#2e9e5b",
+                            activeShadow: "0 0 0 3px rgba(46, 158, 91, 0.12)",
                             borderRadius: 99,
                             colorText: "#1a1a1a",
                             colorTextPlaceholder: "rgba(0,0,0,0.3)",
@@ -321,7 +263,7 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
                           <IoSearchOutline
                             size={20}
                             style={{
-                              color: "#97e13e",
+                              color: "#2e9e5b",
                               marginRight: 8,
                               flexShrink: 0,
                             }}
@@ -330,17 +272,15 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
                         suffix={
                           <Flex align="center">
                             {search && (
-                              <Button
-                                type="text"
+                              <button
                                 onClick={() => clearSearch()}
-                                className="p-1 rounded-full transition-colors shrink-0 mr-2 !h-auto !w-auto !border-none flex items-center justify-center"
-                                icon={
-                                  <IoCloseOutline
-                                    size={18}
-                                    className="text-gray-400"
-                                  />
-                                }
-                              />
+                                className="flex shrink-0 items-center justify-center w-8 h-8 rounded-full hover:bg-black/10 transition-colors cursor-pointer border-none bg-transparent outline-none m-0 p-0 mr-2"
+                              >
+                                <IoCloseOutline
+                                  size={20}
+                                  className="text-gray-400 hover:text-gray-600"
+                                />
+                              </button>
                             )}
                             {isSearching && (
                               <div
@@ -348,7 +288,7 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
                                 style={{
                                   width: 20,
                                   height: 20,
-                                  border: "2px solid #97e13e",
+                                  border: "2px solid #2e9e5b",
                                   borderTopColor: "transparent",
                                   borderRadius: "50%",
                                 }}
@@ -363,23 +303,15 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
                   </Flex>
 
                   {/* Desktop close button */}
-                  <Button
-                    type="text"
+                  <button
                     onClick={() => {
                       setIsSearchOpen(false);
                       clearSearch();
                     }}
-                    className="hidden lg:flex !h-auto !w-auto !border-none items-center justify-center"
-                    style={{
-                      padding: 12,
-                      borderRadius: "50%",
-                      background: "rgba(0,0,0,0.06)",
-                      transition: "all 0.3s ease",
-                    }}
-                    icon={
-                      <IoCloseOutline size={28} className="text-gray-600" />
-                    }
-                  />
+                    className="hidden lg:flex shrink-0 items-center justify-center w-12 h-12 rounded-full bg-black/5 hover:bg-black/10 transition-colors cursor-pointer border-none outline-none m-0 p-0"
+                  >
+                    <IoCloseOutline size={28} className="text-gray-600" />
+                  </button>
                 </Flex>
 
                 {/* Results Section */}
@@ -391,7 +323,7 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
                       style={{
                         marginBottom: 24,
                         paddingBottom: 16,
-                        borderBottom: "1px solid rgba(151, 225, 62, 0.15)",
+                        borderBottom: "1px solid rgba(46, 158, 91, 0.15)",
                       }}
                     >
                       <Text
@@ -409,7 +341,7 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
                         style={{
                           fontSize: 11,
                           fontWeight: 900,
-                          color: "#5a9a1a",
+                          color: "#2e9e5b",
                         }}
                       >
                         ({items.length})

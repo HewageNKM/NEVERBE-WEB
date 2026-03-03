@@ -8,6 +8,7 @@ import { Button } from "antd";
 
 interface SearchDialogProps {
   results: Product[];
+  recommendations?: Product[];
   onClick: () => void;
   containerStyle?: string;
   maxHeight?: string;
@@ -15,6 +16,7 @@ interface SearchDialogProps {
 
 const SearchDialog: React.FC<SearchDialogProps> = ({
   results,
+  recommendations = [],
   onClick,
   containerStyle,
   maxHeight = "60vh",
@@ -74,16 +76,34 @@ const SearchDialog: React.FC<SearchDialogProps> = ({
               ))}
             </ul>
           )
+        ) : recommendations.length > 0 ? (
+          /* --- ZERO RESULTS STATE WITH RECOMMENDATIONS --- */
+          <div className="flex flex-col w-full h-full p-6 animate-fade">
+            <h3 className="text-sm font-black uppercase tracking-widest text-muted mb-4">
+              Trending Now
+            </h3>
+            <div className="grid grid-cols-2 lg:grid-cols-6 gap-4 border-t border-dark pt-4">
+              {recommendations.map((result, index) => (
+                <motion.div
+                  key={result.id || index}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.05 }}
+                >
+                  <SearchResultCard
+                    item={result}
+                    onClick={onClick}
+                    variant="card"
+                  />
+                </motion.div>
+              ))}
+            </div>
+          </div>
         ) : (
-          /* --- EMPTY STATE: NEVERBE Performance Styling --- */
+          /* --- PURE EMPTY STATE --- */
           <div className="flex flex-col items-center justify-center py-20 px-6 text-center animate-fade">
-            <div className="bg-surface-3 p-6 rounded-full mb-6 relative group">
-              {/* Subtle green pulse behind the icon */}
-              <div className="absolute inset-0 bg-accent/20 rounded-full blur-xl group-hover:bg-accent/40 transition-all duration-500" />
-              <IoSearchOutline
-                className="text-accent relative z-10"
-                size={32}
-              />
+            <div className="bg-gray-100 p-6 rounded-full mb-6">
+              <IoSearchOutline className="text-gray-400" size={32} />
             </div>
 
             <h3 className="text-2xl font-display font-black uppercase tracking-tighter text-primary">
@@ -91,13 +111,15 @@ const SearchDialog: React.FC<SearchDialogProps> = ({
             </h3>
 
             <p className="text-base text-muted mt-2 font-medium max-w-[240px] leading-snug">
-              Adjust your filters or search for a better fit.
+              Adjust your search terms to find what you're looking for.
             </p>
 
             <Button
-              type="link"
+              type="primary"
+              shape="round"
+              size="large"
               onClick={onClick}
-              className="mt-8 text-xs font-black uppercase tracking-widest text-primary underline underline-offset-8 decoration-accent hover:decoration-primary transition-all p-0"
+              className="mt-8 font-bold uppercase tracking-widest bg-[#2e9e5b] hover:bg-[#26854b] border-none px-8"
             >
               Clear Search
             </Button>

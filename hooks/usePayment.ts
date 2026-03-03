@@ -70,7 +70,7 @@ interface UsePaymentReturn {
     bagItems: BagItem[],
     couponDiscount: number,
     promotionDiscount: number,
-    shippingFeeOverride?: number
+    shippingFeeOverride?: number,
   ) => PaymentTotals;
 
   // Order building
@@ -82,7 +82,7 @@ interface UsePaymentReturn {
     promotionData?: {
       appliedPromotionId: string | null;
       appliedPromotionIds: string[];
-    }
+    },
   ) => Order;
 
   // Payment processing
@@ -104,7 +104,7 @@ export const usePayment = (options: UsePaymentOptions): UsePaymentReturn => {
   const { executeRecaptcha } = useGoogleReCaptcha();
 
   const couponDiscount = useSelector(
-    (state: RootState) => state.bag.couponDiscount
+    (state: RootState) => state.bag.couponDiscount,
   );
   const couponCode = useSelector((state: RootState) => state.bag.couponCode);
 
@@ -130,7 +130,7 @@ export const usePayment = (options: UsePaymentOptions): UsePaymentReturn => {
       bagItems: BagItem[],
       couponDisc: number,
       promotionDisc: number = 0,
-      shippingFeeOverride?: number
+      shippingFeeOverride?: number,
     ): PaymentTotals => {
       const itemDiscount = calculateTotalDiscount(bagItems);
       const shippingFee =
@@ -141,7 +141,7 @@ export const usePayment = (options: UsePaymentOptions): UsePaymentReturn => {
       const subtotal = calculateSubTotal(
         bagItems,
         options.paymentFee,
-        shippingFee
+        shippingFee,
       );
       const total = subtotal - couponDisc - promotionDisc;
 
@@ -155,7 +155,7 @@ export const usePayment = (options: UsePaymentOptions): UsePaymentReturn => {
         total,
       };
     },
-    [options.paymentFee]
+    [options.paymentFee],
   );
 
   /**
@@ -170,7 +170,7 @@ export const usePayment = (options: UsePaymentOptions): UsePaymentReturn => {
       promotionData?: {
         appliedPromotionId: string | null;
         appliedPromotionIds: string[];
-      }
+      },
     ): Order => ({
       orderId,
       paymentId: "",
@@ -185,7 +185,7 @@ export const usePayment = (options: UsePaymentOptions): UsePaymentReturn => {
       transactionFeeCharge: calculateTransactionFeeCharge(
         bagItems,
         options.paymentFee,
-        totals.shippingFee
+        totals.shippingFee,
       ),
       paymentStatus: "Pending",
       status: "Processing",
@@ -200,7 +200,7 @@ export const usePayment = (options: UsePaymentOptions): UsePaymentReturn => {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     }),
-    [orderId, options, couponCode]
+    [orderId, options, couponCode],
   );
 
   /**
@@ -208,7 +208,7 @@ export const usePayment = (options: UsePaymentOptions): UsePaymentReturn => {
    */
   const submitExternalForm = (
     action: string,
-    payload: Record<string, string>
+    payload: Record<string, string>,
   ) => {
     const form = document.createElement("form");
     form.method = "POST";
@@ -247,14 +247,14 @@ export const usePayment = (options: UsePaymentOptions): UsePaymentReturn => {
       city: customer.city,
       items: `${order.items.length} Products`,
       returnUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/checkout/success/${order.orderId}`,
-      cancelUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/checkout/fail?orderId=${order.orderId}`,
-      notifyUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/ipg/payhere/notify`,
+      cancelUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/checkout`,
+      notifyUrl: `${process.env.NEXT_PUBLIC_API_URL}/ipg/payhere/notify`,
     };
 
     const payherePayload = await initiatePayHerePayment(payload);
     submitExternalForm(
       process.env.NEXT_PUBLIC_PAYHERE_URL || "",
-      payherePayload
+      payherePayload,
     );
   };
 
@@ -279,7 +279,7 @@ export const usePayment = (options: UsePaymentOptions): UsePaymentReturn => {
     const kokoPayload = await initiateKOKOPayment(payload);
     submitExternalForm(
       process.env.NEXT_PUBLIC_KOKO_REDIRECT_URL || "",
-      kokoPayload
+      kokoPayload,
     );
   };
 
@@ -360,7 +360,7 @@ export const usePayment = (options: UsePaymentOptions): UsePaymentReturn => {
         setIsProcessing(false);
       }
     },
-    [executeRecaptcha, options.paymentMethodId, dispatch]
+    [executeRecaptcha, options.paymentMethodId, dispatch],
   );
 
   /**
@@ -388,7 +388,7 @@ export const usePayment = (options: UsePaymentOptions): UsePaymentReturn => {
         setOtpState((prev) => ({ ...prev, isVerifying: false }));
       }
     },
-    [otpState.pendingOrder, executeRecaptcha, dispatch, router]
+    [otpState.pendingOrder, executeRecaptcha, dispatch, router],
   );
 
   /**
@@ -427,7 +427,7 @@ export const usePayment = (options: UsePaymentOptions): UsePaymentReturn => {
         setOtpState((prev) => ({ ...prev, isResending: false }));
       }
     },
-    [executeRecaptcha]
+    [executeRecaptcha],
   );
 
   /**

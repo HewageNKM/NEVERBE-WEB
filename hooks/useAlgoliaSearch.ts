@@ -15,7 +15,9 @@ interface UseAlgoliaSearchReturn {
   results: Product[];
   isSearching: boolean;
   showResults: boolean;
+  recommendations: Product[];
   search: (query: string) => Promise<void>;
+  fetchRecommendations: () => Promise<void>;
   clearSearch: () => void;
 }
 
@@ -24,7 +26,7 @@ interface UseAlgoliaSearchReturn {
  * Replaces duplicate search logic in Header.tsx and Menu.tsx
  */
 export function useAlgoliaSearch(
-  options: UseAlgoliaSearchOptions = {}
+  options: UseAlgoliaSearchOptions = {},
 ): UseAlgoliaSearchReturn {
   const {
     indexName = "products_index",
@@ -36,6 +38,7 @@ export function useAlgoliaSearch(
   const [results, setResults] = useState<Product[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [showResults, setShowResults] = useState(false);
+  const [recommendations, setRecommendations] = useState<Product[]>([]);
 
   const searchClient = getAlgoliaClient();
 
@@ -68,15 +71,15 @@ export function useAlgoliaSearch(
           (item: any) =>
             item.status === true &&
             item.listing === true &&
-            item.isDeleted === false
+            item.isDeleted === false,
         );
 
         // Filter out products with all deleted/inactive variants
         filteredResults = filteredResults.filter(
           (item: any) =>
             !item.variants?.every(
-              (v: ProductVariant) => v.isDeleted === true || v.status === false
-            )
+              (v: ProductVariant) => v.isDeleted === true || v.status === false,
+            ),
         );
 
         setResults(filteredResults);
@@ -88,7 +91,7 @@ export function useAlgoliaSearch(
         setIsSearching(false);
       }
     },
-    [searchClient, indexName, hitsPerPage, minQueryLength]
+    [searchClient, indexName, hitsPerPage, minQueryLength],
   );
 
   const clearSearch = useCallback(() => {
@@ -97,13 +100,39 @@ export function useAlgoliaSearch(
     setShowResults(false);
   }, []);
 
+  const fetchRecommendations = useCallback(async () => {
+    try {
+      const res = await searchClient.search({
+        requests: [
+          {
+            indexName,
+            query: "", // Empty query fetches popular hits by default if configured, or just recent products
+            hitsPerPage: 6,
+          },
+        ],
+      });
+      const hits = (res.results[0] as any)?.hits || [];
+      const filtered = hits.filter(
+        (item: any) =>
+          item.status === true &&
+          item.listing === true &&
+          item.isDeleted === false,
+      );
+      setRecommendations(filtered);
+    } catch (e) {
+      console.error("[useAlgoliaSearch] Recommend failed:", e);
+    }
+  }, [searchClient, indexName]);
+
   return {
     query,
     results,
     isSearching,
     showResults,
     search,
+    fetchRecommendations,
     clearSearch,
+    recommendations, // Exporting this explicitly from the return object
   };
 }
 

@@ -98,7 +98,7 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
             {/* STATUS & ACTIONS */}
             <div className="flex flex-wrap items-center justify-between gap-6 bg-zinc-50 p-6 rounded-4xl border border-zinc-100">
               <div className="flex items-center gap-5">
-                <div className="p-4 bg-[#97e13e] text-black rounded-2xl shadow-lg shadow-[#97e13e]/20">
+                <div className="p-4 bg-[#2e9e5b] text-black rounded-2xl shadow-lg shadow-[#2e9e5b]/20">
                   <IoCubeOutline size={24} />
                 </div>
                 <div>
@@ -111,7 +111,7 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
                     </p>
                     <Link
                       href={`/checkout/success/${orderId}`}
-                      className="text-[10px] font-black uppercase tracking-widest text-black underline underline-offset-8 decoration-[#97e13e] decoration-2 hover:decoration-black transition-all"
+                      className="text-[10px] font-black uppercase tracking-widest text-black underline underline-offset-8 decoration-[#2e9e5b] decoration-2 hover:decoration-black transition-all"
                     >
                       View Receipt
                     </Link>
@@ -177,7 +177,7 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
                             Rs. {item.price.toLocaleString()}
                           </p>
                           {item.discount > 0 && (
-                            <p className="text-[10px] font-bold text-[#97e13e] uppercase tracking-tighter">
+                            <p className="text-[10px] font-bold text-[#2e9e5b] uppercase tracking-tighter">
                               - Rs. {item.discount.toLocaleString()}
                             </p>
                           )}
@@ -194,12 +194,12 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
               <div className="space-y-10">
                 <div className="group">
                   <div className="flex items-center gap-3 mb-5">
-                    <IoLocationOutline size={20} className="text-[#97e13e]" />
+                    <IoLocationOutline size={20} className="text-[#2e9e5b]" />
                     <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-black">
                       Shipping Details
                     </h3>
                   </div>
-                  <address className="not-text-sm text-zinc-500 font-medium leading-relaxed pl-8 border-l-2 border-zinc-100 group-hover:border-[#97e13e] transition-colors">
+                  <address className="not-text-sm text-zinc-500 font-medium leading-relaxed pl-8 border-l-2 border-zinc-100 group-hover:border-[#2e9e5b] transition-colors">
                     <p className="text-black font-black uppercase tracking-tighter text-base">
                       {customer.shippingName || customer.name}
                     </p>
@@ -215,12 +215,12 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
 
                 <div className="group">
                   <div className="flex items-center gap-3 mb-5">
-                    <IoCardOutline size={20} className="text-[#97e13e]" />
+                    <IoCardOutline size={20} className="text-[#2e9e5b]" />
                     <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-black">
                       Payment Method
                     </h3>
                   </div>
-                  <div className="pl-8 border-l-2 border-zinc-100 group-hover:border-[#97e13e] transition-colors">
+                  <div className="pl-8 border-l-2 border-zinc-100 group-hover:border-[#2e9e5b] transition-colors">
                     <p className="text-sm font-bold text-black uppercase tracking-widest">
                       {paymentMethod}
                     </p>
@@ -238,7 +238,7 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
                     </span>
                   </div>
                   {totalDiscount > 0 && (
-                    <div className="flex justify-between text-[11px] font-bold uppercase tracking-widest text-[#97e13e]">
+                    <div className="flex justify-between text-[11px] font-bold uppercase tracking-widest text-[#2e9e5b]">
                       <span>Discount</span>
                       <span>- Rs. {totalDiscount.toLocaleString()}</span>
                     </div>
@@ -258,7 +258,7 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
                         Order Total
                       </span>
                       <div className="flex items-center gap-2">
-                        <IoCheckmarkCircle className="text-[#97e13e]" />
+                        <IoCheckmarkCircle className="text-[#2e9e5b]" />
                         <span className="text-[10px] font-black uppercase tracking-widest text-zinc-900">
                           Payment Verified
                         </span>

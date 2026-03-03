@@ -138,8 +138,8 @@ const SEOContent = () => {
                         padding: "4px 14px",
                         fontSize: 11,
                         fontWeight: 600,
-                        border: "1px solid rgba(151, 225, 62, 0.15)",
-                        background: "rgba(151, 225, 62, 0.05)",
+                        border: "1px solid rgba(46, 158, 91, 0.15)",
+                        background: "rgba(46, 158, 91, 0.05)",
                         color: "#1a1a1a",
                         cursor: "default",
                         transition: "all 0.3s ease",
@@ -152,7 +152,7 @@ const SEOContent = () => {
               </Flex>
 
               <Divider
-                style={{ margin: 0, borderColor: "rgba(151, 225, 62, 0.08)" }}
+                style={{ margin: 0, borderColor: "rgba(46, 158, 91, 0.08)" }}
               />
 
               <Flex vertical gap={12}>
@@ -196,7 +196,7 @@ const SEOContent = () => {
           style={{
             marginTop: 48,
             paddingTop: 32,
-            borderTop: "1px solid rgba(151, 225, 62, 0.08)",
+            borderTop: "1px solid rgba(46, 158, 91, 0.08)",
           }}
         >
           <Text
@@ -230,7 +230,7 @@ const SEOContent = () => {
                     color: "#1a1a1a",
                     transition: "color 0.3s ease",
                   }}
-                  className="hover:text-[#97e13e]!"
+                  className="hover:text-[#2e9e5b]!"
                 >
                   {link.label}
                 </Link>

@@ -14,7 +14,7 @@ const ComponentLoader = () => {
         style={{
           background: `
             radial-gradient(ellipse at 50% 50%, rgba(255, 255, 255, 0.92) 0%, rgba(248, 250, 245, 0.88) 100%),
-            radial-gradient(ellipse at 30% 30%, rgba(151, 225, 62, 0.05) 0%, transparent 60%)
+            radial-gradient(ellipse at 30% 30%, rgba(46, 158, 91, 0.05) 0%, transparent 60%)
           `,
           boxShadow: `
             inset 0 1px 0 rgba(255, 255, 255, 0.7),

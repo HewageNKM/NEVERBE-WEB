@@ -41,7 +41,7 @@ const TrendingBundles: React.FC<TrendingBundlesProps> = ({ bundles }) => {
                   fontWeight: 800,
                   textTransform: "uppercase",
                   letterSpacing: "0.2em",
-                  color: "#97e13e",
+                  color: "#2e9e5b",
                 }}
               >
                 Save More
@@ -54,13 +54,13 @@ const TrendingBundles: React.FC<TrendingBundlesProps> = ({ bundles }) => {
                   gap: 6,
                   padding: "3px 10px",
                   borderRadius: 99,
-                  background: "rgba(151,225,62,0.1)",
-                  border: "1px solid rgba(151,225,62,0.25)",
+                  background: "rgba(46, 158, 91,0.1)",
+                  border: "1px solid rgba(46, 158, 91,0.25)",
                   fontSize: 9,
                   fontWeight: 900,
                   textTransform: "uppercase" as const,
                   letterSpacing: "0.1em",
-                  color: "#97e13e",
+                  color: "#2e9e5b",
                 }}
               >
                 <span
@@ -68,7 +68,7 @@ const TrendingBundles: React.FC<TrendingBundlesProps> = ({ bundles }) => {
                     width: 6,
                     height: 6,
                     borderRadius: "50%",
-                    background: "#97e13e",
+                    background: "#2e9e5b",
                     display: "inline-block",
                   }}
                   className="pulse-green"
@@ -108,14 +108,14 @@ const TrendingBundles: React.FC<TrendingBundlesProps> = ({ bundles }) => {
               shape="circle"
               icon={<LeftOutlined />}
               size="middle"
-              className=" hover:border-[#97e13e]! hover:text-[#97e13e]!"
+              className=" hover:border-[#2e9e5b]! hover:text-[#2e9e5b]!"
               onClick={() => carouselRef.current?.prev()}
             />
             <Button
               shape="circle"
               icon={<RightOutlined />}
               size="middle"
-              className=" hover:border-[#97e13e]! hover:text-[#97e13e]!"
+              className=" hover:border-[#2e9e5b]! hover:text-[#2e9e5b]!"
               onClick={() => carouselRef.current?.next()}
             />
           </Flex>
@@ -131,7 +131,7 @@ const TrendingBundles: React.FC<TrendingBundlesProps> = ({ bundles }) => {
                 letterSpacing: "0.1em",
                 fontSize: 12,
               }}
-              className="hover:text-[#97e13e]!"
+              className="hover:text-[#2e9e5b]!"
             >
               View All
             </Button>
@@ -176,7 +176,7 @@ const TrendingBundles: React.FC<TrendingBundlesProps> = ({ bundles }) => {
             href="/collections/combos"
             className=" flex flex-col items-center justify-center w-full aspect-4/5 rounded-[24px] transition-all duration-300 group"
             style={{
-              border: "1px solid rgba(151, 225, 62, 0.15)",
+              border: "1px solid rgba(46, 158, 91, 0.15)",
             }}
           >
             <div
@@ -184,7 +184,7 @@ const TrendingBundles: React.FC<TrendingBundlesProps> = ({ bundles }) => {
                 width: 60,
                 height: 60,
                 borderRadius: "50%",
-                background: "linear-gradient(135deg, #97e13e 0%, #7bc922 100%)",
+                background: "linear-gradient(135deg, #2e9e5b 0%, #26854b 100%)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -219,7 +219,7 @@ const TrendingBundles: React.FC<TrendingBundlesProps> = ({ bundles }) => {
             size="large"
             shape="round"
             style={{
-              background: "#97e13e",
+              background: "#2e9e5b",
               color: "#fff",
               border: "none",
               fontWeight: 800,

@@ -120,7 +120,7 @@ const SizeGuideDialog: React.FC<SizeGuideDialogProps> = ({
                     {activeTab === tab && (
                       <motion.div
                         layoutId="activeTabGuide"
-                        className="absolute bottom-0 left-0 right-0 h-1 bg-accent shadow-[0_0_10px_#97e13e]"
+                        className="absolute bottom-0 left-0 right-0 h-1 bg-accent shadow-[0_0_10px_#2e9e5b]"
                       />
                     )}
                   </Button>

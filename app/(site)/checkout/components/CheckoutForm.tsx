@@ -221,12 +221,16 @@ const CheckoutForm = () => {
           phone: billingCustomer?.phone || "",
           country: "Sri Lanka",
         }}
-        className="w-full px-4 md:px-8 py-8 bg-surface"
+        className="w-full"
       >
-        <Row gutter={[32, 32]} className="w-full">
+        <Row
+          gutter={[16, 32]}
+          align="stretch"
+          className="w-full mx-auto md:gutter-[32, 32]"
+        >
           {/* --- LEFT COLUMN: FORMS --- */}
           <Col xs={24} lg={14}>
-            <Flex vertical gap={40}>
+            <Flex vertical gap={24} className="md:gap-[40px]">
               <BillingDetails
                 saveAddress={saveAddress}
                 setSaveAddress={setSaveAddress}
@@ -244,7 +248,7 @@ const CheckoutForm = () => {
 
           {/* --- RIGHT COLUMN: SUMMARY & PAYMENT --- */}
           <Col xs={24} lg={10}>
-            <div className="sticky top-10">
+            <div className="h-full">
               <PaymentDetails
                 setPaymentType={setPaymentType}
                 paymentType={paymentType || ""}
@@ -300,14 +304,21 @@ const CheckoutForm = () => {
               disabled={otpState.isVerifying}
               onChange={(e) => setOtp(e.target.value)}
               placeholder="000000"
-              className="w-full h-14 text-center text-2xl tracking-[0.5em] font-display font-black border-2 border-default bg-surface-2 rounded-xl focus:border-accent hover:border-accent outline-none transition-colors text-primary"
+              className="w-full h-14 text-center text-2xl tracking-[0.5em] font-display font-black border-2 border-gray-200 bg-gray-50 rounded-xl focus:border-[#2e9e5b] hover:border-[#2e9e5b] outline-none transition-colors text-black"
               maxLength={6}
             />
             <Button
               type="primary"
               onClick={() => handleOTPVerification(otp)}
               loading={otpState.isVerifying}
-              className="w-full h-14 bg-dark border-none text-inverse rounded-full font-display font-black uppercase tracking-widest text-xs hover:bg-accent hover:text-dark transition-all shadow-custom hover:shadow-hover"
+              className="w-full font-display font-black uppercase tracking-widest text-xs transition-all hover:scale-105 shadow-sm"
+              style={{
+                background: "#2e9e5b",
+                border: "none",
+                borderRadius: 99,
+                color: "white",
+                height: 56,
+              }}
             >
               Confirm Order
             </Button>
@@ -318,7 +329,7 @@ const CheckoutForm = () => {
                 handleResendOTP(otpState.pendingOrder!.customer.phone)
               }
               disabled={otpState.isResending || otpState.cooldown > 0}
-              className="text-xs font-black uppercase tracking-widest text-muted hover:text-accent transition-all p-0 h-auto"
+              className="text-xs font-black uppercase tracking-widest text-gray-400 hover:text-[#2e9e5b] transition-all p-0 h-auto"
             >
               {otpState.cooldown > 0
                 ? `Resend in ${otpState.cooldown}s`

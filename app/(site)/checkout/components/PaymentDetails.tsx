@@ -53,8 +53,8 @@ const BundleCard = ({ bundle }: { bundle: BundleGroup }) => {
   const netPrice = bundle.totalPrice - bundle.totalDiscount;
 
   return (
-    <div className="border border-default bg-surface rounded-xl overflow-hidden shadow-custom">
-      <div className="bg-dark text-inverse px-3 py-2 flex justify-between items-center">
+    <div className="border border-gray-200 bg-white rounded-xl overflow-hidden shadow-sm">
+      <div className="bg-gray-50 text-black px-3 py-2 flex justify-between items-center border-b border-gray-200">
         <span className="text-[9px] font-display font-black uppercase tracking-tighter">
           Bundle
         </span>
@@ -71,7 +71,7 @@ const BundleCard = ({ bundle }: { bundle: BundleGroup }) => {
                 fill
                 className="object-cover mix-blend-multiply rounded-lg"
               />
-              <span className="absolute -top-1 -left-1 bg-accent text-dark text-[7px] font-black px-1 rounded-sm">
+              <span className="absolute -top-1 -left-1 bg-[#2e9e5b] text-white text-[7px] font-black px-1 rounded-sm">
                 {idx + 1}
               </span>
             </div>
@@ -87,7 +87,7 @@ const BundleCard = ({ bundle }: { bundle: BundleGroup }) => {
         ))}
       </div>
 
-      <div className="border-t border-default px-3 py-2 flex justify-between items-center bg-surface-2">
+      <div className="border-t border-gray-200 px-3 py-2 flex justify-between items-center bg-gray-50">
         <span className="text-[9px] text-muted uppercase font-bold">
           {bundle.items.length} Items
         </span>
@@ -97,7 +97,7 @@ const BundleCard = ({ bundle }: { bundle: BundleGroup }) => {
               Rs. {bundle.totalPrice.toLocaleString()}
             </span>
           )}
-          <span className="text-xs font-display font-black text-success">
+          <span className="text-xs font-display font-black text-[#2e9e5b]">
             Rs. {netPrice.toLocaleString()}
           </span>
         </div>
@@ -196,15 +196,20 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
 
   const shipping = shippingCost;
 
-  const Divider = () => <div className="h-px bg-default w-full my-6" />;
-
   const bundleCount = bundles.length;
   const regularCount = regularItems.length;
 
   return (
     <Card
-      styles={{ body: { padding: "24px 32px" } }}
-      className="w-full border-default rounded-2xl h-fit sticky top-24 shadow-custom"
+      styles={{
+        body: {
+          padding: "clamp(8px, 2vw, 32px)" /* drastically reduced for mobile */,
+          display: "flex",
+          flexDirection: "column",
+          height: "100%",
+        },
+      }}
+      className="w-full border-gray-200 rounded-2xl h-full shadow-sm flex flex-col mx-auto"
     >
       {/* Header */}
       <Flex align="center" justify="space-between" className="mb-6">
@@ -252,7 +257,7 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
         ))}
       </Flex>
 
-      <Divider className="my-6 border-default" />
+      <Divider style={{ margin: "24px 0", borderColor: "#f0f0f0" }} />
 
       {/* Payment Selection */}
       <div className="mb-6">
@@ -272,7 +277,7 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
         )}
       </div>
 
-      <Divider className="my-6 border-default" />
+      <Divider style={{ margin: "24px 0", borderColor: "#f0f0f0" }} />
 
       {/* Coupon Section */}
       <div className="mb-6">
@@ -282,7 +287,7 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
         <CouponInput />
       </div>
 
-      <Divider className="my-6 border-default" />
+      <Divider style={{ margin: "24px 0", borderColor: "#f0f0f0" }} />
 
       {/* Financial Breakdown */}
       <Flex vertical gap={12} className="mb-6">
@@ -296,33 +301,45 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
         </Flex>
 
         {itemDiscount > 0 && (
-          <Flex justify="space-between" align="center" className="text-success">
-            <Typography.Text className="font-medium text-success">
+          <Flex
+            justify="space-between"
+            align="center"
+            className="text-[#2e9e5b] bg-[#2e9e5b]/10 py-1.5 px-3 rounded-lg -mx-3"
+          >
+            <Typography.Text className="font-bold text-[#2e9e5b]">
               Discounts
             </Typography.Text>
-            <Typography.Text className="font-bold font-mono text-success">
+            <Typography.Text className="font-bold font-mono text-[#2e9e5b]">
               - Rs. {itemDiscount.toLocaleString()}
             </Typography.Text>
           </Flex>
         )}
 
         {promotionDiscount > 0 && (
-          <Flex justify="space-between" align="center" className="text-success">
-            <Typography.Text className="font-medium text-success">
+          <Flex
+            justify="space-between"
+            align="center"
+            className="text-[#2e9e5b] bg-[#2e9e5b]/10 py-1.5 px-3 rounded-lg -mx-3"
+          >
+            <Typography.Text className="font-bold text-[#2e9e5b]">
               Promotion
             </Typography.Text>
-            <Typography.Text className="font-bold font-mono text-success">
+            <Typography.Text className="font-bold font-mono text-[#2e9e5b]">
               - Rs. {promotionDiscount.toLocaleString()}
             </Typography.Text>
           </Flex>
         )}
 
         {couponDiscount > 0 && (
-          <Flex justify="space-between" align="center" className="text-success">
-            <Typography.Text className="font-medium text-success">
+          <Flex
+            justify="space-between"
+            align="center"
+            className="text-[#2e9e5b] bg-[#2e9e5b]/10 py-1.5 px-3 rounded-lg -mx-3"
+          >
+            <Typography.Text className="font-bold text-[#2e9e5b]">
               Coupon
             </Typography.Text>
-            <Typography.Text className="font-bold font-mono text-success">
+            <Typography.Text className="font-bold font-mono text-[#2e9e5b]">
               - Rs. {couponDiscount.toLocaleString()}
             </Typography.Text>
           </Flex>
@@ -337,18 +354,22 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
           </Typography.Text>
         </Flex>
 
-        <Flex justify="space-between" align="center">
-          <Typography.Text className="text-secondary font-medium">
+        <Flex
+          justify="space-between"
+          align="center"
+          className="bg-orange-50 py-1.5 px-3 rounded-lg -mx-3"
+        >
+          <Typography.Text className="text-orange-600 font-bold">
             Handling Fee
           </Typography.Text>
-          <Typography.Text className="font-bold text-primary font-mono">
-            Rs. {fee.toFixed(2)}
+          <Typography.Text className="font-bold text-orange-600 font-mono">
+            + Rs. {fee.toFixed(2)}
           </Typography.Text>
         </Flex>
       </Flex>
 
       {/* Total Section */}
-      <div className="border-t-2 border-dark pt-4 mb-8">
+      <div className="border-t-2 border-black pt-4 mt-auto mb-8">
         <Flex justify="space-between" align="end">
           <Typography.Text className="text-sm font-black uppercase tracking-widest text-primary">
             Total Due
@@ -364,12 +385,20 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
         type="primary"
         htmlType="submit"
         disabled={bagItems.length === 0 || !paymentType}
-        className="group w-full flex items-center justify-between px-6 py-8 bg-dark border-none text-inverse rounded-full disabled:bg-surface-3 disabled:text-muted disabled:cursor-not-allowed transition-all duration-300 shadow-custom hover:shadow-hover hover:-translate-y-1 hover:bg-accent hover:text-dark"
+        style={{
+          background:
+            bagItems.length === 0 || !paymentType ? undefined : "#2e9e5b",
+          border: "none",
+          borderRadius: 99,
+          height: 64,
+          padding: "0 24px",
+        }}
+        className="group w-full flex items-center justify-between text-white transition-all duration-300 shadow-sm hover:shadow-md hover:-translate-y-1"
       >
         <span className="font-display font-black uppercase tracking-widest text-sm">
           Complete Order
         </span>
-        <div className="bg-inverse text-dark rounded-full p-1.5 transition-transform group-hover:translate-x-1 group-hover:bg-dark group-hover:text-accent">
+        <div className="bg-white text-[#2e9e5b] rounded-full p-2 transition-transform group-hover:translate-x-1">
           <IoArrowForward size={18} />
         </div>
       </Button>

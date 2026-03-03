@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 import { Button } from "antd";
-import { Logo } from "@/assets/images";
 import toast from "react-hot-toast";
 import { Order } from "@/interfaces/Order";
 
@@ -26,7 +25,7 @@ const Invoice: React.FC<InvoiceProps> = ({
   const [loading, setLoading] = useState(false);
 
   // NEVERBE Brand Colors in RGB
-  const BRAND_GREEN: [number, number, number] = [151, 225, 62]; // #97e13e
+  const BRAND_GREEN: [number, number, number] = [46, 158, 91]; // #2e9e5b
   const BRAND_DARK: [number, number, number] = [26, 26, 26]; // #1a1a1a
 
   const generateInvoice = async () => {
@@ -45,7 +44,7 @@ const Invoice: React.FC<InvoiceProps> = ({
 
       // Logo
       doc.addImage(
-        Logo.src,
+        "/logo.png",
         "PNG",
         centerX - imgWidth / 2,
         25 - imgHeight / 2,

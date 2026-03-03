@@ -14,16 +14,16 @@ const PrivacyPolicyContent = () => {
         <div className="flex flex-col md:flex-row gap-6 md:gap-12">
           {/* Section Title - Left Sticky-ish feel on Desktop */}
           <div className="md:w-1/3 shrink-0">
-            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1 block">
+            <span className="text-[10px] font-bold text-muted uppercase tracking-widest mb-1 block">
               {String(index).padStart(2, "0")}
             </span>
-            <h2 className="text-lg md:text-xl font-black uppercase tracking-tight text-black">
+            <h2 className="text-lg md:text-xl font-black uppercase tracking-tight text-primary">
               {value.title || key.replace(/([A-Z])/g, " $1")}
             </h2>
           </div>
 
           {/* Content - Right */}
-          <div className="md:w-2/3 space-y-4 text-sm md:text-base text-gray-600 font-medium leading-relaxed">
+          <div className="md:w-2/3 space-y-4 text-sm md:text-base text-secondary font-medium leading-relaxed">
             {typeof value === "string" && <p>{value}</p>}
 
             {value.description && <p>{value.description}</p>}
@@ -32,7 +32,7 @@ const PrivacyPolicyContent = () => {
               <ul className="space-y-2 mt-2">
                 {value.map((item: string, idx: number) => (
                   <li key={idx} className="flex items-start gap-3">
-                    <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-black shrink-0" />
+                    <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-primary shrink-0" />
                     <span>{item}</span>
                   </li>
                 ))}
@@ -57,7 +57,8 @@ const PrivacyPolicyContent = () => {
                           key={idx}
                           className="flex items-start gap-2 text-xs md:text-sm"
                         >
-                          <span className="text-black font-bold">›</span> {item}
+                          <span className="text-primary font-bold">›</span>{" "}
+                          {item}
                         </li>
                       ))}
                     </ul>
@@ -74,11 +75,11 @@ const PrivacyPolicyContent = () => {
     <article className="w-full">
       {/* Intro Paragraph */}
       <div className="mb-16 max-w-3xl">
-        <p className="text-lg md:text-xl font-medium text-black leading-relaxed">
+        <p className="text-lg md:text-xl font-medium text-primary leading-relaxed">
           {privacyPolicy.sections.intro}{" "}
           <a
             href={privacyPolicy.website}
-            className="text-black underline decoration-1 underline-offset-4 hover:text-gray-500 transition-colors"
+            className="text-primary underline decoration-1 underline-offset-4 decoration-accent hover:decoration-primary transition-colors"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -90,7 +91,7 @@ const PrivacyPolicyContent = () => {
       {/* Sections */}
       <div className="flex flex-col">
         {Object.entries(privacyPolicy.sections).map(([key, value], idx) =>
-          renderSection(key, value, idx)
+          renderSection(key, value, idx),
         )}
       </div>
     </article>

@@ -97,13 +97,13 @@ const Account = () => {
 
   return (
     <div className="min-h-screen bg-surface text-primary">
-      <div className="max-w-content mx-auto px-4 md:px-12 py-10 md:py-20">
+      <div className="max-w-content mx-auto px-4 lg:px-12 py-6 md:py-20">
         {/* TOP BAR */}
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-12 gap-8">
           <div className="flex items-center gap-6">
             <Link href="/" className="hover:opacity-70 transition-opacity">
               <Image
-                src={Logo}
+                src="/logo.png"
                 width={120}
                 height={40}
                 alt="NEVERBE"

@@ -55,7 +55,7 @@ const CategoryCardInner = ({ label }: { label: string }) => (
             color: "#fff",
             transition: "all 0.35s cubic-bezier(0.4,0,0.2,1)",
           }}
-          className="group-hover:!bg-[#97e13e] group-hover:!text-black group-hover:!border-transparent"
+          className="group-hover:!bg-[#2e9e5b] group-hover:!text-black group-hover:!border-transparent"
         >
           {label}
         </span>
@@ -65,7 +65,7 @@ const CategoryCardInner = ({ label }: { label: string }) => (
             width: 40,
             height: 40,
             borderRadius: "50%",
-            background: "#97e13e",
+            background: "#2e9e5b",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -90,7 +90,7 @@ const FeaturedCategories = () => {
               fontWeight: 800,
               textTransform: "uppercase",
               letterSpacing: "0.2em",
-              color: "#97e13e",
+              color: "#2e9e5b",
             }}
           >
             Collections
@@ -119,7 +119,7 @@ const FeaturedCategories = () => {
               fontSize: 12,
               transition: "color 0.3s ease",
             }}
-            className="hover:!text-[#97e13e]"
+            className="hover:!text-[#2e9e5b]"
           >
             View All <ArrowRightOutlined />
           </span>

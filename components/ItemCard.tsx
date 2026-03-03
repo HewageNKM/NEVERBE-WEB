@@ -77,7 +77,7 @@ const ItemCard = ({
               ? `${item.discount}% Off`
               : null
       }
-      color={outOfStocks ? "#1a1a1a" : "#97e13e"}
+      color={outOfStocks ? "#1a1a1a" : "#2e9e5b"}
       style={{
         padding: "0 10px",
         fontSize: "11px",
@@ -135,7 +135,7 @@ const ItemCard = ({
                     textTransform: "uppercase",
                     letterSpacing: "0.1em",
                   }}
-                  className=" hover:text-[#97e13e]! hover:border-[#97e13e]!"
+                  className=" hover:text-[#2e9e5b]! hover:border-[#2e9e5b]!"
                 >
                   Quick Look
                 </Button>
@@ -201,7 +201,7 @@ const ItemCard = ({
                   <div
                     className={`w-6 h-6 rounded-full overflow-hidden border-2 transition-all duration-200 ${
                       activeVariant?.variantId === variant.variantId
-                        ? "border-[#97e13e] shadow-sm transform scale-110 relative z-10"
+                        ? "border-[#2e9e5b] shadow-sm transform scale-110 relative z-10"
                         : "border-transparent opacity-70 hover:opacity-100"
                     }`}
                   >
@@ -213,7 +213,7 @@ const ItemCard = ({
                     />
                   </div>
                   {variantPromo && (
-                    <div className="absolute -top-1 -right-1 z-20 w-3.5 h-3.5 bg-[#97e13e] rounded-full border border-white flex items-center justify-center shadow-sm">
+                    <div className="absolute -top-1 -right-1 z-20 w-3.5 h-3.5 bg-[#2e9e5b] rounded-full border border-white flex items-center justify-center shadow-sm">
                       <span className="text-[7px] font-black text-black">
                         %
                       </span>
@@ -235,7 +235,7 @@ const ItemCard = ({
             <Text
               strong
               style={{
-                color: hasDiscount ? "#97e13e" : "inherit",
+                color: hasDiscount ? "#2e9e5b" : "inherit",
                 fontSize: "1rem",
                 letterSpacing: "-0.03em",
               }}

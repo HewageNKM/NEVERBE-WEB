@@ -169,7 +169,7 @@ const PromotionBanner: React.FC<PromotionBannerProps> = ({
                 initial={{ width: 0 }}
                 animate={{ width: `${nearestPromo.progress}%` }}
                 transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
-                className="h-full bg-accent shadow-[0_0_10px_#97e13e] -skew-x-12 origin-left scale-110"
+                className="h-full bg-accent shadow-[0_0_10px_#2e9e5b] -skew-x-12 origin-left scale-110"
               />
             </div>
           </motion.div>

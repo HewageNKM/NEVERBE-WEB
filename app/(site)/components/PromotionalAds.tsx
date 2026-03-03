@@ -44,7 +44,7 @@ const PromotionalAds: React.FC = () => {
             fontWeight: 800,
             textTransform: "uppercase",
             letterSpacing: "0.2em",
-            color: "#97e13e",
+            color: "#2e9e5b",
           }}
         >
           Limited Time
@@ -138,12 +138,12 @@ const PromotionalAds: React.FC = () => {
                             letterSpacing: "0.1em",
                             fontSize: 12,
                           }}
-                          className="group-hover:text-[#97e13e]! transition-colors"
+                          className="group-hover:text-[#2e9e5b]! transition-colors"
                         >
                           Shop Now
                         </Text>
                         <div
-                          className="bg-white/80 backdrop-blur-sm border border-[rgba(151,225,62,0.2)] flex items-center justify-center transition-all duration-300 group-hover:bg-[#97e13e]! group-hover:border-[#97e13e]! shadow-[0_4px_12px_rgba(0,0,0,0.05)]"
+                          className="bg-white/80 backdrop-blur-sm border border-[rgba(46, 158, 91,0.2)] flex items-center justify-center transition-all duration-300 group-hover:bg-[#2e9e5b]! group-hover:border-[#2e9e5b]! shadow-[0_4px_12px_rgba(0,0,0,0.05)]"
                           style={{
                             width: 32,
                             height: 32,

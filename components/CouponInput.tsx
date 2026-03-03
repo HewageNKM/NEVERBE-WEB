@@ -38,7 +38,7 @@ const CouponInput: React.FC<CouponInputProps> = ({
         particleCount: 100,
         spread: 70,
         origin: { y: 0.6 },
-        colors: ["#97e13e", "#1a1a1a", "#ffffff"], // Green, Dark, White
+        colors: ["#2e9e5b", "#1a1a1a", "#ffffff"], // Green, Dark, White
       });
     }
   }, [couponState.isApplied]);
@@ -199,7 +199,7 @@ const CouponInput: React.FC<CouponInputProps> = ({
                               100,
                             )}%`,
                           }}
-                          className="h-full bg-accent shadow-[0_0_8px_rgba(151,225,62,0.5)]"
+                          className="h-full bg-accent shadow-[0_0_8px_rgba(46, 158, 91,0.5)]"
                         />
                       </div>
                     )}

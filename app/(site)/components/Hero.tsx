@@ -48,7 +48,7 @@ const Hero = ({ slides }: { slides: Slide[] }) => {
                   height: 8,
                   borderRadius: 99,
                   background:
-                    activeSlide === i ? "#97e13e" : "rgba(255,255,255,0.35)",
+                    activeSlide === i ? "#2e9e5b" : "rgba(255,255,255,0.35)",
                   border: "none",
                   cursor: "pointer",
                   padding: 0,
@@ -78,7 +78,7 @@ const Hero = ({ slides }: { slides: Slide[] }) => {
               backdropFilter: "blur(10px)",
               transition: "all 0.3s ease",
             }}
-            className="hover:!bg-[#97e13e] hover:!text-black hover:!border-[#97e13e]"
+            className="hover:!bg-[#2e9e5b] hover:!text-black hover:!border-[#2e9e5b]"
           />
           <Button
             shape="circle"
@@ -89,7 +89,7 @@ const Hero = ({ slides }: { slides: Slide[] }) => {
               width: 48,
               height: 48,
               background: "rgba(255,255,255,0.85)",
-              border: "1px solid rgba(151,225,62,0.2)",
+              border: "1px solid rgba(46, 158, 91,0.2)",
               color: "#1a1a1a",
               display: "flex",
               alignItems: "center",
@@ -97,7 +97,7 @@ const Hero = ({ slides }: { slides: Slide[] }) => {
               backdropFilter: "blur(10px)",
               transition: "all 0.3s ease",
             }}
-            className="hover:!bg-[#97e13e] hover:!text-black hover:!border-[#97e13e]"
+            className="hover:!bg-[#2e9e5b] hover:!text-black hover:!border-[#2e9e5b]"
           />
         </div>
       </div>

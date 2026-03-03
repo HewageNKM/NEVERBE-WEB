@@ -15,7 +15,7 @@ const BillingDetails: React.FC<BillingDetailsProps> = ({
   customer,
 }) => {
   return (
-    <section className="flex flex-col items-start w-full">
+    <section className="flex flex-col items-start w-full mx-auto md:px-0 px-2">
       <Typography.Title
         level={4}
         className="uppercase tracking-tighter mb-6 text-primary"
@@ -40,7 +40,7 @@ const BillingDetails: React.FC<BillingDetailsProps> = ({
             <Input
               size="large"
               placeholder="John"
-              className="px-4 bg-surface-2 border-default rounded-xl hover:border-accent focus:border-accent text-sm font-bold text-primary"
+              className="px-4 rounded-xl text-sm font-bold"
             />
           </Form.Item>
         </Col>
@@ -60,7 +60,7 @@ const BillingDetails: React.FC<BillingDetailsProps> = ({
             <Input
               size="large"
               placeholder="Doe"
-              className="px-4 bg-surface-2 border-default rounded-xl hover:border-accent focus:border-accent text-sm font-bold text-primary"
+              className="px-4 rounded-xl text-sm font-bold"
             />
           </Form.Item>
         </Col>
@@ -78,7 +78,7 @@ const BillingDetails: React.FC<BillingDetailsProps> = ({
             <Input
               size="large"
               placeholder="House No, Street Name"
-              className="px-4 bg-surface-2 border-default rounded-xl hover:border-accent focus:border-accent text-sm font-bold text-primary"
+              className="px-4 rounded-xl text-sm font-bold"
             />
           </Form.Item>
         </Col>
@@ -96,7 +96,7 @@ const BillingDetails: React.FC<BillingDetailsProps> = ({
             <Input
               size="large"
               placeholder="Colombo"
-              className="px-4 bg-surface-2 border-default rounded-xl hover:border-accent focus:border-accent text-sm font-bold text-primary"
+              className="px-4 rounded-xl text-sm font-bold"
             />
           </Form.Item>
         </Col>
@@ -113,7 +113,7 @@ const BillingDetails: React.FC<BillingDetailsProps> = ({
             <Input
               size="large"
               placeholder="00700"
-              className="px-4 bg-surface-2 border-default rounded-xl hover:border-accent focus:border-accent text-sm font-bold text-primary"
+              className="px-4 rounded-xl text-sm font-bold"
             />
           </Form.Item>
         </Col>
@@ -134,7 +134,7 @@ const BillingDetails: React.FC<BillingDetailsProps> = ({
             <Input
               size="large"
               placeholder="john@example.com"
-              className="px-4 bg-surface-2 border-default rounded-xl hover:border-accent focus:border-accent text-sm font-bold text-primary"
+              className="px-4 rounded-xl text-sm font-bold"
             />
           </Form.Item>
         </Col>
@@ -159,7 +159,7 @@ const BillingDetails: React.FC<BillingDetailsProps> = ({
             <Input
               size="large"
               placeholder="07XXXXXXXX"
-              className="px-4 bg-surface-2 border-default rounded-xl hover:border-accent focus:border-accent text-sm font-bold text-primary"
+              className="px-4 rounded-xl text-sm font-bold"
             />
           </Form.Item>
         </Col>
@@ -177,7 +177,7 @@ const BillingDetails: React.FC<BillingDetailsProps> = ({
             <Input
               size="large"
               disabled
-              className="px-4 bg-surface-3 border-default rounded-xl text-muted font-bold cursor-not-allowed"
+              className="px-4 rounded-xl font-bold cursor-not-allowed"
             />
           </Form.Item>
         </Col>

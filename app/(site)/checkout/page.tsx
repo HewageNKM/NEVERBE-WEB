@@ -9,16 +9,16 @@ export const metadata: Metadata = {
 
 const Page = () => {
   return (
-    <main className="w-full min-h-screen bg-white">
+    <main className="w-full min-h-screen bg-white pb-20">
       {/* Simple Header for Checkout Focus */}
       <div className="w-full border-b border-gray-100 py-6 text-center">
-        <h1 className="text-2xl font-black uppercase tracking-tighter">
+        <h1 className="text-2xl font-black uppercase tracking-tighter text-[#1a1a1a]">
           Checkout
         </h1>
       </div>
       <AnonymousConversionBanner />
 
-      <div className="w-full max-w-[1440px] mx-auto">
+      <div className="w-full max-w-content mx-auto px-2 md:px-8 mt-4 md:mt-8">
         <CheckoutForm />
       </div>
     </main>

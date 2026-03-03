@@ -24,7 +24,7 @@ const ShippingDetails = ({
   };
 
   return (
-    <section className="w-full">
+    <section className="w-full mx-auto md:px-0 px-2 mt-4 md:mt-0">
       <Flex align="center" justify="space-between" className="mb-6">
         <Typography.Title
           level={4}
@@ -35,11 +35,7 @@ const ShippingDetails = ({
         </Typography.Title>
       </Flex>
 
-      <Flex
-        align="center"
-        gap={12}
-        className="mb-6 p-4 bg-surface-2 border border-default rounded-xl"
-      >
+      <Flex align="center" gap={12} className="mb-6">
         <Checkbox
           id="sameAddress"
           checked={shippingSameAsBilling}
@@ -68,7 +64,7 @@ const ShippingDetails = ({
               <Input
                 size="large"
                 onChange={handleChange}
-                className="px-4 bg-surface-2 border-default rounded-xl hover:border-accent focus:border-accent text-sm font-bold text-primary"
+                className="px-4 rounded-xl text-sm font-bold"
               />
             </Form.Item>
           </Col>
@@ -91,7 +87,7 @@ const ShippingDetails = ({
               <Input
                 size="large"
                 onChange={handleChange}
-                className="px-4 bg-surface-2 border-default rounded-xl hover:border-accent focus:border-accent text-sm font-bold text-primary"
+                className="px-4 rounded-xl text-sm font-bold"
               />
             </Form.Item>
           </Col>
@@ -111,7 +107,7 @@ const ShippingDetails = ({
               <Input
                 size="large"
                 onChange={handleChange}
-                className="px-4 bg-surface-2 border-default rounded-xl hover:border-accent focus:border-accent text-sm font-bold text-primary"
+                className="px-4 rounded-xl text-sm font-bold"
               />
             </Form.Item>
           </Col>
@@ -131,7 +127,7 @@ const ShippingDetails = ({
               <Input
                 size="large"
                 onChange={handleChange}
-                className="px-4 bg-surface-2 border-default rounded-xl hover:border-accent focus:border-accent text-sm font-bold text-primary"
+                className="px-4 rounded-xl text-sm font-bold"
               />
             </Form.Item>
           </Col>
@@ -148,7 +144,7 @@ const ShippingDetails = ({
               <Input
                 size="large"
                 onChange={handleChange}
-                className="px-4 bg-surface-2 border-default rounded-xl hover:border-accent focus:border-accent text-sm font-bold text-primary"
+                className="px-4 rounded-xl text-sm font-bold"
               />
             </Form.Item>
           </Col>

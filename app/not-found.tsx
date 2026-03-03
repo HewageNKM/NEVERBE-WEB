@@ -18,10 +18,10 @@ const NotFound = () => {
 
         {/* Message */}
         <div className="space-y-2">
-          <h2 className="text-xl md:text-2xl font-medium uppercase tracking-tight">
+          <h2 className="text-xl md:text-2xl font-medium uppercase tracking-tight text-primary">
             We can't find that page.
           </h2>
-          <p className="text-gray-500 text-sm md:text-base leading-relaxed max-w-md mx-auto">
+          <p className="text-secondary text-sm md:text-base leading-relaxed max-w-md mx-auto">
             The page you are looking for might have been removed, had its name
             changed, or is temporarily unavailable.
           </p>
@@ -31,13 +31,13 @@ const NotFound = () => {
         <div className="flex flex-col md:flex-row gap-4 justify-center pt-4">
           <Link
             href="/"
-            className="inline-flex items-center justify-center px-8 py-3 bg-black text-white text-sm font-bold uppercase tracking-wider rounded-full hover:bg-gray-800 transition-colors"
+            className="inline-flex items-center justify-center px-8 py-3 bg-[#2e9e5b] hover:bg-[#26854b] text-white text-sm font-bold uppercase tracking-wider rounded-full transition-all shadow-md hover:shadow-lg"
           >
             Return Home
           </Link>
           <Link
             href="/collections/new-arrivals"
-            className="inline-flex items-center justify-center px-8 py-3 border border-gray-300 text-black text-sm font-bold uppercase tracking-wider rounded-full hover:border-black transition-colors"
+            className="inline-flex items-center justify-center px-8 py-3 bg-[#1a1a1a] hover:bg-black text-white text-sm font-bold uppercase tracking-wider rounded-full transition-all shadow-md hover:shadow-lg"
           >
             Shop New Arrivals
           </Link>
@@ -45,11 +45,11 @@ const NotFound = () => {
       </div>
 
       {/* Footer link */}
-      <p className="absolute bottom-10 text-xs text-gray-400 font-medium uppercase tracking-wide">
+      <p className="absolute bottom-10 text-xs text-muted font-medium uppercase tracking-wide">
         Need help?{" "}
         <Link
           href="/contact"
-          className="text-black underline underline-offset-4 hover:text-gray-600"
+          className="text-primary underline underline-offset-4 decoration-accent hover:decoration-primary transition-all"
         >
           Contact Us
         </Link>

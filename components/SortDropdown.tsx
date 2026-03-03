@@ -84,7 +84,7 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
 
                   {/* Performance indicator for active selection */}
                   {isSelected && (
-                    <div className="w-1.5 h-1.5 bg-accent rounded-full shadow-[0_0_8px_#97e13e] animate-pulse" />
+                    <div className="w-1.5 h-1.5 bg-accent rounded-full shadow-[0_0_8px_#2e9e5b] animate-pulse" />
                   )}
                 </li>
               );

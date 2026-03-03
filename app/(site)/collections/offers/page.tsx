@@ -8,27 +8,35 @@ import DealsProducts from "./components/DealsProducts";
 import Image from "next/image";
 import Link from "next/link";
 import { Metadata } from "next";
-import { Breadcrumb, Typography, Divider, Button } from "antd";
+import { Button } from "antd";
 
-const { Title, Text, Paragraph } = Typography;
+const sectionLabel: React.CSSProperties = {
+  fontSize: 11,
+  fontWeight: 800,
+  textTransform: "uppercase" as const,
+  letterSpacing: "0.1em",
+  color: "#aaa",
+  display: "block",
+  marginBottom: 12,
+};
 
 export const metadata: Metadata = {
-  title: "Offers & Deals | NEVERBE Sri Lanka - Shoe Discounts",
+  title: "Exclusive Deals, Coupons & Promotions | NEVERBE Sri Lanka",
   description:
-    "Explore exclusive shoe deals, active promotions, and discount coupons at NEVERBE. Best prices on sneakers & footwear in Sri Lanka. Cash on Delivery available.",
+    "Unlock exclusive promotions, seasonal coupons and markdown deals at NEVERBE. Best discounts on sneakers & apparel in Sri Lanka. Cash on Delivery available.",
   alternates: { canonical: "https://neverbe.lk/collections/offers" },
   keywords: [
-    "shoe offers sri lanka",
-    "discount shoes",
-    "shoe deals colombo",
-    "cheap sneakers",
-    "footwear sale",
-    "coupons neverbe",
+    "shoe deals sri lanka",
+    "discount sneakers colombo",
+    "coupon codes sri lanka",
+    "neverbe promotions",
+    "footwear sale sri lanka",
+    "markdown deals shoes",
   ],
   openGraph: {
-    title: "Offers & Deals | NEVERBE Sri Lanka",
+    title: "Deals & Promotions | NEVERBE Sri Lanka",
     description:
-      "Exclusive shoe deals, promotions & discount coupons. Best prices on sneakers & footwear.",
+      "Exclusive promotions, coupons and markdown deals on sneakers & apparel in Sri Lanka.",
     url: "https://neverbe.lk/collections/offers",
     type: "website",
     siteName: "NEVERBE",
@@ -44,9 +52,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Offers & Deals | NEVERBE Sri Lanka",
-    description:
-      "Exclusive shoe deals & discount coupons. Best prices in Sri Lanka.",
+    title: "Deals & Promotions | NEVERBE",
+    description: "Exclusive coupons & markdown deals on sneakers in Sri Lanka.",
     images: ["https://neverbe.lk/deals-og.jpg"],
   },
 };
@@ -65,7 +72,7 @@ const OffersPage = async () => {
 
   let dealsList: any[] = [];
   try {
-    const dealsResult = await getDealsProducts(1, 30);
+    const dealsResult = await getDealsProducts({ page: 1, size: 30 });
     dealsList = dealsResult?.dataList || [];
   } catch (e) {
     console.error("Error fetching deal items:", e);
@@ -133,12 +140,14 @@ const OffersPage = async () => {
 
       {/* Page Header */}
       <div className="w-full max-w-content mx-auto px-4 md:px-12 pt-8 pb-6">
-        <Breadcrumb
-          style={{ marginBottom: 16 }}
-          items={[{ title: <Link href="/">Home</Link> }, { title: "Offers" }]}
-        />
-        <Title
-          level={1}
+        <nav style={{ fontSize: 12, color: "#aaa", marginBottom: 16 }}>
+          <Link href="/" style={{ color: "#aaa" }}>
+            Home
+          </Link>
+          <span style={{ margin: "0 8px" }}>/</span>
+          <span>Offers</span>
+        </nav>
+        <h1
           style={{
             fontSize: "clamp(2rem, 5vw, 3.5rem)",
             fontWeight: 900,
@@ -147,13 +156,14 @@ const OffersPage = async () => {
             lineHeight: 1,
             margin: 0,
             marginBottom: 8,
+            color: "#1a1a1a",
           }}
         >
-          Offers & Deals
-        </Title>
-        <Text style={{ color: "#888", fontSize: 14 }}>
+          Offers &amp; Deals
+        </h1>
+        <p style={{ color: "#888", fontSize: 14, margin: 0 }}>
           Exclusive campaigns, seasonal coupons &amp; markdown deals.
-        </Text>
+        </p>
       </div>
 
       <div
@@ -167,18 +177,18 @@ const OffersPage = async () => {
         {/* Active Campaigns */}
         {bannerPromotions.length > 0 && (
           <section>
-            <Title
-              level={5}
+            <p
               style={{
-                textTransform: "uppercase",
-                letterSpacing: "0.08em",
-                color: "#999",
+                fontSize: 11,
                 fontWeight: 800,
+                textTransform: "uppercase",
+                letterSpacing: "0.1em",
+                color: "#999",
                 marginBottom: 20,
               }}
             >
               Active Campaigns
-            </Title>
+            </p>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {bannerPromotions.map((promo: any) => (
                 <div
@@ -223,20 +233,20 @@ const OffersPage = async () => {
         {/* Coupons */}
         {coupons.length > 0 && (
           <section>
-            <Title
-              level={5}
+            <p
               style={{
-                textTransform: "uppercase",
-                letterSpacing: "0.08em",
-                color: "#999",
+                fontSize: 11,
                 fontWeight: 800,
+                textTransform: "uppercase",
+                letterSpacing: "0.1em",
+                color: "#999",
                 marginBottom: 20,
               }}
             >
               Available Coupons
-            </Title>
+            </p>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {coupons.map((coupon) => (
+              {coupons.map((coupon: any) => (
                 <CouponCard key={coupon.id} coupon={coupon} />
               ))}
             </div>
@@ -247,8 +257,7 @@ const OffersPage = async () => {
         <section>
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
             <div>
-              <Title
-                level={2}
+              <h2
                 style={{
                   textTransform: "uppercase",
                   letterSpacing: "-0.02em",
@@ -258,17 +267,17 @@ const OffersPage = async () => {
                 }}
               >
                 Markdown Deals
-              </Title>
-              <Text style={{ color: "#888", fontSize: 13 }}>
+              </h2>
+              <p style={{ color: "#888", fontSize: 13 }}>
                 Best prices on premium products.
-              </Text>
+              </p>
             </div>
             <Link
               href="/collections/combos"
               style={{
                 fontSize: 12,
                 fontWeight: 800,
-                color: "#5a9a1a",
+                color: "#2e9e5b",
                 textTransform: "uppercase",
                 letterSpacing: "0.06em",
                 whiteSpace: "nowrap",
@@ -292,38 +301,14 @@ const OffersPage = async () => {
         <div className="max-w-content mx-auto px-8 lg:px-12">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
             <div>
-              <Text
-                strong
-                style={{
-                  fontSize: 11,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.1em",
-                  color: "#aaa",
-                  display: "block",
-                  marginBottom: 12,
-                }}
-              >
-                Member Benefits
-              </Text>
-              <Paragraph style={{ fontSize: 13, color: "#777", margin: 0 }}>
+              <span style={sectionLabel}>Member Benefits</span>
+              <p style={{ fontSize: 13, color: "#777", margin: 0 }}>
                 Sign up to unlock early access, exclusive deals, and the best
                 prices on premium products in Sri Lanka.
-              </Paragraph>
+              </p>
             </div>
             <div>
-              <Text
-                strong
-                style={{
-                  fontSize: 11,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.1em",
-                  color: "#aaa",
-                  display: "block",
-                  marginBottom: 12,
-                }}
-              >
-                Ways to Save
-              </Text>
+              <span style={sectionLabel}>Ways to Save</span>
               <ul
                 style={{
                   fontSize: 13,
@@ -340,23 +325,11 @@ const OffersPage = async () => {
               </ul>
             </div>
             <div>
-              <Text
-                strong
-                style={{
-                  fontSize: 11,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.1em",
-                  color: "#aaa",
-                  display: "block",
-                  marginBottom: 12,
-                }}
-              >
-                Price Match Promise
-              </Text>
-              <Paragraph style={{ fontSize: 13, color: "#777", margin: 0 }}>
+              <span style={sectionLabel}>Price Match Promise</span>
+              <p style={{ fontSize: 13, color: "#777", margin: 0 }}>
                 Found a better price elsewhere? Let us know and we&apos;ll do
                 our best to match it.
-              </Paragraph>
+              </p>
             </div>
           </div>
         </div>

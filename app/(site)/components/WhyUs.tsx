@@ -75,7 +75,7 @@ const WhyUs = () => {
                 padding: "20px 16px",
                 borderRadius: 20,
                 background: "#fff",
-                border: "1px solid rgba(151, 225, 62, 0.2)",
+                border: "1px solid rgba(46, 158, 91, 0.2)",
                 position: "relative",
                 overflow: "hidden",
                 boxShadow: "0 2px 12px rgba(0,0,0,0.05)",
@@ -90,7 +90,7 @@ const WhyUs = () => {
                   fontSize: 72,
                   fontWeight: 900,
                   lineHeight: 1,
-                  color: "rgba(151, 225, 62, 0.10)",
+                  color: "rgba(46, 158, 91, 0.10)",
                   fontFamily: "var(--font-display), sans-serif",
                   pointerEvents: "none",
                   userSelect: "none",
@@ -104,15 +104,15 @@ const WhyUs = () => {
                   height: 48,
                   borderRadius: "50%",
                   background:
-                    "linear-gradient(135deg, rgba(151, 225, 62, 0.18) 0%, rgba(151, 225, 62, 0.06) 100%)",
-                  border: "1px solid rgba(151, 225, 62, 0.2)",
+                    "linear-gradient(135deg, rgba(46, 158, 91, 0.18) 0%, rgba(46, 158, 91, 0.06) 100%)",
+                  border: "1px solid rgba(46, 158, 91, 0.2)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   marginBottom: 16,
                 }}
               >
-                <item.icon size={22} style={{ color: "#97e13e" }} />
+                <item.icon size={22} style={{ color: "#2e9e5b" }} />
               </div>
               <Text
                 style={{
@@ -159,16 +159,16 @@ const WhyUs = () => {
                     padding: "28px 20px",
                     borderRadius: 20,
                     background: "#fff",
-                    border: "1px solid rgba(151, 225, 62, 0.15)",
+                    border: "1px solid rgba(46, 158, 91, 0.15)",
                     boxShadow: "0 2px 20px rgba(0,0,0,0.04)",
                     transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
-                    borderLeft: "3px solid rgba(151, 225, 62, 0.5)",
+                    borderLeft: "3px solid rgba(46, 158, 91, 0.5)",
                     cursor: "default",
                   }}
                 >
                   {/* Watermark digit */}
                   <span
-                    className="transition-all duration-500 group-hover:text-[rgba(151,225,62,0.12)]"
+                    className="transition-all duration-500 group-hover:text-[rgba(46, 158, 91,0.12)]"
                     style={{
                       position: "absolute",
                       bottom: -8,
@@ -176,7 +176,7 @@ const WhyUs = () => {
                       fontSize: 88,
                       fontWeight: 900,
                       lineHeight: 1,
-                      color: "rgba(151, 225, 62, 0.07)",
+                      color: "rgba(46, 158, 91, 0.07)",
                       fontFamily: "var(--font-display), sans-serif",
                       pointerEvents: "none",
                       userSelect: "none",
@@ -193,8 +193,8 @@ const WhyUs = () => {
                         height: 56,
                         borderRadius: "50%",
                         background:
-                          "linear-gradient(135deg, rgba(151, 225, 62, 0.2) 0%, rgba(151, 225, 62, 0.08) 100%)",
-                        border: "1px solid rgba(151, 225, 62, 0.2)",
+                          "linear-gradient(135deg, rgba(46, 158, 91, 0.2) 0%, rgba(46, 158, 91, 0.08) 100%)",
+                        border: "1px solid rgba(46, 158, 91, 0.2)",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
@@ -204,7 +204,7 @@ const WhyUs = () => {
                       <item.icon
                         size={24}
                         style={{
-                          color: "#97e13e",
+                          color: "#2e9e5b",
                           transition: "color 0.3s ease",
                         }}
                       />

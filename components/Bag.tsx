@@ -334,9 +334,11 @@ const Bag = () => {
                 Your bag is empty
               </p>
               <Button
-                type="link"
+                type="primary"
+                shape="round"
+                size="large"
                 onClick={() => dispatch(hideBag())}
-                className="mt-6 text-sm font-bold uppercase tracking-widest text-primary underline underline-offset-8 decoration-accent hover:decoration-primary transition-all p-0 h-auto"
+                className="mt-6 font-bold uppercase tracking-widest bg-[#2e9e5b] hover:bg-[#26854b] border-none px-8"
               >
                 Start Shopping
               </Button>
@@ -411,22 +413,25 @@ const Bag = () => {
             </div>
 
             <Button
-              type="text"
+              type="primary"
+              shape="round"
+              size="large"
+              style={{ height: "60px" }}
               onClick={() => {
                 dispatch(hideBag());
                 router.push("/checkout");
               }}
-              className="group w-full flex items-center justify-between px-6 py-8 bg-dark text-inverse transition-all shadow-lg hover:shadow-hover hover:-translate-y-0.5 rounded-none border-none hover:bg-dark hover:text-inverse focus:bg-dark focus:text-inverse"
+              className="group w-full flex items-center justify-between px-8 bg-[#1a1a1a] hover:bg-black border-none"
             >
-              <span className="text-base font-black uppercase tracking-widest">
+              <span className="text-sm font-black uppercase tracking-widest text-bg-secondary">
                 Checkout Now
               </span>
-              <div className="bg-accent text-primary rounded-full p-1.5 transition-transform group-hover:translate-x-2 flex items-center justify-center">
-                <IoArrowForward size={18} />
+              <div className="bg-[#2e9e5b] text-white rounded-full p-2 transition-transform group-hover:translate-x-2 flex items-center justify-center">
+                <IoArrowForward size={20} />
               </div>
             </Button>
 
-            <div className="flex items-center justify-center gap-4 opacity-60 grayscale hover:grayscale-0 transition-all">
+            <div className="flex items-center justify-center gap-6 opacity-60 grayscale hover:grayscale-0 transition-all mt-4">
               {/* Minimal placeholder for payment icons */}
               <span className="text-[10px] font-bold uppercase tracking-tighter">
                 PayHere

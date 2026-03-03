@@ -1,37 +1,39 @@
 import { Metadata } from "next";
 import { getPaginatedCombos } from "@/services/PromotionService";
-import { seoKeywords } from "@/constants";
 import Link from "next/link";
-import { Breadcrumb, Typography } from "antd";
-
-const { Title, Text, Paragraph } = Typography;
-
 import CombosGrid from "./components/CombosGrid";
 import EmptyState from "@/components/EmptyState";
+
+const sectionLabel: React.CSSProperties = {
+  fontSize: 11,
+  fontWeight: 800,
+  textTransform: "uppercase" as const,
+  letterSpacing: "0.1em",
+  color: "#aaa",
+  display: "block",
+  marginBottom: 12,
+};
 
 // OPTIMIZATION: Cache for 1 hour (ISR)
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: "Bundle Deals & Combo Offers | NEVERBE Sri Lanka",
+  title: "Bundle Deals & Combos | Buy More, Save More | NEVERBE",
   description:
-    "Shop exclusive combo deals and save big! Bundle offers, BOGO deals, and multi-buy discounts on premium sneakers in Sri Lanka. Cash on Delivery available.",
+    "Exclusive BOGO deals, multi-buy discounts and combo packs on sneakers & apparel. Save more when you bundle at NEVERBE Sri Lanka.",
   keywords: [
     "combo deals sri lanka",
-    "bundle offers",
-    "bogo shoes",
-    "buy one get one free",
-    "multi buy discount",
-    "shoe deals sri lanka",
-    ...seoKeywords,
+    "bundle shoe offers",
+    "bogo sneakers sri lanka",
+    "buy one get one free shoes",
+    "multi buy discount footwear",
+    "save on shoes sri lanka",
   ],
-  alternates: {
-    canonical: "https://neverbe.lk/collections/combos",
-  },
+  alternates: { canonical: "https://neverbe.lk/collections/combos" },
   openGraph: {
-    title: "Bundle Deals & Combo Offers | NEVERBE",
+    title: "Bundle Deals & Combos | NEVERBE Sri Lanka",
     description:
-      "Exclusive combo deals and bundle offers on premium sneakers. BOGO and multi-buy discounts.",
+      "BOGO deals and multi-buy discounts on premium sneakers. Save more when you bundle.",
     url: "https://neverbe.lk/collections/combos",
     type: "website",
     siteName: "NEVERBE",
@@ -47,8 +49,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Bundle Deals & Combo Offers | NEVERBE",
-    description: "BOGO deals & bundle discounts on sneakers in Sri Lanka.",
+    title: "Bundle Deals | NEVERBE Sri Lanka",
+    description: "BOGO & multi-buy discounts on sneakers in Sri Lanka.",
     images: ["https://neverbe.lk/logo-og.png"],
   },
   metadataBase: new URL("https://neverbe.lk"),
@@ -140,15 +142,14 @@ const CombosPage = async ({
 
       {/* Page Header */}
       <div className="w-full max-w-content mx-auto px-4 md:px-12 pt-8 pb-6">
-        <Breadcrumb
-          style={{ marginBottom: 16 }}
-          items={[
-            { title: <Link href="/">Home</Link> },
-            { title: "Bundle Deals" },
-          ]}
-        />
-        <Title
-          level={1}
+        <nav style={{ fontSize: 12, color: "#aaa", marginBottom: 16 }}>
+          <Link href="/" style={{ color: "#aaa" }}>
+            Home
+          </Link>
+          <span style={{ margin: "0 8px" }}>/</span>
+          <span>Bundle Deals</span>
+        </nav>
+        <h1
           style={{
             fontSize: "clamp(2rem, 5vw, 3.5rem)",
             fontWeight: 900,
@@ -157,14 +158,15 @@ const CombosPage = async ({
             lineHeight: 1,
             margin: 0,
             marginBottom: 8,
+            color: "#1a1a1a",
           }}
         >
           Bundle Deals
-        </Title>
-        <Text style={{ color: "#888", fontSize: 14 }}>
+        </h1>
+        <p style={{ color: "#888", fontSize: 14, margin: 0 }}>
           BOGO offers &amp; exclusive combo packs — save more when you buy
           together.
-        </Text>
+        </p>
       </div>
 
       <div className="w-full max-w-content mx-auto px-4 md:px-12 pb-20">
@@ -191,38 +193,14 @@ const CombosPage = async ({
         <div className="max-w-content mx-auto px-8 lg:px-12">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
             <div>
-              <Text
-                strong
-                style={{
-                  fontSize: 11,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.1em",
-                  color: "#aaa",
-                  display: "block",
-                  marginBottom: 12,
-                }}
-              >
-                Stack &amp; Save
-              </Text>
-              <Paragraph style={{ fontSize: 13, color: "#777", margin: 0 }}>
+              <span style={sectionLabel}>Stack &amp; Save</span>
+              <p style={{ fontSize: 13, color: "#777", margin: 0 }}>
                 Our bundle deals give you maximum value — BOGO or multi-buy, you
                 always get premium quality for less.
-              </Paragraph>
+              </p>
             </div>
             <div>
-              <Text
-                strong
-                style={{
-                  fontSize: 11,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.1em",
-                  color: "#aaa",
-                  display: "block",
-                  marginBottom: 12,
-                }}
-              >
-                Popular Bundles
-              </Text>
+              <span style={sectionLabel}>Popular Bundles</span>
               <ul
                 style={{
                   fontSize: 13,
@@ -239,23 +217,11 @@ const CombosPage = async ({
               </ul>
             </div>
             <div>
-              <Text
-                strong
-                style={{
-                  fontSize: 11,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.1em",
-                  color: "#aaa",
-                  display: "block",
-                  marginBottom: 12,
-                }}
-              >
-                Limited Time
-              </Text>
-              <Paragraph style={{ fontSize: 13, color: "#777", margin: 0 }}>
+              <span style={sectionLabel}>Limited Time</span>
+              <p style={{ fontSize: 13, color: "#777", margin: 0 }}>
                 Most bundle deals are available for a limited time only. Grab
                 your favorites before the campaign ends.
-              </Paragraph>
+              </p>
             </div>
           </div>
         </div>
