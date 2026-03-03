@@ -1,8 +1,8 @@
-import { otherRepository } from "@/repositories/OtherRepository";
+import axiosInstance from "./axiosInstance";
 
 /**
- * WebsiteService - Thin wrapper over OtherRepository
- * Delegates data access to repository layer
+ * WebsiteService - Thin wrapper over API
+ * Delegates data access to API server
  */
 
 // ============ NAVIGATION CONFIG ============
@@ -24,5 +24,12 @@ export interface NavigationConfig {
   socialLinks?: SocialMediaItem[];
 }
 
-export const getNavigationConfig = (): Promise<NavigationConfig> =>
-  otherRepository.getNavigationConfig();
+export const getNavigationConfig = async (): Promise<NavigationConfig> => {
+  try {
+    const res = await axiosInstance.get("/web/config/navigation");
+    return res.data;
+  } catch (error) {
+    console.error("Failed to fetch navigation config:", error);
+    return { mainNav: [], footerNav: [] };
+  }
+};

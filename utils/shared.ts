@@ -4,7 +4,6 @@
  * Common utility functions used across services and repositories.
  */
 
-import { Timestamp } from "firebase-admin/firestore";
 import { formatInTimeZone } from "date-fns-tz";
 
 /**
@@ -37,32 +36,6 @@ export const toSafeLocaleString = (val: any): string | null => {
 };
 
 /**
- * Check if a date range is currently active
- */
-export const isWithinDateRange = (
-  startDate: Timestamp | string | null | undefined,
-  endDate: Timestamp | string | null | undefined
-): boolean => {
-  const now = new Date();
-
-  const start = startDate
-    ? typeof (startDate as any).toDate === "function"
-      ? (startDate as Timestamp).toDate()
-      : new Date(startDate as string)
-    : null;
-
-  const end = endDate
-    ? typeof (endDate as any).toDate === "function"
-      ? (endDate as Timestamp).toDate()
-      : new Date(endDate as string)
-    : null;
-
-  if (start && now < start) return false;
-  if (end && now > end) return false;
-  return true;
-};
-
-/**
  * Format currency (LKR)
  */
 export const formatMoney = (amount: number = 0): string => {
@@ -92,7 +65,7 @@ export const generateHash = async (input: string): Promise<string> => {
  * Clear timestamps from object (for client serialization)
  */
 export const clearTimestamps = <T extends { createdAt?: any; updatedAt?: any }>(
-  data: T
+  data: T,
 ): T => ({
   ...data,
   createdAt: null,

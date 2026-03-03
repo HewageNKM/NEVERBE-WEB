@@ -12,7 +12,6 @@ import {
 } from "react-icons/io5";
 import { toSafeLocaleString } from "@/actions/utilAction";
 import Image from "next/image";
-import Invoice from "@/components/Invoice";
 import Link from "next/link";
 import { Button } from "antd";
 import { Order } from "@/interfaces/Order";
@@ -21,7 +20,6 @@ interface OrderDetailsModalProps {
   order: Order | null;
   isOpen: boolean;
   onClose: () => void;
-  onDownloadInvoice: (order: Order) => void;
 }
 
 const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
@@ -118,16 +116,13 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
                   </div>
                 </div>
               </div>
-              <Invoice
-                order={order}
+              <Link
+                href={`/checkout/success/${orderId}`}
                 className="flex items-center gap-3 px-8 py-4 bg-black text-white hover:bg-zinc-800 transition-all text-xs font-black uppercase tracking-widest rounded-full shadow-xl shadow-black/10"
-                btnText={
-                  <>
-                    <IoCloudDownloadOutline size={18} />
-                    Download PDF
-                  </>
-                }
-              />
+              >
+                <IoCloudDownloadOutline size={18} />
+                View Receipt
+              </Link>
             </div>
 
             {/* PRODUCT LIST */}

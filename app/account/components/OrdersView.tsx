@@ -25,10 +25,6 @@ const OrdersView: React.FC<OrdersViewProps> = ({ orders }) => {
     setIsModalOpen(true);
   };
 
-  const handleDownloadInvoice = (order: Order) => {
-    router.push(`/checkout/success/${order.orderId}`);
-  };
-
   return (
     <>
       <div className="space-y-8">
@@ -125,7 +121,6 @@ const OrdersView: React.FC<OrdersViewProps> = ({ orders }) => {
         order={selectedOrder}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        onDownloadInvoice={handleDownloadInvoice}
       />
     </>
   );

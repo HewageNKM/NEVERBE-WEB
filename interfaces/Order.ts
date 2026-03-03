@@ -1,4 +1,4 @@
-import { Timestamp } from "@firebase/firestore";
+// import { Timestamp } from "@firebase/firestore";
 import { Customer } from "./Customer";
 import { OrderItem } from "./BaseItem";
 
@@ -25,6 +25,6 @@ export interface Order {
   appliedPromotionId?: string;
   appliedPromotionIds?: string[]; // All stacked promotion IDs
 
-  createdAt: Timestamp | string;
-  updatedAt: Timestamp | string;
+  createdAt: string | Date;
+  updatedAt: string | Date;
 }

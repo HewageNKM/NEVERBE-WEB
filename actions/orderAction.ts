@@ -133,7 +133,7 @@ export const sendCODOrderNotifications = async (
   }
 };
 
-export const getOrderByIdForInvoice = async (orderId: string) => {
+export const getOrderById = async (orderId: string) => {
   try {
     const res = await axiosInstance.get(`/web/orders/${orderId}`);
     const data = res.data;

@@ -3,13 +3,15 @@ import React from "react";
 import { redirect, notFound } from "next/navigation";
 import SuccessPageClient from "./components/SuccessPageClient";
 import { Metadata } from "next";
-import { getOrderByIdForInvoice } from "@/actions/orderAction";
+import { getOrderById } from "@/actions/orderAction";
 
 export const metadata: Metadata = {
   title: "Order Success",
 };
 
-export default async function Page(context: { params: Promise<{ orderId: string }> }) {
+export default async function Page(context: {
+  params: Promise<{ orderId: string }>;
+}) {
   const params = await context.params;
   const orderId = params.orderId;
   console.log("orderId", orderId);
@@ -17,7 +19,7 @@ export default async function Page(context: { params: Promise<{ orderId: string 
   if (!orderId) return notFound();
 
   try {
-    const order = await getOrderByIdForInvoice(orderId);
+    const order = await getOrderById(orderId);
     if (!order) return redirect("/checkout/fail");
 
     return <SuccessPageClient order={order} expired={order.expired} />;

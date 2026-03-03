@@ -413,7 +413,7 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
         </Flex>
         <Typography.Text className="text-[9px] text-muted leading-relaxed max-w-[250px]">
           By placing this order, you agree to the Terms of Service. Please do
-          not close this window until the Invoice loads.
+          not close this window until the checkout is complete.
         </Typography.Text>
       </Flex>
     </Card>
