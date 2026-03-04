@@ -51,14 +51,16 @@ const MobileCheckoutBar = () => {
       >
         <div className="bg-dark/95 backdrop-blur-md border-t border-white/10 px-5 py-3 shadow-[0_-8px_30px_rgb(0,0,0,0.3)]">
           <div className="flex items-center justify-between gap-4 max-w-lg mx-auto">
-            {/* Total Value Info */}
+            {/* Total Value Info - with intelligent contrast logic */}
             <div className="flex flex-col">
-              <span className="text-[9px] font-bold uppercase tracking-widest text-accent/80">
+              <span className="text-[9px] font-bold uppercase tracking-widest text-accent/90">
                 Bag Total
               </span>
-              <span className="text-lg font-display font-black text-inverse tracking-tighter">
-                Rs. {Math.max(0, totalDue).toLocaleString()}
-              </span>
+              <div style={{ isolation: "isolate" }}>
+                <span className="text-lg font-display font-black text-inverse tracking-tighter mix-blend-difference">
+                  Rs. {Math.max(0, totalDue).toLocaleString()}
+                </span>
+              </div>
             </div>
 
             {/* Ultra Compact Checkout Button */}
