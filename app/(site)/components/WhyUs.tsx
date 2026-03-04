@@ -65,13 +65,13 @@ const WhyUs = () => {
       <div className="green-separator mb-12" />
 
       <div className="max-w-content mx-auto px-4 md:px-8">
-        {/* Mobile: horizontal scroll row */}
+        {/* Mobile: Grid Layout (Left Justified) */}
         <div className="block md:hidden">
-          <div className="flex gap-4 overflow-x-auto pb-4 hide-scrollbar snap-x snap-mandatory">
+          <div className="grid grid-cols-2 gap-4">
             {benefits.map((item, index) => (
               <div
                 key={index}
-                className="snap-start shrink-0 w-[68vw] max-w-[260px] group"
+                className="w-full group"
                 style={{
                   padding: "20px 16px",
                   borderRadius: 20,
@@ -80,6 +80,10 @@ const WhyUs = () => {
                   position: "relative",
                   overflow: "hidden",
                   boxShadow: "0 2px 12px rgba(0,0,0,0.05)",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  height: "100%",
                 }}
               >
                 {/* Watermark digit */}
