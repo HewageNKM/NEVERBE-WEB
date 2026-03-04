@@ -15,6 +15,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "antd";
 import { Order } from "@/interfaces/Order";
+import { BusinessInfo } from "@/config/BusinessInfo";
+
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 
@@ -61,12 +63,15 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
     // 1. Header & Branding
     doc.setFont("helvetica", "bold");
     doc.setFontSize(22);
-    doc.text("NEVERBE", 14, 20);
+    doc.text(BusinessInfo.name, 14, 20);
 
     doc.setFontSize(10);
     doc.setFont("helvetica", "normal");
     doc.setTextColor(100);
-    doc.text("info@neverbe.lk | www.neverbe.lk", 14, 26);
+    doc.text(BusinessInfo.legalName, 14, 26);
+    doc.text(`${BusinessInfo.addressLine1}, ${BusinessInfo.city}`, 14, 31);
+    doc.text(`${BusinessInfo.email} | ${BusinessInfo.website}`, 14, 36);
+    doc.text(`Tel: ${BusinessInfo.phone}`, 14, 41);
 
     doc.setFont("helvetica", "bold");
     doc.setFontSize(16);
@@ -76,19 +81,26 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
     doc.setFontSize(10);
     doc.setFont("helvetica", "normal");
     doc.text(`Order ID: #${orderId}`, 150, 26, { align: "right" });
-    doc.text(`Date: ${toSafeLocaleString(createdAt)}`, 150, 32, {
+    doc.text(`Date: ${toSafeLocaleString(createdAt)}`, 150, 31, {
       align: "right",
     });
-    doc.text(`Status: ${status}`, 150, 38, { align: "right" });
+    doc.text(`Status: ${status}`, 150, 36, { align: "right" });
 
     // 2. Customer & Shipping details
     doc.setFont("helvetica", "bold");
-    doc.text("Billed To:", 14, 45);
+    doc.text("Billed To:", 14, 52);
     doc.setFont("helvetica", "normal");
-    doc.text(customer.shippingName || customer.name, 14, 51);
-    doc.text(customer.shippingAddress || customer.address, 14, 57);
-    doc.text(customer.shippingCity || customer.city, 14, 63);
-    doc.text(`Phone: +${customer.shippingPhone || customer.phone}`, 14, 69);
+    doc.text(customer.name, 14, 57);
+    doc.text(customer.email || "", 14, 62);
+    doc.text(`Phone: +${customer.phone}`, 14, 67);
+
+    doc.setFont("helvetica", "bold");
+    doc.text("Shipped To:", 100, 52);
+    doc.setFont("helvetica", "normal");
+    doc.text(customer.shippingName || customer.name, 100, 57);
+    doc.text(customer.shippingAddress || customer.address, 100, 62);
+    doc.text(customer.shippingCity || customer.city, 100, 67);
+    doc.text(`Phone: +${customer.shippingPhone || customer.phone}`, 100, 72);
 
     // 3. Items Table
     const tableColumn = [
