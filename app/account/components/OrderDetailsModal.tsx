@@ -15,6 +15,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "antd";
 import { Order } from "@/interfaces/Order";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 
 interface OrderDetailsModalProps {
   order: Order | null;
@@ -52,6 +54,113 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
   );
   const totalDiscount = itemsDiscount + (discount || 0);
   const total = subtotal - totalDiscount + (shippingFee || 0) + (fee || 0);
+
+  const handleDownloadInvoice = () => {
+    const doc = new jsPDF();
+
+    // 1. Header & Branding
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(22);
+    doc.text("NEVERBE", 14, 20);
+
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(100);
+    doc.text("info@neverbe.lk | www.neverbe.lk", 14, 26);
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(16);
+    doc.setTextColor(0);
+    doc.text("INVOICE", 150, 20, { align: "right" });
+
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    doc.text(`Order ID: #${orderId}`, 150, 26, { align: "right" });
+    doc.text(`Date: ${toSafeLocaleString(createdAt)}`, 150, 32, {
+      align: "right",
+    });
+    doc.text(`Status: ${status}`, 150, 38, { align: "right" });
+
+    // 2. Customer & Shipping details
+    doc.setFont("helvetica", "bold");
+    doc.text("Billed To:", 14, 45);
+    doc.setFont("helvetica", "normal");
+    doc.text(customer.shippingName || customer.name, 14, 51);
+    doc.text(customer.shippingAddress || customer.address, 14, 57);
+    doc.text(customer.shippingCity || customer.city, 14, 63);
+    doc.text(`Phone: +${customer.shippingPhone || customer.phone}`, 14, 69);
+
+    // 3. Items Table
+    const tableColumn = [
+      "Item Description",
+      "Size",
+      "Qty",
+      "Unit Price",
+      "Discount",
+      "Total",
+    ];
+    const tableRows = items.map((item) => [
+      item.name,
+      item.size || "-",
+      item.quantity.toString(),
+      `Rs. ${item.price.toLocaleString()}`,
+      `Rs. ${(item.discount || 0).toLocaleString()}`,
+      `Rs. ${(item.price * item.quantity - (item.discount || 0)).toLocaleString()}`,
+    ]);
+
+    (doc as any).autoTable({
+      head: [tableColumn],
+      body: tableRows,
+      startY: 80,
+      theme: "striped",
+      headStyles: { fillColor: [46, 158, 91] }, // NEVERBE green
+      styles: { fontSize: 9 },
+    });
+
+    const finalY = (doc as any).lastAutoTable.finalY + 10;
+
+    // 4. Summary Totals
+    doc.setFontSize(10);
+    doc.text("Subtotal:", 130, finalY);
+    doc.text(`Rs. ${subtotal.toLocaleString()}`, 180, finalY, {
+      align: "right",
+    });
+
+    if (totalDiscount > 0) {
+      doc.setTextColor(46, 158, 91);
+      doc.text("Discount:", 130, finalY + 6);
+      doc.text(`- Rs. ${totalDiscount.toLocaleString()}`, 180, finalY + 6, {
+        align: "right",
+      });
+      doc.setTextColor(0);
+    }
+
+    doc.text("Shipping:", 130, finalY + (totalDiscount > 0 ? 12 : 6));
+    doc.text(
+      `Rs. ${(shippingFee || 0).toLocaleString()}`,
+      180,
+      finalY + (totalDiscount > 0 ? 12 : 6),
+      { align: "right" },
+    );
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(12);
+    const finalTotalY = finalY + (totalDiscount > 0 ? 20 : 14);
+    doc.text("Total:", 130, finalTotalY);
+    doc.text(`Rs. ${total.toLocaleString()}`, 180, finalTotalY, {
+      align: "right",
+    });
+
+    // 5. Footer
+    doc.setFont("helvetica", "italic");
+    doc.setFontSize(9);
+    doc.setTextColor(150);
+    doc.text("Thank you for shopping with NEVERBE!", 105, 280, {
+      align: "center",
+    });
+
+    doc.save(`Neverbe-Invoice-${orderId}.pdf`);
+  };
 
   return (
     <AnimatePresence>
@@ -116,13 +225,21 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
                   </div>
                 </div>
               </div>
-              <Link
-                href={`/checkout/success/${orderId}`}
-                className="flex items-center gap-3 px-8 py-4 bg-black text-white hover:bg-zinc-800 transition-all text-xs font-black uppercase tracking-widest rounded-full shadow-xl shadow-black/10"
-              >
-                <IoCloudDownloadOutline size={18} />
-                View Receipt
-              </Link>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={handleDownloadInvoice}
+                  className="flex items-center gap-2 px-6 py-4 bg-white text-black border border-zinc-200 hover:border-black transition-all text-xs font-black uppercase tracking-widest rounded-full shadow-sm"
+                >
+                  <IoCloudDownloadOutline size={18} />
+                  Download Invoice
+                </button>
+                <Link
+                  href={`/checkout/success/${orderId}`}
+                  className="flex items-center gap-3 px-8 py-4 bg-black text-white hover:bg-zinc-800 transition-all text-xs font-black uppercase tracking-widest rounded-full shadow-xl shadow-black/10"
+                >
+                  View Receipt
+                </Link>
+              </div>
             </div>
 
             {/* PRODUCT LIST */}
