@@ -31,7 +31,7 @@ const OrdersView: React.FC<OrdersViewProps> = ({ orders }) => {
       <div className="space-y-8">
         {/* Header */}
         <div className="flex flex-col gap-1 border-b border-default pb-6">
-          <Text className="block text-[10px] font-black uppercase tracking-[0.3em] text-accent">
+          <Text className="block text-[10px] font-black uppercase tracking-[0.3em] text-[#2e9e5b]">
             Purchases
           </Text>
           <Title
