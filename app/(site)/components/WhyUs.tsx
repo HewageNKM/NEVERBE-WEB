@@ -117,7 +117,7 @@ const WhyUs = () => {
                     marginBottom: 16,
                   }}
                 >
-                  <item.icon size={22} style={{ color: "#2e9e5b" }} />
+                  <item.icon size={22} style={{ color: "var(--color-accent)" }} />
                 </div>
                 <Text
                   style={{
@@ -211,7 +211,7 @@ const WhyUs = () => {
                         <item.icon
                           size={24}
                           style={{
-                            color: "#2e9e5b",
+                            color: "var(--color-accent)",
                             transition: "color 0.3s ease",
                           }}
                         />

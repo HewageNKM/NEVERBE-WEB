@@ -1,6 +1,4 @@
-import { firestore } from "firebase-admin";
-import Timestamp = firestore.Timestamp;
-import { ProductVariantTarget } from "./Promotion";
+import { ProductVariantTarget, Timestamp } from "./Promotion";
 
 export interface Coupon {
   id: string;

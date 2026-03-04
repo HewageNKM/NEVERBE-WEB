@@ -65,7 +65,7 @@ const ProfileOverview: React.FC<ProfileOverviewProps> = ({
           <motion.div whileHover={{ y: -4 }}>
             <Card
               bordered={false}
-              className="bg-white flex flex-col justify-between min-h-[280px] rounded-2xl border border-default hover:border-[#2e9e5b] transition-all duration-300 group relative overflow-hidden h-full shadow-none hover:shadow-none"
+              className="bg-white flex flex-col justify-between min-h-[280px] rounded-2xl border border-default hover:border-accent transition-all duration-300 group relative overflow-hidden h-full shadow-none hover:shadow-none"
               bodyStyle={{
                 padding: "32px",
                 height: "100%",
@@ -79,7 +79,7 @@ const ProfileOverview: React.FC<ProfileOverviewProps> = ({
               </div>
 
               <div className="relative z-10 mb-6">
-                <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-[#2e9e5b] mb-4 border border-default">
+                <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-accent mb-4 border border-default">
                   <IoCubeOutline size={24} />
                 </div>
                 <Title
@@ -96,7 +96,7 @@ const ProfileOverview: React.FC<ProfileOverviewProps> = ({
               <Button
                 type="primary"
                 onClick={() => setActiveTab("orders")}
-                className="group relative z-10 self-start flex items-center gap-2 bg-[#2e9e5b] text-white px-6 py-3 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-[#26854b] shadow-md hover:shadow-lg transition-all border-none h-auto active:scale-[0.98]"
+                className="group relative z-10 self-start flex items-center gap-2 bg-accent text-white px-6 py-3 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-accent-hover shadow-md hover:shadow-lg transition-all border-none h-auto active:scale-[0.98]"
               >
                 View Orders ({ordersCount})
                 <IoChevronForward className="group-hover:translate-x-1 transition-transform" />
@@ -110,7 +110,7 @@ const ProfileOverview: React.FC<ProfileOverviewProps> = ({
           <motion.div whileHover={{ y: -4 }}>
             <Card
               bordered={false}
-              className="bg-white flex flex-col justify-between min-h-[280px] rounded-2xl border border-default hover:border-[#2e9e5b] transition-all duration-300 group relative overflow-hidden h-full shadow-none hover:shadow-none"
+              className="bg-white flex flex-col justify-between min-h-[280px] rounded-2xl border border-default hover:border-accent transition-all duration-300 group relative overflow-hidden h-full shadow-none hover:shadow-none"
               bodyStyle={{
                 padding: "32px",
                 height: "100%",
@@ -124,7 +124,7 @@ const ProfileOverview: React.FC<ProfileOverviewProps> = ({
               </div>
 
               <div className="relative z-10 mb-6">
-                <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-[#2e9e5b] mb-4 border border-default">
+                <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-accent mb-4 border border-default">
                   <IoSettingsOutline size={24} />
                 </div>
                 <Title
@@ -141,7 +141,7 @@ const ProfileOverview: React.FC<ProfileOverviewProps> = ({
               <Button
                 type="primary"
                 onClick={() => setActiveTab("details")}
-                className="group relative z-10 self-start flex items-center gap-2 bg-[#2e9e5b] text-white px-6 py-3 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-[#26854b] shadow-md hover:shadow-lg transition-all border-none h-auto active:scale-[0.98]"
+                className="group relative z-10 self-start flex items-center gap-2 bg-accent text-white px-6 py-3 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-accent-hover shadow-md hover:shadow-lg transition-all border-none h-auto active:scale-[0.98]"
               >
                 Manage Settings
                 <IoChevronForward className="group-hover:translate-x-1 transition-transform" />

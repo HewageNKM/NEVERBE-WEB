@@ -32,7 +32,7 @@ const PageLoader = () => {
           <ConfigProvider
             theme={{
               token: {
-                colorPrimary: "#2e9e5b",
+                colorPrimary: "var(--color-accent)",
               },
             }}
           >

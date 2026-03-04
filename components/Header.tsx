@@ -83,7 +83,7 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
         <Flex
           justify="space-between"
           align="center"
-          className="max-w-content mx-auto px-4 lg:px-12 h-[64px] lg:h-[76px]"
+          className="max-w-content w-full mx-auto px-4 lg:px-12 h-[64px] lg:h-[76px]"
         >
           {/* LOGO */}
           <Link href="/" className="shrink-0">
@@ -103,13 +103,14 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
                 <li key={item.title}>
                   <Link
                     href={item.link}
-                    className="relative pb-2 text-[13px] font-bold uppercase tracking-tight text-gray-700 hover:text-[#2e9e5b] transition-colors group"
+                    className="relative pb-2 text-[13px] font-bold uppercase tracking-tight text-gray-700 hover:text-accent transition-colors group"
                   >
                     {item.title}
                     <span
                       className="absolute bottom-0 left-0 w-0 h-[3px] transition-all duration-300 group-hover:w-full"
                       style={{
-                        background: "linear-gradient(90deg, #2e9e5b, #26854b)",
+                        background:
+                          "linear-gradient(90deg, var(--color-accent), var(--color-accent-hover))",
                         borderRadius: 99,
                       }}
                     />
@@ -127,7 +128,7 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
             >
               <IoSearchOutline
                 size={24}
-                className="text-gray-700 group-hover:text-[#2e9e5b] transition-colors"
+                className="text-gray-700 group-hover:text-accent transition-colors"
               />
             </button>
 
@@ -137,7 +138,7 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
             >
               <IoPersonOutline
                 size={24}
-                className="text-gray-700 group-hover:text-[#2e9e5b] transition-colors"
+                className="text-gray-700 group-hover:text-accent transition-colors"
               />
             </Link>
 
@@ -147,7 +148,7 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
             >
               <IoHeartOutline
                 size={24}
-                className="text-gray-700 group-hover:text-[#2e9e5b] transition-colors"
+                className="text-gray-700 group-hover:text-accent transition-colors"
               />
             </Link>
 
@@ -158,13 +159,13 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
               <Badge
                 count={bagItems.length}
                 offset={[-2, 6]}
-                color="#2e9e5b"
+                color="var(--color-accent)"
                 size="small"
                 style={{ color: "#fff", fontWeight: 800 }}
               >
                 <IoBagHandleOutline
                   size={24}
-                  className="text-gray-700 group-hover:text-[#2e9e5b] transition-colors"
+                  className="text-gray-700 group-hover:text-accent transition-colors"
                 />
               </Badge>
             </button>
@@ -176,7 +177,7 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
               >
                 <IoMenuOutline
                   size={28}
-                  className="text-gray-800 group-hover:text-[#2e9e5b] transition-colors"
+                  className="text-gray-800 group-hover:text-accent transition-colors"
                 />
               </button>
             </div>
@@ -237,8 +238,8 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
                           Input: {
                             colorBgContainer: "#fff",
                             colorBorder: "rgba(46, 158, 91, 0.3)",
-                            hoverBorderColor: "#2e9e5b",
-                            activeBorderColor: "#2e9e5b",
+                            hoverBorderColor: "var(--color-accent)",
+                            activeBorderColor: "var(--color-accent)",
                             activeShadow: "0 0 0 3px rgba(46, 158, 91, 0.12)",
                             borderRadius: 99,
                             colorText: "#1a1a1a",
@@ -263,7 +264,7 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
                           <IoSearchOutline
                             size={20}
                             style={{
-                              color: "#2e9e5b",
+                              color: "var(--color-accent)",
                               marginRight: 8,
                               flexShrink: 0,
                             }}
@@ -288,7 +289,7 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
                                 style={{
                                   width: 20,
                                   height: 20,
-                                  border: "2px solid #2e9e5b",
+                                  border: "2px solid var(--color-accent)",
                                   borderTopColor: "transparent",
                                   borderRadius: "50%",
                                 }}
@@ -341,7 +342,7 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
                         style={{
                           fontSize: 11,
                           fontWeight: 900,
-                          color: "#2e9e5b",
+                          color: "var(--color-accent)",
                         }}
                       >
                         ({items.length})

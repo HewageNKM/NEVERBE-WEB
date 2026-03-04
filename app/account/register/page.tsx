@@ -136,7 +136,7 @@ const RegisterPage = () => {
                 <Input
                   size="large"
                   placeholder="First Name"
-                  className="w-full bg-white hover:bg-zinc-50 focus:bg-white border-default focus:border-[#2e9e5b] px-4 py-3 text-sm font-bold rounded-xl transition-all"
+                  className="w-full bg-white hover:bg-zinc-50 focus:bg-white border-default focus:border-accent px-4 py-3 text-sm font-bold rounded-xl transition-all"
                 />
               </Form.Item>
             </Col>
@@ -149,7 +149,7 @@ const RegisterPage = () => {
                 <Input
                   size="large"
                   placeholder="Last Name"
-                  className="w-full bg-white hover:bg-zinc-50 focus:bg-white border-default focus:border-[#2e9e5b] px-4 py-3 text-sm font-bold rounded-xl transition-all"
+                  className="w-full bg-white hover:bg-zinc-50 focus:bg-white border-default focus:border-accent px-4 py-3 text-sm font-bold rounded-xl transition-all"
                 />
               </Form.Item>
             </Col>
@@ -166,7 +166,7 @@ const RegisterPage = () => {
             <Input
               size="large"
               placeholder="Email Address"
-              className="w-full bg-white hover:bg-zinc-50 focus:bg-white border-default focus:border-[#2e9e5b] px-4 py-3 text-sm font-bold rounded-xl transition-all"
+              className="w-full bg-white hover:bg-zinc-50 focus:bg-white border-default focus:border-accent px-4 py-3 text-sm font-bold rounded-xl transition-all"
             />
           </Form.Item>
 
@@ -181,7 +181,7 @@ const RegisterPage = () => {
             <Input.Password
               size="large"
               placeholder="Password (Min. 6 Characters)"
-              className="w-full bg-white hover:bg-zinc-50 focus:bg-white border-default focus:border-[#2e9e5b] px-4 py-3 text-sm font-bold rounded-xl transition-all"
+              className="w-full bg-white hover:bg-zinc-50 focus:bg-white border-default focus:border-accent px-4 py-3 text-sm font-bold rounded-xl transition-all"
             />
           </Form.Item>
 
@@ -192,7 +192,7 @@ const RegisterPage = () => {
             type="primary"
             htmlType="submit"
             disabled={loading}
-            className="group w-full h-auto bg-[#2e9e5b] text-white py-4 rounded-full font-display font-black uppercase tracking-widest text-xs flex items-center justify-center gap-3 transition-all hover:bg-[#26854b] shadow-md hover:shadow-lg active:scale-[0.98] disabled:opacity-50 mt-4 border-none"
+            className="group w-full h-auto bg-accent text-white py-4 rounded-full font-display font-black uppercase tracking-widest text-xs flex items-center justify-center gap-3 transition-all hover:bg-accent-hover shadow-md hover:shadow-lg active:scale-[0.98] disabled:opacity-50 mt-4 border-none"
           >
             {loading ? "Creating Profile..." : "Join Now"}
             <IoArrowForwardOutline
@@ -229,7 +229,7 @@ const RegisterPage = () => {
               href={`/account/login${
                 redirectUrl !== "/account" ? `?redirect=${redirectUrl}` : ""
               }`}
-              className="text-primary font-black underline underline-offset-8 decoration-[#2e9e5b] decoration-4 hover:decoration-primary transition-all ml-1"
+              className="text-primary font-black underline underline-offset-8 decoration-accent decoration-4 hover:decoration-primary transition-all ml-1"
             >
               Sign In.
             </Link>

@@ -46,7 +46,7 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({
     return (
       <Badge.Ribbon
         text={ribbonText}
-        color={outOfStock ? "#1a1a1a" : "#2e9e5b"}
+        color={outOfStock ? "#1a1a1a" : "var(--color-accent)"}
         style={{
           padding: "0 10px",
           fontSize: "11px",
@@ -122,7 +122,7 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({
               <Text
                 strong
                 style={{
-                  color: hasDiscount ? "#2e9e5b" : "inherit",
+                  color: hasDiscount ? "var(--color-accent)" : "inherit",
                   fontSize: "1rem",
                   letterSpacing: "-0.03em",
                 }}
@@ -200,7 +200,7 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({
           <Text
             strong
             style={{
-              color: hasDiscount ? "#2e9e5b" : "inherit",
+              color: hasDiscount ? "var(--color-accent)" : "inherit",
               fontSize: "0.9rem",
               letterSpacing: "-0.03em",
             }}

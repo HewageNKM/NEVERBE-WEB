@@ -38,7 +38,7 @@ const CouponInput: React.FC<CouponInputProps> = ({
         particleCount: 100,
         spread: 70,
         origin: { y: 0.6 },
-        colors: ["#2e9e5b", "#1a1a1a", "#ffffff"], // Green, Dark, White
+        colors: ["var(--color-accent)", "#1a1a1a", "#ffffff"], // Green, Dark, White
       });
     }
   }, [couponState.isApplied]);

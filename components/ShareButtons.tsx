@@ -47,7 +47,7 @@ const ShareButtons: React.FC<ShareButtonsProps> = ({
       toast.success("Blueprint link copied!", {
         style: {
           background: "#1a1a1a",
-          color: "#2e9e5b",
+          color: "var(--color-accent)",
           fontWeight: "bold",
           fontSize: "12px",
           textTransform: "uppercase",

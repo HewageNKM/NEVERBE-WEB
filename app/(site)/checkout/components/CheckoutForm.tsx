@@ -320,7 +320,7 @@ const CheckoutForm = () => {
               disabled={otpState.isVerifying}
               onChange={(e) => setOtp(e.target.value)}
               placeholder="000000"
-              className="w-full h-14 text-center text-2xl tracking-[0.5em] font-display font-black border-2 border-gray-200 bg-gray-50 rounded-xl focus:border-[#2e9e5b] hover:border-[#2e9e5b] outline-none transition-colors text-black"
+              className="w-full h-14 text-center text-2xl tracking-[0.5em] font-display font-black border-2 border-gray-200 bg-gray-50 rounded-xl focus:border-accent hover:border-accent outline-none transition-colors text-black"
               maxLength={6}
             />
             <Button
@@ -329,7 +329,7 @@ const CheckoutForm = () => {
               loading={otpState.isVerifying}
               className="w-full font-display font-black uppercase tracking-widest text-xs transition-all hover:scale-105 shadow-sm"
               style={{
-                background: "#2e9e5b",
+                background: "var(--color-accent)",
                 border: "none",
                 borderRadius: 99,
                 color: "white",
@@ -345,7 +345,7 @@ const CheckoutForm = () => {
                 handleResendOTP(otpState.pendingOrder!.customer.phone)
               }
               disabled={otpState.isResending || otpState.cooldown > 0}
-              className="text-xs font-black uppercase tracking-widest text-gray-400 hover:text-[#2e9e5b] transition-all p-0 h-auto"
+              className="text-xs font-black uppercase tracking-widest text-gray-400 hover:text-accent transition-all p-0 h-auto"
             >
               {otpState.cooldown > 0
                 ? `Resend in ${otpState.cooldown}s`

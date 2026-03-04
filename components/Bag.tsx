@@ -341,7 +341,7 @@ const Bag = () => {
                 shape="round"
                 size="large"
                 onClick={() => dispatch(hideBag())}
-                className="mt-6 font-bold uppercase tracking-widest bg-[#2e9e5b] hover:bg-[#26854b] border-none px-8"
+                className="mt-6 font-bold uppercase tracking-widest bg-accent hover:bg-accent-hover border-none px-8"
               >
                 Start Shopping
               </Button>
@@ -429,7 +429,7 @@ const Bag = () => {
               <span className="text-sm font-black uppercase tracking-widest text-bg-secondary">
                 Checkout Now
               </span>
-              <div className="bg-[#2e9e5b] text-white rounded-full p-2 transition-transform group-hover:translate-x-2 flex items-center justify-center">
+              <div className="bg-accent text-white rounded-full p-2 transition-transform group-hover:translate-x-2 flex items-center justify-center">
                 <IoArrowForward size={20} />
               </div>
             </Button>

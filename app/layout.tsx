@@ -200,12 +200,12 @@ export default function RootLayout({
               <ConfigProvider
                 theme={{
                   token: {
-                    colorPrimary: "#2e9e5b",
-                    colorLink: "#2e9e5b",
-                    colorLinkHover: "#2e9e5b",
-                    colorLinkActive: "#26854b",
-                    colorInfo: "#2e9e5b",
-                    colorSuccess: "#2e9e5b",
+                    colorPrimary: "var(--color-accent)",
+                    colorLink: "var(--color-accent)",
+                    colorLinkHover: "var(--color-accent)",
+                    colorLinkActive: "var(--color-accent-hover)",
+                    colorInfo: "var(--color-accent)",
+                    colorSuccess: "var(--color-accent)",
                     fontFamily: "var(--font-inter)",
                     borderRadius: 12,
                     colorBgLayout: "#f8faf5",
@@ -223,8 +223,8 @@ export default function RootLayout({
                       controlHeight: 44,
                       controlHeightLG: 56,
                       fontWeight: 700,
-                      colorPrimary: "#2e9e5b",
-                      colorPrimaryHover: "#26854b",
+                      colorPrimary: "var(--color-accent)",
+                      colorPrimaryHover: "var(--color-accent-hover)",
                       primaryColor: "#ffffff",
                     },
                     Carousel: {
@@ -234,14 +234,14 @@ export default function RootLayout({
                     },
                     Input: {
                       borderRadius: 99,
-                      colorPrimary: "#2e9e5b",
-                      colorPrimaryHover: "#2e9e5b",
-                      activeBorderColor: "#2e9e5b",
-                      hoverBorderColor: "#2e9e5b",
+                      colorPrimary: "var(--color-accent)",
+                      colorPrimaryHover: "var(--color-accent)",
+                      activeBorderColor: "var(--color-accent)",
+                      hoverBorderColor: "var(--color-accent)",
                     },
                     Select: {
                       borderRadius: 99,
-                      colorPrimary: "#2e9e5b",
+                      colorPrimary: "var(--color-accent)",
                     },
                     Tag: {
                       borderRadiusSM: 99,
@@ -253,7 +253,7 @@ export default function RootLayout({
                       borderRadius: 32,
                     },
                     Badge: {
-                      colorPrimary: "#2e9e5b",
+                      colorPrimary: "var(--color-accent)",
                     },
                   },
                 }}

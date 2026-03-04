@@ -102,7 +102,7 @@ const AuthPage = () => {
               <Input
                 size="large"
                 placeholder="Email Address"
-                className="w-full bg-white hover:bg-zinc-50 focus:bg-white border-default focus:border-[#2e9e5b] px-4 py-3 text-sm font-bold rounded-xl transition-all"
+                className="w-full bg-white hover:bg-zinc-50 focus:bg-white border-default focus:border-accent px-4 py-3 text-sm font-bold rounded-xl transition-all"
                 name="email"
               />
             </Form.Item>
@@ -117,7 +117,7 @@ const AuthPage = () => {
               <Input.Password
                 size="large"
                 placeholder="Password"
-                className="w-full bg-white hover:bg-zinc-50 focus:bg-white border-default focus:border-[#2e9e5b] px-4 py-3 text-sm font-bold rounded-xl transition-all"
+                className="w-full bg-white hover:bg-zinc-50 focus:bg-white border-default focus:border-accent px-4 py-3 text-sm font-bold rounded-xl transition-all"
                 name="password"
               />
             </Form.Item>
@@ -136,7 +136,7 @@ const AuthPage = () => {
             type="primary"
             htmlType="submit"
             disabled={loading}
-            className="group w-full h-auto bg-[#2e9e5b] text-white py-4 rounded-full font-display font-black uppercase tracking-widest text-xs flex items-center justify-center gap-3 transition-all hover:bg-[#26854b] shadow-md hover:shadow-lg active:scale-[0.98] disabled:opacity-50 mt-4 border-none"
+            className="group w-full h-auto bg-accent text-white py-4 rounded-full font-display font-black uppercase tracking-widest text-xs flex items-center justify-center gap-3 transition-all hover:bg-accent-hover shadow-md hover:shadow-lg active:scale-[0.98] disabled:opacity-50 mt-4 border-none"
           >
             {loading ? "Signing In..." : "Log In"}
             <IoArrowForward
@@ -173,7 +173,7 @@ const AuthPage = () => {
             href={`/account/register?redirect=${encodeURIComponent(
               redirectUrl,
             )}`}
-            className="text-xs font-black uppercase tracking-widest text-primary hover:text-secondary underline underline-offset-4 decoration-[#2e9e5b] decoration-2 transition-all"
+            className="text-xs font-black uppercase tracking-widest text-primary hover:text-secondary underline underline-offset-4 decoration-accent decoration-2 transition-all"
           >
             Join the Club
           </Link>

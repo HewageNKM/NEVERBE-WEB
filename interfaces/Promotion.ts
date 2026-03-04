@@ -1,5 +1,11 @@
-import { firestore } from "firebase-admin";
-import Timestamp = firestore.Timestamp;
+export interface Timestamp {
+  seconds: number;
+  nanoseconds: number;
+  toDate(): Date;
+  toMillis(): number;
+  isEqual(other: Timestamp): boolean;
+  valueOf(): string;
+}
 
 /**
  * Variant targeting mode for product-level campaign restrictions

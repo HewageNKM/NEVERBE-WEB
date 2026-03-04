@@ -277,7 +277,7 @@ const OffersPage = async () => {
               style={{
                 fontSize: 12,
                 fontWeight: 800,
-                color: "#2e9e5b",
+                color: "var(--color-accent)",
                 textTransform: "uppercase",
                 letterSpacing: "0.06em",
                 whiteSpace: "nowrap",

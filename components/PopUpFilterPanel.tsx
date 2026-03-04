@@ -47,7 +47,7 @@ const FilterList = ({
               fontSize: 12,
               fontWeight: 700,
               border: isActive
-                ? "1.5px solid #2e9e5b"
+                ? "1.5px solid var(--color-accent)"
                 : "1.5px solid rgba(0,0,0,0.1)",
               background: isActive ? "rgba(46, 158, 91,0.1)" : "transparent",
               color: isActive ? "#1d6639" : "#555",
@@ -125,7 +125,7 @@ const PopUpFilterPanel: React.FC<PopUpFilterPanelProps> = ({
             <span
               style={{
                 marginLeft: 8,
-                background: "#2e9e5b",
+                background: "var(--color-accent)",
                 color: "#fff",
                 borderRadius: 99,
                 fontSize: 11,
@@ -167,7 +167,7 @@ const PopUpFilterPanel: React.FC<PopUpFilterPanelProps> = ({
             style={{
               flex: 2,
               height: 44,
-              background: "#2e9e5b",
+              background: "var(--color-accent)",
               color: "#fff",
               border: "none",
               fontWeight: 800,
@@ -199,7 +199,7 @@ const PopUpFilterPanel: React.FC<PopUpFilterPanelProps> = ({
           <Switch
             checked={inStock}
             onChange={onInStockChange}
-            style={{ background: inStock ? "#2e9e5b" : undefined }}
+            style={{ background: inStock ? "var(--color-accent)" : undefined }}
           />
         </div>
 
@@ -218,7 +218,7 @@ const PopUpFilterPanel: React.FC<PopUpFilterPanelProps> = ({
                   style={{
                     aspectRatio: "1",
                     border: isActive
-                      ? "2px solid #2e9e5b"
+                      ? "2px solid var(--color-accent)"
                       : "1.5px solid rgba(0,0,0,0.1)",
                     background: isActive ? "rgba(46, 158, 91,0.1)" : "#f8f9fa",
                     color: isActive ? "#1d6639" : "#333",

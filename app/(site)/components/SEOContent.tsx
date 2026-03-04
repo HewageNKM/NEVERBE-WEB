@@ -51,12 +51,12 @@ const SEOContent = () => {
 
   return (
     <div
-      className="!rounded-none !border-x-0 !border-b-0"
+      className="rounded-none! border-x-0! border-b-0!"
       style={{
         padding: "48px 0",
       }}
     >
-      <div className="max-w-content mx-auto px-6 lg:px-12">
+      <div className="max-w-content w-full mx-auto px-6 lg:px-12">
         <Row gutter={[48, 48]}>
           {/* LEFT COLUMN: Main Keywords */}
           <Col xs={24} lg={12}>
@@ -231,7 +231,7 @@ const SEOContent = () => {
                     color: "#1a1a1a",
                     transition: "color 0.3s ease",
                   }}
-                  className="hover:text-[#2e9e5b]!"
+                  className="hover:text-accent!"
                 >
                   {link.label}
                 </Link>

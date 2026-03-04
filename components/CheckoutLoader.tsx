@@ -38,7 +38,7 @@ const CheckoutLoader = () => {
             <ConfigProvider
               theme={{
                 token: {
-                  colorPrimary: "#2e9e5b",
+                  colorPrimary: "var(--color-accent)",
                 },
               }}
             >
@@ -60,7 +60,7 @@ const CheckoutLoader = () => {
           </Flex>
         </Flex>
 
-        <Typography.Text className="text-[10px] uppercase font-black tracking-widest text-[#2e9e5b]/60 animate-pulse">
+        <Typography.Text className="text-[10px] uppercase font-black tracking-widest text-accent/60 animate-pulse">
           Do not close this page
         </Typography.Text>
       </Flex>

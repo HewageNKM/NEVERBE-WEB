@@ -48,7 +48,7 @@ const Hero = ({ slides }: { slides: Slide[] }) => {
                   height: 8,
                   borderRadius: 99,
                   background:
-                    activeSlide === i ? "#2e9e5b" : "rgba(255,255,255,0.35)",
+                    activeSlide === i ? "var(--color-accent)" : "rgba(255,255,255,0.35)",
                   border: "none",
                   cursor: "pointer",
                   padding: 0,
@@ -65,14 +65,14 @@ const Hero = ({ slides }: { slides: Slide[] }) => {
             size="middle"
             icon={<LeftOutlined />}
             onClick={() => sliderRef.current?.prev?.()}
-            className="hover:border-[#2e9e5b]! hover:text-[#2e9e5b]!"
+            className="hover:border-accent! hover:text-accent!"
           />
           <Button
             shape="circle"
             size="middle"
             icon={<RightOutlined />}
             onClick={() => sliderRef.current?.next?.()}
-            className="hover:border-[#2e9e5b]! hover:text-[#2e9e5b]!"
+            className="hover:border-accent! hover:text-accent!"
           />
         </div>
       </div>

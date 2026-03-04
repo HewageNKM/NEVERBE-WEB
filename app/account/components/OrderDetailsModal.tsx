@@ -219,7 +219,7 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
             {/* STATUS & ACTIONS */}
             <div className="flex flex-wrap items-center justify-between gap-6 bg-white p-6 rounded-4xl border border-default">
               <div className="flex items-center gap-5">
-                <div className="p-4 bg-[#2e9e5b] text-white rounded-2xl shadow-lg shadow-[#2e9e5b]/20">
+                <div className="p-4 bg-accent text-white rounded-2xl shadow-lg shadow-accent/20">
                   <IoCubeOutline size={24} />
                 </div>
                 <div>
@@ -227,7 +227,7 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
                     Current Status
                   </p>
                   <div className="flex items-center gap-3">
-                    <p className="font-display font-black text-xl uppercase tracking-tighter text-[#2e9e5b]">
+                    <p className="font-display font-black text-xl uppercase tracking-tighter text-accent">
                       {status}
                     </p>
                   </div>
@@ -254,7 +254,7 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
                 {items.map((item, idx) => (
                   <div
                     key={idx}
-                    className="flex gap-6 p-4 bg-white rounded-3xl border border-default hover:border-[#2e9e5b] transition-all group"
+                    className="flex gap-6 p-4 bg-white rounded-3xl border border-default hover:border-accent transition-all group"
                   >
                     <div className="w-20 h-20 bg-white shrink-0 rounded-2xl overflow-hidden border border-default p-1">
                       <Image
@@ -291,7 +291,7 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
                             Rs. {item.price.toLocaleString()}
                           </p>
                           {(item.discount || 0) > 0 && (
-                            <p className="text-[10px] font-bold text-[#2e9e5b] uppercase tracking-tighter">
+                            <p className="text-[10px] font-bold text-accent uppercase tracking-tighter">
                               - Rs. {(item.discount || 0).toLocaleString()}
                             </p>
                           )}
@@ -308,12 +308,12 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
               <div className="space-y-10">
                 <div className="group">
                   <div className="flex items-center gap-3 mb-5">
-                    <IoLocationOutline size={20} className="text-[#2e9e5b]" />
+                    <IoLocationOutline size={20} className="text-accent" />
                     <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-black">
                       Shipping Details
                     </h3>
                   </div>
-                  <address className="not-text-sm text-zinc-500 font-medium leading-relaxed pl-8 border-l-2 border-default group-hover:border-[#2e9e5b] transition-colors">
+                  <address className="not-text-sm text-zinc-500 font-medium leading-relaxed pl-8 border-l-2 border-default group-hover:border-accent transition-colors">
                     <p className="text-black font-black uppercase tracking-tighter text-base">
                       {customer.shippingName || customer.name}
                     </p>
@@ -321,7 +321,7 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
                       {customer.shippingAddress || customer.address}
                     </p>
                     <p>{customer.shippingCity || customer.city}</p>
-                    <p className="text-[#2e9e5b] font-black mt-3">
+                    <p className="text-accent font-black mt-3">
                       +{customer.shippingPhone || customer.phone}
                     </p>
                   </address>
@@ -330,18 +330,18 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
                 {customer.address && (
                   <div className="group">
                     <div className="flex items-center gap-3 mb-5">
-                      <IoLocationOutline size={20} className="text-[#2e9e5b]" />
+                      <IoLocationOutline size={20} className="text-accent" />
                       <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-black">
                         Billing Details
                       </h3>
                     </div>
-                    <address className="not-text-sm text-zinc-500 font-medium leading-relaxed pl-8 border-l-2 border-default group-hover:border-[#2e9e5b] transition-colors">
+                    <address className="not-text-sm text-zinc-500 font-medium leading-relaxed pl-8 border-l-2 border-default group-hover:border-accent transition-colors">
                       <p className="text-black font-black uppercase tracking-tighter text-base">
                         {customer.name}
                       </p>
                       <p className="mt-1">{customer.address}</p>
                       <p>{customer.city}</p>
-                      <p className="text-[#2e9e5b] font-black mt-3">
+                      <p className="text-accent font-black mt-3">
                         +{customer.phone}
                       </p>
                     </address>
@@ -350,16 +350,16 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
 
                 <div className="group">
                   <div className="flex items-center gap-3 mb-5">
-                    <IoCardOutline size={20} className="text-[#2e9e5b]" />
+                    <IoCardOutline size={20} className="text-accent" />
                     <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-black">
                       Payment Method
                     </h3>
                   </div>
-                  <div className="pl-8 border-l-2 border-zinc-100 group-hover:border-[#2e9e5b] transition-colors">
+                  <div className="pl-8 border-l-2 border-zinc-100 group-hover:border-accent transition-colors">
                     <p className="text-sm font-bold text-black uppercase tracking-widest">
                       {paymentMethod}
                     </p>
-                    <p className="text-[10px] font-black uppercase tracking-widest text-[#2e9e5b] mt-1">
+                    <p className="text-[10px] font-black uppercase tracking-widest text-accent mt-1">
                       Status: {paymentStatus}
                     </p>
                   </div>
@@ -369,19 +369,19 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
               {/* SUMMARY */}
               <div className="bg-white p-8 rounded-[2.5rem] border border-default flex flex-col justify-between">
                 <div className="space-y-4">
-                  <div className="flex justify-between text-[11px] font-bold uppercase tracking-widest text-[#2e9e5b]">
+                  <div className="flex justify-between text-[11px] font-bold uppercase tracking-widest text-accent">
                     <span>Subtotal</span>
                     <span className="text-black">
                       Rs. {subtotal.toLocaleString()}
                     </span>
                   </div>
                   {totalDiscount > 0 && (
-                    <div className="flex justify-between text-[11px] font-bold uppercase tracking-widest text-[#2e9e5b]">
+                    <div className="flex justify-between text-[11px] font-bold uppercase tracking-widest text-accent">
                       <span>Discount</span>
                       <span>- Rs. {totalDiscount.toLocaleString()}</span>
                     </div>
                   )}
-                  <div className="flex justify-between text-[11px] font-bold uppercase tracking-widest text-[#2e9e5b]/40">
+                  <div className="flex justify-between text-[11px] font-bold uppercase tracking-widest text-accent/40">
                     <span>Shipping</span>
                     <span className="text-black">
                       Rs. {(shippingFee || 0).toLocaleString()}
@@ -392,12 +392,12 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
                 <div className="pt-8 mt-8 border-t border-default">
                   <div className="flex justify-between items-end">
                     <div>
-                      <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#2e9e5b] block mb-2">
+                      <span className="text-[10px] font-black uppercase tracking-[0.3em] text-accent block mb-2">
                         Order Total
                       </span>
                       <div className="flex items-center gap-2">
-                        <IoCheckmarkCircle className="text-[#2e9e5b]" />
-                        <span className="text-[10px] font-black uppercase tracking-widest text-[#2e9e5b]">
+                        <IoCheckmarkCircle className="text-accent" />
+                        <span className="text-[10px] font-black uppercase tracking-widest text-accent">
                           Payment Verified
                         </span>
                       </div>

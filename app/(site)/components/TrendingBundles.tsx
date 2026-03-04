@@ -57,7 +57,7 @@ const TrendingBundles: React.FC<TrendingBundlesProps> = ({ bundles }) => {
                   fontWeight: 800,
                   textTransform: "uppercase",
                   letterSpacing: "0.2em",
-                  color: "#2e9e5b",
+                  color: "var(--color-accent)",
                 }}
               >
                 Save More
@@ -76,7 +76,7 @@ const TrendingBundles: React.FC<TrendingBundlesProps> = ({ bundles }) => {
                   fontWeight: 900,
                   textTransform: "uppercase" as const,
                   letterSpacing: "0.1em",
-                  color: "#2e9e5b",
+                  color: "var(--color-accent)",
                 }}
               >
                 <span
@@ -84,7 +84,7 @@ const TrendingBundles: React.FC<TrendingBundlesProps> = ({ bundles }) => {
                     width: 6,
                     height: 6,
                     borderRadius: "50%",
-                    background: "#2e9e5b",
+                    background: "var(--color-accent)",
                     display: "inline-block",
                   }}
                   className="pulse-green"
@@ -126,7 +126,7 @@ const TrendingBundles: React.FC<TrendingBundlesProps> = ({ bundles }) => {
               icon={
                 <LeftOutlined style={{ fontSize: "clamp(12px, 2vw, 14px)" }} />
               }
-              className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center hover:border-[#2e9e5b]! hover:text-[#2e9e5b]!"
+              className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center hover:border-accent! hover:text-accent!"
             />
             <Button
               ref={nextRef}
@@ -134,7 +134,7 @@ const TrendingBundles: React.FC<TrendingBundlesProps> = ({ bundles }) => {
               icon={
                 <RightOutlined style={{ fontSize: "clamp(12px, 2vw, 14px)" }} />
               }
-              className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center hover:border-[#2e9e5b]! hover:text-[#2e9e5b]!"
+              className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center hover:border-accent! hover:text-accent!"
             />
           </Flex>
 
@@ -149,7 +149,7 @@ const TrendingBundles: React.FC<TrendingBundlesProps> = ({ bundles }) => {
                 letterSpacing: "0.1em",
                 fontSize: 12,
               }}
-              className="hover:text-[#2e9e5b]!"
+              className="hover:text-accent!"
             >
               View All
             </Button>
@@ -200,7 +200,7 @@ const TrendingBundles: React.FC<TrendingBundlesProps> = ({ bundles }) => {
                   height: 60,
                   borderRadius: "50%",
                   background:
-                    "linear-gradient(135deg, #2e9e5b 0%, #26854b 100%)",
+                    "linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-hover) 100%)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -236,7 +236,7 @@ const TrendingBundles: React.FC<TrendingBundlesProps> = ({ bundles }) => {
             size="large"
             shape="round"
             style={{
-              background: "#2e9e5b",
+              background: "var(--color-accent)",
               color: "#fff",
               border: "none",
               fontWeight: 800,

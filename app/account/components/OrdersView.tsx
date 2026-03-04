@@ -31,7 +31,7 @@ const OrdersView: React.FC<OrdersViewProps> = ({ orders }) => {
       <div className="space-y-8">
         {/* Header */}
         <div className="flex flex-col gap-1 border-b border-default pb-6">
-          <Text className="block text-[10px] font-black uppercase tracking-[0.3em] text-[#2e9e5b]">
+          <Text className="block text-[10px] font-black uppercase tracking-[0.3em] text-accent">
             Purchases
           </Text>
           <Title
@@ -62,7 +62,7 @@ const OrdersView: React.FC<OrdersViewProps> = ({ orders }) => {
               >
                 <Card
                   bordered={false}
-                  className="group bg-white border border-default hover:border-[#2e9e5b] transition-all duration-300 rounded-xl overflow-hidden shadow-none hover:shadow-none"
+                  className="group bg-white border border-default hover:border-accent transition-all duration-300 rounded-xl overflow-hidden shadow-none hover:shadow-none"
                   bodyStyle={{
                     padding: "20px",
                     display: "flex",
@@ -90,7 +90,7 @@ const OrdersView: React.FC<OrdersViewProps> = ({ orders }) => {
                   <div className="flex-1 flex flex-col justify-center text-center md:text-left min-w-[200px]">
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-3">
                       <div className="flex items-center justify-center md:justify-start gap-2">
-                        <div className="w-2 h-2 rounded-full bg-[#2e9e5b]" />
+                        <div className="w-2 h-2 rounded-full bg-accent" />
                         <Title
                           level={3}
                           className="text-lg! font-display! font-black! uppercase! tracking-tighter! text-primary! mb-0!"
@@ -121,7 +121,7 @@ const OrdersView: React.FC<OrdersViewProps> = ({ orders }) => {
                       <Button
                         type="primary"
                         onClick={() => handleViewOrder(order)}
-                        className="inline-flex items-center justify-center gap-2 px-6 py-5 bg-[#2e9e5b] hover:bg-[#26854b] shadow-md hover:shadow-lg border-none text-white text-[10px] font-black uppercase tracking-widest rounded-full transition-all"
+                        className="inline-flex items-center justify-center gap-2 px-6 py-5 bg-accent hover:bg-accent-hover shadow-md hover:shadow-lg border-none text-white text-[10px] font-black uppercase tracking-widest rounded-full transition-all"
                       >
                         <IoReceiptOutline size={14} />
                         Details

@@ -120,7 +120,7 @@ const SearchDialog: React.FC<SearchDialogProps> = ({
               shape="round"
               size="large"
               onClick={onClick}
-              className="mt-8 font-bold uppercase tracking-widest bg-[#2e9e5b] hover:bg-[#26854b] border-none px-8"
+              className="mt-8 font-bold uppercase tracking-widest bg-accent hover:bg-accent-hover border-none px-8"
             >
               Clear Search
             </Button>

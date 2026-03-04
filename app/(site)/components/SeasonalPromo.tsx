@@ -67,7 +67,7 @@ const SeasonalPromo = ({
                     letterSpacing: "0.2em",
                     cursor: "pointer",
                   }}
-                  className="hover:text-[#2e9e5b] transition-colors"
+                  className="hover:text-accent transition-colors"
                 >
                   {offer.text}
                 </Text>

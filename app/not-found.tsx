@@ -31,7 +31,7 @@ const NotFound = () => {
         <div className="flex flex-col md:flex-row gap-4 justify-center pt-4">
           <Link
             href="/"
-            className="inline-flex items-center justify-center px-8 py-3 bg-[#2e9e5b] hover:bg-[#26854b] text-white text-sm font-bold uppercase tracking-wider rounded-full transition-all shadow-md hover:shadow-lg"
+            className="inline-flex items-center justify-center px-8 py-3 bg-accent hover:bg-accent-hover text-white text-sm font-bold uppercase tracking-wider rounded-full transition-all shadow-md hover:shadow-lg"
           >
             Return Home
           </Link>

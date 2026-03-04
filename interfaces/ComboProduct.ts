@@ -1,7 +1,5 @@
-import { firestore } from "firebase-admin";
-import Timestamp = firestore.Timestamp;
 import { Img } from "./Img";
-import { VariantMode } from "./Promotion";
+import { VariantMode, Timestamp } from "./Promotion";
 
 export interface ComboProduct {
   id: string;

@@ -51,7 +51,7 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
     return (
       <Card
         bordered={false}
-        className="bg-white rounded-2xl border border-default shadow-none hover:shadow-none transition-all hover:border-[#2e9e5b]"
+        className="bg-white rounded-2xl border border-default shadow-none hover:shadow-none transition-all hover:border-accent"
         bodyStyle={{
           padding: "32px",
           display: "flex",
@@ -61,7 +61,7 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
       >
         <div className="flex flex-col gap-6">
           <div className="flex items-center gap-3">
-            <div className="p-3 bg-white rounded-xl text-[#2e9e5b] border border-default">
+            <div className="p-3 bg-white rounded-xl text-accent border border-default">
               <IoPersonOutline size={22} />
             </div>
             <Title
@@ -98,7 +98,7 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
                 >
                   <Input
                     size="large"
-                    className="w-full bg-white p-3 text-sm font-bold border border-default focus:border-[#2e9e5b] focus:bg-white outline-none rounded-xl transition-all"
+                    className="w-full bg-white p-3 text-sm font-bold border border-default focus:border-accent focus:bg-white outline-none rounded-xl transition-all"
                   />
                 </Form.Item>
               </Col>
@@ -115,7 +115,7 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
                 >
                   <Input
                     size="large"
-                    className="w-full bg-white p-3 text-sm font-bold border border-default focus:border-[#2e9e5b] focus:bg-white outline-none rounded-xl transition-all"
+                    className="w-full bg-white p-3 text-sm font-bold border border-default focus:border-accent focus:bg-white outline-none rounded-xl transition-all"
                   />
                 </Form.Item>
               </Col>
@@ -133,7 +133,7 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
                   className="w-full bg-zinc-50 py-3 px-4 text-sm font-bold border border-default text-muted cursor-not-allowed outline-none rounded-xl"
                 />
                 <IoCheckmarkCircle
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-[#2e9e5b]"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-accent"
                   size={20}
                 />
               </div>
@@ -144,7 +144,7 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
                 type="primary"
                 htmlType="submit"
                 loading={isUpdating}
-                className="group flex items-center gap-3 bg-[#2e9e5b] hover:bg-[#26854b] shadow-md hover:shadow-lg text-white px-6 py-5 rounded-full font-black uppercase tracking-widest text-xs border-none transition-all active:scale-[0.98]"
+                className="group flex items-center gap-3 bg-accent hover:bg-accent-hover shadow-md hover:shadow-lg text-white px-6 py-5 rounded-full font-black uppercase tracking-widest text-xs border-none transition-all active:scale-[0.98]"
               >
                 Save Changes
                 {!isUpdating && <IoRefreshOutline size={18} />}
@@ -193,7 +193,7 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
     return (
       <Card
         bordered={false}
-        className="bg-white rounded-2xl border border-default shadow-none hover:shadow-none transition-all hover:border-[#2e9e5b] h-full"
+        className="bg-white rounded-2xl border border-default shadow-none hover:shadow-none transition-all hover:border-accent h-full"
         bodyStyle={{
           padding: "32px",
           display: "flex",
@@ -203,7 +203,7 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
       >
         <div className="flex flex-col gap-6">
           <div className="flex items-center gap-3">
-            <div className="p-3 bg-white rounded-xl text-[#2e9e5b] border border-default">
+            <div className="p-3 bg-white rounded-xl text-accent border border-default">
               <IoLockClosedOutline size={22} />
             </div>
             <Title
@@ -232,7 +232,7 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
             >
               <Input.Password
                 size="large"
-                className="w-full bg-white p-3 text-sm font-bold border border-default focus:border-[#2e9e5b] focus:bg-white outline-none rounded-xl transition-all"
+                className="w-full bg-white p-3 text-sm font-bold border border-default focus:border-accent focus:bg-white outline-none rounded-xl transition-all"
               />
             </Form.Item>
             <Form.Item
@@ -247,7 +247,7 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
             >
               <Input.Password
                 size="large"
-                className="w-full bg-white p-3 text-sm font-bold border border-default focus:border-[#2e9e5b] focus:bg-white outline-none rounded-xl transition-all"
+                className="w-full bg-white p-3 text-sm font-bold border border-default focus:border-accent focus:bg-white outline-none rounded-xl transition-all"
               />
             </Form.Item>
             <Form.Item
@@ -262,14 +262,14 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
             >
               <Input.Password
                 size="large"
-                className="w-full bg-white p-3 text-sm font-bold border border-default focus:border-[#2e9e5b] focus:bg-white outline-none rounded-xl transition-all"
+                className="w-full bg-white p-3 text-sm font-bold border border-default focus:border-accent focus:bg-white outline-none rounded-xl transition-all"
               />
             </Form.Item>
 
             <div className="flex flex-col sm:flex-row justify-between items-center flex-wrap gap-4 pt-4">
               <Button
                 type="link"
-                className="text-[10px] font-black uppercase tracking-widest text-muted hover:text-primary underline underline-offset-8 decoration-[#2e9e5b] decoration-2 transition-all p-0 h-auto"
+                className="text-[10px] font-black uppercase tracking-widest text-muted hover:text-primary underline underline-offset-8 decoration-accent decoration-2 transition-all p-0 h-auto"
               >
                 Forgot Password?
               </Button>
@@ -277,7 +277,7 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
                 type="primary"
                 htmlType="submit"
                 loading={isUpdating}
-                className="w-full sm:w-auto bg-[#2e9e5b] hover:bg-[#26854b] shadow-md hover:shadow-lg text-white px-6 py-5 rounded-full font-black uppercase tracking-widest text-xs border-none transition-all active:scale-[0.98]"
+                className="w-full sm:w-auto bg-accent hover:bg-accent-hover shadow-md hover:shadow-lg text-white px-6 py-5 rounded-full font-black uppercase tracking-widest text-xs border-none transition-all active:scale-[0.98]"
               >
                 Update Password
               </Button>

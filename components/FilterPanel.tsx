@@ -46,7 +46,7 @@ const FilterSection = ({
               fontSize: 11,
               fontWeight: 700,
               border: isSelected
-                ? "1.5px solid #2e9e5b"
+                ? "1.5px solid var(--color-accent)"
                 : "1.5px solid rgba(0,0,0,0.1)",
               background: isSelected ? "rgba(46, 158, 91,0.1)" : "transparent",
               color: isSelected ? "#1d6639" : "#666",
@@ -88,7 +88,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
         </h2>
         <button
           onClick={onReset}
-          className="text-xs font-bold uppercase tracking-widest text-muted hover:text-[#2e9e5b] transition-colors underline underline-offset-4 bg-transparent border-none cursor-pointer"
+          className="text-xs font-bold uppercase tracking-widest text-muted hover:text-accent transition-colors underline underline-offset-4 bg-transparent border-none cursor-pointer"
         >
           Clear All
         </button>
@@ -103,7 +103,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
           checked={inStock}
           onChange={onInStockChange}
           size="small"
-          style={{ background: inStock ? "#2e9e5b" : undefined }}
+          style={{ background: inStock ? "var(--color-accent)" : undefined }}
         />
       </div>
 
@@ -125,7 +125,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
                   fontSize: 12,
                   fontWeight: 800,
                   border: isSelected
-                    ? "2px solid #2e9e5b"
+                    ? "2px solid var(--color-accent)"
                     : "1.5px solid rgba(0,0,0,0.1)",
                   background: isSelected ? "rgba(46, 158, 91,0.1)" : "#f8f9fa",
                   color: isSelected ? "#1d6639" : "#333",

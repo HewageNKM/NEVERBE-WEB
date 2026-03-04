@@ -161,7 +161,7 @@ const Account = () => {
               {activeTab === item.id && (
                 <motion.div
                   layoutId="underline"
-                  className="absolute bottom-0 left-0 right-0 h-1 bg-[#2e9e5b] rounded-full"
+                  className="absolute bottom-0 left-0 right-0 h-1 bg-accent rounded-full"
                 />
               )}
             </Button>
@@ -199,7 +199,7 @@ const Account = () => {
                     bodyStyle={{ padding: "40px 64px", textAlign: "center" }}
                   >
                     <IoShieldCheckmarkOutline
-                      className="mx-auto text-[#2e9e5b] mb-6"
+                      className="mx-auto text-accent mb-6"
                       size={60}
                     />
                     <Title

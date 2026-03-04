@@ -66,10 +66,10 @@ const CategoryCard = ({ item }: { item: any }) => (
         {/* Card Content Overlay */}
         <div className="absolute inset-x-0 bottom-0 p-5 z-20">
           <Flex align="center" justify="space-between">
-            <span className="flex items-center gap-2 bg-dark text-inverse px-6 py-2.5 rounded-full font-display font-black text-[10px] uppercase tracking-widest transition-all group-hover:bg-[#2e9e5b]! group-hover:text-black! group-hover:border-transparent! max-w-[85%] truncate">
+            <span className="flex items-center gap-2 bg-dark text-inverse px-6 py-2.5 rounded-full font-display font-black text-[10px] uppercase tracking-widest transition-all group-hover:bg-accent! group-hover:text-black! group-hover:border-transparent! max-w-[85%] truncate">
               {item.label}
             </span>
-            <div className="opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all duration-400 w-10 h-10 rounded-full bg-[#2e9e5b] flex items-center justify-center shrink-0">
+            <div className="opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all duration-400 w-10 h-10 rounded-full bg-accent flex items-center justify-center shrink-0">
               <ArrowRightOutlined style={{ color: "#fff", fontSize: 16 }} />
             </div>
           </Flex>
@@ -102,7 +102,7 @@ const FeaturedCategories = () => {
               fontWeight: 800,
               textTransform: "uppercase",
               letterSpacing: "0.2em",
-              color: "#2e9e5b",
+              color: "var(--color-accent)",
             }}
           >
             Collections
@@ -133,7 +133,7 @@ const FeaturedCategories = () => {
               icon={
                 <LeftOutlined style={{ fontSize: "clamp(12px, 2vw, 14px)" }} />
               }
-              className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center hover:border-[#2e9e5b]! hover:text-[#2e9e5b]!"
+              className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center hover:border-accent! hover:text-accent!"
             />
             <Button
               ref={nextRef}
@@ -141,7 +141,7 @@ const FeaturedCategories = () => {
               icon={
                 <RightOutlined style={{ fontSize: "clamp(12px, 2vw, 14px)" }} />
               }
-              className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center hover:border-[#2e9e5b]! hover:text-[#2e9e5b]!"
+              className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center hover:border-accent! hover:text-accent!"
             />
           </Flex>
 
@@ -197,9 +197,9 @@ const FeaturedCategories = () => {
           <SwiperSlide className="md:hidden">
             <Link
               href="/collections/products"
-              className="flex flex-col items-center justify-center w-full aspect-4/5 rounded-[24px] border border-[#2e9e5b]/20 bg-[#2e9e5b]/5 transition-all duration-300 group hover:bg-[#2e9e5b]/10"
+              className="flex flex-col items-center justify-center w-full aspect-4/5 rounded-[24px] border border-accent/20 bg-accent/5 transition-all duration-300 group hover:bg-accent/10"
             >
-              <div className="w-12 h-12 rounded-full bg-[#2e9e5b] flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+              <div className="w-12 h-12 rounded-full bg-accent flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                 <ArrowRightOutlined style={{ color: "white", fontSize: 20 }} />
               </div>
               <Text strong className="uppercase tracking-widest text-[11px]">

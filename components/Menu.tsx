@@ -72,7 +72,7 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
             <Link
               key={item.id}
               href={`/collections/products?category=${encodeURIComponent(item.label.toLowerCase())}`}
-              className="text-sm font-bold uppercase tracking-tight transition-all hover:translate-x-1 hover:text-[#2e9e5b]!"
+              className="text-sm font-bold uppercase tracking-tight transition-all hover:translate-x-1 hover:text-accent!"
               style={{ color: "#777" }}
               onClick={handleClose}
             >
@@ -107,7 +107,7 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
             <Link
               key={item.id}
               href={`/collections/products?brand=${encodeURIComponent(item.label.toLowerCase())}`}
-              className="text-sm font-bold uppercase tracking-tight transition-all hover:translate-x-1 hover:text-[#2e9e5b]!"
+              className="text-sm font-bold uppercase tracking-tight transition-all hover:translate-x-1 hover:text-accent!"
               style={{ color: "#777" }}
               onClick={handleClose}
             >
@@ -162,7 +162,7 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
       closeIcon={
         <span
           style={{
-            color: "#2e9e5b",
+            color: "var(--color-accent)",
             fontSize: 20,
             lineHeight: 1,
             fontWeight: 700,
@@ -186,7 +186,7 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
                 style={{
                   width: 16,
                   height: 16,
-                  border: "2px solid #2e9e5b",
+                  border: "2px solid var(--color-accent)",
                   borderTopColor: "transparent",
                   borderRadius: "50%",
                   flexShrink: 0,
@@ -195,7 +195,7 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
             ) : (
               <IoSearchOutline
                 size={16}
-                style={{ color: "#2e9e5b", flexShrink: 0 }}
+                style={{ color: "var(--color-accent)", flexShrink: 0 }}
               />
             )
           }
@@ -245,14 +245,14 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
                 color: "#1a1a1a",
                 transition: "color 0.2s ease, transform 0.2s ease",
               }}
-              className="group-hover:text-[#2e9e5b]! group-hover:translate-x-2 inline-block transition-all"
+              className="group-hover:text-accent! group-hover:translate-x-2 inline-block transition-all"
             >
               {link.title}
             </span>
             <IoChevronForward
               size={16}
               style={{ color: "rgba(0,0,0,0.15)", flexShrink: 0 }}
-              className="group-hover:!text-[#2e9e5b]"
+              className="group-hover:!text-accent"
             />
           </Link>
         ))}
@@ -265,7 +265,7 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
             <RightOutlined
               rotate={isActive ? 90 : 0}
               style={{
-                color: isActive ? "#2e9e5b" : "rgba(0,0,0,0.2)",
+                color: isActive ? "var(--color-accent)" : "rgba(0,0,0,0.2)",
                 transition: "all 0.3s ease",
                 fontSize: 14,
               }}
@@ -286,7 +286,7 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
         <div className="flex gap-8 mb-3">
           <Link
             href="/contact"
-            className="text-xs font-black uppercase tracking-widest transition-colors hover:!text-[#2e9e5b]"
+            className="text-xs font-black uppercase tracking-widest transition-colors hover:!text-accent"
             style={{ color: "#aaa" }}
             onClick={handleClose}
           >
@@ -294,7 +294,7 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
           </Link>
           <Link
             href="/contact"
-            className="text-xs font-black uppercase tracking-widest transition-colors hover:!text-[#2e9e5b]"
+            className="text-xs font-black uppercase tracking-widest transition-colors hover:!text-accent"
             style={{ color: "#aaa" }}
             onClick={handleClose}
           >

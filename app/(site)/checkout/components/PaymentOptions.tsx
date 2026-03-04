@@ -37,7 +37,7 @@ const PaymentOptions: React.FC<PaymentOptionsProps> = ({
               relative group cursor-pointer border p-3 md:p-4 transition-all duration-300 rounded-xl overflow-hidden
               ${
                 isSelected
-                  ? "bg-bg-secondary border-[#2e9e5b] text-black shadow-sm scale-[1.01] ring-1 ring-[#2e9e5b]"
+                  ? "bg-bg-secondary border-accent text-black shadow-sm scale-[1.01] ring-1 ring-accent"
                   : "bg-white border-gray-200 text-black hover:border-gray-300 hover:shadow-sm"
               }
             `}
@@ -49,8 +49,8 @@ const PaymentOptions: React.FC<PaymentOptionsProps> = ({
                   flex items-center justify-center h-5 w-5 shrink-0 border-2 rounded-full transition-all
                   ${
                     isSelected
-                      ? "border-[#2e9e5b] bg-[#2e9e5b] text-white"
-                      : "border-gray-300 group-hover:border-[#2e9e5b] bg-transparent"
+                      ? "border-accent bg-accent text-white"
+                      : "border-gray-300 group-hover:border-accent bg-transparent"
                   }
                 `}
               >
@@ -76,7 +76,7 @@ const PaymentOptions: React.FC<PaymentOptionsProps> = ({
                         text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest
                         ${
                           isSelected
-                            ? "bg-[#2e9e5b] text-white"
+                            ? "bg-accent text-white"
                             : "bg-gray-100 text-[#1a1a1a]"
                         }
                       `}
@@ -87,7 +87,7 @@ const PaymentOptions: React.FC<PaymentOptionsProps> = ({
                     <span
                       className={`
                         text-[10px] font-black uppercase tracking-widest
-                        ${isSelected ? "text-[#2e9e5b]" : "text-gray-400"}
+                        ${isSelected ? "text-accent" : "text-gray-400"}
                        `}
                     >
                       No Fee
@@ -99,7 +99,7 @@ const PaymentOptions: React.FC<PaymentOptionsProps> = ({
                   <p
                     className={`
                       text-[10px] font-medium uppercase tracking-wide mt-1.5
-                      ${isSelected ? "text-[#2e9e5b]" : "text-gray-400"}
+                      ${isSelected ? "text-accent" : "text-gray-400"}
                     `}
                   >
                     {option.description}
@@ -110,7 +110,7 @@ const PaymentOptions: React.FC<PaymentOptionsProps> = ({
 
             {/* Corner Accent for Selected State */}
             {isSelected && (
-              <div className="absolute top-0 right-0 w-4 h-4 bg-[#2e9e5b] rounded-bl-xl" />
+              <div className="absolute top-0 right-0 w-4 h-4 bg-accent rounded-bl-xl" />
             )}
           </div>
         );

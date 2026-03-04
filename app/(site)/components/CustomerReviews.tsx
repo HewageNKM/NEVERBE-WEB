@@ -93,7 +93,7 @@ const ReviewCard = ({ review }: { review: (typeof reviews)[0] }) => {
                 size={48}
                 style={{
                   background:
-                    "linear-gradient(135deg, #2e9e5b 0%, #26854b 100%)",
+                    "linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-hover) 100%)",
                   color: "#fff",
                   fontWeight: 900,
                   flexShrink: 0,
@@ -146,7 +146,7 @@ const ReviewCard = ({ review }: { review: (typeof reviews)[0] }) => {
             disabled
             defaultValue={review.rating}
             className="mb-4"
-            style={{ color: "#2e9e5b", fontSize: 14 }}
+            style={{ color: "var(--color-accent)", fontSize: 14 }}
           />
 
           <Paragraph
@@ -175,7 +175,7 @@ const ReviewCard = ({ review }: { review: (typeof reviews)[0] }) => {
             style={{
               width: 16,
               height: 4,
-              background: "linear-gradient(90deg, #2e9e5b, #26854b)",
+              background: "linear-gradient(90deg, var(--color-accent), var(--color-accent-hover))",
               borderRadius: 99,
             }}
           />
@@ -233,7 +233,7 @@ const CustomerReviews = () => {
                 <Rate
                   disabled
                   defaultValue={5}
-                  style={{ color: "#2e9e5b", fontSize: 14 }}
+                  style={{ color: "var(--color-accent)", fontSize: 14 }}
                 />
                 <Text
                   strong
@@ -262,7 +262,7 @@ const CustomerReviews = () => {
                   fontWeight: 800,
                   textTransform: "uppercase",
                   letterSpacing: "0.2em",
-                  color: "#2e9e5b",
+                  color: "var(--color-accent)",
                 }}
               >
                 Testimonials
@@ -298,7 +298,7 @@ const CustomerReviews = () => {
               icon={
                 <LeftOutlined style={{ fontSize: "clamp(12px, 2vw, 14px)" }} />
               }
-              className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center hover:border-[#2e9e5b]! hover:text-[#2e9e5b]!"
+              className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center hover:border-accent! hover:text-accent!"
             />
             <Button
               ref={nextRef}
@@ -306,7 +306,7 @@ const CustomerReviews = () => {
               icon={
                 <RightOutlined style={{ fontSize: "clamp(12px, 2vw, 14px)" }} />
               }
-              className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center hover:border-[#2e9e5b]! hover:text-[#2e9e5b]!"
+              className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center hover:border-accent! hover:text-accent!"
             />
           </Flex>
         </Flex>
@@ -359,7 +359,7 @@ const CustomerReviews = () => {
                 textTransform: "uppercase",
                 letterSpacing: "0.1em",
                 fontSize: 13,
-                backgroundColor: "#2e9e5b",
+                backgroundColor: "var(--color-accent)",
                 color: "#fff",
                 border: "none",
               }}

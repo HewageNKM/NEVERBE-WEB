@@ -39,7 +39,7 @@ export const calculateFee = (fee: number, items: BagItem[]) => {
 export const calculateTransactionFeeCharge = (
   items: BagItem[],
   fee: number,
-  shippingOverride?: number
+  shippingOverride?: number,
 ) => {
   const shipping =
     shippingOverride !== undefined
@@ -57,7 +57,7 @@ export const calculateTransactionFeeCharge = (
 export const calculateSubTotal = (
   items: BagItem[],
   fee: number,
-  shippingOverride?: number
+  shippingOverride?: number,
 ) => {
   const shipping =
     shippingOverride !== undefined
@@ -75,5 +75,5 @@ export const getAlgoliaClient = () => {
   const ALGOLIA_APP_ID = process.env.NEXT_PUBLIC_ALGOLIA_APP_ID;
   const ALGOLIA_SEARCH_KEY = process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_API_KEY;
 
-  return algoliasearch(ALGOLIA_APP_ID, ALGOLIA_SEARCH_KEY);
+  return algoliasearch(ALGOLIA_APP_ID || "", ALGOLIA_SEARCH_KEY || "");
 };

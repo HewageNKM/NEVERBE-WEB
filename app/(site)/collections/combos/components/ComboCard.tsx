@@ -40,7 +40,7 @@ const ComboCard: React.FC<ComboCardProps> = ({ combo }) => {
   return (
     <Badge.Ribbon
       text={hasSavings ? `Save ${savingsPercent}%` : getTypeLabel()}
-      color={hasSavings ? "#1a1a1a" : "#2e9e5b"}
+      color={hasSavings ? "#1a1a1a" : "var(--color-accent)"}
       style={{
         padding: "0 10px",
         fontSize: "11px",
@@ -84,7 +84,7 @@ const ComboCard: React.FC<ComboCardProps> = ({ combo }) => {
               {hasSavings && (
                 <div className="absolute bottom-3 left-3 z-10">
                   <Tag
-                    color="#2e9e5b"
+                    color="var(--color-accent)"
                     style={{
                       color: "#fff",
                       fontWeight: 800,
@@ -128,7 +128,7 @@ const ComboCard: React.FC<ComboCardProps> = ({ combo }) => {
             {combo.type === "BOGO" && (
               <Text
                 style={{
-                  color: "#2e9e5b",
+                  color: "var(--color-accent)",
                   fontWeight: 800,
                   textTransform: "uppercase",
                   fontSize: "0.75rem",

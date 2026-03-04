@@ -83,7 +83,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                 fontWeight: 800,
                 textTransform: "uppercase",
                 letterSpacing: "0.2em",
-                color: "#2e9e5b",
+                color: "var(--color-accent)",
               }}
             >
               Stay Updated
@@ -110,7 +110,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
               Subscribe for exclusive offers and new arrivals
             </Text>
           </div>
-          <div className="flex items-center w-full max-w-[500px] md:max-w-[600px] lg:max-w-[800px] bg-white rounded-full p-2 shadow-sm border border-gray-200 focus-within:border-[#2e9e5b] focus-within:ring-1 focus-within:ring-[#2e9e5b] transition-all">
+          <div className="flex items-center w-full max-w-[500px] md:max-w-[600px] lg:max-w-[800px] bg-white rounded-full p-2 shadow-sm border border-gray-200 focus-within:border-accent focus-within:ring-1 focus-within:ring-accent transition-all">
             <Input
               placeholder="Enter your email address"
               variant="borderless"
@@ -126,7 +126,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
               type="primary"
               icon={<SendOutlined />}
               style={{
-                background: "#2e9e5b",
+                background: "var(--color-accent)",
                 border: "none",
                 borderRadius: 99,
                 fontWeight: 800,
@@ -190,7 +190,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                 >
                   <GoLocation
                     size={18}
-                    className="mt-0.5 text-gray-400 group-hover:text-[#2e9e5b] transition-colors"
+                    className="mt-0.5 text-gray-400 group-hover:text-accent transition-colors"
                   />
                   <Text
                     style={{
@@ -201,7 +201,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                       lineHeight: 1.6,
                       transition: "color 0.3s ease",
                     }}
-                    className="group-hover:text-[#2e9e5b]!"
+                    className="group-hover:text-accent!"
                   >
                     {address.address}
                   </Text>
@@ -239,7 +239,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                       letterSpacing: "0.08em",
                       transition: "color 0.3s ease",
                     }}
-                    className="hover:text-[#2e9e5b]!"
+                    className="hover:text-accent!"
                   >
                     {link.title}
                   </Link>
@@ -278,7 +278,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                         color: "#aaa",
                         transition: "color 0.3s ease",
                       }}
-                      className="group-hover:text-[#2e9e5b]!"
+                      className="group-hover:text-accent!"
                     />
                     <Text
                       style={{
@@ -289,7 +289,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                         letterSpacing: "0.05em",
                         transition: "color 0.3s ease",
                       }}
-                      className="group-hover:text-[#2e9e5b]!"
+                      className="group-hover:text-accent!"
                     >
                       {info.content}
                     </Text>
@@ -333,7 +333,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                       transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                       color: "#555",
                     }}
-                    className="hover:bg-[#2e9e5b]! hover:text-black! hover:border-[#2e9e5b]!"
+                    className="hover:bg-accent! hover:text-black! hover:border-accent!"
                   >
                     <media.Icon size={20} />
                   </Link>
@@ -359,7 +359,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
             { Icon: StarOutlined, label: "100% Quality Guaranteed" },
           ].map((badge) => (
             <span key={badge.label} className="trust-badge">
-              <badge.Icon style={{ color: "#2e9e5b", fontSize: 14 }} />
+              <badge.Icon style={{ color: "var(--color-accent)", fontSize: 14 }} />
               {badge.label}
             </span>
           ))}
@@ -429,7 +429,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                 href="https://policies.google.com/privacy"
                 target="_blank"
                 rel="noreferrer"
-                className="hover:text-[#2e9e5b] transition-colors underline underline-offset-2"
+                className="hover:text-accent transition-colors underline underline-offset-2"
               >
                 Privacy Policy
               </a>{" "}
@@ -438,7 +438,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                 href="https://policies.google.com/terms"
                 target="_blank"
                 rel="noreferrer"
-                className="hover:text-[#2e9e5b] transition-colors underline underline-offset-2"
+                className="hover:text-accent transition-colors underline underline-offset-2"
               >
                 Terms of Service
               </a>{" "}

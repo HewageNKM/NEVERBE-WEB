@@ -11,7 +11,7 @@ export default function MaintenancePage() {
         className="absolute inset-0 opacity-5 pointer-events-none"
         style={{
           backgroundImage:
-            "linear-gradient(#2e9e5b 1px, transparent 1px), linear-gradient(90deg, #2e9e5b 1px, transparent 1px)",
+            "linear-gradient(var(--color-accent) 1px, transparent 1px), linear-gradient(90deg, var(--color-accent) 1px, transparent 1px)",
           size: "40px 40px",
           backgroundSize: "60px 60px",
         }}
@@ -24,7 +24,7 @@ export default function MaintenancePage() {
           animate={{ opacity: 1, scale: 1 }}
           className="mb-6 px-4 py-1.5 border border-accent/30 rounded-full bg-accent/5 flex items-center gap-2"
         >
-          <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse shadow-[0_0_8px_#2e9e5b]" />
+          <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse shadow-[0_0_8px_var(--color-accent)]" />
           <span className="text-[10px] font-black uppercase tracking-[0.3em] text-accent">
             System Protocol 4.0
           </span>
@@ -48,7 +48,7 @@ export default function MaintenancePage() {
           className="w-full max-w-sm h-1.5 bg-zinc-900 overflow-hidden mb-12 -skew-x-12 border border-white/5"
         >
           <motion.div
-            className="h-full bg-accent w-full origin-left shadow-[0_0_15px_#2e9e5b]"
+            className="h-full bg-accent w-full origin-left shadow-[0_0_15px_var(--color-accent)]"
             animate={{ x: ["-100%", "100%"] }}
             transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
           />

@@ -71,7 +71,7 @@ const BundleCard = ({ bundle }: { bundle: BundleGroup }) => {
                 fill
                 className="object-cover mix-blend-multiply rounded-lg"
               />
-              <span className="absolute -top-1 -left-1 bg-[#2e9e5b] text-white text-[7px] font-black px-1 rounded-sm">
+              <span className="absolute -top-1 -left-1 bg-accent text-white text-[7px] font-black px-1 rounded-sm">
                 {idx + 1}
               </span>
             </div>
@@ -97,7 +97,7 @@ const BundleCard = ({ bundle }: { bundle: BundleGroup }) => {
               Rs. {bundle.totalPrice.toLocaleString()}
             </span>
           )}
-          <span className="text-xs font-display font-black text-[#2e9e5b]">
+          <span className="text-xs font-display font-black text-accent">
             Rs. {netPrice.toLocaleString()}
           </span>
         </div>
@@ -306,12 +306,12 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
             <Flex
               justify="space-between"
               align="center"
-              className="text-[#2e9e5b] bg-[#2e9e5b]/10 py-1.5 px-3 rounded-lg -mx-3"
+              className="text-accent bg-accent/10 py-1.5 px-3 rounded-lg -mx-3"
             >
-              <Typography.Text className="font-bold text-[#2e9e5b]">
+              <Typography.Text className="font-bold text-accent">
                 Discounts
               </Typography.Text>
-              <Typography.Text className="font-bold font-mono text-[#2e9e5b]">
+              <Typography.Text className="font-bold font-mono text-accent">
                 - Rs. {itemDiscount.toLocaleString()}
               </Typography.Text>
             </Flex>
@@ -321,12 +321,12 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
             <Flex
               justify="space-between"
               align="center"
-              className="text-[#2e9e5b] bg-[#2e9e5b]/10 py-1.5 px-3 rounded-lg -mx-3"
+              className="text-accent bg-accent/10 py-1.5 px-3 rounded-lg -mx-3"
             >
-              <Typography.Text className="font-bold text-[#2e9e5b]">
+              <Typography.Text className="font-bold text-accent">
                 Promotion
               </Typography.Text>
-              <Typography.Text className="font-bold font-mono text-[#2e9e5b]">
+              <Typography.Text className="font-bold font-mono text-accent">
                 - Rs. {promotionDiscount.toLocaleString()}
               </Typography.Text>
             </Flex>
@@ -336,12 +336,12 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
             <Flex
               justify="space-between"
               align="center"
-              className="text-[#2e9e5b] bg-[#2e9e5b]/10 py-1.5 px-3 rounded-lg -mx-3"
+              className="text-accent bg-accent/10 py-1.5 px-3 rounded-lg -mx-3"
             >
-              <Typography.Text className="font-bold text-[#2e9e5b]">
+              <Typography.Text className="font-bold text-accent">
                 Coupon
               </Typography.Text>
-              <Typography.Text className="font-bold font-mono text-[#2e9e5b]">
+              <Typography.Text className="font-bold font-mono text-accent">
                 - Rs. {couponDiscount.toLocaleString()}
               </Typography.Text>
             </Flex>
@@ -389,7 +389,7 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
           disabled={bagItems.length === 0 || !paymentType}
           style={{
             background:
-              bagItems.length === 0 || !paymentType ? undefined : "#2e9e5b",
+              bagItems.length === 0 || !paymentType ? undefined : "var(--color-accent)",
             border: "none",
             borderRadius: 99,
             height: 64,
@@ -400,7 +400,7 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
           <span className="font-display font-black uppercase tracking-widest text-sm">
             Complete Order
           </span>
-          <div className="bg-white text-[#2e9e5b] rounded-full p-2 transition-transform group-hover:translate-x-1">
+          <div className="bg-white text-accent rounded-full p-2 transition-transform group-hover:translate-x-1">
             <IoArrowForward size={18} />
           </div>
         </Button>

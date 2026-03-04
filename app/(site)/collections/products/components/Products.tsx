@@ -100,7 +100,7 @@ const Products = ({ items }: { items: Product[] }) => {
               <span
                 style={{
                   marginLeft: 6,
-                  background: "#2e9e5b",
+                  background: "var(--color-accent)",
                   color: "#fff",
                   borderRadius: 99,
                   fontSize: 10,
