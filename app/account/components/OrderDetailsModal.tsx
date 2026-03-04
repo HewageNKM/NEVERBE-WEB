@@ -92,8 +92,9 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
     doc.text("Billed To:", 14, 52);
     doc.setFont("helvetica", "normal");
     doc.text(customer.name, 14, 57);
-    doc.text(customer.email || "", 14, 62);
-    doc.text(`Phone: +${customer.phone}`, 14, 67);
+    doc.text(customer.address || "", 14, 62);
+    doc.text(customer.city || "", 14, 67);
+    doc.text(`Phone: +${customer.phone}`, 14, 72);
 
     doc.setFont("helvetica", "bold");
     doc.text("Shipped To:", 100, 52);
@@ -325,6 +326,27 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
                     </p>
                   </address>
                 </div>
+
+                {customer.address && (
+                  <div className="group">
+                    <div className="flex items-center gap-3 mb-5">
+                      <IoLocationOutline size={20} className="text-[#2e9e5b]" />
+                      <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-black">
+                        Billing Details
+                      </h3>
+                    </div>
+                    <address className="not-text-sm text-zinc-500 font-medium leading-relaxed pl-8 border-l-2 border-default group-hover:border-[#2e9e5b] transition-colors">
+                      <p className="text-black font-black uppercase tracking-tighter text-base">
+                        {customer.name}
+                      </p>
+                      <p className="mt-1">{customer.address}</p>
+                      <p>{customer.city}</p>
+                      <p className="text-[#2e9e5b] font-black mt-3">
+                        +{customer.phone}
+                      </p>
+                    </address>
+                  </div>
+                )}
 
                 <div className="group">
                   <div className="flex items-center gap-3 mb-5">
