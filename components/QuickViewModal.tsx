@@ -247,7 +247,7 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
             <div className="hidden md:flex items-center justify-end px-4 pt-4 shrink-0">
               <button
                 onClick={onClose}
-                className="w-9 h-9 flex items-center justify-center rounded-full bg-dark text-inverse hover:bg-accent hover:text-dark transition-all shadow-custom"
+                className="w-9 h-9 flex items-center justify-center rounded-full bg-surface-2 text-primary border border-default hover:bg-accent hover:text-dark hover:border-accent transition-all"
               >
                 <IoClose size={20} />
               </button>

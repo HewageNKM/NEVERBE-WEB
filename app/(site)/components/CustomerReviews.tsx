@@ -311,7 +311,7 @@ const CustomerReviews = () => {
           </Flex>
         </Flex>
 
-        <div className="relative pb-8">
+        <div className="relative pb-8 mt-6 md:mt-0">
           <Swiper
             modules={[Navigation]}
             onInit={(s) => {

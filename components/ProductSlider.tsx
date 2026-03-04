@@ -45,7 +45,7 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
         vertical={false}
         align="center"
         justify="space-between"
-        className="mb-8 gap-4 flex-col md:flex-row"
+        className="mb-10 md:mb-8 gap-4 flex-col md:flex-row"
       >
         <Flex vertical gap={4} className="text-center md:text-left">
           <Text
@@ -118,7 +118,7 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
         </Flex>
       </Flex>
 
-      <div className="relative pb-4">
+      <div className="relative pb-4 mt-6 md:mt-0">
         <Swiper
           modules={[Navigation]}
           onInit={(s) => {

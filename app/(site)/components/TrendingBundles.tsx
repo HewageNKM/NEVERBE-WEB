@@ -32,7 +32,7 @@ const TrendingBundles: React.FC<TrendingBundlesProps> = ({ bundles }) => {
         vertical={false}
         justify="space-between"
         align="center"
-        className="mb-8 gap-4 flex-col md:flex-row"
+        className="mb-10 md:mb-8 gap-4 flex-col md:flex-row"
       >
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -157,7 +157,7 @@ const TrendingBundles: React.FC<TrendingBundlesProps> = ({ bundles }) => {
         </Flex>
       </Flex>
 
-      <div className="relative pb-4">
+      <div className="relative pb-4 mt-6 md:mt-0">
         <Swiper
           modules={[Navigation]}
           onInit={(s) => {

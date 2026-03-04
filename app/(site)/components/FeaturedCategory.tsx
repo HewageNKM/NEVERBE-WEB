@@ -106,7 +106,7 @@ const FeaturedCategories = () => {
         vertical={false}
         align="end"
         justify="space-between"
-        className="mb-14 flex-col md:flex-row gap-6"
+        className="mb-10 md:mb-14 flex-col md:flex-row gap-6"
       >
         <Flex
           vertical
@@ -182,7 +182,7 @@ const FeaturedCategories = () => {
         </Flex>
       </Flex>
 
-      <div className="relative pb-4">
+      <div className="relative pb-4 mt-6 md:mt-0">
         <Swiper
           modules={[Navigation]}
           onInit={(s) => {
