@@ -409,6 +409,36 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                 className="object-contain h-5 w-auto"
               />
             </Link>
+
+            {/* reCAPTCHA Disclaimer */}
+            <Text
+              style={{
+                fontSize: 10,
+                color: "#777",
+                textAlign: "right",
+              }}
+            >
+              This site is protected by reCAPTCHA and the Google{" "}
+              <br className="hidden md:block" />
+              <a
+                href="https://policies.google.com/privacy"
+                target="_blank"
+                rel="noreferrer"
+                className="hover:text-[#2e9e5b] transition-colors underline underline-offset-2"
+              >
+                Privacy Policy
+              </a>{" "}
+              and{" "}
+              <a
+                href="https://policies.google.com/terms"
+                target="_blank"
+                rel="noreferrer"
+                className="hover:text-[#2e9e5b] transition-colors underline underline-offset-2"
+              >
+                Terms of Service
+              </a>{" "}
+              apply.
+            </Text>
           </Flex>
         </Flex>
       </div>
