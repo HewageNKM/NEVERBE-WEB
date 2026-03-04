@@ -61,18 +61,18 @@ const MobileCheckoutBar = () => {
               </span>
             </div>
 
-            {/* Compact Checkout Button */}
+            {/* Ultra Compact Checkout Button */}
             <Button
               type="primary"
               onClick={() => {
                 if (showBag) dispatch(hideBag());
                 router.push("/checkout");
               }}
-              className="flex-1 h-auto py-2.5 bg-accent text-dark border-none rounded-full font-display font-black uppercase tracking-widest text-[10px] flex items-center justify-center gap-2 shadow-custom active:scale-95 transition-all"
+              className="shrink-0 h-auto py-1.5 px-4 bg-accent text-dark border-none rounded-full font-display font-black uppercase tracking-widest text-[9px] flex items-center justify-center gap-1 shadow-custom active:scale-95 transition-all w-auto"
             >
               Checkout
-              <div className="bg-dark text-inverse rounded-full p-1 flex items-center justify-center">
-                <IoArrowForward size={12} />
+              <div className="bg-dark text-inverse rounded-full p-0.5 flex items-center justify-center">
+                <IoArrowForward size={9} />
               </div>
             </Button>
           </div>
