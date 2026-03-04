@@ -215,27 +215,48 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: "100%", opacity: 0 }}
             transition={{ type: "spring", damping: 30, stiffness: 300 }}
-            className="relative bg-surface w-full max-w-6xl h-[92vh] md:h-[85vh] shadow-hover overflow-hidden rounded-t-3xl md:rounded-2xl border-t md:border border-default"
+            onClick={(e) => e.stopPropagation()}
+            className="relative bg-surface w-full max-w-6xl h-[92vh] md:h-[85vh] shadow-hover rounded-t-3xl md:rounded-2xl border-t md:border border-default flex flex-col"
           >
-            {/* Top Drag Handle (Mobile) */}
-            <div className="md:hidden flex justify-center py-3 sticky top-0 bg-surface z-40">
-              <div className="w-10 h-1 bg-border-dark rounded-full" />
+            {/* ── HEADER BAR ─────────────────────────────── */}
+            {/* Mobile: draggable handle strip that can swipe-to-close */}
+            <motion.div
+              drag="y"
+              dragConstraints={{ top: 0, bottom: 0 }}
+              dragElastic={{ top: 0, bottom: 0.4 }}
+              onDragEnd={(_e, info) => {
+                if (info.offset.y > 80) onClose();
+              }}
+              className="md:hidden flex items-center justify-between px-4 pt-3 pb-2 shrink-0 cursor-grab active:cursor-grabbing"
+              style={{ touchAction: "none" }}
+            >
+              {/* Centered pill handle */}
+              <div className="flex-1 flex justify-center">
+                <div className="w-12 h-1.5 bg-gray-300 rounded-full" />
+              </div>
+              {/* X button right side on mobile */}
+              <button
+                onClick={onClose}
+                className="w-8 h-8 flex items-center justify-center rounded-full bg-surface-2 text-primary hover:bg-surface-3 transition-colors"
+              >
+                <IoClose size={18} />
+              </button>
+            </motion.div>
+
+            {/* Desktop: simple header row with close button */}
+            <div className="hidden md:flex items-center justify-end px-4 pt-4 shrink-0">
+              <button
+                onClick={onClose}
+                className="w-9 h-9 flex items-center justify-center rounded-full bg-dark text-inverse hover:bg-accent hover:text-dark transition-all shadow-custom"
+              >
+                <IoClose size={20} />
+              </button>
             </div>
 
-            {/* Desktop Close Button */}
-            <Button
-              type="text"
-              icon={<IoClose size={20} />}
-              onClick={onClose}
-              className="hidden md:flex absolute top-4 right-4 z-50 p-2.5 bg-dark text-inverse rounded-full hover:bg-accent hover:text-dark transition-all shadow-custom h-auto w-auto border-none"
-            />
-
-            <div className="flex flex-col md:flex-row h-full overflow-y-auto hide-scrollbar">
+            <div className="flex flex-col md:flex-row flex-1 min-h-0 overflow-y-auto md:overflow-hidden hide-scrollbar">
               {/* LEFT: VISUALS SECTION */}
-              <div className="w-full md:w-1/2 flex flex-col bg-surface-2 md:border-r border-default shrink-0">
-                <div className="relative aspect-square md:aspect-auto md:min-h-[400px] md:flex-1 flex items-center justify-center p-4 sm:p-6 md:p-8 lg:p-12">
-                  {/* Performance Glow behind product */}
-                  <div className="absolute inset-0 bg-accent/5 rounded-full blur-[100px] scale-50 md:scale-75" />
+              <div className="w-full md:w-1/2 flex flex-col bg-surface-2 md:border-r border-default md:shrink-0 md:overflow-y-auto hide-scrollbar">
+                <div className="relative aspect-[4/3] md:aspect-auto md:min-h-[400px] md:flex-1 flex items-center justify-center p-4 sm:p-6 md:p-8 lg:p-12">
                   <Image
                     src={
                       selectedVariant?.images?.[0]?.url || product.thumbnail.url
@@ -322,7 +343,7 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
               </div>
 
               {/* RIGHT: DETAILS SECTION */}
-              <div className="w-full md:w-1/2 p-4 sm:p-6 md:p-10 lg:p-12 flex flex-col bg-surface">
+              <div className="w-full md:w-1/2 p-4 sm:p-6 md:p-10 lg:p-12 flex flex-col bg-surface md:overflow-y-auto hide-scrollbar">
                 {/* Promotion Banner - Display Only */}
                 <AnimatePresence>
                   {activePromo && (
@@ -446,7 +467,7 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
                 </div>
 
                 {/* Action Performance Pills */}
-                <div className="mt-auto space-y-3 pb-6 sm:pb-4 md:pb-0">
+                <div className="mt-auto space-y-3 pb-8 sm:pb-6 md:pb-0">
                   <Button
                     type="primary"
                     onClick={handleAddToBag}

@@ -204,7 +204,7 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
                   justify="space-between"
                   align="center"
                   gap={16}
-                  className="mb-6 lg:mb-12 lg:flex-row"
+                  className="mb-8 lg:mb-12 lg:flex-row"
                 >
                   <Flex
                     justify="space-between"
@@ -315,8 +315,8 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
                 </Flex>
 
                 {/* Results Section */}
-                {showSearchResult && (
-                  <div className="animate-fade">
+                {showSearchResult ? (
+                  <div className="animate-fade mt-4">
                     <Flex
                       align="center"
                       gap={8}
@@ -349,7 +349,7 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
                     </Flex>
                     {items.length > 0 ? (
                       <SearchDialog
-                        containerStyle="shadow-none border-none grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 lg:gap-6"
+                        containerStyle="shadow-none border-none grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 gap-y-6 lg:gap-6"
                         results={items}
                         onClick={() => {
                           setIsSearchOpen(false);
@@ -392,7 +392,39 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
                       </Flex>
                     )}
                   </div>
-                )}
+                ) : recommendations.length > 0 ? (
+                  /* Show trending / recommended products when search overlay first opens */
+                  <div className="animate-fade mt-4">
+                    <Flex
+                      align="center"
+                      gap={8}
+                      style={{
+                        marginBottom: 16,
+                        borderBottom: "1px solid rgba(46, 158, 91, 0.15)",
+                      }}
+                    >
+                      <Text
+                        style={{
+                          fontSize: 11,
+                          fontWeight: 900,
+                          textTransform: "uppercase",
+                          letterSpacing: "0.2em",
+                          color: "rgba(0,0,0,0.35)",
+                        }}
+                      >
+                        Trending Now
+                      </Text>
+                    </Flex>
+                    <SearchDialog
+                      containerStyle="shadow-none border-none grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 gap-y-6 lg:gap-6"
+                      results={recommendations}
+                      onClick={() => {
+                        setIsSearchOpen(false);
+                        clearSearch();
+                      }}
+                    />
+                  </div>
+                ) : null}
               </div>
             </motion.div>
           )}

@@ -101,7 +101,7 @@ const ItemCard = ({
           cover: { position: "relative" },
         }}
         cover={
-          <div className="relative aspect-square w-full overflow-hidden bg-[#fcfdfa] rounded-t-[24px]">
+          <div className="relative aspect-square w-full overflow-hidden rounded-t-[24px]">
             <Link
               href={`/collections/products/${item?.id}`}
               className="block h-full w-full"

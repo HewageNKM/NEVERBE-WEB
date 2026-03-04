@@ -8,11 +8,14 @@ import {
   calculateFinalPrice,
   hasDiscount as checkHasDiscount,
 } from "@/utils/pricing";
+import { Card, Typography, Badge } from "antd";
+
+const { Text, Title } = Typography;
 
 interface SearchResultCardProps {
   item: Product;
   onClick: () => void;
-  variant?: "list" | "card"; // 'list' for mobile menu, 'card' for desktop grid
+  variant?: "list" | "card";
 }
 
 const SearchResultCard: React.FC<SearchResultCardProps> = ({
@@ -23,81 +26,121 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({
   const { getPromotionForProduct } = usePromotionsContext();
   const activePromo = getPromotionForProduct(item.id);
 
-  // Use shared pricing utilities
   const finalPrice = calculateFinalPrice(item, activePromo);
   const hasDiscount = checkHasDiscount(item, activePromo);
+  const outOfStock = !item.inStock;
 
-  // Shared Badge Component for Consistency
-  const Badge = ({
-    children,
-    isPromo = false,
-  }: {
-    children: React.ReactNode;
-    isPromo?: boolean;
-  }) => (
-    <span
-      className={`absolute top-2 left-2 px-2 py-1 text-[9px] font-display font-black uppercase tracking-tighter shadow-custom z-10 ${
-        isPromo ? "bg-accent text-dark" : "bg-dark text-inverse"
-      }`}
-    >
-      {children}
-    </span>
-  );
+  // Determine ribbon text — only show when there's something meaningful
+  const ribbonText = outOfStock
+    ? "Sold Out"
+    : activePromo
+      ? activePromo.type === "BOGO"
+        ? "Buy 1 Get 1"
+        : "Special Offer"
+      : item.discount > 0
+        ? `${item.discount}% Off`
+        : null;
 
-  // --- VARIANT: CARD (Desktop Grid Search) ---
+  // --- VARIANT: CARD (Grid Search / Trending) ---
   if (variant === "card") {
     return (
-      <Link
-        href={`/collections/products/${item.id}`}
-        onClick={onClick}
-        className="group flex flex-col bg-surface hover:bg-surface-2 transition-all duration-300 cursor-pointer border border-transparent hover:border-default hover:shadow-hover"
+      <Badge.Ribbon
+        text={ribbonText}
+        color={outOfStock ? "#1a1a1a" : "#2e9e5b"}
+        style={{
+          padding: "0 10px",
+          fontSize: "11px",
+          fontWeight: 800,
+          textTransform: "uppercase",
+          color: "#fff",
+          letterSpacing: "0.05em",
+          display: ribbonText ? undefined : "none",
+        }}
       >
-        {/* Product Image */}
-        <div className="relative aspect-square bg-surface-2 overflow-hidden">
-          <Image
-            src={item.thumbnail.url}
-            alt={item.name}
-            fill
-            className="object-cover mix-blend-multiply transition-transform duration-700 group-hover:scale-110"
-          />
-
-          {/* Branded Badges */}
-          {activePromo ? (
-            <Badge isPromo>
-              {activePromo.type === "BOGO" ? "BOGO" : "Promo"}
-            </Badge>
-          ) : item.discount > 0 ? (
-            <Badge isPromo>-{item.discount}%</Badge>
-          ) : (
-            <Badge>New</Badge>
-          )}
-        </div>
-
-        {/* Product Info */}
-        <div className="p-4 flex flex-col flex-1">
-          <h3 className="text-base font-display font-bold text-primary leading-tight line-clamp-2 group-hover:text-accent transition-colors">
-            {item.name}
-          </h3>
-          <p className="text-xs text-muted mt-1 font-bold uppercase tracking-widest">
-            {item.category?.replace("-", " ") || "Performance Gear"}
-          </p>
-
-          <div className="mt-auto pt-3 flex items-baseline gap-2 flex-wrap">
-            <span
-              className={`text-md font-black tracking-tighter ${
-                hasDiscount ? "text-success" : "text-primary"
-              }`}
+        <Card
+          hoverable
+          className="group active:scale-[0.98]"
+          style={{
+            overflow: "hidden",
+            transition: "all 0.3s ease",
+            background: "#fff",
+            boxShadow: "none",
+            border: "1px solid rgba(0,0,0,0.06)",
+            borderRadius: 16,
+          }}
+          styles={{
+            body: { padding: "10px 12px" },
+            cover: { position: "relative" },
+          }}
+          cover={
+            <Link
+              href={`/collections/products/${item.id}`}
+              onClick={onClick}
+              className="block"
             >
-              Rs. {finalPrice.toLocaleString()}
-            </span>
-            {hasDiscount && (
-              <span className="text-xs text-muted line-through decoration-border-dark">
-                Rs. {item.sellingPrice.toLocaleString()}
-              </span>
-            )}
-          </div>
-        </div>
-      </Link>
+              <div className="relative aspect-square w-full overflow-hidden rounded-t-[16px]">
+                <Image
+                  src={item.thumbnail.url}
+                  alt={item.name}
+                  fill
+                  className={`object-cover transition-transform duration-700 group-hover:scale-105 ${
+                    outOfStock ? "opacity-60 grayscale" : ""
+                  }`}
+                />
+              </div>
+            </Link>
+          }
+        >
+          <Link href={`/collections/products/${item.id}`} onClick={onClick}>
+            <div className="flex flex-col gap-0.5 mb-2">
+              <Title
+                level={5}
+                style={{
+                  margin: 0,
+                  fontSize: 13,
+                  fontWeight: 800,
+                  letterSpacing: "-0.02em",
+                  lineHeight: 1.2,
+                }}
+                className="group-hover:text-accent transition-colors line-clamp-2"
+              >
+                {item.name}
+              </Title>
+              <Text
+                type="secondary"
+                style={{
+                  textTransform: "capitalize",
+                  fontWeight: 600,
+                  fontSize: "11px",
+                }}
+              >
+                {item.category?.replace("-", " ") || "Premium Gear"}
+              </Text>
+            </div>
+
+            <div className="flex items-baseline gap-1.5 flex-wrap mb-1 text-base">
+              <Text
+                strong
+                style={{
+                  color: hasDiscount ? "#2e9e5b" : "inherit",
+                  fontSize: "1rem",
+                  letterSpacing: "-0.03em",
+                }}
+              >
+                Rs. {finalPrice.toLocaleString()}
+              </Text>
+              {hasDiscount && (
+                <Text delete type="secondary" style={{ fontSize: "0.75rem" }}>
+                  Rs.{" "}
+                  {item.marketPrice > item.sellingPrice
+                    ? item.marketPrice.toLocaleString()
+                    : item.sellingPrice.toLocaleString()}
+                </Text>
+              )}
+            </div>
+          </Link>
+        </Card>
+      </Badge.Ribbon>
     );
   }
 
@@ -108,46 +151,66 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({
       onClick={onClick}
       className="group flex items-center gap-4 p-4 hover:bg-surface-3 transition-all cursor-pointer w-full border-b border-default last:border-none"
     >
-      {/* Precision Image Box */}
       <div className="relative w-20 h-20 bg-surface-2 rounded-lg overflow-hidden shrink-0 border border-default">
         <Image
           src={item.thumbnail.url}
           alt={item.name}
           width={100}
           height={100}
-          className="object-cover w-full h-full mix-blend-multiply transition-transform duration-500 group-hover:scale-110"
+          className={`object-cover w-full h-full transition-transform duration-500 group-hover:scale-110 ${
+            outOfStock ? "opacity-60 grayscale" : ""
+          }`}
         />
-        <div className="absolute inset-0 bg-accent/0 group-hover:bg-accent/5 transition-colors" />
       </div>
 
       <div className="flex-1 min-w-0">
         <div className="flex justify-between items-start gap-2">
-          <h2 className="text-base font-display font-black uppercase tracking-tighter text-primary leading-tight truncate group-hover:text-accent transition-colors">
+          <Title
+            level={5}
+            style={{
+              margin: 0,
+              fontSize: 14,
+              fontWeight: 800,
+              letterSpacing: "-0.02em",
+              lineHeight: 1.3,
+            }}
+            className="truncate group-hover:text-accent transition-colors"
+          >
             {item.name}
-          </h2>
+          </Title>
           {activePromo && (
-            <span className="shrink-0 bg-accent text-dark text-[8px] font-black px-1.5 py-0.5 shadow-sm">
-              PROMO
+            <span className="shrink-0 bg-accent text-dark text-[8px] font-black px-1.5 py-0.5 rounded-sm shadow-sm">
+              {activePromo.type === "BOGO" ? "BOGO" : "PROMO"}
             </span>
           )}
         </div>
 
-        <p className="text-xs text-muted font-bold uppercase tracking-wider mt-0.5">
+        <Text
+          type="secondary"
+          style={{
+            textTransform: "capitalize",
+            fontWeight: 600,
+            fontSize: "11px",
+          }}
+        >
           {item.category?.replace("-", " ") || "Gear"}
-        </p>
+        </Text>
 
         <div className="flex items-center gap-3 mt-2">
-          <span
-            className={`text-base font-black tracking-tighter ${
-              hasDiscount ? "text-success" : "text-primary"
-            }`}
+          <Text
+            strong
+            style={{
+              color: hasDiscount ? "#2e9e5b" : "inherit",
+              fontSize: "0.9rem",
+              letterSpacing: "-0.03em",
+            }}
           >
             Rs. {finalPrice.toLocaleString()}
-          </span>
+          </Text>
           {hasDiscount && (
-            <span className="text-xs text-muted line-through">
+            <Text delete type="secondary" style={{ fontSize: "0.75rem" }}>
               Rs. {item.sellingPrice.toLocaleString()}
-            </span>
+            </Text>
           )}
         </div>
       </div>

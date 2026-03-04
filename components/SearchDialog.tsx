@@ -31,7 +31,7 @@ const SearchDialog: React.FC<SearchDialogProps> = ({
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: 10 }}
         transition={{ type: "spring", damping: 25, stiffness: 200 }}
-        className={`w-full bg-surface text-primary overflow-hidden flex flex-col ${
+        className={`w-full text-primary overflow-hidden flex flex-col ${
           containerStyle ||
           "shadow-hover border border-default absolute top-14 right-0 lg:w-[600px] z-50"
         }`}
@@ -85,6 +85,7 @@ const SearchDialog: React.FC<SearchDialogProps> = ({
             <div className="grid grid-cols-2 lg:grid-cols-6 gap-4 border-t border-dark pt-4">
               {recommendations.map((result, index) => (
                 <motion.div
+                  className="p-5"
                   key={result.id || index}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}

@@ -128,7 +128,7 @@ export function useAlgoliaSearch(
   }, []);
 
   const fetchRecommendations = useCallback(async () => {
-    try {
+    const doFetch = async () => {
       const res = await searchClient.search({
         requests: [
           {
@@ -146,8 +146,18 @@ export function useAlgoliaSearch(
           item.isDeleted === false,
       );
       setRecommendations(filtered);
-    } catch (e) {
-      console.error("[useAlgoliaSearch] Recommend failed:", e);
+    };
+
+    try {
+      await doFetch();
+    } catch {
+      // Retry once after a short delay (client may not be ready yet)
+      try {
+        await new Promise((r) => setTimeout(r, 1500));
+        await doFetch();
+      } catch {
+        // Silently fail - recommendations are non-critical
+      }
     }
   }, [searchClient, indexName]);
 
