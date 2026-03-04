@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { Form, Input, Button } from "antd";
+import { Form, Input, Button, Row, Col, Typography, Card } from "antd";
+const { Title, Text } = Typography;
 import toast from "react-hot-toast";
 import { auth } from "@/firebase/firebaseClient";
 import { motion, AnimatePresence } from "framer-motion";
@@ -96,9 +97,12 @@ const SavedAddresses: React.FC<SavedAddressesProps> = ({
                 }}
               >
                 <div className="flex justify-between items-center mb-2">
-                  <h3 className="text-lg font-bold text-primary uppercase tracking-tight">
+                  <Title
+                    level={3}
+                    className="text-lg! font-bold! text-primary! uppercase! tracking-tight! mb-0!"
+                  >
                     Edit {type} Address
-                  </h3>
+                  </Title>
                   <Button
                     type="text"
                     onClick={() => setIsEditing(false)}
@@ -155,55 +159,71 @@ const SavedAddresses: React.FC<SavedAddressesProps> = ({
               </Form>
             </motion.div>
           ) : (
-            <motion.div
-              key="display"
-              className="bg-surface-2 p-6 rounded-2xl border border-default flex flex-col justify-between h-full min-h-[200px] relative group hover:border-accent transition-all"
-            >
-              <div>
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 bg-surface rounded-xl flex items-center justify-center text-accent border border-default">
-                    {type === "Shipping" ? (
-                      <IoMapOutline size={20} />
-                    ) : (
-                      <IoCardOutline size={20} />
-                    )}
+            <motion.div key="display" className="h-full">
+              <Card
+                bordered={false}
+                className="bg-surface-2 rounded-2xl border border-default flex flex-col justify-between h-full min-h-[200px] relative group hover:border-accent transition-all shadow-none hover:shadow-none"
+                bodyStyle={{
+                  padding: "24px",
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                }}
+              >
+                <div>
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 bg-surface rounded-xl flex items-center justify-center text-accent border border-default">
+                      {type === "Shipping" ? (
+                        <IoMapOutline size={20} />
+                      ) : (
+                        <IoCardOutline size={20} />
+                      )}
+                    </div>
+                    <Title
+                      level={3}
+                      className="font-display! font-black! text-lg! uppercase! tracking-tighter! text-primary! mb-0!"
+                    >
+                      {type} Address
+                    </Title>
                   </div>
-                  <h3 className="font-display font-black text-lg uppercase tracking-tighter text-primary">
-                    {type} Address
-                  </h3>
+
+                  {existing ? (
+                    <div className="space-y-1 block">
+                      <Text className="block text-sm font-bold text-primary">
+                        {existing.address}
+                      </Text>
+                      <Text className="block text-sm text-muted">
+                        {existing.city}
+                      </Text>
+                      <Text className="block text-xs font-bold text-accent mt-2 tracking-widest">
+                        {existing.phone}
+                      </Text>
+                    </div>
+                  ) : (
+                    <Text className="block text-sm text-muted">
+                      No address provided
+                    </Text>
+                  )}
                 </div>
 
-                {existing ? (
-                  <div className="space-y-1">
-                    <p className="text-sm font-bold text-primary">
-                      {existing.address}
-                    </p>
-                    <p className="text-sm text-muted">{existing.city}</p>
-                    <p className="text-xs font-bold text-accent mt-2 tracking-widest">
-                      {existing.phone}
-                    </p>
+                <div className="mt-6">
+                  <Button
+                    type="text"
+                    onClick={() => setIsEditing(true)}
+                    className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-accent hover:text-primary transition-all"
+                  >
+                    <IoPencilOutline size={14} />
+                    {existing ? "Change Address" : "Add Address"}
+                  </Button>
+                </div>
+
+                {existing && (
+                  <div className="absolute top-6 right-6 text-accent/50">
+                    <IoCheckmarkCircleOutline size={22} />
                   </div>
-                ) : (
-                  <p className="text-sm text-muted">No address provided</p>
                 )}
-              </div>
-
-              <div className="mt-6">
-                <Button
-                  type="text"
-                  onClick={() => setIsEditing(true)}
-                  className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-accent hover:text-primary transition-all"
-                >
-                  <IoPencilOutline size={14} />
-                  {existing ? "Change Address" : "Add Address"}
-                </Button>
-              </div>
-
-              {existing && (
-                <div className="absolute top-6 right-6 text-accent/50">
-                  <IoCheckmarkCircleOutline size={22} />
-                </div>
-              )}
+              </Card>
             </motion.div>
           )}
         </AnimatePresence>
@@ -214,21 +234,28 @@ const SavedAddresses: React.FC<SavedAddressesProps> = ({
   return (
     <div className="space-y-8">
       <div className="border-b border-default pb-6">
-        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-accent">
+        <Text className="block text-[10px] font-black uppercase tracking-[0.3em] text-accent">
           Delivery
-        </span>
-        <h2 className="text-3xl font-display font-black uppercase tracking-tighter text-primary mt-2">
+        </Text>
+        <Title
+          level={2}
+          className="text-3xl! font-display! font-black! uppercase! tracking-tighter! text-primary! mt-2! mb-0!"
+        >
           Your Addresses
-        </h2>
-        <p className="text-xs text-muted font-bold uppercase tracking-widest mt-2">
+        </Title>
+        <Text className="block text-xs text-muted font-bold uppercase tracking-widest mt-2">
           Manage your delivery and billing locations
-        </p>
+        </Text>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <AddressCard type="Shipping" />
-        <AddressCard type="Billing" />
-      </div>
+      <Row gutter={[24, 24]}>
+        <Col xs={24} md={12}>
+          <AddressCard type="Shipping" />
+        </Col>
+        <Col xs={24} md={12}>
+          <AddressCard type="Billing" />
+        </Col>
+      </Row>
     </div>
   );
 };

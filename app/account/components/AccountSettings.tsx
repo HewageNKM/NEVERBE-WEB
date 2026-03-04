@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
-import { Form, Input, Button } from "antd";
+import { Form, Input, Button, Row, Col, Typography, Card } from "antd";
+const { Title, Text } = Typography;
 import {
   updatePassword,
   updateProfile,
@@ -48,15 +49,27 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
     };
 
     return (
-      <div className="bg-surface p-8 rounded-2xl border border-default transition-all hover:border-accent">
+      <Card
+        bordered={false}
+        className="bg-surface rounded-2xl border border-default shadow-none hover:shadow-none transition-all hover:border-accent"
+        bodyStyle={{
+          padding: "32px",
+          display: "flex",
+          flexDirection: "column",
+          gap: "24px",
+        }}
+      >
         <div className="flex flex-col gap-6">
           <div className="flex items-center gap-3">
             <div className="p-3 bg-surface-2 rounded-xl text-primary border border-default">
               <IoPersonOutline size={22} />
             </div>
-            <h3 className="text-xl font-display font-black uppercase tracking-tighter text-primary">
+            <Title
+              level={3}
+              className="text-xl! font-display! font-black! uppercase! tracking-tighter! text-primary! mb-0!"
+            >
               Profile
-            </h3>
+            </Title>
           </div>
 
           <Form
@@ -71,43 +84,47 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
                   : "",
             }}
           >
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Form.Item
-                name="fName"
-                label={
-                  <span className="text-[10px] font-black uppercase tracking-widest text-muted ml-1">
-                    First Name
-                  </span>
-                }
-                rules={[{ required: true }]}
-                className="mb-0"
-              >
-                <Input
-                  size="large"
-                  className="w-full bg-surface-2 p-3 text-sm font-bold border border-default focus:border-primary focus:bg-surface outline-none rounded-xl transition-all"
-                />
-              </Form.Item>
-              <Form.Item
-                name="lName"
-                label={
-                  <span className="text-[10px] font-black uppercase tracking-widest text-muted ml-1">
-                    Last Name
-                  </span>
-                }
-                rules={[{ required: true }]}
-                className="mb-0"
-              >
-                <Input
-                  size="large"
-                  className="w-full bg-surface-2 p-3 text-sm font-bold border border-default focus:border-primary focus:bg-surface outline-none rounded-xl transition-all"
-                />
-              </Form.Item>
-            </div>
+            <Row gutter={[16, 16]}>
+              <Col xs={24} md={12}>
+                <Form.Item
+                  name="fName"
+                  label={
+                    <Text className="block text-[10px] font-black uppercase tracking-widest text-muted ml-1">
+                      First Name
+                    </Text>
+                  }
+                  rules={[{ required: true }]}
+                  className="mb-0"
+                >
+                  <Input
+                    size="large"
+                    className="w-full bg-surface-2 p-3 text-sm font-bold border border-default focus:border-primary focus:bg-surface outline-none rounded-xl transition-all"
+                  />
+                </Form.Item>
+              </Col>
+              <Col xs={24} md={12}>
+                <Form.Item
+                  name="lName"
+                  label={
+                    <Text className="block text-[10px] font-black uppercase tracking-widest text-muted ml-1">
+                      Last Name
+                    </Text>
+                  }
+                  rules={[{ required: true }]}
+                  className="mb-0"
+                >
+                  <Input
+                    size="large"
+                    className="w-full bg-surface-2 p-3 text-sm font-bold border border-default focus:border-primary focus:bg-surface outline-none rounded-xl transition-all"
+                  />
+                </Form.Item>
+              </Col>
+            </Row>
 
-            <div className="space-y-2">
-              <label className="text-[10px] font-black uppercase tracking-widest text-muted ml-1 mb-2 block">
+            <div className="space-y-2 mt-4">
+              <Text className="block text-[10px] font-black uppercase tracking-widest text-muted ml-1 mb-2">
                 Email Address
-              </label>
+              </Text>
               <div className="relative">
                 <Input
                   readOnly
@@ -135,7 +152,7 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
             </div>
           </Form>
         </div>
-      </div>
+      </Card>
     );
   };
 
@@ -174,15 +191,27 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
     };
 
     return (
-      <div className="bg-surface-2 p-8 rounded-2xl border border-default transition-all hover:border-accent h-full">
+      <Card
+        bordered={false}
+        className="bg-surface-2 rounded-2xl border border-default shadow-none hover:shadow-none transition-all hover:border-accent h-full"
+        bodyStyle={{
+          padding: "32px",
+          display: "flex",
+          flexDirection: "column",
+          gap: "24px",
+        }}
+      >
         <div className="flex flex-col gap-6">
           <div className="flex items-center gap-3">
             <div className="p-3 bg-surface rounded-xl text-primary border border-default">
               <IoLockClosedOutline size={22} />
             </div>
-            <h3 className="text-xl font-display font-black uppercase tracking-tighter text-primary">
+            <Title
+              level={3}
+              className="text-xl! font-display! font-black! uppercase! tracking-tighter! text-primary! mb-0!"
+            >
               Security
-            </h3>
+            </Title>
           </div>
 
           <Form
@@ -194,9 +223,9 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
             <Form.Item
               name="currentPass"
               label={
-                <span className="text-[10px] font-black uppercase tracking-widest text-muted ml-1">
+                <Text className="block text-[10px] font-black uppercase tracking-widest text-muted ml-1">
                   Current Password
-                </span>
+                </Text>
               }
               rules={[{ required: true }]}
               className="mb-0"
@@ -209,9 +238,9 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
             <Form.Item
               name="newPass"
               label={
-                <span className="text-[10px] font-black uppercase tracking-widest text-muted ml-1">
+                <Text className="block text-[10px] font-black uppercase tracking-widest text-muted ml-1">
                   New Password
-                </span>
+                </Text>
               }
               rules={[{ required: true }]}
               className="mb-0"
@@ -224,9 +253,9 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
             <Form.Item
               name="confirmPass"
               label={
-                <span className="text-[10px] font-black uppercase tracking-widest text-muted ml-1">
+                <Text className="block text-[10px] font-black uppercase tracking-widest text-muted ml-1">
                   Confirm New Password
-                </span>
+                </Text>
               }
               rules={[{ required: true }]}
               className="mb-0"
@@ -255,16 +284,20 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
             </div>
           </Form>
         </div>
-      </div>
+      </Card>
     );
   };
 
   return (
     <div className="w-full">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <ProfileForm />
-        <PasswordForm />
-      </div>
+      <Row gutter={[24, 24]}>
+        <Col xs={24} lg={12}>
+          <ProfileForm />
+        </Col>
+        <Col xs={24} lg={12}>
+          <PasswordForm />
+        </Col>
+      </Row>
     </div>
   );
 };

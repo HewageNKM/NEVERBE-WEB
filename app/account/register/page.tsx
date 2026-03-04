@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
-import { Form, Input, Button } from "antd";
+import { Form, Input, Button, Typography, Row, Col } from "antd";
+const { Title, Text } = Typography;
 import {
   createUserWithEmailAndPassword,
   updateProfile,
@@ -107,13 +108,16 @@ const RegisterPage = () => {
             />
           </Link>
 
-          <h1 className="text-3xl md:text-4xl font-display font-black uppercase tracking-tighter mb-4">
+          <Title
+            level={1}
+            className="text-3xl! md:text-4xl! font-display! font-black! uppercase! tracking-tighter! mb-4!"
+          >
             Become a Member
-          </h1>
-          <p className="text-muted text-sm font-medium leading-relaxed max-w-[300px]">
+          </Title>
+          <Text className="text-muted text-sm font-medium leading-relaxed max-w-[300px] block">
             Create your profile to unlock exclusive gear, faster checkout, and
             performance tracking.
-          </p>
+          </Text>
         </div>
 
         <Form
@@ -122,30 +126,34 @@ const RegisterPage = () => {
           disabled={loading}
           className="space-y-4"
         >
-          <div className="grid grid-cols-2 gap-4">
-            <Form.Item
-              name="firstName"
-              rules={[{ required: true, message: "Required" }]}
-              className="mb-0"
-            >
-              <Input
-                size="large"
-                placeholder="First Name"
-                className="w-full bg-surface-2 hover:bg-surface focus:bg-surface border-default focus:border-primary px-4 py-3 text-sm font-bold rounded-xl transition-all"
-              />
-            </Form.Item>
-            <Form.Item
-              name="lastName"
-              rules={[{ required: true, message: "Required" }]}
-              className="mb-0"
-            >
-              <Input
-                size="large"
-                placeholder="Last Name"
-                className="w-full bg-surface-2 hover:bg-surface focus:bg-surface border-default focus:border-primary px-4 py-3 text-sm font-bold rounded-xl transition-all"
-              />
-            </Form.Item>
-          </div>
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
+                name="firstName"
+                rules={[{ required: true, message: "Required" }]}
+                className="mb-0"
+              >
+                <Input
+                  size="large"
+                  placeholder="First Name"
+                  className="w-full bg-surface-2 hover:bg-surface focus:bg-surface border-default focus:border-primary px-4 py-3 text-sm font-bold rounded-xl transition-all"
+                />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                name="lastName"
+                rules={[{ required: true, message: "Required" }]}
+                className="mb-0"
+              >
+                <Input
+                  size="large"
+                  placeholder="Last Name"
+                  className="w-full bg-surface-2 hover:bg-surface focus:bg-surface border-default focus:border-primary px-4 py-3 text-sm font-bold rounded-xl transition-all"
+                />
+              </Form.Item>
+            </Col>
+          </Row>
 
           <Form.Item
             name="email"
@@ -177,9 +185,9 @@ const RegisterPage = () => {
             />
           </Form.Item>
 
-          <p className="text-[11px] text-muted text-center uppercase font-bold tracking-widest leading-relaxed py-4 px-6">
+          <Text className="text-[11px] text-muted text-center uppercase font-bold tracking-widest leading-relaxed py-4 px-6 block">
             By joining, you agree to our Privacy Policy and Terms of Use.
-          </p>
+          </Text>
           <Button
             type="primary"
             htmlType="submit"
@@ -215,7 +223,7 @@ const RegisterPage = () => {
 
         {/* Login Link */}
         <div className="text-center mt-12">
-          <p className="text-muted text-xs font-bold uppercase tracking-wide">
+          <Text className="text-muted text-xs font-bold uppercase tracking-wide">
             Already a member?{" "}
             <Link
               href={`/account/login${
@@ -225,7 +233,7 @@ const RegisterPage = () => {
             >
               Sign In.
             </Link>
-          </p>
+          </Text>
         </div>
       </motion.div>
 

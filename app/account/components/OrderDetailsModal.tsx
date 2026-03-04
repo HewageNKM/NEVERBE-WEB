@@ -40,6 +40,7 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
     items,
     customer,
     paymentMethod,
+    paymentStatus,
     shippingFee,
     fee,
     discount,
@@ -164,7 +165,7 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
     });
 
     // 5. Footer
-    doc.setFont("helvetica", "italic");
+    doc.setFont("helvetica", "normal");
     doc.setFontSize(9);
     doc.setTextColor(150);
     doc.text("Thank you for shopping with NEVERBE!", 105, 280, {
@@ -228,29 +229,17 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
                     <p className="font-display font-black text-xl uppercase tracking-tighter text-black">
                       {status}
                     </p>
-                    <Link
-                      href={`/checkout/success/${orderId}`}
-                      className="text-[10px] font-black uppercase tracking-widest text-black underline underline-offset-8 decoration-[#2e9e5b] decoration-2 hover:decoration-black transition-all"
-                    >
-                      View Receipt
-                    </Link>
                   </div>
                 </div>
               </div>
               <div className="flex items-center gap-3">
-                <button
+                <Button
                   onClick={handleDownloadInvoice}
-                  className="flex items-center gap-2 px-6 py-4 bg-white text-black border border-zinc-200 hover:border-black transition-all text-xs font-black uppercase tracking-widest rounded-full shadow-sm"
+                  className="flex items-center gap-2 px-6 py-4 bg-white text-black border border-zinc-200 hover:border-black transition-all text-xs! font-black! uppercase! tracking-widest! rounded-full shadow-sm h-auto"
                 >
                   <IoCloudDownloadOutline size={18} />
                   Download Invoice
-                </button>
-                <Link
-                  href={`/checkout/success/${orderId}`}
-                  className="flex items-center gap-3 px-8 py-4 bg-black text-white hover:bg-zinc-800 transition-all text-xs font-black uppercase tracking-widest rounded-full shadow-xl shadow-black/10"
-                >
-                  View Receipt
-                </Link>
+                </Button>
               </div>
             </div>
 
@@ -300,9 +289,9 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
                           <p className="font-display font-black text-black">
                             Rs. {item.price.toLocaleString()}
                           </p>
-                          {item.discount > 0 && (
+                          {(item.discount || 0) > 0 && (
                             <p className="text-[10px] font-bold text-[#2e9e5b] uppercase tracking-tighter">
-                              - Rs. {item.discount.toLocaleString()}
+                              - Rs. {(item.discount || 0).toLocaleString()}
                             </p>
                           )}
                         </div>
@@ -347,6 +336,9 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
                   <div className="pl-8 border-l-2 border-zinc-100 group-hover:border-[#2e9e5b] transition-colors">
                     <p className="text-sm font-bold text-black uppercase tracking-widest">
                       {paymentMethod}
+                    </p>
+                    <p className="text-[10px] font-black uppercase tracking-widest text-[#2e9e5b] mt-1">
+                      Status: {paymentStatus}
                     </p>
                   </div>
                 </div>

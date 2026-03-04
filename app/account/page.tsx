@@ -24,7 +24,9 @@ import {
 } from "react-icons/io5";
 import { motion } from "framer-motion";
 import axiosInstance from "@/actions/axiosInstance";
-import { Button } from "antd";
+import { Button, Typography, Card } from "antd";
+
+const { Title, Text } = Typography;
 
 const Account = () => {
   const router = useRouter();
@@ -112,9 +114,12 @@ const Account = () => {
               />
             </Link>
             <div className="h-8 w-px bg-border-default hidden md:block"></div>
-            <h1 className="text-2xl font-display font-black uppercase tracking-tighter">
+            <Title
+              level={1}
+              className="text-2xl! font-display! font-black! uppercase! tracking-tighter! mb-0!"
+            >
               Account
-            </h1>
+            </Title>
           </div>
 
           <div className="flex items-center gap-6">
@@ -188,18 +193,25 @@ const Account = () => {
               )}
               {activeTab === "details" &&
                 (user?.isAnonymous ? (
-                  <div className="bg-surface-2 rounded-2xl p-10 md:p-16 text-center border border-default">
+                  <Card
+                    bordered={false}
+                    className="bg-surface-2 rounded-2xl border border-default shadow-none"
+                    bodyStyle={{ padding: "40px 64px", textAlign: "center" }}
+                  >
                     <IoShieldCheckmarkOutline
                       className="mx-auto text-accent mb-6"
                       size={60}
                     />
-                    <h2 className="text-3xl font-display font-black uppercase tracking-tighter mb-4">
+                    <Title
+                      level={2}
+                      className="text-3xl! font-display! font-black! uppercase! tracking-tighter! mb-4!"
+                    >
                       Secure your profile
-                    </h2>
-                    <p className="text-muted max-w-md mx-auto mb-10 font-medium">
+                    </Title>
+                    <Text className="block text-muted max-w-md mx-auto mb-10 font-medium">
                       Link your Google account to save your orders and profile
                       permanently.
-                    </p>
+                    </Text>
                     <Button
                       type="default"
                       onClick={handleGoogleLink}
@@ -227,7 +239,7 @@ const Account = () => {
                       </span>
                       Sync with Google
                     </Button>
-                  </div>
+                  </Card>
                 ) : (
                   <AccountSettings user={user} dispatch={dispatch} />
                 ))}

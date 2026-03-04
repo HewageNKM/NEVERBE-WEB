@@ -1,7 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import { FirebaseError } from "firebase/app";
-import { Form, Input, ConfigProvider, Button } from "antd";
+import { Form, Input, ConfigProvider, Button, Typography } from "antd";
+const { Title, Text } = Typography;
 import {
   signInWithEmailAndPassword,
   GoogleAuthProvider,
@@ -71,12 +72,15 @@ const AuthPage = () => {
               priority
             />
           </Link>
-          <h1 className="text-3xl font-display font-black uppercase tracking-tighter mb-3">
+          <Title
+            level={1}
+            className="text-3xl! font-display! font-black! uppercase! tracking-tighter! mb-3!"
+          >
             Sign In
-          </h1>
-          <p className="text-muted text-sm font-medium">
+          </Title>
+          <Text className="text-muted text-sm font-medium block">
             Enter your details to access your gear and orders.
-          </p>
+          </Text>
         </div>
 
         {/* Auth Form */}
@@ -145,9 +149,9 @@ const AuthPage = () => {
         {/* Divider */}
         <div className="flex items-center gap-4 my-10">
           <div className="h-px bg-border-default flex-1"></div>
-          <span className="text-[10px] font-black text-muted tracking-widest uppercase">
+          <Text className="text-[10px] font-black text-muted tracking-widest uppercase">
             Or
-          </span>
+          </Text>
           <div className="h-px bg-border-default flex-1"></div>
         </div>
 
@@ -162,9 +166,9 @@ const AuthPage = () => {
 
         {/* Footer Links */}
         <div className="mt-8 flex flex-col items-center gap-2">
-          <span className="text-xs font-semibold text-muted uppercase tracking-widest">
+          <Text className="text-xs font-semibold text-muted uppercase tracking-widest block">
             Don't have an account?
-          </span>
+          </Text>
           <Link
             href={`/account/register?redirect=${encodeURIComponent(
               redirectUrl,

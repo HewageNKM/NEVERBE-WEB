@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { Button } from "antd";
+import { Button, Typography, Card } from "antd";
+const { Title, Text } = Typography;
 import EmptyState from "@/components/EmptyState";
 import { useRouter } from "next/navigation";
 import { Order } from "@/interfaces/Order";
@@ -30,12 +31,15 @@ const OrdersView: React.FC<OrdersViewProps> = ({ orders }) => {
       <div className="space-y-8">
         {/* Header */}
         <div className="flex flex-col gap-1 border-b border-default pb-6">
-          <span className="text-[10px] font-black uppercase tracking-[0.3em] text-accent">
+          <Text className="block text-[10px] font-black uppercase tracking-[0.3em] text-accent">
             Purchases
-          </span>
-          <h2 className="text-3xl font-display font-black uppercase tracking-tighter text-primary">
+          </Text>
+          <Title
+            level={2}
+            className="text-3xl! font-display! font-black! uppercase! tracking-tighter! text-primary! mb-0!"
+          >
             Order History
-          </h2>
+          </Title>
         </div>
 
         <div className="space-y-4">
@@ -55,62 +59,77 @@ const OrdersView: React.FC<OrdersViewProps> = ({ orders }) => {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: idx * 0.05 }}
-                className="group flex flex-col md:flex-row bg-surface border border-default p-5 md:p-6 gap-6 items-center hover:border-accent transition-all duration-300 rounded-xl relative"
               >
-                {/* Thumbnail */}
-                <div className="w-20 h-20 md:w-24 md:h-24 bg-surface-2 rounded-xl shrink-0 overflow-hidden border border-default p-2 flex items-center justify-center">
-                  <Image
-                    width={80}
-                    height={80}
-                    src={
-                      order.items?.[0]?.thumbnail ||
-                      "https://placehold.co/400?text=GEAR"
-                    }
-                    alt="Product"
-                    className="w-full h-full object-cover mix-blend-multiply transition-transform duration-500 group-hover:scale-110"
-                  />
-                </div>
-
-                {/* Details */}
-                <div className="flex-1 flex flex-col justify-center text-center md:text-left">
-                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-3">
-                    <div className="flex items-center justify-center md:justify-start gap-2">
-                      <div className="w-2 h-2 rounded-full bg-accent" />
-                      <h3 className="font-display font-black text-lg uppercase tracking-tighter text-primary">
-                        {order.status || "Processing"}
-                      </h3>
-                    </div>
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-muted">
-                      {order.createdAt
-                        ? toSafeLocaleString(order.createdAt)
-                        : "Just now"}
-                    </span>
+                <Card
+                  bordered={false}
+                  className="group bg-surface border border-default hover:border-accent transition-all duration-300 rounded-xl overflow-hidden shadow-none hover:shadow-none"
+                  bodyStyle={{
+                    padding: "20px",
+                    display: "flex",
+                    flexDirection: "row",
+                    gap: "24px",
+                    alignItems: "center",
+                    flexWrap: "wrap",
+                  }}
+                >
+                  {/* Thumbnail */}
+                  <div className="w-20 h-20 md:w-24 md:h-24 bg-surface-2 rounded-xl shrink-0 overflow-hidden border border-default p-2 flex items-center justify-center">
+                    <Image
+                      width={80}
+                      height={80}
+                      src={
+                        order.items?.[0]?.thumbnail ||
+                        "https://placehold.co/400?text=GEAR"
+                      }
+                      alt="Product"
+                      className="w-full h-full object-cover mix-blend-multiply transition-transform duration-500 group-hover:scale-110"
+                    />
                   </div>
 
-                  <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-                    <div className="space-y-1">
-                      <p className="text-muted text-[10px] font-black uppercase tracking-widest">
-                        Order No:{" "}
-                        <span className="text-primary">
-                          #{order.orderId || order.id.slice(0, 8)}
-                        </span>
-                      </p>
-                      <p className="text-xl font-display font-black text-primary tracking-tighter">
-                        LKR {order.total?.toLocaleString() || "0.00"}
-                      </p>
+                  {/* Details */}
+                  <div className="flex-1 flex flex-col justify-center text-center md:text-left min-w-[200px]">
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-3">
+                      <div className="flex items-center justify-center md:justify-start gap-2">
+                        <div className="w-2 h-2 rounded-full bg-accent" />
+                        <Title
+                          level={3}
+                          className="text-lg! font-display! font-black! uppercase! tracking-tighter! text-primary! mb-0!"
+                        >
+                          {order.status || "Processing"}
+                        </Title>
+                      </div>
+                      <Text className="text-[10px] font-bold uppercase tracking-widest text-muted">
+                        {order.createdAt
+                          ? toSafeLocaleString(order.createdAt)
+                          : "Just now"}
+                      </Text>
                     </div>
 
-                    <Button
-                      type="primary"
-                      onClick={() => handleViewOrder(order)}
-                      className="inline-flex items-center justify-center gap-2 px-6 py-5 bg-[#2e9e5b] hover:bg-[#26854b] shadow-md hover:shadow-lg border-none text-white text-[10px] font-black uppercase tracking-widest rounded-full transition-all"
-                    >
-                      <IoReceiptOutline size={14} />
-                      Details
-                      <IoChevronForwardOutline className="group-hover:translate-x-1 transition-transform" />
-                    </Button>
+                    <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                      <div className="space-y-1">
+                        <Text className="block text-muted text-[10px] font-black uppercase tracking-widest">
+                          Order No:{" "}
+                          <span className="text-primary">
+                            #{order.orderId || order.id.slice(0, 8)}
+                          </span>
+                        </Text>
+                        <Text className="block text-xl font-display font-black text-primary tracking-tighter">
+                          LKR {order.total?.toLocaleString() || "0.00"}
+                        </Text>
+                      </div>
+
+                      <Button
+                        type="primary"
+                        onClick={() => handleViewOrder(order)}
+                        className="inline-flex items-center justify-center gap-2 px-6 py-5 bg-[#2e9e5b] hover:bg-[#26854b] shadow-md hover:shadow-lg border-none text-white text-[10px] font-black uppercase tracking-widest rounded-full transition-all"
+                      >
+                        <IoReceiptOutline size={14} />
+                        Details
+                        <IoChevronForwardOutline className="group-hover:translate-x-1 transition-transform" />
+                      </Button>
+                    </div>
                   </div>
-                </div>
+                </Card>
               </motion.div>
             ))
           )}
