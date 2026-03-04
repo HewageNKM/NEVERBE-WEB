@@ -99,7 +99,7 @@ const Account = () => {
   };
 
   return (
-    <div className="min-h-screen bg-surface text-primary">
+    <div className="min-h-screen bg-white text-primary">
       <div className="max-w-content mx-auto px-4 lg:px-12 py-6 md:py-20">
         {/* TOP BAR */}
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-12 gap-8">
@@ -161,7 +161,7 @@ const Account = () => {
               {activeTab === item.id && (
                 <motion.div
                   layoutId="underline"
-                  className="absolute bottom-0 left-0 right-0 h-1 bg-accent rounded-full"
+                  className="absolute bottom-0 left-0 right-0 h-1 bg-[#2e9e5b] rounded-full"
                 />
               )}
             </Button>
@@ -195,11 +195,11 @@ const Account = () => {
                 (user?.isAnonymous ? (
                   <Card
                     bordered={false}
-                    className="bg-surface-2 rounded-2xl border border-default shadow-none"
+                    className="bg-white rounded-2xl border border-default shadow-none"
                     bodyStyle={{ padding: "40px 64px", textAlign: "center" }}
                   >
                     <IoShieldCheckmarkOutline
-                      className="mx-auto text-accent mb-6"
+                      className="mx-auto text-[#2e9e5b] mb-6"
                       size={60}
                     />
                     <Title
@@ -217,7 +217,7 @@ const Account = () => {
                       onClick={handleGoogleLink}
                       className="inline-flex h-auto items-center justify-center gap-4 bg-dark text-inverse px-10 py-5 rounded-full font-black uppercase text-xs tracking-widest hover:bg-accent! hover:text-dark! hover:border-accent! transition-all active:scale-95 border-none"
                     >
-                      <span className="w-5 h-5 bg-surface rounded-full flex items-center justify-center p-1">
+                      <span className="w-5 h-5 bg-white rounded-full flex items-center justify-center p-1">
                         <svg viewBox="0 0 24 24">
                           <path
                             d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"

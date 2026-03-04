@@ -44,7 +44,7 @@ const OrdersView: React.FC<OrdersViewProps> = ({ orders }) => {
 
         <div className="space-y-4">
           {orders.length === 0 ? (
-            <div className="py-20 bg-surface-2 rounded-2xl border border-default flex items-center justify-center text-center px-6 max-w-xl mx-auto">
+            <div className="py-20 bg-white rounded-2xl border border-default flex items-center justify-center text-center px-6 max-w-xl mx-auto">
               <EmptyState
                 heading="No orders yet"
                 subHeading="Your purchase history will appear here once you've made your first order."
@@ -62,7 +62,7 @@ const OrdersView: React.FC<OrdersViewProps> = ({ orders }) => {
               >
                 <Card
                   bordered={false}
-                  className="group bg-surface border border-default hover:border-accent transition-all duration-300 rounded-xl overflow-hidden shadow-none hover:shadow-none"
+                  className="group bg-white border border-default hover:border-[#2e9e5b] transition-all duration-300 rounded-xl overflow-hidden shadow-none hover:shadow-none"
                   bodyStyle={{
                     padding: "20px",
                     display: "flex",
@@ -73,7 +73,7 @@ const OrdersView: React.FC<OrdersViewProps> = ({ orders }) => {
                   }}
                 >
                   {/* Thumbnail */}
-                  <div className="w-20 h-20 md:w-24 md:h-24 bg-surface-2 rounded-xl shrink-0 overflow-hidden border border-default p-2 flex items-center justify-center">
+                  <div className="w-20 h-20 md:w-24 md:h-24 bg-white rounded-xl shrink-0 overflow-hidden border border-default p-2 flex items-center justify-center">
                     <Image
                       width={80}
                       height={80}
@@ -90,7 +90,7 @@ const OrdersView: React.FC<OrdersViewProps> = ({ orders }) => {
                   <div className="flex-1 flex flex-col justify-center text-center md:text-left min-w-[200px]">
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-3">
                       <div className="flex items-center justify-center md:justify-start gap-2">
-                        <div className="w-2 h-2 rounded-full bg-accent" />
+                        <div className="w-2 h-2 rounded-full bg-[#2e9e5b]" />
                         <Title
                           level={3}
                           className="text-lg! font-display! font-black! uppercase! tracking-tighter! text-primary! mb-0!"

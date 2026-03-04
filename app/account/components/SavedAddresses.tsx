@@ -83,7 +83,7 @@ const SavedAddresses: React.FC<SavedAddressesProps> = ({
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              className="bg-surface-2 p-6 rounded-2xl border border-default"
+              className="bg-white p-6 rounded-2xl border border-default"
             >
               <Form
                 form={form}
@@ -120,7 +120,7 @@ const SavedAddresses: React.FC<SavedAddressesProps> = ({
                   <Input
                     size="large"
                     placeholder="Street Address"
-                    className="w-full bg-surface p-3 rounded-xl border border-default focus:border-primary outline-none text-sm transition-all hover:bg-surface focus:bg-surface"
+                    className="w-full bg-white p-3 rounded-xl border border-default focus:border-[#2e9e5b] outline-none text-sm transition-all hover:bg-white focus:bg-white"
                   />
                 </Form.Item>
                 <div className="grid grid-cols-2 gap-4">
@@ -132,7 +132,7 @@ const SavedAddresses: React.FC<SavedAddressesProps> = ({
                     <Input
                       size="large"
                       placeholder="City"
-                      className="w-full bg-surface p-3 rounded-xl border border-default focus:border-primary outline-none text-sm transition-all hover:bg-surface focus:bg-surface"
+                      className="w-full bg-white p-3 rounded-xl border border-default focus:border-[#2e9e5b] outline-none text-sm transition-all hover:bg-white focus:bg-white"
                     />
                   </Form.Item>
                   <Form.Item
@@ -143,7 +143,7 @@ const SavedAddresses: React.FC<SavedAddressesProps> = ({
                     <Input
                       size="large"
                       placeholder="Phone Number"
-                      className="w-full bg-surface p-3 rounded-xl border border-default focus:border-primary outline-none text-sm transition-all hover:bg-surface focus:bg-surface"
+                      className="w-full bg-white p-3 rounded-xl border border-default focus:border-[#2e9e5b] outline-none text-sm transition-all hover:bg-white focus:bg-white"
                     />
                   </Form.Item>
                 </div>
@@ -162,7 +162,7 @@ const SavedAddresses: React.FC<SavedAddressesProps> = ({
             <motion.div key="display" className="h-full">
               <Card
                 bordered={false}
-                className="bg-surface-2 rounded-2xl border border-default flex flex-col justify-between h-full min-h-[200px] relative group hover:border-accent transition-all shadow-none hover:shadow-none"
+                className="bg-white rounded-2xl border border-default flex flex-col justify-between h-full min-h-[200px] relative group hover:border-[#2e9e5b] transition-all shadow-none hover:shadow-none"
                 bodyStyle={{
                   padding: "24px",
                   height: "100%",
@@ -173,7 +173,7 @@ const SavedAddresses: React.FC<SavedAddressesProps> = ({
               >
                 <div>
                   <div className="flex items-center gap-3 mb-4">
-                    <div className="w-10 h-10 bg-surface rounded-xl flex items-center justify-center text-accent border border-default">
+                    <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-[#2e9e5b] border border-default">
                       {type === "Shipping" ? (
                         <IoMapOutline size={20} />
                       ) : (
@@ -196,7 +196,7 @@ const SavedAddresses: React.FC<SavedAddressesProps> = ({
                       <Text className="block text-sm text-muted">
                         {existing.city}
                       </Text>
-                      <Text className="block text-xs font-bold text-accent mt-2 tracking-widest">
+                      <Text className="block text-xs font-bold text-[#2e9e5b] mt-2 tracking-widest">
                         {existing.phone}
                       </Text>
                     </div>
@@ -211,7 +211,7 @@ const SavedAddresses: React.FC<SavedAddressesProps> = ({
                   <Button
                     type="text"
                     onClick={() => setIsEditing(true)}
-                    className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-accent hover:text-primary transition-all"
+                    className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-[#2e9e5b] hover:text-primary transition-all"
                   >
                     <IoPencilOutline size={14} />
                     {existing ? "Change Address" : "Add Address"}
@@ -219,7 +219,7 @@ const SavedAddresses: React.FC<SavedAddressesProps> = ({
                 </div>
 
                 {existing && (
-                  <div className="absolute top-6 right-6 text-accent/50">
+                  <div className="absolute top-6 right-6 text-[#2e9e5b]/50">
                     <IoCheckmarkCircleOutline size={22} />
                   </div>
                 )}
@@ -234,7 +234,7 @@ const SavedAddresses: React.FC<SavedAddressesProps> = ({
   return (
     <div className="space-y-8">
       <div className="border-b border-default pb-6">
-        <Text className="block text-[10px] font-black uppercase tracking-[0.3em] text-accent">
+        <Text className="block text-[10px] font-black uppercase tracking-[0.3em] text-[#2e9e5b]">
           Delivery
         </Text>
         <Title

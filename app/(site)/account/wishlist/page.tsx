@@ -49,8 +49,8 @@ const WishlistPage = () => {
         {wishlistItems.length === 0 ? (
           /* Empty State */
           <div className="flex flex-col items-center justify-center py-20">
-            <div className="w-24 h-24 bg-surface-2 rounded-full flex items-center justify-center mb-6">
-              <IoHeartDislike className="text-secondary" size={40} />
+            <div className="w-24 h-24 bg-white border border-default rounded-full flex items-center justify-center mb-6">
+              <IoHeartDislike className="text-[#2e9e5b]" size={40} />
             </div>
             <Title
               level={2}
@@ -92,7 +92,7 @@ const WishlistPage = () => {
                       bodyStyle={{ padding: 0 }}
                     >
                       <Link href={`/collections/products/${item.productId}`}>
-                        <div className="relative aspect-4/5 bg-surface-2 overflow-hidden mb-4 rounded-2xl">
+                        <div className="relative aspect-4/5 bg-white overflow-hidden mb-4 rounded-2xl border border-default">
                           <Image
                             src={item.thumbnail}
                             alt={item.name}

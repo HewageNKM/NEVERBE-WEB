@@ -53,7 +53,7 @@ const AuthPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-surface text-primary flex flex-col items-center justify-center px-6 relative">
+    <div className="min-h-screen bg-white text-primary flex flex-col items-center justify-center px-6 relative">
       {loading && <ComponentLoader />}
 
       <motion.div
@@ -102,7 +102,7 @@ const AuthPage = () => {
               <Input
                 size="large"
                 placeholder="Email Address"
-                className="w-full bg-surface-2 hover:bg-surface focus:bg-surface border-default focus:border-primary px-4 py-3 text-sm font-bold rounded-xl transition-all"
+                className="w-full bg-white hover:bg-zinc-50 focus:bg-white border-default focus:border-[#2e9e5b] px-4 py-3 text-sm font-bold rounded-xl transition-all"
                 name="email"
               />
             </Form.Item>
@@ -117,7 +117,7 @@ const AuthPage = () => {
               <Input.Password
                 size="large"
                 placeholder="Password"
-                className="w-full bg-surface-2 hover:bg-surface focus:bg-surface border-default focus:border-primary px-4 py-3 text-sm font-bold rounded-xl transition-all"
+                className="w-full bg-white hover:bg-zinc-50 focus:bg-white border-default focus:border-[#2e9e5b] px-4 py-3 text-sm font-bold rounded-xl transition-all"
                 name="password"
               />
             </Form.Item>
@@ -173,7 +173,7 @@ const AuthPage = () => {
             href={`/account/register?redirect=${encodeURIComponent(
               redirectUrl,
             )}`}
-            className="text-xs font-black uppercase tracking-widest text-primary hover:text-secondary underline underline-offset-4 decoration-accent decoration-2 transition-all"
+            className="text-xs font-black uppercase tracking-widest text-primary hover:text-secondary underline underline-offset-4 decoration-[#2e9e5b] decoration-2 transition-all"
           >
             Join the Club
           </Link>

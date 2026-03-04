@@ -89,7 +89,7 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-surface text-primary flex flex-col items-center justify-center px-6 relative">
+    <div className="min-h-screen bg-white text-primary flex flex-col items-center justify-center px-6 relative">
       {loading && <ComponentLoader />}
 
       <motion.div
@@ -136,7 +136,7 @@ const RegisterPage = () => {
                 <Input
                   size="large"
                   placeholder="First Name"
-                  className="w-full bg-surface-2 hover:bg-surface focus:bg-surface border-default focus:border-primary px-4 py-3 text-sm font-bold rounded-xl transition-all"
+                  className="w-full bg-white hover:bg-zinc-50 focus:bg-white border-default focus:border-[#2e9e5b] px-4 py-3 text-sm font-bold rounded-xl transition-all"
                 />
               </Form.Item>
             </Col>
@@ -149,7 +149,7 @@ const RegisterPage = () => {
                 <Input
                   size="large"
                   placeholder="Last Name"
-                  className="w-full bg-surface-2 hover:bg-surface focus:bg-surface border-default focus:border-primary px-4 py-3 text-sm font-bold rounded-xl transition-all"
+                  className="w-full bg-white hover:bg-zinc-50 focus:bg-white border-default focus:border-[#2e9e5b] px-4 py-3 text-sm font-bold rounded-xl transition-all"
                 />
               </Form.Item>
             </Col>
@@ -166,7 +166,7 @@ const RegisterPage = () => {
             <Input
               size="large"
               placeholder="Email Address"
-              className="w-full bg-surface-2 hover:bg-surface focus:bg-surface border-default focus:border-primary px-4 py-3 text-sm font-bold rounded-xl transition-all"
+              className="w-full bg-white hover:bg-zinc-50 focus:bg-white border-default focus:border-[#2e9e5b] px-4 py-3 text-sm font-bold rounded-xl transition-all"
             />
           </Form.Item>
 
@@ -181,7 +181,7 @@ const RegisterPage = () => {
             <Input.Password
               size="large"
               placeholder="Password (Min. 6 Characters)"
-              className="w-full bg-surface-2 hover:bg-surface focus:bg-surface border-default focus:border-primary px-4 py-3 text-sm font-bold rounded-xl transition-all"
+              className="w-full bg-white hover:bg-zinc-50 focus:bg-white border-default focus:border-[#2e9e5b] px-4 py-3 text-sm font-bold rounded-xl transition-all"
             />
           </Form.Item>
 
@@ -229,7 +229,7 @@ const RegisterPage = () => {
               href={`/account/login${
                 redirectUrl !== "/account" ? `?redirect=${redirectUrl}` : ""
               }`}
-              className="text-primary font-black underline underline-offset-8 decoration-accent decoration-4 hover:decoration-primary transition-all ml-1"
+              className="text-primary font-black underline underline-offset-8 decoration-[#2e9e5b] decoration-4 hover:decoration-primary transition-all ml-1"
             >
               Sign In.
             </Link>

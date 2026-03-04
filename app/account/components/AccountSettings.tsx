@@ -51,7 +51,7 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
     return (
       <Card
         bordered={false}
-        className="bg-surface rounded-2xl border border-default shadow-none hover:shadow-none transition-all hover:border-accent"
+        className="bg-white rounded-2xl border border-default shadow-none hover:shadow-none transition-all hover:border-[#2e9e5b]"
         bodyStyle={{
           padding: "32px",
           display: "flex",
@@ -61,7 +61,7 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
       >
         <div className="flex flex-col gap-6">
           <div className="flex items-center gap-3">
-            <div className="p-3 bg-surface-2 rounded-xl text-primary border border-default">
+            <div className="p-3 bg-white rounded-xl text-[#2e9e5b] border border-default">
               <IoPersonOutline size={22} />
             </div>
             <Title
@@ -98,7 +98,7 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
                 >
                   <Input
                     size="large"
-                    className="w-full bg-surface-2 p-3 text-sm font-bold border border-default focus:border-primary focus:bg-surface outline-none rounded-xl transition-all"
+                    className="w-full bg-white p-3 text-sm font-bold border border-default focus:border-[#2e9e5b] focus:bg-white outline-none rounded-xl transition-all"
                   />
                 </Form.Item>
               </Col>
@@ -115,7 +115,7 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
                 >
                   <Input
                     size="large"
-                    className="w-full bg-surface-2 p-3 text-sm font-bold border border-default focus:border-primary focus:bg-surface outline-none rounded-xl transition-all"
+                    className="w-full bg-white p-3 text-sm font-bold border border-default focus:border-[#2e9e5b] focus:bg-white outline-none rounded-xl transition-all"
                   />
                 </Form.Item>
               </Col>
@@ -130,10 +130,10 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
                   readOnly
                   type="email"
                   value={user.email}
-                  className="w-full bg-surface-3 py-3 px-4 text-sm font-bold border border-default text-muted cursor-not-allowed outline-none rounded-xl"
+                  className="w-full bg-zinc-50 py-3 px-4 text-sm font-bold border border-default text-muted cursor-not-allowed outline-none rounded-xl"
                 />
                 <IoCheckmarkCircle
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-accent"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-[#2e9e5b]"
                   size={20}
                 />
               </div>
@@ -193,7 +193,7 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
     return (
       <Card
         bordered={false}
-        className="bg-surface-2 rounded-2xl border border-default shadow-none hover:shadow-none transition-all hover:border-accent h-full"
+        className="bg-white rounded-2xl border border-default shadow-none hover:shadow-none transition-all hover:border-[#2e9e5b] h-full"
         bodyStyle={{
           padding: "32px",
           display: "flex",
@@ -203,7 +203,7 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
       >
         <div className="flex flex-col gap-6">
           <div className="flex items-center gap-3">
-            <div className="p-3 bg-surface rounded-xl text-primary border border-default">
+            <div className="p-3 bg-white rounded-xl text-[#2e9e5b] border border-default">
               <IoLockClosedOutline size={22} />
             </div>
             <Title
@@ -232,7 +232,7 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
             >
               <Input.Password
                 size="large"
-                className="w-full bg-surface p-3 text-sm font-bold border border-default focus:border-primary outline-none rounded-xl transition-all"
+                className="w-full bg-white p-3 text-sm font-bold border border-default focus:border-[#2e9e5b] focus:bg-white outline-none rounded-xl transition-all"
               />
             </Form.Item>
             <Form.Item
@@ -247,7 +247,7 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
             >
               <Input.Password
                 size="large"
-                className="w-full bg-surface p-3 text-sm font-bold border border-default focus:border-primary outline-none rounded-xl transition-all"
+                className="w-full bg-white p-3 text-sm font-bold border border-default focus:border-[#2e9e5b] focus:bg-white outline-none rounded-xl transition-all"
               />
             </Form.Item>
             <Form.Item
@@ -262,14 +262,14 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
             >
               <Input.Password
                 size="large"
-                className="w-full bg-surface p-3 text-sm font-bold border border-default focus:border-primary outline-none rounded-xl transition-all"
+                className="w-full bg-white p-3 text-sm font-bold border border-default focus:border-[#2e9e5b] focus:bg-white outline-none rounded-xl transition-all"
               />
             </Form.Item>
 
             <div className="flex flex-col sm:flex-row justify-between items-center flex-wrap gap-4 pt-4">
               <Button
                 type="link"
-                className="text-[10px] font-black uppercase tracking-widest text-muted hover:text-primary underline underline-offset-8 decoration-accent decoration-2 transition-all p-0 h-auto"
+                className="text-[10px] font-black uppercase tracking-widest text-muted hover:text-primary underline underline-offset-8 decoration-[#2e9e5b] decoration-2 transition-all p-0 h-auto"
               >
                 Forgot Password?
               </Button>
