@@ -27,7 +27,7 @@ env:
   - variable: NEXT_PUBLIC_API_URL
     value: "https://api.neverbe.lk"
   - variable: NEXT_PUBLIC_RECAPTCHA_SITE_KEY
-    value: "6Ldrk-wrAAAAACK238_u98frA-L21JAVblUnHLlC"
+    value: "6LfEkOwrAAAAABOebRpa-aTV27NesIrQLczgAf39"
   - variable: NEXT_PUBLIC_WHATSAPP_NUMBER
     value: "94705208999"
   - variable: NEXT_PUBLIC_PAYHERE_URL
