@@ -18,7 +18,7 @@ const sectionLabel: React.CSSProperties = {
 export const metadata: Metadata = {
   title: "New Arrivals | Fresh Sneakers & Apparel | NEVERBE Sri Lanka",
   description:
-    "Shop the latest shoe drops and fresh apparel at NEVERBE. New sneakers, slides & activewear added weekly. Premium 7A quality. Cash on Delivery island-wide.",
+    "Shop the latest shoe drops and fresh apparel at NEVERBE. New sneakers, slides & activewear added weekly. Authentic Premium quality. Cash on Delivery island-wide.",
   alternates: { canonical: "https://neverbe.lk/collections/new-arrivals" },
   keywords: [
     "new sneakers sri lanka",
@@ -166,7 +166,7 @@ const NewArrivalsPage = async () => {
               <span style={sectionLabel}>Fresh Drops Weekly</span>
               <p style={{ fontSize: 13, color: "#777", margin: 0 }}>
                 We update our collection with the latest releases from global
-                sneaker culture. 7A quality guaranteed.
+                sneaker culture. Premium quality guaranteed.
               </p>
             </div>
             <div>

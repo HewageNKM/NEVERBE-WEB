@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     "womens shoes",
     "sneakers",
     "running shoes",
-    "master copy sneakers",
+    "premium sneakers",
     "NEVERBE",
   ],
   openGraph: {
@@ -225,7 +225,7 @@ const Page = async () => {
             name: "Are NEVERBE shoes original?",
             acceptedAnswer: {
               "@type": "Answer",
-              text: "NEVERBE sells premium 7A quality shoes that are high-quality reproductions. We are transparent about our products - they are not original branded items but offer excellent quality at affordable prices.",
+              text: "NEVERBE sells premium quality footwear that meets the highest standards. We are dedicated to providing excellent craftsmanship and style at affordable prices.",
             },
           },
           {

@@ -94,9 +94,8 @@ const AboutUsClient = () => {
                     We recognized a gap in the Sri Lankan market for
                     high-quality, trend-setting footwear that doesn't cost a
                     fortune. We bridge the gap between high-end streetwear and
-                    affordability, offering premium Master Copy (7A) shoes and
-                    apparel that rival the originals in look, feel, and
-                    durability.
+                    affordability, offering Premium High-End shoes and apparel
+                    that rival the originals in look, feel, and durability.
                   </Paragraph>
                 </div>
 
@@ -142,7 +141,7 @@ const AboutUsClient = () => {
             {[
               {
                 title: "Premium Quality",
-                desc: "We stock only Master Copy / 7A Grade products. Heavy materials, correct stitching, and durable soles.",
+                desc: "We stock only Premium High-End products. Heavy materials, correct stitching, and durable soles.",
               },
               {
                 title: "Island-wide Delivery",

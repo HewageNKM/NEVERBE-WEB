@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description:
     "Read NEVERBE's shipping & return policy outlining how we manage shipping and returns. Fast delivery and easy returns across Sri Lanka.",
   keywords:
-    "NEVERBE, shipping policy, return policy, delivery Sri Lanka, online shoe store Sri Lanka, nike replica, adidas replica, sneakers Sri Lanka",
+    "NEVERBE, shipping policy, return policy, delivery Sri Lanka, online shoe store Sri Lanka, nike premium, adidas premium, sneakers Sri Lanka",
   alternates: {
     canonical: "https://neverbe.lk/policies/shipping-return-policy",
   },

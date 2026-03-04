@@ -18,7 +18,7 @@ export const revalidate = 3600;
 export const metadata: Metadata = {
   title: "Shop Sneakers, Slides & Apparel | NEVERBE Sri Lanka",
   description:
-    "Browse the full NEVERBE collection — sneakers, activewear, slides, accessories and more. Premium 7A quality. Cash on Delivery island-wide.",
+    "Browse the full NEVERBE collection — sneakers, activewear, slides, accessories and more. Authentic Premium quality. Cash on Delivery island-wide.",
   keywords: [
     "buy shoes online sri lanka",
     "sneakers colombo",
@@ -53,7 +53,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Shop NEVERBE | Sneakers, Slides & More",
-    description: "Premium 7A quality. Cash on Delivery island-wide.",
+    description: "Authentic Premium quality. Cash on Delivery island-wide.",
     images: ["https://neverbe.lk/shoes-og.jpg"],
   },
   metadataBase: new URL("https://neverbe.lk"),
@@ -212,8 +212,8 @@ const Page = async () => {
             <div>
               <span style={sectionLabel}>Quality Guaranteed</span>
               <p style={{ fontSize: 13, color: "#777", margin: 0 }}>
-                Size exchanges within 7 days. Every product is 7A Grade quality
-                — durability and comfort guaranteed.
+                Size exchanges within 7 days. Every product is Premium Grade
+                quality — durability and comfort guaranteed.
               </p>
             </div>
           </div>

@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description:
     "Read NEVERBE's Privacy Policy outlining how we collect, use, and protect your data. Trusted online shoe store in Sri Lanka.",
   keywords:
-    "NEVERBE, privacy policy, data protection, online shoe store Sri Lanka, nike replica, adidas replica, sneakers Sri Lanka",
+    "NEVERBE, privacy policy, data protection, online shoe store Sri Lanka, nike premium, adidas premium, sneakers Sri Lanka",
   alternates: {
     canonical: "https://neverbe.lk/policies/privacy-policy",
   },

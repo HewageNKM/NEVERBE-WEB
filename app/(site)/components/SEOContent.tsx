@@ -102,9 +102,10 @@ const SEOContent = () => {
                 }}
               >
                 We specialize in{" "}
-                <Text strong style={{ color: "#1a1a1a" }}>
-                  Master Copy (7A Quality)
-                </Text>{" "}
+                <li className="flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-accent mt-0.5" />
+                  Premium Quality
+                </li>{" "}
                 footwear and fashion, giving you the look and feel of major
                 global brands like Nike, Adidas, and Jordan at a fraction of the
                 cost. From premium shoes to everyday clothing and wearables —

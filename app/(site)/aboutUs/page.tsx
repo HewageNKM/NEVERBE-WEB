@@ -5,16 +5,16 @@ import AboutUsClient from "./components/AboutUsClient";
 export const metadata: Metadata = {
   title: "About Us - NEVERBE Sri Lanka",
   description:
-    "Learn about NEVERBE, Sri Lanka's trusted destination for premium replica shoes. Discover our mission, vision, and commitment to style, quality, and affordability.",
+    "Learn about NEVERBE, Sri Lanka's trusted destination for premium footwear. Discover our mission, vision, and commitment to style, quality, and affordability.",
   keywords:
-    "NEVERBE, about us, replica shoes Sri Lanka, nike replica, adidas replica, new balance Sri Lanka, sneakers Sri Lanka, online shoe store",
+    "NEVERBE, about us, premium shoes Sri Lanka, nike premium, adidas premium, new balance Sri Lanka, sneakers Sri Lanka, online shoe store",
   alternates: {
     canonical: "https://neverbe.lk/about",
   },
   openGraph: {
-    title: "About NEVERBE - Sri Lanka's Trusted Replica Shoe Store",
+    title: "About NEVERBE - Sri Lanka's Trusted Premium Shoe Store",
     description:
-      "Learn about NEVERBE, Sri Lanka's trusted destination for premium replica shoes. Discover our mission, vision, and commitment to style, quality, and affordability.",
+      "Learn about NEVERBE, Sri Lanka's trusted destination for premium footwear. Discover our mission, vision, and commitment to style, quality, and affordability.",
     url: "https://neverbe.lk/about",
     siteName: "NEVERBE",
     type: "website",
@@ -32,9 +32,9 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     site: "@neverbe",
     creator: "@neverbe",
-    title: "About NEVERBE - Sri Lanka's Trusted Replica Shoe Store",
+    title: "About NEVERBE - Sri Lanka's Trusted Premium Shoe Store",
     description:
-      "Learn about NEVERBE, Sri Lanka's trusted destination for premium replica shoes.",
+      "Learn about NEVERBE, Sri Lanka's trusted destination for premium footwear.",
     images: ["https://neverbe.lk/logo-og.png"],
   },
   robots: {
@@ -77,7 +77,7 @@ const AboutUs = () => {
         "@type": "AboutPage",
         name: "About NEVERBE",
         description:
-          "Learn about NEVERBE, Sri Lanka's trusted destination for premium replica shoes. Discover our mission, vision, and commitment to style, quality, and affordability.",
+          "Learn about NEVERBE, Sri Lanka's trusted destination for premium footwear. Discover our mission, vision, and commitment to style, quality, and affordability.",
         url: "https://neverbe.lk/about",
         inLanguage: "en-LK",
       },

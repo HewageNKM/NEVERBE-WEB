@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description:
     "Read NEVERBE's Terms & Conditions outlining the rules and guidelines for using our website and purchasing our products in Sri Lanka.",
   keywords:
-    "NEVERBE, terms and conditions, website rules, online shopping Sri Lanka, nike replica, adidas replica, sneakers Sri Lanka",
+    "NEVERBE, terms and conditions, website rules, online shopping Sri Lanka, nike premium, adidas premium, sneakers Sri Lanka",
   alternates: {
     canonical: "https://neverbe.lk/policies/terms-and-conditions",
   },
