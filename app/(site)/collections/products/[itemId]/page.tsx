@@ -56,13 +56,37 @@ export async function generateMetadata(context: {
       url: `https://neverbe.lk/collections/products/${item.id}`,
       type: "website",
       siteName: "NEVERBE",
+      locale: "en_LK",
       images: [
         {
-          url: item.thumbnail?.url || "https://neverbe.lk/logo-og.png",
+          url: (
+            item.thumbnail?.url || "https://neverbe.lk/logo-og.png"
+          ).replace(/^http:\/\//, "https://"),
           width: 1200,
           height: 630,
-          alt: `${item.name} - Detailed View`,
+          type: "image/jpeg",
+          alt: `${item.name} - Premium Edition`,
         },
+        {
+          url: (
+            item.thumbnail?.url || "https://neverbe.lk/logo-og.png"
+          ).replace(/^http:\/\//, "https://"),
+          width: 600,
+          height: 600,
+          type: "image/jpeg",
+          alt: `${item.name} - Square View`,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: safeTitle,
+      description: `Explore ${item.name} at NEVERBE. Premium quality footwear and apparel in Sri Lanka.`,
+      images: [
+        (item.thumbnail?.url || "https://neverbe.lk/logo-og.png").replace(
+          /^http:\/\//,
+          "https://",
+        ),
       ],
     },
   };
