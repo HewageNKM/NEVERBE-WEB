@@ -95,6 +95,33 @@ interface UsePaymentReturn {
 }
 
 /**
+ * Helper to determine the type of operating system ordering.
+ */
+const getDeviceSystem = (): string => {
+  if (typeof window === "undefined") return "Website";
+
+  const userAgent = window.navigator.userAgent.toLowerCase();
+
+  if (/android/i.test(userAgent)) {
+    return "Android Web";
+  }
+  if (/ipad|iphone|ipod/.test(userAgent)) {
+    return "iOS Web";
+  }
+  if (/macintosh|mac os x/i.test(userAgent)) {
+    return "Mac Web";
+  }
+  if (/windows/i.test(userAgent)) {
+    return "Windows Web";
+  }
+  if (/linux/i.test(userAgent)) {
+    return "Linux Web";
+  }
+
+  return "Website";
+};
+
+/**
  * usePayment - Centralized hook for all checkout payment logic
  * Handles PayHere, KOKO, and COD payment flows
  */
@@ -189,7 +216,7 @@ export const usePayment = (options: UsePaymentOptions): UsePaymentReturn => {
       ),
       paymentStatus: "Pending",
       status: "Processing",
-      from: "Website",
+      from: getDeviceSystem(),
       discount:
         totals.itemDiscount + totals.couponDiscount + totals.promotionDiscount,
       couponCode: couponCode || undefined,
