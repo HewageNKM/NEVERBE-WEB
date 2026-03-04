@@ -11,6 +11,22 @@ export const getPaginatedCombos = async (params: any = {}) => {
   }
 };
 
+export const getCombosForSitemap = async () => {
+  try {
+    const res = await axiosInstance.get("/web/combos?size=100");
+    const combos = res.data.dataList || res.data.combos || [];
+    return combos.map((c: any) => ({
+      url: `${process.env.NEXT_PUBLIC_BASE_URL}/collections/combos/${c.id}`,
+      priority: 0.7,
+      lastModified: c.updatedAt ? new Date(c.updatedAt) : new Date(),
+      changeFrequency: "weekly",
+    }));
+  } catch (error) {
+    console.error("Failed to fetch combos for sitemap:", error);
+    return [];
+  }
+};
+
 export const getComboById = async (id: string) => {
   try {
     const res = await axiosInstance.get(`/web/combos/${id}`);
