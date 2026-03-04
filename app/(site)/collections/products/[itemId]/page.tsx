@@ -37,22 +37,22 @@ export async function generateMetadata(context: {
 
   return {
     title: safeTitle,
-    description: `Get the best deal on ${item.name} (Master Copy) in Sri Lanka. High-quality materials, 7A grade finish, and islandwide delivery available at NEVERBE.`,
+    description: `Experience the exclusive ${item.name} (Premium Edition) in Sri Lanka. Crafted with high-end materials, artisanal finish, and islandwide delivery available at NEVERBE.`,
     keywords: [
       item.name,
-      "first copy sneakers sri lanka",
-      "7a quality shoes",
-      "master copy shoes",
-      "premium copy sneakers",
-      "neverbe shoes",
-      "mens fashion footwear",
+      "premium edition sneakers sri lanka",
+      "high-end quality shoes",
+      "exclusive design footwear",
+      "artisan series sneakers",
+      "neverbe premium",
+      "mens luxury footwear",
     ],
     alternates: {
       canonical: `https://neverbe.lk/collections/products/${item.id}`,
     },
     openGraph: {
       title: safeTitle,
-      description: `Shop ${item.name} - High Quality First Copy in Sri Lanka.`,
+      description: `Shop ${item.name} - Premium Edition in Sri Lanka.`,
       url: `https://neverbe.lk/collections/products/${item.id}`,
       type: "website",
       siteName: "NEVERBE",
@@ -83,7 +83,7 @@ const Page = async (context: { params: Promise<{ itemId: string }> }) => {
     "@type": "Product",
     name: item.name,
     image: [item.thumbnail?.url || "https://neverbe.lk/logo-og.png"],
-    description: `High-quality inspired design of ${item.name}. Note: This is a premium replica intended for fashion purposes.`,
+    description: `High-end inspired design of ${item.name}. Note: This is a premium designer-inspired masterpiece intended for fashion enthusiasts.`,
     sku: item.id,
     brand: {
       "@type": "Brand",

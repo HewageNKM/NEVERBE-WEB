@@ -21,10 +21,10 @@ const ProductFAQ = () => {
           </div>
           <div className="space-y-4">
             <h4 className="text-sm font-display font-black uppercase tracking-tight text-primary">
-              Premium 7A Craftsmanship
+              Premium Artisanal Craftsmanship
             </h4>
             <p className="text-sm text-muted leading-relaxed">
-              Our footwear is built using the Master Copy (7A Grade) standard,
+              Our footwear is built using the Masterpiece Quality standard,
               delivering the perfect balance of iconic design and comfort.
             </p>
           </div>

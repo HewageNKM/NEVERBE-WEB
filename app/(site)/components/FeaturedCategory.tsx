@@ -33,57 +33,40 @@ const fadeUp = {
 };
 
 // Reusable category card component used within SwiperSlide
-const CategoryCard = ({ item, index }: { item: any; index: number }) => (
+const CategoryCard = ({ item }: { item: any }) => (
   <motion.div
-    variants={fadeUp}
-    initial="hidden"
-    whileInView="visible"
+    whileHover={{ y: -5 }}
+    initial={{ opacity: 0, y: 20 }}
+    whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true }}
-    custom={index}
+    transition={{ duration: 0.5 }}
     className="h-full"
   >
-    <Link href={item.url} className="block w-full h-full group">
-      <div className="relative aspect-4/5 w-full overflow-hidden rounded-[24px] bg-gray-100 border border-gray-100/50">
-        <Image
-          src={item.image}
-          alt={item.label}
-          fill
-          className="object-cover transition-transform duration-700 group-hover:scale-105"
-          sizes="(max-width: 768px) 80vw, (max-width: 1280px) 33vw, 25vw"
-        />
+    <Link
+      href={item.url}
+      className="group relative block aspect-4/5 overflow-hidden rounded-[32px] bg-surface-2 shadow-sm hover:shadow-xl transition-all duration-500 border border-default/50"
+    >
+      {/* Background Image with optimized scaling */}
+      <Image
+        src={item.image}
+        alt={item.label}
+        fill
+        className="object-cover transition-transform duration-700 group-hover:scale-110"
+      />
 
-        {/* Dark gradient overlay */}
+      {/* Decorative Overlay */}
+      <div className="absolute inset-0 z-10">
         <div
-          className="absolute inset-x-0 bottom-0 z-10 pointer-events-none transition-all duration-500 h-[65%]"
+          className="absolute inset-0 opacity-60 transition-opacity duration-500 group-hover:opacity-80"
           style={{
             background:
               "linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.45) 50%, transparent 100%)",
           }}
         />
-
         {/* Card Content Overlay */}
         <div className="absolute inset-x-0 bottom-0 p-5 z-20">
           <Flex align="center" justify="space-between">
-            <span
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 8,
-                padding: "clamp(6px, 1.5vw, 8px) clamp(12px, 2vw, 18px)",
-                borderRadius: 99,
-                background: "rgba(255,255,255,0.12)",
-                backdropFilter: "blur(12px)",
-                WebkitBackdropFilter: "blur(12px)",
-                border: "1px solid rgba(255,255,255,0.2)",
-                fontWeight: 800,
-                fontSize: "clamp(10px, 1.2vw, 12px)",
-                textTransform: "uppercase" as const,
-                letterSpacing: "0.08em",
-                color: "#fff",
-                transition: "all 0.35s cubic-bezier(0.4,0,0.2,1)",
-              }}
-              className="group-hover:!bg-[#2e9e5b] group-hover:!text-black group-hover:!border-transparent max-w-[85%] truncate"
-            >
+            <span className="flex items-center gap-2 bg-dark text-inverse px-6 py-2.5 rounded-full font-display font-black text-[10px] uppercase tracking-widest transition-all group-hover:bg-[#2e9e5b]! group-hover:text-black! group-hover:border-transparent! max-w-[85%] truncate">
               {item.label}
             </span>
             <div className="opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all duration-400 w-10 h-10 rounded-full bg-[#2e9e5b] flex items-center justify-center shrink-0">
@@ -106,7 +89,7 @@ const FeaturedCategories = () => {
         vertical={false}
         align="end"
         justify="space-between"
-        className="mb-10 md:mb-14 flex-col md:flex-row gap-6"
+        className="mt-6 md:mt-0 swiper-wrapper-fix flex-col md:flex-row gap-6"
       >
         <Flex
           vertical
@@ -204,9 +187,9 @@ const FeaturedCategories = () => {
           }}
           className="overflow-visible!"
         >
-          {collectionList.map((item, index) => (
-            <SwiperSlide key={index}>
-              <CategoryCard item={item} index={index} />
+          {collectionList.map((item) => (
+            <SwiperSlide key={item.label}>
+              <CategoryCard item={item} />
             </SwiperSlide>
           ))}
 

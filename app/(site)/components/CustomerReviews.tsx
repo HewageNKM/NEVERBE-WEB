@@ -80,7 +80,7 @@ const ReviewCard = ({ review }: { review: (typeof reviews)[0] }) => {
           height: "100%",
         },
       }}
-      className="group/review hover:!border-[#2e9e5b]/40 hover:-translate-y-2 transition-all duration-500 !rounded-[24px]"
+      className="group relative block aspect-4/5 overflow-hidden rounded-[32px] bg-surface-2 shadow-sm hover:shadow-xl transition-all duration-500 border border-default/50"
     >
       {/* Quote watermark */}
       <span className="review-quote-mark">❝</span>

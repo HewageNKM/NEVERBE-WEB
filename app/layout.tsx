@@ -5,28 +5,26 @@ import { WebVitals } from "@/components/WebVitals";
 
 export const metadata: Metadata = {
   title: {
-    default: "NEVERBE — Buy Shoes Online in Sri Lanka | Sneakers & Footwear",
+    default:
+      "NEVERBE — Premium Footwear & Apparel in Sri Lanka | Sneakers & Clothing",
     template: "%s | NEVERBE",
   },
   description:
-    "NEVERBE is Sri Lanka's #1 online shoe store. Shop sneakers, running shoes, slides, sandals & casual footwear. Cash on Delivery island-wide. Best prices guaranteed.",
+    "NEVERBE is Sri Lanka's premier destination for high-end footwear and apparel. Explore our curated collection of sneakers, premium clothing, and high-performance wearables. Island-wide delivery & COD.",
   applicationName: "NEVERBE",
   keywords: [
     "NEVERBE",
-    "shoes sri lanka",
-    "buy shoes online",
-    "sneakers sri lanka",
-    "footwear sri lanka",
-    "online shoe store",
-    "mens shoes",
-    "womens shoes",
-    "running shoes",
-    "casual shoes",
-    "slides",
-    "sandals",
-    "cash on delivery shoes",
-    "cheap shoes colombo",
-    "best shoe shop sri lanka",
+    "premium footwear sri lanka",
+    "buy sneakers online colombo",
+    "branded clothing sri lanka",
+    "mens premium fashion",
+    "womens high-end apparel",
+    "luxury wearables sri lanka",
+    "running gear colombo",
+    "online clothing store sri lanka",
+    "best sneakers shop sri lanka",
+    "curated fashion colombo",
+    "exclusive footwear sri lanka",
   ],
   authors: [{ name: "NEVERBE" }],
   creator: "NEVERBE",
@@ -53,9 +51,9 @@ export const metadata: Metadata = {
     canonical: "https://neverbe.lk",
   },
   openGraph: {
-    title: "NEVERBE — Buy Shoes Online in Sri Lanka",
+    title: "NEVERBE — Premium Footwear & Apparel Online",
     description:
-      "Sri Lanka's largest online shoe collection. Shop sneakers, running shoes, slides & sandals. Cash on Delivery available island-wide.",
+      "Experience premium fashion in Sri Lanka. Shop our exclusive collection of sneakers, luxury clothing, and high-performance wearables.",
     siteName: "NEVERBE",
     url: "https://neverbe.lk",
     locale: "en_LK",
@@ -65,22 +63,22 @@ export const metadata: Metadata = {
         url: "/logo-og.png",
         width: 1200,
         height: 630,
-        alt: "NEVERBE - Online Shoe Store Sri Lanka",
+        alt: "NEVERBE - Premium Footwear & Apparel Sri Lanka",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "NEVERBE — Buy Shoes Online in Sri Lanka",
+    title: "NEVERBE — High-End Footwear & Clothing Online",
     description:
-      "Shop sneakers, running shoes & footwear online. Cash on Delivery island-wide.",
+      "Discover the finest selection of sneakers and premium apparel in Sri Lanka. COD available island-wide.",
     images: ["/logo-og.png"],
     creator: "@neverbe_lk",
   },
   verification: {
     google: "your-google-verification-code", // Replace with actual code
   },
-  category: "ecommerce",
+  category: "retail",
 };
 
 const mono = Roboto_Mono({
@@ -111,11 +109,91 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "NEVERBE",
+    url: "https://neverbe.lk",
+    logo: "https://neverbe.lk/logo.png",
+    contactPoint: [
+      {
+        "@type": "ContactPoint",
+        telephone: "+94729249999",
+        contactType: "customer service",
+        areaServed: "LK",
+        availableLanguage: "English",
+      },
+      {
+        "@type": "ContactPoint",
+        telephone: "+94705208999",
+        contactType: "sales",
+        areaServed: "LK",
+        availableLanguage: "English",
+      },
+    ],
+    sameAs: [
+      "https://www.facebook.com/share/1GaP5gJB2p/",
+      "https://www.instagram.com/neverbe.196",
+      "https://www.tiktok.com/@neverbe196",
+    ],
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: "330/4/10, New Kandy Road",
+      addressLocality: "Delgoda",
+      addressRegion: "Gampaha",
+      addressCountry: "LK",
+    },
+  };
+
+  const localBusinessLd = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    name: "NEVERBE",
+    image: "https://neverbe.lk/logo-og.png",
+    "@id": "https://neverbe.lk",
+    url: "https://neverbe.lk",
+    telephone: "+94729249999",
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: "330/4/10, New Kandy Road",
+      addressLocality: "Delgoda",
+      addressRegion: "Gampaha",
+      addressCountry: "LK",
+    },
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: 6.9869,
+      longitude: 80.0127,
+    },
+    openingHoursSpecification: {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday",
+      ],
+      opens: "00:00",
+      closes: "23:59",
+    },
+  };
+
   return (
     <html lang="en" className="bg-white text-neutral-900">
       <body
         className={`${mono.variable} ${inter.variable} ${plusJakartaSans.variable} antialiased min-h-screen flex flex-col font-sans`}
       >
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessLd) }}
+        />
         <StoreProvider>
           <AuthProvider>
             <AntdRegistry>

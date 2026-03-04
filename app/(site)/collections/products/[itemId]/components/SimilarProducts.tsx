@@ -36,31 +36,35 @@ const SimilarProducts = ({ items }: { items: Product[] }) => {
           </button>
         </div>
       </div>
-
-      <Swiper
-        modules={[Navigation]}
-        onInit={(s) => {
-          if (s.params.navigation && typeof s.params.navigation !== "boolean") {
-            s.params.navigation.prevEl = prevRef.current;
-            s.params.navigation.nextEl = nextRef.current;
-            s.navigation.init();
-            s.navigation.update();
-          }
-        }}
-        spaceBetween={16}
-        slidesPerView={1.3}
-        breakpoints={{
-          768: { slidesPerView: 3.2 },
-          1280: { slidesPerView: 4.2 },
-        }}
-        className="overflow-visible!"
-      >
-        {items.map((item) => (
-          <SwiperSlide key={item.id}>
-            <ItemCard item={item} />
-          </SwiperSlide>
-        ))}
-      </Swiper>
+      <div className="relative mt-6 md:mt-0">
+        <Swiper
+          modules={[Navigation]}
+          onInit={(s) => {
+            if (
+              s.params.navigation &&
+              typeof s.params.navigation !== "boolean"
+            ) {
+              s.params.navigation.prevEl = prevRef.current;
+              s.params.navigation.nextEl = nextRef.current;
+              s.navigation.init();
+              s.navigation.update();
+            }
+          }}
+          spaceBetween={16}
+          slidesPerView={1.3}
+          breakpoints={{
+            768: { slidesPerView: 3.2 },
+            1280: { slidesPerView: 4.2 },
+          }}
+          className="overflow-visible!"
+        >
+          {items.map((item) => (
+            <SwiperSlide key={item.id}>
+              <ItemCard item={item} />
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </div>
     </section>
   );
 };

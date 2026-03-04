@@ -8,7 +8,7 @@ import {
   SlidesBG,
   SupportImage,
 } from "@/assets/images";
-import { FooterLink, SocialMedia } from "@/interfaces/BagItem";
+import { FooterLink, SocialMedia } from "@/interfaces/FooterLink";
 import { IoLogoTiktok } from "react-icons/io5";
 import { IoLogoFacebook, IoLogoInstagram } from "react-icons/io";
 import { MdEmail } from "react-icons/md";
@@ -17,123 +17,92 @@ import { FaMessage, FaPhone } from "react-icons/fa6";
 
 export const seoKeywords: string[] = [
   // 1. The Broadest Terms (Highest Volume)
-  "shoes",
-  "shoes sri lanka",
-  "footwear",
+  "premium shoes",
   "footwear sri lanka",
-  "buy shoes online",
-  "shoe shop",
-  "shoe store near me",
-  "online shoe store sri lanka",
-  "best shoe shop in sri lanka",
+  "branded apparel colombo",
+  "high-end clothing sri lanka",
+  "buy sneakers online colombo",
+  "luxury fashion shop sri lanka",
+  "designer store near me",
+  "curated clothing store sri lanka",
+  "best footwear shop in sri lanka",
 
-  // 2. Category Specific (Capturing "any type")
+  // 2. Category Specific
   "sneakers",
   "running shoes",
-  "sports shoes",
-  "gym shoes",
-  "casual shoes",
-  "canvas shoes",
-  "formal shoes",
-  "boots",
-  "slides",
-  "slippers",
-  "sandals",
-  "flip flops",
-  "jogging shoes",
-  "walking shoes",
-  "high tops",
-  "low tops",
-  "chunky sneakers",
-  "retro sneakers",
-  "basketball shoes",
-  "training shoes",
+  "performance footwear",
+  "lifestyle sneakers sri lanka",
+  "casual luxury shoes",
+  "athleisure clothing colombo",
+  "formal footwear",
+  "premium boots",
+  "designer slides",
+  "luxury loafers",
+  "bespoke sandals",
+  "performance training shoes",
+  "high-top sneakers",
+  "low-top sneakers",
+  "basketball shoes colombo",
 
-  // 3. Gender Specific
-  "mens shoes",
-  "mens shoes sri lanka",
-  "womens shoes",
-  "ladies shoes",
-  "boys shoes",
-  "girls shoes",
-  "kids shoes sri lanka",
-  "unisex sneakers",
+  // 3. Gender & Purpose
+  "mens premium shoes",
+  "womens high-end apparel",
+  "ladies designer footwear",
+  "luxury clothing colombo",
+  "premium children's wear sri lanka",
+  "unisex designer sneakers",
 
-  // 4. The Niche (Your specific strength)
-  "first copy shoes",
-  "master copy sneakers",
-  "7a quality shoes",
-  "branded copy shoes",
-  "nike copy",
-  "adidas copy",
-  "replica sneakers",
-  "premium quality shoes",
-  "imported shoes sri lanka",
+  // 4. The Premium Standard
+  "premium artisanal footwear",
+  "masterpiece quality sneakers",
+  "authentic-look designer shoes",
+  "high-end custom sneakers",
+  "performance footwear colombo",
+  "imported luxury shoes sri lanka",
 
-  // 5. Sri Lankan Locations
-  "shoes colombo",
-  "shoes gampaha",
-  "shoes kandy",
-  "shoes galle",
-  "shoes negombo",
-  "shoes kurunegala",
-  "shoes matara",
-  "shoes jaffna",
-  "shoes ratnapura",
-  "shoes anuradhapura",
-  "cash on delivery shoes",
-  "COD shoes sri lanka",
-  "island wide delivery shoes",
+  // 5. Sri Lankan Locations & Intent
+  "luxury shoes colombo",
+  "premium clothing gampaha",
+  "designer footwear kandy",
+  "branded apparel galle",
+  "islandwide delivery Sri Lanka",
+  "cash on delivery sneakers",
+  "COD premium gear SL",
+  "secure checkout shopping sri lanka",
 
-  // 6. Price & Value Keywords
-  "cheap shoes sri lanka",
-  "affordable footwear",
-  "best price shoes",
-  "discount shoes",
-  "shoes on sale",
-  "budget sneakers",
-  "low price shoes colombo",
-  "shoes under 5000",
-  "shoes under 10000",
+  // 6. Value & Expertise Keywords
+  "curated fashion sri lanka",
+  "exclusive clothing deals",
+  "best price for premium sneakers",
+  "limited edition footwear colombo",
+  "high-performance activewear SL",
 
   // 7. Occasion-Based Keywords
-  "wedding shoes",
-  "party shoes",
-  "office shoes",
-  "school shoes",
-  "work shoes",
-  "casual wear shoes",
-  "daily wear shoes",
-  "gym workout shoes",
-  "outdoor shoes",
-  "beach sandals",
+  "wedding luxury shoes",
+  "party designer wear",
+  "executive office footwear",
+  "professional sports gear",
+  "premium casual wear",
+  "exclusive event fashion",
 
-  // 8. Material & Style Keywords
-  "leather shoes",
-  "mesh sneakers",
-  "synthetic shoes",
-  "breathable shoes",
-  "lightweight shoes",
-  "cushioned shoes",
-  "waterproof shoes",
+  // 8. Material & Craftsmanship
+  "full grain leather shoes",
+  "premium mesh sneakers",
+  "sustainable high-end fashion",
+  "breathable performance gear",
+  "cushioned luxury sneakers",
 
-  // 9. Brand-Related Searches
-  "nike shoes sri lanka",
-  "adidas shoes sri lanka",
-  "puma shoes sri lanka",
-  "new balance sri lanka",
-  "jordan shoes sri lanka",
-  "air force 1 sri lanka",
-  "air max sri lanka",
-  "yeezy sri lanka",
+  // 9. Global Influence
+  "international fashion sri lanka",
+  "global trends colombo",
+  "urban luxury apparel",
+  "contemporary footwear colombo",
 
-  // 10. Sinhala Romanized Terms
-  "sappathu",
-  "sappu",
-  "shoes ganna",
-  "shoes mila",
-  "sneakers lk",
-  "neverbe shoes",
+  // 10. Branded Terms
+  "neverbe premium",
+  "neverbe collections",
+  "neverbe clothing sri lanka",
+  "neverbe footwear",
 ];
 
 export const sortingOptions = [
@@ -153,8 +122,9 @@ export const sortingOptions = [
 
 export const whyUs = [
   {
-    title: "Low Prices",
-    description: "We offer the lowest prices, best deals and promotions.",
+    title: "Premium Quality",
+    description:
+      "We source only the finest materials for ultimate comfort and style.",
     image: MoneyImage,
   },
   {

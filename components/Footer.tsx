@@ -60,7 +60,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
   return (
     <footer
       id="footer"
-      className="w-full !rounded-none !border-x-0 !border-b-0"
+      className="w-full rounded-none! border-x-0! border-b-0!"
       style={{
         background: "#f8faf5",
         paddingTop: 0,
@@ -333,7 +333,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                       transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                       color: "#555",
                     }}
-                    className="hover:bg-[#2e9e5b]! hover:!text-black hover:border-[#2e9e5b]!"
+                    className="hover:bg-[#2e9e5b]! hover:text-black! hover:border-[#2e9e5b]!"
                   >
                     <media.Icon size={20} />
                   </Link>
@@ -394,7 +394,13 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
             </Text>
           </Flex>
 
-          <Flex vertical align="center" gap={32} className="md:flex-row">
+          <Flex
+            vertical
+            align="center"
+            justify="center"
+            gap={32}
+            className="md:flex-row"
+          >
             {/* Payment Partners */}
             <Link
               href={payHere.payHereLink}
@@ -415,11 +421,10 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
               style={{
                 fontSize: 10,
                 color: "#777",
-                textAlign: "right",
+                textAlign: "center",
               }}
             >
               This site is protected by reCAPTCHA and the Google{" "}
-              <br className="hidden md:block" />
               <a
                 href="https://policies.google.com/privacy"
                 target="_blank"
