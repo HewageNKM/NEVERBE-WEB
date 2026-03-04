@@ -24,6 +24,8 @@ env:
     value: "neverbe-18307.appspot.com"
   - variable: NEXT_PUBLIC_BASE_URL
     value: "https://neverbe.lk"
+  - variable: NEXT_PUBLIC_API_URL
+    value: "https://api.neverbe.lk"
   - variable: NEXT_PUBLIC_RECAPTCHA_SITE_KEY
     value: "6LfEkOwrAAAAABOebRpa-aTV27NesIrQLczgAf39"
   - variable: NEXT_PUBLIC_WHATSAPP_NUMBER

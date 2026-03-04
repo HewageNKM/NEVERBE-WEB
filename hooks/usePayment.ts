@@ -252,10 +252,7 @@ export const usePayment = (options: UsePaymentOptions): UsePaymentReturn => {
     };
 
     const payherePayload = await initiatePayHerePayment(payload);
-    submitExternalForm(
-      process.env.NEXT_PUBLIC_PAYHERE_URL || "",
-      payherePayload,
-    );
+    return payherePayload;
   };
 
   /**
@@ -277,10 +274,7 @@ export const usePayment = (options: UsePaymentOptions): UsePaymentReturn => {
     };
 
     const kokoPayload = await initiateKOKOPayment(payload);
-    submitExternalForm(
-      process.env.NEXT_PUBLIC_KOKO_REDIRECT_URL || "",
-      kokoPayload,
-    );
+    return kokoPayload;
   };
 
   /**
@@ -330,23 +324,32 @@ export const usePayment = (options: UsePaymentOptions): UsePaymentReturn => {
       setError(null);
 
       try {
+        if (options.paymentMethodId?.toUpperCase() === PAYMENT_METHOD_IDS.COD) {
+          await processCOD(order, customer);
+          return;
+        }
+
         const token = await executeRecaptcha("new_order");
 
         switch (options.paymentMethodId?.toUpperCase()) {
           case PAYMENT_METHOD_IDS.KOKO:
+            const kokoPayload = await processKOKO(order, customer);
             await addNewOrder(order, token);
             dispatch(clearBag());
-            await processKOKO(order, customer);
-            break;
-
-          case PAYMENT_METHOD_IDS.COD:
-            await processCOD(order, customer);
+            submitExternalForm(
+              process.env.NEXT_PUBLIC_KOKO_REDIRECT_URL || "",
+              kokoPayload,
+            );
             break;
 
           case PAYMENT_METHOD_IDS.PAYHERE:
+            const payherePayload = await processPayHere(order, customer);
             await addNewOrder(order, token);
             dispatch(clearBag());
-            await processPayHere(order, customer);
+            submitExternalForm(
+              process.env.NEXT_PUBLIC_PAYHERE_URL || "",
+              payherePayload,
+            );
             break;
 
           default:
