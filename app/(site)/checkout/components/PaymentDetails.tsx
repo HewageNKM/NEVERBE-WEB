@@ -200,7 +200,7 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
   const regularCount = regularItems.length;
 
   return (
-    <div className="w-full flex justify-center h-full">
+    <div className="w-full flex justify-center items-center h-full sm:px-0">
       <Card
         bordered={false}
         styles={{
@@ -211,7 +211,7 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
             height: "100%",
           },
         }}
-        className="w-full max-w-[450px] lg:max-w-none border-0 lg:border border-gray-200 rounded-2xl h-full shadow-none lg:shadow-sm flex flex-col"
+        className="w-full max-w-[450px] lg:max-w-none bg-transparent! lg:bg-white! border-none! lg:border! border-gray-200! rounded-none! md:rounded-2xl! h-full shadow-none! lg:shadow-sm! flex flex-col mx-auto"
       >
         {/* Header */}
         <Flex vertical align="center" gap={8} className="mb-6">
