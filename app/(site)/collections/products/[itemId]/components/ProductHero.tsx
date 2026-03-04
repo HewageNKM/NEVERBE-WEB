@@ -34,7 +34,6 @@ import {
 import { isVariantEligibleForPromotion } from "@/utils/promotionUtils";
 import StockBadge from "@/components/StockBadge";
 import ShareButtons from "@/components/ShareButtons";
-import FloatingAddToBag from "@/components/FloatingAddToBag";
 import SizeGrid from "@/components/SizeGrid";
 import axiosInstance from "@/actions/axiosInstance";
 
@@ -528,18 +527,6 @@ const ProductHero = ({ item }: { item: Product }) => {
       <SizeGuideDialog
         isOpen={showSizeGuide}
         onClose={() => setShowSizeGuide(false)}
-      />
-
-      {/* Floating Add to Bag - Mobile/Tablet */}
-      <FloatingAddToBag
-        productName={item.name}
-        price={finalPrice}
-        selectedSize={selectedSize}
-        canAddToBag={!!selectedSize && (sizeStock[selectedSize] ?? 0) > 0}
-        onAddToBag={handleAddToBag}
-        qty={qty}
-        onQtyChange={setQty}
-        maxQty={Math.min(10, availableStock || 10)}
       />
     </section>
   );

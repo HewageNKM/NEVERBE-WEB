@@ -1,0 +1,85 @@
+"use client";
+import React from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { IoArrowForward, IoBagOutline } from "react-icons/io5";
+import { Button } from "antd";
+import { useSelector, useDispatch } from "react-redux";
+import { useRouter, usePathname } from "next/navigation";
+import { RootState, AppDispatch } from "@/redux/store";
+import { calculateSubTotal } from "@/utils/bagCalculations";
+import { hideBag } from "@/redux/bagSlice/bagSlice";
+
+/**
+ * MobileCheckoutBar - NEVERBE Premium Theme
+ * A global sticky bar for mobile that shows the current bag total
+ * and a direct link to checkout.
+ */
+const MobileCheckoutBar = () => {
+  const router = useRouter();
+  const pathname = usePathname();
+  const dispatch: AppDispatch = useDispatch();
+  const bagItems = useSelector((state: RootState) => state.bag.bag);
+  const couponDiscount =
+    useSelector((state: RootState) => state.bag.couponDiscount) || 0;
+  const promotionDiscount =
+    useSelector((state: RootState) => state.bag.promotionDiscount) || 0;
+  const showBag = useSelector((state: RootState) => state.bag.showBag);
+
+  // Filter visibility: Hide on specific pages
+  const isHiddenPage =
+    pathname?.startsWith("/checkout") ||
+    pathname?.startsWith("/account") ||
+    pathname?.startsWith("/policies");
+
+  // We only show this bar on mobile (lg:hidden) and when bag has items
+  const shouldShow = bagItems.length > 0 && !isHiddenPage;
+
+  // Simple total calculation for the quick-view bar
+  const totalDue =
+    calculateSubTotal(bagItems, 0, 0) - couponDiscount - promotionDiscount;
+
+  if (!shouldShow) return null;
+
+  return (
+    <AnimatePresence>
+      <motion.div
+        initial={{ y: 100 }}
+        animate={{ y: 0 }}
+        exit={{ y: 100 }}
+        transition={{ type: "spring", stiffness: 400, damping: 32 }}
+        className="fixed bottom-0 left-0 right-0 z-50 lg:hidden"
+      >
+        <div className="bg-dark/95 backdrop-blur-md border-t border-white/10 px-5 py-3 shadow-[0_-8px_30px_rgb(0,0,0,0.3)]">
+          <div className="flex items-center justify-between gap-4 max-w-lg mx-auto">
+            {/* Total Value Info */}
+            <div className="flex flex-col">
+              <span className="text-[9px] font-bold uppercase tracking-widest text-accent/80">
+                Bag Total
+              </span>
+              <span className="text-lg font-display font-black text-inverse tracking-tighter">
+                Rs. {Math.max(0, totalDue).toLocaleString()}
+              </span>
+            </div>
+
+            {/* Compact Checkout Button */}
+            <Button
+              type="primary"
+              onClick={() => {
+                if (showBag) dispatch(hideBag());
+                router.push("/checkout");
+              }}
+              className="flex-1 h-auto py-2.5 bg-accent text-dark border-none rounded-full font-display font-black uppercase tracking-widest text-[10px] flex items-center justify-center gap-2 shadow-custom active:scale-95 transition-all"
+            >
+              Checkout
+              <div className="bg-dark text-inverse rounded-full p-1 flex items-center justify-center">
+                <IoArrowForward size={12} />
+              </div>
+            </Button>
+          </div>
+        </div>
+      </motion.div>
+    </AnimatePresence>
+  );
+};
+
+export default MobileCheckoutBar;

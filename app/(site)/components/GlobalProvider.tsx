@@ -8,6 +8,7 @@ import Bag from "@/components/Bag";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Menu from "@/components/Menu";
+import MobileCheckoutBar from "@/components/MobileCheckoutBar";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { NavigationItem, SocialMediaItem } from "@/actions/websiteAction";
@@ -34,7 +35,7 @@ const GlobalProvider = ({
 
   const showBag = useSelector((state: RootState) => state.bag.showBag);
   const showMenu = useSelector(
-    (state: RootState) => state.headerSlice.showMenu
+    (state: RootState) => state.headerSlice.showMenu,
   );
 
   useEffect(() => {
@@ -53,6 +54,7 @@ const GlobalProvider = ({
             <AnimatePresence>
               {showMenu && <Menu mainNav={mainNav} />}
             </AnimatePresence>
+            <MobileCheckoutBar />
             <Analytics />
             <SpeedInsights />
           </QuickViewProvider>
