@@ -30,7 +30,7 @@ const ComponentLoader = () => {
         <ConfigProvider
           theme={{
             token: {
-              colorPrimary: "var(--color-accent)",
+              colorPrimary: "var(--color-primary)",
             },
           }}
         >

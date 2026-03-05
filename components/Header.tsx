@@ -103,14 +103,13 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
                 <li key={item.title}>
                   <Link
                     href={item.link}
-                    className="relative pb-2 text-[13px] font-bold uppercase tracking-tight text-gray-700 hover:text-accent transition-colors group"
+                    className="relative pb-2 text-[13px] font-bold uppercase tracking-tight text-black hover:text-primary transition-colors group"
                   >
                     {item.title}
                     <span
                       className="absolute bottom-0 left-0 w-0 h-[3px] transition-all duration-300 group-hover:w-full"
                       style={{
-                        background:
-                          "linear-gradient(90deg, var(--color-accent), var(--color-accent-hover))",
+                        background: "var(--color-primary)",
                         borderRadius: 99,
                       }}
                     />
@@ -128,7 +127,7 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
             >
               <IoSearchOutline
                 size={24}
-                className="text-gray-700 group-hover:text-accent transition-colors"
+                className="text-gray-700 group-hover:text-primary transition-colors"
               />
             </button>
 
@@ -138,7 +137,7 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
             >
               <IoPersonOutline
                 size={24}
-                className="text-gray-700 group-hover:text-accent transition-colors"
+                className="text-gray-700 group-hover:text-primary transition-colors"
               />
             </Link>
 
@@ -148,7 +147,7 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
             >
               <IoHeartOutline
                 size={24}
-                className="text-gray-700 group-hover:text-accent transition-colors"
+                className="text-gray-700 group-hover:text-primary transition-colors"
               />
             </Link>
 
@@ -165,7 +164,7 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
               >
                 <IoBagHandleOutline
                   size={24}
-                  className="text-gray-700 group-hover:text-accent transition-colors"
+                  className="text-gray-700 group-hover:text-primary transition-colors"
                 />
               </Badge>
             </button>
@@ -177,7 +176,7 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
               >
                 <IoMenuOutline
                   size={28}
-                  className="text-gray-800 group-hover:text-accent transition-colors"
+                  className="text-gray-800 group-hover:text-primary transition-colors"
                 />
               </button>
             </div>
@@ -289,7 +288,7 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
                                 style={{
                                   width: 20,
                                   height: 20,
-                                  border: "2px solid var(--color-accent)",
+                                  border: "2px solid var(--color-primary)",
                                   borderTopColor: "transparent",
                                   borderRadius: "50%",
                                 }}
