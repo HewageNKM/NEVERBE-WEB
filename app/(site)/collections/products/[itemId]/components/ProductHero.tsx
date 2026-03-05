@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import ReactMarkdown from "react-markdown";
 import {
   IoHeartOutline,
   IoHeart,
@@ -522,6 +523,67 @@ const ProductHero = ({ item }: { item: Product }) => {
               <FaWhatsapp size={16} /> Chat with a specialist
             </a>
           </div>
+
+          {/* Product Description */}
+          {item.description && (
+            <div className="border-t border-default pt-6">
+              <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted mb-4">
+                About This Product
+              </h3>
+              <div className="text-sm text-secondary leading-relaxed prose-product">
+                <ReactMarkdown
+                  components={{
+                    p: ({ children }) => (
+                      <p className="mb-3 text-sm text-secondary leading-relaxed">
+                        {children}
+                      </p>
+                    ),
+                    strong: ({ children }) => (
+                      <strong className="font-bold text-primary">
+                        {children}
+                      </strong>
+                    ),
+                    em: ({ children }) => (
+                      <em className="italic text-secondary">{children}</em>
+                    ),
+                    ul: ({ children }) => (
+                      <ul className="my-3 space-y-1.5 pl-0 list-none">
+                        {children}
+                      </ul>
+                    ),
+                    li: ({ children }) => (
+                      <li className="flex items-start gap-2 text-sm text-secondary">
+                        <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-accent flex-shrink-0" />
+                        <span>{children}</span>
+                      </li>
+                    ),
+                    ol: ({ children }) => (
+                      <ol className="my-3 space-y-1.5 pl-4 list-decimal">
+                        {children}
+                      </ol>
+                    ),
+                    h1: ({ children }) => (
+                      <h1 className="text-base font-display font-black uppercase tracking-tight text-primary mt-4 mb-2">
+                        {children}
+                      </h1>
+                    ),
+                    h2: ({ children }) => (
+                      <h2 className="text-sm font-display font-black uppercase tracking-tight text-primary mt-4 mb-2">
+                        {children}
+                      </h2>
+                    ),
+                    h3: ({ children }) => (
+                      <h3 className="text-xs font-bold uppercase tracking-widest text-muted mt-3 mb-1">
+                        {children}
+                      </h3>
+                    ),
+                  }}
+                >
+                  {item.description}
+                </ReactMarkdown>
+              </div>
+            </div>
+          )}
         </div>
       </div>
       <SizeGuideDialog
