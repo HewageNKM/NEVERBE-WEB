@@ -211,7 +211,7 @@ const ProductHero = ({ item }: { item: Product }) => {
   };
 
   return (
-    <section className="w-full max-w-[1600px] mx-auto px-4 md:px-10 lg:px-16 py-10 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">
+    <section className="w-full max-w-[1600px] mx-auto px-4 md:px-10 lg:px-16 py-6 md:py-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-20">
       {/* --- LEFT COLUMN: IMAGES --- */}
       <div className="lg:col-span-7 flex flex-col gap-4">
         <div className="relative aspect-square bg-surface-2 rounded-sm overflow-hidden group">
@@ -523,69 +523,68 @@ const ProductHero = ({ item }: { item: Product }) => {
               <FaWhatsapp size={16} /> Chat with a specialist
             </a>
           </div>
-
-          {/* Product Description */}
-          {item.description && (
-            <div className="border-t border-default pt-6">
-              <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted mb-4">
-                About This Product
-              </h3>
-              <div className="text-sm text-secondary leading-relaxed prose-product">
-                <ReactMarkdown
-                  components={{
-                    p: ({ children }) => (
-                      <p className="mb-3 text-sm text-secondary leading-relaxed">
-                        {children}
-                      </p>
-                    ),
-                    strong: ({ children }) => (
-                      <strong className="font-bold text-primary">
-                        {children}
-                      </strong>
-                    ),
-                    em: ({ children }) => (
-                      <em className="italic text-secondary">{children}</em>
-                    ),
-                    ul: ({ children }) => (
-                      <ul className="my-3 space-y-1.5 pl-0 list-none">
-                        {children}
-                      </ul>
-                    ),
-                    li: ({ children }) => (
-                      <li className="flex items-start gap-2 text-sm text-secondary">
-                        <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-accent flex-shrink-0" />
-                        <span>{children}</span>
-                      </li>
-                    ),
-                    ol: ({ children }) => (
-                      <ol className="my-3 space-y-1.5 pl-4 list-decimal">
-                        {children}
-                      </ol>
-                    ),
-                    h1: ({ children }) => (
-                      <h1 className="text-base font-display font-black uppercase tracking-tight text-primary mt-4 mb-2">
-                        {children}
-                      </h1>
-                    ),
-                    h2: ({ children }) => (
-                      <h2 className="text-sm font-display font-black uppercase tracking-tight text-primary mt-4 mb-2">
-                        {children}
-                      </h2>
-                    ),
-                    h3: ({ children }) => (
-                      <h3 className="text-xs font-bold uppercase tracking-widest text-muted mt-3 mb-1">
-                        {children}
-                      </h3>
-                    ),
-                  }}
-                >
-                  {item.description}
-                </ReactMarkdown>
-              </div>
-            </div>
-          )}
         </div>
       </div>
+
+      {/* Product Description */}
+      {item.description && (
+        <div className="lg:col-span-12 border-t border-default pt-8 mt-4 md:mt-8 md:pt-10">
+          <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted mb-4">
+            About This Product
+          </h3>
+          <div className="text-sm text-secondary leading-relaxed prose-product">
+            <ReactMarkdown
+              components={{
+                p: ({ children }) => (
+                  <p className="mb-3 text-sm text-secondary leading-relaxed">
+                    {children}
+                  </p>
+                ),
+                strong: ({ children }) => (
+                  <strong className="font-bold text-primary">{children}</strong>
+                ),
+                em: ({ children }) => (
+                  <em className="italic text-secondary">{children}</em>
+                ),
+                ul: ({ children }) => (
+                  <ul className="my-3 space-y-1.5 pl-0 list-none">
+                    {children}
+                  </ul>
+                ),
+                li: ({ children }) => (
+                  <li className="flex items-start gap-2 text-sm text-secondary">
+                    <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-accent shrink-0" />
+                    <span>{children}</span>
+                  </li>
+                ),
+                ol: ({ children }) => (
+                  <ol className="my-3 space-y-1.5 pl-4 list-decimal">
+                    {children}
+                  </ol>
+                ),
+                h1: ({ children }) => (
+                  <h1 className="text-base font-display font-black uppercase tracking-tight text-primary mt-4 mb-2">
+                    {children}
+                  </h1>
+                ),
+                h2: ({ children }) => (
+                  <h2 className="text-sm font-display font-black uppercase tracking-tight text-primary mt-4 mb-2">
+                    {children}
+                  </h2>
+                ),
+                h3: ({ children }) => (
+                  <h3 className="text-xs font-bold uppercase tracking-widest text-muted mt-3 mb-1">
+                    {children}
+                  </h3>
+                ),
+              }}
+            >
+              {item.description}
+            </ReactMarkdown>
+          </div>
+        </div>
+      )}
+
       <SizeGuideDialog
         isOpen={showSizeGuide}
         onClose={() => setShowSizeGuide(false)}
