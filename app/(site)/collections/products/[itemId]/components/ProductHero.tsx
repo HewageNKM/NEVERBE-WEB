@@ -211,7 +211,7 @@ const ProductHero = ({ item }: { item: Product }) => {
   };
 
   return (
-    <section className="w-full max-w-[1600px] mx-auto px-4 md:px-10 lg:px-16 py-6 md:py-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-20">
+    <section className="w-full max-w-[1600px] mx-auto px-4 md:px-10 lg:px-16 py-2 md:py-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-20">
       {/* --- LEFT COLUMN: IMAGES --- */}
       <div className="lg:col-span-7 flex flex-col gap-4">
         <div className="relative aspect-square bg-surface-2 rounded-sm overflow-hidden group">
@@ -518,7 +518,7 @@ const ProductHero = ({ item }: { item: Product }) => {
             {/* WhatsApp Specialist */}
             <a
               href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER}`}
-              className="flex items-center justify-center gap-2 text-[10px] font-black uppercase text-muted hover:text-success"
+              className="flex items-center justify-center gap-2 text-[10px] font-black uppercase text-muted hover:text-primary"
             >
               <FaWhatsapp size={16} /> Chat with a specialist
             </a>

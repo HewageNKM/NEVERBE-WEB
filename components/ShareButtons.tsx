@@ -66,12 +66,11 @@ const ShareButtons: React.FC<ShareButtonsProps> = ({
       </span>
 
       <div className="flex items-center gap-3">
-        {/* WhatsApp - Primary platform for SL market */}
         <Button
           type="text"
           shape="circle"
           onClick={shareToWhatsApp}
-          className="flex items-center justify-center w-12 h-12 rounded-full bg-[#25D366] text-white shadow-lg hover:bg-[#25D366] hover:text-white hover:shadow-[#25D366]/40 hover:-translate-y-1 transition-all active:scale-90 border-none p-0"
+          className="flex items-center justify-center w-12 h-12 rounded-full bg-primary text-white shadow-lg border border-primary hover:bg-white hover:text-primary hover:shadow-primary/40 hover:-translate-y-1 transition-all active:scale-90 p-0"
           aria-label="Share on WhatsApp"
           icon={<IoLogoWhatsapp size={24} />}
         />
@@ -81,7 +80,7 @@ const ShareButtons: React.FC<ShareButtonsProps> = ({
           type="text"
           shape="circle"
           onClick={shareToFacebook}
-          className="flex items-center justify-center w-12 h-12 rounded-full bg-[#1877F2] text-white shadow-lg hover:bg-[#1877F2] hover:text-white hover:shadow-[#1877F2]/40 hover:-translate-y-1 transition-all active:scale-90 border-none p-0"
+          className="flex items-center justify-center w-12 h-12 rounded-full bg-primary text-white shadow-lg border border-primary hover:bg-white hover:text-primary hover:shadow-primary/40 hover:-translate-y-1 transition-all active:scale-90 p-0"
           aria-label="Share on Facebook"
           icon={<FaFacebookF size={20} />}
         />

@@ -15,8 +15,8 @@ const SimilarProducts = ({ items }: { items: Product[] }) => {
   if (items.length === 0) return null;
 
   return (
-    <section className="w-full max-w-content mx-auto py-10 md:py-20 px-4 md:px-12">
-      <div className="flex justify-between items-end mb-6 md:mb-10">
+    <section className="w-full max-w-content mx-auto py-6 md:py-16 px-4 md:px-12">
+      <div className="flex justify-between items-end mb-4 md:mb-8">
         <h2 className="text-xl md:text-2xl font-display font-black uppercase tracking-tighter text-primary">
           You Might Also Like
         </h2>
