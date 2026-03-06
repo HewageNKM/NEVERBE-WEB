@@ -114,6 +114,7 @@ const FeaturedCategories = () => {
               fontWeight: 900,
               margin: 0,
               letterSpacing: "-0.03em",
+              color: "var(--color-primary-dark)",
             }}
           >
             Shop by Category
@@ -156,8 +157,9 @@ const FeaturedCategories = () => {
                 letterSpacing: "0.1em",
                 fontSize: 12,
                 transition: "color 0.3s ease",
+                color: "var(--color-primary-dark)",
               }}
-              className="hover:text-primary-dark! cursor-pointer"
+              className="hover:text-accent! cursor-pointer"
             >
               View All <ArrowRightOutlined />
             </span>

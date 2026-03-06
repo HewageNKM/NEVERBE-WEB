@@ -46,13 +46,20 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({
     return (
       <Badge.Ribbon
         text={ribbonText}
-        color={outOfStock ? "var(--color-primary-400)" : "var(--color-accent)"}
+        color={
+          outOfStock
+            ? "var(--color-error)"
+            : activePromo
+              ? "var(--color-warning)"
+              : "var(--color-accent)"
+        }
         style={{
           padding: "0 10px",
           fontSize: "11px",
           fontWeight: 800,
           textTransform: "uppercase",
-          color: "#fff",
+          color:
+            activePromo && !outOfStock ? "var(--color-primary-dark)" : "#fff",
           letterSpacing: "0.05em",
           display: ribbonText ? undefined : "none",
         }}
@@ -65,8 +72,8 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({
             transition: "all 0.3s ease",
             background: "#fff",
             boxShadow: "none",
-            border: "1px solid var(--color-primary-100)",
-            borderRadius: 16,
+            border: "1px solid var(--color-default)",
+            borderRadius: 24,
           }}
           styles={{
             body: { padding: "10px 12px" },
@@ -78,7 +85,7 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({
               onClick={onClick}
               className="block"
             >
-              <div className="relative aspect-square w-full overflow-hidden rounded-t-[16px]">
+              <div className="relative aspect-square w-full overflow-hidden rounded-t-[24px]">
                 <Image
                   src={item.thumbnail.url}
                   alt={item.name}
@@ -151,7 +158,7 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({
       onClick={onClick}
       className="group flex items-center gap-4 p-4 hover:bg-surface-3 transition-all cursor-pointer w-full border-b border-default last:border-none"
     >
-      <div className="relative w-20 h-20 bg-surface-2 rounded-lg overflow-hidden shrink-0 border border-default">
+      <div className="relative w-20 h-20 bg-surface-2 rounded-xl overflow-hidden shrink-0 border border-default">
         <Image
           src={item.thumbnail.url}
           alt={item.name}

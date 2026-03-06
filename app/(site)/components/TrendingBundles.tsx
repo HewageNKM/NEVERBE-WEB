@@ -100,6 +100,7 @@ const TrendingBundles: React.FC<TrendingBundlesProps> = ({ bundles }) => {
                 textTransform: "uppercase",
                 fontWeight: 900,
                 letterSpacing: "-0.03em",
+                color: "var(--color-primary-dark)",
               }}
             >
               Trending Bundles

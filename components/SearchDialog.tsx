@@ -58,7 +58,7 @@ const SearchDialog: React.FC<SearchDialogProps> = ({
             </>
           ) : (
             // List layout - vertical scrollable list with BRANDED SCROLLBAR
-            <ul className="flex flex-col overflow-y-auto hide-scrollbar">
+            <ul className="flex flex-col overflow-y-auto hide-scrollbar bg-white">
               {results.map((result, index) => (
                 <motion.li
                   key={result.id || index}
@@ -78,14 +78,14 @@ const SearchDialog: React.FC<SearchDialogProps> = ({
           )
         ) : recommendations.length > 0 ? (
           /* --- ZERO RESULTS STATE WITH RECOMMENDATIONS --- */
-          <div className="flex flex-col w-full h-full p-6 animate-fade">
-            <h3 className="text-sm font-black uppercase tracking-widest text-muted mb-4">
+          <div className="flex flex-col w-full h-full p-6 animate-fade bg-white">
+            <h3 className="text-xs font-black uppercase tracking-widest text-muted mb-6 flex items-center gap-3">
+              <span className="w-8 h-px bg-default"></span>
               Trending Now
             </h3>
-            <div className="grid grid-cols-2 lg:grid-cols-6 gap-4 border-t border-dark pt-4">
+            <div className="grid grid-cols-2 lg:grid-cols-6 gap-6">
               {recommendations.map((result, index) => (
                 <motion.div
-                  className="p-5"
                   key={result.id || index}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -102,9 +102,10 @@ const SearchDialog: React.FC<SearchDialogProps> = ({
           </div>
         ) : (
           /* --- PURE EMPTY STATE --- */
-          <div className="flex flex-col items-center justify-center py-20 px-6 text-center animate-fade">
-            <div className="bg-surface-2 p-6 rounded-full mb-6">
-              <IoSearchOutline className="text-muted" size={32} />
+          <div className="flex flex-col items-center justify-center py-20 px-6 text-center animate-fade bg-white">
+            <div className="bg-surface-2 p-6 rounded-full mb-6 relative">
+              <div className="absolute inset-0 bg-accent/10 rounded-full animate-ping scale-150 opacity-20"></div>
+              <IoSearchOutline className="text-muted relative z-10" size={32} />
             </div>
 
             <h3 className="text-2xl font-display font-black uppercase tracking-tighter text-primary-dark">
@@ -120,7 +121,7 @@ const SearchDialog: React.FC<SearchDialogProps> = ({
               shape="round"
               size="large"
               onClick={onClick}
-              className="mt-8 font-bold uppercase tracking-widest bg-accent hover:bg-accent-hover border-none px-8"
+              className="mt-8 font-bold uppercase tracking-widest bg-accent hover:bg-accent-hover border-none px-8 h-12 flex items-center shadow-accent"
             >
               Clear Search
             </Button>

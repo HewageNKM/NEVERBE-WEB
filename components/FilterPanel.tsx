@@ -30,7 +30,7 @@ const FilterSection = ({
   onToggle: (label: string) => void;
 }) => (
   <div className="py-5 border-t border-default">
-    <h3 className="text-xs font-black uppercase tracking-widest text-muted mb-3">
+    <h3 className="text-xs font-black uppercase tracking-widest text-primary-dark/40 mb-3">
       {title}
     </h3>
     <div className="flex flex-wrap gap-2">

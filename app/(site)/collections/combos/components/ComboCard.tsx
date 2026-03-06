@@ -42,13 +42,17 @@ const ComboCard: React.FC<ComboCardProps> = ({ combo }) => {
       text={hasSavings ? `Save ${savingsPercent}%` : getTypeLabel()}
       color={hasSavings ? "var(--color-primary)" : "var(--color-accent)"}
       style={{
-        padding: "0 10px",
+        padding: "0 12px",
         fontSize: "11px",
+        height: 24,
+        display: "flex",
+        alignItems: "center",
         fontWeight: 800,
         textTransform: "uppercase",
         color: "#fff",
         letterSpacing: "0.05em",
         top: 12,
+        borderRadius: "0 4px 4px 24px",
       }}
     >
       <Link

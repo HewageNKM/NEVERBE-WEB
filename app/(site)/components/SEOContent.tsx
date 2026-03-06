@@ -69,6 +69,7 @@ const SEOContent = () => {
                   fontSize: 14,
                   textTransform: "uppercase",
                   letterSpacing: "0.05em",
+                  color: "var(--color-primary-dark)",
                 }}
               >
                 Premium Fashion & Footwear in Sri Lanka
@@ -165,6 +166,7 @@ const SEOContent = () => {
                     fontSize: 14,
                     textTransform: "uppercase",
                     letterSpacing: "0.05em",
+                    color: "var(--color-primary-dark)",
                   }}
                 >
                   Why Buy Online with NEVERBE?

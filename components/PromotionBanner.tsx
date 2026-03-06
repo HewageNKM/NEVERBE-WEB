@@ -41,7 +41,7 @@ const PromotionBanner: React.FC<PromotionBannerProps> = ({
       <motion.div
         initial={{ opacity: 0, x: -10 }}
         animate={{ opacity: 1, x: 0 }}
-        className={`flex items-start gap-4 p-5 bg-surface-2 border-l-4 border-accent shadow-custom ${className}`}
+        className={`flex items-start gap-4 p-5 bg-surface-2 border-l-4 border-accent shadow-custom rounded-[24px] ${className}`}
       >
         <IoLockClosedOutline
           className="text-primary-dark shrink-0 mt-0.5"

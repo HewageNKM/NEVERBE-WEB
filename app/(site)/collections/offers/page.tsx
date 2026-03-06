@@ -5,6 +5,7 @@ import {
 import { getDealsProducts } from "@/actions/productAction";
 import CouponCard from "./components/CouponCard";
 import DealsProducts from "./components/DealsProducts";
+import CampaignCarousel from "./components/CampaignCarousel";
 import Image from "next/image";
 import Link from "next/link";
 import { Metadata } from "next";
@@ -168,7 +169,11 @@ const OffersPage = async () => {
           Offers &amp; Deals
         </h1>
         <p
-          style={{ color: "var(--color-primary-dark)", fontSize: 14, margin: 0 }}
+          style={{
+            color: "var(--color-primary-dark)",
+            fontSize: 14,
+            margin: 0,
+          }}
         >
           Exclusive campaigns, seasonal coupons &amp; markdown deals.
         </p>
@@ -184,58 +189,7 @@ const OffersPage = async () => {
       >
         {/* Active Campaigns */}
         {bannerPromotions.length > 0 && (
-          <section>
-            <p
-              style={{
-                fontSize: 11,
-                fontWeight: 800,
-                textTransform: "uppercase",
-                letterSpacing: "0.1em",
-                color: "var(--color-primary-dark)",
-                marginBottom: 20,
-              }}
-            >
-              Active Campaigns
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {bannerPromotions.map((promo: any) => (
-                <div
-                  key={promo.id}
-                  className="group block relative bg-surface-3 overflow-hidden cursor-pointer rounded-2xl hover:shadow-lg transition-all"
-                  style={{ aspectRatio: "4/5" }}
-                >
-                  <Image
-                    src={promo.bannerUrl}
-                    alt={promo.name}
-                    fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-primary/20 group-hover:bg-primary/10 transition-colors" />
-                  <div className="absolute bottom-8 left-8 right-8">
-                    <h3 className="text-white text-lg font-black uppercase tracking-tight mb-3">
-                      {promo.name}
-                    </h3>
-                    <Button
-                      style={{
-                        borderRadius: 99,
-                        background: "#fff",
-                        color: "var(--color-primary-dark)",
-                        border: "none",
-                        fontWeight: 800,
-                        fontSize: 11,
-                        textTransform: "uppercase",
-                        letterSpacing: "0.08em",
-                        height: 36,
-                        padding: "0 20px",
-                      }}
-                    >
-                      Shop Now
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
+          <CampaignCarousel promotions={bannerPromotions} />
         )}
 
         {/* Coupons */}

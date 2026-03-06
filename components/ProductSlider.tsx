@@ -66,6 +66,7 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
               textTransform: "uppercase",
               fontWeight: 900,
               letterSpacing: "-0.03em",
+              color: "var(--color-primary-dark)",
             }}
           >
             {title}
