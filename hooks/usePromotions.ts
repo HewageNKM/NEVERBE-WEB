@@ -563,6 +563,20 @@ export const usePromotions = (): UsePromotionsReturn => {
         0,
       );
       return calculateDiscountAmount(action, eligibleTotal, eligibleItems);
+    } else if (
+      promo.applicableProducts &&
+      promo.applicableProducts.length > 0
+    ) {
+      // PRIORITY 3: Legacy product-level targeting
+      const eligibleItems = items.filter((item) =>
+        promo.applicableProducts.includes(item.itemId),
+      );
+
+      const eligibleTotal = eligibleItems.reduce(
+        (sum, item) => sum + item.price * item.quantity,
+        0,
+      );
+      return calculateDiscountAmount(action, eligibleTotal, eligibleItems);
     }
 
     // No specific product conditions - apply to entire cart

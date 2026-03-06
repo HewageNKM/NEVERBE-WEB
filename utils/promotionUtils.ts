@@ -31,7 +31,7 @@ export interface EligibilityResult {
 
 export const isPromotionDateValid = (
   startDate?: string | Date | any,
-  endDate?: string | Date | any
+  endDate?: string | Date | any,
 ): { valid: boolean; reason?: string } => {
   const now = new Date();
 
@@ -52,13 +52,13 @@ export const isPromotionDateValid = (
 
 export const checkVariantEligibility = (
   items: CartItem[],
-  targets: ProductVariantTarget[]
+  targets: ProductVariantTarget[],
 ): boolean => {
   if (!targets || targets.length === 0) return true;
 
   for (const target of targets) {
     const matchingItems = items.filter(
-      (item) => item.itemId === target.productId
+      (item) => item.itemId === target.productId,
     );
     if (matchingItems.length === 0) continue;
 
@@ -66,7 +66,7 @@ export const checkVariantEligibility = (
 
     if (target.variantMode === "SPECIFIC_VARIANTS" && target.variantIds) {
       const hasMatch = matchingItems.some(
-        (item) => item.variantId && target.variantIds!.includes(item.variantId)
+        (item) => item.variantId && target.variantIds!.includes(item.variantId),
       );
       if (hasMatch) return true;
     }
@@ -93,7 +93,8 @@ export const isVariantEligibleForPromotion = (
   productId: string,
   variantId: string,
   targets?: ProductVariantTarget[],
-  conditions?: PromotionCondition[]
+  conditions?: PromotionCondition[],
+  applicableProducts?: string[],
 ): boolean => {
   // Check applicableProductVariants first (legacy/explicit targeting)
   if (targets && targets.length > 0) {
@@ -116,7 +117,7 @@ export const isVariantEligibleForPromotion = (
     const productConditions = conditions.filter(
       (c) =>
         c.type === "SPECIFIC_PRODUCT" &&
-        (c.value === productId || c.productIds?.includes(productId))
+        (c.value === productId || c.productIds?.includes(productId)),
     );
 
     // If no conditions for this product, check if product has any condition
@@ -125,7 +126,7 @@ export const isVariantEligibleForPromotion = (
       const anyProductCondition = conditions.find(
         (c) =>
           c.type === "SPECIFIC_PRODUCT" &&
-          (c.value === productId || c.productIds?.includes(productId))
+          (c.value === productId || c.productIds?.includes(productId)),
       );
       // If not targeted, promotion doesn't apply
       return !anyProductCondition;
@@ -153,6 +154,13 @@ export const isVariantEligibleForPromotion = (
     return false;
   }
 
+  // Check legacy applicableProducts targeting
+  if (applicableProducts && applicableProducts.length > 0) {
+    if (!applicableProducts.includes(productId)) {
+      return false;
+    }
+  }
+
   // No variant targeting at all - all variants are eligible
   return true;
 };
@@ -161,7 +169,7 @@ export const isVariantEligibleForPromotion = (
 
 export const getEligibleCartItems = (
   items: CartItem[],
-  targets: ProductVariantTarget[]
+  targets: ProductVariantTarget[],
 ): CartItem[] => {
   if (!targets || targets.length === 0) return items;
 
@@ -182,12 +190,12 @@ export const getEligibleCartItems = (
 export const checkProductTargeting = (
   items: CartItem[],
   applicableProducts?: string[],
-  excludedProducts?: string[]
+  excludedProducts?: string[],
 ): { pass: boolean; restricted: boolean; reason?: string } => {
   // Check applicable products
   if (applicableProducts && applicableProducts.length > 0) {
     const hasApplicable = items.some((item) =>
-      applicableProducts.includes(item.itemId)
+      applicableProducts.includes(item.itemId),
     );
     if (!hasApplicable) {
       return {
@@ -201,7 +209,7 @@ export const checkProductTargeting = (
   // Check excluded products
   if (excludedProducts && excludedProducts.length > 0) {
     const allExcluded = items.every((item) =>
-      excludedProducts.includes(item.itemId)
+      excludedProducts.includes(item.itemId),
     );
     if (allExcluded) {
       return {
@@ -220,12 +228,12 @@ export const checkProductTargeting = (
 export const checkCategoryBrandTargeting = (
   items: CartItem[],
   applicableCategories?: string[],
-  applicableBrands?: string[]
+  applicableBrands?: string[],
 ): { pass: boolean; restricted: boolean; reason?: string } => {
   // Check categories
   if (applicableCategories && applicableCategories.length > 0) {
     const hasCategory = items.some(
-      (item) => item.category && applicableCategories.includes(item.category)
+      (item) => item.category && applicableCategories.includes(item.category),
     );
     if (!hasCategory) {
       return {
@@ -239,7 +247,7 @@ export const checkCategoryBrandTargeting = (
   // Check brands
   if (applicableBrands && applicableBrands.length > 0) {
     const hasBrand = items.some(
-      (item) => item.brand && applicableBrands.includes(item.brand)
+      (item) => item.brand && applicableBrands.includes(item.brand),
     );
     if (!hasBrand) {
       return {
@@ -258,7 +266,7 @@ export const checkCategoryBrandTargeting = (
 export const checkConditions = (
   conditions: PromotionCondition[] | undefined,
   items: CartItem[],
-  cartTotal: number
+  cartTotal: number,
 ): boolean => {
   if (!conditions || conditions.length === 0) return true;
 
@@ -287,7 +295,7 @@ export const checkConditions = (
             : items;
         const totalQty = applicableItems.reduce(
           (sum, item) => sum + item.quantity,
-          0
+          0,
         );
         return totalQty >= Number(condition.value);
 
@@ -300,7 +308,7 @@ export const checkConditions = (
             (item) =>
               specificProductIds.includes(item.itemId) &&
               item.variantId &&
-              condition.variantIds!.includes(item.variantId)
+              condition.variantIds!.includes(item.variantId),
           );
         }
         if (specificProductIds.length > 0) {
@@ -335,7 +343,7 @@ export const checkPromotionEligibility = (
     conditions?: PromotionCondition[];
   },
   items: CartItem[],
-  cartTotal: number
+  cartTotal: number,
 ): EligibilityResult => {
   // 1. Check date validity
   const dateCheck = isPromotionDateValid(promo.startDate, promo.endDate);
@@ -350,7 +358,7 @@ export const checkPromotionEligibility = (
   ) {
     const variantEligible = checkVariantEligibility(
       items,
-      promo.applicableProductVariants
+      promo.applicableProductVariants,
     );
     if (!variantEligible) {
       return {
@@ -365,7 +373,7 @@ export const checkPromotionEligibility = (
   const productCheck = checkProductTargeting(
     items,
     promo.applicableProducts,
-    promo.excludedProducts
+    promo.excludedProducts,
   );
   if (!productCheck.pass) {
     return {
@@ -379,7 +387,7 @@ export const checkPromotionEligibility = (
   const catBrandCheck = checkCategoryBrandTargeting(
     items,
     promo.applicableCategories,
-    promo.applicableBrands
+    promo.applicableBrands,
   );
   if (!catBrandCheck.pass) {
     return {
@@ -400,7 +408,7 @@ export const checkPromotionEligibility = (
 export const calculatePromotionProgress = (
   conditions: PromotionCondition[] | undefined,
   items: CartItem[],
-  cartTotal: number
+  cartTotal: number,
 ): { progress: number; remaining: number } => {
   if (!conditions || conditions.length === 0) {
     return { progress: 100, remaining: 0 };
@@ -422,7 +430,7 @@ export const calculatePromotionProgress = (
   // Check MIN_QUANTITY for applicable items
   if (specificProductIds.length > 0) {
     const applicableItems = items.filter((item) =>
-      specificProductIds.includes(item.itemId)
+      specificProductIds.includes(item.itemId),
     );
     if (applicableItems.length === 0) {
       return { progress: 0, remaining: 0 };
@@ -433,11 +441,11 @@ export const calculatePromotionProgress = (
       const requiredQty = Number(minQtyCondition.value);
       const applicableQty = applicableItems.reduce(
         (sum, item) => sum + item.quantity,
-        0
+        0,
       );
       const progress = Math.min(
         Math.round((applicableQty / requiredQty) * 100),
-        100
+        100,
       );
       const remaining = Math.max(requiredQty - applicableQty, 0);
       return { progress, remaining };
