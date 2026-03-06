@@ -233,7 +233,7 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
             href={link.link}
             onClick={handleClose}
             className="flex items-center justify-between py-4 group"
-            style={{ borderBottom: "1px solid rgba(0,0,0,0.04)" }}
+            style={{ borderBottom: "1px solid var(--color-primary-100)" }}
           >
             <span
               style={{
@@ -251,7 +251,7 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
             </span>
             <IoChevronForward
               size={16}
-              style={{ color: "rgba(0,0,0,0.15)", flexShrink: 0 }}
+              style={{ color: "var(--color-primary-200)", flexShrink: 0 }}
               className="group-hover:text-accent!"
             />
           </Link>
@@ -265,14 +265,16 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
             <RightOutlined
               rotate={isActive ? 90 : 0}
               style={{
-                color: isActive ? "var(--color-accent)" : "rgba(0,0,0,0.2)",
+                color: isActive
+                  ? "var(--color-accent)"
+                  : "var(--color-primary-400)",
                 transition: "all 0.3s ease",
                 fontSize: 14,
               }}
             />
           )}
           items={collapseItems}
-          style={{ borderTop: "1px solid rgba(0,0,0,0.04)" }}
+          style={{ borderTop: "1px solid var(--color-primary-100)" }}
         />
       </nav>
 

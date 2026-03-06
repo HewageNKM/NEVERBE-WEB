@@ -65,7 +65,7 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({
             transition: "all 0.3s ease",
             background: "#fff",
             boxShadow: "none",
-            border: "1px solid rgba(0,0,0,0.06)",
+            border: "1px solid var(--color-primary-100)",
             borderRadius: 16,
           }}
           styles={{

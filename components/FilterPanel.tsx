@@ -47,7 +47,7 @@ const FilterSection = ({
               fontWeight: 700,
               border: isSelected
                 ? "1.5px solid var(--color-accent)"
-                : "1.5px solid rgba(0,0,0,0.1)",
+                : "1.5px solid var(--color-primary-100)",
               background: isSelected ? "rgba(46, 158, 91,0.1)" : "transparent",
               color: isSelected
                 ? "var(--color-primary-600)"
@@ -128,7 +128,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
                   fontWeight: 800,
                   border: isSelected
                     ? "2px solid var(--color-accent)"
-                    : "1.5px solid rgba(0,0,0,0.1)",
+                    : "1.5px solid var(--color-primary-100)",
                   background: isSelected ? "rgba(46, 158, 91,0.1)" : "#f8f9fa",
                   color: isSelected
                     ? "var(--color-primary-600)"

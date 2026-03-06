@@ -48,7 +48,7 @@ const FilterList = ({
               fontWeight: 700,
               border: isActive
                 ? "1.5px solid var(--color-accent)"
-                : "1.5px solid rgba(0,0,0,0.1)",
+                : "1.5px solid var(--color-primary-100)",
               background: isActive ? "rgba(46, 158, 91,0.1)" : "transparent",
               color: isActive
                 ? "var(--color-primary-600)"
@@ -96,7 +96,7 @@ const PopUpFilterPanel: React.FC<PopUpFilterPanelProps> = ({
       styles={{
         header: {
           background: "#fff",
-          borderBottom: "1px solid rgba(0,0,0,0.06)",
+          borderBottom: "1px solid var(--color-primary-100)",
           padding: "20px 24px",
         },
         body: {
@@ -107,7 +107,7 @@ const PopUpFilterPanel: React.FC<PopUpFilterPanelProps> = ({
         },
         footer: {
           background: "#fff",
-          borderTop: "1px solid rgba(0,0,0,0.06)",
+          borderTop: "1px solid var(--color-primary-100)",
           padding: "16px 24px",
         },
         content: { borderRadius: "24px 0 0 24px", overflow: "hidden" },
@@ -162,7 +162,7 @@ const PopUpFilterPanel: React.FC<PopUpFilterPanelProps> = ({
               textTransform: "uppercase",
               letterSpacing: "0.08em",
               color: activeFilterCount > 0 ? "#e53e3e" : "#ccc",
-              border: "1.5px solid rgba(0,0,0,0.08)",
+              border: "1.5px solid var(--color-primary-100)",
               borderRadius: 99,
             }}
           >
@@ -226,7 +226,7 @@ const PopUpFilterPanel: React.FC<PopUpFilterPanelProps> = ({
                     aspectRatio: "1",
                     border: isActive
                       ? "2px solid var(--color-accent)"
-                      : "1.5px solid rgba(0,0,0,0.1)",
+                      : "1.5px solid var(--color-primary-100)",
                     background: isActive ? "rgba(46, 158, 91,0.1)" : "#f8f9fa",
                     color: isActive
                       ? "var(--color-primary-600)"
