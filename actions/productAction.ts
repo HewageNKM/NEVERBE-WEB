@@ -79,12 +79,14 @@ export const getBrandForSitemap = async () => {
   try {
     const res = await axiosInstance.get("/web/brands/dropdown");
     const brands = res.data;
-    return brands.map((b: any) => ({
-      url: `${process.env.NEXT_PUBLIC_BASE_URL}/collections/products?brand=${b.name}`,
-      priority: 0.6,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-    }));
+    return brands
+      .filter((b: any) => b.name)
+      .map((b: any) => ({
+        url: `${process.env.NEXT_PUBLIC_BASE_URL}/collections/products?brand=${encodeURIComponent(b.name)}`,
+        priority: 0.6,
+        lastModified: new Date(),
+        changeFrequency: "weekly",
+      }));
   } catch (error) {
     console.error("Failed to fetch brands for sitemap:", error);
     return [];
@@ -95,12 +97,14 @@ export const getCategoriesForSitemap = async () => {
   try {
     const res = await axiosInstance.get("/web/categories/dropdown");
     const categories = res.data;
-    return categories.map((c: any) => ({
-      url: `${process.env.NEXT_PUBLIC_BASE_URL}/collections/products?category=${c.name}`,
-      priority: 0.7,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-    }));
+    return categories
+      .filter((c: any) => c.name)
+      .map((c: any) => ({
+        url: `${process.env.NEXT_PUBLIC_BASE_URL}/collections/products?category=${encodeURIComponent(c.name)}`,
+        priority: 0.7,
+        lastModified: new Date(),
+        changeFrequency: "weekly",
+      }));
   } catch (error) {
     console.error("Failed to fetch categories for sitemap:", error);
     return [];
@@ -111,12 +115,14 @@ export const getProductsForSitemap = async () => {
   try {
     const res = await axiosInstance.get("/web/products?size=200");
     const products = res.data.dataList || [];
-    return products.map((p: any) => ({
-      url: `${process.env.NEXT_PUBLIC_BASE_URL}/collections/products/${p.id}`,
-      priority: 0.8,
-      lastModified: p.updatedAt ? new Date(p.updatedAt) : new Date(),
-      changeFrequency: "daily",
-    }));
+    return products
+      .filter((p: any) => p.id)
+      .map((p: any) => ({
+        url: `${process.env.NEXT_PUBLIC_BASE_URL}/collections/products/${p.id}`,
+        priority: 0.8,
+        lastModified: p.updatedAt ? new Date(p.updatedAt) : new Date(),
+        changeFrequency: "daily",
+      }));
   } catch (error) {
     console.error("Failed to fetch products for sitemap:", error);
     return [];

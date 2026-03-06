@@ -39,17 +39,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     // Ensure all dynamic URLs use the correct base URL and are structured correctly
     const processDynamicUrls = (items: any[]) => {
-      return items.map((item) => {
-        // Strip out any incorrect domain or literal "undefined" prefix
-        let path = item.url.replace(/^https?:\/\/[^\/]+/, "");
-        path = path.replace(/^undefined/, "");
-        if (!path.startsWith("/")) path = `/${path}`;
+      return items
+        .filter((item) => item.url && !item.url.includes("undefined"))
+        .map((item) => {
+          // Strip out any incorrect domain or literal "undefined" prefix
+          let path = item.url.replace(/^https?:\/\/[^\/]+/, "");
+          path = path.replace(/^undefined/, "");
+          if (!path.startsWith("/")) path = `/${path}`;
 
-        return {
-          ...item,
-          url: `${baseUrl}${path}`,
-        };
-      });
+          return {
+            ...item,
+            url: `${baseUrl}${path}`,
+          };
+        });
     };
 
     return [
