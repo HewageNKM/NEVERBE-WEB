@@ -79,10 +79,14 @@ export const getBrandForSitemap = async () => {
   try {
     const res = await axiosInstance.get("/web/brands/dropdown");
     const brands = res.data;
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://neverbe.lk";
     return brands
-      .filter((b: any) => b.name)
+      .filter(
+        (b: any) =>
+          b.name && b.name !== "undefined" && String(b.name).trim() !== "",
+      )
       .map((b: any) => ({
-        url: `${process.env.NEXT_PUBLIC_BASE_URL}/collections/products?brand=${encodeURIComponent(b.name)}`,
+        url: `${baseUrl}/collections/products?brand=${encodeURIComponent(b.name)}`,
         priority: 0.6,
         lastModified: new Date(),
         changeFrequency: "weekly",
@@ -97,10 +101,14 @@ export const getCategoriesForSitemap = async () => {
   try {
     const res = await axiosInstance.get("/web/categories/dropdown");
     const categories = res.data;
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://neverbe.lk";
     return categories
-      .filter((c: any) => c.name)
+      .filter(
+        (c: any) =>
+          c.name && c.name !== "undefined" && String(c.name).trim() !== "",
+      )
       .map((c: any) => ({
-        url: `${process.env.NEXT_PUBLIC_BASE_URL}/collections/products?category=${encodeURIComponent(c.name)}`,
+        url: `${baseUrl}/collections/products?category=${encodeURIComponent(c.name)}`,
         priority: 0.7,
         lastModified: new Date(),
         changeFrequency: "weekly",
@@ -115,10 +123,13 @@ export const getProductsForSitemap = async () => {
   try {
     const res = await axiosInstance.get("/web/products?size=200");
     const products = res.data.dataList || [];
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://neverbe.lk";
     return products
-      .filter((p: any) => p.id)
+      .filter(
+        (p: any) => p.id && p.id !== "undefined" && String(p.id).trim() !== "",
+      )
       .map((p: any) => ({
-        url: `${process.env.NEXT_PUBLIC_BASE_URL}/collections/products/${p.id}`,
+        url: `${baseUrl}/collections/products/${p.id}`,
         priority: 0.8,
         lastModified: p.updatedAt ? new Date(p.updatedAt) : new Date(),
         changeFrequency: "daily",

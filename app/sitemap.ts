@@ -40,11 +40,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // Ensure all dynamic URLs use the correct base URL and are structured correctly
     const processDynamicUrls = (items: any[]) => {
       return items
-        .filter((item) => item.url && !item.url.includes("undefined"))
+        .filter(
+          (item) =>
+            item.url &&
+            !String(item.url).toLowerCase().includes("undefined") &&
+            !String(item.url).includes("?category=") && // Filter out items with empty params if needed, but the action filter handles this
+            !String(item.url).includes("?brand="),
+        )
         .map((item) => {
-          // Strip out any incorrect domain or literal "undefined" prefix
-          let path = item.url.replace(/^https?:\/\/[^\/]+/, "");
-          path = path.replace(/^undefined/, "");
+          // Normalize path: remove domain if present, ensure leading slash
+          let path = String(item.url).replace(/^https?:\/\/[^\/]+/, "");
           if (!path.startsWith("/")) path = `/${path}`;
 
           return {
@@ -54,10 +59,27 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         });
     };
 
+    // For brand and categories, we need to allow the query params, so we refine the filter
+    const processCatalogUrls = (items: any[]) => {
+      return items
+        .filter(
+          (item) =>
+            item.url && !String(item.url).toLowerCase().includes("undefined"),
+        )
+        .map((item) => {
+          let path = String(item.url).replace(/^https?:\/\/[^\/]+/, "");
+          if (!path.startsWith("/")) path = `/${path}`;
+          return {
+            ...item,
+            url: `${baseUrl}${path}`,
+          };
+        });
+    };
+
     return [
       ...staticPages,
-      ...processDynamicUrls(categories),
-      ...processDynamicUrls(brands),
+      ...processCatalogUrls(categories),
+      ...processCatalogUrls(brands),
       ...processDynamicUrls(products),
       ...processDynamicUrls(combos),
     ];

@@ -14,11 +14,11 @@ export const getPaginatedCombos = async (params: any = {}) => {
 export const getCombosForSitemap = async () => {
   try {
     const res = await axiosInstance.get("/web/combos?size=100");
-    const combos = res.data.dataList || res.data.combos || [];
+    const combos = res.data.dataList || res.data.combos || res.data.data || [];
     return combos
-      .filter((c: any) => c.id)
+      .filter((c: any) => c.id && String(c.id).toLowerCase() !== "undefined")
       .map((c: any) => ({
-        url: `${process.env.NEXT_PUBLIC_BASE_URL}/collections/combos/${c.id}`,
+        url: `/collections/combos/${c.id}`,
         priority: 0.7,
         lastModified: c.updatedAt ? new Date(c.updatedAt) : new Date(),
         changeFrequency: "weekly",
