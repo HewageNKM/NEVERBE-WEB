@@ -260,6 +260,9 @@ export default function RootLayout({
                     Badge: {
                       colorPrimary: "var(--color-accent)",
                     },
+                    Spin: {
+                      colorPrimary: "var(--color-accent)",
+                    },
                   },
                 }}
               >
