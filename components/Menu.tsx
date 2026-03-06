@@ -57,7 +57,7 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
             fontWeight: 900,
             textTransform: "uppercase",
             letterSpacing: "-0.03em",
-            color: "var(--color-primary)",
+            color: "var(--color-primary-dark)",
           }}
         >
           Categories
@@ -73,7 +73,7 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
               key={item.id}
               href={`/collections/products?category=${encodeURIComponent(item.label.toLowerCase())}`}
               className="text-sm font-bold uppercase tracking-tight transition-all hover:translate-x-1 hover:text-accent!"
-              style={{ color: "var(--color-primary-400)" }}
+              style={{ color: "var(--color-primary-dark)" }}
               onClick={handleClose}
             >
               {item.label}
@@ -92,7 +92,7 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
             fontWeight: 900,
             textTransform: "uppercase",
             letterSpacing: "-0.03em",
-            color: "var(--color-primary)",
+            color: "var(--color-primary-dark)",
           }}
         >
           Brands
@@ -108,7 +108,7 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
               key={item.id}
               href={`/collections/products?brand=${encodeURIComponent(item.label.toLowerCase())}`}
               className="text-sm font-bold uppercase tracking-tight transition-all hover:translate-x-1 hover:text-accent!"
-              style={{ color: "var(--color-primary-400)" }}
+              style={{ color: "var(--color-primary-dark)" }}
               onClick={handleClose}
             >
               {item.label}
@@ -153,7 +153,7 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
             fontSize: 20,
             textTransform: "uppercase",
             letterSpacing: "-0.03em",
-            color: "var(--color-primary)",
+            color: "var(--color-primary-dark)",
           }}
         >
           Menu
@@ -203,7 +203,7 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
             background: "#f8faf5",
             border: "1px solid rgba(46, 158, 91,0.25)",
             borderRadius: 99,
-            color: "var(--color-primary)",
+            color: "var(--color-primary-dark)",
             fontSize: 13,
             fontWeight: 600,
           }}
@@ -242,7 +242,7 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
                 fontSize: 26,
                 textTransform: "uppercase",
                 letterSpacing: "-0.03em",
-                color: "var(--color-primary)",
+                color: "var(--color-primary-dark)",
                 transition: "color 0.2s ease, transform 0.2s ease",
               }}
               className="group-hover:text-accent! group-hover:translate-x-2 inline-block transition-all"
@@ -289,7 +289,7 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
           <Link
             href="/contact"
             className="text-xs font-black uppercase tracking-widest transition-colors hover:text-accent!"
-            style={{ color: "var(--color-primary-400)" }}
+            style={{ color: "var(--color-primary-dark)" }}
             onClick={handleClose}
           >
             Contact
@@ -297,7 +297,7 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
           <Link
             href="/contact"
             className="text-xs font-black uppercase tracking-widest transition-colors hover:text-accent!"
-            style={{ color: "var(--color-primary-400)" }}
+            style={{ color: "var(--color-primary-dark)" }}
             onClick={handleClose}
           >
             Help

@@ -31,7 +31,7 @@ const ContactDetailsSection = () => {
         style={{
           fontSize: "0.875rem",
           fontWeight: 500,
-          color: "var(--color-primary-400)",
+          color: "var(--color-primary-dark)",
           lineHeight: 1.6,
           maxWidth: 400,
         }}
@@ -57,17 +57,17 @@ const ContactDetailsSection = () => {
                   letterSpacing: "0.1em",
                   color: "var(--color-primary-300)",
                 }}
-                className="group-hover:text-primary transition-colors"
+                className="group-hover:text-primary-dark transition-colors"
               >
                 {(info as any).title || "Contact"}
               </Text>
               <div className="flex items-center gap-3">
-                <info.icon size={20} className="text-primary" />
+                <info.icon size={20} className="text-primary-dark" />
                 <Text
                   style={{
                     fontSize: "1.125rem",
                     fontWeight: 800,
-                    color: "var(--color-primary)",
+                    color: "var(--color-primary-dark)",
                   }}
                   className="border-b border-transparent group-hover:border-primary transition-all"
                 >

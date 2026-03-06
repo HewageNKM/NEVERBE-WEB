@@ -76,7 +76,7 @@ const Pagination: React.FC<PaginationProps> = ({
           ${
             page === 1
               ? "border-border-primary text-muted opacity-40 cursor-not-allowed"
-              : "border-border-dark text-primary hover:bg-dark hover:text-inverse shadow-sm"
+              : "border-border-dark text-primary-dark hover:bg-dark hover:text-inverse shadow-sm"
           }
         `}
         aria-label="Previous page"
@@ -108,7 +108,7 @@ const Pagination: React.FC<PaginationProps> = ({
                 ${
                   p === page
                     ? "bg-accent text-dark font-black tracking-tighter shadow-custom scale-110 hover:bg-accent hover:text-dark"
-                    : "text-muted font-bold hover:text-primary hover:bg-surface-2"
+                    : "text-muted font-bold hover:text-primary-dark hover:bg-surface-2"
                 }
               `}
               aria-current={p === page ? "page" : undefined}
@@ -129,7 +129,7 @@ const Pagination: React.FC<PaginationProps> = ({
           ${
             page === count
               ? "border-border-primary text-muted opacity-40 cursor-not-allowed"
-              : "border-border-dark text-primary hover:bg-dark hover:text-inverse shadow-sm"
+              : "border-border-dark text-primary-dark hover:bg-dark hover:text-inverse shadow-sm"
           }
         `}
         aria-label="Next page"

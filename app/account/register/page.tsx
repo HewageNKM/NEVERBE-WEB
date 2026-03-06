@@ -89,7 +89,7 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white text-primary flex flex-col items-center justify-center px-6 relative">
+    <div className="min-h-screen bg-white text-primary-dark flex flex-col items-center justify-center px-6 relative">
       {loading && <ComponentLoader />}
 
       <motion.div
@@ -215,7 +215,7 @@ const RegisterPage = () => {
           onClick={handleGoogleRegister}
           type="default"
           disabled={loading}
-          className="group w-full h-auto bg-white text-primary py-4 rounded-full font-display font-black uppercase tracking-widest text-xs flex items-center justify-center gap-3 transition-all hover:bg-surface-2 shadow-md hover:shadow-lg active:scale-[0.98] disabled:opacity-50 border-default"
+          className="group w-full h-auto bg-white text-primary-dark py-4 rounded-full font-display font-black uppercase tracking-widest text-xs flex items-center justify-center gap-3 transition-all hover:bg-surface-2 shadow-md hover:shadow-lg active:scale-[0.98] disabled:opacity-50 border-default"
         >
           <FcGoogle size={24} />
           Register with Google
@@ -229,7 +229,7 @@ const RegisterPage = () => {
               href={`/account/login${
                 redirectUrl !== "/account" ? `?redirect=${redirectUrl}` : ""
               }`}
-              className="text-primary font-black underline underline-offset-8 decoration-accent decoration-4 hover:decoration-primary transition-all ml-1"
+              className="text-primary-dark font-black underline underline-offset-8 decoration-accent decoration-4 hover:decoration-primary transition-all ml-1"
             >
               Sign In.
             </Link>
@@ -241,7 +241,7 @@ const RegisterPage = () => {
       <div className="mt-16 relative z-10">
         <Link
           href="/"
-          className="group flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted hover:text-primary transition-all"
+          className="group flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted hover:text-primary-dark transition-all"
         >
           <IoChevronBackOutline size={14} />
           Back to store

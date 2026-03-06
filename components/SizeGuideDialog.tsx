@@ -83,7 +83,7 @@ const SizeGuideDialog: React.FC<SizeGuideDialogProps> = ({
                 <span className="text-[10px] font-black uppercase tracking-[0.3em] text-accent">
                   Blueprint
                 </span>
-                <h2 className="text-2xl md:text-3xl font-display font-black uppercase tracking-tighter text-primary">
+                <h2 className="text-2xl md:text-3xl font-display font-black uppercase tracking-tighter text-primary-dark">
                   Size Guide
                 </h2>
               </div>
@@ -91,7 +91,7 @@ const SizeGuideDialog: React.FC<SizeGuideDialogProps> = ({
                 type="text"
                 icon={<IoClose size={24} />}
                 onClick={onClose}
-                className="p-3 bg-surface-2 text-primary hover:bg-dark hover:text-inverse transition-all rounded-full shadow-sm h-auto w-auto border-none"
+                className="p-3 bg-surface-2 text-primary-dark hover:bg-dark hover:text-inverse transition-all rounded-full shadow-sm h-auto w-auto border-none"
               />
             </div>
 
@@ -113,7 +113,7 @@ const SizeGuideDialog: React.FC<SizeGuideDialogProps> = ({
                     className={`pb-4 text-sm font-black uppercase tracking-widest transition-all relative h-auto p-0 border-none rounded-none bg-transparent hover:bg-transparent ${
                       activeTab === tab
                         ? "text-accent"
-                        : "text-muted hover:text-primary"
+                        : "text-muted hover:text-primary-dark"
                     }`}
                   >
                     {tab}
@@ -157,7 +157,7 @@ const SizeGuideDialog: React.FC<SizeGuideDialogProps> = ({
                         key={idx}
                         className="hover:bg-surface-2 transition-colors group"
                       >
-                        <td className="px-6 py-4 font-black text-primary text-base tracking-tighter group-hover:text-accent transition-colors">
+                        <td className="px-6 py-4 font-black text-primary-dark text-base tracking-tighter group-hover:text-accent transition-colors">
                           {row.us}
                         </td>
                         <td className="px-6 py-4 text-muted font-bold border-l border-default">

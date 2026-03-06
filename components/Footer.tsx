@@ -92,7 +92,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
               level={4}
               style={{
                 margin: 0,
-                color: "var(--color-primary)",
+                color: "var(--color-primary-dark)",
                 fontWeight: 900,
                 textTransform: "uppercase",
                 letterSpacing: "-0.02em",
@@ -102,7 +102,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
             </Title>
             <Text
               style={{
-                color: "var(--color-primary-400)",
+                color: "var(--color-primary-dark)",
                 fontSize: 13,
                 fontWeight: 500,
               }}
@@ -117,10 +117,10 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
               style={{
                 fontSize: 15,
                 fontWeight: 500,
-                color: "var(--color-primary)",
+                color: "var(--color-primary-dark)",
                 backgroundColor: "transparent",
               }}
-              className="flex-1 px-4 placeholder:text-primary-400"
+              className="flex-1 px-4 placeholder:text-muted"
             />
             <Button
               type="primary"
@@ -178,7 +178,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                     margin: 0,
                     textTransform: "uppercase",
                     letterSpacing: "0.15em",
-                    color: "var(--color-primary-400)",
+                    color: "var(--color-primary-dark)",
                   }}
                 >
                   Store Location
@@ -190,13 +190,13 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                 >
                   <GoLocation
                     size={18}
-                    className="mt-0.5 text-primary-400 group-hover:text-accent transition-colors"
+                    className="mt-0.5 text-muted group-hover:text-accent transition-colors"
                   />
                   <Text
                     style={{
                       fontSize: 11,
                       fontWeight: 700,
-                      color: "var(--color-primary)",
+                      color: "var(--color-primary-dark)",
                       textTransform: "uppercase",
                       lineHeight: 1.6,
                       transition: "color 0.3s ease",
@@ -221,7 +221,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                   margin: 0,
                   textTransform: "uppercase",
                   letterSpacing: "0.15em",
-                  color: "var(--color-primary-400)",
+                  color: "var(--color-primary-dark)",
                 }}
               >
                 Get Help
@@ -234,7 +234,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                     style={{
                       fontSize: 11,
                       fontWeight: 700,
-                      color: "var(--color-primary)",
+                      color: "var(--color-primary-dark)",
                       textTransform: "uppercase",
                       letterSpacing: "0.08em",
                       transition: "color 0.3s ease",
@@ -259,7 +259,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                   margin: 0,
                   textTransform: "uppercase",
                   letterSpacing: "0.15em",
-                  color: "var(--color-primary-400)",
+                  color: "var(--color-primary-dark)",
                 }}
               >
                 Contact Us
@@ -275,7 +275,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                     <info.icon
                       size={16}
                       style={{
-                        color: "var(--color-primary-400)",
+                        color: "var(--color-primary-dark)",
                         transition: "color 0.3s ease",
                       }}
                       className="group-hover:text-accent!"
@@ -284,7 +284,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                       style={{
                         fontSize: 11,
                         fontWeight: 700,
-                        color: "var(--color-primary)",
+                        color: "var(--color-primary-dark)",
                         textTransform: "uppercase",
                         letterSpacing: "0.05em",
                         transition: "color 0.3s ease",
@@ -311,7 +311,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                   margin: 0,
                   textTransform: "uppercase",
                   letterSpacing: "0.15em",
-                  color: "var(--color-primary-400)",
+                  color: "var(--color-primary-dark)",
                 }}
               >
                 Follow Us
@@ -331,7 +331,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                       alignItems: "center",
                       justifyContent: "center",
                       transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-                      color: "var(--color-primary)",
+                      color: "var(--color-primary-dark)",
                     }}
                     className="hover:bg-accent! hover:text-inverse! hover:border-accent!"
                   >
@@ -389,7 +389,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                 fontWeight: 800,
                 textTransform: "uppercase",
                 letterSpacing: "0.15em",
-                color: "var(--color-primary-400)",
+                color: "var(--color-primary-dark)",
               }}
             >
               © {new Date().getFullYear()} NEVERBE, INC.
@@ -422,7 +422,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
             <Text
               style={{
                 fontSize: 10,
-                color: "var(--color-primary-400)",
+                color: "var(--color-primary-dark)",
                 textAlign: "center",
               }}
             >

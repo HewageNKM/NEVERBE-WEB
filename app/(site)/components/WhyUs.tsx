@@ -129,7 +129,7 @@ const WhyUs = () => {
                     fontWeight: 900,
                     letterSpacing: "-0.01em",
                     fontSize: 12,
-                    color: "var(--color-primary)",
+                    color: "var(--color-primary-dark)",
                     display: "block",
                     marginBottom: 4,
                   }}
@@ -141,7 +141,7 @@ const WhyUs = () => {
                     fontSize: 11,
                     fontWeight: 500,
                     display: "block",
-                    color: "var(--color-primary-400)",
+                    color: "var(--color-primary-dark)",
                   }}
                 >
                   {item.desc}
@@ -227,7 +227,7 @@ const WhyUs = () => {
                             fontWeight: 900,
                             letterSpacing: "-0.01em",
                             fontSize: 12,
-                            color: "var(--color-primary)",
+                            color: "var(--color-primary-dark)",
                             display: "block",
                           }}
                         >
@@ -239,7 +239,7 @@ const WhyUs = () => {
                             fontWeight: 500,
                             display: "block",
                             marginTop: 4,
-                            color: "var(--color-primary-400)",
+                            color: "var(--color-primary-dark)",
                           }}
                         >
                           {item.desc}

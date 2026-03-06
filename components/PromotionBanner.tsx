@@ -44,14 +44,14 @@ const PromotionBanner: React.FC<PromotionBannerProps> = ({
         className={`flex items-start gap-4 p-5 bg-surface-2 border-l-4 border-accent shadow-custom ${className}`}
       >
         <IoLockClosedOutline
-          className="text-primary shrink-0 mt-0.5"
+          className="text-primary-dark shrink-0 mt-0.5"
           size={20}
         />
         <div>
-          <p className="text-base font-display font-black uppercase tracking-tighter text-primary">
+          <p className="text-base font-display font-black uppercase tracking-tighter text-primary-dark">
             Promotions Locked
           </p>
-          <p className="text-sm text-secondary mt-1 font-medium leading-relaxed">
+          <p className="text-sm text-primary-dark mt-1 font-medium leading-relaxed">
             Special offers cannot be combined with combo deals. Remove items to
             unlock.
           </p>
@@ -110,7 +110,7 @@ const PromotionBanner: React.FC<PromotionBannerProps> = ({
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between gap-4">
                     <div className="min-w-0">
-                      <p className="text-base font-display font-black uppercase tracking-tighter text-primary">
+                      <p className="text-base font-display font-black uppercase tracking-tighter text-primary-dark">
                         {hasStackedPromotions
                           ? `${displayPromotions.length} Offers Applied`
                           : displayPromotions[0].name}
@@ -146,12 +146,12 @@ const PromotionBanner: React.FC<PromotionBannerProps> = ({
                   <IoAlertCircleOutline size={20} />
                 </div>
                 <div>
-                  <p className="text-base font-display font-black uppercase tracking-tighter text-primary">
+                  <p className="text-base font-display font-black uppercase tracking-tighter text-primary-dark">
                     Unlock Special Savings
                   </p>
-                  <p className="text-sm text-secondary mt-1 font-medium">
+                  <p className="text-sm text-primary-dark mt-1 font-medium">
                     Spend{" "}
-                    <span className="text-dark font-black tracking-tighter">
+                    <span className="text-primary-dark font-black tracking-tighter">
                       Rs. {nearestPromo.remaining?.toLocaleString()}
                     </span>{" "}
                     more to get {nearestPromo.name}
@@ -237,7 +237,7 @@ const PromotionBanner: React.FC<PromotionBannerProps> = ({
                 <span className="text-[10px] font-black uppercase tracking-[0.25em] bg-accent text-dark px-3 py-1 shadow-custom">
                   Active Offer
                 </span>
-                <h3 className="text-3xl font-display font-black uppercase tracking-tighter text-primary">
+                <h3 className="text-3xl font-display font-black uppercase tracking-tighter text-primary-dark">
                   {promo.name}
                 </h3>
               </div>

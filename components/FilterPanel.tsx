@@ -30,7 +30,7 @@ const FilterSection = ({
   onToggle: (label: string) => void;
 }) => (
   <div className="py-5 border-t border-default">
-    <h3 className="text-xs font-black uppercase tracking-widest text-primary-400 mb-3">
+    <h3 className="text-xs font-black uppercase tracking-widest text-muted mb-3">
       {title}
     </h3>
     <div className="flex flex-wrap gap-2">
@@ -85,7 +85,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
     <aside className="hidden lg:block w-[280px] pr-10 sticky top-24 h-fit max-h-[85vh] overflow-y-auto hide-scrollbar">
       {/* Header */}
       <div className="flex justify-between items-end mb-8">
-        <h2 className="text-2xl font-display font-black uppercase tracking-tighter text-primary">
+        <h2 className="text-2xl font-display font-black uppercase tracking-tighter text-primary-dark">
           {title}
         </h2>
         <button
@@ -98,7 +98,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
 
       {/* In Stock Toggle */}
       <div className="flex justify-between items-center py-5 border-b border-default">
-        <span className="text-xs font-black text-primary-400 uppercase tracking-widest">
+        <span className="text-xs font-black text-muted uppercase tracking-widest">
           In Stock Only
         </span>
         <Switch
@@ -111,7 +111,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
 
       {/* Select Size Grid */}
       <div className="py-5 border-b border-default">
-        <h3 className="text-xs font-black uppercase tracking-widest text-primary-400 mb-3">
+        <h3 className="text-xs font-black uppercase tracking-widest text-muted mb-3">
           Size
         </h3>
         <div className="grid grid-cols-3 gap-1.5">

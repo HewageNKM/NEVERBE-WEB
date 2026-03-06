@@ -108,7 +108,7 @@ const ReviewCard = ({ review }: { review: (typeof reviews)[0] }) => {
                     textTransform: "uppercase",
                     letterSpacing: "-0.02em",
                     fontSize: 13,
-                    color: "var(--color-primary)",
+                    color: "var(--color-primary-dark)",
                   }}
                 >
                   {review.name}
@@ -119,7 +119,7 @@ const ReviewCard = ({ review }: { review: (typeof reviews)[0] }) => {
                     textTransform: "uppercase",
                     fontWeight: 700,
                     letterSpacing: "0.05em",
-                    color: "var(--color-primary-400)",
+                    color: "var(--color-primary-dark)",
                   }}
                 >
                   {review.date}
@@ -152,7 +152,7 @@ const ReviewCard = ({ review }: { review: (typeof reviews)[0] }) => {
           <Paragraph
             style={{
               marginBottom: 24,
-              color: "var(--color-primary)",
+              color: "var(--color-primary-dark)",
               fontWeight: 500,
               lineHeight: 1.7,
               position: "relative",
@@ -186,7 +186,7 @@ const ReviewCard = ({ review }: { review: (typeof reviews)[0] }) => {
               fontWeight: 800,
               textTransform: "uppercase",
               letterSpacing: "0.05em",
-              color: "var(--color-primary-400)",
+              color: "var(--color-primary-dark)",
             }}
           >
             Verified Purchase
@@ -241,7 +241,7 @@ const CustomerReviews = () => {
                   style={{
                     fontSize: 18,
                     fontWeight: 900,
-                    color: "var(--color-primary)",
+                    color: "var(--color-primary-dark)",
                   }}
                 >
                   4.9
@@ -253,7 +253,7 @@ const CustomerReviews = () => {
                   fontWeight: 800,
                   textTransform: "uppercase",
                   letterSpacing: "0.08em",
-                  color: "var(--color-primary-400)",
+                  color: "var(--color-primary-dark)",
                 }}
               >
                 200+ Reviews
@@ -279,7 +279,7 @@ const CustomerReviews = () => {
                   textTransform: "uppercase",
                   fontWeight: 900,
                   letterSpacing: "-0.03em",
-                  color: "var(--color-primary)",
+                  color: "var(--color-primary-dark)",
                 }}
               >
                 Customers Trust Us
@@ -289,7 +289,7 @@ const CustomerReviews = () => {
               style={{
                 fontWeight: 500,
                 display: "block",
-                color: "var(--color-primary-400)",
+                color: "var(--color-primary-dark)",
               }}
             >
               Real performance reviews from real Sri Lankan athletes

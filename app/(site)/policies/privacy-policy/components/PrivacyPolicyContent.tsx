@@ -17,13 +17,13 @@ const PrivacyPolicyContent = () => {
             <span className="text-[10px] font-bold text-muted uppercase tracking-widest mb-1 block">
               {String(index).padStart(2, "0")}
             </span>
-            <h2 className="text-lg md:text-xl font-black uppercase tracking-tight text-primary">
+            <h2 className="text-lg md:text-xl font-black uppercase tracking-tight text-primary-dark">
               {value.title || key.replace(/([A-Z])/g, " $1")}
             </h2>
           </div>
 
           {/* Content - Right */}
-          <div className="md:w-2/3 space-y-4 text-sm md:text-base text-secondary font-medium leading-relaxed">
+          <div className="md:w-2/3 space-y-4 text-sm md:text-base text-primary-dark font-medium leading-relaxed">
             {typeof value === "string" && <p>{value}</p>}
 
             {value.description && <p>{value.description}</p>}
@@ -57,7 +57,7 @@ const PrivacyPolicyContent = () => {
                           key={idx}
                           className="flex items-start gap-2 text-xs md:text-sm"
                         >
-                          <span className="text-primary font-bold">›</span>{" "}
+                          <span className="text-primary-dark font-bold">›</span>{" "}
                           {item}
                         </li>
                       ))}
@@ -75,11 +75,11 @@ const PrivacyPolicyContent = () => {
     <article className="w-full">
       {/* Intro Paragraph */}
       <div className="mb-16 max-w-3xl">
-        <p className="text-lg md:text-xl font-medium text-primary leading-relaxed">
+        <p className="text-lg md:text-xl font-medium text-primary-dark leading-relaxed">
           {privacyPolicy.sections.intro}{" "}
           <a
             href={privacyPolicy.website}
-            className="text-primary underline decoration-1 underline-offset-4 decoration-accent hover:decoration-primary transition-colors"
+            className="text-primary-dark underline decoration-1 underline-offset-4 decoration-accent hover:decoration-primary transition-colors"
             target="_blank"
             rel="noopener noreferrer"
           >

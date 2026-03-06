@@ -34,7 +34,7 @@ const PaymentOptions: React.FC<PaymentOptionsProps> = ({
             key={option.paymentId}
             onClick={() => handleSelect(option)}
             className={`
-              relative group cursor-pointer border p-3 md:p-4 transition-all duration-300 rounded-xl overflow-hidden text-primary
+              relative group cursor-pointer border p-3 md:p-4 transition-all duration-300 rounded-xl overflow-hidden text-primary-dark
               ${
                 isSelected
                   ? "bg-bg-secondary border-accent shadow-sm scale-[1.01] ring-1 ring-accent"
@@ -63,7 +63,7 @@ const PaymentOptions: React.FC<PaymentOptionsProps> = ({
                 <div className="flex justify-between items-center w-full">
                   <p
                     className={`text-sm font-display font-black uppercase tracking-wider ${
-                      isSelected ? "text-primary" : "text-primary-800"
+                      isSelected ? "text-primary-dark" : "text-primary-dark"
                     }`}
                   >
                     {option.name}
@@ -77,7 +77,7 @@ const PaymentOptions: React.FC<PaymentOptionsProps> = ({
                         ${
                           isSelected
                             ? "bg-accent text-white"
-                            : "bg-surface-2 text-primary"
+                            : "bg-surface-2 text-primary-dark"
                         }
                       `}
                     >
@@ -87,7 +87,7 @@ const PaymentOptions: React.FC<PaymentOptionsProps> = ({
                     <span
                       className={`
                         text-[10px] font-black uppercase tracking-widest
-                        ${isSelected ? "text-accent" : "text-primary-400"}
+                        ${isSelected ? "text-accent" : "text-muted"}
                        `}
                     >
                       No Fee
@@ -99,7 +99,7 @@ const PaymentOptions: React.FC<PaymentOptionsProps> = ({
                   <p
                     className={`
                       text-[10px] font-medium uppercase tracking-wide mt-1.5
-                      ${isSelected ? "text-accent" : "text-primary-400"}
+                      ${isSelected ? "text-accent" : "text-muted"}
                     `}
                   >
                     {option.description}

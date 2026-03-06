@@ -32,21 +32,21 @@ const RecentlyViewedSection: React.FC<RecentlyViewedSectionProps> = ({
   return (
     <section className="w-full max-w-content mx-auto py-6 md:py-16 px-4 md:px-12">
       <div className="flex justify-between items-end mb-4 md:mb-8">
-        <h2 className="text-xl md:text-2xl font-display font-black uppercase tracking-tighter text-primary">
+        <h2 className="text-xl md:text-2xl font-display font-black uppercase tracking-tighter text-primary-dark">
           Recently Viewed
         </h2>
 
         <div className="flex gap-2">
           <button
             ref={prevRef}
-            className="w-10 h-10 rounded-full border border-default bg-surface flex items-center justify-center text-primary hover:border-accent hover:text-accent transition-all"
+            className="w-10 h-10 rounded-full border border-default bg-surface flex items-center justify-center text-primary-dark hover:border-accent hover:text-accent transition-all"
             aria-label="Previous items"
           >
             <IoChevronBack size={18} />
           </button>
           <button
             ref={nextRef}
-            className="w-10 h-10 rounded-full border border-default bg-surface flex items-center justify-center text-primary hover:border-accent hover:text-accent transition-all"
+            className="w-10 h-10 rounded-full border border-default bg-surface flex items-center justify-center text-primary-dark hover:border-accent hover:text-accent transition-all"
             aria-label="Next items"
           >
             <IoChevronForward size={18} />

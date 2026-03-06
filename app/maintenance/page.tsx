@@ -79,7 +79,7 @@ export default function MaintenancePage() {
         >
           <a
             href="mailto:support@neverbe.lk"
-            className="group relative flex items-center gap-4 px-8 py-4 bg-accent text-primary rounded-full font-display font-black uppercase tracking-widest text-xs transition-all hover:shadow-hover hover:scale-105 active:scale-95"
+            className="group relative flex items-center gap-4 px-8 py-4 bg-accent text-primary-dark rounded-full font-display font-black uppercase tracking-widest text-xs transition-all hover:shadow-hover hover:scale-105 active:scale-95"
           >
             Contact Control
             <FaArrowRightLong

@@ -70,7 +70,7 @@ const ShareButtons: React.FC<ShareButtonsProps> = ({
           type="text"
           shape="circle"
           onClick={shareToWhatsApp}
-          className="flex items-center justify-center w-12 h-12 rounded-full bg-primary text-white shadow-lg border border-primary hover:bg-white hover:text-primary hover:shadow-primary/40 hover:-translate-y-1 transition-all active:scale-90 p-0"
+          className="flex items-center justify-center w-12 h-12 rounded-full bg-primary text-white shadow-lg border border-primary hover:bg-white hover:text-primary-dark hover:shadow-primary/40 hover:-translate-y-1 transition-all active:scale-90 p-0"
           aria-label="Share on WhatsApp"
           icon={<IoLogoWhatsapp size={24} />}
         />
@@ -80,7 +80,7 @@ const ShareButtons: React.FC<ShareButtonsProps> = ({
           type="text"
           shape="circle"
           onClick={shareToFacebook}
-          className="flex items-center justify-center w-12 h-12 rounded-full bg-primary text-white shadow-lg border border-primary hover:bg-white hover:text-primary hover:shadow-primary/40 hover:-translate-y-1 transition-all active:scale-90 p-0"
+          className="flex items-center justify-center w-12 h-12 rounded-full bg-primary text-white shadow-lg border border-primary hover:bg-white hover:text-primary-dark hover:shadow-primary/40 hover:-translate-y-1 transition-all active:scale-90 p-0"
           aria-label="Share on Facebook"
           icon={<FaFacebookF size={20} />}
         />
@@ -90,7 +90,7 @@ const ShareButtons: React.FC<ShareButtonsProps> = ({
           type="text"
           shape="circle"
           onClick={copyLink}
-          className="group flex items-center justify-center w-12 h-12 rounded-full bg-surface-2 text-accent border border-accent/20 shadow-custom hover:bg-accent hover:text-primary hover:shadow-hover hover:-translate-y-1 transition-all active:scale-90 p-0"
+          className="group flex items-center justify-center w-12 h-12 rounded-full bg-surface-2 text-accent border border-accent/20 shadow-custom hover:bg-accent hover:text-primary-dark hover:shadow-hover hover:-translate-y-1 transition-all active:scale-90 p-0"
           aria-label="Copy link"
           icon={
             <FaLink

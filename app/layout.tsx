@@ -182,7 +182,7 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="en" className="bg-white text-primary">
+    <html lang="en" className="bg-white text-primary-dark">
       <body
         className={`${mono.variable} ${inter.variable} ${plusJakartaSans.variable} antialiased min-h-screen flex flex-col font-sans`}
       >
@@ -210,7 +210,7 @@ export default function RootLayout({
                     borderRadius: 12,
                     colorBgLayout: "#f8faf5",
                     colorBgContainer: "#ffffff",
-                    colorTextBase: "var(--color-primary)",
+                    colorTextBase: "var(--color-primary-dark)",
                   },
                   components: {
                     Card: {
@@ -225,7 +225,12 @@ export default function RootLayout({
                       fontWeight: 700,
                       colorPrimary: "var(--color-accent)",
                       colorPrimaryHover: "var(--color-accent-hover)",
+                      colorPrimaryActive: "var(--color-accent-hover)",
                       primaryColor: "#ffffff",
+                    },
+                    Checkbox: {
+                      colorPrimary: "var(--color-accent)",
+                      colorPrimaryHover: "var(--color-accent-hover)",
                     },
                     Carousel: {
                       dotHeight: 6,

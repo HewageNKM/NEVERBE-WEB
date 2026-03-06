@@ -43,7 +43,7 @@ const SeasonalPromo = ({
   const bgClass =
     season === "christmas"
       ? "bg-primary-600 text-white"
-      : "bg-primary-50 text-primary";
+      : "bg-primary-50 text-primary-dark";
 
   return (
     <div className={`w-full ${bgClass} relative z-50`}>
@@ -69,7 +69,7 @@ const SeasonalPromo = ({
                     letterSpacing: "0.2em",
                     cursor: "pointer",
                   }}
-                  className="hover:text-primary transition-colors"
+                  className="hover:text-primary-dark transition-colors"
                 >
                   {offer.text}
                 </Text>

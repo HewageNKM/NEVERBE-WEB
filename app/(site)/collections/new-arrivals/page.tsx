@@ -10,7 +10,7 @@ const sectionLabel: React.CSSProperties = {
   fontWeight: 800,
   textTransform: "uppercase",
   letterSpacing: "0.1em",
-  color: "var(--color-primary-400)",
+  color: "var(--color-primary-dark)",
   display: "block",
   marginBottom: 12,
 };
@@ -126,11 +126,11 @@ const NewArrivalsPage = async () => {
         <nav
           style={{
             fontSize: 12,
-            color: "var(--color-primary-400)",
+            color: "var(--color-primary-dark)",
             marginBottom: 16,
           }}
         >
-          <Link href="/" style={{ color: "var(--color-primary-400)" }}>
+          <Link href="/" style={{ color: "var(--color-primary-dark)" }}>
             Home
           </Link>
           <span style={{ margin: "0 8px" }}>/</span>
@@ -145,13 +145,13 @@ const NewArrivalsPage = async () => {
             lineHeight: 1,
             margin: 0,
             marginBottom: 8,
-            color: "var(--color-primary)",
+            color: "var(--color-primary-dark)",
           }}
         >
           New Arrivals
         </h1>
         <p
-          style={{ color: "var(--color-primary-400)", fontSize: 14, margin: 0 }}
+          style={{ color: "var(--color-primary-dark)", fontSize: 14, margin: 0 }}
         >
           Fresh styles just added to the collection.
         </p>
@@ -178,7 +178,7 @@ const NewArrivalsPage = async () => {
               <p
                 style={{
                   fontSize: 13,
-                  color: "var(--color-primary-400)",
+                  color: "var(--color-primary-dark)",
                   margin: 0,
                 }}
               >
@@ -191,7 +191,7 @@ const NewArrivalsPage = async () => {
               <ul
                 style={{
                   fontSize: 13,
-                  color: "var(--color-primary-400)",
+                  color: "var(--color-primary-dark)",
                   lineHeight: 2,
                   listStyle: "none",
                   padding: 0,
@@ -208,7 +208,7 @@ const NewArrivalsPage = async () => {
               <p
                 style={{
                   fontSize: 13,
-                  color: "var(--color-primary-400)",
+                  color: "var(--color-primary-dark)",
                   margin: 0,
                 }}
               >

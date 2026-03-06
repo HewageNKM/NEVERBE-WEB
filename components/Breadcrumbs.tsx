@@ -24,7 +24,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items, className = "" }) => {
     <nav
       aria-label="Breadcrumb"
       // Added your custom 'hide-scrollbar' utility and brand spacing
-      className={`flex items-center gap-1 md:gap-2 text-base text-secondary overflow-x-auto hide-scrollbar max-w-full ${className}`}
+      className={`flex items-center gap-1 md:gap-2 text-base text-primary-dark overflow-x-auto hide-scrollbar max-w-full ${className}`}
     >
       {/* Home icon */}
       <Link
@@ -48,7 +48,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items, className = "" }) => {
             </Link>
           ) : (
             /* Active Page: Highlighted with primary color/weight */
-            <span className="text-primary font-bold capitalize truncate max-w-[120px] sm:max-w-[180px] md:max-w-[250px] min-h-[44px] flex items-center">
+            <span className="text-primary-dark font-bold capitalize truncate max-w-[120px] sm:max-w-[180px] md:max-w-[250px] min-h-[44px] flex items-center">
               {item.label}
             </span>
           )}

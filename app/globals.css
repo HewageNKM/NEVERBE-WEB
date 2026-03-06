@@ -20,11 +20,12 @@
   --color-primary-600: #154c2a;
   --color-primary-dark: #0e331c;
 
-  /* === NEUTRAL COLORS (NEVERBE Theme) === */
-  --color-text-primary: #2e9e5b; /* Changed from dark to primary */
-  --color-text-secondary: #26854b; /* Changed from gray to darker primary */
-  --color-text-muted: #a1ceb4; /* Changed from gray to light green */
-  --color-text-inverse: #ffffff;
+  /* === NEUTRAL COLORS (Typography) === */
+  --color-text-primary: #111827; /* Gray 900, main headings */
+  --color-text-secondary: #374151; /* Gray 700, subheadings */
+  --color-text-body: #4b5563; /* Gray 600, paragraph text */
+  --color-text-muted: #9ca3af; /* Gray 400, placeholders and secondary info */
+  --color-text-inverse: #ffffff; /* White over dark backgrounds */
 
   --color-bg-primary: #ffffff;
   --color-bg-secondary: #f8faf5;
@@ -40,8 +41,6 @@
   --color-dark-surface: #f8faf5;
   --color-dark-elevated: #ffffff;
   --color-dark-border: #e0e8d8;
-  --color-dark-text: #2e9e5b;
-  --color-dark-text-muted: #a1ceb4;
 
   /* === ACCENT COLORS === */
   --color-accent: #2e9e5b;
@@ -143,31 +142,32 @@
 
 /* Custom Utility Classes
 */
-@layer utilities {
-  /* === COLOR UTILITIES === */
-  /* Text colors */
-  .text-primary {
-    color: var(--color-text-primary);
-  }
-  .text-secondary {
-    color: var(--color-text-secondary);
-  }
-  .text-muted {
-    color: var(--color-text-muted);
-  }
-  .text-inverse {
-    color: var(--color-text-inverse);
-  }
-  .text-error {
-    color: var(--color-error);
-  }
-  .text-warning {
-    color: var(--color-warning);
-  }
-  .text-success {
-    color: var(--color-success);
-  }
+@utility text-primary {
+  color: var(--color-text-primary);
+}
+@utility text-secondary {
+  color: var(--color-text-secondary);
+}
+@utility text-body {
+  color: var(--color-text-body);
+}
+@utility text-muted {
+  color: var(--color-text-muted);
+}
+@utility text-inverse {
+  color: var(--color-text-inverse);
+}
+@utility text-error {
+  color: var(--color-error);
+}
+@utility text-warning {
+  color: var(--color-warning);
+}
+@utility text-success {
+  color: var(--color-success);
+}
 
+@layer utilities {
   /* Background colors */
   .bg-surface {
     background-color: var(--color-bg-primary);
@@ -179,7 +179,7 @@
     background-color: var(--color-bg-tertiary);
   }
   .bg-dark {
-    background-color: var(--color-text-primary);
+    background-color: var(--color-primary-600);
   }
 
   /* Border colors */

@@ -123,7 +123,7 @@ const PromotionalAds: React.FC = () => {
                       <Title
                         level={3}
                         style={{
-                          color: "var(--color-primary)",
+                          color: "var(--color-primary-dark)",
                           textTransform: "uppercase",
                           fontWeight: 900,
                           letterSpacing: "-0.02em",
@@ -135,7 +135,7 @@ const PromotionalAds: React.FC = () => {
                       <Flex align="center" gap={8} className="mt-3">
                         <Text
                           style={{
-                            color: "var(--color-primary-400)",
+                            color: "var(--color-primary-dark)",
                             textTransform: "uppercase",
                             letterSpacing: "0.1em",
                             fontSize: 12,
@@ -155,7 +155,7 @@ const PromotionalAds: React.FC = () => {
                         >
                           <ArrowRightOutlined
                             style={{
-                              color: "var(--color-primary)",
+                              color: "var(--color-primary-dark)",
                               fontSize: 14,
                             }}
                             className="group-hover:text-inverse! group-hover:translate-x-0.5 transition-all"

@@ -99,14 +99,14 @@ const SavedAddresses: React.FC<SavedAddressesProps> = ({
                 <div className="flex justify-between items-center mb-2">
                   <Title
                     level={3}
-                    className="text-lg! font-bold! text-primary! uppercase! tracking-tight! mb-0!"
+                    className="text-lg! font-bold! text-primary-dark! uppercase! tracking-tight! mb-0!"
                   >
                     Edit {type} Address
                   </Title>
                   <Button
                     type="text"
                     onClick={() => setIsEditing(false)}
-                    className="text-muted hover:text-primary transition-colors p-0 h-auto"
+                    className="text-muted hover:text-primary-dark transition-colors p-0 h-auto"
                   >
                     <IoCloseOutline size={24} />
                   </Button>
@@ -182,7 +182,7 @@ const SavedAddresses: React.FC<SavedAddressesProps> = ({
                     </div>
                     <Title
                       level={3}
-                      className="font-display! font-black! text-lg! uppercase! tracking-tighter! text-primary! mb-0!"
+                      className="font-display! font-black! text-lg! uppercase! tracking-tighter! text-primary-dark! mb-0!"
                     >
                       {type} Address
                     </Title>
@@ -190,7 +190,7 @@ const SavedAddresses: React.FC<SavedAddressesProps> = ({
 
                   {existing ? (
                     <div className="space-y-1 block">
-                      <Text className="block text-sm font-bold text-primary">
+                      <Text className="block text-sm font-bold text-primary-dark">
                         {existing.address}
                       </Text>
                       <Text className="block text-sm text-muted">
@@ -211,7 +211,7 @@ const SavedAddresses: React.FC<SavedAddressesProps> = ({
                   <Button
                     type="text"
                     onClick={() => setIsEditing(true)}
-                    className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-accent hover:text-primary transition-all"
+                    className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-accent hover:text-primary-dark transition-all"
                   >
                     <IoPencilOutline size={14} />
                     {existing ? "Change Address" : "Add Address"}
@@ -239,7 +239,7 @@ const SavedAddresses: React.FC<SavedAddressesProps> = ({
         </Text>
         <Title
           level={2}
-          className="text-3xl! font-display! font-black! uppercase! tracking-tighter! text-primary! mt-2! mb-0!"
+          className="text-3xl! font-display! font-black! uppercase! tracking-tighter! text-primary-dark! mt-2! mb-0!"
         >
           Your Addresses
         </Title>

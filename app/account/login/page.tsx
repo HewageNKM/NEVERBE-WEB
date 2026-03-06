@@ -53,7 +53,7 @@ const AuthPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white text-primary flex flex-col items-center justify-center px-6 relative">
+    <div className="min-h-screen bg-white text-primary-dark flex flex-col items-center justify-center px-6 relative">
       {loading && <ComponentLoader />}
 
       <motion.div
@@ -126,7 +126,7 @@ const AuthPage = () => {
           <div className="flex justify-end pr-2">
             <Button
               type="link"
-              className="text-[11px] font-bold uppercase tracking-widest text-muted hover:text-primary transition-colors mt-2 p-0 h-auto"
+              className="text-[11px] font-bold uppercase tracking-widest text-muted hover:text-primary-dark transition-colors mt-2 p-0 h-auto"
             >
               Forgot Password?
             </Button>
@@ -158,7 +158,7 @@ const AuthPage = () => {
         <Button
           onClick={handleGoogleLogin}
           type="default"
-          className="w-full bg-white text-primary border border-default flex items-center justify-center gap-4 py-6 rounded-full font-black uppercase text-xs tracking-widest hover:bg-surface-2 shadow-sm transition-all"
+          className="w-full bg-white text-primary-dark border border-default flex items-center justify-center gap-4 py-6 rounded-full font-black uppercase text-xs tracking-widest hover:bg-surface-2 shadow-sm transition-all"
         >
           <FcGoogle size={22} />
           Continue with Google
@@ -173,7 +173,7 @@ const AuthPage = () => {
             href={`/account/register?redirect=${encodeURIComponent(
               redirectUrl,
             )}`}
-            className="text-xs font-black uppercase tracking-widest text-primary hover:text-secondary underline underline-offset-4 decoration-accent decoration-2 transition-all"
+            className="text-xs font-black uppercase tracking-widest text-primary-dark hover:text-primary-dark underline underline-offset-4 decoration-accent decoration-2 transition-all"
           >
             Join the Club
           </Link>
@@ -184,7 +184,7 @@ const AuthPage = () => {
       <div className="mt-16">
         <Link
           href="/"
-          className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-muted hover:text-primary transition-all"
+          className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-muted hover:text-primary-dark transition-all"
         >
           <IoChevronBackOutline size={14} />
           Return to Store

@@ -78,11 +78,11 @@ const CouponInput: React.FC<CouponInputProps> = ({
       case "error":
         return "text-error";
       case "info":
-        return "text-secondary";
+        return "text-primary-dark";
       case "restricted":
         return "text-warning";
       default:
-        return "text-secondary";
+        return "text-primary-dark";
     }
   };
 
@@ -95,8 +95,8 @@ const CouponInput: React.FC<CouponInputProps> = ({
           animate={{ opacity: 1, y: 0 }}
           className="mb-4 p-4 bg-surface-2 border-l-4 border-accent flex items-start gap-3 shadow-custom"
         >
-          <IoLockClosed className="text-primary shrink-0 mt-0.5" size={18} />
-          <p className="text-base font-medium text-primary leading-relaxed">
+          <IoLockClosed className="text-primary-dark shrink-0 mt-0.5" size={18} />
+          <p className="text-base font-medium text-primary-dark leading-relaxed">
             Promotions are currently locked. Remove bundle items to use a
             coupon.
           </p>
@@ -136,7 +136,7 @@ const CouponInput: React.FC<CouponInputProps> = ({
         {couponState.isApplied ? (
           <Button
             onClick={removeCouponFromCart}
-            className="px-6 h-12 bg-surface border border-border-secondary text-primary text-base font-bold rounded-full hover:border-dark transition-all"
+            className="px-6 h-12 bg-surface border border-border-secondary text-primary-dark text-base font-bold rounded-full hover:border-dark transition-all"
           >
             Remove
           </Button>
@@ -146,7 +146,7 @@ const CouponInput: React.FC<CouponInputProps> = ({
             disabled={
               !couponState.code || couponState.isValidating || isBlocked
             }
-            className="px-8 h-12 bg-dark text-inverse text-base font-bold rounded-full hover:bg-accent hover:text-primary disabled:bg-surface-3 disabled:text-muted disabled:cursor-not-allowed transition-all shadow-md active:scale-95"
+            className="px-8 h-12 bg-dark text-inverse text-base font-bold rounded-full hover:bg-accent hover:text-primary-dark disabled:bg-surface-3 disabled:text-muted disabled:cursor-not-allowed transition-all shadow-md active:scale-95"
           >
             {couponState.isValidating ? "..." : "Apply"}
           </Button>
@@ -181,7 +181,7 @@ const CouponInput: React.FC<CouponInputProps> = ({
                   className={`flex items-center justify-between gap-4 text-xs font-bold px-4 py-3 border rounded-[4px] shadow-sm ${
                     condition.met
                       ? "bg-surface-2 border-success/30 text-success"
-                      : "bg-surface border-border-primary text-primary"
+                      : "bg-surface border-border-primary text-primary-dark"
                   }`}
                 >
                   <span className="flex-1 uppercase tracking-wider">
@@ -222,7 +222,7 @@ const CouponInput: React.FC<CouponInputProps> = ({
           >
             <div className="flex justify-between items-center">
               <div>
-                <p className="text-base font-black text-primary uppercase tracking-tighter">
+                <p className="text-base font-black text-primary-dark uppercase tracking-tighter">
                   {couponState.isApplied ? "Promo Applied" : "Code Eligible"}
                 </p>
                 <p className="text-xs text-muted font-mono mt-0.5">

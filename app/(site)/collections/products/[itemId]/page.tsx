@@ -142,7 +142,7 @@ const Page = async (context: { params: Promise<{ itemId: string }> }) => {
   return (
     <Flex
       vertical
-      className="w-full relative mt-[80px] md:mt-[100px] min-h-screen px-4 md:px-8 bg-white text-primary"
+      className="w-full relative mt-[80px] md:mt-[100px] min-h-screen px-4 md:px-8 bg-white text-primary-dark"
     >
       <script
         type="application/ld+json"
@@ -152,7 +152,7 @@ const Page = async (context: { params: Promise<{ itemId: string }> }) => {
       <Flex
         vertical
         gap={16}
-        className="w-full max-w-[1600px] mx-auto pt-4 pb-2 text-primary px-4 md:px-10 lg:px-16"
+        className="w-full max-w-[1600px] mx-auto pt-4 pb-2 text-primary-dark px-4 md:px-10 lg:px-16"
       >
         <Breadcrumbs items={breadcrumbItems} />
       </Flex>

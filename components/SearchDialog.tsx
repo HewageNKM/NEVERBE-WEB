@@ -31,7 +31,7 @@ const SearchDialog: React.FC<SearchDialogProps> = ({
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: 10 }}
         transition={{ type: "spring", damping: 25, stiffness: 200 }}
-        className={`w-full text-primary overflow-hidden flex flex-col ${
+        className={`w-full text-primary-dark overflow-hidden flex flex-col ${
           containerStyle ||
           "shadow-hover border border-default absolute top-14 right-0 lg:w-[600px] z-50"
         }`}
@@ -104,10 +104,10 @@ const SearchDialog: React.FC<SearchDialogProps> = ({
           /* --- PURE EMPTY STATE --- */
           <div className="flex flex-col items-center justify-center py-20 px-6 text-center animate-fade">
             <div className="bg-surface-2 p-6 rounded-full mb-6">
-              <IoSearchOutline className="text-primary-400" size={32} />
+              <IoSearchOutline className="text-muted" size={32} />
             </div>
 
-            <h3 className="text-2xl font-display font-black uppercase tracking-tighter text-primary">
+            <h3 className="text-2xl font-display font-black uppercase tracking-tighter text-primary-dark">
               No results found
             </h3>
 

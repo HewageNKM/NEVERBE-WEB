@@ -67,7 +67,7 @@ const UpsellNudge: React.FC<Props> = ({
       className={`p-4 rounded-xl border text-sm font-bold mb-4 ${
         isMet
           ? "bg-accent/10 border-accent text-dark"
-          : "bg-surface-2 border-default text-primary"
+          : "bg-surface-2 border-default text-primary-dark"
       }`}
     >
       <div className="flex items-center gap-2 mb-2">

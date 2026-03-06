@@ -46,14 +46,14 @@ const ProfileOverview: React.FC<ProfileOverviewProps> = ({
         </Text>
         <Title
           level={2}
-          className="text-3xl! md:text-4xl! font-display! font-black! uppercase! tracking-tighter! text-primary! mt-2! mb-0!"
+          className="text-3xl! md:text-4xl! font-display! font-black! uppercase! tracking-tighter! text-primary-dark! mt-2! mb-0!"
         >
           Member Overview
         </Title>
         <div className="flex items-center gap-2 mt-4 text-muted">
           <IoTimeOutline className="text-accent" />
           <Text className="text-xs font-bold uppercase tracking-widest text-muted">
-            Member since <span className="text-primary">{memberDate}</span>
+            Member since <span className="text-primary-dark">{memberDate}</span>
           </Text>
         </div>
       </div>
@@ -84,7 +84,7 @@ const ProfileOverview: React.FC<ProfileOverviewProps> = ({
                 </div>
                 <Title
                   level={3}
-                  className="text-2xl! font-display! font-black! uppercase! tracking-tighter! text-primary! mb-3!"
+                  className="text-2xl! font-display! font-black! uppercase! tracking-tighter! text-primary-dark! mb-3!"
                 >
                   Order History
                 </Title>
@@ -129,7 +129,7 @@ const ProfileOverview: React.FC<ProfileOverviewProps> = ({
                 </div>
                 <Title
                   level={3}
-                  className="text-2xl! font-display! font-black! uppercase! tracking-tighter! text-primary! mb-3!"
+                  className="text-2xl! font-display! font-black! uppercase! tracking-tighter! text-primary-dark! mb-3!"
                 >
                   Account Settings
                 </Title>

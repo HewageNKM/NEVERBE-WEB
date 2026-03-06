@@ -45,7 +45,7 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
           <TbArrowsSort
             size={18}
             className={`transition-colors ${
-              isOpen ? "text-accent" : "text-primary group-hover:text-accent"
+              isOpen ? "text-accent" : "text-primary-dark group-hover:text-accent"
             }`}
           />
         }
@@ -76,7 +76,7 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
                     className={`text-sm uppercase tracking-tight transition-colors ${
                       isSelected
                         ? "text-accent font-display font-black tracking-tighter"
-                        : "text-muted font-bold group-hover:text-primary"
+                        : "text-muted font-bold group-hover:text-primary-dark"
                     }`}
                   >
                     {opt.name}

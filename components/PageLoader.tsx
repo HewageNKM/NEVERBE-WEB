@@ -39,11 +39,6 @@ const PageLoader = () => {
             <Spin size="large" />
           </ConfigProvider>
         </div>
-
-        {/* Brand Name */}
-        <p className="text-xs font-display font-black uppercase tracking-[0.3em] text-primary mt-2">
-          NEVERBE
-        </p>
       </div>
     </main>
   );

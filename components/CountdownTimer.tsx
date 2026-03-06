@@ -72,7 +72,7 @@ const CountdownTimer: React.FC<Props> = ({
   }) => (
     <div className="flex flex-col items-center min-w-[32px]">
       {/* Numbers using Brand Display font for a premium look */}
-      <span className="font-display font-black text-xl md:text-2xl leading-none text-primary tracking-tighter">
+      <span className="font-display font-black text-xl md:text-2xl leading-none text-primary-dark tracking-tighter">
         {String(value || 0).padStart(2, "0")}
       </span>
       {labels && (

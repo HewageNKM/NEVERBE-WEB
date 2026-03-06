@@ -206,7 +206,8 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="absolute inset-0 bg-surface/80 backdrop-blur-xl"
+            className="absolute inset-0 bg-white/70"
+            style={{ backdropFilter: "blur(8px)" }}
           />
 
           {/* Modal Container */}
@@ -237,9 +238,15 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
               {/* X button right side on mobile */}
               <button
                 onClick={onClose}
-                className="w-8 h-8 flex items-center justify-center rounded-full bg-surface-2 text-primary hover:bg-surface-3 transition-colors"
+                className="w-8 h-8 flex items-center justify-center rounded-full hover:opacity-70 transition-all"
+                style={{
+                  color: "var(--color-accent)",
+                  fontSize: 20,
+                  fontWeight: 700,
+                  lineHeight: 1,
+                }}
               >
-                <IoClose size={18} />
+                ✕
               </button>
             </motion.div>
 
@@ -247,9 +254,15 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
             <div className="hidden md:flex items-center justify-end px-4 pt-4 shrink-0">
               <button
                 onClick={onClose}
-                className="w-9 h-9 flex items-center justify-center rounded-full bg-surface-2 text-primary border border-default hover:bg-accent hover:text-dark hover:border-accent transition-all"
+                className="w-9 h-9 flex items-center justify-center rounded-full hover:opacity-70 transition-all"
+                style={{
+                  color: "var(--color-accent)",
+                  fontSize: 22,
+                  fontWeight: 700,
+                  lineHeight: 1,
+                }}
               >
-                <IoClose size={20} />
+                ✕
               </button>
             </div>
 
@@ -329,7 +342,7 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
                           )}
                           {/* Promotion indicator badge */}
                           {variantPromo && !isVariantOutOfStock && (
-                            <span className="absolute -top-1 -right-1 w-4 h-4 bg-accent rounded-full border-2 border-surface flex items-center justify-center shadow-custom">
+                            <span className="absolute -top-1 -right-1 w-4 h-4 bg-warning rounded-full border-2 border-surface flex items-center justify-center shadow-custom">
                               <span className="text-[7px] font-black text-dark">
                                 %
                               </span>
@@ -350,7 +363,7 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
                     <motion.div
                       initial={{ opacity: 0, x: 20 }}
                       animate={{ opacity: 1, x: 0 }}
-                      className="bg-accent text-dark p-3 sm:p-4 mb-4 sm:mb-6 -mx-4 sm:-mx-6 md:-mx-10 lg:-mx-12 px-4 sm:px-6 md:px-10 lg:px-12 flex items-center gap-2 sm:gap-3 shadow-custom"
+                      className="bg-warning text-dark p-3 sm:p-4 mb-4 sm:mb-6 -mx-4 sm:-mx-6 md:-mx-10 lg:-mx-12 px-4 sm:px-6 md:px-10 lg:px-12 flex items-center gap-2 sm:gap-3 shadow-custom"
                     >
                       <IoFlash className="animate-pulse shrink-0" size={16} />
                       <div className="flex-1 min-w-0">
@@ -369,7 +382,7 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
                   <p className="text-accent text-[10px] sm:text-xs font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] mb-1 sm:mb-2">
                     {product.brand?.replace("-", " ")}
                   </p>
-                  <h2 className="text-xl sm:text-2xl md:text-3xl font-display font-black text-primary leading-tight uppercase tracking-tighter">
+                  <h2 className="text-xl sm:text-2xl md:text-3xl font-display font-black text-primary-dark leading-tight uppercase tracking-tighter">
                     {product.name}
                   </h2>
                 </div>
@@ -378,7 +391,7 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
                 <div className="flex items-center gap-3 mb-6 sm:mb-8">
                   <span
                     className={`text-2xl sm:text-3xl font-display font-black tracking-tighter ${
-                      hasActiveDiscount ? "text-success" : "text-primary"
+                      hasActiveDiscount ? "text-success" : "text-primary-dark"
                     }`}
                   >
                     Rs. {finalPrice.toLocaleString()}
@@ -393,13 +406,13 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
                 {/* Size Grid - Integrated with Brand Styling */}
                 <div className="mb-6 sm:mb-8">
                   <div className="flex justify-between items-center mb-3 sm:mb-4">
-                    <p className="text-xs sm:text-sm font-black uppercase tracking-widest text-primary">
+                    <p className="text-xs sm:text-sm font-black uppercase tracking-widest text-primary-dark">
                       Select Size
                     </p>
                     <Button
                       type="link"
                       onClick={() => {}} // Add Size Guide click handler if exists in parent context later
-                      className="text-[9px] sm:text-[10px] font-bold uppercase text-accent hover:text-primary transition-colors underline underline-offset-4 p-0 h-auto"
+                      className="text-[9px] sm:text-[10px] font-bold uppercase text-accent hover:text-primary-dark transition-colors underline underline-offset-4 p-0 h-auto"
                     >
                       Size Guide
                     </Button>
@@ -416,7 +429,7 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
                 {/* Quantity Selector */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-6 mb-6 sm:mb-8">
                   <div className="flex items-center gap-4 sm:gap-6">
-                    <span className="text-xs sm:text-sm font-black uppercase tracking-widest text-primary">
+                    <span className="text-xs sm:text-sm font-black uppercase tracking-widest text-primary-dark">
                       Quantity
                     </span>
                     <div className="flex items-center bg-surface-2 border border-default rounded-full px-3 py-1.5 sm:px-4 sm:py-2">
@@ -471,10 +484,23 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
                   <Button
                     type="primary"
                     onClick={handleAddToBag}
-                    disabled={!selectedSize || isOutOfStock || isLimitReached}
-                    className="group w-full h-auto py-5 sm:py-6 border-none bg-dark text-inverse rounded-full font-display font-black uppercase tracking-wider text-xs sm:text-sm transition-all hover:bg-accent hover:text-dark hover:shadow-hover active:scale-[0.98] disabled:bg-surface-3 disabled:text-muted disabled:cursor-not-allowed"
+                    disabled={
+                      !product.inStock ||
+                      !selectedSize ||
+                      isOutOfStock ||
+                      isLimitReached
+                    }
+                    className={`group w-full h-auto py-5 sm:py-6 border-none rounded-full font-display font-black uppercase tracking-wider text-xs sm:text-sm transition-all hover:shadow-hover active:scale-[0.98] disabled:cursor-not-allowed ${
+                      !product.inStock || isOutOfStock || isLimitReached
+                        ? "bg-error! text-inverse! disabled:bg-error! disabled:text-inverse/80!"
+                        : !selectedSize
+                          ? "bg-surface-3 text-muted disabled:bg-surface-3! disabled:text-muted!"
+                          : activePromo
+                            ? "bg-warning! text-dark! hover:bg-warning/80!"
+                            : "bg-dark text-inverse hover:bg-accent hover:text-dark!"
+                    }`}
                   >
-                    {isOutOfStock
+                    {!product.inStock || isOutOfStock
                       ? "Sold Out"
                       : isLimitReached
                         ? "Inventory Maxed"
@@ -484,7 +510,7 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
                   <Link
                     href={`/collections/products/${product.id}`}
                     onClick={onClose}
-                    className="flex items-center justify-center w-full py-3 sm:py-4 border-2 border-default rounded-full font-black text-[10px] sm:text-xs uppercase tracking-widest text-primary hover:bg-surface-2 hover:border-dark transition-all"
+                    className="flex items-center justify-center w-full py-3 sm:py-4 border-2 border-default rounded-full font-black text-[10px] sm:text-xs uppercase tracking-widest text-primary-dark hover:bg-surface-2 hover:border-dark transition-all"
                   >
                     View Full Details
                   </Link>

@@ -23,7 +23,7 @@ const Page = ({
         <FailAnimationComponent />
 
         {/* Heading */}
-        <h1 className="text-4xl md:text-6xl font-display font-black uppercase tracking-tighter leading-none mb-4 text-primary">
+        <h1 className="text-4xl md:text-6xl font-display font-black uppercase tracking-tighter leading-none mb-4 text-primary-dark">
           Order Failed
         </h1>
 
@@ -53,7 +53,7 @@ const Page = ({
           {/* Support Action */}
           <Link
             href="/pages/contact"
-            className="flex-1 sm:flex-none py-4 px-8 border-2 border-dark text-primary font-display font-black uppercase tracking-widest hover:bg-dark hover:text-inverse transition-all rounded-full flex items-center justify-center gap-2"
+            className="flex-1 sm:flex-none py-4 px-8 border-2 border-dark text-primary-dark font-display font-black uppercase tracking-widest hover:bg-dark hover:text-inverse transition-all rounded-full flex items-center justify-center gap-2"
           >
             <IoHelpCircleOutline size={20} />
             Contact Support

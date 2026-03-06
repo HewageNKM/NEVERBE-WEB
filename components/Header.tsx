@@ -103,7 +103,7 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
                 <li key={item.title}>
                   <Link
                     href={item.link}
-                    className="relative pb-2 text-[13px] font-bold uppercase tracking-tight text-primary hover:text-accent transition-colors group"
+                    className="relative pb-2 text-[13px] font-bold uppercase tracking-tight text-primary-dark hover:text-accent transition-colors group"
                   >
                     {item.title}
                     <span
@@ -127,7 +127,7 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
             >
               <IoSearchOutline
                 size={24}
-                className="text-primary-400 group-hover:text-primary transition-colors"
+                className="text-muted group-hover:text-primary-dark transition-colors"
               />
             </button>
 
@@ -137,7 +137,7 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
             >
               <IoPersonOutline
                 size={24}
-                className="text-primary-400 group-hover:text-primary transition-colors"
+                className="text-muted group-hover:text-primary-dark transition-colors"
               />
             </Link>
 
@@ -147,7 +147,7 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
             >
               <IoHeartOutline
                 size={24}
-                className="text-primary-400 group-hover:text-primary transition-colors"
+                className="text-muted group-hover:text-primary-dark transition-colors"
               />
             </Link>
 
@@ -164,7 +164,7 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
               >
                 <IoBagHandleOutline
                   size={24}
-                  className="text-primary-400 group-hover:text-primary transition-colors"
+                  className="text-muted group-hover:text-primary-dark transition-colors"
                 />
               </Badge>
             </button>
@@ -176,7 +176,7 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
               >
                 <IoMenuOutline
                   size={28}
-                  className="text-primary-400 group-hover:text-primary transition-colors"
+                  className="text-muted group-hover:text-primary-dark transition-colors"
                 />
               </button>
             </div>
@@ -225,7 +225,7 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
                       }}
                       className="lg:hidden flex shrink-0 items-center justify-center w-10 h-10 rounded-full bg-surface-2 hover:bg-surface-3 transition-colors cursor-pointer border-none outline-none m-0 p-0"
                     >
-                      <IoCloseOutline size={24} className="text-primary-400" />
+                      <IoCloseOutline size={24} className="text-muted" />
                     </button>
                   </Flex>
 
@@ -278,7 +278,7 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
                               >
                                 <IoCloseOutline
                                   size={20}
-                                  className="text-primary-400 hover:text-primary"
+                                  className="text-muted hover:text-primary-dark"
                                 />
                               </button>
                             )}
@@ -310,7 +310,7 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
                     }}
                     className="hidden lg:flex shrink-0 items-center justify-center w-12 h-12 rounded-full bg-surface-2 hover:bg-surface-3 transition-colors cursor-pointer border-none outline-none m-0 p-0"
                   >
-                    <IoCloseOutline size={28} className="text-primary-400" />
+                    <IoCloseOutline size={28} className="text-muted" />
                   </button>
                 </Flex>
 

@@ -74,47 +74,50 @@ const Products = ({ items }: { items: Product[] }) => {
 
       <div className="flex-1 w-full">
         <div className="relative z-20 py-4 flex justify-between lg:justify-end items-center gap-3">
-          <Button
-            onClick={() => setShowFilter(true)}
-            className="hidden"
-            icon={<IoOptionsOutline size={16} />}
-            style={{
-              borderRadius: 99,
-              fontWeight: 700,
-              fontSize: 12,
-              textTransform: "uppercase",
-              letterSpacing: "0.06em",
-              height: 38,
-              padding: "0 16px",
-              border: "1.5px solid rgba(0,0,0,0.12)",
-              background: "#fff",
-              color: "var(--color-primary)",
-            }}
-          >
-            Filters
-            {filters.brands.length +
-              filters.categories.length +
-              filters.sizes.length +
-              (filters.inStock ? 1 : 0) >
-              0 && (
-              <span
-                style={{
-                  marginLeft: 6,
-                  background: "var(--color-accent)",
-                  color: "#fff",
-                  borderRadius: 99,
-                  fontSize: 10,
-                  fontWeight: 900,
-                  padding: "1px 7px",
-                }}
-              >
-                {filters.brands.length +
-                  filters.categories.length +
-                  filters.sizes.length +
-                  (filters.inStock ? 1 : 0)}
-              </span>
-            )}
-          </Button>
+          <div className="flex lg:hidden">
+            <Button
+              onClick={() => setShowFilter(true)}
+              icon={<IoOptionsOutline size={16} />}
+              style={{
+                borderRadius: 99,
+                fontWeight: 700,
+                fontSize: 12,
+                textTransform: "uppercase",
+                letterSpacing: "0.06em",
+                height: 38,
+                padding: "0 16px",
+                border: "1.5px solid rgba(0,0,0,0.12)",
+                background: "#fff",
+                color: "var(--color-primary-dark)",
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              Filters
+              {filters.brands.length +
+                filters.categories.length +
+                filters.sizes.length +
+                (filters.inStock ? 1 : 0) >
+                0 && (
+                <span
+                  style={{
+                    marginLeft: 6,
+                    background: "var(--color-accent)",
+                    color: "#fff",
+                    borderRadius: 99,
+                    fontSize: 10,
+                    fontWeight: 900,
+                    padding: "1px 7px",
+                  }}
+                >
+                  {filters.brands.length +
+                    filters.categories.length +
+                    filters.sizes.length +
+                    (filters.inStock ? 1 : 0)}
+                </span>
+              )}
+            </Button>
+          </div>
 
           <SortDropdown value={filters.sort} onChange={setSort} />
         </div>

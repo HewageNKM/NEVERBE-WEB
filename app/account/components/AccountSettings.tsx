@@ -66,7 +66,7 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
             </div>
             <Title
               level={3}
-              className="text-xl! font-display! font-black! uppercase! tracking-tighter! text-primary! mb-0!"
+              className="text-xl! font-display! font-black! uppercase! tracking-tighter! text-primary-dark! mb-0!"
             >
               Profile
             </Title>
@@ -208,7 +208,7 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
             </div>
             <Title
               level={3}
-              className="text-xl! font-display! font-black! uppercase! tracking-tighter! text-primary! mb-0!"
+              className="text-xl! font-display! font-black! uppercase! tracking-tighter! text-primary-dark! mb-0!"
             >
               Security
             </Title>
@@ -269,7 +269,7 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
             <div className="flex flex-col sm:flex-row justify-between items-center flex-wrap gap-4 pt-4">
               <Button
                 type="link"
-                className="text-[10px] font-black uppercase tracking-widest text-muted hover:text-primary underline underline-offset-8 decoration-accent decoration-2 transition-all p-0 h-auto"
+                className="text-[10px] font-black uppercase tracking-widest text-muted hover:text-primary-dark underline underline-offset-8 decoration-accent decoration-2 transition-all p-0 h-auto"
               >
                 Forgot Password?
               </Button>

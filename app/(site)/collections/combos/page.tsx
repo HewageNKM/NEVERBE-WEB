@@ -9,7 +9,7 @@ const sectionLabel: React.CSSProperties = {
   fontWeight: 800,
   textTransform: "uppercase" as const,
   letterSpacing: "0.1em",
-  color: "var(--color-primary-400)",
+  color: "var(--color-primary-dark)",
   display: "block",
   marginBottom: 12,
 };
@@ -145,11 +145,11 @@ const CombosPage = async ({
         <nav
           style={{
             fontSize: 12,
-            color: "var(--color-primary-400)",
+            color: "var(--color-primary-dark)",
             marginBottom: 16,
           }}
         >
-          <Link href="/" style={{ color: "var(--color-primary-400)" }}>
+          <Link href="/" style={{ color: "var(--color-primary-dark)" }}>
             Home
           </Link>
           <span style={{ margin: "0 8px" }}>/</span>
@@ -164,13 +164,13 @@ const CombosPage = async ({
             lineHeight: 1,
             margin: 0,
             marginBottom: 8,
-            color: "var(--color-primary)",
+            color: "var(--color-primary-dark)",
           }}
         >
           Bundle Deals
         </h1>
         <p
-          style={{ color: "var(--color-primary-400)", fontSize: 14, margin: 0 }}
+          style={{ color: "var(--color-primary-dark)", fontSize: 14, margin: 0 }}
         >
           BOGO offers &amp; exclusive combo packs — save more when you buy
           together.
@@ -208,7 +208,7 @@ const CombosPage = async ({
               <p
                 style={{
                   fontSize: 13,
-                  color: "var(--color-primary-400)",
+                  color: "var(--color-primary-dark)",
                   margin: 0,
                 }}
               >
@@ -221,7 +221,7 @@ const CombosPage = async ({
               <ul
                 style={{
                   fontSize: 13,
-                  color: "var(--color-primary-400)",
+                  color: "var(--color-primary-dark)",
                   lineHeight: 2,
                   listStyle: "none",
                   padding: 0,
@@ -238,7 +238,7 @@ const CombosPage = async ({
               <p
                 style={{
                   fontSize: 13,
-                  color: "var(--color-primary-400)",
+                  color: "var(--color-primary-dark)",
                   margin: 0,
                 }}
               >

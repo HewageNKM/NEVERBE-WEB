@@ -19,7 +19,7 @@ const ShippingReturnPolicyClient = () => {
               textTransform: "uppercase",
               letterSpacing: "-0.03em",
               lineHeight: 0.9,
-              color: "var(--color-primary)",
+              color: "var(--color-primary-dark)",
               margin: 0,
             }}
           >
@@ -27,11 +27,11 @@ const ShippingReturnPolicyClient = () => {
           </Title>
 
           <div className="flex flex-col md:flex-row md:items-center gap-4 mt-6">
-            <p className="text-xs font-bold uppercase tracking-widest text-primary-400">
+            <p className="text-xs font-bold uppercase tracking-widest text-muted">
               Customer Service
             </p>
             <div className="hidden md:block h-px w-12 bg-default"></div>
-            <p className="text-xs font-bold uppercase tracking-widest text-primary-400">
+            <p className="text-xs font-bold uppercase tracking-widest text-muted">
               Exchange Guidelines
             </p>
           </div>

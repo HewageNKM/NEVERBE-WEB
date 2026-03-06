@@ -83,7 +83,7 @@ const ComboDetailPage = async (context: {
   ];
 
   return (
-    <main className="w-full relative bg-white text-primary">
+    <main className="w-full relative bg-white text-primary-dark">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}

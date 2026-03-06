@@ -77,13 +77,20 @@ const ItemCard = ({
               ? `${item.discount}% Off`
               : null
       }
-      color={outOfStocks ? "var(--color-primary-400)" : "var(--color-accent)"}
+      color={
+        outOfStocks
+          ? "var(--color-error)"
+          : activePromo
+            ? "var(--color-warning)"
+            : "var(--color-accent)"
+      }
       style={{
         padding: "0 10px",
         fontSize: "11px",
         fontWeight: 800,
         textTransform: "uppercase",
-        color: "#fff",
+        color:
+          activePromo && !outOfStocks ? "var(--color-primary-dark)" : "#fff",
         letterSpacing: "0.05em",
         display:
           outOfStocks || activePromo || item.discount > 0 ? undefined : "none",
@@ -118,39 +125,16 @@ const ItemCard = ({
               />
             </Link>
 
-            {!outOfStocks && (
-              <div className="absolute bottom-4 left-4 right-4 translate-y-[150%] group-hover:translate-y-0 transition-transform duration-300 z-10 hidden lg:block">
-                <Button
-                  block
-                  shape="round"
-                  size="large"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    openQuickView(item);
-                  }}
-                  style={{
-                    fontWeight: 800,
-                    textTransform: "uppercase",
-                    letterSpacing: "0.1em",
-                  }}
-                  className=" hover:text-accent! hover:border-accent!"
-                >
-                  Quick Look
-                </Button>
-              </div>
-            )}
-
-            {!outOfStocks && (
-              <Button
-                shape="circle"
-                icon={<IoEyeOutline size={20} />}
-                onClick={(e) => {
-                  e.preventDefault();
-                  openQuickView(item);
-                }}
-                className="absolute bottom-3 right-3 lg:hidden z-10 shadow-md  border-none"
-              />
-            )}
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                openQuickView(item);
+              }}
+              className="absolute bottom-3 right-3 z-20 w-9 h-9 rounded-full shadow-custom border border-white/40 bg-white/80 backdrop-blur-md text-primary-dark hover:bg-white hover:text-accent lg:opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center shrink-0"
+            >
+              <IoEyeOutline size={18} />
+            </button>
           </div>
         }
       >
@@ -212,7 +196,7 @@ const ItemCard = ({
                   </div>
                   {variantPromo && (
                     <div className="absolute -top-1 -right-1 z-20 w-3.5 h-3.5 bg-accent rounded-full border border-white flex items-center justify-center shadow-sm">
-                      <span className="text-[7px] font-black text-primary">
+                      <span className="text-[7px] font-black text-primary-dark">
                         %
                       </span>
                     </div>

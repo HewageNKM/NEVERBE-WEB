@@ -66,7 +66,7 @@ const CategoryCard = ({ item }: { item: any }) => (
         {/* Card Content Overlay */}
         <div className="absolute inset-x-0 bottom-0 p-5 z-20">
           <Flex align="center" justify="space-between">
-            <span className="flex items-center gap-2 bg-dark text-inverse px-6 py-2.5 rounded-full font-display font-black text-[10px] uppercase tracking-widest transition-all group-hover:bg-accent! group-hover:text-inverse! group-hover:border-transparent! max-w-[85%] truncate">
+            <span className="flex items-center gap-2 bg-white/80 backdrop-blur-md shadow-custom border border-[rgba(46,158,91,0.2)] text-primary-dark px-6 py-2.5 rounded-full font-display font-black text-[10px] uppercase tracking-widest transition-all group-hover:bg-accent! group-hover:text-inverse! group-hover:border-transparent! max-w-[85%] truncate">
               {item.label}
             </span>
             <div className="opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all duration-400 w-10 h-10 rounded-full bg-accent flex items-center justify-center shrink-0">
@@ -157,7 +157,7 @@ const FeaturedCategories = () => {
                 fontSize: 12,
                 transition: "color 0.3s ease",
               }}
-              className="hover:text-primary! cursor-pointer"
+              className="hover:text-primary-dark! cursor-pointer"
             >
               View All <ArrowRightOutlined />
             </span>

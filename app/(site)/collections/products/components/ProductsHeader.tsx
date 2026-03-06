@@ -6,7 +6,7 @@ const ProductsHeader = () => {
     <section className="w-full px-4 md:px-12 py-8 md:py-16 bg-surface flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
       <div className="flex flex-col items-start max-w-[1920px]">
         {/* NEVERBE Performance Style Header */}
-        <h1 className="text-3xl md:text-5xl font-display font-black uppercase tracking-tighter text-primary leading-none">
+        <h1 className="text-3xl md:text-5xl font-display font-black uppercase tracking-tighter text-primary-dark leading-none">
           All Products
         </h1>
         <div className="flex items-center gap-4 mt-3">

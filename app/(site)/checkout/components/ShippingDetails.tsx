@@ -41,7 +41,7 @@ const ShippingDetails = ({
           checked={shippingSameAsBilling}
           onChange={(e) => setShippingSameAsBilling(!shippingSameAsBilling)}
         >
-          <span className="text-sm font-bold uppercase tracking-wide text-secondary font-display">
+          <span className="text-sm font-bold uppercase tracking-wide text-primary-dark font-display">
             Same as billing address
           </span>
         </Checkbox>

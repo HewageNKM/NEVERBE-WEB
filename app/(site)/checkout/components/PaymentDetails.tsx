@@ -54,7 +54,7 @@ const BundleCard = ({ bundle }: { bundle: BundleGroup }) => {
 
   return (
     <div className="border border-default bg-surface rounded-xl overflow-hidden shadow-sm">
-      <div className="bg-surface-2 text-primary px-3 py-2 flex justify-between items-center border-b border-default">
+      <div className="bg-surface-2 text-primary-dark px-3 py-2 flex justify-between items-center border-b border-default">
         <span className="text-[9px] font-display font-black uppercase tracking-tighter">
           Bundle
         </span>
@@ -76,7 +76,7 @@ const BundleCard = ({ bundle }: { bundle: BundleGroup }) => {
               </span>
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-[10px] font-bold uppercase truncate text-primary">
+              <p className="text-[10px] font-bold uppercase truncate text-primary-dark">
                 {item.name}
               </p>
               <p className="text-[9px] text-muted uppercase">
@@ -294,10 +294,10 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
         {/* Financial Breakdown */}
         <Flex vertical gap={12} className="mb-6">
           <Flex justify="space-between" align="center">
-            <Typography.Text className="text-secondary font-medium">
+            <Typography.Text className="text-primary-dark font-medium">
               Subtotal
             </Typography.Text>
-            <Typography.Text className="font-bold text-primary font-mono">
+            <Typography.Text className="font-bold text-primary-dark font-mono">
               Rs. {rawSubTotal.toLocaleString()}
             </Typography.Text>
           </Flex>
@@ -348,10 +348,10 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
           )}
 
           <Flex justify="space-between" align="center">
-            <Typography.Text className="text-secondary font-medium">
+            <Typography.Text className="text-primary-dark font-medium">
               Shipping
             </Typography.Text>
-            <Typography.Text className="font-bold text-primary font-mono">
+            <Typography.Text className="font-bold text-primary-dark font-mono">
               {shipping === 0 ? "FREE" : `Rs. ${shipping}`}
             </Typography.Text>
           </Flex>
@@ -373,10 +373,10 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
         {/* Total Section */}
         <div className="border-t-2 border-primary pt-4 mt-auto mb-8">
           <Flex justify="space-between" align="end">
-            <Typography.Text className="text-sm font-black uppercase tracking-widest text-primary">
+            <Typography.Text className="text-sm font-black uppercase tracking-widest text-primary-dark">
               Total Due
             </Typography.Text>
-            <Typography.Text className="text-3xl font-display font-black tracking-tighter text-primary leading-none">
+            <Typography.Text className="text-3xl font-display font-black tracking-tighter text-primary-dark leading-none">
               Rs.{finalTotal.toLocaleString()}
             </Typography.Text>
           </Flex>

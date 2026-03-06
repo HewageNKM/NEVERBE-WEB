@@ -31,7 +31,7 @@ const FilterList = ({
   onToggle: (label: string) => void;
 }) => (
   <div className="py-6 border-t border-default">
-    <h3 className="text-xs font-black uppercase tracking-widest text-primary-400 mb-4">
+    <h3 className="text-xs font-black uppercase tracking-widest text-muted mb-4">
       {title}
     </h3>
     <div className="flex flex-wrap gap-2">
@@ -119,7 +119,7 @@ const PopUpFilterPanel: React.FC<PopUpFilterPanelProps> = ({
             fontSize: 16,
             textTransform: "uppercase",
             letterSpacing: "-0.02em",
-            color: "var(--color-primary)",
+            color: "var(--color-primary-dark)",
           }}
         >
           Filters
@@ -143,7 +143,7 @@ const PopUpFilterPanel: React.FC<PopUpFilterPanelProps> = ({
       closeIcon={
         <IoCloseOutline
           size={22}
-          style={{ color: "var(--color-primary-400)" }}
+          style={{ color: "var(--color-primary-dark)" }}
         />
       }
       footer={
@@ -199,7 +199,7 @@ const PopUpFilterPanel: React.FC<PopUpFilterPanelProps> = ({
               fontWeight: 700,
               textTransform: "uppercase",
               letterSpacing: "0.05em",
-              color: "var(--color-primary)",
+              color: "var(--color-primary-dark)",
             }}
           >
             In Stock Only
@@ -213,7 +213,7 @@ const PopUpFilterPanel: React.FC<PopUpFilterPanelProps> = ({
 
         {/* Sizes */}
         <div className="py-6 border-b border-default">
-          <h3 className="text-xs font-black uppercase tracking-widest text-primary-400 mb-4">
+          <h3 className="text-xs font-black uppercase tracking-widest text-muted mb-4">
             Size
           </h3>
           <div className="grid grid-cols-4 gap-2">

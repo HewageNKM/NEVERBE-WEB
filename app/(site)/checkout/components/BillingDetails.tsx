@@ -18,7 +18,7 @@ const BillingDetails: React.FC<BillingDetailsProps> = ({
     <section className="flex flex-col items-start w-full mx-auto md:px-0 px-2">
       <Typography.Title
         level={4}
-        className="uppercase tracking-tighter mb-6 text-primary"
+        className="uppercase tracking-tighter mb-6 text-primary-dark"
         style={{ margin: 0, fontWeight: 900 }}
       >
         Billing Address
@@ -189,7 +189,7 @@ const BillingDetails: React.FC<BillingDetailsProps> = ({
           checked={saveAddress}
           onChange={(e) => setSaveAddress(e.target.checked)}
         >
-          <span className="text-sm font-bold text-secondary">
+          <span className="text-sm font-bold uppercase tracking-wide text-primary-dark font-display">
             Save this information for next time
           </span>
         </Checkbox>

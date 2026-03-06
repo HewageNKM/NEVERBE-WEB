@@ -48,7 +48,7 @@ const SizeGrid: React.FC<SizeGridProps> = ({
                     ? "bg-accent! text-white! border-accent! font-black tracking-tighter shadow-custom scale-[1.02] z-10"
                     : isOutOfStock
                       ? "bg-surface-3 text-muted border-transparent cursor-not-allowed opacity-40"
-                      : "bg-surface text-primary border border-border-primary hover:border-accent hover:text-accent"
+                      : "bg-surface text-primary-dark border border-border-primary hover:border-accent hover:text-accent"
                 }
               `}
           >

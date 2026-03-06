@@ -71,11 +71,11 @@ const SocialMediaSection = () => {
               className="flex items-center justify-center gap-3 border border-default px-6 py-4 hover:border-primary hover:bg-surface-2 transition-all group"
               style={{ width: "100%", height: "100%" }}
             >
-              <span className="text-primary-300 group-hover:text-primary transition-colors">
+              <span className="text-muted group-hover:text-primary-dark transition-colors">
                 {media.icon ? <media.icon size={18} /> : getIcon(media.url)}
               </span>
               <Text
-                className="group-hover:text-primary"
+                className="group-hover:text-primary-dark"
                 style={{
                   fontWeight: 800,
                   textTransform: "uppercase",

@@ -40,10 +40,10 @@ const BagItemCard = ({
           )}
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-xs font-bold uppercase truncate text-primary">
+          <p className="text-xs font-bold uppercase truncate text-primary-dark">
             {item.name}
           </p>
-          <p className="text-[10px] text-secondary uppercase">
+          <p className="text-[10px] text-primary-dark uppercase">
             Size: {item.size} · Qty: {item.quantity}
           </p>
           {item.isComboItem && item.comboName && (
@@ -98,7 +98,7 @@ const BagItemCard = ({
         {/* Top: Name & Price */}
         <div>
           <div className="flex justify-between items-start gap-2">
-            <h3 className="font-bold text-sm uppercase leading-tight line-clamp-2 text-primary">
+            <h3 className="font-bold text-sm uppercase leading-tight line-clamp-2 text-primary-dark">
               {item.name}
             </h3>
             <div className="text-right shrink-0">
@@ -112,7 +112,7 @@ const BagItemCard = ({
                   </p>
                 </>
               ) : (
-                <p className="font-bold text-sm text-primary">
+                <p className="font-bold text-sm text-primary-dark">
                   Rs. {totalPrice.toLocaleString()}
                 </p>
               )}
@@ -126,15 +126,15 @@ const BagItemCard = ({
                 {item.comboName}
               </span>
             )}
-            <div className="text-[10px] text-secondary font-medium uppercase space-y-0.5">
+            <div className="text-[10px] text-primary-dark font-medium uppercase space-y-0.5">
               {item.variantName && (
-                <p className="text-primary">{item.variantName}</p>
+                <p className="text-primary-dark">{item.variantName}</p>
               )}
               <p>
                 Size:{" "}
-                <span className="text-primary font-semibold">{item.size}</span>{" "}
+                <span className="text-primary-dark font-semibold">{item.size}</span>{" "}
                 · Qty:{" "}
-                <span className="text-primary font-semibold">
+                <span className="text-primary-dark font-semibold">
                   {item.quantity}
                 </span>
               </p>

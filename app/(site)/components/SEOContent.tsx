@@ -75,19 +75,19 @@ const SEOContent = () => {
               </Title>
               <Paragraph
                 style={{
-                  color: "var(--color-primary)",
+                  color: "var(--color-primary-dark)",
                   fontSize: 12,
                   marginBottom: 0,
                   lineHeight: 1.8,
                 }}
               >
                 NEVERBE is Sri Lanka&apos;s premier online destination to{" "}
-                <Text strong style={{ color: "var(--color-primary)" }}>
+                <Text strong style={{ color: "var(--color-primary-dark)" }}>
                   buy shoes, clothing, and fashion accessories
                 </Text>
                 . We bridge the gap between high-end street culture and
                 affordability, offering a curated selection of{" "}
-                <Text strong style={{ color: "var(--color-primary)" }}>
+                <Text strong style={{ color: "var(--color-primary-dark)" }}>
                   sneakers, activewear, sports apparel, and casual footwear
                 </Text>
                 . Whether you are in Colombo, Kandy, or Galle, our island-wide
@@ -95,7 +95,7 @@ const SEOContent = () => {
               </Paragraph>
               <Paragraph
                 style={{
-                  color: "var(--color-primary)",
+                  color: "var(--color-primary-dark)",
                   fontSize: 12,
                   marginBottom: 0,
                   lineHeight: 1.8,
@@ -141,7 +141,7 @@ const SEOContent = () => {
                         fontWeight: 600,
                         border: "1px solid rgba(46, 158, 91, 0.15)",
                         background: "rgba(46, 158, 91, 0.05)",
-                        color: "var(--color-primary)",
+                        color: "var(--color-primary-dark)",
                         cursor: "default",
                         transition: "all 0.3s ease",
                       }}
@@ -171,7 +171,7 @@ const SEOContent = () => {
                 </Title>
                 <Paragraph
                   style={{
-                    color: "var(--color-primary)",
+                    color: "var(--color-primary-dark)",
                     fontSize: 12,
                     marginBottom: 0,
                     lineHeight: 1.8,
@@ -179,7 +179,7 @@ const SEOContent = () => {
                 >
                   Stop searching for &quot;shops near me&quot; and trust our
                   secure online platform. We offer{" "}
-                  <Text strong style={{ color: "var(--color-primary)" }}>
+                  <Text strong style={{ color: "var(--color-primary-dark)" }}>
                     Cash on Delivery (COD)
                   </Text>
                   , hassle-free exchanges, and dedicated customer support. Join
@@ -206,7 +206,7 @@ const SEOContent = () => {
               fontWeight: 800,
               textTransform: "uppercase",
               letterSpacing: "0.2em",
-              color: "var(--color-primary)",
+              color: "var(--color-primary-dark)",
               display: "block",
               marginBottom: 16,
             }}
@@ -228,7 +228,7 @@ const SEOContent = () => {
                     fontWeight: 600,
                     textTransform: "uppercase",
                     letterSpacing: "0.05em",
-                    color: "var(--color-primary-400)",
+                    color: "var(--color-primary-dark)",
                     transition: "color 0.3s ease",
                   }}
                   className="hover:text-accent!"

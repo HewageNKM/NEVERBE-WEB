@@ -36,7 +36,7 @@ const OrdersView: React.FC<OrdersViewProps> = ({ orders }) => {
           </Text>
           <Title
             level={2}
-            className="text-3xl! font-display! font-black! uppercase! tracking-tighter! text-primary! mb-0!"
+            className="text-3xl! font-display! font-black! uppercase! tracking-tighter! text-primary-dark! mb-0!"
           >
             Order History
           </Title>
@@ -93,7 +93,7 @@ const OrdersView: React.FC<OrdersViewProps> = ({ orders }) => {
                         <div className="w-2 h-2 rounded-full bg-accent" />
                         <Title
                           level={3}
-                          className="text-lg! font-display! font-black! uppercase! tracking-tighter! text-primary! mb-0!"
+                          className="text-lg! font-display! font-black! uppercase! tracking-tighter! text-primary-dark! mb-0!"
                         >
                           {order.status || "Processing"}
                         </Title>
@@ -109,11 +109,11 @@ const OrdersView: React.FC<OrdersViewProps> = ({ orders }) => {
                       <div className="space-y-1">
                         <Text className="block text-muted text-[10px] font-black uppercase tracking-widest">
                           Order No:{" "}
-                          <span className="text-primary">
+                          <span className="text-primary-dark">
                             #{order.orderId || order.id.slice(0, 8)}
                           </span>
                         </Text>
-                        <Text className="block text-xl font-display font-black text-primary tracking-tighter">
+                        <Text className="block text-xl font-display font-black text-primary-dark tracking-tighter">
                           LKR {order.total?.toLocaleString() || "0.00"}
                         </Text>
                       </div>

@@ -31,7 +31,7 @@ const CouponCard: React.FC<Props> = ({ coupon }) => {
     >
       {/* Visual Header / Discount */}
       <div className="bg-surface-2 p-4 sm:p-5 flex flex-col items-center justify-center min-w-[100px] sm:min-w-[120px]">
-        <div className="text-2xl sm:text-3xl font-display font-black tracking-tighter text-primary leading-none">
+        <div className="text-2xl sm:text-3xl font-display font-black tracking-tighter text-primary-dark leading-none">
           {coupon.discountType === "PERCENTAGE"
             ? `${coupon.discountValue}%`
             : coupon.discountType === "FIXED"
@@ -68,7 +68,7 @@ const CouponCard: React.FC<Props> = ({ coupon }) => {
             )}
           </div>
 
-          <h3 className="text-sm sm:text-base font-display font-black text-primary uppercase tracking-tight line-clamp-2">
+          <h3 className="text-sm sm:text-base font-display font-black text-primary-dark uppercase tracking-tight line-clamp-2">
             {coupon.description || "Exclusive Member Offer"}
           </h3>
 

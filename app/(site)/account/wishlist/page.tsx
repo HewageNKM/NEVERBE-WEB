@@ -32,11 +32,11 @@ const WishlistPage = () => {
       <div className="w-full max-w-content mx-auto px-4 md:px-12 py-12 md:py-20 text-left">
         <Title
           level={1}
-          className="text-[28px]! md:text-[42px]! font-medium! tracking-tight! text-primary! leading-none! mb-4!"
+          className="text-[28px]! md:text-[42px]! font-medium! tracking-tight! text-primary-dark! leading-none! mb-4!"
         >
           Your Wishlist
         </Title>
-        <Text className="text-secondary max-w-xl text-md md:text-[18px] font-normal block">
+        <Text className="text-primary-dark max-w-xl text-md md:text-[18px] font-normal block">
           {wishlistItems.length > 0
             ? `${wishlistItems.length} saved ${
                 wishlistItems.length === 1 ? "item" : "items"
@@ -54,11 +54,11 @@ const WishlistPage = () => {
             </div>
             <Title
               level={2}
-              className="text-[20px]! font-medium! text-primary! mb-2!"
+              className="text-[20px]! font-medium! text-primary-dark! mb-2!"
             >
               Your wishlist is empty
             </Title>
-            <Text className="text-secondary text-[15px] mb-8 block">
+            <Text className="text-primary-dark text-[15px] mb-8 block">
               Browse our collection and save items you love.
             </Text>
             <Link
@@ -113,7 +113,7 @@ const WishlistPage = () => {
                             icon={
                               <IoTrashOutline
                                 size={18}
-                                className="text-primary"
+                                className="text-primary-dark"
                               />
                             }
                           />
@@ -127,12 +127,12 @@ const WishlistPage = () => {
                           >
                             <Title
                               level={3}
-                              className="text-[15px]! font-medium! text-primary! leading-tight! mb-1! group-hover:text-secondary! transition-colors"
+                              className="text-[15px]! font-medium! text-primary-dark! leading-tight! mb-1! group-hover:text-primary-dark! transition-colors"
                             >
                               {item.name}
                             </Title>
                           </Link>
-                          <Text className="text-[14px] font-medium text-primary block">
+                          <Text className="text-[14px] font-medium text-primary-dark block">
                             Rs. {item.price.toLocaleString()}
                           </Text>
                         </div>

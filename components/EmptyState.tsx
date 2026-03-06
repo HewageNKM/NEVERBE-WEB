@@ -30,12 +30,12 @@ const EmptyState = ({
         </div>
 
         {/* Heading - Performance Display Style */}
-        <h2 className="text-3xl md:text-4xl font-display font-black uppercase tracking-tighter text-primary mb-4">
+        <h2 className="text-3xl md:text-4xl font-display font-black uppercase tracking-tighter text-primary-dark mb-4">
           {heading}
         </h2>
 
         {/* Subheading - High Contrast Secondary */}
-        <p className="text-secondary text-base md:text-md font-medium leading-relaxed mb-10 max-w-xs mx-auto">
+        <p className="text-primary-dark text-base md:text-md font-medium leading-relaxed mb-10 max-w-xs mx-auto">
           {subHeading ||
             "We couldn't find any items matching your criteria. Try clearing your filters or check back later."}
         </p>
@@ -45,7 +45,7 @@ const EmptyState = ({
           <Button
             type="primary"
             onClick={onAction}
-            className="px-10 py-5 bg-dark border-none text-inverse text-xs md:text-sm font-bold uppercase tracking-[0.2em] rounded-full hover:bg-accent hover:text-primary hover:-translate-y-1 transition-all duration-300 shadow-custom hover:shadow-hover active:scale-95"
+            className="px-10 py-5 bg-dark border-none text-inverse text-xs md:text-sm font-bold uppercase tracking-[0.2em] rounded-full hover:bg-accent hover:text-primary-dark hover:-translate-y-1 transition-all duration-300 shadow-custom hover:shadow-hover active:scale-95"
           >
             {actionLabel}
           </Button>

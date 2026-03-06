@@ -491,7 +491,7 @@ const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
 
         {/* Desktop List View */}
         <div className="hidden lg:block border-t border-default pt-6">
-          <h3 className="font-black uppercase tracking-widest text-xs text-primary mb-4">
+          <h3 className="font-black uppercase tracking-widest text-xs text-primary-dark mb-4">
             Configuration ({slots.length} Items)
           </h3>
           <div className="space-y-1">
@@ -502,7 +502,7 @@ const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
                 className={`flex items-center gap-4 p-3 border cursor-pointer transition-colors rounded-sm ${
                   idx === activeSlotIndex
                     ? "bg-dark text-inverse border-dark"
-                    : "bg-surface text-primary border-default hover:border-border-dark"
+                    : "bg-surface text-primary-dark border-default hover:border-border-dark"
                 }`}
               >
                 <div className="w-10 h-10 relative bg-surface border border-default rounded-sm overflow-hidden">
@@ -556,7 +556,7 @@ const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
               </span>
             </div>
 
-            <h1 className="text-4xl md:text-5xl font-display font-black uppercase tracking-tighter text-primary leading-[0.9]">
+            <h1 className="text-4xl md:text-5xl font-display font-black uppercase tracking-tighter text-primary-dark leading-[0.9]">
               {combo.name}
             </h1>
 
@@ -567,7 +567,7 @@ const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
             )}
 
             <div className="flex flex-wrap items-baseline gap-3 mt-6">
-              <span className="text-4xl font-display font-black tracking-tighter text-primary">
+              <span className="text-4xl font-display font-black tracking-tighter text-primary-dark">
                 Rs. {combo.comboPrice.toLocaleString()}
               </span>
               <span className="text-xl font-bold text-muted line-through">
@@ -582,13 +582,13 @@ const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
             <div className="flex gap-4 mt-6 border-y border-default py-3">
               <div className="flex items-center gap-2">
                 <FaTruckFast className="text-muted" size={14} />
-                <span className="text-[10px] font-bold uppercase text-secondary">
+                <span className="text-[10px] font-bold uppercase text-primary-dark">
                   Standard Shipping 2-3 Days
                 </span>
               </div>
               <div className="flex items-center gap-2">
                 <FaArrowRotateLeft className="text-muted" size={14} />
-                <span className="text-[10px] font-bold uppercase text-secondary">
+                <span className="text-[10px] font-bold uppercase text-primary-dark">
                   Size Exchange
                 </span>
               </div>
@@ -609,7 +609,7 @@ const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
                   <span className="text-[10px] font-bold uppercase tracking-widest text-muted block mb-1">
                     Selection {activeSlotIndex + 1} of {slots.length}
                   </span>
-                  <h3 className="text-sm font-black uppercase tracking-wide text-primary">
+                  <h3 className="text-sm font-black uppercase tracking-wide text-primary-dark">
                     {activeProduct.name}
                   </h3>
                 </div>
@@ -711,7 +711,7 @@ const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
                   <Button
                     type="default"
                     onClick={() => setActiveSlotIndex(activeSlotIndex + 1)}
-                    className="w-full mt-4 flex items-center justify-center gap-2 py-3 bg-surface-2 hover:bg-dark hover:text-inverse text-primary text-xs font-bold uppercase tracking-widest rounded-full transition-colors h-auto border-none shadow-none"
+                    className="w-full mt-4 flex items-center justify-center gap-2 py-3 bg-surface-2 hover:bg-dark hover:text-inverse text-primary-dark text-xs font-bold uppercase tracking-widest rounded-full transition-colors h-auto border-none shadow-none"
                     iconPosition="end"
                     icon={<IoChevronForward />}
                   >
@@ -750,7 +750,7 @@ const ComboHero: React.FC<ComboHeroProps> = ({ combo }) => {
               type="default"
               onClick={handleBuyNow}
               disabled={!allSelectionsValid}
-              className="w-full py-5 h-auto border-2 border-dark text-primary rounded-full font-display font-black uppercase tracking-widest text-xs hover:bg-dark hover:text-inverse transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-transparent"
+              className="w-full py-5 h-auto border-2 border-dark text-primary-dark rounded-full font-display font-black uppercase tracking-widest text-xs hover:bg-dark hover:text-inverse transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-transparent"
             >
               Buy Now
             </Button>

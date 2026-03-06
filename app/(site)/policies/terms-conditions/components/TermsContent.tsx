@@ -18,7 +18,7 @@ const TermsContent = () => {
           {/* Index Number - Sticky feel */}
           <Col xs={24} md={4} lg={3}>
             <Text
-              className="group-hover:text-primary transition-colors"
+              className="group-hover:text-primary-dark transition-colors"
               style={{
                 fontSize: 12,
                 fontWeight: 800,

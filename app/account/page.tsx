@@ -99,7 +99,7 @@ const Account = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white text-primary">
+    <div className="min-h-screen bg-white text-primary-dark">
       <div className="max-w-content mx-auto px-4 lg:px-12 py-6 md:py-20">
         {/* TOP BAR */}
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-12 gap-8">
@@ -125,7 +125,7 @@ const Account = () => {
           <div className="flex items-center gap-6">
             <Link
               href="/"
-              className="text-xs font-bold uppercase tracking-widest text-muted hover:text-primary transition-colors flex items-center gap-2"
+              className="text-xs font-bold uppercase tracking-widest text-muted hover:text-primary-dark transition-colors flex items-center gap-2"
             >
               <IoArrowBackOutline size={16} /> Back to Store
             </Link>
@@ -153,8 +153,8 @@ const Account = () => {
               onClick={() => setActiveTab(item.id)}
               className={`whitespace-nowrap pb-4 px-0 h-auto text-sm font-bold uppercase tracking-widest transition-all relative hover:bg-transparent! ${
                 activeTab === item.id
-                  ? "text-primary!"
-                  : "text-muted! hover:text-primary!"
+                  ? "text-primary-dark!"
+                  : "text-muted! hover:text-primary-dark!"
               }`}
             >
               {item.label}

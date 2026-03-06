@@ -79,12 +79,12 @@ const BundleGroupCard = ({
 
             {/* Details */}
             <div className="flex-1 min-w-0">
-              <p className="text-base font-bold uppercase truncate text-primary">
+              <p className="text-base font-bold uppercase truncate text-primary-dark">
                 {item.name}
               </p>
-              <p className="text-xs text-secondary uppercase">
+              <p className="text-xs text-primary-dark uppercase">
                 Size:{" "}
-                <span className="text-primary font-medium">{item.size}</span>
+                <span className="text-primary-dark font-medium">{item.size}</span>
               </p>
             </div>
           </div>
@@ -106,7 +106,7 @@ const BundleGroupCard = ({
               Rs. {bundle.totalPrice.toLocaleString()}
             </p>
           )}
-          <p className="text-md font-black text-primary">
+          <p className="text-md font-black text-primary-dark">
             Rs. {netPrice.toLocaleString()}
           </p>
         </div>
@@ -141,13 +141,13 @@ const SingleItemCard = ({
       <div className="flex flex-1 flex-col justify-between py-0.5">
         <div>
           <div className="flex justify-between items-start gap-2">
-            <h3 className="font-bold text-base uppercase leading-tight line-clamp-2 text-primary">
+            <h3 className="font-bold text-base uppercase leading-tight line-clamp-2 text-primary-dark">
               {item.name}
             </h3>
             <div className="text-right shrink-0">
               {item.discount > 0 ? (
                 <>
-                  <p className="font-bold text-base text-primary">
+                  <p className="font-bold text-base text-primary-dark">
                     Rs. {netPrice.toLocaleString()}
                   </p>
                   <p className="text-xs text-muted line-through">
@@ -155,20 +155,20 @@ const SingleItemCard = ({
                   </p>
                 </>
               ) : (
-                <p className="font-bold text-base text-primary">
+                <p className="font-bold text-base text-primary-dark">
                   Rs. {totalPrice.toLocaleString()}
                 </p>
               )}
             </div>
           </div>
 
-          <div className="mt-1 text-xs text-secondary font-medium uppercase space-y-0.5">
+          <div className="mt-1 text-xs text-primary-dark font-medium uppercase space-y-0.5">
             {item.variantName && (
-              <p className="text-primary">{item.variantName}</p>
+              <p className="text-primary-dark">{item.variantName}</p>
             )}
             <p>
-              Size: <span className="text-primary">{item.size}</span> | Qty:{" "}
-              <span className="text-primary">{item.quantity}</span>
+              Size: <span className="text-primary-dark">{item.size}</span> | Qty:{" "}
+              <span className="text-primary-dark">{item.quantity}</span>
             </p>
           </div>
         </div>
@@ -291,7 +291,7 @@ const Bag = () => {
         {/* --- Header --- */}
         <div className="flex justify-between items-center px-6 py-5 border-b border-dark">
           <div>
-            <h2 className="text-2xl font-black uppercase tracking-tighter text-primary">
+            <h2 className="text-2xl font-black uppercase tracking-tighter text-primary-dark">
               Your Bag
             </h2>
             <p className="text-xs font-bold uppercase tracking-widest text-muted mt-0.5">
@@ -303,7 +303,7 @@ const Bag = () => {
           <Button
             type="text"
             onClick={() => dispatch(hideBag())}
-            className="p-2 border border-transparent hover:border-dark text-primary transition-all rounded-full h-auto w-auto"
+            className="p-2 border border-transparent hover:border-dark text-primary-dark transition-all rounded-full h-auto w-auto"
             aria-label="Close Bag"
             icon={<IoCloseOutline size={28} />}
           />
@@ -354,8 +354,8 @@ const Bag = () => {
           <div className="border-t-2 border-dark p-6 bg-surface-2 space-y-4">
             <div className="space-y-2 text-base">
               <div className="flex justify-between">
-                <span className="text-secondary font-medium">Subtotal</span>
-                <span className="font-bold text-primary">
+                <span className="text-primary-dark font-medium">Subtotal</span>
+                <span className="font-bold text-primary-dark">
                   Rs. {calculateTotal(bagItems).toLocaleString()}
                 </span>
               </div>
@@ -393,8 +393,8 @@ const Bag = () => {
               )}
 
               <div className="flex justify-between">
-                <span className="text-secondary font-medium">Shipping</span>
-                <span className="font-bold text-primary">
+                <span className="text-primary-dark font-medium">Shipping</span>
+                <span className="font-bold text-primary-dark">
                   {loadingShipping ? (
                     <span className="animate-pulse">...</span>
                   ) : shippingCost === 0 ? (
@@ -407,10 +407,10 @@ const Bag = () => {
             </div>
 
             <div className="flex justify-between items-end border-t border-dark pt-4">
-              <span className="text-sm font-black uppercase tracking-widest text-primary">
+              <span className="text-sm font-black uppercase tracking-widest text-primary-dark">
                 Total Due
               </span>
-              <span className="font-black text-3xl tracking-tight text-primary">
+              <span className="font-black text-3xl tracking-tight text-primary-dark">
                 Rs. {Math.max(0, finalTotal).toLocaleString()}
               </span>
             </div>

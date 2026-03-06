@@ -12,7 +12,7 @@ const Page = () => {
     <main className="w-full min-h-screen bg-white pb-20">
       {/* Simple Header for Checkout Focus */}
       <div className="w-full border-b border-default py-6 text-center">
-        <h1 className="text-2xl font-black uppercase tracking-tighter text-primary">
+        <h1 className="text-2xl font-black uppercase tracking-tighter text-primary-dark">
           Checkout
         </h1>
       </div>
