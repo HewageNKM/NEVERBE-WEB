@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import ReactMarkdown from "react-markdown";
+import rehypeRaw from "rehype-raw";
 import {
   IoHeartOutline,
   IoHeart,
@@ -534,6 +535,7 @@ const ProductHero = ({ item }: { item: Product }) => {
           </h3>
           <div className="text-sm text-secondary leading-relaxed prose-product">
             <ReactMarkdown
+              rehypePlugins={[rehypeRaw]}
               components={{
                 p: ({ children }) => (
                   <p className="mb-3 text-sm text-secondary leading-relaxed">
@@ -577,6 +579,16 @@ const ProductHero = ({ item }: { item: Product }) => {
                     {children}
                   </h3>
                 ),
+                // Pass through u tag with styles intact, or apply custom styles
+                u: ({ node, ...rest }) => {
+                  const styleProps: React.CSSProperties = {};
+                  const styleStr = (node?.properties?.style as string) || "";
+                  if (styleStr.includes("color:red")) styleProps.color = "red";
+                  if (styleStr.includes("font-weight:bold"))
+                    styleProps.fontWeight = "bold";
+
+                  return <u style={styleProps} {...rest} />;
+                },
               }}
             >
               {item.description}
