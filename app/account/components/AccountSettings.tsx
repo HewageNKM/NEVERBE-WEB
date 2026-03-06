@@ -130,7 +130,7 @@ const AccountSettings = ({ user, dispatch }: { user: any; dispatch: any }) => {
                   readOnly
                   type="email"
                   value={user.email}
-                  className="w-full bg-zinc-50 py-3 px-4 text-sm font-bold border border-default text-muted cursor-not-allowed outline-none rounded-xl"
+                  className="w-full bg-surface-2 py-3 px-4 text-sm font-bold border border-default text-muted cursor-not-allowed outline-none rounded-xl"
                 />
                 <IoCheckmarkCircle
                   className="absolute right-4 top-1/2 -translate-y-1/2 text-accent"

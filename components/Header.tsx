@@ -103,7 +103,7 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
                 <li key={item.title}>
                   <Link
                     href={item.link}
-                    className="relative pb-2 text-[13px] font-bold uppercase tracking-tight text-black hover:text-primary transition-colors group"
+                    className="relative pb-2 text-[13px] font-bold uppercase tracking-tight text-primary hover:text-accent transition-colors group"
                   >
                     {item.title}
                     <span
@@ -123,37 +123,37 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
           <Flex align="center" gap={4} className="lg:gap-[16px]">
             <button
               onClick={() => setIsSearchOpen(true)}
-              className="flex shrink-0 items-center justify-center w-[40px] h-[40px] rounded-full hover:bg-black/5 transition-colors group cursor-pointer border-none bg-transparent outline-none m-0 p-0"
+              className="flex shrink-0 items-center justify-center w-[40px] h-[40px] rounded-full hover:bg-surface-3 transition-colors group cursor-pointer border-none bg-transparent outline-none m-0 p-0"
             >
               <IoSearchOutline
                 size={24}
-                className="text-gray-700 group-hover:text-primary transition-colors"
+                className="text-primary-400 group-hover:text-primary transition-colors"
               />
             </button>
 
             <Link
               href="/account"
-              className="flex shrink-0 items-center justify-center w-[40px] h-[40px] rounded-full hover:bg-black/5 transition-colors group cursor-pointer border-none bg-transparent outline-none m-0 p-0"
+              className="flex shrink-0 items-center justify-center w-[40px] h-[40px] rounded-full hover:bg-surface-3 transition-colors group cursor-pointer border-none bg-transparent outline-none m-0 p-0"
             >
               <IoPersonOutline
                 size={24}
-                className="text-gray-700 group-hover:text-primary transition-colors"
+                className="text-primary-400 group-hover:text-primary transition-colors"
               />
             </Link>
 
             <Link
               href="/account/wishlist"
-              className="flex shrink-0 items-center justify-center w-[40px] h-[40px] rounded-full hover:bg-black/5 transition-colors group cursor-pointer border-none bg-transparent outline-none m-0 p-0"
+              className="flex shrink-0 items-center justify-center w-[40px] h-[40px] rounded-full hover:bg-surface-3 transition-colors group cursor-pointer border-none bg-transparent outline-none m-0 p-0"
             >
               <IoHeartOutline
                 size={24}
-                className="text-gray-700 group-hover:text-primary transition-colors"
+                className="text-primary-400 group-hover:text-primary transition-colors"
               />
             </Link>
 
             <button
               onClick={() => dispatch(showBag())}
-              className="flex shrink-0 items-center justify-center w-[40px] h-[40px] rounded-full hover:bg-black/5 transition-colors group cursor-pointer border-none bg-transparent outline-none m-0 p-0"
+              className="flex shrink-0 items-center justify-center w-[40px] h-[40px] rounded-full hover:bg-surface-3 transition-colors group cursor-pointer border-none bg-transparent outline-none m-0 p-0"
             >
               <Badge
                 count={bagItems.length}
@@ -164,7 +164,7 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
               >
                 <IoBagHandleOutline
                   size={24}
-                  className="text-gray-700 group-hover:text-primary transition-colors"
+                  className="text-primary-400 group-hover:text-primary transition-colors"
                 />
               </Badge>
             </button>
@@ -172,11 +172,11 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
             <div className="lg:hidden flex items-center justify-center">
               <button
                 onClick={() => dispatch(toggleMenu(true))}
-                className="flex shrink-0 items-center justify-center w-[40px] h-[40px] rounded-full hover:bg-black/5 transition-colors group cursor-pointer border-none bg-transparent outline-none m-0 p-0"
+                className="flex shrink-0 items-center justify-center w-[40px] h-[40px] rounded-full hover:bg-surface-3 transition-colors group cursor-pointer border-none bg-transparent outline-none m-0 p-0"
               >
                 <IoMenuOutline
                   size={28}
-                  className="text-gray-800 group-hover:text-primary transition-colors"
+                  className="text-primary-400 group-hover:text-primary transition-colors"
                 />
               </button>
             </div>
@@ -223,9 +223,9 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
                         setIsSearchOpen(false);
                         clearSearch();
                       }}
-                      className="lg:hidden flex shrink-0 items-center justify-center w-10 h-10 rounded-full bg-black/5 hover:bg-black/10 transition-colors cursor-pointer border-none outline-none m-0 p-0"
+                      className="lg:hidden flex shrink-0 items-center justify-center w-10 h-10 rounded-full bg-surface-2 hover:bg-surface-3 transition-colors cursor-pointer border-none outline-none m-0 p-0"
                     >
-                      <IoCloseOutline size={24} className="text-gray-600" />
+                      <IoCloseOutline size={24} className="text-primary-400" />
                     </button>
                   </Flex>
 
@@ -241,8 +241,8 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
                             activeBorderColor: "var(--color-accent)",
                             activeShadow: "0 0 0 3px rgba(46, 158, 91, 0.12)",
                             borderRadius: 99,
-                            colorText: "#1a1a1a",
-                            colorTextPlaceholder: "rgba(0,0,0,0.3)",
+                            colorText: "var(--color-primary)",
+                            colorTextPlaceholder: "var(--color-primary-400)",
                           },
                         },
                       }}
@@ -274,11 +274,11 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
                             {search && (
                               <button
                                 onClick={() => clearSearch()}
-                                className="flex shrink-0 items-center justify-center w-8 h-8 rounded-full hover:bg-black/10 transition-colors cursor-pointer border-none bg-transparent outline-none m-0 p-0 mr-2"
+                                className="flex shrink-0 items-center justify-center w-8 h-8 rounded-full hover:bg-surface-3 transition-colors cursor-pointer border-none bg-transparent outline-none m-0 p-0 mr-2"
                               >
                                 <IoCloseOutline
                                   size={20}
-                                  className="text-gray-400 hover:text-gray-600"
+                                  className="text-primary-400 hover:text-primary"
                                 />
                               </button>
                             )}
@@ -308,9 +308,9 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
                       setIsSearchOpen(false);
                       clearSearch();
                     }}
-                    className="hidden lg:flex shrink-0 items-center justify-center w-12 h-12 rounded-full bg-black/5 hover:bg-black/10 transition-colors cursor-pointer border-none outline-none m-0 p-0"
+                    className="hidden lg:flex shrink-0 items-center justify-center w-12 h-12 rounded-full bg-surface-2 hover:bg-surface-3 transition-colors cursor-pointer border-none outline-none m-0 p-0"
                   >
-                    <IoCloseOutline size={28} className="text-gray-600" />
+                    <IoCloseOutline size={28} className="text-primary-400" />
                   </button>
                 </Flex>
 

@@ -136,7 +136,7 @@ const RegisterPage = () => {
                 <Input
                   size="large"
                   placeholder="First Name"
-                  className="w-full bg-white hover:bg-zinc-50 focus:bg-white border-default focus:border-accent px-4 py-3 text-sm font-bold rounded-xl transition-all"
+                  className="w-full bg-white hover:bg-surface-2 focus:bg-white border-default focus:border-accent px-4 py-3 text-sm font-bold rounded-xl transition-all"
                 />
               </Form.Item>
             </Col>
@@ -149,7 +149,7 @@ const RegisterPage = () => {
                 <Input
                   size="large"
                   placeholder="Last Name"
-                  className="w-full bg-white hover:bg-zinc-50 focus:bg-white border-default focus:border-accent px-4 py-3 text-sm font-bold rounded-xl transition-all"
+                  className="w-full bg-white hover:bg-surface-2 focus:bg-white border-default focus:border-accent px-4 py-3 text-sm font-bold rounded-xl transition-all"
                 />
               </Form.Item>
             </Col>
@@ -166,7 +166,7 @@ const RegisterPage = () => {
             <Input
               size="large"
               placeholder="Email Address"
-              className="w-full bg-white hover:bg-zinc-50 focus:bg-white border-default focus:border-accent px-4 py-3 text-sm font-bold rounded-xl transition-all"
+              className="w-full bg-white hover:bg-surface-2 focus:bg-white border-default focus:border-accent px-4 py-3 text-sm font-bold rounded-xl transition-all"
             />
           </Form.Item>
 
@@ -181,7 +181,7 @@ const RegisterPage = () => {
             <Input.Password
               size="large"
               placeholder="Password (Min. 6 Characters)"
-              className="w-full bg-white hover:bg-zinc-50 focus:bg-white border-default focus:border-accent px-4 py-3 text-sm font-bold rounded-xl transition-all"
+              className="w-full bg-white hover:bg-surface-2 focus:bg-white border-default focus:border-accent px-4 py-3 text-sm font-bold rounded-xl transition-all"
             />
           </Form.Item>
 
@@ -215,7 +215,7 @@ const RegisterPage = () => {
           onClick={handleGoogleRegister}
           type="default"
           disabled={loading}
-          className="group w-full h-auto bg-white text-primary py-4 rounded-full font-display font-black uppercase tracking-widest text-xs flex items-center justify-center gap-3 transition-all hover:bg-gray-100 shadow-md hover:shadow-lg active:scale-[0.98] disabled:opacity-50 border-default"
+          className="group w-full h-auto bg-white text-primary py-4 rounded-full font-display font-black uppercase tracking-widest text-xs flex items-center justify-center gap-3 transition-all hover:bg-surface-2 shadow-md hover:shadow-lg active:scale-[0.98] disabled:opacity-50 border-default"
         >
           <FcGoogle size={24} />
           Register with Google

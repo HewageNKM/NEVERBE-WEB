@@ -251,7 +251,7 @@ const ProductHero = ({ item }: { item: Product }) => {
               onMouseEnter={() => setSelectedImage(img)}
               className={`relative aspect-square bg-surface-2 rounded-sm overflow-hidden border-2 transition-all p-0 h-auto ${
                 selectedImage.url === img.url
-                  ? "border-dark hover:border-dark focus:border-dark"
+                  ? "border-primary hover:border-primary focus:border-primary"
                   : "border-transparent opacity-70 hover:opacity-100 focus:opacity-100"
               }`}
             >
@@ -293,12 +293,12 @@ const ProductHero = ({ item }: { item: Product }) => {
                 Rs. {finalPrice.toLocaleString()}
               </span>
               {hasActiveDiscount && (
-                <span className="text-muted line-through text-base decoration-border-dark">
+                <span className="text-muted line-through text-base decoration-default">
                   Rs. {originalPrice.toLocaleString()}
                 </span>
               )}
               {hasActiveDiscount && (
-                <span className="bg-success text-dark text-[10px] font-black px-3 py-1 uppercase tracking-widest shadow-custom">
+                <span className="bg-success text-primary text-[10px] font-black px-3 py-1 uppercase tracking-widest shadow-custom">
                   Save Rs. {(originalPrice - finalPrice).toLocaleString()}
                 </span>
               )}
@@ -462,7 +462,7 @@ const ProductHero = ({ item }: { item: Product }) => {
                 disabled={
                   !selectedSize || availableStock === 0 || isLimitReached
                 }
-                className="flex-1 h-auto py-5 bg-dark text-inverse rounded-full font-display font-black uppercase tracking-widest text-xs hover:bg-accent hover:text-dark transition-all shadow-custom hover:shadow-hover active:scale-95 disabled:bg-surface-3 disabled:text-muted disabled:shadow-none disabled:cursor-not-allowed border-none"
+                className="flex-1 h-auto py-5 bg-primary text-inverse rounded-full font-display font-black uppercase tracking-widest text-xs hover:bg-accent hover:text-primary transition-all shadow-custom hover:shadow-hover active:scale-95 disabled:bg-surface-3 disabled:text-muted disabled:shadow-none disabled:cursor-not-allowed border-none"
               >
                 {isLimitReached
                   ? "Inventory Maxed"
@@ -477,8 +477,8 @@ const ProductHero = ({ item }: { item: Product }) => {
                 onClick={handleToggleWishlist}
                 className={`w-16 h-16 rounded-full border-2 flex items-center justify-center transition-all p-0 ${
                   isInWishlist
-                    ? "bg-dark border-dark text-inverse hover:bg-dark hover:text-inverse focus:bg-dark focus:text-inverse"
-                    : "bg-surface border-default text-primary hover:border-dark hover:bg-surface hover:text-primary focus:bg-surface focus:text-primary"
+                    ? "bg-primary border-primary text-inverse hover:bg-primary hover:text-inverse focus:bg-primary focus:text-inverse"
+                    : "bg-surface border-default text-primary hover:border-primary hover:bg-surface hover:text-primary focus:bg-surface focus:text-primary"
                 }`}
                 aria-label={
                   isInWishlist ? "Remove from wishlist" : "Add to wishlist"

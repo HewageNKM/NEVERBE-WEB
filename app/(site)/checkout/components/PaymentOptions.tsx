@@ -34,11 +34,11 @@ const PaymentOptions: React.FC<PaymentOptionsProps> = ({
             key={option.paymentId}
             onClick={() => handleSelect(option)}
             className={`
-              relative group cursor-pointer border p-3 md:p-4 transition-all duration-300 rounded-xl overflow-hidden
+              relative group cursor-pointer border p-3 md:p-4 transition-all duration-300 rounded-xl overflow-hidden text-primary
               ${
                 isSelected
-                  ? "bg-bg-secondary border-accent text-black shadow-sm scale-[1.01] ring-1 ring-accent"
-                  : "bg-white border-gray-200 text-black hover:border-gray-300 hover:shadow-sm"
+                  ? "bg-bg-secondary border-accent shadow-sm scale-[1.01] ring-1 ring-accent"
+                  : "bg-surface border-default hover:border-strong hover:shadow-sm"
               }
             `}
           >
@@ -50,7 +50,7 @@ const PaymentOptions: React.FC<PaymentOptionsProps> = ({
                   ${
                     isSelected
                       ? "border-accent bg-accent text-white"
-                      : "border-gray-300 group-hover:border-accent bg-transparent"
+                      : "border-default group-hover:border-accent bg-transparent"
                   }
                 `}
               >
@@ -63,7 +63,7 @@ const PaymentOptions: React.FC<PaymentOptionsProps> = ({
                 <div className="flex justify-between items-center w-full">
                   <p
                     className={`text-sm font-display font-black uppercase tracking-wider ${
-                      isSelected ? "text-[#1a1a1a]" : "text-gray-800"
+                      isSelected ? "text-primary" : "text-primary-800"
                     }`}
                   >
                     {option.name}
@@ -77,7 +77,7 @@ const PaymentOptions: React.FC<PaymentOptionsProps> = ({
                         ${
                           isSelected
                             ? "bg-accent text-white"
-                            : "bg-gray-100 text-[#1a1a1a]"
+                            : "bg-surface-2 text-primary"
                         }
                       `}
                     >
@@ -87,7 +87,7 @@ const PaymentOptions: React.FC<PaymentOptionsProps> = ({
                     <span
                       className={`
                         text-[10px] font-black uppercase tracking-widest
-                        ${isSelected ? "text-accent" : "text-gray-400"}
+                        ${isSelected ? "text-accent" : "text-primary-400"}
                        `}
                     >
                       No Fee
@@ -99,7 +99,7 @@ const PaymentOptions: React.FC<PaymentOptionsProps> = ({
                   <p
                     className={`
                       text-[10px] font-medium uppercase tracking-wide mt-1.5
-                      ${isSelected ? "text-accent" : "text-gray-400"}
+                      ${isSelected ? "text-accent" : "text-primary-400"}
                     `}
                   >
                     {option.description}

@@ -40,7 +40,7 @@ const ComboCard: React.FC<ComboCardProps> = ({ combo }) => {
   return (
     <Badge.Ribbon
       text={hasSavings ? `Save ${savingsPercent}%` : getTypeLabel()}
-      color={hasSavings ? "#1a1a1a" : "var(--color-accent)"}
+      color={hasSavings ? "var(--color-primary)" : "var(--color-accent)"}
       style={{
         padding: "0 10px",
         fontSize: "11px",

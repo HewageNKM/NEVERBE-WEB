@@ -30,8 +30,8 @@ const FilterList = ({
   selected: string[];
   onToggle: (label: string) => void;
 }) => (
-  <div className="py-6 border-t border-gray-100">
-    <h3 className="text-xs font-black uppercase tracking-widest text-gray-400 mb-4">
+  <div className="py-6 border-t border-default">
+    <h3 className="text-xs font-black uppercase tracking-widest text-primary-400 mb-4">
       {title}
     </h3>
     <div className="flex flex-wrap gap-2">
@@ -50,7 +50,9 @@ const FilterList = ({
                 ? "1.5px solid var(--color-accent)"
                 : "1.5px solid rgba(0,0,0,0.1)",
               background: isActive ? "rgba(46, 158, 91,0.1)" : "transparent",
-              color: isActive ? "#1d6639" : "#555",
+              color: isActive
+                ? "var(--color-primary-600)"
+                : "var(--color-primary-400)",
               cursor: "pointer",
               transition: "all 0.2s ease",
               textTransform: "uppercase",
@@ -117,7 +119,7 @@ const PopUpFilterPanel: React.FC<PopUpFilterPanelProps> = ({
             fontSize: 16,
             textTransform: "uppercase",
             letterSpacing: "-0.02em",
-            color: "#1a1a1a",
+            color: "var(--color-primary)",
           }}
         >
           Filters
@@ -138,7 +140,12 @@ const PopUpFilterPanel: React.FC<PopUpFilterPanelProps> = ({
           )}
         </span>
       }
-      closeIcon={<IoCloseOutline size={22} style={{ color: "#555" }} />}
+      closeIcon={
+        <IoCloseOutline
+          size={22}
+          style={{ color: "var(--color-primary-400)" }}
+        />
+      }
       footer={
         <div className="flex gap-3">
           <Button
@@ -184,14 +191,14 @@ const PopUpFilterPanel: React.FC<PopUpFilterPanelProps> = ({
     >
       <div className="flex-1 overflow-y-auto px-6 hide-scrollbar">
         {/* In Stock */}
-        <div className="flex justify-between items-center py-5 border-b border-gray-100">
+        <div className="flex justify-between items-center py-5 border-b border-default">
           <span
             style={{
               fontSize: 13,
               fontWeight: 700,
               textTransform: "uppercase",
               letterSpacing: "0.05em",
-              color: "#1a1a1a",
+              color: "var(--color-primary)",
             }}
           >
             In Stock Only
@@ -204,8 +211,8 @@ const PopUpFilterPanel: React.FC<PopUpFilterPanelProps> = ({
         </div>
 
         {/* Sizes */}
-        <div className="py-6 border-b border-gray-100">
-          <h3 className="text-xs font-black uppercase tracking-widest text-gray-400 mb-4">
+        <div className="py-6 border-b border-default">
+          <h3 className="text-xs font-black uppercase tracking-widest text-primary-400 mb-4">
             Size
           </h3>
           <div className="grid grid-cols-4 gap-2">
@@ -221,7 +228,9 @@ const PopUpFilterPanel: React.FC<PopUpFilterPanelProps> = ({
                       ? "2px solid var(--color-accent)"
                       : "1.5px solid rgba(0,0,0,0.1)",
                     background: isActive ? "rgba(46, 158, 91,0.1)" : "#f8f9fa",
-                    color: isActive ? "#1d6639" : "#333",
+                    color: isActive
+                      ? "var(--color-primary-600)"
+                      : "var(--color-primary)",
                     fontWeight: 800,
                     fontSize: 13,
                     borderRadius: 12,

@@ -9,7 +9,7 @@ const PrivacyPolicyContent = () => {
     return (
       <section
         key={key}
-        className="py-8 border-t border-gray-100 first:border-none"
+        className="py-8 border-t border-default first:border-none"
       >
         <div className="flex flex-col md:flex-row gap-6 md:gap-12">
           {/* Section Title - Left Sticky-ish feel on Desktop */}
@@ -45,7 +45,7 @@ const PrivacyPolicyContent = () => {
               Object.entries(value).map(([subKey, subValue]) => (
                 <div
                   key={subKey}
-                  className="mt-4 p-4 bg-surface-2 border border-gray-200"
+                  className="mt-4 p-4 bg-surface-2 border border-default"
                 >
                   {typeof subValue === "string" && (
                     <p className="mb-2">{subValue}</p>

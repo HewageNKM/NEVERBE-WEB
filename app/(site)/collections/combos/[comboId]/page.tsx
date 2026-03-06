@@ -83,14 +83,14 @@ const ComboDetailPage = async (context: {
   ];
 
   return (
-    <main className="w-full relative bg-white text-black">
+    <main className="w-full relative bg-white text-primary">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
 
       {/* Container with Nike-style spacing */}
-      <div className="max-w-[1440px] mx-auto pt-[100px] md:pt-[140px] px-6 md:px-12 pb-20">
+      <div className="max-w-text mx-auto pt-[100px] md:pt-[140px] px-6 md:px-12 pb-20">
         {/* Breadcrumbs Navigation */}
         <div className="pb-4">
           <Breadcrumbs items={breadcrumbItems} />

@@ -77,7 +77,7 @@ const ItemCard = ({
               ? `${item.discount}% Off`
               : null
       }
-      color={outOfStocks ? "#1a1a1a" : "var(--color-accent)"}
+      color={outOfStocks ? "var(--color-primary-400)" : "var(--color-accent)"}
       style={{
         padding: "0 10px",
         fontSize: "11px",
@@ -212,7 +212,7 @@ const ItemCard = ({
                   </div>
                   {variantPromo && (
                     <div className="absolute -top-1 -right-1 z-20 w-3.5 h-3.5 bg-accent rounded-full border border-white flex items-center justify-center shadow-sm">
-                      <span className="text-[7px] font-black text-black">
+                      <span className="text-[7px] font-black text-primary">
                         %
                       </span>
                     </div>
@@ -250,7 +250,7 @@ const ItemCard = ({
             )}
           </div>
 
-          <div className="flex items-center justify-between mt-1 pt-1.5 border-t border-gray-100/50">
+          <div className="flex items-center justify-between mt-1 pt-1.5 border-t border-default">
             <Text
               type="secondary"
               style={{

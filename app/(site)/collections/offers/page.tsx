@@ -15,7 +15,7 @@ const sectionLabel: React.CSSProperties = {
   fontWeight: 800,
   textTransform: "uppercase" as const,
   letterSpacing: "0.1em",
-  color: "#aaa",
+  color: "var(--color-primary-400)",
   display: "block",
   marginBottom: 12,
 };
@@ -140,8 +140,14 @@ const OffersPage = async () => {
 
       {/* Page Header */}
       <div className="w-full max-w-content mx-auto px-4 md:px-12 pt-8 pb-6">
-        <nav style={{ fontSize: 12, color: "#aaa", marginBottom: 16 }}>
-          <Link href="/" style={{ color: "#aaa" }}>
+        <nav
+          style={{
+            fontSize: 12,
+            color: "var(--color-primary-400)",
+            marginBottom: 16,
+          }}
+        >
+          <Link href="/" style={{ color: "var(--color-primary-400)" }}>
             Home
           </Link>
           <span style={{ margin: "0 8px" }}>/</span>
@@ -156,12 +162,14 @@ const OffersPage = async () => {
             lineHeight: 1,
             margin: 0,
             marginBottom: 8,
-            color: "#1a1a1a",
+            color: "var(--color-primary)",
           }}
         >
           Offers &amp; Deals
         </h1>
-        <p style={{ color: "#888", fontSize: 14, margin: 0 }}>
+        <p
+          style={{ color: "var(--color-primary-400)", fontSize: 14, margin: 0 }}
+        >
           Exclusive campaigns, seasonal coupons &amp; markdown deals.
         </p>
       </div>
@@ -183,7 +191,7 @@ const OffersPage = async () => {
                 fontWeight: 800,
                 textTransform: "uppercase",
                 letterSpacing: "0.1em",
-                color: "#999",
+                color: "var(--color-primary-400)",
                 marginBottom: 20,
               }}
             >
@@ -193,7 +201,7 @@ const OffersPage = async () => {
               {bannerPromotions.map((promo: any) => (
                 <div
                   key={promo.id}
-                  className="group block relative bg-gray-100 overflow-hidden cursor-pointer rounded-2xl hover:shadow-lg transition-all"
+                  className="group block relative bg-surface-3 overflow-hidden cursor-pointer rounded-2xl hover:shadow-lg transition-all"
                   style={{ aspectRatio: "4/5" }}
                 >
                   <Image
@@ -202,7 +210,7 @@ const OffersPage = async () => {
                     fill
                     className="object-cover transition-transform duration-700 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
+                  <div className="absolute inset-0 bg-primary/20 group-hover:bg-primary/10 transition-colors" />
                   <div className="absolute bottom-8 left-8 right-8">
                     <h3 className="text-white text-lg font-black uppercase tracking-tight mb-3">
                       {promo.name}
@@ -211,7 +219,7 @@ const OffersPage = async () => {
                       style={{
                         borderRadius: 99,
                         background: "#fff",
-                        color: "#1a1a1a",
+                        color: "var(--color-primary)",
                         border: "none",
                         fontWeight: 800,
                         fontSize: 11,
@@ -239,7 +247,7 @@ const OffersPage = async () => {
                 fontWeight: 800,
                 textTransform: "uppercase",
                 letterSpacing: "0.1em",
-                color: "#999",
+                color: "var(--color-primary-400)",
                 marginBottom: 20,
               }}
             >
@@ -268,7 +276,7 @@ const OffersPage = async () => {
               >
                 Markdown Deals
               </h2>
-              <p style={{ color: "#888", fontSize: 13 }}>
+              <p style={{ color: "var(--color-primary-400)", fontSize: 13 }}>
                 Best prices on premium products.
               </p>
             </div>
@@ -293,7 +301,7 @@ const OffersPage = async () => {
       {/* SEO Footer */}
       <div
         style={{
-          borderTop: "1px solid rgba(0,0,0,0.06)",
+          borderTop: "1px solid var(--color-default)",
           padding: "48px 0",
           marginTop: 24,
         }}
@@ -302,7 +310,13 @@ const OffersPage = async () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
             <div>
               <span style={sectionLabel}>Member Benefits</span>
-              <p style={{ fontSize: 13, color: "#777", margin: 0 }}>
+              <p
+                style={{
+                  fontSize: 13,
+                  color: "var(--color-primary-400)",
+                  margin: 0,
+                }}
+              >
                 Sign up to unlock early access, exclusive deals, and the best
                 prices on premium products in Sri Lanka.
               </p>
@@ -312,7 +326,7 @@ const OffersPage = async () => {
               <ul
                 style={{
                   fontSize: 13,
-                  color: "#777",
+                  color: "var(--color-primary-400)",
                   lineHeight: 2,
                   listStyle: "none",
                   padding: 0,
@@ -326,7 +340,13 @@ const OffersPage = async () => {
             </div>
             <div>
               <span style={sectionLabel}>Price Match Promise</span>
-              <p style={{ fontSize: 13, color: "#777", margin: 0 }}>
+              <p
+                style={{
+                  fontSize: 13,
+                  color: "var(--color-primary-400)",
+                  margin: 0,
+                }}
+              >
                 Found a better price elsewhere? Let us know and we&apos;ll do
                 our best to match it.
               </p>

@@ -10,7 +10,7 @@ const ShippingReturnPolicyClient = () => {
     <main className="w-full min-h-screen bg-white pt-8 md:pt-12 pb-20 px-4 md:px-8">
       <div className="max-w-content mx-auto">
         {/* Header */}
-        <div className="mb-16 md:mb-24 border-b border-black pb-8">
+        <div className="mb-16 md:mb-24 border-b border-primary pb-8">
           <Title
             level={1}
             style={{
@@ -19,7 +19,7 @@ const ShippingReturnPolicyClient = () => {
               textTransform: "uppercase",
               letterSpacing: "-0.03em",
               lineHeight: 0.9,
-              color: "#1a1a1a",
+              color: "var(--color-primary)",
               margin: 0,
             }}
           >
@@ -27,11 +27,11 @@ const ShippingReturnPolicyClient = () => {
           </Title>
 
           <div className="flex flex-col md:flex-row md:items-center gap-4 mt-6">
-            <p className="text-xs font-bold uppercase tracking-widest text-gray-400">
+            <p className="text-xs font-bold uppercase tracking-widest text-primary-400">
               Customer Service
             </p>
-            <div className="hidden md:block h-px w-12 bg-gray-300"></div>
-            <p className="text-xs font-bold uppercase tracking-widest text-gray-400">
+            <div className="hidden md:block h-px w-12 bg-default"></div>
+            <p className="text-xs font-bold uppercase tracking-widest text-primary-400">
               Exchange Guidelines
             </p>
           </div>

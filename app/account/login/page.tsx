@@ -102,7 +102,7 @@ const AuthPage = () => {
               <Input
                 size="large"
                 placeholder="Email Address"
-                className="w-full bg-white hover:bg-zinc-50 focus:bg-white border-default focus:border-accent px-4 py-3 text-sm font-bold rounded-xl transition-all"
+                className="w-full bg-white hover:bg-surface-2 focus:bg-white border-default focus:border-accent px-4 py-3 text-sm font-bold rounded-xl transition-all"
                 name="email"
               />
             </Form.Item>
@@ -117,7 +117,7 @@ const AuthPage = () => {
               <Input.Password
                 size="large"
                 placeholder="Password"
-                className="w-full bg-white hover:bg-zinc-50 focus:bg-white border-default focus:border-accent px-4 py-3 text-sm font-bold rounded-xl transition-all"
+                className="w-full bg-white hover:bg-surface-2 focus:bg-white border-default focus:border-accent px-4 py-3 text-sm font-bold rounded-xl transition-all"
                 name="password"
               />
             </Form.Item>
@@ -158,7 +158,7 @@ const AuthPage = () => {
         <Button
           onClick={handleGoogleLogin}
           type="default"
-          className="w-full bg-white text-dark border border-gray-200 flex items-center justify-center gap-4 py-6 rounded-full font-black uppercase text-xs tracking-widest hover:bg-gray-50 shadow-sm transition-all"
+          className="w-full bg-white text-primary border border-default flex items-center justify-center gap-4 py-6 rounded-full font-black uppercase text-xs tracking-widest hover:bg-surface-2 shadow-sm transition-all"
         >
           <FcGoogle size={22} />
           Continue with Google

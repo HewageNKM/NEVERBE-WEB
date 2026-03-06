@@ -8,7 +8,7 @@ const sectionLabel: React.CSSProperties = {
   fontWeight: 800,
   textTransform: "uppercase" as const,
   letterSpacing: "0.1em",
-  color: "#aaa",
+  color: "var(--color-primary-400)",
   display: "block",
   marginBottom: 12,
 };
@@ -147,8 +147,14 @@ const Page = async () => {
 
       {/* Page Header */}
       <div className="w-full max-w-content mx-auto px-4 md:px-12 pt-8 pb-6">
-        <nav style={{ fontSize: 12, color: "#aaa", marginBottom: 16 }}>
-          <Link href="/" style={{ color: "#aaa" }}>
+        <nav
+          style={{
+            fontSize: 12,
+            color: "var(--color-primary-400)",
+            marginBottom: 16,
+          }}
+        >
+          <Link href="/" style={{ color: "var(--color-primary-400)" }}>
             Home
           </Link>
           <span style={{ margin: "0 8px" }}>/</span>
@@ -163,12 +169,14 @@ const Page = async () => {
             lineHeight: 1,
             margin: 0,
             marginBottom: 8,
-            color: "#1a1a1a",
+            color: "var(--color-primary)",
           }}
         >
           All Products
         </h1>
-        <p style={{ color: "#888", fontSize: 14, margin: 0 }}>
+        <p
+          style={{ color: "var(--color-primary-400)", fontSize: 14, margin: 0 }}
+        >
           Sneakers, activewear, slides, accessories and more.
         </p>
       </div>
@@ -180,13 +188,22 @@ const Page = async () => {
 
       {/* SEO Footer */}
       <div
-        style={{ borderTop: "1px solid rgba(0,0,0,0.06)", padding: "48px 0" }}
+        style={{
+          borderTop: "1px solid var(--color-default)",
+          padding: "48px 0",
+        }}
       >
         <div className="max-w-content mx-auto px-8 lg:px-12">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
             <div>
               <span style={sectionLabel}>Premium Fashion in Sri Lanka</span>
-              <p style={{ fontSize: 13, color: "#777", margin: 0 }}>
+              <p
+                style={{
+                  fontSize: 13,
+                  color: "var(--color-primary-400)",
+                  margin: 0,
+                }}
+              >
                 NEVERBE offers shoes, clothing, activewear, and accessories —
                 all with island-wide Cash on Delivery.
               </p>
@@ -196,7 +213,7 @@ const Page = async () => {
               <ul
                 style={{
                   fontSize: 13,
-                  color: "#777",
+                  color: "var(--color-primary-400)",
                   lineHeight: 2,
                   listStyle: "none",
                   padding: 0,
@@ -211,7 +228,13 @@ const Page = async () => {
             </div>
             <div>
               <span style={sectionLabel}>Quality Guaranteed</span>
-              <p style={{ fontSize: 13, color: "#777", margin: 0 }}>
+              <p
+                style={{
+                  fontSize: 13,
+                  color: "var(--color-primary-400)",
+                  margin: 0,
+                }}
+              >
                 Size exchanges within 7 days. Every product is Premium Grade
                 quality — durability and comfort guaranteed.
               </p>

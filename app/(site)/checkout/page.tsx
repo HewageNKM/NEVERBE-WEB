@@ -11,8 +11,8 @@ const Page = () => {
   return (
     <main className="w-full min-h-screen bg-white pb-20">
       {/* Simple Header for Checkout Focus */}
-      <div className="w-full border-b border-gray-100 py-6 text-center">
-        <h1 className="text-2xl font-black uppercase tracking-tighter text-[#1a1a1a]">
+      <div className="w-full border-b border-default py-6 text-center">
+        <h1 className="text-2xl font-black uppercase tracking-tighter text-primary">
           Checkout
         </h1>
       </div>

@@ -46,7 +46,7 @@ const ShareButtons: React.FC<ShareButtonsProps> = ({
       await navigator.clipboard.writeText(fullUrl);
       toast.success("Blueprint link copied!", {
         style: {
-          background: "#1a1a1a",
+          background: "var(--color-primary)",
           color: "var(--color-accent)",
           fontWeight: "bold",
           fontSize: "12px",
@@ -90,7 +90,7 @@ const ShareButtons: React.FC<ShareButtonsProps> = ({
           type="text"
           shape="circle"
           onClick={copyLink}
-          className="group flex items-center justify-center w-12 h-12 rounded-full bg-dark text-accent border border-accent/20 shadow-custom hover:bg-accent hover:text-dark hover:shadow-hover hover:-translate-y-1 transition-all active:scale-90 p-0"
+          className="group flex items-center justify-center w-12 h-12 rounded-full bg-surface-2 text-accent border border-accent/20 shadow-custom hover:bg-accent hover:text-primary hover:shadow-hover hover:-translate-y-1 transition-all active:scale-90 p-0"
           aria-label="Copy link"
           icon={
             <FaLink

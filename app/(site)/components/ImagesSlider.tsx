@@ -24,7 +24,7 @@ const ImagesSlider = forwardRef<CarouselRef, ImagesSliderProps>(
         {images.map((image, index) => (
           <div
             key={image.id}
-            className="w-full h-full bg-gray-900 block overflow-hidden"
+            className="w-full h-full bg-surface-2 block overflow-hidden"
           >
             <div className="relative w-full h-[60vh] md:h-[88vh]">
               <Image

@@ -17,7 +17,7 @@ const BrandsSlider = ({ items }: { items: any[] }) => {
     <section
       className="w-full overflow-hidden"
       style={{
-        background: "#111",
+        background: "var(--color-primary)",
         padding: "64px 0",
       }}
     >
@@ -114,7 +114,7 @@ const BrandsSlider = ({ items }: { items: any[] }) => {
                 href={`/collections/products?brand=${encodeURIComponent(
                   (brand?.name || "").toLowerCase(),
                 )}`}
-                className="flex-shrink-0 mx-6 flex items-center justify-center opacity-30 hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-500"
+                className="w-[120px] md:w-[160px] lg:w-[200px] shrink-0 flex items-center justify-center opacity-60 hover:opacity-100 transition-opacity duration-300"
                 style={{ height: 60, minWidth: 120 }}
               >
                 {brand.logoUrl ? (

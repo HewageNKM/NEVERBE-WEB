@@ -22,7 +22,7 @@ const SocialMediaSection = () => {
   };
 
   return (
-    <section className="flex flex-col gap-8 mt-8 pt-8 border-t border-gray-100">
+    <section className="flex flex-col gap-8 mt-8 pt-8 border-t border-default">
       <Title
         level={2}
         style={{
@@ -43,7 +43,7 @@ const SocialMediaSection = () => {
             href={`https://wa.me/${whatsappNumber}?text=${message}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center gap-3 bg-black text-white px-6 py-4 hover:bg-gray-800 transition-all active:scale-[0.98]"
+            className="flex items-center justify-center gap-3 bg-primary text-white px-6 py-4 hover:bg-primary-600 transition-all active:scale-[0.98]"
             style={{ width: "100%" }}
           >
             <FaWhatsapp size={20} />
@@ -68,20 +68,20 @@ const SocialMediaSection = () => {
               href={media.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-3 border border-gray-200 px-6 py-4 hover:border-black hover:bg-gray-50 transition-all group"
+              className="flex items-center justify-center gap-3 border border-default px-6 py-4 hover:border-primary hover:bg-surface-2 transition-all group"
               style={{ width: "100%", height: "100%" }}
             >
-              <span className="text-gray-400 group-hover:text-black transition-colors">
+              <span className="text-primary-300 group-hover:text-primary transition-colors">
                 {media.icon ? <media.icon size={18} /> : getIcon(media.url)}
               </span>
               <Text
-                className="group-hover:text-black"
+                className="group-hover:text-primary"
                 style={{
                   fontWeight: 800,
                   textTransform: "uppercase",
                   letterSpacing: "0.05em",
                   fontSize: 12,
-                  color: "#aaa",
+                  color: "var(--color-primary-300)",
                 }}
               >
                 {media.name}

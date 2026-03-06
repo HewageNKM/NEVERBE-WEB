@@ -108,7 +108,7 @@ const WishlistPage = () => {
                               e.stopPropagation();
                               handleRemove(item.productId, item.variantId);
                             }}
-                            className="absolute top-4 right-4 w-10 h-10 bg-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-gray-100 border-none p-0"
+                            className="absolute top-4 right-4 w-10 h-10 bg-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-surface-2 border-none p-0"
                             aria-label="Remove from wishlist"
                             icon={
                               <IoTrashOutline

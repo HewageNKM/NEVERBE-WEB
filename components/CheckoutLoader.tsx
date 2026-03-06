@@ -49,12 +49,15 @@ const CheckoutLoader = () => {
           <Flex vertical align="center" gap={4}>
             <Typography.Title
               level={4}
-              className="uppercase tracking-widest text-[#1a1a1a] m-0"
+              className="uppercase tracking-widest text-primary m-0"
               style={{ margin: 0, fontWeight: 900, fontSize: "1.125rem" }}
             >
               Processing Order
             </Typography.Title>
-            <Typography.Text type="secondary" className="text-xs font-medium">
+            <Typography.Text
+              type="secondary"
+              className="text-xs font-medium text-primary-400"
+            >
               Please wait while we secure your order
             </Typography.Text>
           </Flex>

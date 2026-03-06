@@ -103,8 +103,8 @@ const SearchDialog: React.FC<SearchDialogProps> = ({
         ) : (
           /* --- PURE EMPTY STATE --- */
           <div className="flex flex-col items-center justify-center py-20 px-6 text-center animate-fade">
-            <div className="bg-gray-100 p-6 rounded-full mb-6">
-              <IoSearchOutline className="text-gray-400" size={32} />
+            <div className="bg-surface-2 p-6 rounded-full mb-6">
+              <IoSearchOutline className="text-primary-400" size={32} />
             </div>
 
             <h3 className="text-2xl font-display font-black uppercase tracking-tighter text-primary">

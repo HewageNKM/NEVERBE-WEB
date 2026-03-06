@@ -46,7 +46,7 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({
     return (
       <Badge.Ribbon
         text={ribbonText}
-        color={outOfStock ? "#1a1a1a" : "var(--color-accent)"}
+        color={outOfStock ? "var(--color-primary-400)" : "var(--color-accent)"}
         style={{
           padding: "0 10px",
           fontSize: "11px",

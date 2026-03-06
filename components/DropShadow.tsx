@@ -26,7 +26,7 @@ const DropShadow = ({
       className={`fixed inset-0 z-100 flex transition-all ${
         variant === "light"
           ? "bg-white/80 backdrop-blur-md"
-          : "bg-black/40 backdrop-blur-sm"
+          : "bg-primary/30 backdrop-blur-sm"
       } ${containerStyle || ""}`}
     >
       {/* The variant="light" is the signature Nike Look. 

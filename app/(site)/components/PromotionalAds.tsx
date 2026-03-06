@@ -16,7 +16,11 @@ const fadeUp = {
   visible: (i: number) => ({
     opacity: 1,
     y: 0,
-    transition: { delay: i * 0.12, duration: 0.5, ease: [0.4, 0, 0.2, 1] },
+    transition: {
+      delay: i * 0.12,
+      duration: 0.5,
+      ease: [0.4, 0, 0.2, 1] as [number, number, number, number],
+    },
   }),
 };
 
@@ -115,12 +119,11 @@ const PromotionalAds: React.FC = () => {
                       sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     />
                     {/* Bottom frosted glass panel */}
-                    <div className="absolute inset-x-4 bottom-4 bg-white/80 backdrop-blur-md rounded-[24px] p-5 transition-transform duration-300 group-hover:-translate-y-2 border border-white/40 shadow-[0_8px_32px_rgba(0,0,0,0.08)]">
+                    <div className="absolute inset-x-4 bottom-4 bg-white/80 backdrop-blur-md rounded-[24px] p-5 transition-transform duration-300 group-hover:-translate-y-2 border border-primary/20 shadow-custom">
                       <Title
                         level={3}
                         style={{
-                          color: "#1a1a1a",
-                          margin: 0,
+                          color: "var(--color-primary)",
                           textTransform: "uppercase",
                           fontWeight: 900,
                           letterSpacing: "-0.02em",
@@ -132,8 +135,7 @@ const PromotionalAds: React.FC = () => {
                       <Flex align="center" gap={8} className="mt-3">
                         <Text
                           style={{
-                            color: "rgba(0,0,0,0.6)",
-                            fontWeight: 800,
+                            color: "var(--color-primary-400)",
                             textTransform: "uppercase",
                             letterSpacing: "0.1em",
                             fontSize: 12,
@@ -143,7 +145,7 @@ const PromotionalAds: React.FC = () => {
                           Shop Now
                         </Text>
                         <div
-                          className="bg-white/80 backdrop-blur-sm border border-[rgba(46, 158, 91,0.2)] flex items-center justify-center transition-all duration-300 group-hover:bg-accent! group-hover:border-accent! shadow-[0_4px_12px_rgba(0,0,0,0.05)]"
+                          className="bg-white/80 backdrop-blur-sm border border-[rgba(46,158,91,0.2)] flex items-center justify-center transition-all duration-300 group-hover:bg-accent! group-hover:border-accent! shadow-custom"
                           style={{
                             width: 32,
                             height: 32,
@@ -153,10 +155,10 @@ const PromotionalAds: React.FC = () => {
                         >
                           <ArrowRightOutlined
                             style={{
-                              color: "rgba(0,0,0,0.8)",
+                              color: "var(--color-primary)",
                               fontSize: 14,
                             }}
-                            className="group-hover:text-black! group-hover:translate-x-0.5 transition-all"
+                            className="group-hover:text-inverse! group-hover:translate-x-0.5 transition-all"
                           />
                         </div>
                       </Flex>

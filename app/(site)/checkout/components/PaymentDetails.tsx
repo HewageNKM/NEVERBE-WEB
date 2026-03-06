@@ -53,8 +53,8 @@ const BundleCard = ({ bundle }: { bundle: BundleGroup }) => {
   const netPrice = bundle.totalPrice - bundle.totalDiscount;
 
   return (
-    <div className="border border-gray-200 bg-white rounded-xl overflow-hidden shadow-sm">
-      <div className="bg-gray-50 text-black px-3 py-2 flex justify-between items-center border-b border-gray-200">
+    <div className="border border-default bg-surface rounded-xl overflow-hidden shadow-sm">
+      <div className="bg-surface-2 text-primary px-3 py-2 flex justify-between items-center border-b border-default">
         <span className="text-[9px] font-display font-black uppercase tracking-tighter">
           Bundle
         </span>
@@ -87,7 +87,7 @@ const BundleCard = ({ bundle }: { bundle: BundleGroup }) => {
         ))}
       </div>
 
-      <div className="border-t border-gray-200 px-3 py-2 flex justify-between items-center bg-gray-50">
+      <div className="border-t border-default px-3 py-2 flex justify-between items-center bg-surface-2">
         <span className="text-[9px] text-muted uppercase font-bold">
           {bundle.items.length} Items
         </span>
@@ -211,7 +211,7 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
             height: "100%",
           },
         }}
-        className="w-full max-w-[450px] lg:max-w-none bg-transparent! lg:bg-white! border-none! lg:border! border-gray-200! rounded-none! md:rounded-2xl! h-full shadow-none! lg:shadow-sm! flex flex-col mx-auto"
+        className="w-full max-w-[450px] lg:max-w-none bg-transparent! lg:bg-white! border-none! lg:border! border-default! rounded-none! md:rounded-2xl! h-full shadow-none! lg:shadow-sm! flex flex-col mx-auto"
       >
         {/* Header */}
         <Flex vertical align="center" gap={8} className="mb-6">
@@ -225,7 +225,7 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
           <Badge
             count={`${bagItems.length} Items${bundleCount > 0 ? ` · ${bundleCount} Bundle` : ""}`}
             style={{
-              backgroundColor: "#1a1a1a",
+              backgroundColor: "var(--color-primary)",
               color: "#ffffff",
               fontWeight: 800,
             }}
@@ -371,7 +371,7 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
         </Flex>
 
         {/* Total Section */}
-        <div className="border-t-2 border-black pt-4 mt-auto mb-8">
+        <div className="border-t-2 border-primary pt-4 mt-auto mb-8">
           <Flex justify="space-between" align="end">
             <Typography.Text className="text-sm font-black uppercase tracking-widest text-primary">
               Total Due
@@ -389,7 +389,9 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
           disabled={bagItems.length === 0 || !paymentType}
           style={{
             background:
-              bagItems.length === 0 || !paymentType ? undefined : "var(--color-accent)",
+              bagItems.length === 0 || !paymentType
+                ? undefined
+                : "var(--color-accent)",
             border: "none",
             borderRadius: 99,
             height: 64,

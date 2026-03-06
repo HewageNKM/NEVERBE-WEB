@@ -117,7 +117,10 @@ const WhyUs = () => {
                     marginBottom: 16,
                   }}
                 >
-                  <item.icon size={22} style={{ color: "var(--color-accent)" }} />
+                  <item.icon
+                    size={22}
+                    style={{ color: "var(--color-accent)" }}
+                  />
                 </div>
                 <Text
                   style={{
@@ -126,7 +129,7 @@ const WhyUs = () => {
                     fontWeight: 900,
                     letterSpacing: "-0.01em",
                     fontSize: 12,
-                    color: "#1a1a1a",
+                    color: "var(--color-primary)",
                     display: "block",
                     marginBottom: 4,
                   }}
@@ -138,7 +141,7 @@ const WhyUs = () => {
                     fontSize: 11,
                     fontWeight: 500,
                     display: "block",
-                    color: "#777",
+                    color: "var(--color-primary-400)",
                   }}
                 >
                   {item.desc}
@@ -224,7 +227,7 @@ const WhyUs = () => {
                             fontWeight: 900,
                             letterSpacing: "-0.01em",
                             fontSize: 12,
-                            color: "#1a1a1a",
+                            color: "var(--color-primary)",
                             display: "block",
                           }}
                         >
@@ -236,7 +239,7 @@ const WhyUs = () => {
                             fontWeight: 500,
                             display: "block",
                             marginTop: 4,
-                            color: "#777",
+                            color: "var(--color-primary-400)",
                           }}
                         >
                           {item.desc}

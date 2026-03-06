@@ -6,7 +6,7 @@ const { Title, Paragraph, Text } = Typography;
 
 const AboutUsClient = () => {
   return (
-    <main className="w-full bg-white text-black min-h-screen pt-8 md:pt-12">
+    <main className="w-full bg-surface text-primary min-h-screen pt-8 md:pt-12">
       {/* 1. HERO MANIFESTO */}
       <section className="w-full px-4 md:px-8 mb-20">
         <div className="max-w-content mx-auto">
@@ -17,9 +17,7 @@ const AboutUsClient = () => {
               fontWeight: 900,
               textTransform: "uppercase",
               letterSpacing: "-0.03em",
-              lineHeight: 0.9,
-              marginBottom: 32,
-              color: "#1a1a1a",
+              color: "var(--color-primary)",
             }}
           >
             We Are <br /> NEVERBE.
@@ -30,8 +28,7 @@ const AboutUsClient = () => {
               fontWeight: 700,
               textTransform: "uppercase",
               letterSpacing: "0.05em",
-              maxWidth: 700,
-              color: "#aaa",
+              color: "var(--color-primary-400)",
             }}
           >
             Redefining sneaker culture in Sri Lanka. Premium quality. Unbeatable
@@ -41,7 +38,7 @@ const AboutUsClient = () => {
       </section>
 
       {/* 2. THE STORY (Split Layout) */}
-      <section className="w-full border-t border-gray-200 px-4 md:px-8 py-16 md:py-24">
+      <section className="w-full border-t border-strong px-4 md:px-8 py-16 md:py-24">
         <div className="max-w-content mx-auto">
           <Row gutter={[48, 48]} justify="space-between">
             {/* Left: Headline */}
@@ -60,7 +57,11 @@ const AboutUsClient = () => {
                   The Mission
                 </Title>
                 <div
-                  style={{ height: 8, width: 80, background: "#1a1a1a" }}
+                  style={{
+                    height: 8,
+                    width: 80,
+                    background: "var(--color-primary)",
+                  }}
                 ></div>
               </div>
             </Col>
@@ -70,33 +71,37 @@ const AboutUsClient = () => {
               <Space direction="vertical" size={48} className="w-full">
                 <div>
                   <Title
-                    level={3}
+                    level={2}
+                    className="mb-8"
                     style={{
-                      fontSize: "1.125rem",
-                      fontWeight: 800,
+                      fontFamily: "var(--font-display)",
+                      fontWeight: 900,
                       textTransform: "uppercase",
-                      letterSpacing: "0.05em",
-                      marginBottom: 16,
-                      color: "#1a1a1a",
+                      letterSpacing: "-0.02em",
+                      color: "var(--color-primary)",
                     }}
                   >
                     Who We Are
                   </Title>
-                  <Paragraph
-                    style={{
-                      fontSize: "1rem",
-                      lineHeight: 1.8,
-                      fontWeight: 500,
-                      color: "#666",
-                    }}
-                  >
-                    At NEVERBE, we don't just sell shoes; we curate a lifestyle.
-                    We recognized a gap in the Sri Lankan market for
-                    high-quality, trend-setting footwear that doesn't cost a
-                    fortune. We bridge the gap between high-end streetwear and
-                    affordability, offering Premium High-End shoes and apparel
-                    that rival the originals in look, feel, and durability.
-                  </Paragraph>
+                  <div className="max-w-3xl mx-auto space-y-6">
+                    <p className="text-base md:text-lg text-primary-400 leading-relaxed">
+                      Based in Sri Lanka, we recognized a gap in the market for
+                      high-end, streetwear-inspired footwear that doesn't
+                      compromise on quality. Our mission is simple: to provide
+                      the local community with access to the global sneaker
+                      culture through our carefully curated, masterpiece-quality
+                      drops.
+                    </p>
+                    <p className="text-base md:text-lg text-primary-400 leading-relaxed">
+                      At NEVERBE, we don't just sell shoes; we curate a
+                      lifestyle. We recognized a gap in the Sri Lankan market
+                      for high-quality, trend-setting footwear that doesn't cost
+                      a fortune. We bridge the gap between high-end streetwear
+                      and affordability, offering Premium High-End shoes and
+                      apparel that rival the originals in look, feel, and
+                      durability.
+                    </p>
+                  </div>
                 </div>
 
                 <div>
@@ -108,7 +113,7 @@ const AboutUsClient = () => {
                       textTransform: "uppercase",
                       letterSpacing: "0.05em",
                       marginBottom: 16,
-                      color: "#1a1a1a",
+                      color: "var(--color-primary)",
                     }}
                   >
                     Our Vision
@@ -118,7 +123,7 @@ const AboutUsClient = () => {
                       fontSize: "1rem",
                       lineHeight: 1.8,
                       fontWeight: 500,
-                      color: "#666",
+                      color: "var(--color-primary-400)",
                     }}
                   >
                     Our vision is to become the undisputed leader in the
@@ -157,39 +162,13 @@ const AboutUsClient = () => {
               },
             ].map((item, i) => (
               <Col xs={24} sm={12} lg={6} key={i}>
-                <div className="flex flex-col gap-3">
-                  <Text
-                    style={{
-                      fontSize: 12,
-                      fontWeight: 900,
-                      color: "#ccc",
-                    }}
-                  >
-                    0{i + 1}
-                  </Text>
-                  <Title
-                    level={4}
-                    style={{
-                      fontSize: "1.25rem",
-                      fontWeight: 900,
-                      textTransform: "uppercase",
-                      letterSpacing: "-0.02em",
-                      margin: 0,
-                    }}
-                  >
+                <div className="bg-surface-2 p-8 lg:p-12 border border-default hover:border-accent transition-colors">
+                  <h3 className="text-xl font-display font-black uppercase tracking-tight text-primary mb-4">
                     {item.title}
-                  </Title>
-                  <Paragraph
-                    style={{
-                      fontSize: "0.875rem",
-                      fontWeight: 500,
-                      color: "#777",
-                      lineHeight: 1.6,
-                      margin: 0,
-                    }}
-                  >
+                  </h3>
+                  <p className="text-sm text-primary-400 leading-relaxed">
                     {item.desc}
-                  </Paragraph>
+                  </p>
                 </div>
               </Col>
             ))}
@@ -198,7 +177,7 @@ const AboutUsClient = () => {
       </section>
 
       {/* 4. STATS STRIP */}
-      <section className="w-full px-4 md:px-8 py-16 border-t border-gray-100">
+      <section className="w-full px-4 md:px-8 py-16 border-t border-default">
         <div className="max-w-content mx-auto">
           <Row gutter={[32, 32]} justify="space-between" align="middle">
             <Col xs={12} md={6}>
@@ -207,7 +186,7 @@ const AboutUsClient = () => {
                   fontSize: 12,
                   fontWeight: 800,
                   textTransform: "uppercase",
-                  color: "#aaa",
+                  color: "var(--color-primary-300)",
                   display: "block",
                   marginBottom: 4,
                 }}
@@ -227,7 +206,7 @@ const AboutUsClient = () => {
                   fontSize: 12,
                   fontWeight: 800,
                   textTransform: "uppercase",
-                  color: "#aaa",
+                  color: "var(--color-primary-300)",
                   display: "block",
                   marginBottom: 4,
                 }}
@@ -247,7 +226,7 @@ const AboutUsClient = () => {
                   fontSize: 12,
                   fontWeight: 800,
                   textTransform: "uppercase",
-                  color: "#aaa",
+                  color: "var(--color-primary-300)",
                   display: "block",
                   marginBottom: 4,
                 }}
@@ -267,7 +246,7 @@ const AboutUsClient = () => {
                   fontSize: 12,
                   fontWeight: 800,
                   textTransform: "uppercase",
-                  color: "#aaa",
+                  color: "var(--color-primary-300)",
                   display: "block",
                   marginBottom: 4,
                 }}

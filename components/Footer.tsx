@@ -92,7 +92,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
               level={4}
               style={{
                 margin: 0,
-                color: "#1a1a1a",
+                color: "var(--color-primary)",
                 fontWeight: 900,
                 textTransform: "uppercase",
                 letterSpacing: "-0.02em",
@@ -102,7 +102,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
             </Title>
             <Text
               style={{
-                color: "#777",
+                color: "var(--color-primary-400)",
                 fontSize: 13,
                 fontWeight: 500,
               }}
@@ -110,17 +110,17 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
               Subscribe for exclusive offers and new arrivals
             </Text>
           </div>
-          <div className="flex items-center w-full max-w-[500px] md:max-w-[600px] lg:max-w-[800px] bg-white rounded-full p-2 shadow-sm border border-gray-200 focus-within:border-accent focus-within:ring-1 focus-within:ring-accent transition-all">
+          <div className="flex items-center w-full max-w-[500px] md:max-w-[600px] lg:max-w-[800px] bg-white rounded-full p-2 shadow-sm border border-default focus-within:border-accent focus-within:ring-1 focus-within:ring-accent transition-all">
             <Input
               placeholder="Enter your email address"
               variant="borderless"
               style={{
                 fontSize: 15,
                 fontWeight: 500,
-                color: "#1a1a1a",
+                color: "var(--color-primary)",
                 backgroundColor: "transparent",
               }}
-              className="flex-1 px-4 placeholder:text-gray-400"
+              className="flex-1 px-4 placeholder:text-primary-400"
             />
             <Button
               type="primary"
@@ -178,7 +178,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                     margin: 0,
                     textTransform: "uppercase",
                     letterSpacing: "0.15em",
-                    color: "#aaa",
+                    color: "var(--color-primary-400)",
                   }}
                 >
                   Store Location
@@ -190,13 +190,13 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                 >
                   <GoLocation
                     size={18}
-                    className="mt-0.5 text-gray-400 group-hover:text-accent transition-colors"
+                    className="mt-0.5 text-primary-400 group-hover:text-accent transition-colors"
                   />
                   <Text
                     style={{
                       fontSize: 11,
                       fontWeight: 700,
-                      color: "#555",
+                      color: "var(--color-primary)",
                       textTransform: "uppercase",
                       lineHeight: 1.6,
                       transition: "color 0.3s ease",
@@ -221,7 +221,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                   margin: 0,
                   textTransform: "uppercase",
                   letterSpacing: "0.15em",
-                  color: "#aaa",
+                  color: "var(--color-primary-400)",
                 }}
               >
                 Get Help
@@ -234,7 +234,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                     style={{
                       fontSize: 11,
                       fontWeight: 700,
-                      color: "#555",
+                      color: "var(--color-primary)",
                       textTransform: "uppercase",
                       letterSpacing: "0.08em",
                       transition: "color 0.3s ease",
@@ -259,7 +259,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                   margin: 0,
                   textTransform: "uppercase",
                   letterSpacing: "0.15em",
-                  color: "#aaa",
+                  color: "var(--color-primary-400)",
                 }}
               >
                 Contact Us
@@ -275,7 +275,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                     <info.icon
                       size={16}
                       style={{
-                        color: "#aaa",
+                        color: "var(--color-primary-400)",
                         transition: "color 0.3s ease",
                       }}
                       className="group-hover:text-accent!"
@@ -284,7 +284,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                       style={{
                         fontSize: 11,
                         fontWeight: 700,
-                        color: "#555",
+                        color: "var(--color-primary)",
                         textTransform: "uppercase",
                         letterSpacing: "0.05em",
                         transition: "color 0.3s ease",
@@ -311,7 +311,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                   margin: 0,
                   textTransform: "uppercase",
                   letterSpacing: "0.15em",
-                  color: "#aaa",
+                  color: "var(--color-primary-400)",
                 }}
               >
                 Follow Us
@@ -331,9 +331,9 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                       alignItems: "center",
                       justifyContent: "center",
                       transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-                      color: "#555",
+                      color: "var(--color-primary)",
                     }}
-                    className="hover:bg-accent! hover:text-black! hover:border-accent!"
+                    className="hover:bg-accent! hover:text-inverse! hover:border-accent!"
                   >
                     <media.Icon size={20} />
                   </Link>
@@ -359,7 +359,9 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
             { Icon: StarOutlined, label: "100% Quality Guaranteed" },
           ].map((badge) => (
             <span key={badge.label} className="trust-badge">
-              <badge.Icon style={{ color: "var(--color-accent)", fontSize: 14 }} />
+              <badge.Icon
+                style={{ color: "var(--color-accent)", fontSize: 14 }}
+              />
               {badge.label}
             </span>
           ))}
@@ -387,7 +389,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
                 fontWeight: 800,
                 textTransform: "uppercase",
                 letterSpacing: "0.15em",
-                color: "#aaa",
+                color: "var(--color-primary-400)",
               }}
             >
               © {new Date().getFullYear()} NEVERBE, INC.
@@ -420,7 +422,7 @@ const Footer = ({ footerNav = [], socialLinks = [] }: FooterProps) => {
             <Text
               style={{
                 fontSize: 10,
-                color: "#777",
+                color: "var(--color-primary-400)",
                 textAlign: "center",
               }}
             >

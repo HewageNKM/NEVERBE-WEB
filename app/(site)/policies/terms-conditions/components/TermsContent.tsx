@@ -12,7 +12,7 @@ const TermsContent = () => {
       {termsAndConditions.map((item, index) => (
         <Row
           key={index}
-          className="group py-10 border-t border-gray-100 first:border-none w-full"
+          className="group py-10 border-t border-default first:border-none w-full"
           gutter={[32, 24]}
         >
           {/* Index Number - Sticky feel */}
@@ -41,7 +41,7 @@ const TermsContent = () => {
                   fontWeight: 900,
                   textTransform: "uppercase",
                   letterSpacing: "-0.02em",
-                  color: "var(--color-primary, #1a1a1a)",
+                  color: "var(--color-primary, var(--color-primary-400))",
                   marginBottom: 8,
                 }}
               >

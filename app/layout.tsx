@@ -182,7 +182,7 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="en" className="bg-white text-neutral-900">
+    <html lang="en" className="bg-white text-primary">
       <body
         className={`${mono.variable} ${inter.variable} ${plusJakartaSans.variable} antialiased min-h-screen flex flex-col font-sans`}
       >
@@ -210,7 +210,7 @@ export default function RootLayout({
                     borderRadius: 12,
                     colorBgLayout: "#f8faf5",
                     colorBgContainer: "#ffffff",
-                    colorTextBase: "#1a1a1a",
+                    colorTextBase: "var(--color-primary)",
                   },
                   components: {
                     Card: {

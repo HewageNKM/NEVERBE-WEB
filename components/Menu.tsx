@@ -57,7 +57,7 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
             fontWeight: 900,
             textTransform: "uppercase",
             letterSpacing: "-0.03em",
-            color: "#1a1a1a",
+            color: "var(--color-primary)",
           }}
         >
           Categories
@@ -73,7 +73,7 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
               key={item.id}
               href={`/collections/products?category=${encodeURIComponent(item.label.toLowerCase())}`}
               className="text-sm font-bold uppercase tracking-tight transition-all hover:translate-x-1 hover:text-accent!"
-              style={{ color: "#777" }}
+              style={{ color: "var(--color-primary-400)" }}
               onClick={handleClose}
             >
               {item.label}
@@ -92,7 +92,7 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
             fontWeight: 900,
             textTransform: "uppercase",
             letterSpacing: "-0.03em",
-            color: "#1a1a1a",
+            color: "var(--color-primary)",
           }}
         >
           Brands
@@ -108,7 +108,7 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
               key={item.id}
               href={`/collections/products?brand=${encodeURIComponent(item.label.toLowerCase())}`}
               className="text-sm font-bold uppercase tracking-tight transition-all hover:translate-x-1 hover:text-accent!"
-              style={{ color: "#777" }}
+              style={{ color: "var(--color-primary-400)" }}
               onClick={handleClose}
             >
               {item.label}
@@ -153,7 +153,7 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
             fontSize: 20,
             textTransform: "uppercase",
             letterSpacing: "-0.03em",
-            color: "#1a1a1a",
+            color: "var(--color-primary)",
           }}
         >
           Menu
@@ -203,7 +203,7 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
             background: "#f8faf5",
             border: "1px solid rgba(46, 158, 91,0.25)",
             borderRadius: 99,
-            color: "#1a1a1a",
+            color: "var(--color-primary)",
             fontSize: 13,
             fontWeight: 600,
           }}
@@ -211,7 +211,7 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
         {showSearchResult && items.length > 0 && (
           <div className="absolute left-0 right-0 top-[72px] z-50 px-4 animate-fade">
             <SearchDialog
-              containerStyle="max-h-[60vh] flex flex-col shadow-lg bg-white/95 backdrop-blur-xl border border-gray-100 rounded-[24px] overflow-hidden"
+              containerStyle="max-h-[60vh] flex flex-col shadow-lg bg-white/95 backdrop-blur-xl border border-default rounded-[24px] overflow-hidden"
               results={items}
               onClick={() => {
                 clearSearch();
@@ -242,7 +242,7 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
                 fontSize: 26,
                 textTransform: "uppercase",
                 letterSpacing: "-0.03em",
-                color: "#1a1a1a",
+                color: "var(--color-primary)",
                 transition: "color 0.2s ease, transform 0.2s ease",
               }}
               className="group-hover:text-accent! group-hover:translate-x-2 inline-block transition-all"
@@ -252,7 +252,7 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
             <IoChevronForward
               size={16}
               style={{ color: "rgba(0,0,0,0.15)", flexShrink: 0 }}
-              className="group-hover:!text-accent"
+              className="group-hover:text-accent!"
             />
           </Link>
         ))}
@@ -286,16 +286,16 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
         <div className="flex gap-8 mb-3">
           <Link
             href="/contact"
-            className="text-xs font-black uppercase tracking-widest transition-colors hover:!text-accent"
-            style={{ color: "#aaa" }}
+            className="text-xs font-black uppercase tracking-widest transition-colors hover:text-accent!"
+            style={{ color: "var(--color-primary-400)" }}
             onClick={handleClose}
           >
             Contact
           </Link>
           <Link
             href="/contact"
-            className="text-xs font-black uppercase tracking-widest transition-colors hover:!text-accent"
-            style={{ color: "#aaa" }}
+            className="text-xs font-black uppercase tracking-widest transition-colors hover:text-accent!"
+            style={{ color: "var(--color-primary-400)" }}
             onClick={handleClose}
           >
             Help

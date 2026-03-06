@@ -14,16 +14,16 @@
   --color-primary-100: #cbdfd3;
   --color-primary-200: #a1ceb4;
   --color-primary-300: #2e9e5b;
-  --color-dark: #1a1a1a;
+  --color-dark: #ffffff; /* Changed from black to white */
   --color-primary-400: #26854b;
   --color-primary-500: #1d6639;
   --color-primary-600: #154c2a;
   --color-primary-dark: #0e331c;
 
   /* === NEUTRAL COLORS (NEVERBE Theme) === */
-  --color-text-primary: #1a1a1a;
-  --color-text-secondary: #4a4a4a;
-  --color-text-muted: #707070;
+  --color-text-primary: #2e9e5b; /* Changed from dark to primary */
+  --color-text-secondary: #26854b; /* Changed from gray to darker primary */
+  --color-text-muted: #a1ceb4; /* Changed from gray to light green */
   --color-text-inverse: #ffffff;
 
   --color-bg-primary: #ffffff;
@@ -35,12 +35,13 @@
   --color-border-dark: #2e9e5b;
 
   /* === DARK THEME COLORS (SimplyTek-Inspired) === */
-  --color-dark-bg: #111111;
-  --color-dark-surface: #1a1a1a;
-  --color-dark-elevated: #222222;
-  --color-dark-border: #2a2a2a;
-  --color-dark-text: #e5e5e5;
-  --color-dark-text-muted: #888888;
+  /* Redefined as light/green theme equivalents since dark is requested to be removed */
+  --color-dark-bg: #ffffff;
+  --color-dark-surface: #f8faf5;
+  --color-dark-elevated: #ffffff;
+  --color-dark-border: #e0e8d8;
+  --color-dark-text: #2e9e5b;
+  --color-dark-text-muted: #a1ceb4;
 
   /* === ACCENT COLORS === */
   --color-accent: #2e9e5b;
@@ -107,7 +108,7 @@
 
   /* 3. Global Scrollbar Thumb (The Nike "Pill" Effect) */
   ::-webkit-scrollbar-thumb {
-    background-color: #333333;
+    background-color: var(--color-primary-200); /* Changed from dark */
     border-radius: 99px;
 
     /* Floating Effect Trick: 
@@ -122,7 +123,7 @@
 
   /* 4. Hover State Expansion */
   ::-webkit-scrollbar-thumb:hover {
-    background-color: #000000;
+    background-color: var(--color-primary); /* Changed from dark */
     border-width: 3px; /* Subtle "growth" effect on hover */
   }
 
@@ -136,7 +137,7 @@
   /* 5. Modern Firefox Support */
   * {
     scrollbar-width: thin;
-    scrollbar-color: #333333 transparent;
+    scrollbar-color: var(--color-primary-200) transparent; /* Changed from dark */
   }
 }
 
@@ -259,7 +260,7 @@
   .trust-badge:hover {
     background: rgba(46, 158, 91, 0.18);
     border-color: rgba(46, 158, 91, 0.5);
-    color: #1a1a1a;
+    color: var(--color-primary);
   }
 
   /* === DARK SECTION UTILITIES === */
@@ -310,7 +311,7 @@
 /* Swiper.js Navigation Customization */
 .swiper-button-next,
 .swiper-button-prev {
-  color: black;
+  color: var(--color-primary); /* Changed from black */
 }
 
 /* Keyframes for animations */

@@ -232,7 +232,7 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
             >
               {/* Centered pill handle */}
               <div className="flex-1 flex justify-center">
-                <div className="w-12 h-1.5 bg-gray-300 rounded-full" />
+                <div className="w-12 h-1.5 bg-primary-200 rounded-full" />
               </div>
               {/* X button right side on mobile */}
               <button
@@ -256,7 +256,7 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
             <div className="flex flex-col md:flex-row flex-1 min-h-0 overflow-y-auto md:overflow-hidden hide-scrollbar">
               {/* LEFT: VISUALS SECTION */}
               <div className="w-full md:w-1/2 flex flex-col bg-surface-2 md:border-r border-default md:shrink-0 md:overflow-y-auto hide-scrollbar">
-                <div className="relative aspect-[4/3] md:aspect-auto md:min-h-[400px] md:flex-1 flex items-center justify-center p-4 sm:p-6 md:p-8 lg:p-12">
+                <div className="relative aspect-4/3 md:aspect-auto md:min-h-[400px] md:flex-1 flex items-center justify-center p-4 sm:p-6 md:p-8 lg:p-12">
                   <Image
                     src={
                       selectedVariant?.images?.[0]?.url || product.thumbnail.url

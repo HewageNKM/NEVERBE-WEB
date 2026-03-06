@@ -88,7 +88,7 @@ const Products = ({ items }: { items: Product[] }) => {
               padding: "0 16px",
               border: "1.5px solid rgba(0,0,0,0.12)",
               background: "#fff",
-              color: "#333",
+              color: "var(--color-primary)",
             }}
           >
             Filters

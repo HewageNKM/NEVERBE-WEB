@@ -8,7 +8,7 @@ export const metadata = {
 
 const NotFound = () => {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-white px-6 text-black font-sans selection:bg-gray-200">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-white px-6 text-primary font-sans selection:bg-primary/20">
       {/* Container */}
       <div className="text-center max-w-lg w-full space-y-6">
         {/* 404 - Massive & Tight */}
@@ -37,7 +37,7 @@ const NotFound = () => {
           </Link>
           <Link
             href="/collections/new-arrivals"
-            className="inline-flex items-center justify-center px-8 py-3 bg-[#1a1a1a] hover:bg-black text-white text-sm font-bold uppercase tracking-wider rounded-full transition-all shadow-md hover:shadow-lg"
+            className="inline-flex items-center justify-center px-8 py-3 bg-surface border border-default hover:bg-surface-2 text-primary text-sm font-bold uppercase tracking-wider rounded-full transition-all shadow-md hover:shadow-lg"
           >
             Shop New Arrivals
           </Link>

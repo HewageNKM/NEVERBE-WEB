@@ -22,14 +22,16 @@ const ContactDetailsSection = () => {
         >
           Get in Touch
         </Title>
-        <div style={{ height: 4, width: 48, background: "#1a1a1a" }}></div>
+        <div
+          style={{ height: 4, width: 48, background: "var(--color-primary)" }}
+        ></div>
       </div>
 
       <Text
         style={{
           fontSize: "0.875rem",
           fontWeight: 500,
-          color: "#666",
+          color: "var(--color-primary-400)",
           lineHeight: 1.6,
           maxWidth: 400,
         }}
@@ -53,21 +55,21 @@ const ContactDetailsSection = () => {
                   fontWeight: 800,
                   textTransform: "uppercase",
                   letterSpacing: "0.1em",
-                  color: "#aaa",
+                  color: "var(--color-primary-300)",
                 }}
-                className="group-hover:text-black transition-colors"
+                className="group-hover:text-primary transition-colors"
               >
-                {info.title || "Contact"}
+                {(info as any).title || "Contact"}
               </Text>
               <div className="flex items-center gap-3">
-                <info.icon size={20} className="text-black" />
+                <info.icon size={20} className="text-primary" />
                 <Text
                   style={{
                     fontSize: "1.125rem",
                     fontWeight: 800,
-                    color: "#1a1a1a",
+                    color: "var(--color-primary)",
                   }}
-                  className="border-b border-transparent group-hover:border-black transition-all"
+                  className="border-b border-transparent group-hover:border-primary transition-all"
                 >
                   {info.content}
                 </Text>

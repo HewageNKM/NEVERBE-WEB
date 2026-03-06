@@ -424,7 +424,7 @@ const Bag = () => {
                 dispatch(hideBag());
                 router.push("/checkout");
               }}
-              className="group w-full flex items-center justify-between px-8 bg-[#1a1a1a] hover:bg-black border-none"
+              className="group w-full flex items-center justify-between px-8 bg-primary hover:bg-primary-500 border-none"
             >
               <span className="text-sm font-black uppercase tracking-widest text-bg-secondary">
                 Checkout Now

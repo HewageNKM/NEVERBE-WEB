@@ -10,7 +10,7 @@ const sectionLabel: React.CSSProperties = {
   fontWeight: 800,
   textTransform: "uppercase",
   letterSpacing: "0.1em",
-  color: "#aaa",
+  color: "var(--color-primary-400)",
   display: "block",
   marginBottom: 12,
 };
@@ -123,8 +123,14 @@ const NewArrivalsPage = async () => {
 
       {/* Page Header */}
       <div className="w-full max-w-content mx-auto px-4 md:px-12 pt-8 pb-6">
-        <nav style={{ fontSize: 12, color: "#aaa", marginBottom: 16 }}>
-          <Link href="/" style={{ color: "#aaa" }}>
+        <nav
+          style={{
+            fontSize: 12,
+            color: "var(--color-primary-400)",
+            marginBottom: 16,
+          }}
+        >
+          <Link href="/" style={{ color: "var(--color-primary-400)" }}>
             Home
           </Link>
           <span style={{ margin: "0 8px" }}>/</span>
@@ -139,12 +145,14 @@ const NewArrivalsPage = async () => {
             lineHeight: 1,
             margin: 0,
             marginBottom: 8,
-            color: "#1a1a1a",
+            color: "var(--color-primary)",
           }}
         >
           New Arrivals
         </h1>
-        <p style={{ color: "#888", fontSize: 14, margin: 0 }}>
+        <p
+          style={{ color: "var(--color-primary-400)", fontSize: 14, margin: 0 }}
+        >
           Fresh styles just added to the collection.
         </p>
       </div>
@@ -158,13 +166,22 @@ const NewArrivalsPage = async () => {
 
       {/* SEO Footer */}
       <div
-        style={{ borderTop: "1px solid rgba(0,0,0,0.06)", padding: "48px 0" }}
+        style={{
+          borderTop: "1px solid var(--color-default)",
+          padding: "48px 0",
+        }}
       >
         <div className="max-w-content mx-auto px-8 lg:px-12">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
             <div>
               <span style={sectionLabel}>Fresh Drops Weekly</span>
-              <p style={{ fontSize: 13, color: "#777", margin: 0 }}>
+              <p
+                style={{
+                  fontSize: 13,
+                  color: "var(--color-primary-400)",
+                  margin: 0,
+                }}
+              >
                 We update our collection with the latest releases from global
                 sneaker culture. Premium quality guaranteed.
               </p>
@@ -174,7 +191,7 @@ const NewArrivalsPage = async () => {
               <ul
                 style={{
                   fontSize: 13,
-                  color: "#777",
+                  color: "var(--color-primary-400)",
                   lineHeight: 2,
                   listStyle: "none",
                   padding: 0,
@@ -188,7 +205,13 @@ const NewArrivalsPage = async () => {
             </div>
             <div>
               <span style={sectionLabel}>Limited Stock</span>
-              <p style={{ fontSize: 13, color: "#777", margin: 0 }}>
+              <p
+                style={{
+                  fontSize: 13,
+                  color: "var(--color-primary-400)",
+                  margin: 0,
+                }}
+              >
                 Most new arrivals are limited runs. If you see your size, grab
                 it before it&apos;s gone.
               </p>

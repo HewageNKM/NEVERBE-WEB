@@ -1,9 +1,9 @@
 # Settings for Backend (on Cloud Run).
 runConfig:
   minInstances: 0
-  maxInstances: 3
-  cpu: 1
-  memoryMiB: 1024
+  maxInstances: 5
+  cpu: 2
+  memoryMiB: 1536
 
 # Environment variables and secrets.
 env:

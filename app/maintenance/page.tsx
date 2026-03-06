@@ -12,7 +12,6 @@ export default function MaintenancePage() {
         style={{
           backgroundImage:
             "linear-gradient(var(--color-accent) 1px, transparent 1px), linear-gradient(90deg, var(--color-accent) 1px, transparent 1px)",
-          size: "40px 40px",
           backgroundSize: "60px 60px",
         }}
       />
@@ -45,7 +44,7 @@ export default function MaintenancePage() {
           initial={{ scaleX: 0 }}
           animate={{ scaleX: 1 }}
           transition={{ duration: 1.5, ease: "circOut" }}
-          className="w-full max-w-sm h-1.5 bg-zinc-900 overflow-hidden mb-12 -skew-x-12 border border-white/5"
+          className="w-full max-w-sm h-1.5 bg-surface-3 overflow-hidden mb-12 -skew-x-12 border border-white/5"
         >
           <motion.div
             className="h-full bg-accent w-full origin-left shadow-[0_0_15px_var(--color-accent)]"
@@ -80,7 +79,7 @@ export default function MaintenancePage() {
         >
           <a
             href="mailto:support@neverbe.lk"
-            className="group relative flex items-center gap-4 px-8 py-4 bg-accent text-dark rounded-full font-display font-black uppercase tracking-widest text-xs transition-all hover:shadow-hover hover:scale-105 active:scale-95"
+            className="group relative flex items-center gap-4 px-8 py-4 bg-accent text-primary rounded-full font-display font-black uppercase tracking-widest text-xs transition-all hover:shadow-hover hover:scale-105 active:scale-95"
           >
             Contact Control
             <FaArrowRightLong
@@ -94,7 +93,7 @@ export default function MaintenancePage() {
       {/* Footer Branded Legal */}
       <footer className="absolute bottom-12 w-full text-center">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-[1px] bg-accent/20" />
+          <div className="w-12 h-px bg-accent/20" />
           <p className="text-[10px] font-black uppercase text-muted tracking-[0.4em]">
             &copy; {new Date().getFullYear()} NEVERBE PERFORMANCE CLOTHING LABS
           </p>
