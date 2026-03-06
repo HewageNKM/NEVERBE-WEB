@@ -309,7 +309,7 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
             fontWeight: 900,
             textTransform: "uppercase",
             letterSpacing: "0.2em",
-            color: "#ccc",
+            color: "var(--color-primary-100)",
             margin: 0,
           }}
         >

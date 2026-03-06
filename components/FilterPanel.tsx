@@ -129,7 +129,9 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
                   border: isSelected
                     ? "2px solid var(--color-accent)"
                     : "1.5px solid var(--color-primary-100)",
-                  background: isSelected ? "rgba(46, 158, 91,0.1)" : "#f8f9fa",
+                  background: isSelected
+                    ? "rgba(46, 158, 91,0.1)"
+                    : "var(--color-bg-secondary)",
                   color: isSelected
                     ? "var(--color-primary-600)"
                     : "var(--color-primary)",

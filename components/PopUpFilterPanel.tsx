@@ -161,7 +161,8 @@ const PopUpFilterPanel: React.FC<PopUpFilterPanelProps> = ({
               fontSize: 12,
               textTransform: "uppercase",
               letterSpacing: "0.08em",
-              color: activeFilterCount > 0 ? "#e53e3e" : "#ccc",
+              color:
+                activeFilterCount > 0 ? "#e53e3e" : "var(--color-primary-100)",
               border: "1.5px solid var(--color-primary-100)",
               borderRadius: 99,
             }}
@@ -227,7 +228,9 @@ const PopUpFilterPanel: React.FC<PopUpFilterPanelProps> = ({
                     border: isActive
                       ? "2px solid var(--color-accent)"
                       : "1.5px solid var(--color-primary-100)",
-                    background: isActive ? "rgba(46, 158, 91,0.1)" : "#f8f9fa",
+                    background: isActive
+                      ? "rgba(46, 158, 91,0.1)"
+                      : "var(--color-bg-secondary)",
                     color: isActive
                       ? "var(--color-primary-600)"
                       : "var(--color-primary)",
