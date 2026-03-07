@@ -120,19 +120,17 @@ export const isVariantEligibleForPromotion = (
         (c.value === productId || c.productIds?.includes(productId)),
     );
 
-    // If no conditions for this product, check if product has any condition
-    if (productConditions.length === 0) {
-      // Check if this product is targeted at all
-      const anyProductCondition = conditions.find(
-        (c) =>
-          c.type === "SPECIFIC_PRODUCT" &&
-          (c.value === productId || c.productIds?.includes(productId)),
-      );
-      // If not targeted, promotion doesn't apply
-      return !anyProductCondition;
+    // If there ARE specific product conditions in the promotion, 
+    // but NONE of them match this productId, then this product is not eligible.
+    const anySpecificProductCondition = conditions.find(
+      (c) => c.type === "SPECIFIC_PRODUCT",
+    );
+
+    if (anySpecificProductCondition && productConditions.length === 0) {
+      return false;
     }
 
-    // Check each condition for this product
+    // Check each matching condition for this product
     for (const condition of productConditions) {
       // If no variantMode specified, treat as ALL_VARIANTS
       if (!condition.variantMode || condition.variantMode === "ALL_VARIANTS") {
@@ -150,8 +148,10 @@ export const isVariantEligibleForPromotion = (
       }
     }
 
-    // Variant not in any eligible list
-    return false;
+    // If we had product-specific conditions and none allowed this variant
+    if (productConditions.length > 0) {
+      return false;
+    }
   }
 
   // Check legacy applicableProducts targeting
