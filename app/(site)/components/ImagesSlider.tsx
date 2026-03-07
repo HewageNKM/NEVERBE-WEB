@@ -24,9 +24,9 @@ const ImagesSlider = forwardRef<CarouselRef, ImagesSliderProps>(
         {images.map((image, index) => (
           <div
             key={image.id}
-            className="w-full h-full bg-surface-2 block overflow-hidden"
+            className="w-full h-full bg-white block overflow-hidden rounded-[24px]"
           >
-            <div className="relative w-full h-[60vh] md:h-[88vh]">
+            <div className="relative w-full h-[40vh] md:h-[75vh] bg-white rounded-[24px] overflow-hidden">
               <Image
                 src={image.url}
                 alt="NEVERBE Hero"

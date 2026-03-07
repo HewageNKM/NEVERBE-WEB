@@ -94,7 +94,11 @@ const PromotionalAds: React.FC = () => {
         </Flex>
 
         {/* Navigation Arrows */}
-        <Flex align="center" gap={8} className="mr-auto flex md:ml-auto md:mr-0">
+        <Flex
+          align="center"
+          gap={8}
+          className="mr-auto flex md:ml-auto md:mr-0"
+        >
           <Button
             ref={prevRef}
             shape="circle"
@@ -154,7 +158,7 @@ const PromotionalAds: React.FC = () => {
                     styles={{ body: { padding: 0 } }}
                     className="group"
                   >
-                    <div className="relative aspect-square md:aspect-[4/5] w-full">
+                    <div className="relative aspect-video md:aspect-4/5 w-full bg-white rounded-[24px] overflow-hidden">
                       <Image
                         src={promo.url}
                         alt={promo.title}

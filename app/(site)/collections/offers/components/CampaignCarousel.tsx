@@ -80,14 +80,13 @@ const CampaignCarousel: React.FC<CampaignCarouselProps> = ({ promotions }) => {
           {promotions.map((promo: any) => (
             <SwiperSlide key={promo.id}>
               <div
-                className="group block relative bg-surface-3 overflow-hidden cursor-pointer rounded-[24px] hover:shadow-lg transition-all"
-                style={{ aspectRatio: "4/5" }}
+                className="group block relative bg-surface-3 overflow-hidden cursor-pointer rounded-[24px] hover:shadow-lg transition-all aspect-[16/9] md:aspect-[4/5]"
               >
                 <Image
                   src={promo.bannerUrl}
                   alt={promo.name}
                   fill
-                  className="object-cover transition-transform duration-700 group-hover:scale-105"
+                  className="object-contain md:object-cover transition-transform duration-700 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-primary/20 group-hover:bg-primary/10 transition-colors" />
                 <div className="absolute bottom-8 left-8 right-8">

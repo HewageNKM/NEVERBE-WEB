@@ -17,8 +17,8 @@ const Hero = ({ slides }: { slides: Slide[] }) => {
   };
 
   return (
-    <section className="w-full relative overflow-hidden">
-      <div className="w-full h-[60vh] md:h-[88vh] relative">
+    <section className="w-full px-4 pt-4 md:pt-6 relative">
+      <div className="max-w-[1800px] mx-auto w-full h-[40vh] md:h-[75vh] relative rounded-[24px] overflow-hidden shadow-lg bg-white">
         <ImagesSlider
           images={slides}
           ref={sliderRef}
@@ -27,11 +27,10 @@ const Hero = ({ slides }: { slides: Slide[] }) => {
 
         {/* Bottom gradient vignette — makes every slide cinematic */}
         <div
-          className="absolute inset-x-0 bottom-0 z-10 pointer-events-none"
+          className="absolute inset-x-0 bottom-0 z-10 pointer-events-none md:h-[45%] h-[20%]"
           style={{
-            height: "45%",
             background:
-              "linear-gradient(to top, rgba(10,10,10,0.75) 0%, rgba(10,10,10,0.35) 55%, transparent 100%)",
+              "linear-gradient(to top, rgba(10,10,10,0.4) 0%, rgba(10,10,10,0.1) 50%, transparent 100%)",
           }}
         />
 
@@ -76,14 +75,6 @@ const Hero = ({ slides }: { slides: Slide[] }) => {
           />
         </div>
       </div>
-
-      {/* Section-to-section fade transition */}
-      <div
-        className="absolute inset-x-0 bottom-0 h-10 pointer-events-none z-20"
-        style={{
-          background: "linear-gradient(to bottom, transparent, #fcfdfa 100%)",
-        }}
-      />
     </section>
   );
 };
