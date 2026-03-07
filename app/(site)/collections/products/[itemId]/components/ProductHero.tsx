@@ -76,6 +76,22 @@ const ProductHero = ({ item }: { item: Product }) => {
   const originalPrice = item.marketPrice;
   const hasActiveDiscount = item.marketPrice > item.sellingPrice;
 
+  // Calculate display-only promotional price
+  let promoDisplayPrice = finalPrice;
+  let hasPromoDiscount = false;
+
+  if (activePromo && activePromo.actions && activePromo.actions.length > 0) {
+    const action = activePromo.actions[0];
+    if (action.type === "PERCENTAGE_OFF") {
+      promoDisplayPrice =
+        Math.round((finalPrice * (1 - action.value / 100)) / 10) * 10;
+      hasPromoDiscount = true;
+    } else if (action.type === "FIXED_OFF") {
+      promoDisplayPrice = Math.max(0, finalPrice - action.value);
+      hasPromoDiscount = true;
+    }
+  }
+
   // Helper to check if a variant has a promotion indicator
   const getVariantPromotion = (variantId: string) => {
     const promo = getPromotionForProduct(item.id, variantId);
@@ -289,15 +305,39 @@ const ProductHero = ({ item }: { item: Product }) => {
               {item.name}
             </h1>
             <div className="flex items-baseline gap-6 flex-wrap">
-              <span className="text-3xl font-display font-black tracking-tighter text-primary-dark">
-                Rs. {finalPrice.toLocaleString()}
+              <span
+                className={`text-3xl font-display font-black tracking-tighter ${
+                  hasPromoDiscount ? "text-warning" : "text-primary-dark"
+                }`}
+              >
+                Rs.{" "}
+                {(hasPromoDiscount
+                  ? promoDisplayPrice
+                  : finalPrice
+                ).toLocaleString()}
               </span>
-              {hasActiveDiscount && (
+
+              {/* Show original selling price struck if promo is active */}
+              {hasPromoDiscount && (
+                <span className="text-muted line-through text-base decoration-default">
+                  Rs. {finalPrice.toLocaleString()}
+                </span>
+              )}
+
+              {/* Show market price struck if no promo OR if it's different from strike price */}
+              {!hasPromoDiscount && hasActiveDiscount && (
                 <span className="text-muted line-through text-base decoration-default">
                   Rs. {originalPrice.toLocaleString()}
                 </span>
               )}
-              {hasActiveDiscount && (
+
+              {hasPromoDiscount && (
+                <span className="bg-success text-primary-dark text-[10px] font-black px-3 py-1 uppercase tracking-widest shadow-custom">
+                  Promo Save Rs. {(finalPrice - promoDisplayPrice).toLocaleString()}
+                </span>
+              )}
+
+              {!hasPromoDiscount && hasActiveDiscount && (
                 <span className="bg-success text-primary-dark text-[10px] font-black px-3 py-1 uppercase tracking-widest shadow-custom">
                   Save Rs. {(originalPrice - finalPrice).toLocaleString()}
                 </span>
