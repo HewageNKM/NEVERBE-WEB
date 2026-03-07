@@ -83,10 +83,10 @@ export const getBrandForSitemap = async () => {
     return brands
       .filter(
         (b: any) =>
-          b.name && b.name !== "undefined" && String(b.name).trim() !== "",
+          b.label && b.label !== "undefined" && String(b.label).trim() !== "",
       )
       .map((b: any) => ({
-        url: `${baseUrl}/collections/products?brand=${encodeURIComponent(b.name)}`,
+        url: `${baseUrl}/collections/products?brand=${encodeURIComponent(b.label)}`,
         priority: 0.6,
         lastModified: new Date(),
         changeFrequency: "weekly",
@@ -105,10 +105,10 @@ export const getCategoriesForSitemap = async () => {
     return categories
       .filter(
         (c: any) =>
-          c.name && c.name !== "undefined" && String(c.name).trim() !== "",
+          c.label && c.label !== "undefined" && String(c.label).trim() !== "",
       )
       .map((c: any) => ({
-        url: `${baseUrl}/collections/products?category=${encodeURIComponent(c.name)}`,
+        url: `${baseUrl}/collections/products?category=${encodeURIComponent(c.label)}`,
         priority: 0.7,
         lastModified: new Date(),
         changeFrequency: "weekly",
