@@ -56,7 +56,7 @@ const PromotionalAds: React.FC = () => {
         justify="space-between"
         className="mb-10 gap-4 flex-col md:flex-row"
       >
-        <Flex vertical gap={4} className="text-center md:text-left">
+        <Flex vertical gap={4} className="text-left">
           <Text
             style={{
               fontSize: 11,
@@ -94,7 +94,7 @@ const PromotionalAds: React.FC = () => {
         </Flex>
 
         {/* Navigation Arrows */}
-        <Flex align="center" gap={8} className="ml-auto hidden md:flex">
+        <Flex align="center" gap={8} className="mr-auto flex md:ml-auto md:mr-0">
           <Button
             ref={prevRef}
             shape="circle"
@@ -110,7 +110,7 @@ const PromotionalAds: React.FC = () => {
         </Flex>
       </Flex>
 
-      <div className="relative pb-4">
+      <div className="relative pb-4 mt-6 md:mt-0">
         <Swiper
           modules={[Navigation]}
           onInit={(s) => {

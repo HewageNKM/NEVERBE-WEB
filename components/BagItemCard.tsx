@@ -6,6 +6,7 @@ import { AppDispatch } from "@/redux/store";
 import { removeFromBag } from "@/redux/bagSlice/bagSlice";
 import { BagItem } from "@/interfaces/BagItem";
 import { Button } from "antd";
+import { IoTrashOutline } from "react-icons/io5";
 
 interface BagItemCardProps {
   item: BagItem;
@@ -55,10 +56,9 @@ const BagItemCard = ({
             <Button
               type="link"
               onClick={() => dispatch(removeFromBag(item))}
-              className="text-[9px] font-bold uppercase tracking-wide text-muted hover:text-error underline transition-colors mt-1 p-0 h-auto"
-            >
-              Remove
-            </Button>
+              className="text-muted hover:text-error transition-colors mt-1 p-0 h-auto flex items-center justify-center"
+              icon={<IoTrashOutline size={14} />}
+            />
           )}
         </div>
         <div className="text-right shrink-0">
@@ -147,10 +147,9 @@ const BagItemCard = ({
           <Button
             type="link"
             onClick={() => dispatch(removeFromBag(item))}
-            className="text-[10px] font-bold uppercase tracking-wider text-muted hover:text-error underline transition-colors p-0 h-auto"
-          >
-            Remove
-          </Button>
+            className="text-muted hover:text-error transition-colors p-0 h-auto flex items-center justify-center"
+            icon={<IoTrashOutline size={16} />}
+          />
         </div>
       </div>
     </div>

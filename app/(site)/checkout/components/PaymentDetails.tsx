@@ -214,7 +214,7 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
         className="w-full max-w-[450px] lg:max-w-none bg-transparent! lg:bg-white! border-none! lg:border! border-default! rounded-none! md:rounded-2xl! h-full shadow-none! lg:shadow-sm! flex flex-col mx-auto"
       >
         {/* Header */}
-        <Flex vertical align="center" gap={8} className="mb-6">
+        <Flex vertical align="center" gap={8} className="mb-10">
           <Typography.Title
             level={4}
             className="uppercase tracking-tighter text-center w-full"

@@ -98,7 +98,7 @@ const PromotionBanner: React.FC<PromotionBannerProps> = ({
               initial={{ opacity: 0, scale: 0.98 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0 }}
-              className="p-5 border border-default bg-surface shadow-sm relative overflow-hidden group"
+              className="p-5 border border-default bg-surface shadow-sm relative overflow-hidden group rounded-2xl"
             >
               {/* Subtle brand glow on card */}
               <div className="absolute top-0 right-0 w-32 h-32 bg-accent/5 rounded-full blur-3xl -mr-16 -mt-16 group-hover:bg-accent/10 transition-all duration-700" />
@@ -115,7 +115,7 @@ const PromotionBanner: React.FC<PromotionBannerProps> = ({
                           ? `${displayPromotions.length} Offers Applied`
                           : displayPromotions[0].name}
                       </p>
-                      <p className="text-sm text-muted mt-1 font-medium tracking-tight truncate">
+                      <p className="text-xs text-muted mt-1 font-medium tracking-tight line-clamp-2">
                         {hasStackedPromotions
                           ? displayPromotions.map((p) => p.name).join(" + ")
                           : displayPromotions[0].message}
@@ -138,7 +138,7 @@ const PromotionBanner: React.FC<PromotionBannerProps> = ({
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="p-5 bg-surface-3 border border-default rounded-sm"
+            className="p-5 bg-surface-3 border border-default rounded-2xl"
           >
             <div className="flex items-start justify-between gap-3 mb-4">
               <div className="flex items-start gap-3">
