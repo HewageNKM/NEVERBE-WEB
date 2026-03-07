@@ -233,7 +233,7 @@ const PaymentDetails: React.FC<PaymentDetailsProps> = ({
         </Flex>
 
         {/* Promotion Banner */}
-        <div className="mb-6">
+        <div className="mb-6 mt-3">
           <PromotionBanner variant="inline" />
         </div>
 
