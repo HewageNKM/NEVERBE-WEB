@@ -7,10 +7,10 @@ const { Title, Text } = Typography;
 
 const ShippingReturnPolicyClient = () => {
   return (
-    <main className="w-full min-h-screen bg-white pt-8 md:pt-12 pb-20 px-4 md:px-8">
+    <main className="w-full min-h-screen bg-surface pt-8 md:pt-12 pb-20 px-4 md:px-8">
       <div className="max-w-content mx-auto">
         {/* Header */}
-        <div className="mb-16 md:mb-24 border-b border-primary pb-8">
+        <div className="mb-16 md:mb-24 border-b border-accent pb-8">
           <Title
             level={1}
             style={{
@@ -19,7 +19,7 @@ const ShippingReturnPolicyClient = () => {
               textTransform: "uppercase",
               letterSpacing: "-0.03em",
               lineHeight: 0.9,
-              color: "var(--color-primary-dark)",
+              color: "var(--color-primary)",
               margin: 0,
             }}
           >

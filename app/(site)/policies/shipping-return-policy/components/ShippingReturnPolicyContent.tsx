@@ -18,13 +18,13 @@ const ShippingReturnPolicyContent = () => {
           {/* Index Number */}
           <Col xs={24} md={4} lg={3}>
             <Text
-              className="group-hover:text-primary-dark transition-colors"
+              className="group-hover:text-primary transition-colors"
               style={{
                 fontSize: 12,
                 fontWeight: 800,
                 textTransform: "uppercase",
                 letterSpacing: "0.1em",
-                color: "var(--color-muted, #9ca3af)",
+                color: "var(--color-text-muted, #9ca3af)",
               }}
             >
               {String(index + 1).padStart(2, "0")}
@@ -41,7 +41,7 @@ const ShippingReturnPolicyContent = () => {
                   fontWeight: 900,
                   textTransform: "uppercase",
                   letterSpacing: "-0.02em",
-                  color: "var(--color-primary, var(--color-primary-400))",
+                  color: "var(--color-accent)",
                   marginBottom: 8,
                 }}
               >
@@ -51,7 +51,7 @@ const ShippingReturnPolicyContent = () => {
                 style={{
                   fontSize: "0.875rem",
                   fontWeight: 500,
-                  color: "var(--color-secondary, #4b5563)",
+                  color: "var(--color-text-body, #4b5563)",
                   lineHeight: 1.8,
                   whiteSpace: "pre-line",
                   margin: 0,
