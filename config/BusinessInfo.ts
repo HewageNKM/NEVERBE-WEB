@@ -1,11 +1,11 @@
 export const BusinessInfo = {
   name: "NEVERBE",
   legalName: "Neverbe (Pvt) Ltd",
-  addressLine1: "123 Fashion Avenue", // Replace with actual
-  addressLine2: "Colombo 03",
-  city: "Colombo",
+  addressLine1: "330/4/10 New Kandy Road",
+  addressLine2: "Degoda",
+  city: "Degoda",
   country: "Sri Lanka",
-  phone: "+94 70 520 8999",
+  phone: "070 520 8999 / 072 924 9999",
   email: "info@neverbe.lk",
   website: "www.neverbe.lk",
 };

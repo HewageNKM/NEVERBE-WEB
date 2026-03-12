@@ -51,58 +51,84 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
     (sum, item) => sum + item.price * item.quantity,
     0,
   );
-  const itemsDiscount = items.reduce(
-    (sum, item) => sum + (item.discount || 0),
-    0,
-  );
-  const totalDiscount = itemsDiscount + (discount || 0);
+  // The 'discount' field at the order level contains the total discount (including individual item discounts)
+  const totalDiscount = discount || 0;
   const total = subtotal - totalDiscount + (shippingFee || 0) + (fee || 0);
 
   const handleDownloadInvoice = () => {
     const doc = new jsPDF();
 
     // 1. Header & Branding
+    // Add Logo
+    const img = new (window as any).Image();
+    img.src = "/logo.png";
+    
+    // Header Section
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(22);
-    doc.text(BusinessInfo.name, 14, 20);
+    doc.setFontSize(24);
+    doc.text(BusinessInfo.name, 50, 22);
+
+    doc.setFontSize(9);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(120);
+    doc.text(BusinessInfo.legalName, 50, 27);
+    doc.text(`${BusinessInfo.addressLine1}, ${BusinessInfo.city}`, 50, 31);
+    doc.text(`${BusinessInfo.email} | ${BusinessInfo.website}`, 50, 35);
+    doc.text(`Tel: ${BusinessInfo.phone}`, 50, 39);
+
+    // Add Logo to PDF
+    try {
+      doc.addImage(img, "PNG", 14, 12, 30, 30);
+    } catch (e) {
+      console.error("Logo not found or failed to load", e);
+    }
+
+    // Invoice Title & Info
+    doc.setFont("helvetica", "black");
+    doc.setFontSize(28);
+    doc.setTextColor(46, 158, 91); // NEVERBE green
+    doc.text("INVOICE", 196, 22, { align: "right" });
 
     doc.setFontSize(10);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(0);
+    doc.text(`Order ID: #${orderId}`, 196, 30, { align: "right" });
     doc.setFont("helvetica", "normal");
     doc.setTextColor(100);
-    doc.text(BusinessInfo.legalName, 14, 26);
-    doc.text(`${BusinessInfo.addressLine1}, ${BusinessInfo.city}`, 14, 31);
-    doc.text(`${BusinessInfo.email} | ${BusinessInfo.website}`, 14, 36);
-    doc.text(`Tel: ${BusinessInfo.phone}`, 14, 41);
-
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(16);
-    doc.setTextColor(0);
-    doc.text("INVOICE", 150, 20, { align: "right" });
-
-    doc.setFontSize(10);
-    doc.setFont("helvetica", "normal");
-    doc.text(`Order ID: #${orderId}`, 150, 26, { align: "right" });
-    doc.text(`Date: ${toSafeLocaleString(createdAt)}`, 150, 31, {
+    doc.text(`Date: ${toSafeLocaleString(createdAt)}`, 196, 35, {
       align: "right",
     });
-    doc.text(`Status: ${status}`, 150, 36, { align: "right" });
+    doc.text(`Status: ${status.toUpperCase()}`, 196, 40, { align: "right" });
 
     // 2. Customer & Shipping details
-    doc.setFont("helvetica", "bold");
-    doc.text("Billed To:", 14, 52);
-    doc.setFont("helvetica", "normal");
-    doc.text(customer.name, 14, 57);
-    doc.text(customer.address || "", 14, 62);
-    doc.text(customer.city || "", 14, 67);
-    doc.text(`Phone: +${customer.phone}`, 14, 72);
+    doc.setDrawColor(230);
+    doc.line(14, 48, 196, 48); // Divider
 
     doc.setFont("helvetica", "bold");
-    doc.text("Shipped To:", 100, 52);
+    doc.setFontSize(10);
+    doc.setTextColor(0);
+    doc.text("BILLED TO", 14, 58);
+    doc.text("SHIPPED TO", 140, 58); // Pushed further right to justify between
+
     doc.setFont("helvetica", "normal");
-    doc.text(customer.shippingName || customer.name, 100, 57);
-    doc.text(customer.shippingAddress || customer.address, 100, 62);
-    doc.text(customer.shippingCity || customer.city, 100, 67);
-    doc.text(`Phone: +${customer.shippingPhone || customer.phone}`, 100, 72);
+    doc.setTextColor(80);
+    doc.setFontSize(9);
+    
+    // Billed To details
+    doc.text(customer.name, 14, 64);
+    const splitBilling = doc.splitTextToSize(customer.address || "", 80);
+    doc.text(splitBilling, 14, 69);
+    const billingCityY = 69 + (splitBilling.length * 4.5);
+    doc.text(customer.city || "", 14, billingCityY);
+    doc.text(`Phone: ${customer.phone.startsWith("+") ? "" : "+"}${customer.phone}`, 14, billingCityY + 5);
+
+    // Shipped To details
+    doc.text(customer.shippingName || customer.name, 140, 64);
+    const splitShipping = doc.splitTextToSize(customer.shippingAddress || customer.address, 55); // Adjusted width for right side
+    doc.text(splitShipping, 140, 69);
+    const shippingCityY = 69 + (splitShipping.length * 4.5);
+    doc.text(customer.shippingCity || customer.city, 140, shippingCityY);
+    doc.text(`Phone: ${((customer.shippingPhone || customer.phone).startsWith("+") ? "" : "+")}${(customer.shippingPhone || customer.phone)}`, 140, shippingCityY + 5);
 
     // 3. Items Table
     const tableColumn = [
@@ -110,7 +136,6 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
       "Size",
       "Qty",
       "Unit Price",
-      "Discount",
       "Total",
     ];
     const tableRows = items.map((item) => [
@@ -118,60 +143,82 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
       item.size || "-",
       item.quantity.toString(),
       `Rs. ${item.price.toLocaleString()}`,
-      `Rs. ${(item.discount || 0).toLocaleString()}`,
-      `Rs. ${(item.price * item.quantity - (item.discount || 0)).toLocaleString()}`,
+      `Rs. ${(item.price * item.quantity).toLocaleString()}`,
     ]);
+
+    // Calculate max Y for address block to determine table start
+    const tableStartY = Math.max(billingCityY, shippingCityY) + 15;
 
     autoTable(doc, {
       head: [tableColumn],
       body: tableRows,
-      startY: 80,
-      theme: "striped",
-      headStyles: { fillColor: [46, 158, 91] }, // NEVERBE green
-      styles: { fontSize: 9 },
+      startY: tableStartY,
+      theme: "grid",
+      headStyles: { 
+        fillColor: [46, 158, 91], 
+        textColor: [255, 255, 255],
+        fontStyle: "bold",
+        halign: "center"
+      },
+      columnStyles: {
+        2: { halign: "center" },
+        3: { halign: "right" },
+        4: { halign: "right" },
+      },
+      styles: { fontSize: 9, cellPadding: 4 },
     });
 
-    const finalY = (doc as any).lastAutoTable.finalY + 10;
+    const finalY = (doc as any).lastAutoTable.finalY + 15;
 
     // 4. Summary Totals
+    const summaryX = 140;
+    const valueX = 196;
+
     doc.setFontSize(10);
-    doc.text("Subtotal:", 130, finalY);
-    doc.text(`Rs. ${subtotal.toLocaleString()}`, 180, finalY, {
-      align: "right",
-    });
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(100);
+    
+    doc.text("Subtotal:", summaryX, finalY);
+    doc.text(`Rs. ${subtotal.toLocaleString()}`, valueX, finalY, { align: "right" });
+
+    let currentY = finalY + 7;
 
     if (totalDiscount > 0) {
       doc.setTextColor(46, 158, 91);
-      doc.text("Discount:", 130, finalY + 6);
-      doc.text(`- Rs. ${totalDiscount.toLocaleString()}`, 180, finalY + 6, {
-        align: "right",
-      });
-      doc.setTextColor(0);
+      doc.setFont("helvetica", "bold");
+      doc.text("Total Savings:", summaryX, currentY);
+      doc.text(`- Rs. ${totalDiscount.toLocaleString()}`, valueX, currentY, { align: "right" });
+      currentY += 7;
     }
 
-    doc.text("Shipping:", 130, finalY + (totalDiscount > 0 ? 12 : 6));
-    doc.text(
-      `Rs. ${(shippingFee || 0).toLocaleString()}`,
-      180,
-      finalY + (totalDiscount > 0 ? 12 : 6),
-      { align: "right" },
-    );
+    doc.setTextColor(100);
+    doc.setFont("helvetica", "normal");
+    doc.text("Shipping Fee:", summaryX, currentY);
+    doc.text(`Rs. ${(shippingFee || 0).toLocaleString()}`, valueX, currentY, { align: "right" });
+    
+    currentY += 10;
+    doc.setDrawColor(230);
+    doc.line(summaryX, currentY - 5, valueX, currentY - 5);
 
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(12);
-    const finalTotalY = finalY + (totalDiscount > 0 ? 20 : 14);
-    doc.text("Total:", 130, finalTotalY);
-    doc.text(`Rs. ${total.toLocaleString()}`, 180, finalTotalY, {
-      align: "right",
-    });
+    doc.setFontSize(14);
+    doc.setTextColor(0);
+    doc.text("Grand Total:", summaryX, currentY);
+    doc.text(`Rs. ${total.toLocaleString()}`, valueX, currentY, { align: "right" });
 
-    // 5. Footer
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(9);
+    // 5. Footer & Terms
+    const footerY = 270;
+    doc.setFontSize(8);
     doc.setTextColor(150);
-    doc.text("Thank you for shopping with NEVERBE!", 105, 280, {
-      align: "center",
-    });
+    doc.setFont("helvetica", "italic");
+    doc.text("Terms & Conditions:", 14, footerY);
+    doc.text("1. Items can be exchanged within 7 days of purchase.", 14, footerY + 5);
+    doc.text("2. Please present this invoice for any exchanges.", 14, footerY + 9);
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(10);
+    doc.setTextColor(46, 158, 91);
+    doc.text("THANK YOU FOR SHOPPING WITH NEVERBE!", 105, 285, { align: "center" });
 
     doc.save(`Neverbe-Invoice-${orderId}.pdf`);
   };
@@ -289,11 +336,6 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
                           <p className="font-display font-black text-primary-dark">
                             Rs. {item.price.toLocaleString()}
                           </p>
-                          {(item.discount || 0) > 0 && (
-                            <p className="text-[10px] font-bold text-accent uppercase tracking-tighter">
-                              - Rs. {(item.discount || 0).toLocaleString()}
-                            </p>
-                          )}
                         </div>
                       </div>
                     </div>
@@ -321,7 +363,8 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
                     </p>
                     <p>{customer.shippingCity || customer.city}</p>
                     <p className="text-accent font-black mt-3">
-                      +{customer.shippingPhone || customer.phone}
+                      {(customer.shippingPhone || customer.phone).startsWith("+") ? "" : "+"}
+                      {customer.shippingPhone || customer.phone}
                     </p>
                   </address>
                 </div>
@@ -341,7 +384,8 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
                       <p className="mt-1">{customer.address}</p>
                       <p>{customer.city}</p>
                       <p className="text-accent font-black mt-3">
-                        +{customer.phone}
+                        {customer.phone.startsWith("+") ? "" : "+"}
+                        {customer.phone}
                       </p>
                     </address>
                   </div>
