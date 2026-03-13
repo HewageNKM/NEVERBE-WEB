@@ -1,16 +1,16 @@
 "use client";
 
 import PrivacyPolicyContent from "./PrivacyPolicyContent";
-import { Typography } from "antd";
+import { Typography, Row, Col } from "antd";
 
 const { Title, Text } = Typography;
 
 const PrivacyPolicyClient = () => {
   return (
-    <main className="w-full min-h-screen bg-surface pt-8 md:pt-12 pb-20 px-4 md:px-8">
-      <div className="max-w-content mx-auto">
-        {/* Header */}
-        <div className="mb-12 md:mb-20 border-b border-accent pb-8">
+    <main className="w-full bg-surface text-primary-dark min-h-screen pt-8 md:pt-12">
+      {/* 1. HERO SECTION */}
+      <section className="w-full px-4 md:px-8 mb-20">
+        <div className="max-w-content mx-auto">
           <Title
             level={1}
             style={{
@@ -19,7 +19,7 @@ const PrivacyPolicyClient = () => {
               textTransform: "uppercase",
               letterSpacing: "-0.03em",
               lineHeight: 0.9,
-              color: "var(--color-primary)",
+              color: "var(--color-primary-dark)",
               margin: 0,
             }}
           >
@@ -39,12 +39,46 @@ const PrivacyPolicyClient = () => {
             </p>
           </div>
         </div>
+      </section>
 
-        {/* Content */}
-        <div className="max-w-5xl">
-          <PrivacyPolicyContent />
+      {/* 2. CONTENT SECTION (Split Layout) */}
+      <section className="w-full border-t border-strong px-4 md:px-8 py-16 md:py-24">
+        <div className="max-w-content mx-auto">
+          <Row gutter={[48, 48]} justify="space-between">
+            {/* Left: Sticky Headline */}
+            <Col xs={24} md={8} lg={6}>
+              <div className="sticky top-24 h-fit">
+                <Title
+                  level={2}
+                  style={{
+                    fontSize: "clamp(1.5rem, 3vw, 2.5rem)",
+                    fontWeight: 900,
+                    textTransform: "uppercase",
+                    letterSpacing: "-0.02em",
+                    marginBottom: 16,
+                  }}
+                >
+                  Legal Guidelines
+                </Title>
+                <div
+                  style={{
+                    height: 8,
+                    width: 80,
+                    background: "var(--color-primary)",
+                  }}
+                ></div>
+              </div>
+            </Col>
+
+            {/* Right: Content */}
+            <Col xs={24} md={16} lg={14}>
+              <div className="max-w-3xl">
+                <PrivacyPolicyContent />
+              </div>
+            </Col>
+          </Row>
         </div>
-      </div>
+      </section>
     </main>
   );
 };
