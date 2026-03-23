@@ -30,7 +30,7 @@ const FilterSection = ({
   onToggle: (label: string) => void;
 }) => (
   <div className="py-5 border-t border-default">
-    <h3 className="text-xs font-black uppercase tracking-widest text-primary-dark/40 mb-3">
+    <h3 className="text-xs font-black uppercase tracking-widest text-primary-dark/70 mb-3">
       {title}
     </h3>
     <div className="flex flex-wrap gap-2">
@@ -41,17 +41,15 @@ const FilterSection = ({
             key={idx}
             onClick={() => onToggle(item.label)}
             style={{
-              padding: "5px 14px",
+              padding: "5px 16px",
               borderRadius: 99,
               fontSize: 11,
               fontWeight: 700,
               border: isSelected
-                ? "1.5px solid var(--color-accent)"
-                : "1.5px solid var(--color-primary-100)",
-              background: isSelected ? "rgba(46, 158, 91,0.1)" : "transparent",
-              color: isSelected
-                ? "var(--color-primary-600)"
-                : "var(--color-primary-400)",
+                ? "1.5px solid var(--color-primary-dark)"
+                : "1.5px solid rgba(14, 51, 28, 0.2)",
+              background: isSelected ? "var(--color-primary-dark)" : "transparent",
+              color: isSelected ? "#fff" : "var(--color-primary-dark)",
               cursor: "pointer",
               transition: "all 0.2s ease",
               textTransform: "uppercase",
@@ -98,7 +96,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
 
       {/* In Stock Toggle */}
       <div className="flex justify-between items-center py-5 border-b border-default">
-        <span className="text-xs font-black text-muted uppercase tracking-widest">
+        <span className="text-xs font-black text-primary-dark/70 uppercase tracking-widest">
           In Stock Only
         </span>
         <Switch
@@ -111,7 +109,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
 
       {/* Select Size Grid */}
       <div className="py-5 border-b border-default">
-        <h3 className="text-xs font-black uppercase tracking-widest text-muted mb-3">
+        <h3 className="text-xs font-black uppercase tracking-widest text-primary-dark/70 mb-3">
           Size
         </h3>
         <div className="grid grid-cols-3 gap-1.5">
@@ -123,18 +121,16 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
                 onClick={() => onSizeToggle(size)}
                 style={{
                   padding: "8px 0",
-                  borderRadius: 10,
+                  borderRadius: 12,
                   fontSize: 12,
                   fontWeight: 800,
                   border: isSelected
-                    ? "2px solid var(--color-accent)"
-                    : "1.5px solid var(--color-primary-100)",
+                    ? "2px solid var(--color-primary-dark)"
+                    : "1.5px solid rgba(14, 51, 28, 0.15)",
                   background: isSelected
-                    ? "rgba(46, 158, 91,0.1)"
-                    : "var(--color-bg-secondary)",
-                  color: isSelected
-                    ? "var(--color-primary-600)"
-                    : "var(--color-primary)",
+                    ? "var(--color-primary-dark)"
+                    : "transparent",
+                  color: isSelected ? "#fff" : "var(--color-primary-dark)",
                   cursor: "pointer",
                   transition: "all 0.2s ease",
                   textAlign: "center",

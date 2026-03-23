@@ -23,7 +23,7 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
   className = "",
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef<HTMLElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const closeDropdown = useCallback(() => setIsOpen(false), []);
   useClickOutside(dropdownRef, closeDropdown, isOpen);
@@ -45,7 +45,7 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
           <TbArrowsSort
             size={18}
             className={`transition-colors ${
-              isOpen ? "text-accent" : "text-primary-dark group-hover:text-accent"
+              isOpen ? "text-primary-dark" : "text-primary-dark group-hover:text-primary-dark/70"
             }`}
           />
         }
@@ -75,7 +75,7 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
                   <span
                     className={`text-sm uppercase tracking-tight transition-colors ${
                       isSelected
-                        ? "text-accent font-display font-black tracking-tighter"
+                        ? "text-primary-dark font-display font-black tracking-tighter"
                         : "text-muted font-bold group-hover:text-primary-dark"
                     }`}
                   >
@@ -84,7 +84,7 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
 
                   {/* Performance indicator for active selection */}
                   {isSelected && (
-                    <div className="w-1.5 h-1.5 bg-accent rounded-full shadow-[0_0_8px_var(--color-accent)] animate-pulse" />
+                    <div className="w-1.5 h-1.5 bg-primary-dark rounded-full shadow-[0_0_8px_rgba(14,51,28,0.3)] animate-pulse" />
                   )}
                 </li>
               );

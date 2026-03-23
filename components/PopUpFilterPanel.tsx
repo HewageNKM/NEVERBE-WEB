@@ -31,7 +31,7 @@ const FilterList = ({
   onToggle: (label: string) => void;
 }) => (
   <div className="py-6 border-t border-default">
-    <h3 className="text-xs font-black uppercase tracking-widest text-muted mb-4">
+    <h3 className="text-xs font-black uppercase tracking-widest text-primary-dark/70 mb-4">
       {title}
     </h3>
     <div className="flex flex-wrap gap-2">
@@ -47,12 +47,10 @@ const FilterList = ({
               fontSize: 12,
               fontWeight: 700,
               border: isActive
-                ? "1.5px solid var(--color-accent)"
-                : "1.5px solid var(--color-primary-100)",
-              background: isActive ? "rgba(46, 158, 91,0.1)" : "transparent",
-              color: isActive
-                ? "var(--color-primary-600)"
-                : "var(--color-primary-400)",
+                ? "1.5px solid var(--color-primary-dark)"
+                : "1.5px solid rgba(14, 51, 28, 0.2)",
+              background: isActive ? "var(--color-primary-dark)" : "transparent",
+              color: isActive ? "#fff" : "var(--color-primary-dark)",
               cursor: "pointer",
               transition: "all 0.2s ease",
               textTransform: "uppercase",
@@ -96,7 +94,7 @@ const PopUpFilterPanel: React.FC<PopUpFilterPanelProps> = ({
       styles={{
         header: {
           background: "#fff",
-          borderBottom: "1px solid var(--color-primary-100)",
+          borderBottom: "1px solid rgba(14, 51, 28, 0.1)",
           padding: "20px 24px",
         },
         body: {
@@ -107,7 +105,7 @@ const PopUpFilterPanel: React.FC<PopUpFilterPanelProps> = ({
         },
         footer: {
           background: "#fff",
-          borderTop: "1px solid var(--color-primary-100)",
+          borderTop: "1px solid rgba(14, 51, 28, 0.1)",
           padding: "16px 24px",
         },
         content: { borderRadius: "24px 0 0 24px", overflow: "hidden" },
@@ -162,8 +160,9 @@ const PopUpFilterPanel: React.FC<PopUpFilterPanelProps> = ({
               textTransform: "uppercase",
               letterSpacing: "0.08em",
               color:
-                activeFilterCount > 0 ? "#e53e3e" : "var(--color-primary-100)",
-              border: "1.5px solid var(--color-primary-100)",
+                activeFilterCount > 0 ? "#e53e3e" : "var(--color-primary-dark)",
+              opacity: activeFilterCount > 0 ? 1 : 0.3,
+              border: "1.5px solid rgba(14, 51, 28, 0.2)",
               borderRadius: 99,
             }}
           >
@@ -213,7 +212,7 @@ const PopUpFilterPanel: React.FC<PopUpFilterPanelProps> = ({
 
         {/* Sizes */}
         <div className="py-6 border-b border-default">
-          <h3 className="text-xs font-black uppercase tracking-widest text-muted mb-4">
+          <h3 className="text-xs font-black uppercase tracking-widest text-primary-dark/70 mb-4">
             Size
           </h3>
           <div className="grid grid-cols-4 gap-2">
@@ -226,14 +225,12 @@ const PopUpFilterPanel: React.FC<PopUpFilterPanelProps> = ({
                   style={{
                     aspectRatio: "1",
                     border: isActive
-                      ? "2px solid var(--color-accent)"
-                      : "1.5px solid var(--color-primary-100)",
+                      ? "2px solid var(--color-primary-dark)"
+                      : "1.5px solid rgba(14, 51, 28, 0.15)",
                     background: isActive
-                      ? "rgba(46, 158, 91,0.1)"
-                      : "var(--color-bg-secondary)",
-                    color: isActive
-                      ? "var(--color-primary-600)"
-                      : "var(--color-primary)",
+                      ? "var(--color-primary-dark)"
+                      : "transparent",
+                    color: isActive ? "#fff" : "var(--color-primary-dark)",
                     fontWeight: 800,
                     fontSize: 13,
                     borderRadius: 12,
