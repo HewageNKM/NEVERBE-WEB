@@ -1,6 +1,6 @@
 export const revalidate = 3600;
 
-import CollectionProducts from "@/app/(site)/collections/components/CollectionProducts";
+import Products from "@/app/(site)/collections/products/components/Products";
 import { getNewArrivals } from "@/actions/productAction";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -54,7 +54,7 @@ export const metadata: Metadata = {
 };
 
 const NewArrivalsPage = async () => {
-  const { total, dataList } = await getNewArrivals(20);
+  const { total, dataList } = await getNewArrivals(30);
 
   const structuredData = {
     "@context": "https://schema.org",
@@ -157,12 +157,10 @@ const NewArrivalsPage = async () => {
         </p>
       </div>
 
-      <CollectionProducts
-        initialItems={dataList}
-        collectionType="new-arrivals"
-        tagName="New Arrivals"
-        total={total}
-      />
+      {/* Product Grid */}
+      <div className="max-w-content mx-auto px-4 md:px-12 pb-20">
+        <Products items={dataList} apiEndpoint="/web/products/new" />
+      </div>
 
       {/* SEO Footer */}
       <div

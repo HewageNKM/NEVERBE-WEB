@@ -9,7 +9,13 @@ import PopUpFilterPanel from "@/components/PopUpFilterPanel";
 import { useProductListing } from "@/hooks/useProductListing";
 import ProductGrid from "@/components/ProductGrid";
 
-const Products = ({ items }: { items: Product[] }) => {
+const Products = ({
+  items,
+  apiEndpoint = "/web/products",
+}: {
+  items: Product[];
+  apiEndpoint?: string;
+}) => {
   // Use the new Unified Hook
   // We don't initialize internal state from 'items' because the hook fetches fresh data
   // but we could pass 'items' as initial data if we wanted SSR hydration support primarily.
@@ -29,7 +35,7 @@ const Products = ({ items }: { items: Product[] }) => {
     toggleSize,
     resetFilters,
   } = useProductListing({
-    apiEndpoint: "/web/products",
+    apiEndpoint,
   });
 
   // Local state for mobile drawer only (UI state, not data state)

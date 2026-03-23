@@ -67,22 +67,28 @@ const ItemCard = ({
   return (
     <Badge.Ribbon
       text={
-        outOfStocks
-          ? "Sold Out"
-          : activePromo
-            ? activePromo.type === "BOGO"
-              ? "Buy 1 Get 1"
-              : "Special Offer"
-            : item.discount > 0
-              ? `${item.discount}% Off`
-              : null
+        item.isRestockingSoon
+          ? "Restock Soon"
+          : outOfStocks
+            ? "Sold Out"
+            : item.isNewArrival
+              ? "New Arrival"
+              : activePromo
+                ? activePromo.type === "BOGO"
+                  ? "Buy 1 Get 1"
+                  : "Special Offer"
+                : item.discount > 0
+                  ? `${item.discount}% Off`
+                  : null
       }
       color={
-        outOfStocks
-          ? "var(--color-error)"
-          : activePromo
-            ? "var(--color-warning)"
-            : "var(--color-accent)"
+        item.isRestockingSoon
+          ? "var(--color-warning)"
+          : outOfStocks
+            ? "var(--color-error)"
+            : activePromo
+              ? "var(--color-warning)"
+              : "var(--color-accent)"
       }
       style={{
         padding: "0 10px",
@@ -90,10 +96,18 @@ const ItemCard = ({
         fontWeight: 800,
         textTransform: "uppercase",
         color:
-          activePromo && !outOfStocks ? "var(--color-primary-dark)" : "#fff",
+          (activePromo || item.isRestockingSoon) && !outOfStocks
+            ? "var(--color-primary-dark)"
+            : "#fff",
         letterSpacing: "0.05em",
         display:
-          outOfStocks || activePromo || item.discount > 0 ? undefined : "none",
+          item.isRestockingSoon ||
+          outOfStocks ||
+          item.isNewArrival ||
+          activePromo ||
+          item.discount > 0
+            ? undefined
+            : "none",
       }}
     >
       <Card

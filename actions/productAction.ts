@@ -13,7 +13,7 @@ export const getProducts = async (params: any = {}) => {
 
 export const getRecentItems = async (limit: number = 10) => {
   try {
-    const res = await axiosInstance.get(`/web/products?sort=new&size=${limit}`);
+    const res = await axiosInstance.get(`/web/products/new?size=${limit}`);
     return res.data.dataList || [];
   } catch (error) {
     console.error("Failed to fetch recent items:", error);
@@ -46,7 +46,7 @@ export const getSimilarItems = async (id: string, limit: number = 4) => {
 
 export const getNewArrivals = async (limit: number = 10) => {
   try {
-    const res = await axiosInstance.get(`/web/products?sort=new&size=${limit}`);
+    const res = await axiosInstance.get(`/web/products/new?size=${limit}`);
     return res.data;
   } catch (error) {
     console.error("Failed to fetch new arrivals:", error);
@@ -67,7 +67,7 @@ export const getDealsProducts = async (params: any = {}) => {
 
 export const getHotProducts = async () => {
   try {
-    const res = await axiosInstance.get("/web/products?sort=new");
+    const res = await axiosInstance.get("/web/products/hot");
     return res.data.dataList || [];
   } catch (error) {
     console.error("Failed to fetch hot products:", error);
