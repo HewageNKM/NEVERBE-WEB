@@ -16,7 +16,7 @@ import Link from "next/link";
 import { Button } from "antd";
 import { Order } from "@/interfaces/Order";
 import { BusinessInfo } from "@/config/BusinessInfo";
-import axios from "axios";
+import { axiosInstance } from "@/actions/axiosInstance";
 
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
@@ -59,8 +59,8 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
       if (trackingNumber) {
         setLoadingTracking(true);
         try {
-          const res = await axios.get(
-            `/api/v1/web/orders/${order.orderId}/tracking`,
+          const res = await axiosInstance.get(
+            `/web/orders/${order.orderId}/tracking`,
           );
           setTrackingHistory(res.data.data.history || []);
         } catch (error) {
