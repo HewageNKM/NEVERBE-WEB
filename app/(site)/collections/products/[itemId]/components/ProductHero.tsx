@@ -228,7 +228,7 @@ const ProductHero = ({ item }: { item: Product }) => {
   };
 
   return (
-    <section className="w-full max-w-[1600px] mx-auto px-4 md:px-10 lg:px-16 py-2 md:py-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-20">
+    <section className="w-full max-w-[1800px] mx-auto px-4 md:px-10 lg:px-16 2xl:px-24 py-2 md:py-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 xl:gap-24 2xl:gap-32">
       {/* --- LEFT COLUMN: IMAGES --- */}
       <div className="lg:col-span-7 flex flex-col gap-4">
         <div className="relative aspect-square bg-surface-2 rounded-2xl overflow-hidden group">
@@ -284,7 +284,7 @@ const ProductHero = ({ item }: { item: Product }) => {
 
       {/* --- RIGHT COLUMN: DETAILS --- */}
       <div className="lg:col-span-5 relative lg:pl-4 xl:pl-8">
-        <div className="lg:sticky lg:top-24 flex flex-col gap-16">
+        <div className="lg:sticky lg:top-32 flex flex-col gap-12 xl:gap-16">
           {/* Promotion Banner - Display Only */}
           {activePromo && (
             <div className="bg-warning text-dark p-4 flex items-center gap-3 shadow-custom">
