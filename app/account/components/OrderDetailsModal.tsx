@@ -16,6 +16,7 @@ import Link from "next/link";
 import { Button } from "antd";
 import { Order } from "@/interfaces/Order";
 import { BusinessInfo } from "@/config/BusinessInfo";
+import axios from "axios";
 
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
@@ -44,7 +45,33 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
     shippingFee,
     fee,
     discount,
+    trackingNumber,
   } = order;
+
+  // New Tracking State
+  const [trackingHistory, setTrackingHistory] = React.useState<
+    { date: string; status: string }[]
+  >([]);
+  const [loadingTracking, setLoadingTracking] = React.useState(false);
+
+  React.useEffect(() => {
+    const fetchTracking = async () => {
+      if (trackingNumber) {
+        setLoadingTracking(true);
+        try {
+          const res = await axios.get(
+            `/api/v1/web/orders/${order.orderId}/tracking`,
+          );
+          setTrackingHistory(res.data.data.history || []);
+        } catch (error) {
+          console.error("Error fetching tracking", error);
+        } finally {
+          setLoadingTracking(false);
+        }
+      }
+    };
+    fetchTracking();
+  }, [order?.orderId, trackingNumber]);
 
   // Calculation Logic
   const subtotal = items.reduce(
@@ -289,6 +316,58 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
                 </Button>
               </div>
             </div>
+
+            {/* TRACKING TIMELINE */}
+            {trackingNumber && (
+              <div className="bg-surface-2 p-6 md:p-8 rounded-4xl border border-default">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-1.5 h-6 bg-accent rounded-full" />
+                  <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-primary-dark">
+                    Shipping Progress (WB #{trackingNumber})
+                  </h3>
+                </div>
+
+                {loadingTracking ? (
+                  <div className="flex justify-center py-6">
+                    <div className="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin" />
+                  </div>
+                ) : trackingHistory.length > 0 ? (
+                  <div className="relative pl-8 space-y-8 before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-0.5 before:bg-default/60">
+                    {trackingHistory.map((item, idx) => (
+                      <div key={idx} className="relative group">
+                        <div
+                          className={`absolute -left-[21px] top-1.5 w-2.5 h-2.5 rounded-full border-2 border-white shadow-sm transition-transform group-hover:scale-125 ${idx === 0 ? "bg-accent scale-125" : "bg-muted"}`}
+                        />
+                        <div className="flex flex-col gap-1">
+                          <p
+                            className={`text-sm font-bold uppercase tracking-tighter transition-colors ${idx === 0 ? "text-accent" : "text-primary-dark/60"}`}
+                          >
+                            {item.status}
+                          </p>
+                          <p className="text-[10px] text-muted font-bold uppercase tracking-widest">
+                            {item.date}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-4">
+                    <p className="text-xs text-muted font-bold uppercase tracking-widest mb-4">
+                      Live tracking data is being updated or currently unavailable.
+                    </p>
+                    <a 
+                      href={`https://domex.lk/Order-Details.php?wbno=${trackingNumber}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-4 py-2 bg-accent/10 text-accent rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-accent/20 transition-colors"
+                    >
+                      View on Domex Site
+                    </a>
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* PRODUCT LIST */}
             <div>

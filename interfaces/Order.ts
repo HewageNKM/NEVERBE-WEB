@@ -25,6 +25,9 @@ export interface Order {
   appliedPromotionId?: string;
   appliedPromotionIds?: string[]; // All stacked promotion IDs
 
+  trackingNumber?: string;
+  courier?: string; // e.g. "Domex"
+
   createdAt: string | Date;
   updatedAt: string | Date;
 }
