@@ -231,7 +231,7 @@ const ProductHero = ({ item }: { item: Product }) => {
     <section className="w-full max-w-[1600px] mx-auto px-4 md:px-10 lg:px-16 py-2 md:py-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-20">
       {/* --- LEFT COLUMN: IMAGES --- */}
       <div className="lg:col-span-7 flex flex-col gap-4">
-        <div className="relative aspect-square bg-surface-2 rounded-sm overflow-hidden group">
+        <div className="relative aspect-square bg-surface-2 rounded-2xl overflow-hidden group">
           <AnimatePresence mode="wait">
             <motion.div
               key={selectedImage.url}
@@ -253,7 +253,7 @@ const ProductHero = ({ item }: { item: Product }) => {
 
           {/* Discount Badge - Branded */}
           {item.discount > 0 && (
-            <div className="absolute top-4 left-4 bg-warning text-dark px-4 py-2 font-display font-black text-xs uppercase tracking-tighter shadow-custom">
+            <div className="absolute top-4 left-4 bg-warning text-dark px-4 py-1.5 rounded-full font-display font-black text-[10px] uppercase tracking-tighter shadow-custom">
               {item.discount}% Off
             </div>
           )}
@@ -265,7 +265,7 @@ const ProductHero = ({ item }: { item: Product }) => {
               type="text"
               key={idx}
               onMouseEnter={() => setSelectedImage(img)}
-              className={`relative aspect-square bg-surface-2 rounded-sm overflow-hidden border-2 transition-all p-0 h-auto ${
+              className={`relative aspect-square bg-surface-2 rounded-xl overflow-hidden border-2 transition-all p-0 h-auto ${
                 selectedImage.url === img.url
                   ? "border-primary hover:border-primary focus:border-primary"
                   : "border-transparent opacity-70 hover:opacity-100 focus:opacity-100"
@@ -332,13 +332,13 @@ const ProductHero = ({ item }: { item: Product }) => {
               )}
 
               {hasPromoDiscount && (
-                <span className="bg-success text-primary-dark text-[10px] font-black px-3 py-1 uppercase tracking-widest shadow-custom">
+                <span className="bg-success text-primary-dark text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest shadow-custom">
                   Promo Save Rs. {(finalPrice - promoDisplayPrice).toLocaleString()}
                 </span>
               )}
 
               {!hasPromoDiscount && hasActiveDiscount && (
-                <span className="bg-success text-primary-dark text-[10px] font-black px-3 py-1 uppercase tracking-widest shadow-custom">
+                <span className="bg-success text-primary-dark text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest shadow-custom">
                   Save Rs. {(originalPrice - finalPrice).toLocaleString()}
                 </span>
               )}
@@ -389,7 +389,7 @@ const ProductHero = ({ item }: { item: Product }) => {
                       setSelectedSize("");
                     }}
                     disabled={false} // Removed isVariantOutOfStock to allow selection
-                    className={`relative w-20 h-20 bg-surface-2 rounded-md overflow-hidden border-2 transition-all p-0 ${
+                    className={`relative w-20 h-20 bg-surface-2 rounded-xl overflow-hidden border-2 transition-all p-0 ${
                       selectedVariant.variantId === v.variantId
                         ? "border-accent shadow-[0_0_0_2px_var(--color-green-500)]"
                         : "border-transparent opacity-60 hover:opacity-100 focus:opacity-100 hover:bg-surface-2 focus:bg-surface-2"

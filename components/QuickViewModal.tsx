@@ -319,7 +319,7 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
                             setSelectedSize("");
                           }}
                           disabled={isVariantOutOfStock}
-                          className={`relative w-12 h-12 sm:w-14 sm:h-14 shrink-0 bg-surface transition-all rounded-lg p-1 ${
+                          className={`relative w-12 h-12 sm:w-14 sm:h-14 shrink-0 bg-surface transition-all rounded-xl p-1 ${
                             selectedVariant?.variantId === v.variantId
                               ? "border-accent border-2 shadow-custom scale-105 z-10 hover:bg-surface focus:bg-surface"
                               : "border border-default hover:border-accent opacity-60 hover:opacity-100 hover:bg-surface focus:bg-surface"
@@ -432,14 +432,14 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
                   )}
 
                   {hasPromoDiscount && (
-                    <span className="bg-success text-primary-dark text-[9px] sm:text-[10px] font-black px-2 sm:px-3 py-1 uppercase tracking-widest shadow-custom">
+                    <span className="bg-success text-primary-dark text-[9px] sm:text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest shadow-custom">
                       Promo Save Rs.{" "}
                       {(finalPrice - promoDisplayPrice).toLocaleString()}
                     </span>
                   )}
 
                   {!hasPromoDiscount && hasActiveDiscount && (
-                    <span className="bg-success text-primary-dark text-[9px] sm:text-[10px] font-black px-2 sm:px-3 py-1 uppercase tracking-widest shadow-custom">
+                    <span className="bg-success text-primary-dark text-[9px] sm:text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest shadow-custom">
                       Save Rs. {(originalPrice - finalPrice).toLocaleString()}
                     </span>
                   )}
