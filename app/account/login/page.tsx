@@ -10,6 +10,8 @@ import {
 } from "firebase/auth";
 import { useRouter, useSearchParams } from "next/navigation";
 import { auth } from "@/firebase/firebaseClient";
+import { sendPasswordResetLinkAction } from "@/actions/authAction";
+import { Modal } from "antd";
 import Image from "next/image";
 import Link from "next/link";
 import { Logo } from "@/assets/images";
@@ -24,6 +26,9 @@ const AuthPage = () => {
   const searchParams = useSearchParams();
   const redirectUrl = searchParams.get("redirect") || "/account";
   const [loading, setLoading] = useState(false);
+  const [resetModalVisible, setResetModalVisible] = useState(false);
+  const [resetEmail, setResetEmail] = useState("");
+  const [resetLoading, setResetLoading] = useState(false);
 
   const handleGoogleLogin = async () => {
     setLoading(true);
@@ -49,6 +54,23 @@ const AuthPage = () => {
       toast.error("Invalid email or password.");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleResetPassword = async () => {
+    if (!resetEmail) {
+      toast.error("Please enter your email address.");
+      return;
+    }
+    setResetLoading(true);
+    try {
+      await sendPasswordResetLinkAction(resetEmail);
+      toast.success("Reset link sent to your email.");
+      setResetModalVisible(false);
+    } catch (err: any) {
+      toast.error(err.message || "Failed to send reset link.");
+    } finally {
+      setResetLoading(false);
     }
   };
 
@@ -126,6 +148,7 @@ const AuthPage = () => {
           <div className="flex justify-end pr-2">
             <Button
               type="link"
+              onClick={() => setResetModalVisible(true)}
               className="text-[11px] font-bold uppercase tracking-widest text-muted hover:text-primary-dark transition-colors mt-2 p-0 h-auto"
             >
               Forgot Password?
@@ -190,6 +213,40 @@ const AuthPage = () => {
           Return to Store
         </Link>
       </div>
+
+      <Modal
+        title={
+          <Title level={4} className="uppercase font-black tracking-tighter mb-0!">
+            Reset Password
+          </Title>
+        }
+        open={resetModalVisible}
+        onCancel={() => setResetModalVisible(false)}
+        footer={null}
+        centered
+        className="reset-modal"
+      >
+        <div className="py-4 space-y-6">
+          <Text className="text-muted text-sm font-medium">
+            Enter your email address and we'll send you a link to reset your password.
+          </Text>
+          <Input
+            size="large"
+            placeholder="Email Address"
+            value={resetEmail}
+            onChange={(e) => setResetEmail(e.target.value)}
+            className="w-full bg-surface-2 hover:bg-surface-2 focus:bg-white border-default focus:border-accent px-4 py-3 text-sm font-bold rounded-xl transition-all"
+          />
+          <Button
+            onClick={handleResetPassword}
+            loading={resetLoading}
+            type="primary"
+            className="w-full bg-accent text-white py-6 rounded-full font-display font-black uppercase tracking-widest text-xs shadow-md hover:bg-accent-hover border-none"
+          >
+            Send Reset Link
+          </Button>
+        </div>
+      </Modal>
     </div>
   );
 };
