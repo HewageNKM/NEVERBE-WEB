@@ -1,4 +1,3 @@
-"use client";
 import React from "react";
 
 const ProductFAQ = () => {
@@ -16,16 +15,18 @@ const ProductFAQ = () => {
             </h4>
             <p className="text-sm text-muted leading-relaxed">
               We offer Cash on Delivery across all 25 districts in Sri Lanka.
-              Pay only when your gear arrives at your door.
+              Pay only when your shoes, clothing, or accessories arrive at your
+              door.
             </p>
           </div>
           <div className="space-y-4">
             <h4 className="text-sm font-display font-black uppercase tracking-tight text-primary-dark">
-              Premium Artisanal Craftsmanship
+              Premium Quality Guaranteed
             </h4>
             <p className="text-sm text-muted leading-relaxed">
-              Our footwear is built using the Masterpiece Quality standard,
-              delivering the perfect balance of iconic design and comfort.
+              Every product — from sneakers and apparel to activewear — is built
+              to deliver the perfect balance of iconic design, comfort, and
+              durability.
             </p>
           </div>
           <div className="space-y-4">
@@ -33,8 +34,8 @@ const ProductFAQ = () => {
               7-Day Size Exchange
             </h4>
             <p className="text-sm text-muted leading-relaxed">
-              Not the perfect fit? We accept size exchanges within 7 days of
-              delivery to ensure you're performing at your best.
+              Not the perfect fit? We accept free size exchanges within 7 days
+              of delivery on all shoes and clothing items.
             </p>
           </div>
         </div>

@@ -19,7 +19,7 @@ import { Flex } from "antd";
 export const metadata: Metadata = {
   title: {
     default:
-      "NEVERBE — Shoes in Sri Lanka | Buy Sneakers, Men's & Women's Footwear",
+      "NEVERBE — Shoes & Clothing in Sri Lanka | Sneakers, Apparel & Fashion Online",
     template: "%s | NEVERBE",
   },
   metadataBase: new URL("https://neverbe.lk"),
@@ -27,25 +27,29 @@ export const metadata: Metadata = {
     canonical: "https://neverbe.lk",
   },
   description:
-    "NEVERBE — The #1 Online Shoe Store in Sri Lanka. Shop Sneakers, Running Shoes, Casual Footwear, and Master Copies. Cash on Delivery island-wide.",
+    "NEVERBE — Sri Lanka's #1 Online Store for Shoes, Clothing & Apparel. Shop Sneakers, T-Shirts, Activewear, Sportswear & Fashion Accessories. Island-wide Cash on Delivery.",
   applicationName: "NEVERBE",
   keywords: [
-    "shoes",
     "shoes sri lanka",
-    "buy shoes",
-    "footwear sri lanka",
+    "clothing sri lanka",
+    "buy shoes online sri lanka",
+    "apparel online sri lanka",
+    "sneakers sri lanka",
+    "men's t-shirts sri lanka",
+    "women's clothing sri lanka",
+    "running shoes sri lanka",
+    "activewear sri lanka",
     "online shoe store",
-    "mens shoes",
-    "womens shoes",
-    "sneakers",
-    "running shoes",
+    "online fashion store sri lanka",
+    "gym wear sri lanka",
+    "sportswear sri lanka",
     "premium sneakers",
     "NEVERBE",
   ],
   openGraph: {
-    title: "NEVERBE — Shoes in Sri Lanka | Buy Sneakers & Footwear Online",
+    title: "NEVERBE — Shoes & Clothing in Sri Lanka | Sneakers, Apparel & Fashion",
     description:
-      "Looking for shoes? NEVERBE has them all — sports, casual, party, and office wear. Best prices in Sri Lanka with island-wide delivery.",
+      "Sri Lanka's top shop for shoes, clothing & fashion. Sneakers, activewear, t-shirts, sportswear & more. Best prices with island-wide Cash on Delivery.",
     url: "https://neverbe.lk",
     siteName: "NEVERBE",
     type: "website",
@@ -53,7 +57,7 @@ export const metadata: Metadata = {
     images: [
       {
         url: "https://neverbe.lk/logo-og.png",
-        alt: "NEVERBE - Largest Shoe Collection in Sri Lanka",
+        alt: "NEVERBE - Shoes & Clothing in Sri Lanka",
         width: 1200,
         height: 630,
       },
@@ -110,16 +114,16 @@ const Page = async () => {
         },
       },
       {
-        "@type": "ShoeStore",
+        "@type": ["ShoeStore", "ClothingStore"],
         "@id": "https://neverbe.lk/#shoestore",
-        name: "NEVERBE - Online Shoe Store Sri Lanka",
+        name: "NEVERBE - Online Shoe & Clothing Store Sri Lanka",
         brand: "NEVERBE",
         legalName: "NEVERBE",
-        alternateName: "NEVERBE Shoe Store",
+        alternateName: "NEVERBE Shoe & Clothing Store",
         url: "https://neverbe.lk",
         image: "https://neverbe.lk/logo-og.png",
         description:
-          "Buy shoes online in Sri Lanka. Sneakers, running shoes, slides, sandals & casual footwear at best prices. Cash on Delivery available.",
+          "Buy shoes, clothing & apparel online in Sri Lanka. Sneakers, t-shirts, activewear, sportswear & fashion accessories at best prices. Cash on Delivery available.",
         telephone: "+94 70 520 8999",
         email: "info@neverbe.lk",
         address: {
@@ -153,12 +157,16 @@ const Page = async () => {
         },
         hasOfferCatalog: {
           "@type": "OfferCatalog",
-          name: "NEVERBE Shoe Collection",
+          name: "NEVERBE Collection",
           itemListElement: [
             { "@type": "OfferCatalog", name: "Sneakers" },
             { "@type": "OfferCatalog", name: "Running Shoes" },
             { "@type": "OfferCatalog", name: "Slides & Sandals" },
             { "@type": "OfferCatalog", name: "Boots" },
+            { "@type": "OfferCatalog", name: "Men's Clothing" },
+            { "@type": "OfferCatalog", name: "Women's Clothing" },
+            { "@type": "OfferCatalog", name: "Activewear & Sportswear" },
+            { "@type": "OfferCatalog", name: "Gym Wear" },
           ],
         },
       },
@@ -234,6 +242,36 @@ const Page = async () => {
             acceptedAnswer: {
               "@type": "Answer",
               text: "NEVERBE accepts Cash on Delivery, credit/debit cards via PayHere, and bank transfers. All transactions are secure.",
+            },
+          },
+        ],
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://neverbe.lk/#faq-apparel",
+        mainEntity: [
+          {
+            "@type": "Question",
+            name: "Does NEVERBE sell clothing and apparel in Sri Lanka?",
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: "Yes! NEVERBE offers a full range of men's and women's clothing, activewear, sportswear, t-shirts, hoodies, joggers, and fashion accessories alongside our footwear collection. All items ship island-wide with Cash on Delivery available.",
+            },
+          },
+          {
+            "@type": "Question",
+            name: "What clothing and apparel brands are available at NEVERBE?",
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: "NEVERBE carries premium quality clothing inspired by top global brands. Our collection includes t-shirts, hoodies, joggers, gym wear, and casual apparel for men and women at affordable prices.",
+            },
+          },
+          {
+            "@type": "Question",
+            name: "Can I buy gym wear and activewear online in Sri Lanka?",
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: "Absolutely! NEVERBE is your go-to destination for gym wear and activewear in Sri Lanka. We offer a wide range of workout clothing, sports apparel, and performance wear with island-wide delivery and Cash on Delivery.",
             },
           },
         ],

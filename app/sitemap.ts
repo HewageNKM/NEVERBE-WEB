@@ -5,6 +5,7 @@ import {
   getBrandForSitemap,
 } from "@/actions/productAction";
 import { getCombosForSitemap } from "@/actions/promotionAction";
+import { CATEGORY_MAPPINGS } from "@/utils/categorySlug";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://neverbe.lk";
@@ -26,6 +27,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     lastModified: new Date(),
     changeFrequency: "weekly" as const,
     priority: route === "" ? 1.0 : 0.8,
+  }));
+
+  // Clean category pages (SEO-friendly URLs)
+  const categoryPages = CATEGORY_MAPPINGS.map((c) => ({
+    url: `${baseUrl}/collections/${c.slug}`,
+    lastModified: new Date(),
+    changeFrequency: "weekly" as const,
+    priority: 0.75,
   }));
 
   try {
@@ -78,6 +87,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     return [
       ...staticPages,
+      ...categoryPages,
       ...processCatalogUrls(categories),
       ...processCatalogUrls(brands),
       ...processDynamicUrls(products),
@@ -88,6 +98,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       "Failed to generate dynamic sitemap, falling back to static:",
       error,
     );
-    return staticPages;
+    return [...staticPages, ...categoryPages];
   }
 }

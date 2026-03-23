@@ -24,20 +24,23 @@ const sectionLabel: React.CSSProperties = {
 export const metadata: Metadata = {
   title: "Exclusive Deals, Coupons & Promotions | NEVERBE Sri Lanka",
   description:
-    "Unlock exclusive promotions, seasonal coupons and markdown deals at NEVERBE. Best discounts on sneakers & apparel in Sri Lanka. Cash on Delivery available.",
+    "Unlock exclusive promotions, seasonal coupons and markdown deals at NEVERBE. Best discounts on sneakers, clothing & apparel in Sri Lanka. Cash on Delivery available.",
   alternates: { canonical: "https://neverbe.lk/collections/offers" },
   keywords: [
     "shoe deals sri lanka",
+    "clothing deals sri lanka",
     "discount sneakers colombo",
+    "apparel sale sri lanka",
     "coupon codes sri lanka",
     "neverbe promotions",
     "footwear sale sri lanka",
+    "clothing sale sri lanka",
     "markdown deals shoes",
   ],
   openGraph: {
     title: "Deals & Promotions | NEVERBE Sri Lanka",
     description:
-      "Exclusive promotions, coupons and markdown deals on sneakers & apparel in Sri Lanka.",
+      "Exclusive promotions, coupons and markdown deals on sneakers, clothing & apparel in Sri Lanka.",
     url: "https://neverbe.lk/collections/offers",
     type: "website",
     siteName: "NEVERBE",
@@ -47,14 +50,14 @@ export const metadata: Metadata = {
         url: "https://neverbe.lk/deals-og.jpg",
         width: 1200,
         height: 630,
-        alt: "NEVERBE Offers & Deals",
+        alt: "NEVERBE Offers & Deals - Shoes & Clothing",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Deals & Promotions | NEVERBE",
-    description: "Exclusive coupons & markdown deals on sneakers in Sri Lanka.",
+    description: "Exclusive coupons & markdown deals on sneakers & clothing in Sri Lanka.",
     images: ["https://neverbe.lk/deals-og.jpg"],
   },
 };

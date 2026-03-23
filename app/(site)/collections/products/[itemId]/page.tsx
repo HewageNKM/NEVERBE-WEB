@@ -34,25 +34,26 @@ export async function generateMetadata(context: {
   }
 
   const safeTitle = `${item.name}`;
+  const categoryLabel = item.category || "fashion";
 
   return {
     title: safeTitle,
-    description: `Experience the exclusive ${item.name} (Premium Edition) in Sri Lanka. Crafted with high-end materials, artisanal finish, and islandwide delivery available at NEVERBE.`,
+    description: `Shop ${item.name} online in Sri Lanka. Premium quality ${categoryLabel} with island-wide delivery & Cash on Delivery available at NEVERBE.`,
     keywords: [
       item.name,
-      "premium edition sneakers sri lanka",
-      "high-end quality shoes",
-      "exclusive design footwear",
-      "artisan series sneakers",
-      "neverbe premium",
-      "mens luxury footwear",
+      `${categoryLabel} sri lanka`,
+      `buy ${categoryLabel} online sri lanka`,
+      item.brand ? `${item.brand} ${categoryLabel} sri lanka` : "neverbe premium",
+      "premium quality sri lanka",
+      "neverbe sri lanka",
+      "cash on delivery sri lanka",
     ],
     alternates: {
       canonical: `https://neverbe.lk/collections/products/${item.id}`,
     },
     openGraph: {
       title: safeTitle,
-      description: `Shop ${item.name} - Premium Edition in Sri Lanka.`,
+      description: `Shop ${item.name} - premium ${categoryLabel} in Sri Lanka at NEVERBE.`,
       url: `https://neverbe.lk/collections/products/${item.id}`,
       type: "website",
       siteName: "NEVERBE",
@@ -102,16 +103,50 @@ const Page = async (context: { params: Promise<{ itemId: string }> }) => {
 
   if (!item) return notFound();
 
+  const categoryLabel = item.category || "Fashion";
+
+  // BreadcrumbList JSON-LD for Google rich breadcrumbs
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: "https://neverbe.lk",
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Products",
+        item: "https://neverbe.lk/collections/products",
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: categoryLabel,
+        item: `https://neverbe.lk/collections/products?category=${encodeURIComponent(item.category || "")}`,
+      },
+      {
+        "@type": "ListItem",
+        position: 4,
+        name: item.name,
+      },
+    ],
+  };
+
   const productSchema = {
     "@context": "https://schema.org",
     "@type": "Product",
     name: item.name,
     image: [item.thumbnail?.url || "https://neverbe.lk/logo-og.png"],
-    description: `High-end inspired design of ${item.name}. Note: This is a premium designer-inspired masterpiece intended for fashion enthusiasts.`,
+    description: `Shop ${item.name} — premium quality ${categoryLabel.toLowerCase()} available in Sri Lanka at NEVERBE. Island-wide delivery with Cash on Delivery.`,
     sku: item.id,
+    category: categoryLabel,
     brand: {
       "@type": "Brand",
-      name: "NEVERBE",
+      name: item.brand || "NEVERBE",
     },
     offers: {
       "@type": "Offer",
@@ -124,10 +159,40 @@ const Page = async (context: { params: Promise<{ itemId: string }> }) => {
         "@type": "Organization",
         name: "NEVERBE",
       },
+      shippingDetails: {
+        "@type": "OfferShippingDetails",
+        shippingDestination: {
+          "@type": "DefinedRegion",
+          addressCountry: "LK",
+        },
+        deliveryTime: {
+          "@type": "ShippingDeliveryTime",
+          handlingTime: {
+            "@type": "QuantitativeValue",
+            minValue: 1,
+            maxValue: 2,
+            unitCode: "DAY",
+          },
+          transitTime: {
+            "@type": "QuantitativeValue",
+            minValue: 1,
+            maxValue: 3,
+            unitCode: "DAY",
+          },
+        },
+      },
+      hasMerchantReturnPolicy: {
+        "@type": "MerchantReturnPolicy",
+        applicableCountry: "LK",
+        returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow",
+        merchantReturnDays: 7,
+        returnMethod: "https://schema.org/ReturnByMail",
+        returnFees: "https://schema.org/FreeReturn",
+      },
     },
   };
 
-  // Build breadcrumb items
+  // Build breadcrumb items for visual breadcrumbs
   const breadcrumbItems = [
     { label: "Products", href: "/collections/products" },
     {
@@ -144,6 +209,10 @@ const Page = async (context: { params: Promise<{ itemId: string }> }) => {
       vertical
       className="w-full relative mt-[80px] md:mt-[100px] min-h-screen px-4 md:px-8 bg-white text-primary-dark"
     >
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}

@@ -18,22 +18,24 @@ const sectionLabel: React.CSSProperties = {
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: "Bundle Deals & Combos | Buy More, Save More | NEVERBE",
+  title: "Bundle Deals & Combos | Shoes & Clothing Offers | NEVERBE",
   description:
-    "Exclusive BOGO deals, multi-buy discounts and combo packs on sneakers & apparel. Save more when you bundle at NEVERBE Sri Lanka.",
+    "Exclusive BOGO deals, multi-buy discounts and combo packs on sneakers, clothing & apparel. Save more when you bundle at NEVERBE Sri Lanka.",
   keywords: [
     "combo deals sri lanka",
     "bundle shoe offers",
     "bogo sneakers sri lanka",
+    "clothing bundle deals sri lanka",
     "buy one get one free shoes",
     "multi buy discount footwear",
     "save on shoes sri lanka",
+    "apparel combo deals",
   ],
   alternates: { canonical: "https://neverbe.lk/collections/combos" },
   openGraph: {
     title: "Bundle Deals & Combos | NEVERBE Sri Lanka",
     description:
-      "BOGO deals and multi-buy discounts on premium sneakers. Save more when you bundle.",
+      "BOGO deals and multi-buy discounts on premium sneakers & clothing. Save more when you bundle.",
     url: "https://neverbe.lk/collections/combos",
     type: "website",
     siteName: "NEVERBE",
@@ -43,14 +45,14 @@ export const metadata: Metadata = {
         url: "https://neverbe.lk/logo-og.png",
         width: 1200,
         height: 630,
-        alt: "NEVERBE Bundle Deals",
+        alt: "NEVERBE Bundle Deals - Shoes & Clothing",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Bundle Deals | NEVERBE Sri Lanka",
-    description: "BOGO & multi-buy discounts on sneakers in Sri Lanka.",
+    description: "BOGO & multi-buy discounts on sneakers & clothing in Sri Lanka.",
     images: ["https://neverbe.lk/logo-og.png"],
   },
   metadataBase: new URL("https://neverbe.lk"),

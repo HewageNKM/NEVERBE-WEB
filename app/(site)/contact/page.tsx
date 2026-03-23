@@ -5,11 +5,11 @@ import SocialMediaSection from "@/app/(site)/contact/components/SocialMediaSecti
 import MapSection from "@/app/(site)/contact/components/MapSection";
 
 export const metadata: Metadata = {
-  title: "Contact Us - NEVERBE Sri Lanka",
+  title: "Contact Us - NEVERBE | Shoes & Clothing Sri Lanka",
   description:
-    "Get in touch with NEVERBE for inquiries, support, or feedback. Contact us via email, WhatsApp, social media, or visit our store in Sri Lanka.",
+    "Get in touch with NEVERBE for inquiries about shoes, clothing & apparel. Contact us via email, WhatsApp, social media, or visit our store in Sri Lanka.",
   keywords:
-    "NEVERBE, contact, support, inquiries, feedback, social media, whatsapp, Sri Lanka",
+    "NEVERBE contact, customer service, shoe store sri lanka, clothing store sri lanka, whatsapp, support, inquiries",
   alternates: {
     canonical: "https://neverbe.lk/contact",
   },

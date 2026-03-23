@@ -1,9 +1,5 @@
-"use client";
 import React from "react";
 import Link from "next/link";
-import { Typography, Row, Col, Flex, Divider, Tag } from "antd";
-
-const { Title, Paragraph, Text } = Typography;
 
 const SEOContent = () => {
   const categories = [
@@ -24,45 +20,103 @@ const SEOContent = () => {
   const searchLinks = [
     {
       label: "Running Shoes Sri Lanka",
-      href: "/collections/products?category=running%20shoes",
+      href: "/collections/running-shoes",
     },
     {
-      label: "Men's Sandals",
-      href: "/collections/products?category=sandals%20%26%20slippers%20%26%20slides",
+      label: "Men's Sandals & Slides",
+      href: "/collections/slides-sandals",
     },
     {
-      label: "Men's Activewear",
-      href: "/collections/products?category=activewear",
+      label: "Activewear & Gym Wear",
+      href: "/collections/activewear",
     },
     { label: "Shoe Sale", href: "/collections/offers" },
     {
-      label: "Best Sneakers 2025",
-      href: "/collections/products?category=sneakers",
+      label: "Best Sneakers 2026",
+      href: "/collections/sneakers",
     },
     {
-      label: "Women's Sports Apparel",
-      href: "/collections/products?category=sports%20apparel",
+      label: "Sports Apparel",
+      href: "/collections/sports-apparel",
     },
     {
-      label: "Clothing Sri Lanka",
-      href: "/collections/products?category=clothing",
+      label: "Men's Clothing",
+      href: "/collections/mens-clothing",
+    },
+    {
+      label: "Boots",
+      href: "/collections/boots",
+    },
+    {
+      label: "Accessories",
+      href: "/collections/accessories",
     },
   ];
 
   return (
     <div
-      className="rounded-none! border-x-0! border-b-0!"
       style={{
         padding: "48px 0",
       }}
     >
       <div className="max-w-content w-full mx-auto px-6 lg:px-12">
-        <Row gutter={[48, 48]}>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* LEFT COLUMN: Main Keywords */}
-          <Col xs={24} lg={12}>
-            <Flex vertical gap={16}>
-              <Title
-                level={5}
+          <div className="flex flex-col gap-4">
+            <h2
+              style={{
+                fontWeight: 800,
+                margin: 0,
+                fontSize: 14,
+                textTransform: "uppercase",
+                letterSpacing: "0.05em",
+                color: "var(--color-primary-dark)",
+              }}
+            >
+              Premium Fashion & Footwear in Sri Lanka
+            </h2>
+            <p
+              style={{
+                color: "var(--color-primary-dark)",
+                fontSize: 12,
+                marginBottom: 0,
+                lineHeight: 1.8,
+              }}
+            >
+              NEVERBE is Sri Lanka&apos;s premier online destination to{" "}
+              <strong>
+                buy shoes, clothing, and fashion accessories
+              </strong>
+              . We bridge the gap between high-end street culture and
+              affordability, offering a curated selection of{" "}
+              <strong>
+                sneakers, activewear, sports apparel, and casual footwear
+              </strong>
+              . Whether you are in Colombo, Kandy, or Galle, our island-wide
+              delivery ensures you get the latest drops right to your door.
+            </p>
+            <p
+              style={{
+                color: "var(--color-primary-dark)",
+                fontSize: 12,
+                marginBottom: 0,
+                lineHeight: 1.8,
+              }}
+            >
+              We specialize in <strong>premium quality</strong> footwear,{" "}
+              <strong>men&apos;s and women&apos;s clothing</strong>, and fashion
+              accessories, giving you the look and feel of major global brands
+              at a fraction of the cost. From premium shoes to everyday{" "}
+              <strong>apparel and sportswear</strong> — experience iconic
+              designs without the premium price tag. Browse our collection of{" "}
+              <strong>t-shirts, hoodies, joggers, gym wear</strong>, and more.
+            </p>
+          </div>
+
+          {/* RIGHT COLUMN: Categories & Trust */}
+          <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-3">
+              <h2
                 style={{
                   fontWeight: 800,
                   margin: 0,
@@ -72,9 +126,51 @@ const SEOContent = () => {
                   color: "var(--color-primary-dark)",
                 }}
               >
-                Premium Fashion & Footwear in Sri Lanka
-              </Title>
-              <Paragraph
+                Shop by Category
+              </h2>
+              <div className="flex flex-wrap gap-2">
+                {categories.map((tag, i) => (
+                  <span
+                    key={i}
+                    style={{
+                      borderRadius: 99,
+                      padding: "4px 14px",
+                      fontSize: 11,
+                      fontWeight: 600,
+                      border: "1px solid rgba(46, 158, 91, 0.15)",
+                      background: "rgba(46, 158, 91, 0.05)",
+                      color: "var(--color-primary-dark)",
+                      cursor: "default",
+                    }}
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <hr
+              style={{
+                margin: 0,
+                border: "none",
+                borderTop: "1px solid rgba(46, 158, 91, 0.08)",
+              }}
+            />
+
+            <div className="flex flex-col gap-3">
+              <h2
+                style={{
+                  fontWeight: 800,
+                  margin: 0,
+                  fontSize: 14,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.05em",
+                  color: "var(--color-primary-dark)",
+                }}
+              >
+                Why Buy Online with NEVERBE?
+              </h2>
+              <p
                 style={{
                   color: "var(--color-primary-dark)",
                   fontSize: 12,
@@ -82,117 +178,19 @@ const SEOContent = () => {
                   lineHeight: 1.8,
                 }}
               >
-                NEVERBE is Sri Lanka&apos;s premier online destination to{" "}
-                <Text strong style={{ color: "var(--color-primary-dark)" }}>
-                  buy shoes, clothing, and fashion accessories
-                </Text>
-                . We bridge the gap between high-end street culture and
-                affordability, offering a curated selection of{" "}
-                <Text strong style={{ color: "var(--color-primary-dark)" }}>
-                  sneakers, activewear, sports apparel, and casual footwear
-                </Text>
-                . Whether you are in Colombo, Kandy, or Galle, our island-wide
-                delivery ensures you get the latest drops right to your door.
-              </Paragraph>
-              <Paragraph
-                style={{
-                  color: "var(--color-primary-dark)",
-                  fontSize: 12,
-                  marginBottom: 0,
-                  lineHeight: 1.8,
-                }}
-              >
-                We specialize in{" "}
-                <li className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-accent mt-0.5" />
-                  Premium Quality
-                </li>{" "}
-                footwear and fashion, giving you the look and feel of major
-                global brands like Nike, Adidas, and Jordan at a fraction of the
-                cost. From premium shoes to everyday clothing and wearables —
-                experience iconic designs without the premium price tag.
-              </Paragraph>
-            </Flex>
-          </Col>
-
-          {/* RIGHT COLUMN: Categories & Trust */}
-          <Col xs={24} lg={12}>
-            <Flex vertical gap={24}>
-              <Flex vertical gap={12}>
-                <Title
-                  level={5}
-                  style={{
-                    fontWeight: 800,
-                    margin: 0,
-                    fontSize: 14,
-                    textTransform: "uppercase",
-                    letterSpacing: "0.05em",
-                  }}
-                >
-                  Shop by Category
-                </Title>
-                <Flex wrap gap={8}>
-                  {categories.map((tag, i) => (
-                    <Tag
-                      key={i}
-                      style={{
-                        borderRadius: 99,
-                        padding: "4px 14px",
-                        fontSize: 11,
-                        fontWeight: 600,
-                        border: "1px solid rgba(46, 158, 91, 0.15)",
-                        background: "rgba(46, 158, 91, 0.05)",
-                        color: "var(--color-primary-dark)",
-                        cursor: "default",
-                        transition: "all 0.3s ease",
-                      }}
-                    >
-                      {tag}
-                    </Tag>
-                  ))}
-                </Flex>
-              </Flex>
-
-              <Divider
-                style={{ margin: 0, borderColor: "rgba(46, 158, 91, 0.08)" }}
-              />
-
-              <Flex vertical gap={12}>
-                <Title
-                  level={5}
-                  style={{
-                    fontWeight: 800,
-                    margin: 0,
-                    fontSize: 14,
-                    textTransform: "uppercase",
-                    letterSpacing: "0.05em",
-                    color: "var(--color-primary-dark)",
-                  }}
-                >
-                  Why Buy Online with NEVERBE?
-                </Title>
-                <Paragraph
-                  style={{
-                    color: "var(--color-primary-dark)",
-                    fontSize: 12,
-                    marginBottom: 0,
-                    lineHeight: 1.8,
-                  }}
-                >
-                  Stop searching for &quot;shops near me&quot; and trust our
-                  secure online platform. We offer{" "}
-                  <Text strong style={{ color: "var(--color-primary-dark)" }}>
-                    Cash on Delivery (COD)
-                  </Text>
-                  , hassle-free exchanges, and dedicated customer support. Join
-                  thousands of satisfied customers across Sri Lanka who have
-                  upgraded their wardrobe — from shoes and clothing to
-                  accessories — with NEVERBE.
-                </Paragraph>
-              </Flex>
-            </Flex>
-          </Col>
-        </Row>
+                Stop searching for &quot;shops near me&quot; and trust our
+                secure online platform. We offer{" "}
+                <strong>Cash on Delivery (COD)</strong>, hassle-free exchanges,
+                and dedicated customer support. Join thousands of satisfied
+                customers across Sri Lanka who have upgraded their wardrobe —
+                from <strong>shoes and clothing to accessories</strong> — with
+                NEVERBE. Shop <strong>men&apos;s t-shirts, women&apos;s
+                activewear, gym clothing, sportswear</strong>, and{" "}
+                <strong>premium sneakers</strong> all in one place.
+              </p>
+            </div>
+          </div>
+        </div>
 
         {/* SEO Navigation Links */}
         <div
@@ -202,7 +200,7 @@ const SEOContent = () => {
             borderTop: "1px solid rgba(46, 158, 91, 0.08)",
           }}
         >
-          <Text
+          <span
             style={{
               fontSize: 10,
               fontWeight: 800,
@@ -214,14 +212,14 @@ const SEOContent = () => {
             }}
           >
             Popular Searches
-          </Text>
-          <Flex wrap gap={12} align="center">
+          </span>
+          <div className="flex flex-wrap gap-3 items-center">
             {searchLinks.map((link, i) => (
               <React.Fragment key={i}>
                 {i > 0 && (
-                  <Text style={{ color: "rgba(0,0,0,0.1)", fontSize: 12 }}>
+                  <span style={{ color: "rgba(0,0,0,0.1)", fontSize: 12 }}>
                     /
-                  </Text>
+                  </span>
                 )}
                 <Link
                   href={link.href}
@@ -239,7 +237,7 @@ const SEOContent = () => {
                 </Link>
               </React.Fragment>
             ))}
-          </Flex>
+          </div>
         </div>
       </div>
     </div>

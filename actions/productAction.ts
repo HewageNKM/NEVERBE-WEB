@@ -139,3 +139,32 @@ export const getProductsForSitemap = async () => {
     return [];
   }
 };
+
+export const getCategories = async () => {
+  try {
+    const res = await axiosInstance.get("/web/categories/dropdown");
+    const data = res.data;
+    return Array.isArray(data) ? data : data.data || [];
+  } catch (error) {
+    console.error("Failed to fetch categories:", error);
+    return [];
+  }
+};
+
+export const getProductsByCategory = async (
+  category: string,
+  params: any = {},
+) => {
+  try {
+    const q = new URLSearchParams({
+      ...params,
+      category,
+    }).toString();
+    const res = await axiosInstance.get(`/web/products?${q}`);
+    return res.data;
+  } catch (error) {
+    console.error(`Failed to fetch products for category ${category}:`, error);
+    return { dataList: [], total: 0 };
+  }
+};
+

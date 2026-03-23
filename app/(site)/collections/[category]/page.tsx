@@ -1,7 +1,83 @@
-import Products from "@/app/(site)/collections/products/components/Products";
-import { getProducts } from "@/actions/productAction";
+import { cache } from "react";
+import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { getProductsByCategory } from "@/actions/productAction";
+import Products from "@/app/(site)/collections/products/components/Products";
+import {
+  getCategoryBySlug,
+  CATEGORY_MAPPINGS,
+} from "@/utils/categorySlug";
+
+const getProductsForCategory = cache(
+  async (categoryLabel: string, page: number = 1) => {
+    try {
+      return await getProductsByCategory(categoryLabel, {
+        page: String(page),
+        size: "30",
+      });
+    } catch (e) {
+      console.error(e);
+      return { dataList: [], total: 0 };
+    }
+  },
+);
+
+// Generate static params for all known categories
+export async function generateStaticParams() {
+  return CATEGORY_MAPPINGS.map((c) => ({
+    category: c.slug,
+  }));
+}
+
+export async function generateMetadata(context: {
+  params: Promise<{ category: string }>;
+}): Promise<Metadata> {
+  const params = await context.params;
+  const mapping = getCategoryBySlug(params.category);
+
+  if (!mapping) {
+    return {
+      title: "Category Not Found | NEVERBE",
+      description: "The requested category could not be found.",
+      robots: { index: false, follow: true },
+    };
+  }
+
+  return {
+    title: `${mapping.title} | NEVERBE`,
+    description: mapping.description,
+    keywords: mapping.keywords,
+    alternates: {
+      canonical: `https://neverbe.lk/collections/${mapping.slug}`,
+    },
+    openGraph: {
+      title: `${mapping.title} | NEVERBE`,
+      description: mapping.description,
+      url: `https://neverbe.lk/collections/${mapping.slug}`,
+      type: "website",
+      siteName: "NEVERBE",
+      locale: "en_LK",
+      images: [
+        {
+          url: "https://neverbe.lk/shoes-og.jpg",
+          width: 1200,
+          height: 630,
+          alt: `${mapping.h1} - NEVERBE Sri Lanka`,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${mapping.h1} | NEVERBE Sri Lanka`,
+      description: mapping.description,
+      images: ["https://neverbe.lk/shoes-og.jpg"],
+    },
+    metadataBase: new URL("https://neverbe.lk"),
+  };
+}
+
+export const revalidate = 3600;
 
 const sectionLabel: React.CSSProperties = {
   fontSize: 11,
@@ -13,72 +89,18 @@ const sectionLabel: React.CSSProperties = {
   marginBottom: 12,
 };
 
-export const revalidate = 3600;
+const CategoryPage = async (context: {
+  params: Promise<{ category: string }>;
+}) => {
+  const params = await context.params;
+  const mapping = getCategoryBySlug(params.category);
 
-export const metadata: Metadata = {
-  title: "Shop Shoes, Clothing & Apparel | NEVERBE Sri Lanka",
-  description:
-    "Browse the full NEVERBE collection — sneakers, t-shirts, activewear, sportswear, slides, accessories and more. Premium quality. Cash on Delivery island-wide.",
-  keywords: [
-    "buy shoes online sri lanka",
-    "buy clothing online sri lanka",
-    "sneakers colombo",
-    "mens shoes sri lanka",
-    "womens shoes sri lanka",
-    "mens clothing sri lanka",
-    "womens clothing sri lanka",
-    "running shoes sri lanka",
-    "activewear sri lanka",
-    "t-shirts sri lanka",
-    "sportswear sri lanka",
-    "gym wear sri lanka",
-    "slides sri lanka",
-    "accessories sri lanka",
-    "shoes under 5000",
-    "shoes under 10000",
-    "neverbe collection",
-  ],
-  alternates: { canonical: "https://neverbe.lk/collections/products" },
-  openGraph: {
-    title: "Shop Shoes, Clothing & Apparel | NEVERBE Sri Lanka",
-    description:
-      "Browse the full NEVERBE collection. Sneakers, clothing, activewear, sportswear and more at best prices. Cash on Delivery island-wide.",
-    url: "https://neverbe.lk/collections/products",
-    type: "website",
-    siteName: "NEVERBE",
-    locale: "en_LK",
-    images: [
-      {
-        url: "https://neverbe.lk/shoes-og.jpg",
-        width: 1200,
-        height: 630,
-        alt: "NEVERBE Collection - Shoes & Clothing",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Shop NEVERBE | Shoes, Clothing & Apparel",
-    description: "Premium quality shoes & clothing. Cash on Delivery island-wide.",
-    images: ["https://neverbe.lk/shoes-og.jpg"],
-  },
-  metadataBase: new URL("https://neverbe.lk"),
-};
+  if (!mapping) return notFound();
 
-const Page = async () => {
-  let items: any = {};
-
-  try {
-    // Increased initial fetch to 30 for a fuller, more premium grid
-    items = await getProducts({ page: 1, size: 30 });
-  } catch (e) {
-    console.error("Error fetching items:", e);
-    items = { dataList: [] };
-  }
-
+  const items = await getProductsForCategory(mapping.label);
   const productList = items?.dataList || [];
 
-  const productListingSchema = {
+  const categorySchema = {
     "@context": "https://schema.org",
     "@graph": [
       {
@@ -96,14 +118,19 @@ const Page = async () => {
             name: "Products",
             item: "https://neverbe.lk/collections/products",
           },
+          {
+            "@type": "ListItem",
+            position: 3,
+            name: mapping.h1,
+            item: `https://neverbe.lk/collections/${mapping.slug}`,
+          },
         ],
       },
       {
         "@type": "CollectionPage",
-        name: "Buy Shoes & Clothing Online Sri Lanka | NEVERBE Collection",
-        description:
-          "Shop sneakers, clothing, activewear, sportswear & accessories in Sri Lanka. Cash on Delivery available.",
-        url: "https://neverbe.lk/collections/products",
+        name: `${mapping.h1} - NEVERBE Sri Lanka`,
+        description: mapping.description,
+        url: `https://neverbe.lk/collections/${mapping.slug}`,
         inLanguage: "en-LK",
         isPartOf: {
           "@id": "https://neverbe.lk/#website",
@@ -121,7 +148,10 @@ const Page = async () => {
                 name: product?.name,
                 image: product?.thumbnail?.url,
                 url: `https://neverbe.lk/collections/products/${product?.id}`,
-                brand: { "@type": "Brand", name: product?.brand || "NEVERBE" },
+                brand: {
+                  "@type": "Brand",
+                  name: product?.brand || "NEVERBE",
+                },
                 offers: {
                   "@type": "Offer",
                   priceCurrency: "LKR",
@@ -147,7 +177,7 @@ const Page = async () => {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(productListingSchema),
+          __html: JSON.stringify(categorySchema),
         }}
       />
 
@@ -164,7 +194,14 @@ const Page = async () => {
             Home
           </Link>
           <span style={{ margin: "0 8px" }}>/</span>
-          <span>Collection</span>
+          <Link
+            href="/collections/products"
+            style={{ color: "var(--color-primary-dark)" }}
+          >
+            Products
+          </Link>
+          <span style={{ margin: "0 8px" }}>/</span>
+          <span>{mapping.h1}</span>
         </nav>
         <h1
           style={{
@@ -178,12 +215,16 @@ const Page = async () => {
             color: "var(--color-primary-dark)",
           }}
         >
-          All Products
+          {mapping.h1}
         </h1>
         <p
-          style={{ color: "var(--color-primary-dark)", fontSize: 14, margin: 0 }}
+          style={{
+            color: "var(--color-primary-dark)",
+            fontSize: 14,
+            margin: 0,
+          }}
         >
-          Sneakers, activewear, slides, accessories and more.
+          {mapping.subtitle}
         </p>
       </div>
 
@@ -202,7 +243,9 @@ const Page = async () => {
         <div className="max-w-content mx-auto px-8 lg:px-12">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
             <div>
-              <span style={sectionLabel}>Premium Fashion in Sri Lanka</span>
+              <span style={sectionLabel}>
+                {mapping.h1} in Sri Lanka
+              </span>
               <p
                 style={{
                   fontSize: 13,
@@ -210,12 +253,11 @@ const Page = async () => {
                   margin: 0,
                 }}
               >
-                NEVERBE offers shoes, clothing, activewear, and accessories —
-                all with island-wide Cash on Delivery.
+                {mapping.description}
               </p>
             </div>
             <div>
-              <span style={sectionLabel}>Popular Collections</span>
+              <span style={sectionLabel}>Browse More</span>
               <ul
                 style={{
                   fontSize: 13,
@@ -226,10 +268,20 @@ const Page = async () => {
                   margin: 0,
                 }}
               >
-                <li>Men&apos;s Sneakers</li>
-                <li>Women&apos;s Activewear</li>
-                <li>Slides &amp; Sandals</li>
-                <li>High-Ankle Boots</li>
+                {CATEGORY_MAPPINGS.filter(
+                  (c) => c.slug !== mapping.slug,
+                )
+                  .slice(0, 4)
+                  .map((c) => (
+                    <li key={c.slug}>
+                      <Link
+                        href={`/collections/${c.slug}`}
+                        style={{ color: "var(--color-primary-dark)" }}
+                      >
+                        {c.h1}
+                      </Link>
+                    </li>
+                  ))}
               </ul>
             </div>
             <div>
@@ -241,8 +293,9 @@ const Page = async () => {
                   margin: 0,
                 }}
               >
-                Size exchanges within 7 days. Every product is Premium Grade
-                quality — durability and comfort guaranteed.
+                Free size exchanges within 7 days. Cash on Delivery
+                island-wide. Every product is premium quality — durability
+                and comfort guaranteed.
               </p>
             </div>
           </div>
@@ -252,4 +305,4 @@ const Page = async () => {
   );
 };
 
-export default Page;
+export default CategoryPage;

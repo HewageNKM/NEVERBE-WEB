@@ -1,0 +1,176 @@
+/**
+ * Category slug utilities for SEO-friendly URLs.
+ * Maps clean URL slugs to actual category names used by the API.
+ */
+
+export interface CategoryMapping {
+  slug: string;
+  label: string;
+  title: string;
+  description: string;
+  keywords: string[];
+  h1: string;
+  subtitle: string;
+}
+
+/**
+ * Static category mappings for SEO.
+ * Slugs are used in clean URLs like /collections/sneakers
+ * Labels match the exact category names from the API.
+ */
+export const CATEGORY_MAPPINGS: CategoryMapping[] = [
+  {
+    slug: "sneakers",
+    label: "Sneakers",
+    title: "Sneakers in Sri Lanka | Buy Sneakers Online",
+    description:
+      "Shop the best sneakers in Sri Lanka at NEVERBE. Premium quality sneakers for men & women with Cash on Delivery island-wide.",
+    keywords: [
+      "sneakers sri lanka",
+      "buy sneakers online",
+      "sneakers colombo",
+      "mens sneakers sri lanka",
+      "womens sneakers sri lanka",
+      "best sneakers 2026",
+    ],
+    h1: "Sneakers",
+    subtitle: "Premium sneakers for every style and occasion.",
+  },
+  {
+    slug: "running-shoes",
+    label: "Running Shoes",
+    title: "Running Shoes in Sri Lanka | Buy Running Shoes Online",
+    description:
+      "Shop running shoes in Sri Lanka at NEVERBE. High-performance running footwear for men & women. Cash on Delivery island-wide.",
+    keywords: [
+      "running shoes sri lanka",
+      "buy running shoes online",
+      "jogging shoes colombo",
+      "marathon shoes sri lanka",
+      "sports shoes sri lanka",
+    ],
+    h1: "Running Shoes",
+    subtitle: "High-performance running footwear for every terrain.",
+  },
+  {
+    slug: "slides-sandals",
+    label: "Sandals & Slippers & Slides",
+    title: "Slides & Sandals in Sri Lanka | Casual Footwear Online",
+    description:
+      "Shop slides, sandals & slippers in Sri Lanka at NEVERBE. Comfortable casual footwear for men & women. Cash on Delivery island-wide.",
+    keywords: [
+      "slides sri lanka",
+      "sandals sri lanka",
+      "slippers sri lanka",
+      "casual footwear colombo",
+      "mens slides sri lanka",
+    ],
+    h1: "Slides & Sandals",
+    subtitle: "Comfort-first casual footwear for everyday wear.",
+  },
+  {
+    slug: "boots",
+    label: "Boots",
+    title: "Boots in Sri Lanka | Premium Boots Online",
+    description:
+      "Shop premium boots in Sri Lanka at NEVERBE. High-ankle boots, combat boots & casual boots. Cash on Delivery island-wide.",
+    keywords: [
+      "boots sri lanka",
+      "high ankle boots sri lanka",
+      "mens boots sri lanka",
+      "combat boots colombo",
+    ],
+    h1: "Boots",
+    subtitle: "Statement boots built for style and durability.",
+  },
+  {
+    slug: "mens-clothing",
+    label: "Clothing",
+    title: "Men's Clothing in Sri Lanka | T-Shirts, Hoodies & More",
+    description:
+      "Shop men's clothing in Sri Lanka at NEVERBE. T-shirts, hoodies, joggers & casual wear. Premium quality with Cash on Delivery island-wide.",
+    keywords: [
+      "mens clothing sri lanka",
+      "mens t-shirts sri lanka",
+      "hoodies sri lanka",
+      "joggers sri lanka",
+      "casual wear colombo",
+      "buy clothing online sri lanka",
+    ],
+    h1: "Men's Clothing",
+    subtitle: "Premium t-shirts, hoodies, joggers & casual wear.",
+  },
+  {
+    slug: "activewear",
+    label: "Activewear",
+    title: "Activewear & Sportswear in Sri Lanka | Gym Wear Online",
+    description:
+      "Shop activewear & sportswear in Sri Lanka at NEVERBE. Gym wear, workout clothing & performance apparel. Cash on Delivery island-wide.",
+    keywords: [
+      "activewear sri lanka",
+      "gym wear sri lanka",
+      "sportswear sri lanka",
+      "workout clothes colombo",
+      "performance apparel sri lanka",
+      "gym clothing online",
+    ],
+    h1: "Activewear & Sportswear",
+    subtitle: "Performance gear for the gym, track, and beyond.",
+  },
+  {
+    slug: "sports-apparel",
+    label: "Sports Apparel",
+    title: "Sports Apparel in Sri Lanka | Athletic Clothing Online",
+    description:
+      "Shop sports apparel in Sri Lanka at NEVERBE. Athletic clothing for men & women. Premium quality with Cash on Delivery island-wide.",
+    keywords: [
+      "sports apparel sri lanka",
+      "athletic clothing sri lanka",
+      "sports clothing colombo",
+      "sports wear online sri lanka",
+    ],
+    h1: "Sports Apparel",
+    subtitle: "Athletic clothing for peak performance.",
+  },
+  {
+    slug: "accessories",
+    label: "Accessories",
+    title: "Fashion Accessories in Sri Lanka | Bags, Socks & More",
+    description:
+      "Shop fashion accessories in Sri Lanka at NEVERBE. Bags, socks, caps & more. Premium quality with Cash on Delivery island-wide.",
+    keywords: [
+      "fashion accessories sri lanka",
+      "bags sri lanka",
+      "socks sri lanka",
+      "caps sri lanka",
+      "accessories colombo",
+    ],
+    h1: "Accessories",
+    subtitle: "Complete your look with premium accessories.",
+  },
+];
+
+/**
+ * Find a category mapping by its URL slug.
+ */
+export function getCategoryBySlug(
+  slug: string,
+): CategoryMapping | undefined {
+  return CATEGORY_MAPPINGS.find((c) => c.slug === slug);
+}
+
+/**
+ * Convert a category label (from API) to a URL slug.
+ */
+export function categoryLabelToSlug(label: string): string {
+  const mapping = CATEGORY_MAPPINGS.find(
+    (c) => c.label.toLowerCase() === label.toLowerCase(),
+  );
+  if (mapping) return mapping.slug;
+  // Fallback: generate slug from label
+  return label
+    .toLowerCase()
+    .replace(/[&]/g, "and")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+}

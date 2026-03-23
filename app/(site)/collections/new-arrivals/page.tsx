@@ -16,22 +16,25 @@ const sectionLabel: React.CSSProperties = {
 };
 
 export const metadata: Metadata = {
-  title: "New Arrivals | Fresh Sneakers & Apparel | NEVERBE Sri Lanka",
+  title: "New Arrivals | Latest Shoes, Clothing & Apparel | NEVERBE Sri Lanka",
   description:
-    "Shop the latest shoe drops and fresh apparel at NEVERBE. New sneakers, slides & activewear added weekly. Authentic Premium quality. Cash on Delivery island-wide.",
+    "Shop the latest shoe drops, clothing & fresh apparel at NEVERBE. New sneakers, t-shirts, activewear & sportswear added weekly. Premium quality. Cash on Delivery island-wide.",
   alternates: { canonical: "https://neverbe.lk/collections/new-arrivals" },
   keywords: [
     "new sneakers sri lanka",
     "latest shoe drops sri lanka",
     "new arrivals footwear 2025",
+    "new clothing sri lanka",
+    "latest fashion sri lanka",
+    "new t-shirts sri lanka",
+    "new activewear sri lanka",
     "fresh shoes colombo",
     "new slides sri lanka",
-    "new activewear sri lanka",
   ],
   openGraph: {
-    title: "New Arrivals | Fresh Sneakers & Apparel | NEVERBE",
+    title: "New Arrivals | Latest Shoes, Clothing & Apparel | NEVERBE",
     description:
-      "Latest shoe drops and fresh apparel added weekly at NEVERBE Sri Lanka.",
+      "Latest shoe drops, clothing & fresh apparel added weekly at NEVERBE Sri Lanka.",
     url: "https://neverbe.lk/collections/new-arrivals",
     type: "website",
     siteName: "NEVERBE",
@@ -41,14 +44,14 @@ export const metadata: Metadata = {
         url: "https://neverbe.lk/logo-og.png",
         width: 1200,
         height: 630,
-        alt: "NEVERBE New Arrivals",
+        alt: "NEVERBE New Arrivals - Shoes & Clothing",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
     title: "New Arrivals | NEVERBE Sri Lanka",
-    description: "Fresh shoe drops & apparel added weekly in Sri Lanka.",
+    description: "Fresh shoe drops, clothing & apparel added weekly in Sri Lanka.",
     images: ["https://neverbe.lk/logo-og.png"],
   },
 };
@@ -78,9 +81,9 @@ const NewArrivalsPage = async () => {
       },
       {
         "@type": "CollectionPage",
-        name: "New Arrivals - Latest Shoes Sri Lanka",
+        name: "New Arrivals - Latest Shoes & Clothing Sri Lanka",
         description:
-          "Shop the newest shoes in Sri Lanka. Latest sneakers, slides & footwear.",
+          "Shop the newest shoes & clothing in Sri Lanka. Latest sneakers, apparel & footwear.",
         url: "https://neverbe.lk/collections/new-arrivals",
         inLanguage: "en-LK",
         mainEntity: {
