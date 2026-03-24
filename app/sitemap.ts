@@ -88,7 +88,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     return [
       ...staticPages,
       ...categoryPages,
-      ...processCatalogUrls(categories),
       ...processCatalogUrls(brands),
       ...processDynamicUrls(products),
       ...processDynamicUrls(combos),
