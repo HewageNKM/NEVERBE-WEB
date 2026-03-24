@@ -333,7 +333,7 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
                   </div>
                 ) : trackingHistory.length > 0 ? (
                   <div className="relative pl-8 space-y-8 before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-0.5 before:bg-default/60">
-                    {trackingHistory.map((item, idx) => (
+                    {[...trackingHistory].reverse().map((item, idx) => (
                       <div key={idx} className="relative group">
                         <div
                           className={`absolute -left-[21px] top-1.5 w-2.5 h-2.5 rounded-full border-2 border-white shadow-sm transition-transform group-hover:scale-125 ${idx === 0 ? "bg-accent scale-125" : "bg-muted"}`}
