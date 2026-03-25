@@ -19,6 +19,11 @@ import {
   PromotionCondition,
 } from "@/interfaces/Promotion";
 import { isVariantEligibleForPromotion } from "@/utils/promotionUtils";
+import {
+  calculateFinalPrice,
+  getOriginalPrice,
+  hasDiscount as checkHasDiscount,
+} from "@/utils/pricing";
 import SizeGrid from "@/components/SizeGrid";
 import axiosInstance from "@/actions/axiosInstance";
 
@@ -135,26 +140,13 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
     selectedVariant?.variantId,
   );
 
-  // Use only product-level pricing (no promotion in calculations)
-  const finalPrice = product.sellingPrice;
-  const originalPrice = product.marketPrice;
-  const hasActiveDiscount = product.marketPrice > product.sellingPrice;
+  // Calculate prices using shared pricing utilities
+  const discountedPrice = calculateFinalPrice(product, activePromo);
+  const originalPrice = getOriginalPrice(product);
+  const hasAnyDiscount = checkHasDiscount(product, activePromo);
+  const totalSavings = Math.max(0, originalPrice - discountedPrice);
+  const isPromoDiscount = !!activePromo;
 
-  // Calculate display-only promotional price
-  let promoDisplayPrice = finalPrice;
-  let hasPromoDiscount = false;
-
-  if (activePromo && activePromo.actions && activePromo.actions.length > 0) {
-    const action = activePromo.actions[0];
-    if (action.type === "PERCENTAGE_OFF") {
-      promoDisplayPrice =
-        Math.round((finalPrice * (1 - action.value / 100)) / 10) * 10;
-      hasPromoDiscount = true;
-    } else if (action.type === "FIXED_OFF") {
-      promoDisplayPrice = Math.max(0, finalPrice - action.value);
-      hasPromoDiscount = true;
-    }
-  }
 
   // Helper to check if a variant is eligible for a promotion
   const getVariantPromotion = (variantId: string) => {
@@ -407,40 +399,23 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({
                 <div className="flex items-center gap-3 flex-wrap mb-6 sm:mb-8">
                   <span
                     className={`text-2xl sm:text-3xl font-display font-black tracking-tighter ${
-                      hasPromoDiscount ? "text-warning" : "text-primary-dark"
+                      isPromoDiscount ? "text-warning" : "text-primary-dark"
                     }`}
                   >
-                    Rs.{" "}
-                    {(hasPromoDiscount
-                      ? promoDisplayPrice
-                      : finalPrice
-                    ).toLocaleString()}
+                    Rs. {discountedPrice.toLocaleString()}
                   </span>
 
-                  {/* Show original selling price struck if promo is active */}
-                  {hasPromoDiscount && (
-                    <span className="text-muted text-sm sm:text-lg line-through decoration-default">
-                      Rs. {finalPrice.toLocaleString()}
-                    </span>
-                  )}
-
-                  {/* Show market price struck if no promo OR if it's different from strike price */}
-                  {!hasPromoDiscount && hasActiveDiscount && (
+                  {/* Show original selling price struck */}
+                  {hasAnyDiscount && originalPrice > discountedPrice && (
                     <span className="text-muted text-sm sm:text-lg line-through decoration-default">
                       Rs. {originalPrice.toLocaleString()}
                     </span>
                   )}
 
-                  {hasPromoDiscount && (
+                  {/* Savings Pill */}
+                  {hasAnyDiscount && totalSavings > 0 && (
                     <span className="bg-success text-primary-dark text-[9px] sm:text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest shadow-custom">
-                      Promo Save Rs.{" "}
-                      {(finalPrice - promoDisplayPrice).toLocaleString()}
-                    </span>
-                  )}
-
-                  {!hasPromoDiscount && hasActiveDiscount && (
-                    <span className="bg-success text-primary-dark text-[9px] sm:text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest shadow-custom">
-                      Save Rs. {(originalPrice - finalPrice).toLocaleString()}
+                      {isPromoDiscount ? "Promo Save" : "Save"} Rs. {totalSavings.toLocaleString()}
                     </span>
                   )}
                 </div>

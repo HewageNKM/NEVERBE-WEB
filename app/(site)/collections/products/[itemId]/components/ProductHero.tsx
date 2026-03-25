@@ -34,6 +34,11 @@ import {
   PromotionCondition,
 } from "@/interfaces/Promotion";
 import { isVariantEligibleForPromotion } from "@/utils/promotionUtils";
+import {
+  calculateFinalPrice,
+  getOriginalPrice,
+  hasDiscount as checkHasDiscount,
+} from "@/utils/pricing";
 import StockBadge from "@/components/StockBadge";
 import ShareButtons from "@/components/ShareButtons";
 import SizeGrid from "@/components/SizeGrid";
@@ -71,26 +76,13 @@ const ProductHero = ({ item }: { item: Product }) => {
     selectedVariant.variantId,
   );
 
-  // Use only product-level pricing (no promotion in calculations)
-  const finalPrice = item.sellingPrice;
-  const originalPrice = item.marketPrice;
-  const hasActiveDiscount = item.marketPrice > item.sellingPrice;
+  // Calculate prices using shared pricing utilities
+  const discountedPrice = calculateFinalPrice(item, activePromo);
+  const originalPrice = getOriginalPrice(item);
+  const hasAnyDiscount = checkHasDiscount(item, activePromo);
+  const totalSavings = Math.max(0, originalPrice - discountedPrice);
+  const isPromoDiscount = !!activePromo;
 
-  // Calculate display-only promotional price
-  let promoDisplayPrice = finalPrice;
-  let hasPromoDiscount = false;
-
-  if (activePromo && activePromo.actions && activePromo.actions.length > 0) {
-    const action = activePromo.actions[0];
-    if (action.type === "PERCENTAGE_OFF") {
-      promoDisplayPrice =
-        Math.round((finalPrice * (1 - action.value / 100)) / 10) * 10;
-      hasPromoDiscount = true;
-    } else if (action.type === "FIXED_OFF") {
-      promoDisplayPrice = Math.max(0, finalPrice - action.value);
-      hasPromoDiscount = true;
-    }
-  }
 
   // Helper to check if a variant has a promotion indicator
   const getVariantPromotion = (variantId: string) => {
@@ -130,8 +122,7 @@ const ProductHero = ({ item }: { item: Product }) => {
 
         try {
           const res = await axiosInstance.get(
-            `/web/inventory/batch?productId=${item.id}&variantId=${
-              variant.variantId
+            `/web/inventory/batch?productId=${item.id}&variantId=${variant.variantId
             }&sizes=${variant.sizes.join(",")}`,
           );
           const data = res.data;
@@ -159,8 +150,7 @@ const ProductHero = ({ item }: { item: Product }) => {
       setStockLoading(true);
       try {
         const res = await axiosInstance.get(
-          `/web/inventory/batch?productId=${item.id}&variantId=${
-            selectedVariant.variantId
+          `/web/inventory/batch?productId=${item.id}&variantId=${selectedVariant.variantId
           }&sizes=${selectedVariant.sizes.join(",")}`,
         );
         const data = res.data;
@@ -265,11 +255,10 @@ const ProductHero = ({ item }: { item: Product }) => {
               type="text"
               key={idx}
               onMouseEnter={() => setSelectedImage(img)}
-              className={`relative aspect-square bg-surface-2 rounded-xl overflow-hidden border-2 transition-all p-0 h-auto ${
-                selectedImage.url === img.url
+              className={`relative aspect-square bg-surface-2 rounded-xl overflow-hidden border-2 transition-all p-0 h-auto ${selectedImage.url === img.url
                   ? "border-primary hover:border-primary focus:border-primary"
                   : "border-transparent opacity-70 hover:opacity-100 focus:opacity-100"
-              }`}
+                }`}
             >
               <Image
                 src={img.url}
@@ -307,39 +296,23 @@ const ProductHero = ({ item }: { item: Product }) => {
             <div className="flex items-baseline gap-6 flex-wrap">
               <span
                 className={`text-3xl font-display font-black tracking-tighter ${
-                  hasPromoDiscount ? "text-warning" : "text-primary-dark"
+                  isPromoDiscount ? "text-warning" : "text-primary-dark"
                 }`}
               >
-                Rs.{" "}
-                {(hasPromoDiscount
-                  ? promoDisplayPrice
-                  : finalPrice
-                ).toLocaleString()}
+                Rs. {discountedPrice.toLocaleString()}
               </span>
 
-              {/* Show original selling price struck if promo is active */}
-              {hasPromoDiscount && (
-                <span className="text-muted line-through text-base decoration-default">
-                  Rs. {finalPrice.toLocaleString()}
-                </span>
-              )}
-
-              {/* Show market price struck if no promo OR if it's different from strike price */}
-              {!hasPromoDiscount && hasActiveDiscount && (
+              {/* Show original selling price struck */}
+              {hasAnyDiscount && originalPrice > discountedPrice && (
                 <span className="text-muted line-through text-base decoration-default">
                   Rs. {originalPrice.toLocaleString()}
                 </span>
               )}
 
-              {hasPromoDiscount && (
+              {/* Savings Pill */}
+              {hasAnyDiscount && totalSavings > 0 && (
                 <span className="bg-success text-primary-dark text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest shadow-custom">
-                  Promo Save Rs. {(finalPrice - promoDisplayPrice).toLocaleString()}
-                </span>
-              )}
-
-              {!hasPromoDiscount && hasActiveDiscount && (
-                <span className="bg-success text-primary-dark text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest shadow-custom">
-                  Save Rs. {(originalPrice - finalPrice).toLocaleString()}
+                  {isPromoDiscount ? "Promo Save" : "Save"} Rs. {totalSavings.toLocaleString()}
                 </span>
               )}
 
@@ -389,11 +362,10 @@ const ProductHero = ({ item }: { item: Product }) => {
                       setSelectedSize("");
                     }}
                     disabled={false} // Removed isVariantOutOfStock to allow selection
-                    className={`relative w-20 h-20 bg-surface-2 rounded-xl overflow-hidden border-2 transition-all p-0 ${
-                      selectedVariant.variantId === v.variantId
+                    className={`relative w-20 h-20 bg-surface-2 rounded-xl overflow-hidden border-2 transition-all p-0 ${selectedVariant.variantId === v.variantId
                         ? "border-accent shadow-[0_0_0_2px_var(--color-green-500)]"
                         : "border-transparent opacity-60 hover:opacity-100 focus:opacity-100 hover:bg-surface-2 focus:bg-surface-2"
-                    } ${isVariantOutOfStock ? "opacity-40" : ""}`}
+                      } ${isVariantOutOfStock ? "opacity-40" : ""}`}
                     title={
                       isVariantOutOfStock
                         ? `${v.variantName} - Out of Stock`
@@ -505,17 +477,16 @@ const ProductHero = ({ item }: { item: Product }) => {
                   availableStock === 0 ||
                   isLimitReached
                 }
-                className={`flex-1 h-auto py-5 rounded-full font-display font-black uppercase tracking-widest text-xs transition-all shadow-custom hover:shadow-hover active:scale-95 disabled:shadow-none disabled:cursor-not-allowed border-none ${
-                  !item.inStock ||
-                  (selectedSize && availableStock === 0) ||
-                  isLimitReached
+                className={`flex-1 h-auto py-5 rounded-full font-display font-black uppercase tracking-widest text-xs transition-all shadow-custom hover:shadow-hover active:scale-95 disabled:shadow-none disabled:cursor-not-allowed border-none ${!item.inStock ||
+                    (selectedSize && availableStock === 0) ||
+                    isLimitReached
                     ? "bg-error! text-inverse! disabled:bg-error! disabled:text-inverse/80!"
                     : !selectedSize
                       ? "bg-surface-3 text-muted disabled:bg-surface-3! disabled:text-muted!"
                       : activePromo
                         ? "bg-warning! text-dark! hover:bg-warning/80!"
                         : "bg-primary text-inverse hover:bg-accent hover:text-primary-dark!"
-                }`}
+                  }`}
               >
                 {!item.inStock || (availableStock === 0 && selectedSize)
                   ? "Sold Out"
@@ -528,11 +499,10 @@ const ProductHero = ({ item }: { item: Product }) => {
               <Button
                 type="text"
                 onClick={handleToggleWishlist}
-                className={`w-16 h-16 rounded-full border-2 flex items-center justify-center transition-all p-0 ${
-                  isInWishlist
+                className={`w-16 h-16 rounded-full border-2 flex items-center justify-center transition-all p-0 ${isInWishlist
                     ? "bg-primary border-primary text-inverse hover:bg-primary hover:text-inverse focus:bg-primary focus:text-inverse"
                     : "bg-surface border-default text-primary-dark hover:border-primary hover:bg-surface hover:text-primary-dark focus:bg-surface focus:text-primary-dark"
-                }`}
+                  }`}
                 aria-label={
                   isInWishlist ? "Remove from wishlist" : "Add to wishlist"
                 }
@@ -549,7 +519,7 @@ const ProductHero = ({ item }: { item: Product }) => {
             {/* Koko Installment Offer */}
             <div className="flex items-center justify-center gap-2 p-3 bg-surface-2 rounded-xl">
               <span className="text-[10px] font-bold text-primary-dark uppercase">
-                Or 3 Interest-Free payments of Rs. {(finalPrice / 3).toFixed(0)}{" "}
+                Or 3 Interest-Free payments of Rs. {(discountedPrice / 3).toFixed(0)}{" "}
                 with
               </span>
               <Image src={KOKOLogo} alt="Koko" width={35} height={12} />
