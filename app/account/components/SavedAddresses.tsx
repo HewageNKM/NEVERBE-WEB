@@ -12,6 +12,7 @@ import {
   IoCloseOutline,
   IoCheckmarkCircleOutline,
   IoPencilOutline,
+  IoLockClosedOutline,
 } from "react-icons/io5";
 import axiosInstance from "@/actions/axiosInstance";
 
@@ -204,20 +205,37 @@ const SavedAddresses: React.FC<SavedAddressesProps> = ({
                     </div>
                   ) : (
                     <Text className="block text-sm text-muted">
-                      No address provided
+                      {user?.isAnonymous 
+                        ? "Registered members can save multiple addresses here."
+                        : "No address provided"}
                     </Text>
                   )}
                 </div>
 
-                <div className="mt-6">
+                <div className="mt-6 flex flex-col gap-2">
                   <Button
                     type="text"
+                    disabled={user?.isAnonymous}
                     onClick={() => setIsEditing(true)}
-                    className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-accent hover:text-primary-dark transition-all"
+                    className={`flex items-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all ${
+                      user?.isAnonymous
+                        ? "text-muted cursor-not-allowed opacity-60"
+                        : "text-accent hover:text-primary-dark"
+                    }`}
                   >
-                    <IoPencilOutline size={14} />
+                    {user?.isAnonymous ? (
+                      <IoLockClosedOutline size={14} />
+                    ) : (
+                      <IoPencilOutline size={14} />
+                    )}
                     {existing ? "Change Address" : "Add Address"}
                   </Button>
+                  
+                  {user?.isAnonymous && (
+                    <Text className="text-[9px] font-bold uppercase tracking-widest text-warning opacity-80 pl-1">
+                      Guest Restriction
+                    </Text>
+                  )}
                 </div>
 
                 {existing && (

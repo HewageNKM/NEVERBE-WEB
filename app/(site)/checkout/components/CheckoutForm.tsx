@@ -57,6 +57,7 @@ const createCustomerFromForm = (values: any): Customer => {
 const CheckoutForm = () => {
   const dispatch: AppDispatch = useDispatch();
   const router = useRouter();
+  const [form] = Form.useForm();
 
   // Ensure promotions are calculated
   usePromotions();
@@ -163,9 +164,53 @@ const CheckoutForm = () => {
   const [otp, setOtp] = useState("");
 
   useEffect(() => {
-    if (user) {
-      // Potentially fetch saved address here if not already in user object
-    }
+    const fetchAutofill = async () => {
+      if (user && !user.isAnonymous) {
+        try {
+          const token = await auth.currentUser?.getIdToken();
+          const res = await axiosInstance.get("/web/customers/autofill", {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          
+          if (res.data) {
+            const { shipping, billing } = res.data;
+            
+            if (billing) {
+              setBillingCustomer(prev => ({
+                ...prev,
+                address: billing.address,
+                city: billing.city,
+                phone: billing.phone,
+              }));
+              
+              // Dynamically update form fields
+              form.setFieldsValue({
+                address: billing.address,
+                city: billing.city,
+                phone: billing.phone,
+              });
+            }
+            
+            if (shipping) {
+              setShippingCustomer({
+                shippingName: user.displayName || "",
+                shippingAddress: shipping.address,
+                shippingCity: shipping.city,
+                shippingPhone: shipping.phone,
+              });
+              
+              // If shipping and billing are different, turn off "Same as Billing"
+              if (billing && (shipping.address !== billing.address || shipping.city !== billing.city)) {
+                setShippingSameAsBilling(false);
+              }
+            }
+          }
+        } catch (error) {
+          console.error("Autofill fetch failed", error);
+        }
+      }
+    };
+    fetchAutofill();
   }, [user]);
 
   const handlePaymentSubmit = async (values: any) => {
@@ -230,6 +275,7 @@ const CheckoutForm = () => {
   return (
     <>
       <Form
+        form={form}
         layout="vertical"
         onFinish={handlePaymentSubmit}
         initialValues={{

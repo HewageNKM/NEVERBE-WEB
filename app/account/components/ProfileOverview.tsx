@@ -15,6 +15,7 @@ const { Title, Text } = Typography;
 interface UserProfile {
   name?: string;
   memberSince?: string | Date;
+  isAnonymous?: boolean;
 }
 
 interface ProfileOverviewProps {
@@ -34,7 +35,9 @@ const ProfileOverview: React.FC<ProfileOverviewProps> = ({
           year: "numeric",
           month: "long",
         })
-      : "New Member";
+      : user?.isAnonymous 
+        ? "Guest Profile"
+        : "New Member";
   }, [user?.memberSince]);
 
   return (
@@ -53,7 +56,10 @@ const ProfileOverview: React.FC<ProfileOverviewProps> = ({
         <div className="flex items-center gap-2 mt-4 text-muted">
           <IoTimeOutline className="text-accent" />
           <Text className="text-xs font-bold uppercase tracking-widest text-muted">
-            Member since <span className="text-primary-dark">{memberDate}</span>
+            {user?.isAnonymous 
+              ? <span className="text-warning">Temporary Session</span>
+              : <>Member since <span className="text-primary-dark">{memberDate}</span></>
+            }
           </Text>
         </div>
       </div>
@@ -143,7 +149,7 @@ const ProfileOverview: React.FC<ProfileOverviewProps> = ({
                 onClick={() => setActiveTab("details")}
                 className="group relative z-10 self-start flex items-center gap-2 bg-accent text-white px-6 py-3 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-accent-hover shadow-md hover:shadow-lg transition-all border-none h-auto active:scale-[0.98]"
               >
-                Manage Settings
+                {user?.isAnonymous ? "Secure Profile" : "Manage Settings"}
                 <IoChevronForward className="group-hover:translate-x-1 transition-transform" />
               </Button>
             </Card>
