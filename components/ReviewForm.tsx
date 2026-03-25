@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { Form, Input, Button, Rate, Modal } from "antd";
+import { Form, Input, Button, Rate, Modal, Upload, UploadFile } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import axiosInstance from "@/actions/axiosInstance";
 import { auth } from "@/firebase/firebaseClient";
 import toast from "react-hot-toast";
@@ -19,20 +21,37 @@ interface ReviewFormProps {
 const ReviewForm = ({ productId, initialValues, onSuccess, onCancel, open }: ReviewFormProps) => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
+  const { executeRecaptcha } = useGoogleReCaptcha();
 
   const handleSubmit = async (values: any) => {
     setLoading(true);
     try {
+      if (!executeRecaptcha) {
+        toast.error("reCAPTCHA not initialized");
+        return;
+      }
+
+      const captchaToken = await executeRecaptcha("submit_review");
+
       const token = await auth.currentUser?.getIdToken();
       const formData = new FormData();
       
       const payload = {
         rating: values.rating,
         review: values.review,
+        captchaToken,
         ...(productId && { itemId: productId }),
       };
 
       formData.append("data", JSON.stringify(payload));
+      
+      // Append images
+      fileList.forEach((file) => {
+        if (file.originFileObj) {
+          formData.append("images", file.originFileObj);
+        }
+      });
 
       if (initialValues) {
         // Edit mode
@@ -86,14 +105,49 @@ const ReviewForm = ({ productId, initialValues, onSuccess, onCancel, open }: Rev
           label="Your Review"
           rules={[{ required: true, message: "Please write your review" }]}
         >
-          <Input.TextArea rows={4} placeholder="Describe your experience..." />
+          <Input.TextArea 
+            rows={4} 
+            placeholder="Describe your experience..." 
+            style={{ borderRadius: '16px', padding: '16px' }}
+          />
+        </Form.Item>
+
+        <Form.Item label="Upload Images (Max 5MB each)">
+          <Upload
+            listType="picture-card"
+            fileList={fileList}
+            onPreview={() => {}} // Could add preview modal later
+            onChange={({ fileList: newFileList }) => setFileList(newFileList)}
+            beforeUpload={(file) => {
+              const isLt5M = file.size / 1024 / 1024 < 5;
+              if (!isLt5M) {
+                toast.error("Image must be smaller than 5MB!");
+                return Upload.LIST_IGNORE;
+              }
+              return false; // Prevent auto-upload
+            }}
+            maxCount={5}
+          >
+            {fileList.length < 5 && (
+              <div>
+                <PlusOutlined />
+                <div style={{ marginTop: 8 }}>Upload</div>
+              </div>
+            )}
+          </Upload>
         </Form.Item>
 
         <Form.Item className="mb-0 text-right">
-          <Button onClick={onCancel} className="mr-2">
+          <Button onClick={onCancel} className="mr-2" style={{ borderRadius: '12px' }}>
             Cancel
           </Button>
-          <Button type="primary" htmlType="submit" loading={loading} className="bg-accent border-none hover:bg-accent-hover!">
+          <Button 
+            type="primary" 
+            htmlType="submit" 
+            loading={loading} 
+            className="bg-accent border-none hover:bg-accent-hover!"
+            style={{ borderRadius: '12px' }}
+          >
             {initialValues ? "Update Review" : "Submit Review"}
           </Button>
         </Form.Item>

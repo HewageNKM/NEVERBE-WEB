@@ -15,6 +15,7 @@ import { NavigationItem, SocialMediaItem } from "@/actions/websiteAction";
 import { PromotionsProvider } from "@/components/PromotionsProvider";
 import QuickViewProvider from "@/components/QuickViewProvider";
 import RecentlyViewedProvider from "@/components/RecentlyViewedProvider";
+import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
 
 interface GlobalProviderProps {
   children: ReactNode;
@@ -43,24 +44,34 @@ const GlobalProvider = ({
   }, []);
 
   return (
-    <main className="w-full relative flex flex-col justify-between min-h-screen overflow-clip">
-      <PromotionsProvider>
-        <RecentlyViewedProvider>
-          <QuickViewProvider>
-            <Header season={season} mainNav={mainNav} />
-            {children}
-            <Footer footerNav={footerNav} socialLinks={socialLinks} />
-            <AnimatePresence>{showBag && <Bag />}</AnimatePresence>
-            <AnimatePresence>
-              {showMenu && <Menu mainNav={mainNav} />}
-            </AnimatePresence>
-            <MobileCheckoutBar />
-            <Analytics />
-            <SpeedInsights />
-          </QuickViewProvider>
-        </RecentlyViewedProvider>
-      </PromotionsProvider>
-    </main>
+    <GoogleReCaptchaProvider
+      reCaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ""}
+      scriptProps={{
+        async: false,
+        defer: false,
+        appendTo: "head",
+        nonce: undefined,
+      }}
+    >
+      <main className="w-full relative flex flex-col justify-between min-h-screen overflow-clip">
+        <PromotionsProvider>
+          <RecentlyViewedProvider>
+            <QuickViewProvider>
+              <Header season={season} mainNav={mainNav} />
+              {children}
+              <Footer footerNav={footerNav} socialLinks={socialLinks} />
+              <AnimatePresence>{showBag && <Bag />}</AnimatePresence>
+              <AnimatePresence>
+                {showMenu && <Menu mainNav={mainNav} />}
+              </AnimatePresence>
+              <MobileCheckoutBar />
+              <Analytics />
+              <SpeedInsights />
+            </QuickViewProvider>
+          </RecentlyViewedProvider>
+        </PromotionsProvider>
+      </main>
+    </GoogleReCaptchaProvider>
   );
 };
 

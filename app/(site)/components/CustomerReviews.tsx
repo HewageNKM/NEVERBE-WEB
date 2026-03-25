@@ -20,6 +20,7 @@ interface ReviewData {
   text: string;
   date: string;
   source?: string;
+  images?: { url: string }[];
 }
 
 const ReviewCard = ({ review }: { review: ReviewData }) => {
@@ -119,7 +120,7 @@ const ReviewCard = ({ review }: { review: ReviewData }) => {
 
           <Paragraph
             style={{
-              marginBottom: 24,
+              marginBottom: review.images?.length ? 12 : 24,
               color: "var(--color-primary-dark)",
               fontWeight: 500,
               lineHeight: 1.7,
@@ -129,6 +130,23 @@ const ReviewCard = ({ review }: { review: ReviewData }) => {
           >
             &ldquo;{review.text}&rdquo;
           </Paragraph>
+
+          {review.images && review.images.length > 0 && (
+            <Flex gap={8} className="mb-4 overflow-x-auto pb-2 custom-scrollbar">
+              {review.images.map((img, idx) => (
+                <div 
+                  key={idx} 
+                  className="shrink-0 w-16 h-16 rounded-xl overflow-hidden border border-default/10 shadow-sm"
+                >
+                  <img 
+                    src={img.url} 
+                    alt={`Review ${idx}`} 
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              ))}
+            </Flex>
+          )}
         </div>
 
         <Flex
@@ -182,6 +200,7 @@ const CustomerReviews = () => {
             rating: r.rating || 5,
             text: r.review || "",
             source: r.source || "WEB",
+            images: r.images || [],
             date: r.createdAt
               ? formatDistanceToNow(new Date(r.createdAt), {
                   addSuffix: true,
