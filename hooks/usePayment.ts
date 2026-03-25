@@ -273,9 +273,6 @@ export const usePayment = (options: UsePaymentOptions): UsePaymentReturn => {
       address: customer.address,
       city: customer.city,
       items: `${order.items.length} Products`,
-      returnUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/checkout/success/${order.orderId}`,
-      cancelUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/checkout`,
-      notifyUrl: `${process.env.NEXT_PUBLIC_API_URL}/api/v1/web/payhere/notify`,
     };
 
     const payherePayload = await initiatePayHerePayment(payload);
