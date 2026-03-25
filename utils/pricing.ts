@@ -15,7 +15,20 @@ export function calculateFinalPrice(
 ): number {
   let finalPrice = product.sellingPrice;
 
-  // Apply product-level discount first
+  // PRIORITY 1: Promotion (if exists, skip item-level discount)
+  if (promotion?.actions?.[0]?.value) {
+    const discountValue = promotion.actions[0].value;
+    if (promotion.type === "PERCENTAGE") {
+      finalPrice =
+        Math.round((product.sellingPrice * (100 - discountValue)) / 100 / 10) *
+        10;
+    } else if (promotion.type === "FIXED") {
+      finalPrice = Math.max(0, product.sellingPrice - discountValue);
+    }
+    return finalPrice;
+  }
+
+  // PRIORITY 2: Item-level discount (only if no promotion)
   if (product.discount > 0) {
     finalPrice =
       Math.round(
@@ -25,29 +38,21 @@ export function calculateFinalPrice(
       ) * 10;
   }
 
-  // Apply promotion discount on top
-  if (promotion?.actions?.[0]?.value) {
-    const discountValue = promotion.actions[0].value;
-
-    if (promotion.type === "PERCENTAGE") {
-      finalPrice =
-        Math.round((finalPrice * (100 - discountValue)) / 100 / 10) * 10;
-    } else if (promotion.type === "FIXED") {
-      finalPrice = Math.max(0, finalPrice - discountValue);
-    }
-  }
-
   return finalPrice;
 }
 
 /**
- * Check if a product has any discount (product-level or promotion)
+ * Check if a product has any discount (product-level, promotion, or market-price difference)
  */
 export function hasDiscount(
   product: Product,
   promotion?: Promotion | null
 ): boolean {
-  return product.discount > 0 || !!promotion;
+  return (
+    product.discount > 0 ||
+    !!promotion ||
+    (product.marketPrice > 0 && product.marketPrice > product.sellingPrice)
+  );
 }
 
 /**
