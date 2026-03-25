@@ -27,11 +27,19 @@ export default function SearchPageClient({ query, products }: SearchPageClientPr
 
       {/* Header Section */}
       <Flex vertical gap={4} className="mb-12">
-        <Title level={1} className="uppercase tracking-tighter m-0 font-black">
-          {products.length > 0 ? `Search results for "${query}"` : `No results for "${query}"`}
+        <Title level={1} className="uppercase tracking-tighter m-0 font-black text-primary">
+          {products.length > 0 ? (
+            <>
+              Search results for <span className="text-accent underline decoration-accent/30 underline-offset-8">"{query}"</span>
+            </>
+          ) : (
+            <>
+              No results for <span className="text-accent">"{query}"</span>
+            </>
+          )}
         </Title>
-        <Text type="secondary" className="font-bold uppercase tracking-widest text-xs">
-          Found {products.length} {products.length === 1 ? "product" : "products"}
+        <Text className="font-bold uppercase tracking-widest text-xs text-secondary opacity-70">
+          Found <span className="text-accent">{products.length}</span> {products.length === 1 ? "product" : "products"}
         </Text>
       </Flex>
 

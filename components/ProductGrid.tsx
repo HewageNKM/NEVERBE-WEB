@@ -35,7 +35,7 @@ const ProductGrid = ({
   }
 
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-12 animate-fade-in">
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-4 gap-y-12 animate-fade-in">
       {products.map((item) => (
         <ItemCard key={item.id} item={item} />
       ))}
