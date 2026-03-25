@@ -167,7 +167,7 @@ const FeaturedCategories = () => {
         </Flex>
       </Flex>
 
-      <div className="relative pb-4 mt-6 md:mt-0">
+      <div className="relative pb-4 mt-8 md:mt-4">
         <Swiper
           modules={[Navigation]}
           onInit={(s) => {
