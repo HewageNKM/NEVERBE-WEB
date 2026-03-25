@@ -15,6 +15,7 @@ import ProfileOverview from "./components/ProfileOverview";
 import OrdersView from "./components/OrdersView";
 import SavedAddresses from "./components/SavedAddresses";
 import AccountSettings from "./components/AccountSettings";
+import MyReviews from "./components/MyReviews";
 import toast from "react-hot-toast";
 import {
   IoLogOutOutline,
@@ -165,6 +166,7 @@ const Account = () => {
                 { id: "dashboard", label: "Overview" },
                 { id: "orders", label: "My Orders" },
                 { id: "addresses", label: "Addresses" },
+                { id: "reviews", label: "Reviews" },
                 { id: "details", label: "Settings" },
               ].map((item) => (
                 <Button
@@ -247,6 +249,7 @@ const Account = () => {
                     user={user}
                   />
                 )}
+                {activeTab === "reviews" && <MyReviews />}
                 {activeTab === "details" &&
                   (user?.isAnonymous ? (
                     <Card

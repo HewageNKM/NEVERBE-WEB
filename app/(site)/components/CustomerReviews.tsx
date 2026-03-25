@@ -1,6 +1,8 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import axiosInstance from "@/actions/axiosInstance";
+import { formatDistanceToNow } from "date-fns";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
@@ -11,52 +13,15 @@ import { Typography, Button, Rate, Avatar, Card, Flex, Space } from "antd";
 
 const { Title, Text, Paragraph } = Typography;
 
-const reviews = [
-  {
-    id: 1,
-    name: "Kavindi Perera",
-    rating: 5,
-    text: "Amazing quality shoes! Delivery was super fast and the packaging was premium. Definitely buying again!",
-    date: "2 weeks ago",
-  },
-  {
-    id: 2,
-    name: "Ashan Fernando",
-    rating: 5,
-    text: "Best shoe store in Sri Lanka. The sneakers I ordered are exactly as shown in the pictures. Very happy customer!",
-    date: "1 month ago",
-  },
-  {
-    id: 3,
-    name: "Dilini Jayawardena",
-    rating: 5,
-    text: "Customer service is exceptional. They helped me find the perfect size and the exchange process was hassle-free.",
-    date: "3 weeks ago",
-  },
-  {
-    id: 4,
-    name: "Nuwan Silva",
-    rating: 4,
-    text: "Great variety of shoes at reasonable prices. Cash on delivery option is very convenient. Highly recommend!",
-    date: "1 month ago",
-  },
-  {
-    id: 5,
-    name: "Tharushi Mendis",
-    rating: 5,
-    text: "Ordered running shoes for my husband. He loves them! Will definitely recommend NEVERBE to friends and family.",
-    date: "2 months ago",
-  },
-  {
-    id: 6,
-    name: "Chamara Rathnayake",
-    rating: 5,
-    text: "The combos offer is amazing value for money. Got two pairs for the price of one. Quality is top-notch!",
-    date: "1 month ago",
-  },
-];
+interface ReviewData {
+  id: string | number;
+  name: string;
+  rating: number;
+  text: string;
+  date: string;
+}
 
-const ReviewCard = ({ review }: { review: (typeof reviews)[0] }) => {
+const ReviewCard = ({ review }: { review: ReviewData }) => {
   const initials = review.name
     .split(" ")
     .map((n) => n[0])
@@ -200,6 +165,36 @@ const ReviewCard = ({ review }: { review: (typeof reviews)[0] }) => {
 const CustomerReviews = () => {
   const prevRef = useRef<HTMLButtonElement>(null);
   const nextRef = useRef<HTMLButtonElement>(null);
+  const [reviewsList, setReviewsList] = useState<ReviewData[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const res = await axiosInstance.get("/web/reviews?limit=10");
+        if (res.data && Array.isArray(res.data)) {
+          const mapped = res.data.map((r: any) => ({
+            id: r.reviewId || r.id,
+            name: r.userName || "Customer",
+            rating: r.rating || 5,
+            text: r.review || "",
+            date: r.createdAt
+              ? formatDistanceToNow(new Date(r.createdAt), {
+                  addSuffix: true,
+                })
+              : "recently",
+          }));
+          setReviewsList(mapped);
+        }
+      } catch (error) {
+        console.error("Failed to fetch reviews", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchReviews();
+  }, []);
 
   return (
     <section
@@ -316,34 +311,49 @@ const CustomerReviews = () => {
           </Flex>
         </Flex>
 
-        <div className="relative pb-8 mt-6 md:mt-0">
-          <Swiper
-            modules={[Navigation]}
-            onInit={(s) => {
-              if (
-                s.params.navigation &&
-                typeof s.params.navigation !== "boolean"
-              ) {
-                s.params.navigation.prevEl = prevRef.current;
-                s.params.navigation.nextEl = nextRef.current;
-                s.navigation.init();
-                s.navigation.update();
-              }
-            }}
-            spaceBetween={16}
-            slidesPerView={1.3}
-            breakpoints={{
-              768: { slidesPerView: 3.2 },
-              1280: { slidesPerView: 4.2 },
-            }}
-            className="overflow-visible!"
-          >
-            {reviews.map((review) => (
-              <SwiperSlide key={review.id} className="pb-4">
-                <ReviewCard review={review} />
-              </SwiperSlide>
-            ))}
-          </Swiper>
+        <div className="relative pb-8 mt-6 md:mt-0 min-h-[300px]">
+          {loading ? (
+            <div className="flex gap-4 overflow-hidden">
+              {[1, 2, 3, 4].map((i) => (
+                <div
+                  key={i}
+                  className="w-[280px] h-[350px] bg-white rounded-[32px] border border-default/20 animate-pulse shrink-0"
+                />
+              ))}
+            </div>
+          ) : reviewsList.length > 0 ? (
+            <Swiper
+              modules={[Navigation]}
+              onInit={(s) => {
+                if (
+                  s.params.navigation &&
+                  typeof s.params.navigation !== "boolean"
+                ) {
+                  s.params.navigation.prevEl = prevRef.current;
+                  s.params.navigation.nextEl = nextRef.current;
+                  s.navigation.init();
+                  s.navigation.update();
+                }
+              }}
+              spaceBetween={16}
+              slidesPerView={1.3}
+              breakpoints={{
+                768: { slidesPerView: 3.2 },
+                1280: { slidesPerView: 4.2 },
+              }}
+              className="overflow-visible!"
+            >
+              {reviewsList.map((review) => (
+                <SwiperSlide key={review.id} className="pb-4">
+                  <ReviewCard review={review} />
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          ) : (
+            <Text className="text-muted italic">
+              No reviews available yet. Be the first to share your experience!
+            </Text>
+          )}
         </div>
 
         <Flex justify="center" className="mt-12">

@@ -8,6 +8,7 @@ import { Product } from "@/interfaces/Product";
 import ProductFAQ from "./components/ProductFAQ";
 import RecentlyViewedTracker from "./components/RecentlyViewedTracker";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import ProductReviews from "./components/ProductReviews";
 import { Flex } from "antd";
 
 const getProduct = cache(async (id: string): Promise<Product | null> => {
@@ -226,6 +227,7 @@ const Page = async (context: { params: Promise<{ itemId: string }> }) => {
         <Breadcrumbs items={breadcrumbItems} />
       </Flex>
       <ProductHero item={item} />
+      <ProductReviews product={item} />
       <ProductFAQ />
       <SimilarProducts items={similarItems || []} />
       <RecentlyViewedTracker product={item} />
