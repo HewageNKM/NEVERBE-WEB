@@ -19,6 +19,7 @@ interface ReviewData {
   rating: number;
   text: string;
   date: string;
+  source?: string;
 }
 
 const ReviewCard = ({ review }: { review: ReviewData }) => {
@@ -91,20 +92,22 @@ const ReviewCard = ({ review }: { review: ReviewData }) => {
                 </Text>
               </Flex>
             </Flex>
-            <div
-              style={{
-                background: "rgba(46, 158, 91, 0.08)",
-                borderRadius: "50%",
-                padding: 8,
-                border: "1px solid rgba(46, 158, 91, 0.15)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                flexShrink: 0,
-              }}
-            >
-              <FcGoogle size={20} />
-            </div>
+            {review.source === "GOOGLE" && (
+              <div
+                style={{
+                  background: "rgba(46, 158, 91, 0.08)",
+                  borderRadius: "50%",
+                  padding: 8,
+                  border: "1px solid rgba(46, 158, 91, 0.15)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flexShrink: 0,
+                }}
+              >
+                <FcGoogle size={20} />
+              </div>
+            )}
           </Flex>
 
           <Rate
@@ -154,7 +157,7 @@ const ReviewCard = ({ review }: { review: ReviewData }) => {
               color: "var(--color-primary-dark)",
             }}
           >
-            Verified Purchase
+            {review.source === "GOOGLE" ? "Verified Google Review" : "Verified Purchase"}
           </Text>
         </Flex>
       </Flex>
@@ -178,6 +181,7 @@ const CustomerReviews = () => {
             name: r.userName || "Customer",
             rating: r.rating || 5,
             text: r.review || "",
+            source: r.source || "WEB",
             date: r.createdAt
               ? formatDistanceToNow(new Date(r.createdAt), {
                   addSuffix: true,

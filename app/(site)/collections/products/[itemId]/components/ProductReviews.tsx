@@ -7,6 +7,7 @@ import { RootState } from "@/redux/store";
 import { auth } from "@/firebase/firebaseClient";
 import toast from "react-hot-toast";
 import { formatDistanceToNow } from "date-fns";
+import { FcGoogle } from "react-icons/fc";
 import ReviewForm from "@/components/ReviewForm";
 import { Product } from "@/interfaces/Product";
 import { IoStar, IoCreateOutline } from "react-icons/io5";
@@ -18,6 +19,7 @@ interface Review {
   userName: string;
   rating: number;
   review: string;
+  source?: "GOOGLE" | "WEB";
   createdAt: string;
 }
 
@@ -100,11 +102,14 @@ const ProductReviews = ({ product }: ProductReviewsProps) => {
                   {review.userName?.[0] || "U"}
                 </Avatar>
                 <div>
-                  <Text className="block text-sm font-black text-primary-dark m-0 leading-none mb-1">
+                  <Text className="block text-sm font-black text-primary-dark m-0 leading-none mb-1 flex items-center gap-2">
                     {review.userName}
+                    {review.source === "GOOGLE" && (
+                      <FcGoogle size={14} className="mt-0.5" />
+                    )}
                   </Text>
                   <Text className="text-[10px] text-muted uppercase tracking-widest font-black leading-none">
-                    {formatDistanceToNow(new Date(review.createdAt), { addSuffix: true })}
+                    {review.source === "GOOGLE" ? "Verified Google Review" : formatDistanceToNow(new Date(review.createdAt), { addSuffix: true })}
                   </Text>
                 </div>
               </Flex>
