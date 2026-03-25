@@ -256,9 +256,11 @@ const Bag = () => {
             quantity: item.quantity,
           })),
         };
+        const formData = new FormData();
+        formData.append("data", JSON.stringify(payload));
         const res = await axiosInstance.post(
           "/web/shipping/calculate",
-          payload,
+          formData,
         );
         if (res.data) {
           const data = res.data;

@@ -8,7 +8,9 @@ import axiosInstance from "./axiosInstance";
 export const addNewOrder = async (newOrder: Order, captchaToken: string) => {
   try {
     const token = await getIdToken();
-    const response = await axiosInstance.post("/web/orders", newOrder, {
+    const formData = new FormData();
+    formData.append("data", JSON.stringify(newOrder));
+    const response = await axiosInstance.post("/web/orders", formData, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -26,9 +28,11 @@ export const addNewOrder = async (newOrder: Order, captchaToken: string) => {
 export const initiateKOKOPayment = async (payload: any) => {
   try {
     const token = await getIdToken();
+    const formData = new FormData();
+    formData.append("data", JSON.stringify(payload));
     const response = await axiosInstance.post(
       "/web/ipg/koko/initiate",
-      payload,
+      formData,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -48,9 +52,11 @@ export const initiateKOKOPayment = async (payload: any) => {
 export const initiatePayHerePayment = async (payload: any) => {
   try {
     const token = await getIdToken();
+    const formData = new FormData();
+    formData.append("data", JSON.stringify(payload));
     const response = await axiosInstance.post(
       "/web/ipg/payhere/initiate",
-      payload,
+      formData,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -70,9 +76,11 @@ export const initiatePayHerePayment = async (payload: any) => {
 export const requestOTP = async (phoneNumber: string, captchaToken: string) => {
   try {
     const token = await getIdToken();
+    const formData = new FormData();
+    formData.append("data", JSON.stringify({ phoneNumber, captchaToken }));
     const response = await axiosInstance.post(
       "/web/otp",
-      { phoneNumber, captchaToken },
+      formData,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -92,9 +100,11 @@ export const requestOTP = async (phoneNumber: string, captchaToken: string) => {
 export const verifyOTP = async (phoneNumber: string, otp: string) => {
   try {
     const token = await getIdToken();
+    const formData = new FormData();
+    formData.append("data", JSON.stringify({ phoneNumber, otp }));
     const response = await axiosInstance.post(
       "/web/otp/verify",
-      { phoneNumber, otp },
+      formData,
       {
         headers: {
           Authorization: `Bearer ${token}`,

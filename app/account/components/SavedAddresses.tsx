@@ -51,9 +51,11 @@ const SavedAddresses: React.FC<SavedAddressesProps> = ({
 
       try {
         const token = await auth.currentUser?.getIdToken();
+        const formData = new FormData();
+        formData.append("data", JSON.stringify(newAddress));
         const res = await axiosInstance.post(
           "/web/customers/addresses",
-          newAddress,
+          formData,
           {
             headers: {
               Authorization: `Bearer ${token}`,

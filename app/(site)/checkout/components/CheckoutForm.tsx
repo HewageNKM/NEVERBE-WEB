@@ -128,9 +128,12 @@ const CheckoutForm = () => {
           setShippingCost(0);
           return;
         }
-        const res = await axiosInstance.post("/web/shipping/calculate", {
-          items: bagItems,
-        });
+        const formData = new FormData();
+        formData.append("data", JSON.stringify({ items: bagItems }));
+        const res = await axiosInstance.post(
+          "/web/shipping/calculate",
+          formData,
+        );
         const data = res.data;
         setShippingCost(data.cost || 0);
       } catch (error) {

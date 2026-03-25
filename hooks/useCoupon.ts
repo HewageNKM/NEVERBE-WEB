@@ -169,7 +169,7 @@ export const useCoupon = (options: UseCouponOptions = {}): UseCouponReturn => {
     }));
 
     try {
-      const res = await axiosInstance.post("/web/coupons/validate", {
+      const requestData = {
         code,
         userId: user?.uid,
         cartTotal: getCartTotal(),
@@ -180,7 +180,12 @@ export const useCoupon = (options: UseCouponOptions = {}): UseCouponReturn => {
           price: item.price,
           discount: item.discount,
         })),
-      });
+      };
+
+      const formData = new FormData();
+      formData.append("data", JSON.stringify(requestData));
+
+      const res = await axiosInstance.post("/web/coupons/validate", formData);
 
       const result: CouponValidationResult = res.data;
       lastValidatedCode.current = code;
