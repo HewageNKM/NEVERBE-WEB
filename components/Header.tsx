@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
 import { showBag } from "@/redux/bagSlice/bagSlice";
+import { useRouter } from "next/navigation";
 import { toggleMenu } from "@/redux/headerSlice/headerSlice";
 import {
   IoBagHandleOutline,
@@ -42,6 +43,7 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
   const bagItems = useSelector((state: RootState) => state.bag.bag);
   const user = useSelector((state: RootState) => state.authSlice.user);
   const dispatch: AppDispatch = useDispatch();
+  const router = useRouter();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -63,6 +65,13 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
 
   const onSearch = (evt: React.ChangeEvent<HTMLInputElement>) => {
     performSearch(evt.target.value);
+  };
+
+  const handleSearchSubmit = (value: string) => {
+    if (!value.trim()) return;
+    setIsSearchOpen(false);
+    clearSearch();
+    router.push(`/search?q=${encodeURIComponent(value.trim())}`);
   };
 
   // Scroll detection & Pre-fetch recommendations
@@ -297,6 +306,11 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
                           </Flex>
                         }
                         onChange={onSearch}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            handleSearchSubmit(search);
+                          }
+                        }}
                         value={search}
                       />
                     </ConfigProvider>
