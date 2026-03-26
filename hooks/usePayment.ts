@@ -381,8 +381,9 @@ export const usePayment = (options: UsePaymentOptions): UsePaymentReturn => {
         }
       } catch (err: any) {
         console.error("Payment Error:", err);
-        setError(err.message || "Payment failed");
-        toast.error("Payment failed. Please try again.");
+        const serverMessage = err.response?.data?.message;
+        setError(serverMessage || err.message || "Payment failed");
+        toast.error(serverMessage || "Payment failed. Please try again.");
       } finally {
         setIsProcessing(false);
       }
@@ -409,8 +410,9 @@ export const usePayment = (options: UsePaymentOptions): UsePaymentReturn => {
         dispatch(clearBag());
         router.replace(`/checkout/success/${otpState.pendingOrder.orderId}`);
       } catch (err: any) {
-        console.error(err);
-        toast.error(err.message || "Invalid OTP");
+        console.error("OTP Verification Error:", err);
+        const serverMessage = err.response?.data?.message;
+        toast.error(serverMessage || err.message || "Invalid OTP");
       } finally {
         setOtpState((prev) => ({ ...prev, isVerifying: false }));
       }
@@ -448,8 +450,9 @@ export const usePayment = (options: UsePaymentOptions): UsePaymentReturn => {
 
         toast.success("OTP sent successfully!");
       } catch (err: any) {
-        console.error(err);
-        toast.error(err.message || "Failed to send OTP");
+        console.error("OTP Resend Error:", err);
+        const serverMessage = err.response?.data?.message;
+        toast.error(serverMessage || err.message || "Failed to send OTP");
       } finally {
         setOtpState((prev) => ({ ...prev, isResending: false }));
       }
