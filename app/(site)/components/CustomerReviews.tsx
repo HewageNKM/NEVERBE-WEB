@@ -373,10 +373,8 @@ const CustomerReviews = () => {
 
             <div className="relative min-h-[300px]">
               {loading ? (
-                <div className="flex gap-4 overflow-hidden">
-                  {[1, 2, 3, 4].map((i) => (
-                    <div key={i} className="w-[280px] h-[350px] bg-white rounded-[32px] border border-default/20 animate-pulse shrink-0" />
-                  ))}
+                <div className="flex items-center justify-center p-12 w-full h-[350px]">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent"></div>
                 </div>
               ) : (
                 <Swiper
@@ -438,10 +436,8 @@ const CustomerReviews = () => {
 
             <div className="relative min-h-[300px]">
               {loading ? (
-                <div className="flex gap-4 overflow-hidden">
-                  {[1, 2, 3, 4].map((i) => (
-                    <div key={i} className="w-[280px] h-[350px] bg-white rounded-[32px] border border-default/20 animate-pulse shrink-0" />
-                  ))}
+                <div className="flex items-center justify-center p-12 w-full h-[350px]">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent"></div>
                 </div>
               ) : (
                 <Swiper
