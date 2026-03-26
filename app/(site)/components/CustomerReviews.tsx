@@ -219,6 +219,8 @@ const CustomerReviews = () => {
     fetchReviews();
   }, []);
 
+  if (!loading && reviewsList.length === 0) return null;
+
   return (
     <section
       className="w-full"
@@ -344,7 +346,7 @@ const CustomerReviews = () => {
                 />
               ))}
             </div>
-          ) : reviewsList.length > 0 ? (
+          ) : (
             <Swiper
               modules={[Navigation]}
               onInit={(s) => {
@@ -372,16 +374,12 @@ const CustomerReviews = () => {
                 </SwiperSlide>
               ))}
             </Swiper>
-          ) : (
-            <Text className="text-muted italic">
-              No reviews available yet. Be the first to share your experience!
-            </Text>
           )}
         </div>
 
         <Flex justify="center" className="mt-12">
           <a
-            href="https://g.page/r/neverbe/review"
+            href="https://search.google.com/local/writereview?placeid=ChIJ2TyZoff_4joRgDt7is46uRk"
             target="_blank"
             rel="noopener noreferrer"
           >
