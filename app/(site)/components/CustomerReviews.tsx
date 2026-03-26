@@ -24,11 +24,15 @@ interface ReviewData {
 }
 
 const ReviewCard = ({ review }: { review: ReviewData }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
   const initials = review.name
     .split(" ")
     .map((n) => n[0])
     .join("")
     .toUpperCase();
+
+  const isLongText = review.text.length > 180;
+  const displayedText = isExpanded ? review.text : review.text.slice(0, 180);
 
   return (
     <Card
@@ -40,19 +44,24 @@ const ReviewCard = ({ review }: { review: ReviewData }) => {
         position: "relative",
         overflow: "hidden",
         boxShadow: "0 2px 16px rgba(0,0,0,0.05)",
+        minHeight: 380,
+        display: "flex",
+        flexDirection: "column"
       }}
       styles={{
         body: {
           padding: 24,
           height: "100%",
+          display: "flex",
+          flexDirection: "column"
         },
       }}
-      className="group relative block aspect-4/5 overflow-hidden rounded-[32px] bg-surface-2 shadow-sm hover:shadow-xl transition-all duration-500 border border-default/50"
+      className="group relative block overflow-hidden rounded-[32px] bg-surface-2 shadow-sm hover:shadow-xl transition-all duration-500 border border-default/50"
     >
       {/* Quote watermark */}
       <span className="review-quote-mark">❝</span>
 
-      <Flex vertical justify="space-between" style={{ height: "100%" }}>
+      <Flex vertical justify="space-between" style={{ flex: 1 }}>
         <div>
           <Flex justify="space-between" align="start" className="mb-4">
             <Flex gap={12} align="center">
@@ -80,17 +89,7 @@ const ReviewCard = ({ review }: { review: ReviewData }) => {
                 >
                   {review.name}
                 </Text>
-                <Text
-                  style={{
-                    fontSize: 10,
-                    textTransform: "uppercase",
-                    fontWeight: 700,
-                    letterSpacing: "0.05em",
-                    color: "var(--color-primary-dark)",
-                  }}
-                >
-                  {review.date}
-                </Text>
+                {/* Timestamp removed as per request */}
               </Flex>
             </Flex>
             {review.source === "GOOGLE" && (
@@ -118,18 +117,40 @@ const ReviewCard = ({ review }: { review: ReviewData }) => {
             style={{ color: "var(--color-accent)", fontSize: 14 }}
           />
 
-          <Paragraph
-            style={{
-              marginBottom: review.images?.length ? 12 : 24,
-              color: "var(--color-primary-dark)",
-              fontWeight: 500,
-              lineHeight: 1.7,
-              position: "relative",
-              zIndex: 1,
-            }}
-          >
-            &ldquo;{review.text}&rdquo;
-          </Paragraph>
+          <div style={{ position: "relative" }}>
+            <Paragraph
+              style={{
+                marginBottom: 8,
+                color: "var(--color-primary-dark)",
+                fontWeight: 500,
+                lineHeight: 1.7,
+                position: "relative",
+                zIndex: 1,
+                fontSize: 14
+              }}
+            >
+              &ldquo;{displayedText}{!isExpanded && isLongText ? "..." : ""}&rdquo;
+            </Paragraph>
+            
+            {isLongText && (
+              <Button 
+                type="link" 
+                onClick={() => setIsExpanded(!isExpanded)}
+                style={{ 
+                  padding: 0, 
+                  height: "auto", 
+                  fontSize: 12, 
+                  fontWeight: 800,
+                  color: "var(--color-accent)",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.05em",
+                  marginBottom: 16
+                }}
+              >
+                {isExpanded ? "Show Less ↑" : "Show More ↓"}
+              </Button>
+            )}
+          </div>
 
           {review.images && review.images.length > 0 && (
             <Flex gap={8} className="mb-4 overflow-x-auto pb-2 custom-scrollbar">
@@ -155,6 +176,7 @@ const ReviewCard = ({ review }: { review: ReviewData }) => {
           style={{
             paddingTop: 16,
             borderTop: "1px solid rgba(46, 158, 91, 0.15)",
+            marginTop: "auto"
           }}
         >
           <div
