@@ -184,30 +184,43 @@ const ReviewCard = ({ review }: { review: ReviewData }) => {
 };
 
 const CustomerReviews = () => {
-  const prevRef = useRef<HTMLButtonElement>(null);
-  const nextRef = useRef<HTMLButtonElement>(null);
-  const [reviewsList, setReviewsList] = useState<ReviewData[]>([]);
+  const googlePrevRef = useRef<HTMLButtonElement>(null);
+  const googleNextRef = useRef<HTMLButtonElement>(null);
+  const sitePrevRef = useRef<HTMLButtonElement>(null);
+  const siteNextRef = useRef<HTMLButtonElement>(null);
+
+  const [googleReviews, setGoogleReviews] = useState<ReviewData[]>([]);
+  const [siteReviews, setSiteReviews] = useState<ReviewData[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        const res = await axiosInstance.get("/web/reviews?limit=10");
-        if (res.data && Array.isArray(res.data)) {
-          const mapped = res.data.map((r: any) => ({
-            id: r.reviewId || r.id,
-            name: r.userName || "Customer",
-            rating: r.rating || 5,
-            text: r.review || "",
-            source: r.source || "WEB",
-            images: r.images || [],
-            date: r.createdAt
-              ? formatDistanceToNow(new Date(r.createdAt), {
-                  addSuffix: true,
-                })
-              : "recently",
-          }));
-          setReviewsList(mapped);
+        setLoading(true);
+        const [googleRes, siteRes] = await Promise.all([
+          axiosInstance.get("/web/reviews?limit=10&source=GOOGLE"),
+          axiosInstance.get("/web/reviews?limit=10&source=WEB"),
+        ]);
+
+        const mapReview = (r: any) => ({
+          id: r.reviewId || r.id,
+          name: r.userName || "Customer",
+          rating: r.rating || 5,
+          text: r.review || "",
+          source: r.source || "WEB",
+          images: r.images || [],
+          date: r.createdAt
+            ? formatDistanceToNow(new Date(r.createdAt), {
+                addSuffix: true,
+              })
+            : "recently",
+        });
+
+        if (googleRes.data && Array.isArray(googleRes.data)) {
+          setGoogleReviews(googleRes.data.map(mapReview));
+        }
+        if (siteRes.data && Array.isArray(siteRes.data)) {
+          setSiteReviews(siteRes.data.map(mapReview));
         }
       } catch (error) {
         console.error("Failed to fetch reviews", error);
@@ -219,7 +232,8 @@ const CustomerReviews = () => {
     fetchReviews();
   }, []);
 
-  if (!loading && reviewsList.length === 0) return null;
+  if (!loading && googleReviews.length === 0 && siteReviews.length === 0)
+    return null;
 
   return (
     <section
@@ -233,6 +247,7 @@ const CustomerReviews = () => {
       <div className="green-separator mb-0" />
 
       <div className="max-w-content mx-auto px-4 md:px-8 pt-16">
+        {/* Header Section */}
         <Flex
           vertical
           justify="space-between"
@@ -305,79 +320,139 @@ const CustomerReviews = () => {
                 Customers Trust Us
               </Title>
             </Flex>
-            <Text
-              style={{
-                fontWeight: 500,
-                display: "block",
-                color: "var(--color-primary-dark)",
-              }}
-            >
-              Real performance reviews from real Sri Lankan athletes
-            </Text>
-          </Flex>
-
-          <Flex align="center" gap={12} className="ml-auto">
-            <Button
-              ref={prevRef}
-              shape="circle"
-              icon={
-                <LeftOutlined style={{ fontSize: "clamp(12px, 2vw, 14px)" }} />
-              }
-              className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center hover:border-accent! hover:text-accent!"
-            />
-            <Button
-              ref={nextRef}
-              shape="circle"
-              icon={
-                <RightOutlined style={{ fontSize: "clamp(12px, 2vw, 14px)" }} />
-              }
-              className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center hover:border-accent! hover:text-accent!"
-            />
           </Flex>
         </Flex>
 
-        <div className="relative pb-8 mt-6 md:mt-0 min-h-[300px]">
-          {loading ? (
-            <div className="flex gap-4 overflow-hidden">
-              {[1, 2, 3, 4].map((i) => (
-                <div
-                  key={i}
-                  className="w-[280px] h-[350px] bg-white rounded-[32px] border border-default/20 animate-pulse shrink-0"
+        {/* --- GOOGLE REVIEWS SECTION --- */}
+        {(loading || googleReviews.length > 0) && (
+          <div className="mb-16">
+            <Flex justify="space-between" align="center" className="mb-6">
+              <Flex align="center" gap={12}>
+                <FcGoogle size={24} />
+                <Title level={4} style={{ margin: 0, fontWeight: 900, textTransform: 'uppercase', letterSpacing: '-0.02em' }}>
+                  Google Reviews
+                </Title>
+              </Flex>
+              <Flex align="center" gap={12}>
+                <Button
+                  ref={googlePrevRef}
+                  shape="circle"
+                  icon={<LeftOutlined style={{ fontSize: 12 }} />}
+                  className="w-8 h-8 flex items-center justify-center hover:border-accent! hover:text-accent!"
                 />
-              ))}
-            </div>
-          ) : (
-            <Swiper
-              modules={[Navigation]}
-              onInit={(s) => {
-                if (
-                  s.params.navigation &&
-                  typeof s.params.navigation !== "boolean"
-                ) {
-                  s.params.navigation.prevEl = prevRef.current;
-                  s.params.navigation.nextEl = nextRef.current;
-                  s.navigation.init();
-                  s.navigation.update();
-                }
-              }}
-              spaceBetween={16}
-              slidesPerView={1.3}
-              breakpoints={{
-                768: { slidesPerView: 3.2 },
-                1280: { slidesPerView: 4.2 },
-              }}
-              className="overflow-visible!"
-            >
-              {reviewsList.map((review) => (
-                <SwiperSlide key={review.id} className="pb-4">
-                  <ReviewCard review={review} />
-                </SwiperSlide>
-              ))}
-            </Swiper>
-          )}
-        </div>
+                <Button
+                  ref={googleNextRef}
+                  shape="circle"
+                  icon={<RightOutlined style={{ fontSize: 12 }} />}
+                  className="w-8 h-8 flex items-center justify-center hover:border-accent! hover:text-accent!"
+                />
+              </Flex>
+            </Flex>
 
-        <Flex justify="center" className="mt-12">
+            <div className="relative min-h-[300px]">
+              {loading ? (
+                <div className="flex gap-4 overflow-hidden">
+                  {[1, 2, 3, 4].map((i) => (
+                    <div key={i} className="w-[280px] h-[350px] bg-white rounded-[32px] border border-default/20 animate-pulse shrink-0" />
+                  ))}
+                </div>
+              ) : (
+                <Swiper
+                  modules={[Navigation]}
+                  onInit={(s) => {
+                    if (s.params.navigation && typeof s.params.navigation !== "boolean") {
+                      s.params.navigation.prevEl = googlePrevRef.current;
+                      s.params.navigation.nextEl = googleNextRef.current;
+                      s.navigation.init();
+                      s.navigation.update();
+                    }
+                  }}
+                  spaceBetween={16}
+                  slidesPerView={1.3}
+                  breakpoints={{
+                    768: { slidesPerView: 3.2 },
+                    1280: { slidesPerView: 4.2 },
+                  }}
+                  className="overflow-visible!"
+                >
+                  {googleReviews.map((review) => (
+                    <SwiperSlide key={review.id} className="pb-4">
+                      <ReviewCard review={review} />
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* --- OUR REVIEWS SECTION --- */}
+        {(loading || siteReviews.length > 0) && (
+          <div className="mb-16">
+            <Flex justify="space-between" align="center" className="mb-6">
+              <Flex align="center" gap={12}>
+                <div className="w-6 h-6 bg-accent rounded-full flex items-center justify-center">
+                  <span className="text-white text-[10px] font-black italic">!</span>
+                </div>
+                <Title level={4} style={{ margin: 0, fontWeight: 900, textTransform: 'uppercase', letterSpacing: '-0.02em' }}>
+                  Our Community
+                </Title>
+              </Flex>
+              <Flex align="center" gap={12}>
+                <Button
+                  ref={sitePrevRef}
+                  shape="circle"
+                  icon={<LeftOutlined style={{ fontSize: 12 }} />}
+                  className="w-8 h-8 flex items-center justify-center hover:border-accent! hover:text-accent!"
+                />
+                <Button
+                  ref={siteNextRef}
+                  shape="circle"
+                  icon={<RightOutlined style={{ fontSize: 12 }} />}
+                  className="w-8 h-8 flex items-center justify-center hover:border-accent! hover:text-accent!"
+                />
+              </Flex>
+            </Flex>
+
+            <div className="relative min-h-[300px]">
+              {loading ? (
+                <div className="flex gap-4 overflow-hidden">
+                  {[1, 2, 3, 4].map((i) => (
+                    <div key={i} className="w-[280px] h-[350px] bg-white rounded-[32px] border border-default/20 animate-pulse shrink-0" />
+                  ))}
+                </div>
+              ) : (
+                <Swiper
+                  modules={[Navigation]}
+                  onInit={(s) => {
+                    if (s.params.navigation && typeof s.params.navigation !== "boolean") {
+                      s.params.navigation.prevEl = sitePrevRef.current;
+                      s.params.navigation.nextEl = siteNextRef.current;
+                      s.navigation.init();
+                      s.navigation.update();
+                    }
+                  }}
+                  spaceBetween={16}
+                  slidesPerView={1.3}
+                  breakpoints={{
+                    768: { slidesPerView: 3.2 },
+                    1280: { slidesPerView: 4.2 },
+                  }}
+                  className="overflow-visible!"
+                >
+                  {siteReviews.map((review) => (
+                    <SwiperSlide key={review.id} className="pb-4">
+                      <ReviewCard review={review} />
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Footer CTA */}
+        <Flex justify="center" className="mt-4">
           <a
             href="https://search.google.com/local/writereview?placeid=ChIJ2TyZoff_4joRgDt7is46uRk"
             target="_blank"
