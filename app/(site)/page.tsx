@@ -244,12 +244,6 @@ const Page = async () => {
               text: "NEVERBE accepts Cash on Delivery, credit/debit cards via PayHere, and bank transfers. All transactions are secure.",
             },
           },
-        ],
-      },
-      {
-        "@type": "FAQPage",
-        "@id": "https://neverbe.lk/#faq-apparel",
-        mainEntity: [
           {
             "@type": "Question",
             name: "Does NEVERBE sell clothing and apparel in Sri Lanka?",

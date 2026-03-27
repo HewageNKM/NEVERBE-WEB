@@ -166,6 +166,11 @@ const Page = async (context: { params: Promise<{ itemId: string }> }) => {
           "@type": "DefinedRegion",
           addressCountry: "LK",
         },
+        shippingRate: {
+          "@type": "MonetaryAmount",
+          value: "380.00",
+          currency: "LKR",
+        },
         deliveryTime: {
           "@type": "ShippingDeliveryTime",
           handlingTime: {
