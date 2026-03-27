@@ -20,14 +20,14 @@ export default function SearchPageClient({ query, products }: SearchPageClientPr
       <Breadcrumb
         className="mb-8"
         items={[
-          { title: <Link href="/">Home</Link> },
-          { title: "Search" },
+          { title: <Link href="/" className="text-primary-dark/50 hover:text-accent transition-colors font-bold uppercase text-[10px] tracking-widest">Home</Link> },
+          { title: <span className="text-primary-dark font-black uppercase text-[10px] tracking-widest">Search</span> },
         ]}
       />
 
       {/* Header Section */}
       <Flex vertical gap={4} className="mb-12">
-        <Title level={1} className="uppercase tracking-tighter m-0 font-black text-primary">
+        <Title level={1} className="uppercase tracking-tighter m-0 font-black text-primary-dark">
           {products.length > 0 ? (
             <>
               Search results for <span className="text-accent underline decoration-accent/30 underline-offset-8">"{query}"</span>
@@ -38,7 +38,7 @@ export default function SearchPageClient({ query, products }: SearchPageClientPr
             </>
           )}
         </Title>
-        <Text className="font-bold uppercase tracking-widest text-xs text-secondary opacity-70">
+        <Text className="font-black uppercase tracking-widest text-[10px] text-primary-dark opacity-40">
           Found <span className="text-accent">{products.length}</span> {products.length === 1 ? "product" : "products"}
         </Text>
       </Flex>

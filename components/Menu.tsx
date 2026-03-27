@@ -1,5 +1,6 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { IoSearchOutline, IoChevronForward } from "react-icons/io5";
 import { Button, Input, Drawer, Collapse, Typography } from "antd";
@@ -30,13 +31,28 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
     isSearching,
     showResults: showSearchResult,
     search: performSearch,
+    fetchRecommendations,
+    recommendations,
     clearSearch,
   } = useAlgoliaSearch();
+
+  useEffect(() => {
+    fetchRecommendations();
+  }, [fetchRecommendations]);
 
   const { brands, categories } = useFilterData(true);
 
   const onSearch = (evt: React.ChangeEvent<HTMLInputElement>) => {
     performSearch(evt.target.value);
+  };
+
+  const router = useRouter();
+  const handleSearchSubmit = (value: string) => {
+    if (!value.trim()) return;
+    performSearch("");
+    clearSearch();
+    handleClose();
+    router.push(`/search?q=${encodeURIComponent(value.trim())}`);
   };
 
   let displayLinks = mainNav.length > 0 ? mainNav : DEFAULT_LINKS;
@@ -178,6 +194,11 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
           type="text"
           value={search}
           onChange={onSearch}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              handleSearchSubmit(search);
+            }
+          }}
           placeholder="Search products..."
           prefix={
             isSearching ? (
@@ -208,18 +229,17 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
             fontWeight: 600,
           }}
         />
-        {showSearchResult && items.length > 0 && (
-          <div className="absolute left-0 right-0 top-[72px] z-50 px-4 animate-fade">
-            <SearchDialog
-              containerStyle="max-h-[60vh] flex flex-col shadow-lg bg-white/95 backdrop-blur-xl border border-default rounded-[24px] overflow-hidden"
-              results={items}
-              onClick={() => {
-                clearSearch();
-                handleClose();
-              }}
-            />
-          </div>
-        )}
+        <div className="absolute left-0 right-0 top-[72px] z-50 px-4 animate-fade">
+          <SearchDialog
+            containerStyle="max-h-[60vh] flex flex-col shadow-lg bg-white/95 backdrop-blur-xl border border-default rounded-[24px] overflow-hidden"
+            results={items}
+            recommendations={recommendations}
+            onClick={() => {
+              clearSearch();
+              handleClose();
+            }}
+          />
+        </div>
       </div>
 
       {/* Nav Links */}

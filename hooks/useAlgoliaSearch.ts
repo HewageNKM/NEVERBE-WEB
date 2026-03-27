@@ -8,6 +8,7 @@ interface UseAlgoliaSearchOptions {
   hitsPerPage?: number;
   minQueryLength?: number;
   debounceMs?: number;
+  isDynamic?: boolean; // New option
 }
 
 interface UseAlgoliaSearchReturn {
@@ -17,6 +18,7 @@ interface UseAlgoliaSearchReturn {
   showResults: boolean;
   recommendations: Product[];
   search: (query: string) => void;
+  executeSearch: (query: string) => Promise<void>; // New function
   fetchRecommendations: () => Promise<void>;
   clearSearch: () => void;
 }
@@ -33,6 +35,7 @@ export function useAlgoliaSearch(
     hitsPerPage = 30,
     minQueryLength = 3,
     debounceMs = 500,
+    isDynamic = false, // Default to FALSE to remove keystroke dynamic search
   } = options;
 
   const [query, setQuery] = useState("");
@@ -44,7 +47,49 @@ export function useAlgoliaSearch(
 
   const searchClient = useMemo(() => getAlgoliaClient(), []);
 
-  // 1. Debounce Effect: Updates debouncedQuery after user stops typing
+  // 1. Manual search function
+  const executeSearch = useCallback(async (searchQuery: string) => {
+    const trimmedQuery = searchQuery.trim();
+    if (trimmedQuery.length < minQueryLength) {
+      setResults([]);
+      setShowResults(false);
+      return;
+    }
+
+    setIsSearching(true);
+    try {
+      const searchResults = await searchClient.search({
+        requests: [
+          {
+            indexName,
+            query: trimmedQuery,
+            hitsPerPage,
+          },
+        ],
+      });
+
+      const hits = (searchResults.results[0] as any)?.hits || [];
+      const filteredResults = hits.filter(
+        (item: any) =>
+          item.status === true &&
+          item.listing === true &&
+          item.isDeleted === false &&
+          !item.variants?.every(
+            (v: ProductVariant) => v.isDeleted === true || v.status === false,
+          ),
+      );
+
+      setResults(filteredResults);
+      setShowResults(true);
+    } catch (error) {
+      console.error("[useAlgoliaSearch] Search failed:", error);
+      setResults([]);
+    } finally {
+      setIsSearching(false);
+    }
+  }, [indexName, hitsPerPage, minQueryLength, searchClient]);
+
+  // 2. Debounce Effect: Updates debouncedQuery after user stops typing
   useEffect(() => {
     if (query.trim().length === 0) {
       setDebouncedQuery("");
@@ -53,6 +98,8 @@ export function useAlgoliaSearch(
       setIsSearching(false);
       return;
     }
+
+    if (!isDynamic) return; // Skip dynamic trigger if not enabled
 
     // Set searching state immediately for UI feedback
     if (query.trim().length >= minQueryLength) {
@@ -64,57 +111,14 @@ export function useAlgoliaSearch(
     }, debounceMs);
 
     return () => clearTimeout(handler);
-  }, [query, minQueryLength, debounceMs]);
+  }, [query, minQueryLength, debounceMs, isDynamic]);
 
-  // 2. Search Effect: Performs actual Algolia call when debouncedQuery changes
+  // 3. Search Effect: Performs actual Algolia call when debouncedQuery changes (DYNAMIC MODE)
   useEffect(() => {
-    const performSearch = async () => {
-      const trimmedQuery = debouncedQuery.trim();
-      if (trimmedQuery.length < minQueryLength) {
-        setIsSearching(false);
-        return;
-      }
-
-      try {
-        const searchResults = await searchClient.search({
-          requests: [
-            {
-              indexName,
-              query: trimmedQuery,
-              hitsPerPage,
-            },
-          ],
-        });
-
-        const hits = (searchResults.results[0] as any)?.hits || [];
-        let filteredResults = hits.filter(
-          (item: any) =>
-            item.status === true &&
-            item.listing === true &&
-            item.isDeleted === false,
-        );
-
-        filteredResults = filteredResults.filter(
-          (item: any) =>
-            !item.variants?.every(
-              (v: ProductVariant) => v.isDeleted === true || v.status === false,
-            ),
-        );
-
-        setResults(filteredResults);
-        setShowResults(true);
-      } catch (error) {
-        console.error("[useAlgoliaSearch] Search failed:", error);
-        setResults([]);
-      } finally {
-        setIsSearching(false);
-      }
-    };
-
-    if (debouncedQuery) {
-      performSearch();
+    if (isDynamic && debouncedQuery) {
+      executeSearch(debouncedQuery);
     }
-  }, [debouncedQuery, indexName, hitsPerPage, minQueryLength, searchClient]);
+  }, [debouncedQuery, isDynamic, executeSearch]);
 
   const search = useCallback((searchQuery: string) => {
     setQuery(searchQuery);
@@ -167,6 +171,7 @@ export function useAlgoliaSearch(
     isSearching,
     showResults,
     search,
+    executeSearch,
     fetchRecommendations,
     clearSearch,
     recommendations,
