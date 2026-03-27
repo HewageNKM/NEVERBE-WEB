@@ -2,6 +2,7 @@ import { useState, useCallback, useMemo, useEffect } from "react";
 import { getAlgoliaClient } from "@/utils/bagCalculations";
 import { Product } from "@/interfaces/Product";
 import { ProductVariant } from "@/interfaces/ProductVariant";
+import axiosInstance from "@/actions/axiosInstance";
 
 interface UseAlgoliaSearchOptions {
   indexName?: string;
@@ -46,6 +47,9 @@ export function useAlgoliaSearch(
   const [recommendations, setRecommendations] = useState<Product[]>([]);
 
   const searchClient = useMemo(() => getAlgoliaClient(), []);
+  
+  // Frontend Results Cache
+  const resultsCache = useMemo(() => new Map<string, Product[]>(), []);
 
   // 1. Manual search function
   const executeSearch = useCallback(async (searchQuery: string) => {
@@ -53,6 +57,14 @@ export function useAlgoliaSearch(
     if (trimmedQuery.length < minQueryLength) {
       setResults([]);
       setShowResults(false);
+      return;
+    }
+
+    // Check frontend cache first
+    const cacheKey = `${indexName}:${trimmedQuery}:${hitsPerPage}`;
+    if (resultsCache.has(cacheKey)) {
+      setResults(resultsCache.get(cacheKey)!);
+      setShowResults(true);
       return;
     }
 
@@ -81,13 +93,16 @@ export function useAlgoliaSearch(
 
       setResults(filteredResults);
       setShowResults(true);
+      
+      // Store in frontend cache
+      resultsCache.set(cacheKey, filteredResults);
     } catch (error) {
       console.error("[useAlgoliaSearch] Search failed:", error);
       setResults([]);
     } finally {
       setIsSearching(false);
     }
-  }, [indexName, hitsPerPage, minQueryLength, searchClient]);
+  }, [indexName, hitsPerPage, minQueryLength, searchClient, resultsCache]);
 
   // 2. Debounce Effect: Updates debouncedQuery after user stops typing
   useEffect(() => {
@@ -132,38 +147,16 @@ export function useAlgoliaSearch(
   }, []);
 
   const fetchRecommendations = useCallback(async () => {
-    const doFetch = async () => {
-      const res = await searchClient.search({
-        requests: [
-          {
-            indexName,
-            query: "",
-            hitsPerPage: 6,
-          },
-        ],
-      });
-      const hits = (res.results[0] as any)?.hits || [];
-      const filtered = hits.filter(
-        (item: any) =>
-          item.status === true &&
-          item.listing === true &&
-          item.isDeleted === false,
-      );
-      setRecommendations(filtered);
-    };
-
     try {
-      await doFetch();
-    } catch {
-      // Retry once after a short delay (client may not be ready yet)
-      try {
-        await new Promise((r) => setTimeout(r, 1500));
-        await doFetch();
-      } catch {
-        // Silently fail - recommendations are non-critical
-      }
+      // MIGRAION: Fetch from Firestore-backed API instead of Algolia direct
+      const response = await axiosInstance.get("/web/products", {
+        params: { size: 6 }
+      });
+      setRecommendations(response.data.dataList || []);
+    } catch (error) {
+      console.error("[useAlgoliaSearch] Failed to fetch recommendations:", error);
     }
-  }, [searchClient, indexName]);
+  }, []);
 
   return {
     query,

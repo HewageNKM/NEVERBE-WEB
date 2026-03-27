@@ -250,8 +250,8 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
                             activeBorderColor: "var(--color-accent)",
                             activeShadow: "0 0 0 3px rgba(46, 158, 91, 0.12)",
                             borderRadius: 99,
-                            colorText: "var(--color-primary)",
-                            colorTextPlaceholder: "var(--color-primary-400)",
+                            colorText: "var(--color-primary-dark)",
+                            colorTextPlaceholder: "rgba(14, 51, 28, 0.4)", // Primary dark with 40% opacity
                           },
                         },
                       }}
@@ -272,7 +272,7 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
                           <IoSearchOutline
                             size={20}
                             style={{
-                              color: "var(--color-accent)",
+                              color: "var(--color-primary-dark)",
                               marginRight: 8,
                               flexShrink: 0,
                             }}

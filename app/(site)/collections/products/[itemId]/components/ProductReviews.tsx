@@ -59,15 +59,44 @@ const ProductReviews = ({ product }: ProductReviewsProps) => {
   };
 
   return (
-    <div className="w-full max-w-[1600px] mx-auto px-4 md:px-10 lg:px-16 py-20 border-t border-default animate-fade">
-      <Flex justify="space-between" align="center" className="mb-12">
-        <div>
-          <Title level={2} className="uppercase tracking-tighter font-black m-0">
+    <div className="w-full max-w-[1600px] mx-auto px-4 md:px-10 lg:px-16 py-12 md:py-20 border-t border-default animate-fade">
+      <Flex 
+        vertical={true}
+        className="md:flex-row gap-6 md:gap-0 mb-10 md:mb-12"
+        justify="space-between" 
+        align="start"
+      >
+        <div className="w-full">
+          <h2
+            style={{
+              fontSize: "clamp(1.5rem, 4vw, 2.5rem)",
+              fontWeight: 900,
+              textTransform: "uppercase",
+              letterSpacing: "-0.03em",
+              lineHeight: 1.1,
+              margin: 0,
+              color: "var(--color-primary-dark)",
+            }}
+          >
             Customer Reviews
-          </Title>
-          <Flex gap={8} align="center" className="mt-2">
-            <Rate disabled allowHalf defaultValue={4.5} className="text-accent text-sm" />
-            <Text className="text-muted text-xs font-bold uppercase tracking-widest">
+          </h2>
+          <Flex gap={12} align="center" className="mt-3">
+            <Rate 
+              disabled 
+              allowHalf 
+              defaultValue={4.5} 
+              style={{ color: "var(--color-accent)", fontSize: 14 }} 
+            />
+            <Text 
+              style={{ 
+                fontSize: 10,
+                fontWeight: 800,
+                textTransform: "uppercase",
+                letterSpacing: "0.1em",
+                color: "var(--color-primary-dark)",
+                opacity: 0.5
+              }}
+            >
               {reviews.length} {reviews.length === 1 ? "Review" : "Reviews"}
             </Text>
           </Flex>
@@ -76,7 +105,7 @@ const ProductReviews = ({ product }: ProductReviewsProps) => {
           type="primary"
           icon={<IoCreateOutline size={18} />}
           onClick={handleWriteReview}
-          className="bg-dark border-none rounded-full px-8 h-12 font-black uppercase text-[11px] tracking-widest hover:bg-accent! hover:text-dark! flex items-center justify-center gap-2"
+          className="bg-accent border-none rounded-full px-10 h-14 font-black uppercase text-[12px] tracking-widest hover:bg-accent-hover! flex items-center justify-center gap-2 shadow-accent w-full md:w-auto"
         >
           Write a Review
         </Button>

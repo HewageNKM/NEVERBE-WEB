@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { IoSearchOutline, IoChevronForward } from "react-icons/io5";
-import { Button, Input, Drawer, Collapse, Typography } from "antd";
+import { Button, Input, Drawer, Collapse, Typography, ConfigProvider } from "antd";
 import { RightOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
@@ -190,56 +190,69 @@ const Menu = ({ mainNav = [] }: { mainNav?: NavigationItem[] }) => {
     >
       {/* Search */}
       <div className="px-6 py-5 bg-white relative">
-        <Input
-          type="text"
-          value={search}
-          onChange={onSearch}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              handleSearchSubmit(search);
+        <ConfigProvider
+          theme={{
+            components: {
+              Input: {
+                colorText: "var(--color-primary-dark)",
+                colorTextPlaceholder: "rgba(14, 51, 28, 0.4)",
+              },
+            },
+          }}
+        >
+          <Input
+            type="text"
+            value={search}
+            onChange={onSearch}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleSearchSubmit(search);
+              }
+            }}
+            placeholder="Search products..."
+            prefix={
+              isSearching ? (
+                <div
+                  className="animate-spin"
+                  style={{
+                    width: 16,
+                    height: 16,
+                    border: "2px solid var(--color-primary-dark)",
+                    borderTopColor: "transparent",
+                    borderRadius: "50%",
+                    flexShrink: 0,
+                  }}
+                />
+              ) : (
+                <IoSearchOutline
+                  size={16}
+                  style={{ color: "var(--color-primary-dark)", flexShrink: 0 }}
+                />
+              )
             }
-          }}
-          placeholder="Search products..."
-          prefix={
-            isSearching ? (
-              <div
-                className="animate-spin"
-                style={{
-                  width: 16,
-                  height: 16,
-                  border: "2px solid var(--color-accent)",
-                  borderTopColor: "transparent",
-                  borderRadius: "50%",
-                  flexShrink: 0,
-                }}
-              />
-            ) : (
-              <IoSearchOutline
-                size={16}
-                style={{ color: "var(--color-accent)", flexShrink: 0 }}
-              />
-            )
-          }
-          style={{
-            background: "#f8faf5",
-            border: "1px solid rgba(46, 158, 91,0.25)",
-            borderRadius: 99,
-            color: "var(--color-primary-dark)",
-            fontSize: 13,
-            fontWeight: 600,
-          }}
-        />
-        <div className="absolute left-0 right-0 top-[72px] z-50 px-4 animate-fade">
-          <SearchDialog
-            containerStyle="max-h-[60vh] flex flex-col shadow-lg bg-white/95 backdrop-blur-xl border border-default rounded-[24px] overflow-hidden"
-            results={items}
-            recommendations={recommendations}
-            onClick={() => {
-              clearSearch();
-              handleClose();
+            style={{
+              background: "#f8faf5",
+              border: "1px solid rgba(46, 158, 91,0.25)",
+              borderRadius: 99,
+              color: "var(--color-primary-dark)",
+              fontSize: 13,
+              fontWeight: 600,
             }}
           />
-        </div>
+        </ConfigProvider>
+        {search.trim().length > 0 && (
+          <div className="absolute left-0 right-0 top-[72px] z-50 px-4 animate-fade">
+            <SearchDialog
+              containerStyle="max-h-[60vh] flex flex-col shadow-lg bg-white/95 backdrop-blur-xl border border-default rounded-[24px] overflow-hidden"
+              results={items}
+              recommendations={[]} // Disabled on mobile
+              onClick={() => {
+                clearSearch();
+                handleClose();
+              }}
+            />
+          </div>
+        )}
       </div>
 
       {/* Nav Links */}
