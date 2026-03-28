@@ -1,6 +1,5 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { collection, getDocs, query, where } from "firebase/firestore";
 import { auth, db } from "@/firebase/firebaseClient";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
@@ -42,24 +41,23 @@ const Account = () => {
     const fetchData = async () => {
       if (user?.uid) {
         try {
-          const ordersQuery = query(
-            collection(db, "orders"),
-            where("userId", "==", user.uid),
-          );
-          const ordersSnapshot = await getDocs(ordersQuery);
-          const ordersData = ordersSnapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          }));
-          setOrders(ordersData);
-
           const token = await auth.currentUser?.getIdToken();
-          const res = await axiosInstance.get("/web/customers/addresses", {
-            headers: { Authorization: `Bearer ${token}` },
+          const headers = { Authorization: `Bearer ${token}` };
+
+          // Fetch orders from backend
+          const ordersRes = await axiosInstance.get("/web/orders", {
+            headers,
           });
-          if (res.data) {
-            const data = res.data;
-            setAddresses(data);
+          if (ordersRes.data) {
+            setOrders(ordersRes.data);
+          }
+
+          // Fetch addresses from backend
+          const addressesRes = await axiosInstance.get("/web/customers/addresses", {
+            headers,
+          });
+          if (addressesRes.data) {
+            setAddresses(addressesRes.data);
           }
         } catch (error) {
           console.error("Error fetching data:", error);
