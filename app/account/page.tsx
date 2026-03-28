@@ -121,7 +121,7 @@ const Account = () => {
               level={1}
               className="text-2xl! font-display! font-black! uppercase! tracking-tighter! mb-0!"
             >
-              Account
+              My Account
             </Title>
           </div>
 

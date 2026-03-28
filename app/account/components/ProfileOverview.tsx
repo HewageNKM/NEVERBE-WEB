@@ -37,7 +37,7 @@ const ProfileOverview: React.FC<ProfileOverviewProps> = ({
         })
       : user?.isAnonymous 
         ? "Guest Profile"
-        : "New Member";
+        : "New Customer";
   }, [user?.memberSince]);
 
   return (
@@ -45,20 +45,20 @@ const ProfileOverview: React.FC<ProfileOverviewProps> = ({
       {/* Header */}
       <div className="border-b border-default pb-8">
         <Text className="block text-[10px] font-black uppercase tracking-[0.3em] text-accent">
-          Dashboard
+          Account
         </Text>
         <Title
           level={2}
           className="text-3xl! md:text-4xl! font-display! font-black! uppercase! tracking-tighter! text-primary-dark! mt-2! mb-0!"
         >
-          Member Overview
+          Overview
         </Title>
         <div className="flex items-center gap-2 mt-4 text-muted">
           <IoTimeOutline className="text-accent" />
           <Text className="text-xs font-bold uppercase tracking-widest text-muted">
             {user?.isAnonymous 
               ? <span className="text-warning">Temporary Session</span>
-              : <>Member since <span className="text-primary-dark">{memberDate}</span></>
+              : <>Customer since <span className="text-primary-dark">{memberDate}</span></>
             }
           </Text>
         </div>

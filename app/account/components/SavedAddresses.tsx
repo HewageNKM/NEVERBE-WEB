@@ -206,7 +206,7 @@ const SavedAddresses: React.FC<SavedAddressesProps> = ({
                   ) : (
                     <Text className="block text-sm text-muted">
                       {user?.isAnonymous 
-                        ? "Registered members can save multiple addresses here."
+                        ? "Registered customers can save multiple addresses here."
                         : "No address provided"}
                     </Text>
                   )}

@@ -98,7 +98,7 @@ const AuthPage = () => {
             level={1}
             className="text-3xl! font-display! font-black! uppercase! tracking-tighter! mb-3!"
           >
-            Sign In
+            Login
           </Title>
           <Text className="text-muted text-sm font-medium block">
             Enter your details to access your gear and orders.
@@ -198,7 +198,7 @@ const AuthPage = () => {
             )}`}
             className="text-xs font-black uppercase tracking-widest text-primary-dark hover:text-primary-dark underline underline-offset-4 decoration-accent decoration-2 transition-all"
           >
-            Join the Club
+            Create an Account
           </Link>
         </div>
       </motion.div>

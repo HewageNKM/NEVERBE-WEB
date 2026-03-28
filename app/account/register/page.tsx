@@ -68,7 +68,7 @@ const RegisterPage = () => {
         await updateProfile(user, {
           displayName: `${values.firstName} ${values.lastName}`.trim(),
         });
-        toast.success("Member registered & history saved");
+        toast.success("Account registered & history saved");
       } else {
         const userCredential = await createUserWithEmailAndPassword(
           auth,
@@ -112,7 +112,7 @@ const RegisterPage = () => {
             level={1}
             className="text-3xl! md:text-4xl! font-display! font-black! uppercase! tracking-tighter! mb-4!"
           >
-            Become a Member
+            Create an Account
           </Title>
           <Text className="text-muted text-sm font-medium leading-relaxed max-w-[300px] block">
             Create your profile to unlock exclusive gear, faster checkout, and
@@ -194,7 +194,7 @@ const RegisterPage = () => {
             disabled={loading}
             className="group w-full h-auto bg-accent text-white py-4 rounded-full font-display font-black uppercase tracking-widest text-xs flex items-center justify-center gap-3 transition-all hover:bg-accent-hover shadow-md hover:shadow-lg active:scale-[0.98] disabled:opacity-50 mt-4 border-none"
           >
-            {loading ? "Creating Profile..." : "Join Now"}
+            {loading ? "Creating Account..." : "Register"}
             <IoArrowForwardOutline
               size={18}
               className="group-hover:translate-x-1 transition-transform"
@@ -224,14 +224,14 @@ const RegisterPage = () => {
         {/* Login Link */}
         <div className="text-center mt-12">
           <Text className="text-muted text-xs font-bold uppercase tracking-wide">
-            Already a member?{" "}
+            Already have an account?{" "}
             <Link
               href={`/account/login${
                 redirectUrl !== "/account" ? `?redirect=${redirectUrl}` : ""
               }`}
               className="text-primary-dark font-black underline underline-offset-8 decoration-accent decoration-4 hover:decoration-primary transition-all ml-1"
             >
-              Sign In.
+              Login.
             </Link>
           </Text>
         </div>

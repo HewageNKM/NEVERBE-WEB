@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Register | NEVERBE - Become A Member",
+  title: "Register | NEVERBE - Create Account",
   description:
-    "Create your profile to get access to the best products and inspiration.",
+    "Create your account to get access to the best products and inspiration.",
 };
 
 export default function RegisterLayout({

@@ -322,9 +322,19 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
               <div className="bg-surface-2 p-6 md:p-8 rounded-4xl border border-default">
                 <div className="flex items-center gap-3 mb-6">
                   <div className="w-1.5 h-6 bg-accent rounded-full" />
-                  <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-primary-dark">
-                    Shipping Progress (WB #{trackingNumber})
-                  </h3>
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 w-full">
+                    <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-primary-dark">
+                      Shipping Progress (WB #{trackingNumber})
+                    </h3>
+                    <a 
+                      href={`https://domex.lk/Order-Details.php?wbno=${trackingNumber}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-4 py-2 bg-accent/10 text-accent rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-accent/20 transition-colors w-fit"
+                    >
+                      View on Domex Site
+                    </a>
+                  </div>
                 </div>
 
                 {loadingTracking ? (
@@ -352,18 +362,10 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
                     ))}
                   </div>
                 ) : (
-                  <div className="text-center py-4">
-                    <p className="text-xs text-muted font-bold uppercase tracking-widest mb-4">
+                  <div className="text-center py-4 bg-white/50 rounded-2xl border border-dashed border-default">
+                    <p className="text-[10px] text-muted font-bold uppercase tracking-widest">
                       Live tracking data is being updated or currently unavailable.
                     </p>
-                    <a 
-                      href={`https://domex.lk/Order-Details.php?wbno=${trackingNumber}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-4 py-2 bg-accent/10 text-accent rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-accent/20 transition-colors"
-                    >
-                      View on Domex Site
-                    </a>
                   </div>
                 )}
               </div>
@@ -535,7 +537,7 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
 
           <div className="p-6 bg-white border-t border-default text-center">
             <p className="text-[10px] font-black uppercase tracking-[0.4em] text-muted">
-              Neverbe Member Exclusives
+              Customer Exclusives
             </p>
           </div>
         </motion.div>
