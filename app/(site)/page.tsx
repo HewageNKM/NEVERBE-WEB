@@ -9,7 +9,8 @@ import CustomerReviews from "./components/CustomerReviews";
 
 import { getHotProducts, getRecentItems } from "@/actions/productAction";
 import { getSliders } from "@/actions/slideAction";
-import { getBrands } from "@/actions/otherAction";
+import { getBrands, getFeaturedCategories } from "@/actions/otherAction";
+
 import type { Metadata } from "next";
 import SEOContent from "./components/SEOContent";
 import FeaturedCategories from "./components/FeaturedCategory";
@@ -73,10 +74,13 @@ const Page = async () => {
     getHotProducts().catch((err) => []),
     getBrands().catch((err) => []),
     getPaginatedCombos(1).catch((err) => ({ combos: [] })),
+    getFeaturedCategories().catch((err) => []),
   ]);
 
-  const [arrivals, sliders, hotItems, brands, combosData] = await dataPromise;
+
+  const [arrivals, sliders, hotItems, brands, combosData, featuredCategories] = await dataPromise;
   const combos = combosData?.combos || [];
+
 
   /* STRUCTURED DATA: Organization + ShoeStore + WebSite + FAQPage + BreadcrumbList
      Enhanced for Google Rich Results with comprehensive business info.
@@ -283,7 +287,8 @@ const Page = async () => {
 
         <Flex vertical style={{ width: "100%", flex: "auto" }}>
           <Hero slides={sliders} />
-          <FeaturedCategories />
+          <FeaturedCategories categories={featuredCategories} />
+
           <PromotionalAds />
 
           {hotItems.length > 0 && <PopularProducts hotItems={hotItems} />}

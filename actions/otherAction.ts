@@ -21,3 +21,12 @@ export const getBrands = async () => {
     return [];
   }
 };
+export const getFeaturedCategories = async () => {
+  try {
+    const res = await axiosInstance.get("/web/categories/featured");
+    return Array.isArray(res.data) ? res.data : [];
+  } catch (error) {
+    console.error("Failed to fetch featured categories:", error);
+    return [];
+  }
+};

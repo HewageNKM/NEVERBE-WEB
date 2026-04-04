@@ -79,9 +79,18 @@ const CategoryCard = ({ item }: { item: any }) => (
   </motion.div>
 );
 
-const FeaturedCategories = () => {
+const FeaturedCategories = ({ categories = [] }: { categories?: any[] }) => {
   const prevRef = useRef<HTMLButtonElement>(null);
   const nextRef = useRef<HTMLButtonElement>(null);
+
+  // Map dynamic categories to the card format or use fallback if empty
+  const displayList = categories.length > 0 
+    ? categories.map(cat => ({
+        label: cat.name,
+        url: `/collections/products?category=${encodeURIComponent(cat.name.toLowerCase())}`,
+        image: cat.imageUrl || "/placeholder-collection.png", // Fallback if no image uploaded
+      }))
+    : collectionList;
 
   return (
     <section className="w-full max-w-content mx-auto px-4 md:px-8 py-12">
@@ -189,7 +198,7 @@ const FeaturedCategories = () => {
           }}
           className="overflow-visible!"
         >
-          {collectionList.map((item) => (
+          {displayList.map((item) => (
             <SwiperSlide key={item.label}>
               <CategoryCard item={item} />
             </SwiperSlide>
