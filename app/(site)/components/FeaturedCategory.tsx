@@ -3,7 +3,6 @@ import React, { useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Typography, Flex, Button } from "antd";
-import { collectionList } from "@/constants";
 import {
   ArrowRightOutlined,
   LeftOutlined,
@@ -18,19 +17,6 @@ import "swiper/css";
 import "swiper/css/navigation";
 
 const { Title, Text } = Typography;
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: {
-      delay: i * 0.15,
-      duration: 0.6,
-      ease: [0.4, 0, 0.2, 1] as [number, number, number, number],
-    },
-  }),
-};
 
 // Reusable category card component used within SwiperSlide
 const CategoryCard = ({ item }: { item: any }) => (
@@ -83,14 +69,12 @@ const FeaturedCategories = ({ categories = [] }: { categories?: any[] }) => {
   const prevRef = useRef<HTMLButtonElement>(null);
   const nextRef = useRef<HTMLButtonElement>(null);
 
-  // Map dynamic categories to the card format or use fallback if empty
-  const displayList = categories.length > 0 
-    ? categories.map(cat => ({
-        label: cat.name,
-        url: `/collections/products?category=${encodeURIComponent(cat.name.toLowerCase())}`,
-        image: cat.imageUrl || "/placeholder-collection.png", // Fallback if no image uploaded
-      }))
-    : collectionList;
+  // Map categories to the card format. The API already handles the "featured vs random 8" fallback logic.
+  const displayList = categories.map(cat => ({
+    label: cat.name,
+    url: `/collections/products?category=${encodeURIComponent(cat.name.toLowerCase())}`,
+    image: cat.imageUrl || "/collection-placeholder.png",
+  }));
 
   return (
     <section className="w-full max-w-content mx-auto px-4 md:px-8 py-12">

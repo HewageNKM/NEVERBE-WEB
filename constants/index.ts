@@ -380,23 +380,6 @@ export enum ContactUs {
   embeddedMap = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d7920.379213809781!2d80.01265924429379!3d6.986933221248742!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae2fff7a1993cd9%3A0x19b93ace8a7b3b80!2sNEVERBE!5e0!3m2!1sen!2slk!4v1729443817724!5m2!1sen!2slk",
 }
 
-export const collectionList = [
-  {
-    label: "Slides & Slippers & Sandals",
-    url: "/collections/products?category=sandals%20%26%20slippers%20%26%20slides",
-    image: SlidesBG,
-  },
-  {
-    label: "Boots",
-    url: "/collections/products?category=boots",
-    image: BOOTSBG,
-  },
-  {
-    label: "Running/Sport Shoes",
-    url: "/collections/products?category=running%20shoes",
-    image: RunningShoeBG,
-  },
-];
 
-export const SHIPPING_FLAT_RATE_1 = 380;
-export const SHIPPING_FLAT_RATE_2 = 500;
+export const SHIPPING_FLAT_RATE_1 = 425;
+export const SHIPPING_FLAT_RATE_2 = 600;
