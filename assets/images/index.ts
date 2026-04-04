@@ -4,10 +4,8 @@ import GoodsImage from "./goods.png";
 import SupportImage from "./support.png";
 import Logo from "./logo.png";
 import PayHereWhiteLongBanner from "./payhere_long_banner.png";
-import RunningShoeBG from "./runningShoeBg.webp";
-import SlidesBG from "./slidesBg.jpg";
 import KOKOLogo from "./koko.png";
-import BOOTSBG from "./bootsBG.jpeg";
+
 
 export {
   PayHereWhiteLongBanner,
@@ -16,8 +14,5 @@ export {
   GoodsImage,
   SupportImage,
   Logo,
-  RunningShoeBG,
-  SlidesBG,
   KOKOLogo,
-  BOOTSBG,
 };

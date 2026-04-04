@@ -1,11 +1,8 @@
 import {
-  BOOTSBG,
   DeliveryImage,
   GoodsImage,
   MoneyImage,
   PayHereWhiteLongBanner,
-  RunningShoeBG,
-  SlidesBG,
   SupportImage,
 } from "@/assets/images";
 import { FooterLink, SocialMedia } from "@/interfaces/FooterLink";
