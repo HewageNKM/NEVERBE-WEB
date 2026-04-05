@@ -649,15 +649,16 @@ export const usePromotions = (): UsePromotionsReturn => {
         }
         break;
       case "BOGO":
-        // Buy One Get One - calculate the value of the cheapest eligible item
-        if (eligibleItems.length >= 2) {
-          // Flatten items based on quantity to accurately find the cheapest single pair
-          const flattenedItems: number[] = [];
-          eligibleItems.forEach(item => {
-            for (let i = 0; i < item.quantity; i++) flattenedItems.push(item.price);
-          });
+        // Buy One Get One - calculate the value of the cheapest eligible items
+        const flattenedItems: number[] = [];
+        eligibleItems.forEach(item => {
+          for (let i = 0; i < item.quantity; i++) flattenedItems.push(item.price);
+        });
+        
+        if (flattenedItems.length >= 2) {
           flattenedItems.sort((a, b) => a - b);
-          grossDiscount = flattenedItems[0]; // Cheapest item is free
+          const freeItemsCount = Math.floor(flattenedItems.length / 2); // 1 free for every pair
+          grossDiscount = flattenedItems.slice(0, freeItemsCount).reduce((acc, price) => acc + price, 0);
         }
         break;
       default:
