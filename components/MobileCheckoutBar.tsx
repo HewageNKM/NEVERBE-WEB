@@ -8,6 +8,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { RootState, AppDispatch } from "@/redux/store";
 import { calculateSubTotal } from "@/utils/bagCalculations";
 import { hideBag } from "@/redux/bagSlice/bagSlice";
+import usePromotions from "@/hooks/usePromotions";
 
 /**
  * MobileCheckoutBar - NEVERBE Premium Theme
@@ -24,6 +25,9 @@ const MobileCheckoutBar = () => {
   const promotionDiscount =
     useSelector((state: RootState) => state.bag.promotionDiscount) || 0;
   const showBag = useSelector((state: RootState) => state.bag.showBag);
+  
+  // Attach active promotion calculation engine 
+  usePromotions();
 
   // Filter visibility: Hide on specific pages
   const isHiddenPage =
