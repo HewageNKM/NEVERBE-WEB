@@ -17,6 +17,7 @@ const ImagesSlider = forwardRef<CarouselRef, ImagesSliderProps>(
         ref={ref}
         autoplay
         autoplaySpeed={6000}
+        dots={false}
         effect="fade"
         afterChange={afterChange}
         className="w-full h-full"

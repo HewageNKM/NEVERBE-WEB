@@ -8,6 +8,7 @@ import {
   LeftOutlined,
   RightOutlined,
 } from "@ant-design/icons";
+import Link from "next/link";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
@@ -23,6 +24,16 @@ const CampaignCarousel: React.FC<CampaignCarouselProps> = ({ promotions }) => {
   const nextRef = useRef<HTMLButtonElement>(null);
 
   if (!promotions || promotions.length === 0) return null;
+
+  const getPromoUrl = (promo: any) => {
+    if (promo.applicableCategories && promo.applicableCategories.length > 0) {
+      return `/collections/products?category=${encodeURIComponent(promo.applicableCategories[0])}`;
+    }
+    if (promo.applicableBrands && promo.applicableBrands.length > 0) {
+      return `/collections/products?brand=${encodeURIComponent(promo.applicableBrands[0])}`;
+    }
+    return `/collections/products`;
+  };
 
   return (
     <section>
@@ -79,38 +90,40 @@ const CampaignCarousel: React.FC<CampaignCarouselProps> = ({ promotions }) => {
         >
           {promotions.map((promo: any) => (
             <SwiperSlide key={promo.id}>
-              <div
-                className="group block relative bg-surface-3 overflow-hidden cursor-pointer rounded-[24px] hover:shadow-lg transition-all aspect-[16/9] md:aspect-[4/5]"
-              >
-                <Image
-                  src={promo.bannerUrl}
-                  alt={promo.name}
-                  fill
-                  className="object-contain md:object-cover transition-transform duration-700 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-primary/20 group-hover:bg-primary/10 transition-colors" />
-                <div className="absolute bottom-8 left-8 right-8">
-                  <h3 className="text-white text-lg font-black uppercase tracking-tight mb-3">
-                    {promo.name}
-                  </h3>
-                  <Button
-                    style={{
-                      borderRadius: 99,
-                      background: "#fff",
-                      color: "var(--color-primary-dark)",
-                      border: "none",
-                      fontWeight: 800,
-                      fontSize: 11,
-                      textTransform: "uppercase",
-                      letterSpacing: "0.08em",
-                      height: 36,
-                      padding: "0 20px",
-                    }}
-                  >
-                    Shop Now
-                  </Button>
+              <Link href={getPromoUrl(promo)} passHref>
+                <div
+                  className="group block relative bg-surface-3 overflow-hidden cursor-pointer rounded-[24px] hover:shadow-lg transition-all aspect-[16/9] md:aspect-[4/5]"
+                >
+                  <Image
+                    src={promo.bannerUrl}
+                    alt={promo.name}
+                    fill
+                    className="object-contain md:object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-primary/20 group-hover:bg-primary/10 transition-colors" />
+                  <div className="absolute bottom-8 left-8 right-8">
+                    <h3 className="text-white text-lg font-black uppercase tracking-tight mb-3">
+                      {promo.name}
+                    </h3>
+                    <Button
+                      style={{
+                        borderRadius: 99,
+                        background: "#fff",
+                        color: "var(--color-primary-dark)",
+                        border: "none",
+                        fontWeight: 800,
+                        fontSize: 11,
+                        textTransform: "uppercase",
+                        letterSpacing: "0.08em",
+                        height: 36,
+                        padding: "0 20px",
+                      }}
+                    >
+                      Shop Now
+                    </Button>
+                  </div>
                 </div>
-              </div>
+              </Link>
             </SwiperSlide>
           ))}
         </Swiper>

@@ -577,9 +577,29 @@ export const usePromotions = (): UsePromotionsReturn => {
         0,
       );
       return calculateDiscountAmount(action, eligibleTotal, eligibleItems);
+    } else if (
+      (promo.applicableCategories && promo.applicableCategories.length > 0) ||
+      (promo.applicableBrands && promo.applicableBrands.length > 0)
+    ) {
+      // PRIORITY 4: Category or Brand targeting
+      const eligibleItems = items.filter((item) => {
+        const matchesCategory = promo.applicableCategories && promo.applicableCategories.length > 0
+          ? promo.applicableCategories.includes((item as any).category)
+          : true;
+        const matchesBrand = promo.applicableBrands && promo.applicableBrands.length > 0
+          ? promo.applicableBrands.includes((item as any).brand)
+          : true;
+        return matchesCategory && matchesBrand;
+      });
+
+      const eligibleTotal = eligibleItems.reduce(
+        (sum, item) => sum + item.price * item.quantity,
+        0,
+      );
+      return calculateDiscountAmount(action, eligibleTotal, eligibleItems);
     }
 
-    // No specific product conditions - apply to entire cart
+    // No specific product/category conditions - apply to entire cart
     let applicableTotal = total;
     let eligibleItems = items;
 
@@ -603,19 +623,20 @@ export const usePromotions = (): UsePromotionsReturn => {
     applicableTotal: number,
     eligibleItems: BagItem[],
   ): number => {
+    let grossDiscount = 0;
     switch (action.type) {
       case "PERCENTAGE_OFF":
-        let discount = (applicableTotal * action.value) / 100;
+        grossDiscount = (applicableTotal * action.value) / 100;
         if (action.maxDiscount) {
-          discount = Math.min(discount, action.maxDiscount);
+          grossDiscount = Math.min(grossDiscount, action.maxDiscount);
         }
-        return Math.round(discount);
+        break;
       case "FIXED_OFF":
-        return Math.min(action.value, applicableTotal);
+        grossDiscount = Math.min(action.value, applicableTotal);
+        break;
       case "FREE_SHIPPING":
         // Return estimated average shipping cost for display
-        // Actual shipping ranges from Rs. 380 (1 item) to Rs. 500+ (2+ items)
-        return 400; // Average shipping cost saved
+        return 400; // Average shipping cost saved (not subject to item discount override)
       case "FREE_ITEM":
         // Return the price of the free item if specified
         if (action.freeProductId) {
@@ -623,22 +644,33 @@ export const usePromotions = (): UsePromotionsReturn => {
             (item: BagItem) => item.itemId === action.freeProductId,
           );
           if (freeItem) {
-            return freeItem.price;
+            grossDiscount = freeItem.price;
           }
         }
-        return 0;
+        break;
       case "BOGO":
         // Buy One Get One - calculate the value of the cheapest eligible item
         if (eligibleItems.length >= 2) {
-          const sortedPrices = eligibleItems
-            .map((item: BagItem) => item.price)
-            .sort((a: number, b: number) => a - b);
-          return sortedPrices[0]; // Cheapest item is free
+          // Flatten items based on quantity to accurately find the cheapest single pair
+          const flattenedItems: number[] = [];
+          eligibleItems.forEach(item => {
+            for (let i = 0; i < item.quantity; i++) flattenedItems.push(item.price);
+          });
+          flattenedItems.sort((a, b) => a - b);
+          grossDiscount = flattenedItems[0]; // Cheapest item is free
         }
-        return 0;
+        break;
       default:
         return 0;
     }
+
+    if (action.type === "FREE_SHIPPING") return grossDiscount;
+
+    // To prevent double dipping, we calculate the total base item discounts already granted to these eligible items
+    const eligibleItemDiscounts = eligibleItems.reduce((sum, item) => sum + (item.discount || 0), 0);
+    
+    // The promotion only grants the net extra savings value!
+    return Math.max(0, Math.round(grossDiscount) - Math.round(eligibleItemDiscounts));
   };
 
   // Generate message for promotion

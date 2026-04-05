@@ -38,6 +38,7 @@ import {
   calculateFinalPrice,
   getOriginalPrice,
   hasDiscount as checkHasDiscount,
+  hasConditions,
 } from "@/utils/pricing";
 import StockBadge from "@/components/StockBadge";
 import ShareButtons from "@/components/ShareButtons";
@@ -81,7 +82,7 @@ const ProductHero = ({ item }: { item: Product }) => {
   const originalPrice = getOriginalPrice(item);
   const hasAnyDiscount = checkHasDiscount(item, activePromo);
   const totalSavings = Math.max(0, originalPrice - discountedPrice);
-  const isPromoDiscount = !!activePromo;
+  const isPromoDiscount = !!activePromo && !hasConditions(activePromo);
 
 
   // Helper to check if a variant has a promotion indicator

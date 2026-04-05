@@ -9,20 +9,32 @@ interface Promotion {
  * Calculate the final price of a product after applying discounts and promotions
  * Consolidates duplicate price calculation logic from ItemCard, SearchResultCard, BagItemCard
  */
+export function hasConditions(promotion?: Promotion | null): boolean {
+  if (!promotion) return false;
+  // If promotion has conditions array and it's not empty, it has conditions.
+  // We're adding an explicit safe-check since Promotion's interface might not define it
+  const conditions = (promotion as any).conditions;
+  return Array.isArray(conditions) && conditions.length > 0;
+}
+
 export function calculateFinalPrice(
   product: Product,
-  promotion?: Promotion | null
+  promotion?: Promotion | null,
+  isEligible: boolean = false
 ): number {
   let finalPrice = product.sellingPrice;
 
-  // PRIORITY 1: Promotion (if exists, skip item-level discount)
-  if (promotion?.actions?.[0]?.value) {
+  // PRIORITY 1: Promotion (if exists, AND it's either an explicitly eligible cart or has no cart conditions)
+  if (promotion?.actions?.[0]?.value && (isEligible || !hasConditions(promotion))) {
     const discountValue = promotion.actions[0].value;
     if (promotion.type === "PERCENTAGE") {
       finalPrice =
         Math.round((product.sellingPrice * (100 - discountValue)) / 100 / 10) *
         10;
-    } else if (promotion.type === "FIXED") {
+    } else if (promotion.type === "FIXED" && isEligible) {
+      // FIXED promotions should ONLY apply to finalPrice if explicitly requested via cart eligibility,
+      // because FIXED amounts apply to the entire cart, not purely one item, and drawing them down here
+      // on individual cards creates massive visual inaccuracies (e.g., 7500 - 6500 = 1000)
       finalPrice = Math.max(0, product.sellingPrice - discountValue);
     }
     return finalPrice;
@@ -46,11 +58,13 @@ export function calculateFinalPrice(
  */
 export function hasDiscount(
   product: Product,
-  promotion?: Promotion | null
+  promotion?: Promotion | null,
+  isEligible: boolean = false
 ): boolean {
+  const promoValid = !!promotion && (isEligible || !hasConditions(promotion));
   return (
     product.discount > 0 ||
-    !!promotion ||
+    promoValid ||
     (product.marketPrice > 0 && product.marketPrice > product.sellingPrice)
   );
 }
@@ -69,10 +83,11 @@ export function getOriginalPrice(product: Product): number {
  */
 export function calculateSavings(
   product: Product,
-  promotion?: Promotion | null
+  promotion?: Promotion | null,
+  isEligible: boolean = false
 ): number {
   const originalPrice = getOriginalPrice(product);
-  const finalPrice = calculateFinalPrice(product, promotion);
+  const finalPrice = calculateFinalPrice(product, promotion, isEligible);
   return Math.max(0, originalPrice - finalPrice);
 }
 
@@ -81,9 +96,11 @@ export function calculateSavings(
  */
 export function calculateSavingsPercent(
   product: Product,
-  promotion?: Promotion | null
+  promotion?: Promotion | null,
+  isEligible: boolean = false
 ): number {
   const originalPrice = getOriginalPrice(product);
-  const savings = calculateSavings(product, promotion);
+  const savings = calculateSavings(product, promotion, isEligible);
   return Math.round((savings / originalPrice) * 100);
 }
+
