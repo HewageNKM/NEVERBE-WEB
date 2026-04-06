@@ -74,13 +74,15 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
   }, [order?.orderId, trackingNumber]);
 
   // Calculation Logic
+  // Subtotal is the sum of net prices (price - discount) * quantity
   const subtotal = items.reduce(
-    (sum, item) => sum + item.price * item.quantity,
+    (sum, item) => sum + (item.price - (item.discount || 0)) * item.quantity,
     0,
   );
-  // The 'discount' field at the order level contains the total discount (including individual item discounts)
-  const totalDiscount = discount || 0;
-  const total = subtotal - totalDiscount + (shippingFee || 0) + (fee || 0);
+  
+  const couponDiscountSum = (order as any).couponDiscount || discount || 0;
+  const promotionDiscountSum = (order as any).promotionDiscount || 0;
+  const total = subtotal - (couponDiscountSum + promotionDiscountSum) + (shippingFee || 0) + (fee || 0);
 
   const handleDownloadInvoice = () => {
     const doc = new jsPDF();
@@ -165,13 +167,16 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
       "Unit Price",
       "Total",
     ];
-    const tableRows = items.map((item) => [
-      item.name,
-      item.size || "-",
-      item.quantity.toString(),
-      `Rs. ${item.price.toLocaleString()}`,
-      `Rs. ${(item.price * item.quantity).toLocaleString()}`,
-    ]);
+    const tableRows = items.map((item) => {
+      const netItemPrice = item.price - (item.discount || 0);
+      return [
+        item.name,
+        item.size || "-",
+        item.quantity.toString(),
+        `Rs. ${netItemPrice.toLocaleString()}`,
+        `Rs. ${(netItemPrice * item.quantity).toLocaleString()}`,
+      ];
+    });
 
     // Calculate max Y for address block to determine table start
     const tableStartY = Math.max(billingCityY, shippingCityY) + 15;
@@ -210,11 +215,19 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
 
     let currentY = finalY + 7;
 
-    if (totalDiscount > 0) {
+    if (promotionDiscountSum > 0) {
       doc.setTextColor(46, 158, 91);
       doc.setFont("helvetica", "bold");
-      doc.text("Total Savings:", summaryX, currentY);
-      doc.text(`- Rs. ${totalDiscount.toLocaleString()}`, valueX, currentY, { align: "right" });
+      doc.text("Auto Promotion:", summaryX, currentY);
+      doc.text(`- Rs. ${promotionDiscountSum.toLocaleString()}`, valueX, currentY, { align: "right" });
+      currentY += 7;
+    }
+
+    if (couponDiscountSum > 0) {
+      doc.setTextColor(46, 158, 91);
+      doc.setFont("helvetica", "bold");
+      doc.text("Coupon Savings:", summaryX, currentY);
+      doc.text(`- Rs. ${couponDiscountSum.toLocaleString()}`, valueX, currentY, { align: "right" });
       currentY += 7;
     }
 
@@ -415,8 +428,13 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
                         </div>
                         <div className="text-right">
                           <p className="font-display font-black text-primary-dark">
-                            Rs. {item.price.toLocaleString()}
+                            Rs. {(item.price - (item.discount || 0)).toLocaleString()}
                           </p>
+                          {((item.discount || 0) > 0) && (
+                            <p className="text-[10px] text-accent font-bold uppercase line-through opacity-40">
+                              Rs. {item.price.toLocaleString()}
+                            </p>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -499,10 +517,16 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
                       Rs. {subtotal.toLocaleString()}
                     </span>
                   </div>
-                  {totalDiscount > 0 && (
+                  {promotionDiscountSum > 0 && (
                     <div className="flex justify-between text-[11px] font-bold uppercase tracking-widest text-accent">
-                      <span>Discount</span>
-                      <span>- Rs. {totalDiscount.toLocaleString()}</span>
+                      <span>Auto Discount</span>
+                      <span>- Rs. {promotionDiscountSum.toLocaleString()}</span>
+                    </div>
+                  )}
+                  {couponDiscountSum > 0 && (
+                    <div className="flex justify-between text-[11px] font-bold uppercase tracking-widest text-accent">
+                      <span>Coupon Discount</span>
+                      <span>- Rs. {couponDiscountSum.toLocaleString()}</span>
                     </div>
                   )}
                   <div className="flex justify-between text-[11px] font-bold uppercase tracking-widest text-accent/40">
