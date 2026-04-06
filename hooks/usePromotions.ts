@@ -562,7 +562,7 @@ export const usePromotions = (): UsePromotionsReturn => {
         (sum, item) => sum + item.price * item.quantity,
         0,
       );
-      return calculateDiscountAmount(action, eligibleTotal, eligibleItems);
+      return calculateDiscountAmount(action, eligibleTotal, eligibleItems, promo);
     } else if (
       promo.applicableProducts &&
       promo.applicableProducts.length > 0
@@ -576,7 +576,7 @@ export const usePromotions = (): UsePromotionsReturn => {
         (sum, item) => sum + item.price * item.quantity,
         0,
       );
-      return calculateDiscountAmount(action, eligibleTotal, eligibleItems);
+      return calculateDiscountAmount(action, eligibleTotal, eligibleItems, promo);
     } else if (
       (promo.applicableCategories && promo.applicableCategories.length > 0) ||
       (promo.applicableBrands && promo.applicableBrands.length > 0)
@@ -596,7 +596,7 @@ export const usePromotions = (): UsePromotionsReturn => {
         (sum, item) => sum + item.price * item.quantity,
         0,
       );
-      return calculateDiscountAmount(action, eligibleTotal, eligibleItems);
+      return calculateDiscountAmount(action, eligibleTotal, eligibleItems, promo);
     }
 
     // No specific product/category conditions - apply to entire cart
@@ -614,7 +614,7 @@ export const usePromotions = (): UsePromotionsReturn => {
       );
     }
 
-    return calculateDiscountAmount(action, applicableTotal, eligibleItems);
+    return calculateDiscountAmount(action, applicableTotal, eligibleItems, promo);
   };
 
   // Helper: Calculate discount amount based on action type
@@ -622,6 +622,7 @@ export const usePromotions = (): UsePromotionsReturn => {
     action: any,
     applicableTotal: number,
     eligibleItems: BagItem[],
+    promo?: any,
   ): number => {
     let grossDiscount = 0;
     switch (action.type) {
@@ -632,7 +633,17 @@ export const usePromotions = (): UsePromotionsReturn => {
         }
         break;
       case "FIXED_OFF":
-        grossDiscount = Math.min(action.value, applicableTotal);
+        // Apply scaling multiplier if MIN_QUANTITY is present
+        const minQtyCondition = promo?.conditions?.find((c: any) => c.type === "MIN_QUANTITY");
+        const minQtyValue = minQtyCondition ? Number(minQtyCondition.value) : 0;
+
+        if (minQtyValue > 0) {
+          const totalEligibleQty = eligibleItems.reduce((sum, item) => sum + item.quantity, 0);
+          const multiplier = Math.floor(totalEligibleQty / minQtyValue);
+          grossDiscount = Math.min(action.value * multiplier, applicableTotal);
+        } else {
+          grossDiscount = Math.min(action.value, applicableTotal);
+        }
         break;
       case "FREE_SHIPPING":
         // Return estimated average shipping cost for display
