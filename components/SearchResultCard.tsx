@@ -8,7 +8,7 @@ import {
   calculateFinalPrice,
   hasDiscount as checkHasDiscount,
 } from "@/utils/pricing";
-import { Card, Typography, Badge } from "antd";
+import { Card, Typography, Badge, Tag } from "antd";
 
 const { Text, Title } = Typography;
 
@@ -23,8 +23,10 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({
   onClick,
   variant = "list",
 }) => {
-  const { getPromotionForProduct } = usePromotionsContext();
+  const { getPromotionForProduct, getPromotionsForProduct } =
+    usePromotionsContext();
   const activePromo = getPromotionForProduct(item.id);
+  const allPromos = getPromotionsForProduct(item.id);
 
   const finalPrice = calculateFinalPrice(item, activePromo);
   const hasDiscount = checkHasDiscount(item, activePromo);
@@ -34,9 +36,11 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({
   const ribbonText = outOfStock
     ? "Sold Out"
     : activePromo
-      ? activePromo.type === "BOGO"
-        ? "Buy 1 Get 1"
-        : "Special Offer"
+      ? activePromo.name?.length < 20
+        ? activePromo.name
+        : activePromo.type === "BOGO"
+          ? "Buy 1 Get 1"
+          : "Special Offer"
       : item.discount > 0
         ? `${item.discount}% Off`
         : null;
@@ -145,6 +149,29 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({
                 </Text>
               )}
             </div>
+
+            {allPromos.length > 0 && (
+              <div className="flex flex-wrap gap-1 mb-2">
+                {allPromos.map((promo) => (
+                  <Tag
+                    key={promo.id}
+                    style={{
+                      fontSize: "9px",
+                      fontWeight: 800,
+                      borderRadius: "6px",
+                      border: "none",
+                      padding: "0 6px",
+                      background: "var(--color-warning)",
+                      color: "var(--color-primary-dark)",
+                      margin: 0,
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    {promo.name}
+                  </Tag>
+                ))}
+              </div>
+            )}
           </Link>
         </Card>
       </Badge.Ribbon>
@@ -185,10 +212,17 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({
           >
             {item.name}
           </Title>
-          {activePromo && (
-            <span className="shrink-0 bg-accent text-dark text-[8px] font-black px-1.5 py-0.5 rounded-sm shadow-sm">
-              {activePromo.type === "BOGO" ? "BOGO" : "PROMO"}
-            </span>
+          {allPromos.length > 0 && (
+            <div className="flex flex-wrap gap-1 mt-1">
+              {allPromos.map((promo) => (
+                <span
+                  key={promo.id}
+                  className="shrink-0 bg-accent text-dark text-[8px] font-black px-1.5 py-0.5 rounded-sm shadow-sm uppercase"
+                >
+                  {promo.name}
+                </span>
+              ))}
+            </div>
           )}
         </div>
 

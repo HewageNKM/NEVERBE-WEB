@@ -34,7 +34,8 @@ const ItemCard = ({
     null,
   );
   const { openQuickView } = useQuickView();
-  const { getPromotionForProduct } = usePromotionsContext();
+  const { getPromotionForProduct, getPromotionsForProduct } =
+    usePromotionsContext();
 
   useEffect(() => {
     if (!item.inStock) {
@@ -46,6 +47,7 @@ const ItemCard = ({
   }, [item]);
 
   const activePromo = getPromotionForProduct(item.id);
+  const allPromos = getPromotionsForProduct(item.id);
   const discountedPrice = calculateFinalPrice(item, activePromo);
   const hasDiscount = checkHasDiscount(item, activePromo);
 
@@ -74,9 +76,11 @@ const ItemCard = ({
             : item.isNewArrival
               ? "New Arrival"
               : activePromo
-                ? activePromo.type === "BOGO"
-                  ? "Buy 1 Get 1"
-                  : "Special Offer"
+                ? activePromo.name?.length < 20
+                  ? activePromo.name
+                  : activePromo.type === "BOGO"
+                    ? "Buy 1 Get 1"
+                    : "Special Offer"
                 : item.discount > 0
                   ? `${item.discount}% Off`
                   : null
@@ -247,7 +251,33 @@ const ItemCard = ({
               </Text>
             )}
           </div>
+        </Link>
 
+        {allPromos.length > 0 && (
+          <div className="flex flex-wrap gap-1 mb-2">
+            {allPromos.map((promo) => (
+              <Tag
+                key={promo.id}
+                style={{
+                  fontSize: "9px",
+                  fontWeight: 800,
+                  borderRadius: "6px",
+                  border: "none",
+                  padding: "0 6px",
+                  background: "var(--color-warning)",
+                  color: "var(--color-primary-dark)",
+                  margin: 0,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.02em",
+                }}
+              >
+                {promo.name}
+              </Tag>
+            ))}
+          </div>
+        )}
+
+        <Link href={`/collections/products/${item?.id}`}>
           <div className="flex items-center justify-between mt-1 pt-1.5 border-t border-default">
             <Text
               type="secondary"

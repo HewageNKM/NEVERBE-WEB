@@ -33,12 +33,17 @@ interface PromotionsContextType {
     productId: string,
     variantId?: string,
   ) => ActivePromotion | null;
+  getPromotionsForProduct: (
+    productId: string,
+    variantId?: string,
+  ) => ActivePromotion[];
 }
 
 const PromotionsContext = createContext<PromotionsContextType>({
   promotions: [],
   isLoading: false,
   getPromotionForProduct: () => null,
+  getPromotionsForProduct: () => [],
 });
 
 export const usePromotionsContext = () => useContext(PromotionsContext);
@@ -116,9 +121,43 @@ export const PromotionsProvider = ({
     [promotions],
   );
 
+  const getPromotionsForProduct = useCallback(
+    (productId: string, variantId?: string): ActivePromotion[] => {
+      if (!productId) return [];
+
+      return promotions
+        .filter((promo) => {
+          // 1. Check Date Validity
+          const dateCheck = isPromotionDateValid(promo.startDate, promo.endDate);
+          if (!dateCheck.valid) return false;
+
+          // 2. Initial Exclusions
+          if (promo.excludedProducts?.includes(productId)) return false;
+
+          // 3. Use Granular Utility for targeting
+          const isEligible = isVariantEligibleForPromotion(
+            productId,
+            variantId || "",
+            promo.applicableProductVariants as ProductVariantTarget[],
+            promo.conditions as PromotionCondition[],
+            promo.applicableProducts,
+          );
+
+          return isEligible;
+        })
+        .sort((a: any, b: any) => (b.priority || 0) - (a.priority || 0));
+    },
+    [promotions],
+  );
+
   return (
     <PromotionsContext.Provider
-      value={{ promotions, isLoading, getPromotionForProduct }}
+      value={{ 
+        promotions, 
+        isLoading, 
+        getPromotionForProduct,
+        getPromotionsForProduct 
+      }}
     >
       {children}
     </PromotionsContext.Provider>
