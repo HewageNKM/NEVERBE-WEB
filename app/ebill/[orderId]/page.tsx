@@ -28,14 +28,20 @@ export default async function EBillPage(props: { params: Promise<{ orderId: stri
     ? new Date(order.createdAt._seconds * 1000)
     : new Date(order.createdAt);
 
-  const subtotal = order.items?.reduce(
-    (sum: number, item: any) => sum + (item.price - (item.discount || 0)) * item.quantity,
+  // Raw subtotal BEFORE any discounts
+  const rawSubtotal = order.items?.reduce(
+    (sum: number, item: any) => sum + item.price * item.quantity,
     0,
   ) || 0;
-  
-  const couponDiscountSum = order.couponDiscount || order.discount || 0;
-  const promotionDiscountSum = order.promotionDiscount || 0;
-  const total = subtotal - (couponDiscountSum + promotionDiscountSum) + (order.shippingFee || 0) + (order.fee || 0);
+
+  // Total of all per-item discounts
+  const itemDiscountTotal = order.items?.reduce(
+    (sum: number, item: any) => sum + (item.discount || 0) * item.quantity,
+    0,
+  ) || 0;
+
+  // Use the backend-calculated total directly (most reliable)
+  const total = order.total || (rawSubtotal - itemDiscountTotal + (order.shippingFee || 0) + (order.fee || 0));
 
   return (
     <div className="min-h-screen bg-white flex flex-col font-sans text-primary-dark">
@@ -96,6 +102,7 @@ export default async function EBillPage(props: { params: Promise<{ orderId: stri
             <div className="block sm:hidden space-y-6">
               {order.items?.map((item: any, idx: number) => {
                 const netPrice = item.price - (item.discount || 0);
+                const hasDiscount = (item.discount || 0) > 0;
                 return (
                   <div key={idx} className="flex justify-between items-start border-b border-default pb-4">
                     <div className="space-y-1">
@@ -103,10 +110,17 @@ export default async function EBillPage(props: { params: Promise<{ orderId: stri
                       <p className="text-[10px] font-bold uppercase text-muted tracking-widest">
                         {item.size || "Free Size"} &times; {item.quantity}
                       </p>
+                      {hasDiscount && (
+                        <p className="text-[9px] font-bold text-accent">
+                          {formatCurrency(item.price)} → {formatCurrency(netPrice)} (-{formatCurrency(item.discount)})
+                        </p>
+                      )}
                     </div>
                     <div className="text-right">
                       <p className="font-display font-black text-lg">{formatCurrency(netPrice * item.quantity)}</p>
-                      <p className="text-[9px] text-muted font-bold uppercase">{formatCurrency(netPrice)} each</p>
+                      {hasDiscount && (
+                        <p className="text-[9px] text-muted font-bold uppercase line-through opacity-40">{formatCurrency(item.price * item.quantity)}</p>
+                      )}
                     </div>
                   </div>
                 );
@@ -121,13 +135,15 @@ export default async function EBillPage(props: { params: Promise<{ orderId: stri
                     <th className="py-4 text-[10px] font-black uppercase tracking-[0.2em] text-muted">Description</th>
                     <th className="py-4 px-4 text-[10px] font-black uppercase tracking-[0.2em] text-muted text-center">Size</th>
                     <th className="py-4 px-4 text-[10px] font-black uppercase tracking-[0.2em] text-muted text-center">Qty</th>
-                    <th className="py-4 px-4 text-[10px] font-black uppercase tracking-[0.2em] text-muted text-right">Unit Price</th>
+                    <th className="py-4 px-4 text-[10px] font-black uppercase tracking-[0.2em] text-muted text-right">Price</th>
+                    <th className="py-4 px-4 text-[10px] font-black uppercase tracking-[0.2em] text-muted text-right">Discount</th>
                     <th className="py-4 text-[10px] font-black uppercase tracking-[0.2em] text-muted text-right">Amount</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-default">
                   {order.items?.map((item: any, idx: number) => {
                     const netPrice = item.price - (item.discount || 0);
+                    const hasDiscount = (item.discount || 0) > 0;
                     return (
                       <tr key={idx} className="group transition-colors">
                         <td className="py-6 pr-4">
@@ -141,11 +157,13 @@ export default async function EBillPage(props: { params: Promise<{ orderId: stri
                         <td className="py-6 px-4 text-center font-bold text-sm">{item.size || "-"}</td>
                         <td className="py-6 px-4 text-center font-bold text-sm">{item.quantity}</td>
                         <td className="py-6 px-4 text-right">
-                          <p className="font-bold text-sm">{formatCurrency(netPrice)}</p>
-                          {item.discount > 0 && (
-                            <p className="text-[9px] text-accent font-bold uppercase line-through opacity-40">
-                              {formatCurrency(item.price)}
-                            </p>
+                          <p className="font-bold text-sm">{formatCurrency(item.price)}</p>
+                        </td>
+                        <td className="py-6 px-4 text-right">
+                          {hasDiscount ? (
+                            <p className="font-bold text-sm text-accent">-{formatCurrency(item.discount * item.quantity)}</p>
+                          ) : (
+                            <p className="font-bold text-sm text-muted">-</p>
                           )}
                         </td>
                         <td className="py-6 text-right font-display font-black text-lg">
@@ -186,13 +204,13 @@ export default async function EBillPage(props: { params: Promise<{ orderId: stri
               <div className="space-y-4">
                 <div className="flex justify-between items-center text-xs font-bold uppercase tracking-widest">
                   <span className="text-muted">Subtotal</span>
-                  <span className="text-primary-dark font-black">{formatCurrency(subtotal)}</span>
+                  <span className="text-primary-dark font-black">{formatCurrency(rawSubtotal)}</span>
                 </div>
-                
-                {(promotionDiscountSum > 0 || couponDiscountSum > 0) && (
+
+                {itemDiscountTotal > 0 && (
                   <div className="flex justify-between items-center text-xs font-bold uppercase tracking-widest text-accent">
-                    <span>Total Discount</span>
-                    <span className="font-black">- {formatCurrency(promotionDiscountSum + couponDiscountSum)}</span>
+                    <span>Item Discounts</span>
+                    <span className="font-black">- {formatCurrency(itemDiscountTotal)}</span>
                   </div>
                 )}
 

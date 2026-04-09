@@ -75,14 +75,16 @@ const EBillDownloadButton: React.FC<EBillDownloadButtonProps> = ({ order }) => {
       doc.text("Walk-in Customer", 14, 64);
     }
 
-    const tableColumn = ["Item Description", "Size", "Qty", "Unit Price", "Total"];
+    const tableColumn = ["Item Description", "Size", "Qty", "Price", "Discount", "Amount"];
     const tableRows = items.map((item: any) => {
       const netItemPrice = item.price - (item.discount || 0);
+      const hasDiscount = (item.discount || 0) > 0;
       return [
         item.name,
         item.size || "-",
         item.quantity.toString(),
-        `Rs. ${netItemPrice.toLocaleString()}`,
+        `Rs. ${item.price.toLocaleString()}`,
+        hasDiscount ? `- Rs. ${(item.discount * item.quantity).toLocaleString()}` : "-",
         `Rs. ${(netItemPrice * item.quantity).toLocaleString()}`,
       ];
     });
@@ -94,7 +96,7 @@ const EBillDownloadButton: React.FC<EBillDownloadButtonProps> = ({ order }) => {
       startY: tableStartY,
       theme: "grid",
       headStyles: { fillColor: [46, 158, 91], textColor: [255, 255, 255], fontStyle: "bold", halign: "center" },
-      columnStyles: { 2: { halign: "center" }, 3: { halign: "right" }, 4: { halign: "right" } },
+      columnStyles: { 2: { halign: "center" }, 3: { halign: "right" }, 4: { halign: "right" }, 5: { halign: "right" } },
       styles: { fontSize: 9, cellPadding: 4 },
     });
 
@@ -102,22 +104,21 @@ const EBillDownloadButton: React.FC<EBillDownloadButtonProps> = ({ order }) => {
     const summaryX = 140;
     const valueX = 196;
 
-    const subtotal = items.reduce((sum: number, item: any) => sum + (item.price - (item.discount || 0)) * item.quantity, 0);
-    const couponDiscountSum = order.couponDiscount || discount || 0;
-    const promotionDiscountSum = order.promotionDiscount || 0;
-    const grandTotal = subtotal - (couponDiscountSum + promotionDiscountSum) + (shippingFee || 0) + (fee || 0);
+    const rawSubtotal = items.reduce((sum: number, item: any) => sum + item.price * item.quantity, 0);
+    const itemDiscountTotal = items.reduce((sum: number, item: any) => sum + (item.discount || 0) * item.quantity, 0);
+    const grandTotal = order.total || (rawSubtotal - itemDiscountTotal + (shippingFee || 0) + (fee || 0));
 
     doc.setFontSize(10);
     doc.setFont("helvetica", "normal");
     doc.setTextColor(100);
     doc.text("Subtotal:", summaryX, finalY);
-    doc.text(`Rs. ${subtotal.toLocaleString()}`, valueX, finalY, { align: "right" });
+    doc.text(`Rs. ${rawSubtotal.toLocaleString()}`, valueX, finalY, { align: "right" });
 
     let currentY = finalY + 7;
-    if (promotionDiscountSum > 0 || couponDiscountSum > 0) {
+    if (itemDiscountTotal > 0) {
       doc.setTextColor(46, 158, 91);
-      doc.text("Discounts:", summaryX, currentY);
-      doc.text(`- Rs. ${(promotionDiscountSum + couponDiscountSum).toLocaleString()}`, valueX, currentY, { align: "right" });
+      doc.text("Item Discounts:", summaryX, currentY);
+      doc.text(`- Rs. ${itemDiscountTotal.toLocaleString()}`, valueX, currentY, { align: "right" });
       currentY += 7;
     }
 
