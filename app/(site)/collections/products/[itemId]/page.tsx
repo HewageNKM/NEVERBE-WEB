@@ -62,7 +62,7 @@ export async function generateMetadata(context: {
       images: [
         {
           url: (
-            item.thumbnail?.url || "https://neverbe.lk/logo-og.png"
+            item.thumbnail?.url || "/collections-og.png"
           ).replace(/^http:\/\//, "https://"),
           width: 1200,
           height: 630,
@@ -71,7 +71,7 @@ export async function generateMetadata(context: {
         },
         {
           url: (
-            item.thumbnail?.url || "https://neverbe.lk/logo-og.png"
+            item.thumbnail?.url || "/collections-og.png"
           ).replace(/^http:\/\//, "https://"),
           width: 600,
           height: 600,
@@ -84,12 +84,7 @@ export async function generateMetadata(context: {
       card: "summary_large_image",
       title: safeTitle,
       description: `Explore ${item.name} at NEVERBE. Premium quality footwear and apparel in Sri Lanka.`,
-      images: [
-        (item.thumbnail?.url || "https://neverbe.lk/logo-og.png").replace(
-          /^http:\/\//,
-          "https://",
-        ),
-      ],
+      images: [(item.thumbnail?.url || "/collections-og.png").replace(/^http:\/\//, "https://")],
     },
   };
 }
@@ -141,7 +136,7 @@ const Page = async (context: { params: Promise<{ itemId: string }> }) => {
     "@context": "https://schema.org",
     "@type": "Product",
     name: item.name,
-    image: [item.thumbnail?.url || "https://neverbe.lk/logo-og.png"],
+    image: [item.thumbnail?.url || "/collections-og.png"],
     description: `Shop ${item.name} — premium quality ${categoryLabel.toLowerCase()} available in Sri Lanka at NEVERBE. Island-wide delivery with Cash on Delivery.`,
     sku: item.id,
     category: categoryLabel,

@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     locale: "en_LK",
     images: [
       {
-        url: "https://neverbe.lk/logo-og.png",
+        url: "/main-og.png",
         width: 1200,
         height: 630,
         alt: "NEVERBE - Shoes & Clothing Sri Lanka",
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     title: "About NEVERBE - Sri Lanka's Trusted Shoe & Clothing Store",
     description:
       "Learn about NEVERBE, Sri Lanka's trusted destination for premium shoes & clothing.",
-    images: ["https://neverbe.lk/logo-og.png"],
+    images: ["/main-og.png"],
   },
   robots: {
     index: true,
@@ -59,7 +59,7 @@ const AboutUs = () => {
         "@type": "Organization",
         name: "NEVERBE",
         url: "https://neverbe.lk",
-        logo: "https://neverbe.lk/logo-og.png",
+        logo: "/main-og.png",
         sameAs: [
           "https://www.facebook.com/neverbe196",
           "https://www.instagram.com/neverbe196",

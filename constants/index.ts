@@ -1,9 +1,5 @@
 import {
-  DeliveryImage,
-  GoodsImage,
-  MoneyImage,
   PayHereWhiteLongBanner,
-  SupportImage,
 } from "@/assets/images";
 import { FooterLink, SocialMedia } from "@/interfaces/FooterLink";
 import { IoLogoTiktok } from "react-icons/io5";
@@ -117,29 +113,7 @@ export const sortingOptions = [
   },
 ];
 
-export const whyUs = [
-  {
-    title: "Premium Quality",
-    description:
-      "We source only the finest materials for ultimate comfort and style.",
-    image: MoneyImage,
-  },
-  {
-    title: "Customer Service",
-    description: "customer service is our top priority.",
-    image: SupportImage,
-  },
-  {
-    title: "Largest Collection",
-    description: "We have the largest collection of products in the market.",
-    image: GoodsImage,
-  },
-  {
-    title: "Fast Shipping",
-    description: "We deliver your products withing couples of days.",
-    image: DeliveryImage,
-  },
-];
+
 export const termsAndConditions = [
   {
     title: "Acceptance of Terms",

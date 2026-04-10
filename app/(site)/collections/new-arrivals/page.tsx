@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     locale: "en_LK",
     images: [
       {
-        url: "https://neverbe.lk/logo-og.png",
+        url: "/collections-og.png",
         width: 1200,
         height: 630,
         alt: "NEVERBE New Arrivals - Shoes & Clothing",
@@ -52,7 +52,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "New Arrivals | NEVERBE Sri Lanka",
     description: "Fresh shoe drops, clothing & apparel added weekly in Sri Lanka.",
-    images: ["https://neverbe.lk/logo-og.png"],
+    images: ["/collections-og.png"],
   },
 };
 
@@ -98,7 +98,7 @@ const NewArrivalsPage = async () => {
                 "@type": "Product",
                 name: product.name,
                 image:
-                  product.thumbnail?.url || "https://neverbe.lk/logo-og.png",
+                  product.thumbnail?.url || "/collections-og.png",
                 url: `https://neverbe.lk/collections/products/${product.id}`,
                 brand: { "@type": "Brand", name: product.brand || "NEVERBE" },
                 offers: {

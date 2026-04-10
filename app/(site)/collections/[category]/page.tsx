@@ -60,7 +60,7 @@ export async function generateMetadata(context: {
       locale: "en_LK",
       images: [
         {
-          url: "https://neverbe.lk/shoes-og.jpg",
+          url: "/collections-og.png",
           width: 1200,
           height: 630,
           alt: `${mapping.h1} - NEVERBE Sri Lanka`,
@@ -71,7 +71,7 @@ export async function generateMetadata(context: {
       card: "summary_large_image",
       title: `${mapping.h1} | NEVERBE Sri Lanka`,
       description: mapping.description,
-      images: ["https://neverbe.lk/shoes-og.jpg"],
+      images: ["/collections-og.png"],
     },
     metadataBase: new URL("https://neverbe.lk"),
   };

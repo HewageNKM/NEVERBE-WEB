@@ -5,6 +5,35 @@ import { notFound } from "next/navigation";
 import { format } from "date-fns";
 import EBillDownloadButton from "../components/EBillDownloadButton";
 import { BusinessInfo } from "@/config/BusinessInfo";
+import { Metadata } from "next";
+
+export async function generateMetadata(props: { params: Promise<{ orderId: string }> }): Promise<Metadata> {
+  const { orderId } = await props.params;
+  const title = `Electronic Receipt #${orderId.toUpperCase()} - NEVERBE`;
+  const description = `View and download your official NEVERBE electronic receipt for order #${orderId.toUpperCase()}. Digital billing made simple.`;
+  const ogImage = "/ebill-og.png";
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      images: [{ url: ogImage, width: 1200, height: 630, alt: "NEVERBE Electronic Receipt" }],
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [ogImage],
+    },
+    robots: {
+      index: false, // Don't index individual customer receipts in search engines for privacy
+      follow: false,
+    },
+  };
+}
 
 const getOrder = async (orderId: string) => {
   try {

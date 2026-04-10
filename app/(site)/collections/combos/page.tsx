@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     locale: "en_LK",
     images: [
       {
-        url: "https://neverbe.lk/logo-og.png",
+        url: "/offers-og.png",
         width: 1200,
         height: 630,
         alt: "NEVERBE Bundle Deals - Shoes & Clothing",
@@ -53,7 +53,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Bundle Deals | NEVERBE Sri Lanka",
     description: "BOGO & multi-buy discounts on sneakers & clothing in Sri Lanka.",
-    images: ["https://neverbe.lk/logo-og.png"],
+    images: ["/offers-og.png"],
   },
   metadataBase: new URL("https://neverbe.lk"),
 };
@@ -117,7 +117,7 @@ const CombosPage = async ({
               "@type": "Product",
               name: combo?.name,
               image:
-                combo?.previewThumbnail || "https://neverbe.lk/logo-og.png",
+                combo?.previewThumbnail || "/offers-og.png",
               description:
                 combo?.description || "Bundle deal at NEVERBE Sri Lanka.",
               url: `https://neverbe.lk/collections/combos/${combo?.id}`,

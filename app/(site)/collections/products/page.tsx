@@ -49,7 +49,7 @@ export const metadata: Metadata = {
     locale: "en_LK",
     images: [
       {
-        url: "https://neverbe.lk/shoes-og.jpg",
+        url: "/collections-og.png",
         width: 1200,
         height: 630,
         alt: "NEVERBE Collection - Shoes & Clothing",
@@ -60,7 +60,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Shop NEVERBE | Shoes, Clothing & Apparel",
     description: "Premium quality shoes & clothing. Cash on Delivery island-wide.",
-    images: ["https://neverbe.lk/shoes-og.jpg"],
+    images: ["/collections-og.png"],
   },
   metadataBase: new URL("https://neverbe.lk"),
 };

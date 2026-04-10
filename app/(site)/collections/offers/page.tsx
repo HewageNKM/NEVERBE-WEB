@@ -47,7 +47,7 @@ export const metadata: Metadata = {
     locale: "en_LK",
     images: [
       {
-        url: "https://neverbe.lk/deals-og.jpg",
+        url: "/offers-og.png",
         width: 1200,
         height: 630,
         alt: "NEVERBE Offers & Deals - Shoes & Clothing",
@@ -58,7 +58,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Deals & Promotions | NEVERBE",
     description: "Exclusive coupons & markdown deals on sneakers & clothing in Sri Lanka.",
-    images: ["https://neverbe.lk/deals-og.jpg"],
+    images: ["/offers-og.png"],
   },
 };
 

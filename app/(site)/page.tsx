@@ -57,7 +57,7 @@ export const metadata: Metadata = {
     locale: "en_LK",
     images: [
       {
-        url: "https://neverbe.lk/logo-og.png",
+        url: "/main-og.png",
         alt: "NEVERBE - Shoes & Clothing in Sri Lanka",
         width: 1200,
         height: 630,
@@ -97,11 +97,11 @@ const Page = async () => {
         url: "https://neverbe.lk",
         logo: {
           "@type": "ImageObject",
-          url: "https://neverbe.lk/logo-og.png",
+          url: "/main-og.png",
           width: 600,
           height: 600,
         },
-        image: "https://neverbe.lk/logo-og.png",
+        image: "/main-og.png",
         description:
           "Sri Lanka's #1 online shoe store. Shop sneakers, running shoes, slides & footwear with Cash on Delivery island-wide.",
         sameAs: [
@@ -125,7 +125,7 @@ const Page = async () => {
         legalName: "NEVERBE",
         alternateName: "NEVERBE Shoe & Clothing Store",
         url: "https://neverbe.lk",
-        image: "https://neverbe.lk/logo-og.png",
+        image: "/main-og.png",
         description:
           "Buy shoes, clothing & apparel online in Sri Lanka. Sneakers, t-shirts, activewear, sportswear & fashion accessories at best prices. Cash on Delivery available.",
         telephone: "+94 70 520 8999",
