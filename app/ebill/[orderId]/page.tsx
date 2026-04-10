@@ -9,16 +9,82 @@ import { BusinessInfo } from "@/config/BusinessInfo";
 const getOrder = async (orderId: string) => {
   try {
     const res = await axiosInstance.get(`/web/orders/${orderId}`);
-    return res.data?.data || res.data;
-  } catch (error) {
-    return null;
+    return { order: res.data?.data || res.data, expired: false };
+  } catch (error: any) {
+    if (error?.response?.status === 410) {
+      return { order: null, expired: true };
+    }
+    return { order: null, expired: false };
   }
 };
 
 export default async function EBillPage(props: { params: Promise<{ orderId: string }> }) {
   const { orderId } = await props.params;
 
-  const order = await getOrder(orderId);
+  const { order, expired } = await getOrder(orderId);
+
+  if (expired) {
+    return (
+      <div className="min-h-screen bg-white flex flex-col font-sans text-primary-dark">
+        {/* HEADER */}
+        <div className="w-full border-b border-default bg-surface-1 p-6 md:p-12">
+          <div className="max-w-5xl mx-auto">
+            <h1 className="text-4xl md:text-6xl font-display font-black uppercase tracking-tighter leading-none">
+              Electronic Receipt
+            </h1>
+          </div>
+        </div>
+
+        {/* EXPIRED CONTENT */}
+        <div className="flex-1 w-full p-6 md:p-12 bg-white flex items-center justify-center">
+          <div className="max-w-lg mx-auto text-center space-y-8">
+            {/* Expired Icon */}
+            <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-surface-1 border border-default mx-auto">
+              <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-muted">
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+              </svg>
+            </div>
+
+            <div className="space-y-4">
+              <h2 className="text-3xl md:text-4xl font-display font-black uppercase tracking-tight">
+                eBill Expired
+              </h2>
+              <p className="text-sm font-bold uppercase tracking-widest text-muted leading-relaxed max-w-sm mx-auto">
+                This electronic receipt has expired. POS receipts are available for 30 days from the date of purchase.
+              </p>
+            </div>
+
+            <div className="pt-4 space-y-3">
+              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted">
+                Ref: #{orderId.toUpperCase()}
+              </p>
+              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted">
+                If you need assistance, please contact us at {BusinessInfo.phone}
+              </p>
+            </div>
+
+            <a
+              href="https://neverbe.lk"
+              className="inline-block px-8 py-4 bg-primary-dark text-white text-xs font-black uppercase tracking-widest rounded-full hover:bg-accent transition-colors"
+            >
+              Visit NEVERBE
+            </a>
+          </div>
+        </div>
+
+        {/* FOOTER */}
+        <footer className="w-full border-t border-default p-12 text-center bg-white">
+          <a
+            href="https://neverbe.lk"
+            className="text-lg font-display font-black uppercase tracking-widest hover:text-accent transition-colors"
+          >
+            neverbe.lk
+          </a>
+        </footer>
+      </div>
+    );
+  }
 
   if (!order) {
     return notFound();
