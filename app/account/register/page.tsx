@@ -15,7 +15,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { auth } from "@/firebase/firebaseClient";
 import Image from "next/image";
 import Link from "next/link";
-import { Logo } from "@/assets/images";
+
 import toast from "react-hot-toast";
 import ComponentLoader from "@/components/ComponentLoader";
 import { motion } from "framer-motion";

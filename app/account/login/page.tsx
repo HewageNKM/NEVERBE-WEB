@@ -14,7 +14,7 @@ import { sendPasswordResetLinkAction } from "@/actions/authAction";
 import { Modal } from "antd";
 import Image from "next/image";
 import Link from "next/link";
-import { Logo } from "@/assets/images";
+
 import toast from "react-hot-toast";
 import ComponentLoader from "@/components/ComponentLoader";
 import { motion } from "framer-motion";

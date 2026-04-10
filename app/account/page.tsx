@@ -4,7 +4,7 @@ import { auth, db } from "@/firebase/firebaseClient";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import Image from "next/image";
-import { Logo } from "@/assets/images";
+
 import Link from "next/link";
 import { GoogleAuthProvider, linkWithPopup } from "firebase/auth";
 import { signOut } from "@firebase/auth";
