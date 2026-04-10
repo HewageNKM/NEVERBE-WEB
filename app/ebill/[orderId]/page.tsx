@@ -9,19 +9,23 @@ import { BusinessInfo } from "@/config/BusinessInfo";
 const getOrder = async (orderId: string) => {
   try {
     const res = await axiosInstance.get(`/web/orders/${orderId}`);
-    return { order: res.data?.data || res.data, expired: false };
+    return { 
+      order: res.data?.data || res.data, 
+      daysRemaining: res.data?.daysRemaining,
+      expired: false 
+    };
   } catch (error: any) {
     if (error?.response?.status === 410) {
-      return { order: null, expired: true };
+      return { order: null, daysRemaining: 0, expired: true };
     }
-    return { order: null, expired: false };
+    return { order: null, daysRemaining: null, expired: false };
   }
 };
 
 export default async function EBillPage(props: { params: Promise<{ orderId: string }> }) {
   const { orderId } = await props.params;
 
-  const { order, expired } = await getOrder(orderId);
+  const { order, expired, daysRemaining } = await getOrder(orderId);
 
   if (expired) {
     return (
@@ -122,6 +126,14 @@ export default async function EBillPage(props: { params: Promise<{ orderId: stri
               <span>Ref: #{order.orderId?.toUpperCase()}</span>
               <span className="hidden sm:inline">|</span>
               <span>Issued: {format(orderDate, "MMM dd, yyyy h:mm a")}</span>
+              <span className="hidden sm:inline">|</span>
+              <span>
+                Validity: {daysRemaining !== undefined ? (
+                  `Expires in ${daysRemaining} days`
+                ) : (
+                  "Lifetime"
+                )}
+              </span>
             </div>
           </div>
           <EBillDownloadButton order={order} />
