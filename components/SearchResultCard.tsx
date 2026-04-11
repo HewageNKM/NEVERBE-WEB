@@ -151,7 +151,7 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({
             </div>
 
             {allPromos.length > 0 && (
-              <div className="flex flex-wrap gap-1 mb-2">
+              <div className="flex flex-col gap-1 mb-2">
                 {allPromos.map((promo) => (
                   <Tag
                     key={promo.id}
@@ -213,7 +213,7 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({
             {item.name}
           </Title>
           {allPromos.length > 0 && (
-            <div className="flex flex-wrap gap-1 mt-1">
+            <div className="flex flex-col gap-1 mt-1">
               {allPromos.map((promo) => (
                 <span
                   key={promo.id}

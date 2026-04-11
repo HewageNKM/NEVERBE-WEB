@@ -254,7 +254,7 @@ const ItemCard = ({
         </Link>
 
         {allPromos.length > 0 && (
-          <div className="flex flex-wrap gap-1 mb-2">
+          <div className="flex flex-col gap-1 mb-2">
             {allPromos.map((promo) => (
               <Tag
                 key={promo.id}
