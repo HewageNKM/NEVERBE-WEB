@@ -47,7 +47,7 @@ const ItemCard = ({
   }, [item]);
 
   const activePromo = getPromotionForProduct(item.id, activeVariant?.variantId);
-  const allPromos = getPromotionsForProduct(item.id, activeVariant?.variantId);
+  const allPromos = getPromotionsForProduct(item.id);
   const discountedPrice = calculateFinalPrice(item, activePromo);
   const hasDiscount = checkHasDiscount(item, activePromo);
 

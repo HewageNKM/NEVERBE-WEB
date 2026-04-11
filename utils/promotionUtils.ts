@@ -91,7 +91,7 @@ export const checkVariantEligibility = (
  */
 export const isVariantEligibleForPromotion = (
   productId: string,
-  variantId: string,
+  variantId?: string,
   targets?: ProductVariantTarget[],
   conditions?: PromotionCondition[],
   applicableProducts?: string[],
@@ -105,6 +105,8 @@ export const isVariantEligibleForPromotion = (
         productTarget.variantMode === "SPECIFIC_VARIANTS" &&
         productTarget.variantIds
       ) {
+        // If no variantId provided, return true if the product has ANY eligible variants
+        if (!variantId) return productTarget.variantIds.length > 0;
         return productTarget.variantIds.includes(variantId);
       }
       return false;
@@ -142,6 +144,8 @@ export const isVariantEligibleForPromotion = (
         condition.variantMode === "SPECIFIC_VARIANTS" &&
         condition.variantIds
       ) {
+        // If no variantId provided, return true if the condition has ANY eligible variants
+        if (!variantId) return condition.variantIds.length > 0;
         if (condition.variantIds.includes(variantId)) {
           return true;
         }

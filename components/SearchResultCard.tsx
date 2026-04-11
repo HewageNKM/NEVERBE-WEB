@@ -26,7 +26,7 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({
   const { getPromotionForProduct, getPromotionsForProduct } =
     usePromotionsContext();
   const activePromo = getPromotionForProduct(item.id, item.variants?.[0]?.variantId);
-  const allPromos = getPromotionsForProduct(item.id, item.variants?.[0]?.variantId);
+  const allPromos = getPromotionsForProduct(item.id);
 
   const finalPrice = calculateFinalPrice(item, activePromo);
   const hasDiscount = checkHasDiscount(item, activePromo);
