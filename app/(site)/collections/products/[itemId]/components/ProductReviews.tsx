@@ -62,7 +62,7 @@ const ProductReviews = ({ product }: ProductReviewsProps) => {
     <div className="w-full max-w-[1600px] mx-auto px-4 md:px-10 lg:px-16 py-12 md:py-20 border-t border-default animate-fade">
       <Flex 
         vertical={true}
-        className="md:flex-row gap-6 md:gap-0 mb-10 md:mb-12"
+        className="md:flex-row gap-6 md:gap-0 mb-10 md:mb-14"
         justify="space-between" 
         align="start"
       >
@@ -111,6 +111,7 @@ const ProductReviews = ({ product }: ProductReviewsProps) => {
         </Button>
       </Flex>
 
+      <div className="border-2 border-dashed border-default rounded-[2rem] p-6 md:p-10">
       {loading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {[1, 2, 3].map((i) => (
@@ -165,9 +166,10 @@ const ProductReviews = ({ product }: ProductReviewsProps) => {
               </Button>
             </div>
           }
-          className="py-20 bg-surface-1 rounded-3xl border border-dashed border-default"
+          className="py-20"
         />
       )}
+      </div>
 
       <ReviewForm
         open={isModalOpen}

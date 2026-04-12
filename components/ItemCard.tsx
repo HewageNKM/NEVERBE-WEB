@@ -263,12 +263,15 @@ const ItemCard = ({
                   fontWeight: 800,
                   borderRadius: "6px",
                   border: "none",
-                  padding: "0 6px",
+                  padding: "2px 6px",
                   background: "var(--color-warning)",
                   color: "var(--color-primary-dark)",
                   margin: 0,
                   textTransform: "uppercase",
                   letterSpacing: "0.02em",
+                  whiteSpace: "normal",
+                  wordBreak: "break-word",
+                  lineHeight: 1.4,
                 }}
               >
                 {promo.name}

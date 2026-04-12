@@ -160,11 +160,14 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({
                       fontWeight: 800,
                       borderRadius: "6px",
                       border: "none",
-                      padding: "0 6px",
+                      padding: "2px 6px",
                       background: "var(--color-warning)",
                       color: "var(--color-primary-dark)",
                       margin: 0,
                       textTransform: "uppercase",
+                      whiteSpace: "normal",
+                      wordBreak: "break-word",
+                      lineHeight: 1.4,
                     }}
                   >
                     {promo.name}
@@ -213,11 +216,12 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({
             {item.name}
           </Title>
           {allPromos.length > 0 && (
-            <div className="flex flex-col gap-1 mt-1">
+            <div className="flex flex-wrap gap-1 mt-1">
               {allPromos.map((promo) => (
                 <span
                   key={promo.id}
                   className="shrink-0 bg-accent text-dark text-[8px] font-black px-1.5 py-0.5 rounded-sm shadow-sm uppercase"
+                  style={{ whiteSpace: "normal", wordBreak: "break-word" }}
                 >
                   {promo.name}
                 </span>
