@@ -32,7 +32,5 @@ env:
     value: "94705208999"
   - variable: NEXT_PUBLIC_PAYHERE_URL
     value: "https://www.payhere.lk/pay/checkout"
-    value: "a511b0ae44b3411786428006f0eab919"
-    value: "T4W2OD5EXU"
   - variable: NEXT_PUBLIC_KOKO_REDIRECT_URL
     value: "https://prodapi.paykoko.com/api/merchants/orderCreate"
