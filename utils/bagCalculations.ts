@@ -1,7 +1,6 @@
 "use client";
 import { SHIPPING_FLAT_RATE_1, SHIPPING_FLAT_RATE_2 } from "@/constants";
 import { BagItem } from "@/interfaces/BagItem";
-import { algoliasearch } from "algoliasearch";
 
 export const generateOrderId = () => {
   const now = new Date();
@@ -71,9 +70,3 @@ export const calculateSubTotal = (
   );
 };
 
-export const getAlgoliaClient = () => {
-  const ALGOLIA_APP_ID = process.env.NEXT_PUBLIC_ALGOLIA_APP_ID;
-  const ALGOLIA_SEARCH_KEY = process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_API_KEY;
-
-  return algoliasearch(ALGOLIA_APP_ID || "", ALGOLIA_SEARCH_KEY || "");
-};

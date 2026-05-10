@@ -21,7 +21,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import SeasonalPromo from "@/app/(site)/components/SeasonalPromo";
 import SearchDialog from "@/components/SearchDialog";
 import { NavigationItem } from "@/actions/websiteAction";
-import { useAlgoliaSearch } from "@/hooks/useAlgoliaSearch";
+import { useProductSearch } from "@/hooks/useProductSearch";
 import { Badge, Input, ConfigProvider, Button, Flex, Typography } from "antd";
 
 const { Text } = Typography;
@@ -61,7 +61,7 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
     fetchRecommendations,
     recommendations,
     clearSearch,
-  } = useAlgoliaSearch();
+  } = useProductSearch();
 
   const onSearch = (evt: React.ChangeEvent<HTMLInputElement>) => {
     performSearch(evt.target.value);

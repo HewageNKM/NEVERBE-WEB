@@ -32,9 +32,7 @@ env:
     value: "94705208999"
   - variable: NEXT_PUBLIC_PAYHERE_URL
     value: "https://www.payhere.lk/pay/checkout"
-  - variable: NEXT_PUBLIC_ALGOLIA_SEARCH_API_KEY
     value: "a511b0ae44b3411786428006f0eab919"
-  - variable: NEXT_PUBLIC_ALGOLIA_APP_ID
     value: "T4W2OD5EXU"
   - variable: NEXT_PUBLIC_KOKO_REDIRECT_URL
     value: "https://prodapi.paykoko.com/api/merchants/orderCreate"

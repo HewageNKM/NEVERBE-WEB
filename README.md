@@ -11,7 +11,6 @@ A premium, high-performance Full-Stack E-Commerce web application built to deliv
 ## 🚀 Features
 
 - **Modern UI/UX**: Premium, clean design utilizing Tailwind CSS v4 and Ant Design, with smooth micro-interactions powered by Framer Motion.
-- **Product Discovery**: Fast, typo-tolerant search and rich product filtering implemented with Algolia. 
 - **E-Commerce Essentials**: Wishlist, dynamic shopping cart, product offers, curated combos, and new arrivals tracking.
 - **Secure Authentication**: Seamless user registration and login flows managed reliably through Firebase Authentication.
 - **Full Checkout Flow**: Integrated with PayHere and Koko for localized, secure payment processing.
@@ -26,7 +25,6 @@ A premium, high-performance Full-Stack E-Commerce web application built to deliv
 - **Styling**: [Tailwind CSS v4](https://tailwindcss.com/) & [Ant Design v6](https://ant.design/)
 - **State Management**: [Redux Toolkit](https://redux-toolkit.js.org/)
 - **Backend Infrastructure**: [Firebase](https://firebase.google.com/) (Auth, Firestore, Cloud Storage, App Hosting)
-- **Search Engine**: [Algolia](https://www.algolia.com/)
 - **Animations**: [Framer Motion](https://www.framer.com/motion/)
 - **Forms & Client Logic**: React Hook Form, Axios, Date-fns
 
@@ -36,7 +34,6 @@ A premium, high-performance Full-Stack E-Commerce web application built to deliv
 - [Node.js](https://nodejs.org/) (v20 or newer recommended)
 - npm, yarn, or pnpm
 - A [Firebase Project](https://console.firebase.google.com/)
-- An [Algolia Account](https://www.algolia.com/)
 
 ### Installation
 
@@ -52,15 +49,12 @@ A premium, high-performance Full-Stack E-Commerce web application built to deliv
    ```
 
 3. Set up Environment Variables
-   Create a `.env.local` file in the root directory and add all the necessary environment variables required for your Firebase and Algolia environments. (You can refer to `apphosting.yaml` for the required variable keys).
    ```env
    NEXT_PUBLIC_FIREBASE_API_KEY="your_api_key"
    NEXT_PUBLIC_FIREBASE_APP_ID="your_app_id"
    NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN="your_auth_domain"
    NEXT_PUBLIC_FIREBASE_PROJECT_ID="your_project_id"
    NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET="your_storage_bucket"
-   NEXT_PUBLIC_ALGOLIA_APP_ID="your_algolia_app_id"
-   NEXT_PUBLIC_ALGOLIA_SEARCH_API_KEY="your_algolia_search_api_key"
    NEXT_PUBLIC_BASE_URL="http://localhost:3000"
    # Add your payment gateway keys and other required config
    ```

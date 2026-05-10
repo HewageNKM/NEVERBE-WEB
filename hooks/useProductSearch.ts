@@ -1,10 +1,10 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
-import { getAlgoliaClient } from "@/utils/bagCalculations";
+
 import { Product } from "@/interfaces/Product";
 import { ProductVariant } from "@/interfaces/ProductVariant";
 import axiosInstance from "@/actions/axiosInstance";
 
-interface UseAlgoliaSearchOptions {
+interface UseProductSearchOptions {
   indexName?: string;
   hitsPerPage?: number;
   minQueryLength?: number;
@@ -12,7 +12,7 @@ interface UseAlgoliaSearchOptions {
   isDynamic?: boolean; // New option
 }
 
-interface UseAlgoliaSearchReturn {
+interface UseProductSearchReturn {
   query: string;
   results: Product[];
   isSearching: boolean;
@@ -25,12 +25,12 @@ interface UseAlgoliaSearchReturn {
 }
 
 /**
- * Consolidated Algolia search hook
+ * Consolidated product search hook
  * Replaces duplicate search logic in Header.tsx and Menu.tsx
  */
-export function useAlgoliaSearch(
-  options: UseAlgoliaSearchOptions = {},
-): UseAlgoliaSearchReturn {
+export function useProductSearch(
+  options: UseProductSearchOptions = {},
+): UseProductSearchReturn {
   const {
     indexName = "products_index",
     hitsPerPage = 30,
@@ -46,8 +46,7 @@ export function useAlgoliaSearch(
   const [showResults, setShowResults] = useState(false);
   const [recommendations, setRecommendations] = useState<Product[]>([]);
 
-  const searchClient = useMemo(() => getAlgoliaClient(), []);
-  
+  // Search Client Removed
   // Frontend Results Cache
   const resultsCache = useMemo(() => new Map<string, Product[]>(), []);
 
@@ -70,22 +69,16 @@ export function useAlgoliaSearch(
 
     setIsSearching(true);
     try {
-      const searchResults = await searchClient.search({
-        requests: [
-          {
-            indexName,
-            query: trimmedQuery,
-            hitsPerPage,
-          },
-        ],
+      const response = await axiosInstance.get("/web/products/search", {
+        params: {
+          q: trimmedQuery,
+          hitsPerPage,
+        }
       });
 
-      const hits = (searchResults.results[0] as any)?.hits || [];
+      const hits = response.data.hits || [];
       const filteredResults = hits.filter(
         (item: any) =>
-          item.status === true &&
-          item.listing === true &&
-          item.isDeleted === false &&
           !item.variants?.every(
             (v: ProductVariant) => v.isDeleted === true || v.status === false,
           ),
@@ -97,12 +90,12 @@ export function useAlgoliaSearch(
       // Store in frontend cache
       resultsCache.set(cacheKey, filteredResults);
     } catch (error) {
-      console.error("[useAlgoliaSearch] Search failed:", error);
+      console.error("[useProductSearch] Search failed:", error);
       setResults([]);
     } finally {
       setIsSearching(false);
     }
-  }, [indexName, hitsPerPage, minQueryLength, searchClient, resultsCache]);
+  }, [indexName, hitsPerPage, minQueryLength, resultsCache]);
 
   // 2. Debounce Effect: Updates debouncedQuery after user stops typing
   useEffect(() => {
@@ -128,7 +121,7 @@ export function useAlgoliaSearch(
     return () => clearTimeout(handler);
   }, [query, minQueryLength, debounceMs, isDynamic]);
 
-  // 3. Search Effect: Performs actual Algolia call when debouncedQuery changes (DYNAMIC MODE)
+  // 3. Search Effect: Performs actual search call when debouncedQuery changes (DYNAMIC MODE)
   useEffect(() => {
     if (isDynamic && debouncedQuery) {
       executeSearch(debouncedQuery);
@@ -148,13 +141,13 @@ export function useAlgoliaSearch(
 
   const fetchRecommendations = useCallback(async () => {
     try {
-      // MIGRAION: Fetch from Firestore-backed API instead of Algolia direct
+      // Fetch from Firestore-backed API
       const response = await axiosInstance.get("/web/products", {
         params: { size: 6 }
       });
       setRecommendations(response.data.dataList || []);
     } catch (error) {
-      console.error("[useAlgoliaSearch] Failed to fetch recommendations:", error);
+      console.error("[useProductSearch] Failed to fetch recommendations:", error);
     }
   }, []);
 
@@ -171,4 +164,4 @@ export function useAlgoliaSearch(
   };
 }
 
-export default useAlgoliaSearch;
+export default useProductSearch;
