@@ -95,7 +95,7 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
           className="max-w-content w-full mx-auto px-6 md:px-10 lg:px-12 h-[64px] lg:h-[76px]"
         >
           {/* LOGO */}
-          <Link href="/" className="shrink-0" style={{ paddingLeft: '32px' }}>
+          <Link href="/" className="shrink-0 pl-0 lg:pl-8">
             <Image
               src="/logo.png"
               alt="NEVERBE"
