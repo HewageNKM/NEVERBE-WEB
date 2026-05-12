@@ -92,15 +92,15 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
         <Flex
           justify="space-between"
           align="center"
-          className="max-w-content w-full mx-auto px-4 lg:px-12 h-[64px] lg:h-[76px]"
+          className="max-w-content w-full mx-auto px-6 md:px-10 lg:px-12 h-[64px] lg:h-[76px]"
         >
           {/* LOGO */}
-          <Link href="/" className="shrink-0">
+          <Link href="/" className="shrink-0" style={{ paddingLeft: '32px' }}>
             <Image
               src="/logo.png"
               alt="NEVERBE"
-              width={60}
-              height={30}
+              width={70}
+              height={35}
               className="object-contain transition-transform hover:scale-110 active:scale-95 duration-300"
             />
           </Link>
@@ -206,7 +206,7 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
                 WebkitBackdropFilter: "blur(32px)",
               }}
             >
-              <div className="max-w-content mx-auto px-4 lg:px-12 py-4 lg:py-12">
+              <div className="max-w-content mx-auto px-6 md:px-10 lg:px-12 py-4 lg:py-12">
                 {/* Mobile: Stacked layout, Desktop: Side-by-side */}
                 <Flex
                   vertical
