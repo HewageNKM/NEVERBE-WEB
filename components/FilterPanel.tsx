@@ -2,16 +2,20 @@
 import React from "react";
 import { useFilterData } from "@/hooks/useFilterData";
 import { Button, Switch } from "antd";
-import { AVAILABLE_SIZES } from "@/constants/filters";
+import { AVAILABLE_SIZES, OCCASIONS, STYLES } from "@/constants/filters";
 
 interface FilterPanelProps {
   selectedBrands: string[];
   selectedCategories: string[];
   selectedSizes: string[];
+  selectedOccasions: string[];
+  selectedStyles: string[];
   inStock: boolean;
   onBrandToggle: (brand: string) => void;
   onCategoryToggle: (category: string) => void;
   onSizeToggle: (size: string) => void;
+  onOccasionToggle: (val: string) => void;
+  onStyleToggle: (val: string) => void;
   onInStockChange: (value: boolean) => void;
   onReset: () => void;
   showCategories?: boolean;
@@ -68,10 +72,14 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
   selectedBrands,
   selectedCategories,
   selectedSizes,
+  selectedOccasions,
+  selectedStyles,
   inStock,
   onBrandToggle,
   onCategoryToggle,
   onSizeToggle,
+  onOccasionToggle,
+  onStyleToggle,
   onInStockChange,
   onReset,
   showCategories = true,
@@ -157,6 +165,20 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
         items={brands}
         selectedItems={selectedBrands}
         onToggle={onBrandToggle}
+      />
+
+      <FilterSection
+        title="Occasion"
+        items={OCCASIONS.map(o => ({ label: o }))}
+        selectedItems={selectedOccasions}
+        onToggle={onOccasionToggle}
+      />
+
+      <FilterSection
+        title="Style"
+        items={STYLES.map(s => ({ label: s }))}
+        selectedItems={selectedStyles}
+        onToggle={onStyleToggle}
       />
 
       <div className="h-20" />

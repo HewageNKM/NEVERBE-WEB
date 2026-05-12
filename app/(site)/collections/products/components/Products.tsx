@@ -33,6 +33,8 @@ const Products = ({
     toggleBrand,
     toggleCategory,
     toggleSize,
+    toggleOccasion,
+    toggleStyle,
     resetFilters,
   } = useProductListing({
     apiEndpoint,
@@ -57,6 +59,8 @@ const Products = ({
           toggleBrand,
           toggleCategory,
           toggleSize,
+          toggleOccasion,
+          toggleStyle,
           setInStock,
           resetFilters,
         }}
@@ -68,10 +72,14 @@ const Products = ({
           selectedBrands={filters.brands}
           selectedCategories={filters.categories}
           selectedSizes={filters.sizes}
+          selectedOccasions={filters.occasion}
+          selectedStyles={filters.style}
           inStock={filters.inStock}
           onBrandToggle={toggleBrand}
           onCategoryToggle={toggleCategory}
           onSizeToggle={toggleSize}
+          onOccasionToggle={toggleOccasion}
+          onStyleToggle={toggleStyle}
           onInStockChange={setInStock}
           onReset={resetFilters}
           onClose={() => setShowFilter(false)}
@@ -103,6 +111,8 @@ const Products = ({
               {filters.brands.length +
                 filters.categories.length +
                 filters.sizes.length +
+                filters.occasion.length +
+                filters.style.length +
                 (filters.inStock ? 1 : 0) >
                 0 && (
                 <span
@@ -119,6 +129,8 @@ const Products = ({
                   {filters.brands.length +
                     filters.categories.length +
                     filters.sizes.length +
+                    filters.occasion.length +
+                    filters.style.length +
                     (filters.inStock ? 1 : 0)}
                 </span>
               )}

@@ -17,3 +17,19 @@ export const AVAILABLE_SIZES = [
   "46",
   "47",
 ];
+export const OCCASIONS = [
+  "Casual",
+  "Formal",
+  "Sport",
+  "Party",
+  "Office",
+  "Beach",
+];
+
+export const STYLES = [
+  "Modern",
+  "Vintage",
+  "Streetwear",
+  "Minimalist",
+  "Boho",
+];

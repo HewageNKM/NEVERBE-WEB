@@ -41,6 +41,16 @@ export const useProductListing = ({
     [searchParams],
   );
 
+  const selectedOccasions = useMemo(
+    () => searchParams.get("occasion")?.split(",").filter(Boolean) || [],
+    [searchParams],
+  );
+
+  const selectedStyles = useMemo(
+    () => searchParams.get("style")?.split(",").filter(Boolean) || [],
+    [searchParams],
+  );
+
   // Parse Sort
   const sortParam = searchParams.get("sort");
   let selectedSort: SortOption = "NO SELCT";
@@ -73,6 +83,12 @@ export const useProductListing = ({
 
         if (selectedSizes.length > 0)
           params.set("sizes", selectedSizes.join(","));
+
+        if (selectedOccasions.length > 0)
+          params.set("occasion", selectedOccasions.join(","));
+
+        if (selectedStyles.length > 0)
+          params.set("style", selectedStyles.join(","));
 
         const endpoint = apiEndpoint.includes("/api/v1")
           ? apiEndpoint.split("/api/v1")[1]
@@ -111,6 +127,8 @@ export const useProductListing = ({
     selectedBrands,
     selectedCategories,
     selectedSizes,
+    selectedOccasions,
+    selectedStyles,
     sortParam,
     selectedSort,
   ]);
@@ -185,6 +203,32 @@ export const useProductListing = ({
     updateURL(params);
   };
 
+  const toggleOccasion = (val: string) => {
+    const lower = val.toLowerCase();
+    const newVals = selectedOccasions.includes(lower)
+      ? selectedOccasions.filter((s) => s !== lower)
+      : [...selectedOccasions, lower];
+
+    const params = createQueryString({
+      occasion: newVals.length > 0 ? newVals.join(",") : null,
+      page: "1",
+    });
+    updateURL(params);
+  };
+
+  const toggleStyle = (val: string) => {
+    const lower = val.toLowerCase();
+    const newVals = selectedStyles.includes(lower)
+      ? selectedStyles.filter((s) => s !== lower)
+      : [...selectedStyles, lower];
+
+    const params = createQueryString({
+      style: newVals.length > 0 ? newVals.join(",") : null,
+      page: "1",
+    });
+    updateURL(params);
+  };
+
   const setInStock = (val: boolean) => {
     const params = createQueryString({
       inStock: val ? "true" : null,
@@ -223,6 +267,8 @@ export const useProductListing = ({
       categories: selectedCategories,
       sizes: selectedSizes,
       gender: selectedGender,
+      occasion: selectedOccasions,
+      style: selectedStyles,
       inStock,
       sort: selectedSort,
     },
@@ -232,6 +278,8 @@ export const useProductListing = ({
     toggleBrand,
     toggleCategory,
     toggleSize,
+    toggleOccasion,
+    toggleStyle,
     setInStock,
     setSort: setSelectedSort,
     resetFilters,

@@ -3,16 +3,20 @@ import React from "react";
 import { Drawer, Button, Switch, Tag } from "antd";
 import { IoCloseOutline } from "react-icons/io5";
 import { useFilterData } from "@/hooks/useFilterData";
-import { AVAILABLE_SIZES } from "@/constants/filters";
+import { AVAILABLE_SIZES, OCCASIONS, STYLES } from "@/constants/filters";
 
 interface PopUpFilterPanelProps {
   selectedBrands: string[];
   selectedCategories: string[];
   selectedSizes: string[];
+  selectedOccasions: string[];
+  selectedStyles: string[];
   inStock: boolean;
   onBrandToggle: (brand: string) => void;
   onCategoryToggle: (category: string) => void;
   onSizeToggle: (size: string) => void;
+  onOccasionToggle: (val: string) => void;
+  onStyleToggle: (val: string) => void;
   onInStockChange: (value: boolean) => void;
   onReset: () => void;
   onClose: () => void;
@@ -69,10 +73,14 @@ const PopUpFilterPanel: React.FC<PopUpFilterPanelProps> = ({
   selectedBrands,
   selectedCategories,
   selectedSizes,
+  selectedOccasions,
+  selectedStyles,
   inStock,
   onBrandToggle,
   onCategoryToggle,
   onSizeToggle,
+  onOccasionToggle,
+  onStyleToggle,
   onInStockChange,
   onReset,
   onClose,
@@ -83,6 +91,8 @@ const PopUpFilterPanel: React.FC<PopUpFilterPanelProps> = ({
     selectedBrands.length +
     selectedCategories.length +
     selectedSizes.length +
+    selectedOccasions.length +
+    selectedStyles.length +
     (inStock ? 1 : 0);
 
   return (
@@ -260,6 +270,20 @@ const PopUpFilterPanel: React.FC<PopUpFilterPanelProps> = ({
           items={brands}
           selected={selectedBrands}
           onToggle={onBrandToggle}
+        />
+
+        <FilterList
+          title="Occasion"
+          items={OCCASIONS.map(o => ({ label: o }))}
+          selected={selectedOccasions}
+          onToggle={onOccasionToggle}
+        />
+
+        <FilterList
+          title="Style"
+          items={STYLES.map(s => ({ label: s }))}
+          selected={selectedStyles}
+          onToggle={onStyleToggle}
         />
 
         <div className="h-6" />
