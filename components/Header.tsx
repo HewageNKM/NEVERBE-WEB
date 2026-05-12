@@ -92,7 +92,7 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
         <Flex
           justify="space-between"
           align="center"
-          className="max-w-content w-full mx-auto px-6 md:px-10 lg:px-12 h-[64px] lg:h-[76px]"
+          className="max-w-content w-full mx-auto px-4 md:px-10 lg:px-12 h-[64px] lg:h-[76px]"
         >
           {/* LOGO */}
           <Link href="/" className="shrink-0 pl-0 lg:pl-8">
@@ -206,7 +206,7 @@ const Header = ({ season, mainNav = [] }: HeaderProps) => {
                 WebkitBackdropFilter: "blur(32px)",
               }}
             >
-              <div className="max-w-content mx-auto px-6 md:px-10 lg:px-12 py-4 lg:py-12">
+              <div className="max-w-content mx-auto px-4 md:px-10 lg:px-12 py-4 lg:py-12">
                 {/* Mobile: Stacked layout, Desktop: Side-by-side */}
                 <Flex
                   vertical
