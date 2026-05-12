@@ -151,6 +151,7 @@ const CheckoutForm = () => {
     otpState,
     calculateTotals,
     buildOrderPayload,
+    processPayment,
     handleOTPVerification,
     handleResendOTP,
     closeOTPModal,
