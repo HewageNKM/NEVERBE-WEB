@@ -47,23 +47,12 @@ export function useProductSearch(
   const [recommendations, setRecommendations] = useState<Product[]>([]);
 
   // Search Client Removed
-  // Frontend Results Cache
-  const resultsCache = useMemo(() => new Map<string, Product[]>(), []);
-
   // 1. Manual search function
   const executeSearch = useCallback(async (searchQuery: string) => {
     const trimmedQuery = searchQuery.trim();
     if (trimmedQuery.length < minQueryLength) {
       setResults([]);
       setShowResults(false);
-      return;
-    }
-
-    // Check frontend cache first
-    const cacheKey = `${indexName}:${trimmedQuery}:${hitsPerPage}`;
-    if (resultsCache.has(cacheKey)) {
-      setResults(resultsCache.get(cacheKey)!);
-      setShowResults(true);
       return;
     }
 
@@ -86,16 +75,13 @@ export function useProductSearch(
 
       setResults(filteredResults);
       setShowResults(true);
-      
-      // Store in frontend cache
-      resultsCache.set(cacheKey, filteredResults);
     } catch (error) {
       console.error("[useProductSearch] Search failed:", error);
       setResults([]);
     } finally {
       setIsSearching(false);
     }
-  }, [indexName, hitsPerPage, minQueryLength, resultsCache]);
+  }, [indexName, hitsPerPage, minQueryLength]);
 
   // 2. Debounce Effect: Updates debouncedQuery after user stops typing
   useEffect(() => {
