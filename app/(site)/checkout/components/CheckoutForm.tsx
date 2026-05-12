@@ -286,6 +286,12 @@ const CheckoutForm = () => {
         form={form}
         layout="vertical"
         onFinish={handlePaymentSubmit}
+        onFinishFailed={() => {
+          if (otpState.pendingOrder) {
+            openOTPModal();
+          }
+        }}
+        requiredMark={false}
         initialValues={{
           first_name: billingCustomer?.name?.split(" ")[0] || "",
           last_name: billingCustomer?.name?.split(" ").slice(1).join(" ") || "",
@@ -345,6 +351,7 @@ const CheckoutForm = () => {
         centered
         width={400}
         closeIcon={<FiX size={24} />}
+        maskClosable={false}
         className="performance-modal"
         styles={{
           body: {
