@@ -1,4 +1,3 @@
-import ReCaptchaProviderWrapper from "@/app/(site)/components/ReCaptchaProvider";
 import React from "react";
 
 export default function CheckoutLayout({
@@ -6,5 +5,5 @@ export default function CheckoutLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <ReCaptchaProviderWrapper>{children}</ReCaptchaProviderWrapper>;
+  return <>{children}</>;
 }

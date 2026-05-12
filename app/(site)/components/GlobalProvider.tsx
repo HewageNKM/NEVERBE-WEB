@@ -47,10 +47,9 @@ const GlobalProvider = ({
     <GoogleReCaptchaProvider
       reCaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ""}
       scriptProps={{
-        async: false,
-        defer: false,
+        async: true,
+        defer: true,
         appendTo: "head",
-        nonce: undefined,
       }}
     >
       <main className="w-full relative flex flex-col justify-between min-h-screen overflow-clip">
