@@ -10,8 +10,12 @@ const { Text, Title } = Typography;
 const BrandsSlider = ({ items }: { items: any[] }) => {
   if (!items || items.length === 0) return null;
 
-  // Double the items for seamless marquee effect
-  const doubledItems = [...items, ...items];
+  // Ensure items have necessary properties and double them for seamless marquee
+  const sanitizedItems = items.map(item => ({
+    ...item,
+    displayName: item.name || item.label || "Brand",
+  }));
+  const doubledItems = [...sanitizedItems, ...sanitizedItems];
 
   return (
     <section
@@ -67,18 +71,18 @@ const BrandsSlider = ({ items }: { items: any[] }) => {
             <Link
               key={`row1-${brand.id}-${idx}`}
               href={`/collections/products?brand=${encodeURIComponent(
-                (brand?.name || "").toLowerCase(),
+                (brand?.displayName || "").toLowerCase(),
               )}`}
-              className="flex-shrink-0 mx-6 flex items-center justify-center opacity-30 hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-500"
-              style={{ height: 60, minWidth: 120 }}
+              className="flex-shrink-0 mx-8 flex items-center justify-center opacity-80 hover:opacity-100 transition-all duration-300"
+              style={{ height: 60, minWidth: 140 }}
             >
               {brand.logoUrl ? (
                 <Image
                   src={brand.logoUrl}
-                  alt={brand.name}
-                  width={100}
-                  height={50}
-                  className="object-contain h-10 w-auto brightness-0 invert"
+                  alt={brand.displayName}
+                  width={120}
+                  height={60}
+                  className="object-contain h-12 w-auto brightness-0 invert"
                 />
               ) : (
                 <Text
@@ -91,7 +95,7 @@ const BrandsSlider = ({ items }: { items: any[] }) => {
                     whiteSpace: "nowrap",
                   }}
                 >
-                  {brand.name}
+                  {brand.displayName}
                 </Text>
               )}
             </Link>
@@ -112,18 +116,18 @@ const BrandsSlider = ({ items }: { items: any[] }) => {
               <Link
                 key={`row2-${brand.id}-${idx}`}
                 href={`/collections/products?brand=${encodeURIComponent(
-                  (brand?.name || "").toLowerCase(),
+                  (brand?.displayName || "").toLowerCase(),
                 )}`}
-                className="w-[120px] md:w-[160px] lg:w-[200px] shrink-0 flex items-center justify-center opacity-60 hover:opacity-100 transition-opacity duration-300"
-                style={{ height: 60, minWidth: 120 }}
+                className="mx-8 shrink-0 flex items-center justify-center opacity-80 hover:opacity-100 transition-opacity duration-300"
+                style={{ height: 60, minWidth: 140 }}
               >
                 {brand.logoUrl ? (
                   <Image
                     src={brand.logoUrl}
-                    alt={brand.name}
-                    width={100}
-                    height={50}
-                    className="object-contain h-10 w-auto brightness-0 invert"
+                    alt={brand.displayName}
+                    width={120}
+                    height={60}
+                    className="object-contain h-12 w-auto brightness-0 invert"
                   />
                 ) : (
                   <Text
@@ -136,7 +140,7 @@ const BrandsSlider = ({ items }: { items: any[] }) => {
                       whiteSpace: "nowrap",
                     }}
                   >
-                    {brand.name}
+                    {brand.displayName}
                   </Text>
                 )}
               </Link>
