@@ -92,6 +92,8 @@ interface UsePaymentReturn {
   handleOTPVerification: (otp: string) => Promise<void>;
   handleResendOTP: (phoneNumber: string) => Promise<void>;
   closeOTPModal: () => void;
+  openOTPModal: () => void;
+  resetOTPState: () => void;
 }
 
 /**
@@ -461,9 +463,23 @@ export const usePayment = (options: UsePaymentOptions): UsePaymentReturn => {
   );
 
   /**
-   * Close OTP modal
+   * Close OTP modal without clearing pending order
    */
   const closeOTPModal = useCallback(() => {
+    setOtpState((prev) => ({ ...prev, showModal: false }));
+  }, []);
+
+  /**
+   * Open OTP modal (re-show verification)
+   */
+  const openOTPModal = useCallback(() => {
+    setOtpState((prev) => ({ ...prev, showModal: true }));
+  }, []);
+
+  /**
+   * Reset OTP state completely (for starting over)
+   */
+  const resetOTPState = useCallback(() => {
     setOtpState({
       showModal: false,
       pendingOrder: null,
@@ -484,6 +500,8 @@ export const usePayment = (options: UsePaymentOptions): UsePaymentReturn => {
     handleOTPVerification,
     handleResendOTP,
     closeOTPModal,
+    openOTPModal,
+    resetOTPState,
   };
 };
 

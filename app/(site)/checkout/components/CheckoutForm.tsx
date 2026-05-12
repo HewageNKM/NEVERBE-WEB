@@ -151,10 +151,11 @@ const CheckoutForm = () => {
     otpState,
     calculateTotals,
     buildOrderPayload,
-    processPayment,
     handleOTPVerification,
     handleResendOTP,
     closeOTPModal,
+    openOTPModal,
+    resetOTPState,
   } = usePayment({
     paymentMethodId: paymentTypeId,
     paymentMethodName: paymentType,
@@ -215,6 +216,12 @@ const CheckoutForm = () => {
 
   const handlePaymentSubmit = async (values: any) => {
     try {
+      // If we already have a pending order (e.g. they closed the modal), just reopen it
+      if (otpState.pendingOrder) {
+        openOTPModal();
+        return;
+      }
+
       // Validate Logic
       const newBilling = createCustomerFromForm(values);
       const userId = user?.uid || null;
@@ -315,6 +322,33 @@ const CheckoutForm = () => {
 
           {/* --- RIGHT COLUMN: SUMMARY & PAYMENT --- */}
           <Col xs={24} lg={10}>
+            {otpState.pendingOrder && !otpState.showModal && (
+              <div className="mb-6 p-4 bg-orange-50 border border-orange-200 rounded-xl flex flex-col gap-3 items-center text-center">
+                <Typography.Text className="text-orange-800 font-semibold">
+                  Verification pending for {otpState.pendingOrder.customer.phone}
+                </Typography.Text>
+                <Flex gap={8}>
+                  <Button 
+                    type="primary" 
+                    danger 
+                    ghost 
+                    size="small" 
+                    onClick={openOTPModal}
+                    className="rounded-full font-bold uppercase text-[10px] tracking-wider"
+                  >
+                    Complete Verification
+                  </Button>
+                  <Button 
+                    type="link" 
+                    size="small" 
+                    onClick={resetOTPState}
+                    className="font-bold uppercase text-[10px] tracking-wider text-muted hover:text-red-500"
+                  >
+                    Cancel & Edit
+                  </Button>
+                </Flex>
+              </div>
+            )}
             <PaymentDetails
               setPaymentType={setPaymentType}
               paymentType={paymentType || ""}
